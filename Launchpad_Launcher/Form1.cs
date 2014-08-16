@@ -233,6 +233,7 @@ namespace Launchpad_Launcher
                     Console.WriteLine("Manifest not OK: Downloading new manifest");
                     File.Delete(Config.GetManifestPath());
                     FTP.DownloadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), Config.GetManifestURL(), Config.GetManifestPath());
+                    File.Create(String.Format(@"{0}\.gameNeedsUpdate", Config.GetLocalDir()));
                     bGameNeedsUpdate = true;
                 }
                 UpdateMainWindow();
@@ -266,6 +267,12 @@ namespace Launchpad_Launcher
 
                     Console.Write("remoteGameVersion: ");
                     Console.Write(remoteVersion);
+                    File.Create(String.Format(@"{0}\.gameNeedsUpdate", Config.GetLocalDir()));
+                }
+
+                if (File.Exists(String.Format(@"{0}\.gameNeedsUpdate", Config.GetLocalDir())))
+                {
+                    bGameNeedsUpdate = true;
                 }
                 Console.Write("localVersion: ");
                 Console.WriteLine(localVersion);
@@ -574,6 +581,12 @@ namespace Launchpad_Launcher
         {
             progress_label.ForeColor = Color.ForestGreen;
             progress_label.Text = "Game update finished!";
+
+            if (File.Exists(String.Format(@"{0}\.gameNeedsUpdate", Config.GetLocalDir())))
+            {
+                File.Delete(String.Format(@"{0}\.gameNeedsUpdate", Config.GetLocalDir()));
+            }
+            
 
             UpdateMainWindow();
         }
