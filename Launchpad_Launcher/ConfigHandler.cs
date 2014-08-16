@@ -20,6 +20,8 @@ namespace Launchpad_Launcher
             string configDir = String.Format(@"{0}\config", GetLocalDir());
             string configPath = String.Format(@"{0}\config\launcherConfig.ini", GetLocalDir());
 
+            string defaultLauncherVersion = "0.0.1";
+
             if (!Directory.Exists(configDir))
             {
                 Directory.CreateDirectory(configDir);
@@ -53,7 +55,14 @@ namespace Launchpad_Launcher
                     Console.WriteLine(ex.StackTrace);
                 }
                 
-            }            
+            }
+            else 
+            {
+                IniData data = Parser.ReadFile(configPath);
+                data["Local"]["launcherVersion"] = defaultLauncherVersion;
+
+                Parser.WriteFile(configPath, data);
+            }
         }
 
         private string GetConfigPath()

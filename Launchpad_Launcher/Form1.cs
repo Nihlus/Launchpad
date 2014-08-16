@@ -586,8 +586,9 @@ namespace Launchpad_Launcher
             {
                 File.Delete(String.Format(@"{0}\.gameNeedsUpdate", Config.GetLocalDir()));
             }
-            
 
+            bInstallCompleted = true;
+            bGameNeedsUpdate = false;
             UpdateMainWindow();
         }
 
