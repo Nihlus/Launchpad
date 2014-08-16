@@ -583,5 +583,11 @@ namespace Launchpad_Launcher
             //verifying is basically the same as updating. Check all files, download replacements, etc
             backgroundWorker_GameUpdate.RunWorkerAsync();
         }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            AboutBox1 a = new AboutBox1();
+            a.Show();
+        }
     }
 }

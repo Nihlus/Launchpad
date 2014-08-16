@@ -40,6 +40,8 @@
             this.backgroundWorker_GameUpdate = new System.ComponentModel.BackgroundWorker();
             this.fileSizeProgress_label = new System.Windows.Forms.Label();
             this.verifyInstallation_button = new System.Windows.Forms.Button();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.SuspendLayout();
             // 
             // webBrowser1
@@ -128,12 +130,24 @@
             this.verifyInstallation_button.UseVisualStyleBackColor = true;
             this.verifyInstallation_button.Click += new System.EventHandler(this.verifyInstallation_button_Click);
             // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(837, 38);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(35, 13);
+            this.linkLabel1.TabIndex = 10;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "About";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(884, 512);
+            this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.verifyInstallation_button);
             this.Controls.Add(this.fileSizeProgress_label);
             this.Controls.Add(this.warning_label);
@@ -167,6 +181,8 @@
         private System.ComponentModel.BackgroundWorker backgroundWorker_GameUpdate;
         private System.Windows.Forms.Label fileSizeProgress_label;
         private System.Windows.Forms.Button verifyInstallation_button;
+        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }
 
