@@ -339,13 +339,13 @@ namespace Launchpad_Launcher
         
         private void DoLauncherUpdate()
         {
-            FTP.DownloadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), Config.GetLauncherURL(), String.Format(@"{0}\{1}_Launcher.exe", Config.GetTempDir(), Config.GetGameName()));
+            FTP.DownloadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), Config.GetLauncherURL(), String.Format(@"{0}\Launchpad.exe", Config.GetTempDir()));
 
             FileStream updateScript = File.Create(String.Format(@"{0}\update.bat", Config.GetLocalDir()));
 
             TextWriter tw = new StreamWriter(updateScript);
-            tw.WriteLine(String.Format(@"timeout 3 & xcopy /s /y ""{0}{1}_Launcher.exe"" ""{2}\{3}_Launcher.exe"" && del ""{0}{1}_Launcher.exe""", Config.GetTempDir(), Config.GetGameName(), Config.GetLocalDir(), Config.GetGameName()));
-            tw.WriteLine(String.Format(@"start {0}_Launcher.exe", Config.GetGameName()));
+            tw.WriteLine(String.Format(@"timeout 3 & xcopy /s /y ""{0}Launchpad.exe"" ""{1}\Launchpad.exe"" && del ""{0}Launchpad.exe""", Config.GetTempDir(), Config.GetLocalDir()));
+            tw.WriteLine(String.Format(@"start Launchpad.exe"));
             tw.Close();
 
             ProcessStartInfo updateBatchProcess = new ProcessStartInfo();
