@@ -1,0 +1,11 @@
+F:\ProjectAzeroth\Launcher\src\Launchpad_Launcher\launchpad_Launcher\bin\Debug\INIFileParser.dll
+F:\ProjectAzeroth\Launcher\src\Launchpad_Launcher\launchpad_Launcher\bin\Debug\INIFileParser.pdb
+F:\ProjectAzeroth\Launcher\src\Launchpad_Launcher\launchpad_Launcher\obj\Debug\Launchpad_Launcher.Form1.resources
+F:\ProjectAzeroth\Launcher\src\Launchpad_Launcher\launchpad_Launcher\obj\Debug\Launchpad_Launcher.Properties.Resources.resources
+F:\ProjectAzeroth\Launcher\src\Launchpad_Launcher\launchpad_Launcher\obj\Debug\launchpad_Launcher.csproj.GenerateResource.Cache
+F:\ProjectAzeroth\Launcher\src\Launchpad_Launcher\launchpad_Launcher\obj\Debug\launchpad_Launcher.csprojResolveAssemblyReference.cache
+F:\ProjectAzeroth\Launcher\src\Launchpad_Launcher\launchpad_Launcher\bin\Debug\Launchpad.exe.config
+F:\ProjectAzeroth\Launcher\src\Launchpad_Launcher\launchpad_Launcher\bin\Debug\Launchpad.exe
+F:\ProjectAzeroth\Launcher\src\Launchpad_Launcher\launchpad_Launcher\bin\Debug\Launchpad.pdb
+F:\ProjectAzeroth\Launcher\src\Launchpad_Launcher\launchpad_Launcher\obj\Debug\Launchpad.exe
+F:\ProjectAzeroth\Launcher\src\Launchpad_Launcher\launchpad_Launcher\obj\Debug\Launchpad.pdb
