@@ -127,7 +127,7 @@ namespace Launchpad_Launcher
 
         public string GetLauncherURL()
         {
-            string launcherURL = String.Format("{0}/launcher/bin/{1}_Launcher.exe", GetFTPUrl(), GetGameName());
+            string launcherURL = String.Format("{0}/launcher/bin/Launchpad.exe", GetFTPUrl());
             return launcherURL;
         }
 

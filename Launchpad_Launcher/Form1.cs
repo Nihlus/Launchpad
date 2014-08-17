@@ -109,7 +109,7 @@ namespace Launchpad_Launcher
         {
             try
             {
-                string remoteLauncherVersion = FTP.ReadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), "ftp://directorate.asuscomm.com/launcher/launcherVersion.txt").Replace("\0", string.Empty);
+                string remoteLauncherVersion = FTP.ReadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), String.Format("{0}/launcher/launcherVersion.txt", Config.GetFTPUrl())).Replace("\0", string.Empty);
 
                 progress_label.Text = "Checking launcher version...";
                 progress_label.Refresh();
