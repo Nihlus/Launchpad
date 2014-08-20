@@ -91,11 +91,6 @@ namespace Launchpad_Launcher
 
                     fileSize = sizereader.ContentLength;
 
-                    //this now runs on a different thread and can't modify UI
-                    //mainPanel_progressBar.Maximum = (int)fileSize;
-
-                    //mainPanel_progressBar.Increment(buffer.Length);
-
                     if (bytesRead == 0)
                     {
                         break;

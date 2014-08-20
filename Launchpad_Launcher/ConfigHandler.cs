@@ -20,7 +20,8 @@ namespace Launchpad_Launcher
             string configDir = String.Format(@"{0}\config", GetLocalDir());
             string configPath = String.Format(@"{0}\config\launcherConfig.ini", GetLocalDir());
 
-            string defaultLauncherVersion = "0.0.1";
+            //release 0.0.
+            string defaultLauncherVersion = "0.0.2";
 
             if (!Directory.Exists(configDir))
             {
@@ -39,14 +40,17 @@ namespace Launchpad_Launcher
 
                     data.Sections.AddSection("Local");
                     data.Sections.AddSection("Remote");
+                    data.Sections.AddSection("Launchpad");
 
-                    data["Local"].AddKey("launcherVersion", "0.0.1");
+                    data["Local"].AddKey("launcherVersion", defaultLauncherVersion);
                     data["Local"].AddKey("gameName", "Example");
                     data["Local"].AddKey("systemTarget", "Win64");
 
                     data["Remote"].AddKey("FTPUsername", "anonymous");
                     data["Remote"].AddKey("FTPPassword", "anonymous");
                     data["Remote"].AddKey("FTPUrl", "ftp://example.example.com");
+
+                    data["Launchpad"].AddKey("bOfficialUpdates", "true");
 
                     Parser.WriteFile(configPath, data);
                 }
@@ -255,6 +259,22 @@ namespace Launchpad_Launcher
                 Console.Write("GetFTPUrl: ");
                 Console.WriteLine(ex.StackTrace);
                 return "";
+            }
+        }
+
+        public bool GetDoOfficialUpdates()
+        {
+            try
+            {
+                FileIniDataParser Parser = new FileIniDataParser();
+                IniData data = Parser.ReadFile(GetConfigPath());
+
+                string officialUpdatesStr = data["Launchpad"]["bOfficialUpdates"];
+                return bool.Parse(officialUpdatesStr);
+            }
+            catch (Exception ex)
+            {
+                return true;
             }
         }
     }

@@ -18,10 +18,13 @@ namespace Launchpad_Launcher
     public partial class Form1 : Form
     {
         bool bManifestDownloadFailed = false;
+
         bool bLauncherVersionCheckFailed = false;
         bool bLauncherNeedsUpdate = false;
+
         bool bGameNeedsUpdate = false;
-        bool bGameIsProbablyInstalled = false;
+        bool bGameIsInstalled = false;
+
         bool bInstallCompleted = false;
 
         //allow borderless window capture
@@ -50,9 +53,7 @@ namespace Launchpad_Launcher
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            webBrowser1.Navigate(Config.GetChangelogURL());
-
-            
+            webBrowser1.Navigate(Config.GetChangelogURL());            
         }
 
         private void Form1_Shown(object sender, EventArgs e)
@@ -116,6 +117,8 @@ namespace Launchpad_Launcher
 
                 if (Config.GetLauncherVersion() == "")
                 {
+                    //this should never happen - if it did, something is SERIOUSLY wrong
+                    bLauncherVersionCheckFailed = true;
                     Console.WriteLine("LauncherUpdateCheck: Local version is NULL!");
                     warning_label.ForeColor = Color.Red;
                     warning_label.Text = "Could not retrieve local launcher version!";
@@ -126,24 +129,18 @@ namespace Launchpad_Launcher
                 else if (remoteLauncherVersion == Config.GetLauncherVersion())
                 {
                     //launcher does not need to be updated
-                    File.Delete(String.Format(@"{0}\update.bat", Config.GetLocalDir()));
-                    Console.WriteLine("SYSMSG: Launcher version is OK");                    
-
-                    progress_label.Text = "Launcher version is OK";
-                    progress_label.Refresh();
+                    bLauncherNeedsUpdate = false;
+                    if (File.Exists(String.Format(@"{0}\update.bat", Config.GetLocalDir())))
+                    {
+                        File.Delete(String.Format(@"{0}\update.bat", Config.GetLocalDir()));
+                    }                    
+                    Console.WriteLine("SYSMSG: Launcher version is OK");                                        
 
                     UpdateMainWindow();
                 }
                 else
                 {
                     bLauncherNeedsUpdate = true;
-                    warning_label.ForeColor = Color.Red;
-                    warning_label.Text = "Launcher update required";
-
-                    mainPanel_mainButton.Text = "Update Launcher";
-
-                    mainPanel_mainButton.Refresh();
-                    warning_label.Refresh();
 
                     UpdateMainWindow();
                 }
@@ -151,16 +148,7 @@ namespace Launchpad_Launcher
             }
             catch (WebException ex)
             {
-                Console.WriteLine(ex.Status);
-
-                warning_label.ForeColor = Color.Red;
-                warning_label.Text = "Could not get launcher version from server";
-
-                progress_label.Text = "Idle";
-
-                progress_label.Refresh();
-                warning_label.Refresh();
-
+                Console.WriteLine(ex.Status);                
                 bLauncherVersionCheckFailed = true;
             }
             catch (Exception ex)
@@ -196,12 +184,9 @@ namespace Launchpad_Launcher
                 catch (WebException ex)
                 {
                     Console.WriteLine(ex.Status);
-
-                    warning_label.ForeColor = Color.Red;
-                    warning_label.Text = "Manifest download failed!";
-                    warning_label.Refresh();
-
+                    
                     bManifestDownloadFailed = true;
+                    UpdateMainWindow();
                 }
                 catch (Exception ex)
                 {
@@ -242,9 +227,7 @@ namespace Launchpad_Launcher
             {
                 if (bManifestDownloadFailed == true)
                 {
-                    warning_label.ForeColor = Color.Red;
-                    warning_label.Text = "Manifest download failed!";
-                    warning_label.Refresh();
+                    UpdateMainWindow();
                 }
                 Console.WriteLine(ex.StackTrace);
             }
@@ -268,18 +251,26 @@ namespace Launchpad_Launcher
                     Console.Write("remoteGameVersion: ");
                     Console.Write(remoteVersion);
                     File.Create(String.Format(@"{0}\.gameNeedsUpdate", Config.GetLocalDir()));
-                }
 
-                if (File.Exists(String.Format(@"{0}\.gameNeedsUpdate", Config.GetLocalDir())))
+                    //if the game update is aborted, we'll still have a local update ping. This needs to be improved.
+                    if (File.Exists(String.Format(@"{0}\.gameNeedsUpdate", Config.GetLocalDir())))
+                    {
+                        bGameNeedsUpdate = true;
+                    }
+
+                    UpdateMainWindow();
+                }
+                else
                 {
-                    bGameNeedsUpdate = true;
-                }
-                Console.Write("localVersion: ");
-                Console.WriteLine(localVersion);
+                    bGameNeedsUpdate = false;
+                    Console.Write("localGameVersion: ");
+                    Console.WriteLine(localVersion);
 
-                Console.Write("remoteVersion: ");
-                Console.WriteLine(remoteVersion);
-                UpdateMainWindow();
+                    Console.Write("remoteGameVersion: ");
+                    Console.WriteLine(remoteVersion);
+
+                    UpdateMainWindow();
+                }
             }
             catch (Exception ex)
             {
@@ -290,41 +281,81 @@ namespace Launchpad_Launcher
 
         private void DoGameIsInstalledCheck()
         {
-            if (File.Exists(String.Format(@"{0}\game\{1}\Saved\Config\WindowsNoEditor\Scalability.ini", Config.GetLocalDir(), Config.GetGameName())))
+            if (File.Exists(String.Format(@"{0}\.installComplete", Config.GetGamePath())))
             {
-                bGameIsProbablyInstalled = true;
-                bInstallCompleted = true;
+                bGameIsInstalled = true;
 
                 UpdateMainWindow();
             }
             else
             {
-                bGameIsProbablyInstalled = false;
-                bInstallCompleted = true;
+                bGameIsInstalled = false;
 
                 UpdateMainWindow();
             }
         }
 
         private void UpdateMainWindow()
-        {                     
-            if (bLauncherNeedsUpdate)
+        {        
+            if (bLauncherVersionCheckFailed == true)
             {
-                mainPanel_mainButton.Text = "Update Launcher";
+                warning_label.ForeColor = Color.Red;
+                warning_label.Text = "Could not get launcher version from server";
+
+                progress_label.Text = "Idle";
+
+                progress_label.Refresh();
+                warning_label.Refresh();
+            } 
+            else if (bLauncherNeedsUpdate == true)
+            {
+
+                warning_label.ForeColor = Color.Red;
+                warning_label.Text = "Launcher update required";
+
+                mainPanel_mainButton.Text = "Update Launcher";                
+
                 mainPanel_mainButton.Refresh();
+                warning_label.Refresh();
             }
-            else if (bGameIsProbablyInstalled == false || bInstallCompleted == false)
+            else if (bManifestDownloadFailed == true)
             {
+                progress_label.Text = "Launcher version is OK";
+                progress_label.Refresh();
+
+                warning_label.ForeColor = Color.Red;
+                warning_label.Text = "Manifest download failed!";
+                warning_label.Refresh();
+            }
+            else if (bGameIsInstalled == false || bInstallCompleted == false)
+            {
+                progress_label.Text = "Launcher version is OK";
+                progress_label.Refresh();
+
                 mainPanel_mainButton.Text = "Install";
                 mainPanel_mainButton.Refresh();
             }
+            else if (bInstallCompleted == true)
+            {
+                progress_label.Text = "Launcher version is OK";
+                progress_label.Refresh();
+
+                progress_label.ForeColor = Color.ForestGreen;
+                progress_label.Text = "Game install finished!";
+            }
             else if (bGameNeedsUpdate)
             {
+                progress_label.Text = "Launcher version is OK";
+                progress_label.Refresh();
+
                 mainPanel_mainButton.Text = "Update Game";
                 mainPanel_mainButton.Refresh();
             }
             else
             {
+                progress_label.Text = "Launcher version is OK";
+                progress_label.Refresh();
+
                 mainPanel_mainButton.Text = "Play";
                 mainPanel_mainButton.Refresh();
             }
@@ -346,12 +377,22 @@ namespace Launchpad_Launcher
         
         private void DoLauncherUpdate()
         {
-            FTP.DownloadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), Config.GetLauncherURL(), String.Format(@"{0}\Launchpad.exe", Config.GetTempDir()));
+            if (Config.GetDoOfficialUpdates() == true)
+            {
+                //the client wants updates from Launchpad
+                FTP.DownloadFTPFile("anonymous", "anonymous", "ftp://directorate.asuscomm.com/launcher/bin/Launchpad.exe", String.Format(@"{0}\Launchpad.exe", Config.GetTempDir()));
+            }
+            else
+            {
+                //you've forked the launcher and want to update it yourself
+                FTP.DownloadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), Config.GetLauncherURL(), String.Format(@"{0}\Launchpad.exe", Config.GetTempDir()));
+            }
+            
 
             FileStream updateScript = File.Create(String.Format(@"{0}\update.bat", Config.GetLocalDir()));
 
             TextWriter tw = new StreamWriter(updateScript);
-            tw.WriteLine(String.Format(@"timeout 3 & xcopy /s /y ""{0}Launchpad.exe"" ""{1}\Launchpad.exe"" && del ""{0}Launchpad.exe""", Config.GetTempDir(), Config.GetLocalDir()));
+            tw.WriteLine(String.Format(@"timeout 3 & xcopy /s /y ""{0}\Launchpad.exe"" ""{1}\Launchpad.exe"" && del ""{0}\Launchpad.exe""", Config.GetTempDir(), Config.GetLocalDir()));
             tw.WriteLine(String.Format(@"start Launchpad.exe"));
             tw.Close();
 
@@ -373,7 +414,7 @@ namespace Launchpad_Launcher
             {
                 DoLauncherUpdate();
             }
-            else if (bGameIsProbablyInstalled == false)
+            else if (bGameIsInstalled == false)
             {
                 //run the game installation in the background
                 backgroundWorker_GameInstall.RunWorkerAsync();
@@ -488,8 +529,7 @@ namespace Launchpad_Launcher
         {
             bInstallCompleted = true;
 
-            progress_label.ForeColor = Color.ForestGreen;
-            progress_label.Text = "Game install finished!";
+            File.Create(String.Format(@"{0}\.installComplete", Config.GetGamePath()));            
 
             UpdateMainWindow();
         }
@@ -595,7 +635,10 @@ namespace Launchpad_Launcher
         private void verifyInstallation_button_Click(object sender, EventArgs e)
         {
             //verifying is basically the same as updating. Check all files, download replacements, etc
-            backgroundWorker_GameUpdate.RunWorkerAsync();
+            if (bGameIsInstalled == true)
+            {
+                backgroundWorker_GameUpdate.RunWorkerAsync();
+            }          
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

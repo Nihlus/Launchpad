@@ -63,7 +63,7 @@
             // 
             // mainPanel_mainButton
             // 
-            this.mainPanel_mainButton.Location = new System.Drawing.Point(767, 460);
+            this.mainPanel_mainButton.Location = new System.Drawing.Point(768, 454);
             this.mainPanel_mainButton.Name = "mainPanel_mainButton";
             this.mainPanel_mainButton.Size = new System.Drawing.Size(105, 40);
             this.mainPanel_mainButton.TabIndex = 3;
@@ -73,7 +73,7 @@
             // 
             // exit_button
             // 
-            this.exit_button.Location = new System.Drawing.Point(817, 12);
+            this.exit_button.Location = new System.Drawing.Point(818, 12);
             this.exit_button.Name = "exit_button";
             this.exit_button.Size = new System.Drawing.Size(55, 23);
             this.exit_button.TabIndex = 4;
@@ -84,7 +84,7 @@
             // progress_label
             // 
             this.progress_label.AutoSize = true;
-            this.progress_label.Location = new System.Drawing.Point(12, 460);
+            this.progress_label.Location = new System.Drawing.Point(13, 460);
             this.progress_label.Name = "progress_label";
             this.progress_label.Size = new System.Drawing.Size(41, 13);
             this.progress_label.TabIndex = 5;
@@ -93,7 +93,7 @@
             // warning_label
             // 
             this.warning_label.AutoSize = true;
-            this.warning_label.Location = new System.Drawing.Point(12, 435);
+            this.warning_label.Location = new System.Drawing.Point(13, 434);
             this.warning_label.Name = "warning_label";
             this.warning_label.Size = new System.Drawing.Size(0, 13);
             this.warning_label.TabIndex = 6;
@@ -115,14 +115,14 @@
             // fileSizeProgress_label
             // 
             this.fileSizeProgress_label.AutoSize = true;
-            this.fileSizeProgress_label.Location = new System.Drawing.Point(12, 448);
+            this.fileSizeProgress_label.Location = new System.Drawing.Point(13, 447);
             this.fileSizeProgress_label.Name = "fileSizeProgress_label";
             this.fileSizeProgress_label.Size = new System.Drawing.Size(0, 13);
             this.fileSizeProgress_label.TabIndex = 7;
             // 
             // verifyInstallation_button
             // 
-            this.verifyInstallation_button.Location = new System.Drawing.Point(767, 425);
+            this.verifyInstallation_button.Location = new System.Drawing.Point(768, 425);
             this.verifyInstallation_button.Name = "verifyInstallation_button";
             this.verifyInstallation_button.Size = new System.Drawing.Size(105, 23);
             this.verifyInstallation_button.TabIndex = 9;
@@ -133,7 +133,7 @@
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(837, 38);
+            this.linkLabel1.Location = new System.Drawing.Point(838, 38);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(35, 13);
             this.linkLabel1.TabIndex = 10;
@@ -146,7 +146,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(884, 512);
+            this.ClientSize = new System.Drawing.Size(885, 512);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.verifyInstallation_button);
             this.Controls.Add(this.fileSizeProgress_label);

@@ -1,10 +1,11 @@
-F:\ProjectAzeroth\Launcher\src\Launchpad_Launcher\launchpad_Launcher\bin\Release\Launchpad_Launcher.exe.config
-F:\ProjectAzeroth\Launcher\src\Launchpad_Launcher\launchpad_Launcher\bin\Release\Launchpad_Launcher.exe
-F:\ProjectAzeroth\Launcher\src\Launchpad_Launcher\launchpad_Launcher\bin\Release\Launchpad_Launcher.pdb
 F:\ProjectAzeroth\Launcher\src\Launchpad_Launcher\launchpad_Launcher\bin\Release\INIFileParser.dll
 F:\ProjectAzeroth\Launcher\src\Launchpad_Launcher\launchpad_Launcher\bin\Release\INIFileParser.pdb
 F:\ProjectAzeroth\Launcher\src\Launchpad_Launcher\launchpad_Launcher\obj\Release\Launchpad_Launcher.Form1.resources
 F:\ProjectAzeroth\Launcher\src\Launchpad_Launcher\launchpad_Launcher\obj\Release\Launchpad_Launcher.Properties.Resources.resources
 F:\ProjectAzeroth\Launcher\src\Launchpad_Launcher\launchpad_Launcher\obj\Release\launchpad_Launcher.csproj.GenerateResource.Cache
-F:\ProjectAzeroth\Launcher\src\Launchpad_Launcher\launchpad_Launcher\obj\Release\Launchpad_Launcher.exe
-F:\ProjectAzeroth\Launcher\src\Launchpad_Launcher\launchpad_Launcher\obj\Release\Launchpad_Launcher.pdb
+F:\ProjectAzeroth\Launcher\src\Launchpad_Launcher\launchpad_Launcher\bin\Release\Launchpad.exe.config
+F:\ProjectAzeroth\Launcher\src\Launchpad_Launcher\launchpad_Launcher\bin\Release\Launchpad.exe
+F:\ProjectAzeroth\Launcher\src\Launchpad_Launcher\launchpad_Launcher\bin\Release\Launchpad.pdb
+F:\ProjectAzeroth\Launcher\src\Launchpad_Launcher\launchpad_Launcher\obj\Release\Launchpad_Launcher.AboutBox1.resources
+F:\ProjectAzeroth\Launcher\src\Launchpad_Launcher\launchpad_Launcher\obj\Release\Launchpad.exe
+F:\ProjectAzeroth\Launcher\src\Launchpad_Launcher\launchpad_Launcher\obj\Release\Launchpad.pdb
