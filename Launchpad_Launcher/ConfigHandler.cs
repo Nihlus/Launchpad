@@ -21,7 +21,7 @@ namespace Launchpad_Launcher
             string configPath = String.Format(@"{0}\config\launcherConfig.ini", GetLocalDir());
 
             //release 0.0.
-            string defaultLauncherVersion = "0.0.2";
+            string defaultLauncherVersion = "0.0.3";
 
             if (!Directory.Exists(configDir))
             {

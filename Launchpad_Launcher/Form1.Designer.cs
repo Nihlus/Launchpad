@@ -31,8 +31,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.mainPanel_progressBar = new System.Windows.Forms.ProgressBar();
-            this.mainPanel_mainButton = new System.Windows.Forms.Button();
-            this.exit_button = new System.Windows.Forms.Button();
             this.progress_label = new System.Windows.Forms.Label();
             this.warning_label = new System.Windows.Forms.Label();
             this.backgroundWorker_GameInstall = new System.ComponentModel.BackgroundWorker();
@@ -46,11 +44,11 @@
             // 
             // webBrowser1
             // 
-            this.webBrowser1.Location = new System.Drawing.Point(13, 13);
+            this.webBrowser1.Location = new System.Drawing.Point(18, 18);
             this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser1.Name = "webBrowser1";
             this.webBrowser1.ScrollBarsEnabled = false;
-            this.webBrowser1.Size = new System.Drawing.Size(400, 400);
+            this.webBrowser1.Size = new System.Drawing.Size(390, 400);
             this.webBrowser1.TabIndex = 0;
             this.webBrowser1.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.webBrowser1_DocumentCompleted);
             // 
@@ -61,29 +59,10 @@
             this.mainPanel_progressBar.Size = new System.Drawing.Size(400, 23);
             this.mainPanel_progressBar.TabIndex = 2;
             // 
-            // mainPanel_mainButton
-            // 
-            this.mainPanel_mainButton.Location = new System.Drawing.Point(768, 454);
-            this.mainPanel_mainButton.Name = "mainPanel_mainButton";
-            this.mainPanel_mainButton.Size = new System.Drawing.Size(105, 40);
-            this.mainPanel_mainButton.TabIndex = 3;
-            this.mainPanel_mainButton.Text = "Default";
-            this.mainPanel_mainButton.UseVisualStyleBackColor = true;
-            this.mainPanel_mainButton.Click += new System.EventHandler(this.mainPanel_mainButton_Click);
-            // 
-            // exit_button
-            // 
-            this.exit_button.Location = new System.Drawing.Point(818, 12);
-            this.exit_button.Name = "exit_button";
-            this.exit_button.Size = new System.Drawing.Size(55, 23);
-            this.exit_button.TabIndex = 4;
-            this.exit_button.Text = "Exit";
-            this.exit_button.UseVisualStyleBackColor = true;
-            this.exit_button.Click += new System.EventHandler(this.exit_button_Click);
-            // 
             // progress_label
             // 
             this.progress_label.AutoSize = true;
+            this.progress_label.BackColor = System.Drawing.Color.Transparent;
             this.progress_label.Location = new System.Drawing.Point(13, 460);
             this.progress_label.Name = "progress_label";
             this.progress_label.Size = new System.Drawing.Size(41, 13);
@@ -93,6 +72,7 @@
             // warning_label
             // 
             this.warning_label.AutoSize = true;
+            this.warning_label.BackColor = System.Drawing.Color.Transparent;
             this.warning_label.Location = new System.Drawing.Point(13, 434);
             this.warning_label.Name = "warning_label";
             this.warning_label.Size = new System.Drawing.Size(0, 13);
@@ -115,6 +95,7 @@
             // fileSizeProgress_label
             // 
             this.fileSizeProgress_label.AutoSize = true;
+            this.fileSizeProgress_label.BackColor = System.Drawing.Color.Transparent;
             this.fileSizeProgress_label.Location = new System.Drawing.Point(13, 447);
             this.fileSizeProgress_label.Name = "fileSizeProgress_label";
             this.fileSizeProgress_label.Size = new System.Drawing.Size(0, 13);
@@ -122,7 +103,7 @@
             // 
             // verifyInstallation_button
             // 
-            this.verifyInstallation_button.Location = new System.Drawing.Point(768, 425);
+            this.verifyInstallation_button.Location = new System.Drawing.Point(738, 431);
             this.verifyInstallation_button.Name = "verifyInstallation_button";
             this.verifyInstallation_button.Size = new System.Drawing.Size(105, 23);
             this.verifyInstallation_button.TabIndex = 9;
@@ -133,7 +114,8 @@
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(838, 38);
+            this.linkLabel1.BackColor = System.Drawing.Color.Transparent;
+            this.linkLabel1.Location = new System.Drawing.Point(414, 18);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(35, 13);
             this.linkLabel1.TabIndex = 10;
@@ -146,14 +128,13 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(885, 512);
+            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+            this.ClientSize = new System.Drawing.Size(855, 512);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.verifyInstallation_button);
             this.Controls.Add(this.fileSizeProgress_label);
             this.Controls.Add(this.warning_label);
             this.Controls.Add(this.progress_label);
-            this.Controls.Add(this.exit_button);
-            this.Controls.Add(this.mainPanel_mainButton);
             this.Controls.Add(this.mainPanel_progressBar);
             this.Controls.Add(this.webBrowser1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -172,8 +153,6 @@
 
         private System.Windows.Forms.WebBrowser webBrowser1;
         private System.Windows.Forms.ProgressBar mainPanel_progressBar;
-        private System.Windows.Forms.Button mainPanel_mainButton;
-        private System.Windows.Forms.Button exit_button;
         private System.Windows.Forms.Label progress_label;
         private System.Windows.Forms.Label warning_label;
         private System.ComponentModel.BackgroundWorker backgroundWorker_GameInstall;

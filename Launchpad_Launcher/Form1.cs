@@ -12,6 +12,8 @@ using System.IO;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using Launchpad_Launcher.Buttons;
+using System.Reflection;
 
 namespace Launchpad_Launcher
 {
@@ -27,6 +29,9 @@ namespace Launchpad_Launcher
 
         bool bInstallCompleted = false;
 
+        //get a reflection to this assembly
+        Assembly thisAssembly = Assembly.GetExecutingAssembly();
+
         //allow borderless window capture
         public const int WM_NCLBUTTONDOWN = 0xA1;
         public const int HT_CAPTION = 0x2;
@@ -41,9 +46,60 @@ namespace Launchpad_Launcher
         ConfigHandler Config = new ConfigHandler();
         FTPHandler FTP = new FTPHandler();
 
+        ImageButton mainButton = new ImageButton();
+        ImageButton exitButton = new ImageButton();
+        ImageButton minimizeButton = new ImageButton();
+
+
         public Form1()
         {
-            InitializeComponent();                        
+            InitializeComponent();
+            
+            mainButton.Parent = this;
+            mainButton.Bounds = new Rectangle(738, 460, 105, 40);
+            mainButton.ForeColor = Color.White;
+            mainButton.Click += new EventHandler(mainButton_Click);
+
+            exitButton.Parent = this;
+            exitButton.Bounds = new Rectangle(815, 8, 24, 24);
+            exitButton.ForeColor = Color.White;
+            exitButton.Text = "X";
+
+            //background image
+            Stream exitBackground = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Mini_Default.png");
+            exitButton.BackgroundImage = new Bitmap(Image.FromStream(exitBackground), new Size(24, 24));
+
+            //hover image
+            Stream exitHover = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Mini_Hover.png");
+            exitButton.HoverImage = new Bitmap(Image.FromStream(exitHover), new Size(24, 24));
+
+            //pressed image
+            Stream exitPressed = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Mini_Pressed.png");
+            exitButton.PressedImage = new Bitmap(Image.FromStream(exitPressed), new Size(24, 24));
+
+            exitButton.Click += new EventHandler(exitbutton_Click);
+
+
+            minimizeButton.Parent = this;
+            minimizeButton.Bounds = new Rectangle(788, 8, 24, 24);
+            minimizeButton.ForeColor = Color.White;
+            minimizeButton.Text = "_";
+
+            //background image
+            Stream miniBackground = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Mini_Default.png");
+            minimizeButton.BackgroundImage = new Bitmap(Image.FromStream(miniBackground), new Size(24, 24));
+
+            //hover image
+            Stream miniHover = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Mini_Hover.png");
+            minimizeButton.HoverImage = new Bitmap(Image.FromStream(miniHover), new Size(24, 24));
+
+            //pressed image
+            Stream miniPressed = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Mini_Pressed.png");
+            minimizeButton.PressedImage = new Bitmap(Image.FromStream(miniPressed), new Size(24, 24));
+
+            minimizeButton.Click += new EventHandler(minimizeButton_Click);
+
+            UpdateMainWindow();            
         }
 
         private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
@@ -313,9 +369,19 @@ namespace Launchpad_Launcher
                 warning_label.ForeColor = Color.Red;
                 warning_label.Text = "Launcher update required";
 
-                mainPanel_mainButton.Text = "Update Launcher";                
+                //update button
+                //background image
+                Stream background = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Update_Default.png");
+                mainButton.BackgroundImage = new Bitmap(Image.FromStream(background), new Size(105, 40));
 
-                mainPanel_mainButton.Refresh();
+                //hover image
+                Stream hover = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Update_Hover.png");
+                mainButton.HoverImage = new Bitmap(Image.FromStream(hover), new Size(105, 40));
+
+                //pressed image
+                Stream pressed = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Update_Pressed.png");
+                mainButton.PressedImage = new Bitmap(Image.FromStream(pressed), new Size(105, 40));
+
                 warning_label.Refresh();
             }
             else if (bManifestDownloadFailed == true)
@@ -327,13 +393,23 @@ namespace Launchpad_Launcher
                 warning_label.Text = "Manifest download failed!";
                 warning_label.Refresh();
             }
-            else if (bGameIsInstalled == false || bInstallCompleted == false)
+            else if (bGameIsInstalled == false)
             {
                 progress_label.Text = "Launcher version is OK";
                 progress_label.Refresh();
 
-                mainPanel_mainButton.Text = "Install";
-                mainPanel_mainButton.Refresh();
+                //install button
+                //background image
+                Stream background = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Install_Default.png");
+                mainButton.BackgroundImage = new Bitmap(Image.FromStream(background), new Size(105, 40));
+
+                //hover image
+                Stream hover = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Install_Hover.png");
+                mainButton.HoverImage = new Bitmap(Image.FromStream(hover), new Size(105, 40));
+
+                //pressed image
+                Stream pressed = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Install_Pressed.png");
+                mainButton.PressedImage = new Bitmap(Image.FromStream(pressed), new Size(105, 40));
             }
             else if (bInstallCompleted == true)
             {
@@ -348,20 +424,40 @@ namespace Launchpad_Launcher
                 progress_label.Text = "Launcher version is OK";
                 progress_label.Refresh();
 
-                mainPanel_mainButton.Text = "Update Game";
-                mainPanel_mainButton.Refresh();
+                //update button
+                //background image
+                Stream background = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Update_Default.png");
+                mainButton.BackgroundImage = new Bitmap(Image.FromStream(background), new Size(105, 40));
+
+                //hover image
+                Stream hover = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Update_Hover.png");
+                mainButton.HoverImage = new Bitmap(Image.FromStream(hover), new Size(105, 40));
+
+                //pressed image
+                Stream pressed = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Update_Pressed.png");
+                mainButton.PressedImage = new Bitmap(Image.FromStream(pressed), new Size(105, 40));
             }
             else
             {
                 progress_label.Text = "Launcher version is OK";
                 progress_label.Refresh();
 
-                mainPanel_mainButton.Text = "Play";
-                mainPanel_mainButton.Refresh();
+                //play button
+                //background image
+                Stream background = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Play_Default.png");
+                mainButton.BackgroundImage = new Bitmap(Image.FromStream(background), new Size(105, 40));
+
+                //hover image
+                Stream hover = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Play_Hover.png");
+                mainButton.HoverImage = new Bitmap(Image.FromStream(hover), new Size(105, 40));
+
+                //pressed image
+                Stream pressed = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Play_Pressed.png");
+                mainButton.PressedImage = new Bitmap(Image.FromStream(pressed), new Size(105, 40));
             }
         }                      
 
-        private void exit_button_Click(object sender, EventArgs e)
+        private void exitbutton_Click(object sender, EventArgs e)
         {
             Environment.Exit(0);
         }
@@ -408,7 +504,7 @@ namespace Launchpad_Launcher
             Environment.Exit(0); 
         }
 
-        private void mainPanel_mainButton_Click(object sender, EventArgs e)
+        private void mainButton_Click(object sender, EventArgs e)
         {
             if (bLauncherNeedsUpdate)
             {
@@ -645,6 +741,11 @@ namespace Launchpad_Launcher
         {
             AboutBox1 a = new AboutBox1();
             a.Show();
+        }
+
+        private void minimizeButton_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
         }
     }
 }
