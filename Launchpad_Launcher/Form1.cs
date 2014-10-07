@@ -18,7 +18,7 @@ using System.Reflection;
 namespace Launchpad_Launcher
 {
     public partial class Form1 : Form
-    {
+    {        
         bool bManifestDownloadFailed = false;
 
         bool bLauncherVersionCheckFailed = false;
@@ -166,7 +166,9 @@ namespace Launchpad_Launcher
         {
             try
             {
-                string remoteLauncherVersion = FTP.ReadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), String.Format("{0}/launcher/launcherVersion.txt", Config.GetFTPUrl())).Replace("\0", string.Empty);
+                Version remoteLauncherVersion = new Version(FTP.ReadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), String.Format("{0}/launcher/launcherVersion.txt", Config.GetFTPUrl())).Replace("\0", string.Empty));
+                Version localLauncherVersion = new Version(Config.GetLauncherVersion());
+                 
 
                 progress_label.Text = "Checking launcher version...";
                 progress_label.Refresh();
@@ -182,7 +184,7 @@ namespace Launchpad_Launcher
 
                     UpdateMainWindow();
                 }
-                else if (remoteLauncherVersion == Config.GetLauncherVersion())
+                else if (remoteLauncherVersion == localLauncherVersion)
                 {
                     //launcher does not need to be updated
                     bLauncherNeedsUpdate = false;
