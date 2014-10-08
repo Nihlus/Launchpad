@@ -219,14 +219,25 @@ namespace Launchpad_Launcher
                 {
                     Console.WriteLine("Running game process.");
 
-                    ProcessStartInfo gameProcess = new ProcessStartInfo();
+                    string pathToExecutable = Config.GetGameExecutable();
 
-                    gameProcess.FileName = Config.GetGameExecutable();
-                    gameProcess.UseShellExecute = true;
-                    Process.Start(gameProcess);
+                    if (File.Exists(pathToExecutable))
+                    {
+                        ProcessStartInfo gameProcess = new ProcessStartInfo();
 
-                    //close launcher when we launch the game
-                    Environment.Exit(0);
+                        gameProcess.FileName = Config.GetGameExecutable();
+                        gameProcess.UseShellExecute = true;
+                        Process.Start(gameProcess);
+
+                        //close launcher when we launch the game
+                        Environment.Exit(0);
+                    }
+                    else
+                    {
+                        string errorMessage = String.Format("Executable path not found: {0}", pathToExecutable);
+                        Console.WriteLine(errorMessage);
+                        MessageBox.Show(errorMessage);
+                    }
                 }
             }
             else
