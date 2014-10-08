@@ -186,6 +186,9 @@ namespace Launchpad_Launcher
                     gameProcess.FileName = Config.GetGameExecutable();
                     gameProcess.UseShellExecute = true;
                     Process.Start(gameProcess);
+
+                    //close launcher when we launch the game
+                    Environment.Exit(0);
                 }
             }
             else
