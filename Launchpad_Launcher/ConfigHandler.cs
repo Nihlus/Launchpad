@@ -251,8 +251,14 @@ namespace Launchpad_Launcher
                 IniData data = Parser.ReadFile(GetConfigPath());
 
                 string FTPUrl = data["Remote"]["FTPUrl"];
+                string FTPAuthUrl = FTPUrl.Substring(0, 6); // Gets ftp://
+                FTPAuthUrl += data["Remote"]["FTPUsername"]; // Add the username
+                FTPAuthUrl += ":";
+                FTPAuthUrl += data["Remote"]["FTPPassword"]; // Add the password
+                FTPAuthUrl += "@";
+                FTPAuthUrl += FTPUrl.Substring(6);
 
-                return FTPUrl;
+                return FTPAuthUrl;
             }
             catch (Exception ex)
             {

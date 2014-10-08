@@ -39,7 +39,9 @@ namespace Launchpad_Launcher
         [DllImportAttribute("user32.dll")]
         public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
         [DllImportAttribute("user32.dll")]
-        public static extern bool ReleaseCapture();        
+        public static extern bool ReleaseCapture();
+        [DllImport("wininet.dll", SetLastError = true)]
+        private static extern long DeleteUrlCacheEntry(string lpszUrlName);
 
         //set up Handler references
         MD5Handler md5 = new MD5Handler();
@@ -109,6 +111,7 @@ namespace Launchpad_Launcher
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            DeleteUrlCacheEntry(Config.GetChangelogURL());
             webBrowser1.Navigate(Config.GetChangelogURL());            
         }
 
