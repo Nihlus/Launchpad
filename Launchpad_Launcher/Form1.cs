@@ -472,7 +472,8 @@ namespace Launchpad_Launcher
                     FTP.DownloadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), Config.GetManifestURL(), Config.GetManifestPath());
 
                     //create .gameNeedsUpdate file to signal that game needs update between launches of the application
-                    File.Create(String.Format(@"{0}\.gameNeedsUpdate", Config.GetLocalDir()));
+                    FileStream fs = File.Create(String.Format(@"{0}\.gameNeedsUpdate", Config.GetLocalDir()));
+                    fs.Close();//important that we close this file stream otherwise we will not be able to delete .gameNeedsUpdate after we update
 
                     bGameNeedsUpdate = true;
                 }
@@ -552,7 +553,8 @@ namespace Launchpad_Launcher
                     bGameNeedsUpdate = true;
 
                     //if the game update is aborted, we'll still have a local update ping. This needs to be improved.
-                    File.Create(String.Format(@"{0}\.gameNeedsUpdate", Config.GetLocalDir()));
+                    FileStream fs = File.Create(String.Format(@"{0}\.gameNeedsUpdate", Config.GetLocalDir()));
+                    fs.Close(); //important that we close this file stream otherwise we will not be able to delete .gameNeedsUpdate after we update
 
                     Console.WriteLine("Local game version needs to be updated from {0} to {1}", LocalVersionObject, RemoteVersionObject);
                 }
@@ -688,7 +690,7 @@ namespace Launchpad_Launcher
             {
                 Console.WriteLine("bGameNeedsUpdate");
 
-                progress_label.Text = "Launcher version is OK";
+                progress_label.Text = "Launcher version is OK. Game needs update.";
                 progress_label.Refresh();
             }
             else
@@ -704,7 +706,7 @@ namespace Launchpad_Launcher
                 //now that we are installed verify button should be Enabled so long as we are not currently updating or installing
                 verifyInstallation_button.Enabled = (!bIsInstallingGame && !bIsUpdatingGame);
 
-                if (bInstallCompleted)
+                if (bInstallCompleted && !bGameNeedsUpdate)
                 {
                     ShowPlayButton();
                 }
@@ -1130,7 +1132,15 @@ namespace Launchpad_Launcher
 
             if (File.Exists(String.Format(@"{0}\.gameNeedsUpdate", Config.GetLocalDir())))
             {
-                File.Delete(String.Format(@"{0}\.gameNeedsUpdate", Config.GetLocalDir()));
+                try
+                {
+                    File.Delete(String.Format(@"{0}\.gameNeedsUpdate", Config.GetLocalDir()));
+                    Console.WriteLine("Succesfully deleted .gameNeedsUpdate");
+                }
+                catch(IOException ioEx)
+                {
+                    Console.WriteLine("Failed to delete .gameNeedsUpdate after succesfull update: {0}", ioEx);
+                }
             }
 
             bInstallCompleted = true;
