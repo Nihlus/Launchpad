@@ -996,7 +996,7 @@ namespace Launchpad_Launcher
 
                 try
                 {
-                    File.Create(installCompleteFilePath);
+                    File.Create(installCompleteFilePath).Close();
                     bGameIsInstalled = true;
                 }
                 catch (System.IO.IOException ex)
