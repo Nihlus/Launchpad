@@ -703,8 +703,8 @@ namespace Launchpad_Launcher
 
             if (bGameIsInstalled)
             {
-                //now that we are installed verify button should be Enabled so long as we are not currently updating or installing
-                verifyInstallation_button.Enabled = (!bIsInstallingGame && !bIsUpdatingGame);
+                //now that we are installed verify button should be Enabled so long as we are not currently updating or installing and game does not need an update
+                verifyInstallation_button.Enabled = (!bIsInstallingGame && !bIsUpdatingGame && !bGameNeedsUpdate);
 
                 if (bInstallCompleted && !bGameNeedsUpdate)
                 {
