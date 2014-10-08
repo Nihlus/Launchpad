@@ -14,7 +14,7 @@ namespace Launchpad_Launcher
     {
         //constructor
         public ConfigHandler()
-        {            
+        {
             FileIniDataParser Parser = new FileIniDataParser();
 
             string configDir = String.Format(@"{0}\config", GetLocalDir());
@@ -58,9 +58,9 @@ namespace Launchpad_Launcher
                 {
                     Console.WriteLine(ex.StackTrace);
                 }
-                
+
             }
-            else 
+            else
             {
                 IniData data = Parser.ReadFile(configPath);
                 data["Local"]["launcherVersion"] = defaultLauncherVersion;
