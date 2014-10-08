@@ -1018,10 +1018,6 @@ namespace Launchpad_Launcher
             Console.WriteLine("backgroundWorker_GameUpdate_DoWork()");
 
             string[] manifestFilesArray = File.ReadAllLines(Config.GetManifestPath());
-            if (manifestFilesArray.Length == 0)
-            {
-                DialogResult result = MessageBox.Show("Could not connect to server! Unable to verify.", "IOException", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
             bool GameUpdateCompletedSuccessfully = true;
             int i = 0;
             int manifestFilesArrayLength = manifestFilesArray.Length;
