@@ -582,7 +582,7 @@ namespace Launchpad_Launcher
 
         private string GetCurrentGameVersion()
         {
-            string currentGameVersion = "no version found";
+            string currentGameVersion = null;
             string gameVersionTxtPath = String.Format(@"{0}\gameVersion.txt", Config.GetGamePath());
 
             if (File.Exists(gameVersionTxtPath))
@@ -601,7 +601,7 @@ namespace Launchpad_Launcher
                 Console.WriteLine("gameVersion.txt does not exist at path: {0}", gameVersionTxtPath);
             }
 
-            return new System.Version(currentGameVersion).ToString();
+            return currentGameVersion != null ? new System.Version(currentGameVersion).ToString() : "no version";
         }
 
         private void UpdateMainWindow()
@@ -733,6 +733,8 @@ namespace Launchpad_Launcher
             //pressed image
             Stream pressed = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Install_Pressed.png");
             mainButton.PressedImage = new Bitmap(Image.FromStream(pressed), new Size(105, 40));
+
+            mainButton.Refresh();
         }
 
         private void ShowUpdateButton()
@@ -749,6 +751,8 @@ namespace Launchpad_Launcher
             //pressed image
             Stream pressed = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Update_Pressed.png");
             mainButton.PressedImage = new Bitmap(Image.FromStream(pressed), new Size(105, 40));
+
+            mainButton.Refresh();
         }
 
         private void ShowPlayButton()
@@ -765,6 +769,8 @@ namespace Launchpad_Launcher
             //pressed image
             Stream pressed = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Play_Pressed.png");
             mainButton.PressedImage = new Bitmap(Image.FromStream(pressed), new Size(105, 40));
+
+            mainButton.Refresh();
         }
 
         private void exitbutton_Click(object sender, EventArgs e)
