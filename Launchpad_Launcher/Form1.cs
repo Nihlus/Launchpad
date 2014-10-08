@@ -1022,11 +1022,20 @@ namespace Launchpad_Launcher
             int i = 0;
             int manifestFilesArrayLength = manifestFilesArray.Length;
 
+            //throttle the amount of progress reports we create in the event that the user
+            //has all of the files already locally
+            long lastProgressReportTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+            long millisecondsBetweenProgressReports = 10;
+
             foreach (string value in manifestFilesArray)
             {
+                long timeInMilliseconds = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+                long timeSinceLastReport = timeInMilliseconds - lastProgressReportTime;
+
                 int progress = i;
 
                 //Console.WriteLine("Progress: {0}", progress);
+
                 //read the value from the manifest as an array with split values (path, MD5 and size)
                 string[] manifestFile = value.Split(':');
 
@@ -1048,7 +1057,12 @@ namespace Launchpad_Launcher
                         //Console.WriteLine("GameUpdateWorker - FileUpdate: ");
                         //Console.WriteLine(localPath);
                         i++;
-                        backgroundWorker_GameUpdate.ReportProgress(progress, new Tuple<string, int>(manifestFile[0], manifestFilesArray.Length));
+
+                        if (timeSinceLastReport > millisecondsBetweenProgressReports)
+                        {
+                            lastProgressReportTime = timeInMilliseconds;
+                            backgroundWorker_GameUpdate.ReportProgress(progress, new Tuple<string, int>(manifestFile[0], manifestFilesArray.Length));
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -1074,7 +1088,11 @@ namespace Launchpad_Launcher
                                 Console.WriteLine("GameUpdateWorker - MD5Update: {0}", localPath);
                                 localFile.Close();
                                 i++;
-                                backgroundWorker_GameUpdate.ReportProgress(progress, new Tuple<string, int>(manifestFile[0], manifestFilesArray.Length));
+                                if (timeSinceLastReport > millisecondsBetweenProgressReports)
+                                {
+                                    lastProgressReportTime = timeInMilliseconds;
+                                    backgroundWorker_GameUpdate.ReportProgress(progress, new Tuple<string, int>(manifestFile[0], manifestFilesArray.Length));
+                                }
                             }
                             catch (IOException ioEx)
                             {
@@ -1089,7 +1107,12 @@ namespace Launchpad_Launcher
                             //Console.WriteLine("GameUpdateWorker - AllOK: {0}", filePath);
                             localFile.Close();
                             i++;
-                            backgroundWorker_GameUpdate.ReportProgress(progress, new Tuple<string, int>(manifestFile[0], manifestFilesArray.Length));
+                            if (timeSinceLastReport > millisecondsBetweenProgressReports)
+                            {
+                                //Console.WriteLine("timeSinceLastReport: {0}", timeSinceLastReport);
+                                lastProgressReportTime = timeInMilliseconds;
+                                backgroundWorker_GameUpdate.ReportProgress(progress, new Tuple<string, int>(manifestFile[0], manifestFilesArray.Length));
+                            }
                         }
                     }
                     catch (Exception ex)
@@ -1123,6 +1146,9 @@ namespace Launchpad_Launcher
 
         private void backgroundWorker_GameUpdate_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            mainPanel_progressBar.Maximum = 100;
+            mainPanel_progressBar.Value = 100;
+
             progress_label.ForeColor = Color.ForestGreen;
             progress_label.Text = "Game update finished!";
 
