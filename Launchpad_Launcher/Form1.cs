@@ -106,6 +106,12 @@ namespace Launchpad_Launcher
 
             minimizeButton.Click += new EventHandler(minimizeButton_Click);
 
+            //Setup background image
+            if (File.Exists("launcherBackground.png"))
+            {
+                this.BackgroundImage = new Bitmap(Image.FromFile("launcherBackground.png"));
+            }
+
             //Update main window based on our initial state
             UpdateMainWindow();
         }
