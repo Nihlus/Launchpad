@@ -124,6 +124,7 @@ namespace Launchpad_Launcher
         private void Form1_Load(object sender, EventArgs e)
         {
             LoadChangelog();
+            LoadBackgroundImage();
         }
 
         private void Form1_Shown(object sender, EventArgs e)
@@ -157,6 +158,37 @@ namespace Launchpad_Launcher
             DeleteUrlCacheEntry(changelogURL); //if we do not clear cache old changelogs will still show
             webBrowser1.Navigate(changelogURL);
             */
+        }
+
+        private void LoadBackgroundImage()
+        {
+            Console.WriteLine("\nLoadBackgroundImage()");
+
+            string backgroundImageURL = String.Format("{0}/launcher/launcherBackground.png", Config.GetFTPUrl());
+
+            WebClient request = new WebClient();
+            request.Credentials = new NetworkCredential(Config.GetFTPUsername(), Config.GetFTPPassword());
+
+            try
+            {
+                byte[] bitmapData = request.DownloadData(backgroundImageURL);
+                ImageConverter ic = new ImageConverter();
+                Image img = (Image)ic.ConvertFrom(bitmapData);
+                Bitmap bitmap = new Bitmap(img);
+                if(bitmap != null)
+                {
+                    this.BackgroundImage = bitmap;
+                    //most likely our progress and link labels text will not be readable over the background image
+                    progress_label.BackColor = Color.White;
+                    linkLabel1.BackColor = Color.White;
+                }
+            }
+            catch (WebException ex)
+            {
+                Console.WriteLine("Failed to find backgroundImage.png at {0}", backgroundImageURL);
+            }
+
+            request.Dispose();
         }
 
         private void mainButton_Click(object sender, EventArgs e)
