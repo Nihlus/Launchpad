@@ -18,7 +18,9 @@ using System.Reflection;
 namespace Launchpad_Launcher
 {
     public partial class Form1 : Form
-    {        
+    {
+        bool bCanConnectToFTP = true;//assume we can connect until we cannot
+
         bool bManifestDownloadFailed = false;
 
         bool bLauncherVersionCheckFailed = false;
@@ -27,7 +29,14 @@ namespace Launchpad_Launcher
         bool bGameNeedsUpdate = false;
         bool bGameIsInstalled = false;
 
+        bool bIsInstallingGame = false;
+        bool bDidAttemptInstall = false;
         bool bInstallCompleted = false;
+
+        bool bIsUpdatingGame = false;
+        bool bUpdateCompleted = false;
+
+        bool bShouldBeginAutoInstall = false;
 
         //get a reflection to this assembly
         Assembly thisAssembly = Assembly.GetExecutingAssembly();
@@ -40,8 +49,9 @@ namespace Launchpad_Launcher
         public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
         [DllImportAttribute("user32.dll")]
         public static extern bool ReleaseCapture();
+        /*
         [DllImport("wininet.dll", SetLastError = true)]
-        private static extern long DeleteUrlCacheEntry(string lpszUrlName);
+        private static extern long DeleteUrlCacheEntry(string lpszUrlName);*/
 
         //set up Handler references
         MD5Handler md5 = new MD5Handler();
@@ -52,84 +62,289 @@ namespace Launchpad_Launcher
         ImageButton exitButton = new ImageButton();
         ImageButton minimizeButton = new ImageButton();
 
-
         public Form1()
         {
             InitializeComponent();
-            
+
+            //Setup main button
             mainButton.Parent = this;
             mainButton.Bounds = new Rectangle(738, 460, 105, 40);
             mainButton.ForeColor = Color.White;
             mainButton.Click += new EventHandler(mainButton_Click);
 
+            //Setup exit button
             exitButton.Parent = this;
             exitButton.Bounds = new Rectangle(815, 8, 24, 24);
             exitButton.ForeColor = Color.White;
             exitButton.Text = "X";
 
-            //background image
             Stream exitBackground = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Mini_Default.png");
             exitButton.BackgroundImage = new Bitmap(Image.FromStream(exitBackground), new Size(24, 24));
 
-            //hover image
             Stream exitHover = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Mini_Hover.png");
             exitButton.HoverImage = new Bitmap(Image.FromStream(exitHover), new Size(24, 24));
 
-            //pressed image
             Stream exitPressed = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Mini_Pressed.png");
             exitButton.PressedImage = new Bitmap(Image.FromStream(exitPressed), new Size(24, 24));
 
             exitButton.Click += new EventHandler(exitbutton_Click);
 
-
+            //Setup minimize button
             minimizeButton.Parent = this;
             minimizeButton.Bounds = new Rectangle(788, 8, 24, 24);
             minimizeButton.ForeColor = Color.White;
             minimizeButton.Text = "_";
 
-            //background image
             Stream miniBackground = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Mini_Default.png");
             minimizeButton.BackgroundImage = new Bitmap(Image.FromStream(miniBackground), new Size(24, 24));
 
-            //hover image
             Stream miniHover = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Mini_Hover.png");
             minimizeButton.HoverImage = new Bitmap(Image.FromStream(miniHover), new Size(24, 24));
 
-            //pressed image
             Stream miniPressed = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Mini_Pressed.png");
             minimizeButton.PressedImage = new Bitmap(Image.FromStream(miniPressed), new Size(24, 24));
 
             minimizeButton.Click += new EventHandler(minimizeButton_Click);
 
-            UpdateMainWindow();            
+            //Setup background image
+            if (File.Exists("launcherBackground.png"))
+            {
+                this.BackgroundImage = new Bitmap(Image.FromFile("launcherBackground.png"));
+            }
+
+            //Update main window based on our initial state
+            UpdateMainWindow();
         }
 
         private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
-            
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            DeleteUrlCacheEntry(Config.GetChangelogURL());
-            webBrowser1.Navigate(Config.GetChangelogURL());            
+            LoadChangelog();
+            LoadBackgroundImage();
         }
 
         private void Form1_Shown(object sender, EventArgs e)
         {
+            Console.WriteLine("\nForm1_Shown()");
+
+            PerformLauncherChecks();
+        }
+
+        private void LoadChangelog()
+        {
+            string changelogURL = Config.GetChangelogURL();
+
+            WebClient request = new WebClient();
+            request.Credentials = new NetworkCredential(Config.GetFTPUsername(), Config.GetFTPPassword());
+
+            try
+            {
+                byte[] newFileData = request.DownloadData(changelogURL);
+                string fileString = System.Text.Encoding.UTF8.GetString(newFileData);
+                webBrowser1.DocumentText = fileString;
+                webBrowser1.ScrollBarsEnabled = true;
+            }
+            catch (WebException ex)
+            {
+                webBrowser1.DocumentText = "Error: Could not load change log from server.";
+            }
+
+            request.Dispose();
+            /*
+            DeleteUrlCacheEntry(changelogURL); //if we do not clear cache old changelogs will still show
+            webBrowser1.Navigate(changelogURL);
+            */
+        }
+
+        private void LoadBackgroundImage()
+        {
+            Console.WriteLine("\nLoadBackgroundImage()");
+
+            string backgroundImageURL = String.Format("{0}/launcher/launcherBackground.png", Config.GetFTPUrl());
+
+            WebClient request = new WebClient();
+            request.Credentials = new NetworkCredential(Config.GetFTPUsername(), Config.GetFTPPassword());
+
+            try
+            {
+                byte[] bitmapData = request.DownloadData(backgroundImageURL);
+                ImageConverter ic = new ImageConverter();
+                Image img = (Image)ic.ConvertFrom(bitmapData);
+                Bitmap bitmap = new Bitmap(img);
+                if(bitmap != null)
+                {
+                    this.BackgroundImage = bitmap;
+                    //most likely our progress and link labels text will not be readable over the background image
+                    progress_label.BackColor = Color.White;
+                    linkLabel1.BackColor = Color.White;
+                }
+            }
+            catch (WebException ex)
+            {
+                Console.WriteLine("Failed to find backgroundImage.png at {0}", backgroundImageURL);
+            }
+
+            request.Dispose();
+        }
+
+        private void mainButton_Click(object sender, EventArgs e)
+        {
+            Console.WriteLine("mainButton_Click()");
+
+            if (bCanConnectToFTP)
+            {
+                if (bLauncherNeedsUpdate)
+                {
+                    Console.WriteLine("bLauncherNeedsUpdate");
+
+                    DoLauncherUpdate();
+                }
+                else if (bGameIsInstalled == false)
+                {
+                    Console.WriteLine("bGameIsInstalled == false");
+
+                    DoGameInstall();
+                }
+                else if (bGameNeedsUpdate)
+                {
+                    Console.WriteLine("bGameNeedsUpdate");
+
+                    DoGameUpdate();
+                }
+                else
+                {
+                    Console.WriteLine("Running game process.");
+
+                    string pathToExecutable = Config.GetGameExecutable();
+
+                    if (File.Exists(pathToExecutable))
+                    {
+                        ProcessStartInfo gameProcess = new ProcessStartInfo();
+
+                        gameProcess.FileName = Config.GetGameExecutable();
+                        gameProcess.UseShellExecute = true;
+                        Process.Start(gameProcess);
+
+                        //close launcher when we launch the game
+                        Environment.Exit(0);
+                    }
+                    else
+                    {
+                        string errorMessage = String.Format("Executable path not found: {0}", pathToExecutable);
+                        Console.WriteLine(errorMessage);
+                        MessageBox.Show(errorMessage);
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Unable to connect to server.");
+
+                PerformLauncherChecks();
+            }
+        }
+
+        private void verifyInstallation_button_Click(object sender, EventArgs e)
+        {
+            if (!bCanConnectToFTP)
+            {
+                MessageBox.Show("Unable to connect to server.");
+                PerformLauncherChecks();
+                return;
+            }
+
+            //verifying is basically the same as updating. Check all files, download replacements, etc
+            if (bGameIsInstalled == true)
+            {
+                DoGameUpdate();
+            }
+            else
+            {
+                MessageBox.Show("Please install before verifying.");
+            }
+        }
+
+        private void PerformLauncherChecks()
+        {
+            Console.WriteLine("PerformLauncherChecks()");
+
+            //check if we can connect to the FTP where gameVersion/manifest/launcherVersion are held
+            DoCanConnectToFTPCheck();
+
+            //check if this is the first time we are launching and prompt user to verify installation path
             DoInitialSetupCheck();
+
+            //check that our launcher is up to date
             DoLauncherUpdateCheck();
 
-            //manifest is both checked and updated
+            //check that the manifest is up to date
             DoManifestUpdate();
 
+            //check that the game is installed
             DoGameIsInstalledCheck();
+
+            //check that the game is up to date
             DoGameUpdateCheck();
+
+            //check if game should begin auto installing
+            DoShouldBeginAutoInstallCheck();
+
+            //update UI
             UpdateMainWindow();
+        }
+
+        private bool DoCanConnectToFTPCheck()
+        {
+            Console.WriteLine("\nDoCanConnectToFTPCheck()");
+
+            string FTPURL = Config.GetFTPUrl();
+            string FTPUserName = Config.GetFTPUsername();
+            string FTPPassword = Config.GetFTPPassword();
+
+            try
+            {
+                FtpWebRequest requestDir = (FtpWebRequest)FtpWebRequest.Create(FTPURL);
+                requestDir.Credentials = new NetworkCredential(FTPUserName, FTPPassword);
+                requestDir.Method = WebRequestMethods.Ftp.ListDirectory;
+
+                try
+                {
+                    WebResponse response = requestDir.GetResponse();
+                    Console.WriteLine("Can connect to FTP at: {0} username: {1} password: {2}", FTPURL, FTPUserName, FTPPassword);
+                    requestDir.Abort();//important otherwise FTP remains open and further attemps to access it hang
+                    bCanConnectToFTP = true;
+
+                }
+                catch
+                {
+                    requestDir.Abort();
+                    bCanConnectToFTP = false;
+                }
+            }
+            catch
+            {
+                //case where ftp url in config is not valid
+                bCanConnectToFTP = false;
+            }
+
+            if (!bCanConnectToFTP)
+            {
+                Console.WriteLine("Failed to connect to FTP at: {0} username: {1} password: {2}", FTPURL, FTPUserName, FTPPassword);
+                bCanConnectToFTP = false;
+            }
+
+            return bCanConnectToFTP;
         }
 
         private void DoInitialSetupCheck()
         {
+            Console.WriteLine("\nDoInitialSetupCheck()");
+
+            //we use an empty file to determine if this is the first launch or not
             if (!File.Exists(Config.GetUpdateCookie()))
             {
                 //this is the first time we're launching
@@ -140,76 +355,89 @@ namespace Launchpad_Launcher
 
                 if (firstTimeSetup == DialogResult.Yes)
                 {
+                    Console.WriteLine("Performing initial setup");
+
+                    bShouldBeginAutoInstall = true;
+
                     try
                     {
+                        Console.WriteLine("Writing launcher version to update cookie");
                         //write the launcher version to the update cookie
                         TextWriter tw = new StreamWriter(Config.GetUpdateCookie());
 
                         tw.WriteLine(Config.GetLauncherVersion());
                         tw.Close();
-
-                        //relaunch update function
-                        UpdateMainWindow();
                     }
                     catch (Exception ex)
                     {
+                        Console.WriteLine("Failed to write launcher version to update cookie");
                         Console.WriteLine(ex.StackTrace);
                     }
-
                 }
                 else
                 {
                     Environment.Exit(0);
                 }
-
+            }
+            else
+            {
+                Console.WriteLine("Initial setup already complete.");
             }
         }
 
         private void DoLauncherUpdateCheck()
         {
+            Console.WriteLine("\nDoLauncherUpdateCheck()");
+
+            if (!bCanConnectToFTP)
+            {
+                Console.WriteLine("Launcher update failed: Unable to connect to FTP");
+                return;
+            }
+
             try
             {
-                Version remoteLauncherVersion = new Version(FTP.ReadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), String.Format("{0}/launcher/launcherVersion.txt", Config.GetFTPUrl())).Replace("\0", string.Empty));
-                Version localLauncherVersion = new Version(Config.GetLauncherVersion());
-                 
+                //get the latest launcher version from the FTP
+                string remoteLauncherVersionTXTURL = String.Format("{0}/launcher/launcherVersion.txt", Config.GetFTPUrl());
+                string FTPUsername = Config.GetFTPUsername();
+                string FTPPassword = Config.GetFTPPassword();
+                //Console.WriteLine("Attempting to ReadFTPFile: userName: {0}, pass:{1}, remoteLauncherVersionTXTURL: {2}", FTPUsername, FTPPassword, remoteLauncherVersionTXTURL);
+                string remoteLauncherVersion = FTP.ReadFTPFile(FTPUsername, FTPPassword, remoteLauncherVersionTXTURL).Replace("\0", string.Empty);
 
+                //get the current launcher version from file
+                string launcherVersion = Config.GetLauncherVersion();
+
+                //we create version objects to format the versions correctly to remove unnecessary spaces or new line characters that may exist
+                System.Version RemoteVersion = new System.Version(remoteLauncherVersion);
+                System.Version LauncherVersion = new System.Version(launcherVersion);
+
+                //update the progress label to let the user know what we are doing
                 progress_label.Text = "Checking launcher version...";
                 progress_label.Refresh();
 
-                if (Config.GetLauncherVersion() == "")
+                if (RemoteVersion.Equals(LauncherVersion))
                 {
-                    //this should never happen - if it did, something is SERIOUSLY wrong
-                    bLauncherVersionCheckFailed = true;
-                    Console.WriteLine("LauncherUpdateCheck: Local version is NULL!");
-                    warning_label.ForeColor = Color.Red;
-                    warning_label.Text = "Could not retrieve local launcher version!";
-                    warning_label.Refresh();
+                    Console.WriteLine("Launcher version is update to date.");
 
-                    UpdateMainWindow();
-                }
-                else if (remoteLauncherVersion == localLauncherVersion)
-                {
                     //launcher does not need to be updated
                     bLauncherNeedsUpdate = false;
                     if (File.Exists(String.Format(@"{0}\update.bat", Config.GetLocalDir())))
                     {
                         File.Delete(String.Format(@"{0}\update.bat", Config.GetLocalDir()));
-                    }                    
-                    Console.WriteLine("SYSMSG: Launcher version is OK");                                        
-
-                    UpdateMainWindow();
+                    }
                 }
                 else
                 {
-                    bLauncherNeedsUpdate = true;
+                    Console.WriteLine("Launcher version {0} is NOT up to date: {1}", LauncherVersion, RemoteVersion);
 
-                    UpdateMainWindow();
+                    bLauncherNeedsUpdate = true;
                 }
+
                 bLauncherVersionCheckFailed = false;
             }
             catch (WebException ex)
             {
-                Console.WriteLine(ex.Status);                
+                Console.WriteLine(ex.Status);
                 bLauncherVersionCheckFailed = true;
             }
             catch (Exception ex)
@@ -221,39 +449,51 @@ namespace Launchpad_Launcher
 
         private void DoManifestUpdate()
         {
+            Console.WriteLine("\nDoManifestUpdate()");
+
+            if (!bCanConnectToFTP)
+            {
+                Console.WriteLine("Manifest update failed: Unable to connect to FTP");
+                return;
+            }
+
+            //if we have no manifest, probably first time setup
             if (!File.Exists(Config.GetManifestPath()))
             {
-                //we have no manifest, probably first time setup
-
                 //download manifest
                 try
                 {
-                    Console.WriteLine("MANIFESTUPDATECHECK: Warning - No Manifest");
+                    Console.WriteLine("DoManifestUpdate(): Warning - No Manifest attempting to download");
+
                     FTP.DownloadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), Config.GetManifestURL(), Config.GetManifestPath());
-                    
+
                     if (File.Exists(Config.GetManifestPath()))
                     {
+                        Console.WriteLine("Manifest download succeeded");
+
                         bManifestDownloadFailed = false;
-                        UpdateMainWindow();
                     }
                     else
                     {
+                        Console.WriteLine("Manifest download failed");
+
                         bManifestDownloadFailed = true;
-                        UpdateMainWindow();
                     }
                 }
                 catch (WebException ex)
                 {
-                    Console.WriteLine(ex.Status);
-                    
+                    Console.WriteLine("DoManifestUpdate() download failed {0}", ex.StackTrace);
+
                     bManifestDownloadFailed = true;
-                    UpdateMainWindow();
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.StackTrace);
+                    Console.WriteLine("DoManifestUpdate() download failed: {0}", ex.StackTrace);
                 }
-                              
+            }
+            else
+            {
+                Console.WriteLine("Manifest already exists locally");
             }
 
             try
@@ -261,105 +501,186 @@ namespace Launchpad_Launcher
                 //we should now have a manifest, let's check if it's the latest one
                 FileStream localManifestStream = File.OpenRead(Config.GetManifestPath());
                 string localManifestChecksum = md5.GetFileHash(localManifestStream);
-
                 localManifestStream.Close();
+                string remoteManifestChecksum = FTP.ReadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), Config.GetManifestChecksumURL()).Replace("\0", string.Empty);
 
-                Console.Write("Remote: ");
-                Console.WriteLine(FTP.ReadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), Config.GetManifestChecksumURL()).Replace("\0", string.Empty));
-                Console.Write("Local:  ");
-                Console.WriteLine(localManifestChecksum);
+                Console.WriteLine("Remote: {0}", remoteManifestChecksum);
+                Console.WriteLine("Local:  {0}", localManifestChecksum);
 
-                if (localManifestChecksum == FTP.ReadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), Config.GetManifestChecksumURL()).Replace("\0", string.Empty))
+                if (localManifestChecksum == remoteManifestChecksum)
                 {
                     Console.WriteLine("Manifest is OK");
                 }
                 else
                 {
-                    //our local version is not OK, download a new one
-                    Console.WriteLine("Manifest not OK: Downloading new manifest");
+                    //our local manifest version is not up to date, download the new one
+                    Console.WriteLine("Manifest not up to date: Downloading new manifest");
+
+                    //delete old manifest
                     File.Delete(Config.GetManifestPath());
                     FTP.DownloadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), Config.GetManifestURL(), Config.GetManifestPath());
-                    File.Create(String.Format(@"{0}\.gameNeedsUpdate", Config.GetLocalDir()));
+
+                    //create .gameNeedsUpdate file to signal that game needs update between launches of the application
+                    FileStream fs = File.Create(String.Format(@"{0}\.gameNeedsUpdate", Config.GetLocalDir()));
+                    fs.Close();//important that we close this file stream otherwise we will not be able to delete .gameNeedsUpdate after we update
+
                     bGameNeedsUpdate = true;
                 }
-                UpdateMainWindow();
+            }
+            catch (System.IO.FileNotFoundException)
+            {
+                Console.WriteLine("Manifest does not exist.");
             }
             catch (Exception ex)
             {
-                if (bManifestDownloadFailed == true)
-                {
-                    UpdateMainWindow();
-                }
-                Console.WriteLine(ex.StackTrace);
-            }
-            
-        }
-
-        private void DoGameUpdateCheck()
-        {
-            try
-            {
-                string localVersion = File.ReadAllText(String.Format(@"{0}\gameVersion.txt", Config.GetGamePath()));
-                string versionURL = String.Format("{0}/game/gameVersion.txt", Config.GetFTPUrl());
-                string remoteVersion = FTP.ReadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), versionURL).Replace("\0", string.Empty);
-
-                if (!(localVersion == remoteVersion))
-                {
-                    bGameNeedsUpdate = true;
-                    Console.Write("localGameVersion: ");
-                    Console.Write(localVersion);
-
-                    Console.Write("remoteGameVersion: ");
-                    Console.Write(remoteVersion);
-                    File.Create(String.Format(@"{0}\.gameNeedsUpdate", Config.GetLocalDir()));
-
-                    //if the game update is aborted, we'll still have a local update ping. This needs to be improved.
-                    if (File.Exists(String.Format(@"{0}\.gameNeedsUpdate", Config.GetLocalDir())))
-                    {
-                        bGameNeedsUpdate = true;
-                    }
-
-                    UpdateMainWindow();
-                }
-                else
-                {
-                    bGameNeedsUpdate = false;
-                    Console.Write("localGameVersion: ");
-                    Console.WriteLine(localVersion);
-
-                    Console.Write("remoteGameVersion: ");
-                    Console.WriteLine(remoteVersion);
-
-                    UpdateMainWindow();
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.Write("DoGameUpdateCheck: ");
-                Console.WriteLine(ex.StackTrace);
+                Console.WriteLine("Manifest download failed: {0}", ex.StackTrace);
             }
         }
 
         private void DoGameIsInstalledCheck()
         {
+            Console.WriteLine("\nDoGameIsInstalledCheck()");
+
             if (File.Exists(String.Format(@"{0}\.installComplete", Config.GetGamePath())))
             {
                 bGameIsInstalled = true;
-
-                UpdateMainWindow();
+                bInstallCompleted = true;
+                Console.WriteLine("Game is installed.");
             }
             else
             {
                 bGameIsInstalled = false;
-
-                UpdateMainWindow();
+                Console.WriteLine("Game is not installed.");
             }
         }
 
-        private void UpdateMainWindow()
-        {        
-            if (bLauncherVersionCheckFailed == true)
+        private void DoGameUpdateCheck()
+        {
+            Console.WriteLine("\nDoGameUpdateCheck()");
+
+            if (!bCanConnectToFTP)
             {
+                Console.WriteLine("Game update failed: Unable to connect to FTP");
+                return;
+            }
+
+            try
+            {
+                //set a default version of 0.0.0
+                string localVersion = "0.0.0";
+
+                //try to get the local version from file
+                try
+                {
+                    localVersion = File.ReadAllText(String.Format(@"{0}\gameVersion.txt", Config.GetGamePath()));
+                }
+                catch (IOException ioEx)
+                {
+                    //if we fail then continue with our version of 0.0.0 to compare against remoteVersion
+                }
+
+                //get the remote version from the ftp
+                string remoteVersionURL = String.Format("{0}/game/gameVersion.txt", Config.GetFTPUrl());
+                string remoteVersion = FTP.ReadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), remoteVersionURL);
+                //note remote version may have a trailing '\0' which will cause the console to hang if written
+
+                //we create version objects to format the versions correctly to remove unnecessary spaces, new line characters or '\0' that may exist
+                System.Version LocalVersionObject = new System.Version(localVersion);
+                System.Version RemoteVersionObject = new System.Version(remoteVersion);
+
+                Console.WriteLine("localGameVersion: {0}", LocalVersionObject);
+                Console.WriteLine("remoteGameVersion: {0}", RemoteVersionObject);
+
+                if (LocalVersionObject.Equals(RemoteVersionObject))
+                {
+                    bGameNeedsUpdate = false;
+
+                    Console.WriteLine("Local game version {0} does not need to be updated.", LocalVersionObject);
+                }
+                else
+                {
+                    bGameNeedsUpdate = true;
+
+                    //if the game update is aborted, we'll still have a local update ping. This needs to be improved.
+                    FileStream fs = File.Create(String.Format(@"{0}\.gameNeedsUpdate", Config.GetLocalDir()));
+                    fs.Close(); //important that we close this file stream otherwise we will not be able to delete .gameNeedsUpdate after we update
+
+                    Console.WriteLine("Local game version needs to be updated from {0} to {1}", LocalVersionObject, RemoteVersionObject);
+                }
+            }
+            catch (IOException ioEx)
+            {
+                Console.WriteLine("DoGameUpdateCheck IOException: {0}", ioEx.StackTrace);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("DoGameUpdateCheck exception: {0}", ex.StackTrace);
+            }
+        }
+
+        private void DoShouldBeginAutoInstallCheck()
+        {
+            Console.WriteLine("\nDoShouldBeginAutoInstallCheck()");
+
+            if (bShouldBeginAutoInstall)
+            {
+                Console.WriteLine("Beginning auto install.");
+
+                DoGameInstall();
+            }
+            else
+            {
+                Console.WriteLine("Auto install should not begin.");
+            }
+        }
+
+        private string GetCurrentGameVersion()
+        {
+            string currentGameVersion = null;
+            string gameVersionTxtPath = String.Format(@"{0}\gameVersion.txt", Config.GetGamePath());
+
+            if (File.Exists(gameVersionTxtPath))
+            {
+                try
+                {
+                    currentGameVersion = File.ReadAllText(gameVersionTxtPath);
+                }
+                catch (IOException ex)
+                {
+                    Console.WriteLine("Could not read gameVersion.txt: {0}", ex);
+                }
+            }
+            else
+            {
+                Console.WriteLine("gameVersion.txt does not exist at path: {0}", gameVersionTxtPath);
+            }
+
+            return currentGameVersion != null ? new System.Version(currentGameVersion).ToString() : "no version";
+        }
+
+        private void UpdateMainWindow()
+        {
+            Console.WriteLine("\nUpdateMainWindow()");
+
+            string currentGameVersion = GetCurrentGameVersion();
+
+            if (bCanConnectToFTP == false)
+            {
+                Console.WriteLine("(bCanConnectToFTP == false)");
+
+                warning_label.ForeColor = Color.Red;
+                warning_label.Text = "Could not connect to server. Please try again later.";
+
+                progress_label.Text = "Idle";
+
+                progress_label.Refresh();
+                warning_label.Refresh();
+
+            }
+            else if (bLauncherVersionCheckFailed)
+            {
+                Console.WriteLine("(bLauncherVersionCheckFailed == true)");
+
                 warning_label.ForeColor = Color.Red;
                 warning_label.Text = "Could not get launcher version from server";
 
@@ -367,30 +688,19 @@ namespace Launchpad_Launcher
 
                 progress_label.Refresh();
                 warning_label.Refresh();
-            } 
-            else if (bLauncherNeedsUpdate == true)
+            }
+            else if (bLauncherNeedsUpdate)
             {
+                Console.WriteLine("(bLauncherNeedsUpdate == true)");
 
                 warning_label.ForeColor = Color.Red;
                 warning_label.Text = "Launcher update required";
-
-                //update button
-                //background image
-                Stream background = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Update_Default.png");
-                mainButton.BackgroundImage = new Bitmap(Image.FromStream(background), new Size(105, 40));
-
-                //hover image
-                Stream hover = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Update_Hover.png");
-                mainButton.HoverImage = new Bitmap(Image.FromStream(hover), new Size(105, 40));
-
-                //pressed image
-                Stream pressed = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Update_Pressed.png");
-                mainButton.PressedImage = new Bitmap(Image.FromStream(pressed), new Size(105, 40));
-
                 warning_label.Refresh();
             }
-            else if (bManifestDownloadFailed == true)
+            else if (bManifestDownloadFailed)
             {
+                Console.WriteLine("(bManifestDownloadFailed == true)");
+
                 progress_label.Text = "Launcher version is OK";
                 progress_label.Refresh();
 
@@ -400,24 +710,25 @@ namespace Launchpad_Launcher
             }
             else if (bGameIsInstalled == false)
             {
+                Console.WriteLine("(bGameIsInstalled == false)");
+
+                progress_label.Text = "Launcher version is OK";
+                progress_label.Refresh();
+            }
+            else if (bUpdateCompleted)
+            {
+                Console.WriteLine("(bUpdateCompleted == true)");
+
                 progress_label.Text = "Launcher version is OK";
                 progress_label.Refresh();
 
-                //install button
-                //background image
-                Stream background = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Install_Default.png");
-                mainButton.BackgroundImage = new Bitmap(Image.FromStream(background), new Size(105, 40));
-
-                //hover image
-                Stream hover = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Install_Hover.png");
-                mainButton.HoverImage = new Bitmap(Image.FromStream(hover), new Size(105, 40));
-
-                //pressed image
-                Stream pressed = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Install_Pressed.png");
-                mainButton.PressedImage = new Bitmap(Image.FromStream(pressed), new Size(105, 40));
+                progress_label.ForeColor = Color.ForestGreen;
+                progress_label.Text = String.Format("Game updated to {0}!", currentGameVersion);
             }
-            else if (bInstallCompleted == true)
+            else if (bInstallCompleted && bDidAttemptInstall)
             {
+                Console.WriteLine("(bInstallCompleted == true)");
+
                 progress_label.Text = "Launcher version is OK";
                 progress_label.Refresh();
 
@@ -426,41 +737,95 @@ namespace Launchpad_Launcher
             }
             else if (bGameNeedsUpdate)
             {
-                progress_label.Text = "Launcher version is OK";
+                Console.WriteLine("bGameNeedsUpdate");
+
+                progress_label.Text = "Launcher version is OK. Game needs update.";
                 progress_label.Refresh();
-
-                //update button
-                //background image
-                Stream background = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Update_Default.png");
-                mainButton.BackgroundImage = new Bitmap(Image.FromStream(background), new Size(105, 40));
-
-                //hover image
-                Stream hover = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Update_Hover.png");
-                mainButton.HoverImage = new Bitmap(Image.FromStream(hover), new Size(105, 40));
-
-                //pressed image
-                Stream pressed = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Update_Pressed.png");
-                mainButton.PressedImage = new Bitmap(Image.FromStream(pressed), new Size(105, 40));
             }
             else
             {
-                progress_label.Text = "Launcher version is OK";
+                Console.WriteLine("ELSE");
+
+                progress_label.Text = String.Format("Launcher is up to date. Game version is up to date {0}", currentGameVersion);
                 progress_label.Refresh();
-
-                //play button
-                //background image
-                Stream background = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Play_Default.png");
-                mainButton.BackgroundImage = new Bitmap(Image.FromStream(background), new Size(105, 40));
-
-                //hover image
-                Stream hover = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Play_Hover.png");
-                mainButton.HoverImage = new Bitmap(Image.FromStream(hover), new Size(105, 40));
-
-                //pressed image
-                Stream pressed = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Play_Pressed.png");
-                mainButton.PressedImage = new Bitmap(Image.FromStream(pressed), new Size(105, 40));
             }
-        }                      
+
+            if (bGameIsInstalled)
+            {
+                //now that we are installed verify button should be Enabled so long as we are not currently updating or installing and game does not need an update
+                verifyInstallation_button.Enabled = (!bIsInstallingGame && !bIsUpdatingGame && !bGameNeedsUpdate);
+
+                if (bInstallCompleted && !bGameNeedsUpdate)
+                {
+                    ShowPlayButton();
+                }
+                else
+                {
+                    ShowUpdateButton();
+                }
+            }
+            else
+            {
+                //verify button should be disabled until the game is installed
+                verifyInstallation_button.Enabled = false;
+
+                ShowInstallButton();
+            }
+        }
+
+        private void ShowInstallButton()
+        {
+            //install button
+            //background image
+            Stream background = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Install_Default.png");
+            mainButton.BackgroundImage = new Bitmap(Image.FromStream(background), new Size(105, 40));
+
+            //hover image
+            Stream hover = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Install_Hover.png");
+            mainButton.HoverImage = new Bitmap(Image.FromStream(hover), new Size(105, 40));
+
+            //pressed image
+            Stream pressed = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Install_Pressed.png");
+            mainButton.PressedImage = new Bitmap(Image.FromStream(pressed), new Size(105, 40));
+
+            mainButton.Refresh();
+        }
+
+        private void ShowUpdateButton()
+        {
+            //update button
+            //background image
+            Stream background = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Update_Default.png");
+            mainButton.BackgroundImage = new Bitmap(Image.FromStream(background), new Size(105, 40));
+
+            //hover image
+            Stream hover = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Update_Hover.png");
+            mainButton.HoverImage = new Bitmap(Image.FromStream(hover), new Size(105, 40));
+
+            //pressed image
+            Stream pressed = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Update_Pressed.png");
+            mainButton.PressedImage = new Bitmap(Image.FromStream(pressed), new Size(105, 40));
+
+            mainButton.Refresh();
+        }
+
+        private void ShowPlayButton()
+        {
+            //play button
+            //background image
+            Stream background = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Play_Default.png");
+            mainButton.BackgroundImage = new Bitmap(Image.FromStream(background), new Size(105, 40));
+
+            //hover image
+            Stream hover = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Play_Hover.png");
+            mainButton.HoverImage = new Bitmap(Image.FromStream(hover), new Size(105, 40));
+
+            //pressed image
+            Stream pressed = thisAssembly.GetManifestResourceStream("Launchpad_Launcher.resource.Button_Play_Pressed.png");
+            mainButton.PressedImage = new Bitmap(Image.FromStream(pressed), new Size(105, 40));
+
+            mainButton.Refresh();
+        }
 
         private void exitbutton_Click(object sender, EventArgs e)
         {
@@ -475,26 +840,30 @@ namespace Launchpad_Launcher
                 SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
             }
         }
-        
+
         private void DoLauncherUpdate()
         {
+            //maintain the executable name if it was renamed to something other than 'Launchpad' 
+            string fullName = Assembly.GetEntryAssembly().Location;
+            string executableName = Path.GetFileNameWithoutExtension(fullName); // "Launchpad"
+
+            //if the client wants official updates of Launchpad
             if (Config.GetDoOfficialUpdates() == true)
             {
-                //the client wants updates from Launchpad
-                FTP.DownloadFTPFile("anonymous", "anonymous", "ftp://directorate.asuscomm.com/launcher/bin/Launchpad.exe", String.Format(@"{0}\Launchpad.exe", Config.GetTempDir()));
+                FTP.DownloadFTPFile("anonymous", "anonymous", "ftp://directorate.asuscomm.com/launcher/bin/Launchpad.exe", String.Format(@"{0}\{1}.exe", Config.GetTempDir(), executableName));
             }
             else
             {
                 //you've forked the launcher and want to update it yourself
-                FTP.DownloadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), Config.GetLauncherURL(), String.Format(@"{0}\Launchpad.exe", Config.GetTempDir()));
+                FTP.DownloadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), Config.GetLauncherURL(), String.Format(@"{0}\{1}.exe", Config.GetTempDir(), executableName));
             }
-            
 
+            //create a .bat file that will replace the old Launchpad.exe
             FileStream updateScript = File.Create(String.Format(@"{0}\update.bat", Config.GetLocalDir()));
 
             TextWriter tw = new StreamWriter(updateScript);
-            tw.WriteLine(String.Format(@"timeout 3 & xcopy /s /y ""{0}\Launchpad.exe"" ""{1}\Launchpad.exe"" && del ""{0}\Launchpad.exe""", Config.GetTempDir(), Config.GetLocalDir()));
-            tw.WriteLine(String.Format(@"start Launchpad.exe"));
+            tw.WriteLine(String.Format(@"timeout 3 & xcopy /s /y ""{0}\{2}.exe"" ""{1}\{2}.exe"" && del ""{0}\{2}.exe""", Config.GetTempDir(), Config.GetLocalDir(), executableName));
+            tw.WriteLine(String.Format(@"start {0}.exe", executableName));
             tw.Close();
 
             ProcessStartInfo updateBatchProcess = new ProcessStartInfo();
@@ -506,37 +875,49 @@ namespace Launchpad_Launcher
 
             Process.Start(updateBatchProcess);
 
-            Environment.Exit(0); 
+            Environment.Exit(0);
         }
 
-        private void mainButton_Click(object sender, EventArgs e)
+        private void DoGameInstall()
         {
-            if (bLauncherNeedsUpdate)
+            if (!bIsInstallingGame)
             {
-                DoLauncherUpdate();
-            }
-            else if (bGameIsInstalled == false)
-            {
+                bIsInstallingGame = true;
+
+                //disable buttons while we install
+                SetButtonsEnabled(false);
+
                 //run the game installation in the background
                 backgroundWorker_GameInstall.RunWorkerAsync();
             }
-            else if (bGameNeedsUpdate)
+        }
+
+        private void DoGameUpdate()
+        {
+            if (!bIsUpdatingGame)
             {
+                bIsUpdatingGame = true;
+
+                //disable buttons while we update
+                SetButtonsEnabled(false);
+
                 //run game update in the background
                 backgroundWorker_GameUpdate.RunWorkerAsync();
             }
-            else
-            {
-                ProcessStartInfo gameProcess = new ProcessStartInfo();
+        }
 
-                gameProcess.FileName = Config.GetGameExecutable();
-                gameProcess.UseShellExecute = true;
-                Process.Start(gameProcess);
-            }
+        private void SetButtonsEnabled(bool enabled)
+        {
+            mainButton.Enabled = enabled;
+            verifyInstallation_button.Enabled = enabled && bGameIsInstalled;
         }
 
         private void backgroundWorker_GameInstall_DoWork(object sender, DoWorkEventArgs e)
         {
+            bDidAttemptInstall = true; //signal to the UI that we did attempt an install for more accurate messages
+
+            bInstallCompleted = true; //we set InstallCompleted to true and then if we fail at any point set to false
+
             try
             {
                 if (!Directory.Exists(Config.GetGamePath()))
@@ -563,6 +944,8 @@ namespace Launchpad_Launcher
                     }
                     catch (Exception ex)
                     {
+                        bInstallCompleted = false;
+
                         Console.WriteLine("I failed :( Sorry.");
                         Console.WriteLine(ex.StackTrace);
                     }
@@ -587,16 +970,43 @@ namespace Launchpad_Launcher
             }
             catch (IOException ex)
             {
-                DialogResult result = MessageBox.Show("Could not read launcher manifest! Unable to install.", "IOException", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Console.Write("GameInstallIOException: ");
+                bInstallCompleted = false;
+
+                DialogResult result = MessageBox.Show("Could not connect to server! Unable to install.", "IOException", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Console.WriteLine("Could not read launcher manifest from server.");
+                Console.WriteLine("GameInstallIOException: ");
                 Console.WriteLine(ex.StackTrace);
             }
             catch (Exception ex)
-            {                
-                Console.Write("GameInstallException: ");
+            {
+                bInstallCompleted = false;
+
+                Console.WriteLine("GameInstallException: ");
                 Console.WriteLine(ex.StackTrace);
             }
-            
+
+            if (bInstallCompleted)
+            {
+                //if the install completed succesfully we update the local gameVersion 
+                UpdateVersionNumber();
+            }
+        }
+
+        private void UpdateVersionNumber()
+        {
+            string localPath = String.Format(@"{0}\gameVersion.txt", Config.GetGamePath());
+            string FTPPath = String.Format("{0}/game/gameVersion.txt", Config.GetFTPUrl());
+
+            try
+            {
+                FTP.DownloadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), FTPPath, localPath);
+                string newVersion = File.ReadAllText(String.Format(@"{0}\gameVersion.txt", Config.GetGamePath()));
+                Console.WriteLine("Write new gameVersion: {0} succeeded", newVersion);
+            }
+            catch (IOException ioEx)
+            {
+                Console.WriteLine("download gameVersion.txt failed: {0}", ioEx);
+            }
         }
 
         private void backgroundWorker_GameInstall_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -612,6 +1022,7 @@ namespace Launchpad_Launcher
             double sizeInMB = state.Item3 / 1000000;
 
             progress_label.Text = String.Format(@"Downloading: {0}", state.Item1);
+
             if (downloadedInMb <= 0 || sizeInMB <= 0)
             {
                 fileSizeProgress_label.Text = String.Format("less than 1/1 MB");
@@ -620,7 +1031,7 @@ namespace Launchpad_Launcher
             {
                 fileSizeProgress_label.Text = String.Format("{0}/{1} MB", downloadedInMb, sizeInMB);
             }
-            
+
 
             progress_label.Refresh();
             fileSizeProgress_label.Refresh();
@@ -628,21 +1039,52 @@ namespace Launchpad_Launcher
 
         private void backgroundWorker_GameInstall_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            bInstallCompleted = true;
+            if (bInstallCompleted)
+            {
+                string installCompleteFilePath = String.Format(@"{0}\.installComplete", Config.GetGamePath());
 
-            File.Create(String.Format(@"{0}\.installComplete", Config.GetGamePath()));            
+                try
+                {
+                    File.Create(installCompleteFilePath).Close();
+                    bGameIsInstalled = true;
+                }
+                catch (System.IO.IOException ex)
+                {
+                    Console.WriteLine("Cannot create file at {0}: {1}", installCompleteFilePath, ex.ToString());
+                }
+            }
+
+            bIsInstallingGame = false;
+
+            //re-enable the buttons that we disabled during install
+            SetButtonsEnabled(true);
 
             UpdateMainWindow();
         }
 
         private void backgroundWorker_GameUpdate_DoWork(object sender, DoWorkEventArgs e)
         {
-            string[] manifestFilesArray = File.ReadAllLines(Config.GetManifestPath());
+            Console.WriteLine("backgroundWorker_GameUpdate_DoWork()");
 
+            string[] manifestFilesArray = File.ReadAllLines(Config.GetManifestPath());
+            bool GameUpdateCompletedSuccessfully = true;
             int i = 0;
+            int manifestFilesArrayLength = manifestFilesArray.Length;
+
+            //throttle the amount of progress reports we create in the event that the user
+            //has all of the files already locally
+            long lastProgressReportTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+            long millisecondsBetweenProgressReports = 10;
 
             foreach (string value in manifestFilesArray)
             {
+                long timeInMilliseconds = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+                long timeSinceLastReport = timeInMilliseconds - lastProgressReportTime;
+
+                int progress = i;
+
+                //Console.WriteLine("Progress: {0}", progress);
+
                 //read the value from the manifest as an array with split values (path, MD5 and size)
                 string[] manifestFile = value.Split(':');
 
@@ -661,16 +1103,22 @@ namespace Launchpad_Launcher
                     try
                     {
                         FTP.DownloadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), FTPPath, localPath);
-                        Console.Write("GameUpdateWorker - FileUpdate: ");
-                        Console.WriteLine(localPath);
+                        //Console.WriteLine("GameUpdateWorker - FileUpdate: ");
+                        //Console.WriteLine(localPath);
                         i++;
-                        backgroundWorker_GameUpdate.ReportProgress(i, new Tuple<string, int>(manifestFile[0], manifestFilesArray.Length));
+
+                        if (timeSinceLastReport > millisecondsBetweenProgressReports)
+                        {
+                            lastProgressReportTime = timeInMilliseconds;
+                            backgroundWorker_GameUpdate.ReportProgress(progress, new Tuple<string, int>(manifestFile[0], manifestFilesArray.Length));
+                        }
                     }
                     catch (Exception ex)
                     {
-                        Console.Write("GameUpdateWorker - NoFile: ");
+                        GameUpdateCompletedSuccessfully = false;
+                        Console.WriteLine("GameUpdateWorker - NoFile: ");
                         Console.WriteLine(ex.StackTrace);
-                    }                    
+                    }
                 }
                 else
                 {
@@ -683,26 +1131,53 @@ namespace Launchpad_Launcher
                         if (!(localMD5 == fileManifestMD5))
                         {
                             //if they do not match, download and replace the file
-                            FTP.DownloadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), FTPPath, localPath);
-                            Console.Write("GameUpdateWorker - MD5Update: ");
-                            Console.WriteLine(localPath);
+                            try
+                            {
+                                FTP.DownloadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), FTPPath, localPath);
+                                Console.WriteLine("GameUpdateWorker - MD5Update: {0}", localPath);
+                                localFile.Close();
+                                i++;
+                                if (timeSinceLastReport > millisecondsBetweenProgressReports)
+                                {
+                                    lastProgressReportTime = timeInMilliseconds;
+                                    backgroundWorker_GameUpdate.ReportProgress(progress, new Tuple<string, int>(manifestFile[0], manifestFilesArray.Length));
+                                }
+                            }
+                            catch (IOException ioEx)
+                            {
+                                GameUpdateCompletedSuccessfully = false;
+
+                                Console.WriteLine("download and replace failed: {0}", ioEx);
+                            }
+                        }
+                        else
+                        {
+                            //if they match, move on
+                            //Console.WriteLine("GameUpdateWorker - AllOK: {0}", filePath);
                             localFile.Close();
                             i++;
-                            backgroundWorker_GameUpdate.ReportProgress(i, new Tuple<string, int>(manifestFile[0], manifestFilesArray.Length));
+                            if (timeSinceLastReport > millisecondsBetweenProgressReports)
+                            {
+                                //Console.WriteLine("timeSinceLastReport: {0}", timeSinceLastReport);
+                                lastProgressReportTime = timeInMilliseconds;
+                                backgroundWorker_GameUpdate.ReportProgress(progress, new Tuple<string, int>(manifestFile[0], manifestFilesArray.Length));
+                            }
                         }
-                        //if they match, move on
-                        Console.Write("GameUpdateWorker - AllOK: ");
-                        Console.WriteLine(filePath);
-                        localFile.Close();
-                        i++;
-                        backgroundWorker_GameUpdate.ReportProgress(i, new Tuple<string, int>(manifestFile[0], manifestFilesArray.Length));
                     }
                     catch (Exception ex)
                     {
-                        Console.Write("GameUpdateWorker - MD5: ");
+                        GameUpdateCompletedSuccessfully = false;
+
+                        Console.WriteLine("GameUpdateWorker - MD5: ");
                         Console.WriteLine(ex.StackTrace);
-                    }                                        
-                }                                                
+                    }
+                }
+            }
+
+            if (GameUpdateCompletedSuccessfully)
+            {
+                //if the update completed succesfully we update the local gameVersion 
+                UpdateVersionNumber();
             }
         }
 
@@ -715,31 +1190,39 @@ namespace Launchpad_Launcher
 
             progress_label.Text = state.Item1;
 
-            progress_label.Refresh();            
+            progress_label.Refresh();
         }
 
         private void backgroundWorker_GameUpdate_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            mainPanel_progressBar.Maximum = 100;
+            mainPanel_progressBar.Value = 100;
+
             progress_label.ForeColor = Color.ForestGreen;
             progress_label.Text = "Game update finished!";
 
             if (File.Exists(String.Format(@"{0}\.gameNeedsUpdate", Config.GetLocalDir())))
             {
-                File.Delete(String.Format(@"{0}\.gameNeedsUpdate", Config.GetLocalDir()));
+                try
+                {
+                    File.Delete(String.Format(@"{0}\.gameNeedsUpdate", Config.GetLocalDir()));
+                    Console.WriteLine("Succesfully deleted .gameNeedsUpdate");
+                }
+                catch(IOException ioEx)
+                {
+                    Console.WriteLine("Failed to delete .gameNeedsUpdate after succesfull update: {0}", ioEx);
+                }
             }
 
             bInstallCompleted = true;
             bGameNeedsUpdate = false;
-            UpdateMainWindow();
-        }
 
-        private void verifyInstallation_button_Click(object sender, EventArgs e)
-        {
-            //verifying is basically the same as updating. Check all files, download replacements, etc
-            if (bGameIsInstalled == true)
-            {
-                backgroundWorker_GameUpdate.RunWorkerAsync();
-            }          
+            bIsUpdatingGame = false;
+
+            //re-enable the buttons that we disabled during install
+            SetButtonsEnabled(true);
+
+            UpdateMainWindow();
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
