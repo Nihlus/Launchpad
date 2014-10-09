@@ -38,6 +38,9 @@ namespace Launchpad_Launcher
 
         bool bShouldBeginAutoInstall = false;
 
+        bool bIsBackgroundImageLoadedFromServer = false;
+        bool bIsChangelogLoadedFromServer = false;
+
         //get a reflection to this assembly
         Assembly thisAssembly = Assembly.GetExecutingAssembly();
 
@@ -123,72 +126,107 @@ namespace Launchpad_Launcher
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            LoadChangelog();
-            LoadBackgroundImage();
-        }
-
-        private void Form1_Shown(object sender, EventArgs e)
-        {
-            Console.WriteLine("\nForm1_Shown()");
+            Console.WriteLine("\nForm1_Load()");
 
             PerformLauncherChecks();
         }
 
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+
+        }
+
         private void LoadChangelog()
         {
-            string changelogURL = Config.GetChangelogURL();
+            Console.WriteLine("\nLoadChangelog()");
 
-            WebClient request = new WebClient();
-            request.Credentials = new NetworkCredential(Config.GetFTPUsername(), Config.GetFTPPassword());
-
-            try
+            if(!bCanConnectToFTP)
             {
-                byte[] newFileData = request.DownloadData(changelogURL);
-                string fileString = System.Text.Encoding.UTF8.GetString(newFileData);
-                webBrowser1.DocumentText = fileString;
-                webBrowser1.ScrollBarsEnabled = true;
-            }
-            catch (WebException ex)
-            {
-                webBrowser1.DocumentText = "Error: Could not load change log from server.";
+                Console.WriteLine("Unable to connect to server to load changelog.");
+                return;
             }
 
-            request.Dispose();
-            /*
-            DeleteUrlCacheEntry(changelogURL); //if we do not clear cache old changelogs will still show
-            webBrowser1.Navigate(changelogURL);
-            */
+            //now that we call LoadChangelog() everytime PerformLauncherChecks() is called
+            //we want to make sure we stop if we successfully retrieve the changelog
+            if (!bIsChangelogLoadedFromServer)
+            {
+                string changelogURL = Config.GetChangelogURL();
+
+                WebClient request = new WebClient();
+                request.Credentials = new NetworkCredential(Config.GetFTPUsername(), Config.GetFTPPassword());
+
+                try
+                {
+                    byte[] newFileData = request.DownloadData(changelogURL);
+                    string fileString = System.Text.Encoding.UTF8.GetString(newFileData);
+                    webBrowser1.DocumentText = fileString;
+                    webBrowser1.ScrollBarsEnabled = true;
+
+                    bIsChangelogLoadedFromServer = true;
+                }
+                catch (WebException ex)
+                {
+                    webBrowser1.DocumentText = "Error: Could not load change log from server.";
+                }
+
+                request.Dispose();
+                /*
+                DeleteUrlCacheEntry(changelogURL); //if we do not clear cache old changelogs will still show
+                webBrowser1.Navigate(changelogURL);
+                */
+            }
+            else
+            {
+                Console.WriteLine("Changelog has already been loaded from server.");
+            }
         }
 
         private void LoadBackgroundImage()
         {
             Console.WriteLine("\nLoadBackgroundImage()");
 
-            string backgroundImageURL = String.Format("{0}/launcher/launcherBackground.png", Config.GetFTPUrl());
-
-            WebClient request = new WebClient();
-            request.Credentials = new NetworkCredential(Config.GetFTPUsername(), Config.GetFTPPassword());
-
-            try
+            if (!bCanConnectToFTP)
             {
-                byte[] bitmapData = request.DownloadData(backgroundImageURL);
-                ImageConverter ic = new ImageConverter();
-                Image img = (Image)ic.ConvertFrom(bitmapData);
-                Bitmap bitmap = new Bitmap(img);
-                if(bitmap != null)
+                Console.WriteLine("Unable to connect to server to load background image.");
+                return;
+            }
+
+            //now that we call LoadBackgroundImage() everytime PerformLauncherChecks() is called
+            //we want to make sure we stop if we successfully retrieve the background image
+            if (!bIsBackgroundImageLoadedFromServer)
+            {
+                string backgroundImageURL = String.Format("{0}/launcher/launcherBackground.png", Config.GetFTPUrl());
+
+                WebClient request = new WebClient();
+                request.Credentials = new NetworkCredential(Config.GetFTPUsername(), Config.GetFTPPassword());
+
+                try
                 {
-                    this.BackgroundImage = bitmap;
-                    //most likely our progress and link labels text will not be readable over the background image
-                    progress_label.BackColor = Color.White;
-                    linkLabel1.BackColor = Color.White;
-                }
-            }
-            catch (WebException ex)
-            {
-                Console.WriteLine("Failed to find backgroundImage.png at {0}", backgroundImageURL);
-            }
+                    byte[] bitmapData = request.DownloadData(backgroundImageURL);
+                    ImageConverter ic = new ImageConverter();
+                    Image img = (Image)ic.ConvertFrom(bitmapData);
+                    Bitmap bitmap = new Bitmap(img);
+                    if (bitmap != null)
+                    {
+                        this.BackgroundImage = bitmap;
+                        //most likely our progress and link labels text will not be readable over the background image
+                        progress_label.BackColor = Color.White;
+                        linkLabel1.BackColor = Color.White;
 
-            request.Dispose();
+                        bIsBackgroundImageLoadedFromServer = true;
+                    }
+                }
+                catch (WebException ex)
+                {
+                    Console.WriteLine("Failed to find backgroundImage.png at {0}", backgroundImageURL);
+                }
+
+                request.Dispose();
+            }
+            else
+            {
+                Console.WriteLine("Background image has already been loaded from server.");
+            }
         }
 
         private void mainButton_Click(object sender, EventArgs e)
@@ -292,6 +330,12 @@ namespace Launchpad_Launcher
 
             //check if game should begin auto installing
             DoShouldBeginAutoInstallCheck();
+
+            //load the changelog from server
+            LoadChangelog();
+
+            //load the background image from server
+            LoadBackgroundImage();
 
             //update UI
             UpdateMainWindow();
