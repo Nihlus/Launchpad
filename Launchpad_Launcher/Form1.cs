@@ -69,6 +69,13 @@ namespace Launchpad_Launcher
         {
             InitializeComponent();
 
+            //this section sends some anonymous useage stats back home. If you don't want to do this for your game, simply change this boolean to false.
+            bool bSendAnonStats = true;
+            if (bSendAnonStats)
+            {
+                SendUseageStats(Config.GetLauncherVersion(), Config.GetGameName(), Config.GetDoOfficialUpdates());
+            }
+            
             //Setup main button
             mainButton.Parent = this;
             mainButton.Bounds = new Rectangle(738, 460, 105, 40);
@@ -117,6 +124,29 @@ namespace Launchpad_Launcher
 
             //Update main window based on our initial state
             UpdateMainWindow();
+        }
+
+        private void SendUseageStats(string version, string gameName, bool officialUpdates)
+        {
+            try
+            {
+                string baseURL = "http://directorate.asuscomm.com/launchpad/report.php?";
+                string formattedURL = String.Format(baseURL + "launcherVersion={0}&gameName={1}&officialUpdates={2}",
+                    version,
+                    gameName,
+                    officialUpdates.ToString()
+                    );
+
+                WebRequest getRequest;
+                getRequest = WebRequest.Create(formattedURL);
+                getRequest.GetResponse();
+            }
+            catch (Exception ex)
+            {
+
+            }
+            
+
         }
 
         private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
