@@ -1,4 +1,5 @@
 using System;
+using Gtk;
 
 namespace Launchpad_Launcher
 {
@@ -8,6 +9,12 @@ namespace Launchpad_Launcher
 				base(Gtk.WindowType.Toplevel)
 		{
 			this.Build ();
+		}
+
+		protected void OnDeleteEvent (object sender, DeleteEventArgs a)
+		{
+			Application.Quit ();
+			a.RetVal = true;
 		}
 	}
 }
