@@ -122,25 +122,25 @@ namespace Launchpad_Launcher
 
         public string GetManifestURL()
         {
-            string manifestURL = String.Format("{0}/Launcher/LauncherManifest.txt", GetFTPUrl());
+            string manifestURL = String.Format("{0}/launcher/LauncherManifest.txt", GetFTPUrl());
             return manifestURL;
         }
 
         public string GetManifestChecksumURL()
         {
-            string manifestChecksumURL = String.Format("{0}/Launcher/LauncherManifest.checksum", GetFTPUrl());
+            string manifestChecksumURL = String.Format("{0}/launcher/LauncherManifest.checksum", GetFTPUrl());
             return manifestChecksumURL;
         }
 
         public string GetLauncherURL()
         {
-            string launcherURL = String.Format("{0}/Launcher/bin/Launchpad.exe", GetFTPUrl());
+            string launcherURL = String.Format("{0}/launcher/bin/Launchpad.exe", GetFTPUrl());
             return launcherURL;
         }
 
         public string GetChangelogURL()
         {
-            string changelogURL = String.Format("{0}/Launcher/changelog.html", GetFTPUrl());
+            string changelogURL = String.Format("{0}/launcher/changelog.html", GetFTPUrl());
             return changelogURL;
         }
 
@@ -149,11 +149,11 @@ namespace Launchpad_Launcher
 			string gameURL;
 			if (bGetSystemGame)
 			{
-				gameURL = String.Format ("{0}/Game/{1}", GetFTPUrl (), GetSystemTarget ());
+				gameURL = String.Format ("{0}/game/{1}", GetFTPUrl (), GetSystemTarget ());
 			}
 			else
 			{
-				gameURL = String.Format("{0}/Game", GetFTPUrl());
+				gameURL = String.Format("{0}/game", GetFTPUrl());
 			}
 
             return gameURL;
@@ -200,6 +200,12 @@ namespace Launchpad_Launcher
 
         public string GetSystemTarget()
         {
+			//possible values are:
+			//Win64
+			//Win32
+			//Linux
+			//Mac
+
             try
             {
                 FileIniDataParser Parser = new FileIniDataParser();
