@@ -144,9 +144,18 @@ namespace Launchpad_Launcher
             return changelogURL;
         }
 
-        public string GetGameURL()
+        public string GetGameURL(bool bGetSystemGame)
         {
-            string gameURL = String.Format("{0}/Game", GetFTPUrl());
+			string gameURL;
+			if (bGetSystemGame)
+			{
+				gameURL = String.Format ("{0}/Game/{1}", GetFTPUrl (), GetSystemTarget ());
+			}
+			else
+			{
+				gameURL = String.Format("{0}/Game", GetFTPUrl());
+			}
+
             return gameURL;
         }
 

@@ -1035,7 +1035,7 @@ namespace Launchpad_Launcher
                     //skip existing files to allow a failed or stopped download to resume
                     if (!File.Exists(String.Format(@"{0}{1}", Config.GetGamePath(), path)))
                     {
-                        FTP.DownloadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), String.Format(@"{0}{1}", Config.GetGameURL(), path.Replace(@"\", "/")), String.Format(@"{0}{1}", Config.GetGamePath(), path));
+                        FTP.DownloadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), String.Format(@"{0}{1}", Config.GetGameURL(false), path.Replace(@"\", "/")), String.Format(@"{0}{1}", Config.GetGamePath(), path));
                     }
 
 
