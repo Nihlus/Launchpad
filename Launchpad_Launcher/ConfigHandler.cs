@@ -21,7 +21,7 @@ namespace Launchpad_Launcher
             string configPath = GetConfigPath();
 
             //release 0.0.
-            string defaultLauncherVersion = "0.0.3";
+            string defaultLauncherVersion = "0.0.4";
 
 			//Check for pre-unix config. If it exists, fix the values and copy it.
 			CheckForOldConfig ();
