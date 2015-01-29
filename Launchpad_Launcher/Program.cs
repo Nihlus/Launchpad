@@ -42,7 +42,7 @@ namespace Launchpad_Launcher
 			} 
 			else 
 			{
-				Console.WriteLine ("NOT running on Unix");
+				Console.WriteLine ("Not running on Unix");
 				return false;
 			}
 		}
