@@ -17,8 +17,8 @@ namespace Launchpad_Launcher
         {
             FileIniDataParser Parser = new FileIniDataParser();
 
-            string configDir = String.Format(@"{0}\config", GetLocalDir());
-            string configPath = String.Format(@"{0}\config\launcherConfig.ini", GetLocalDir());
+            string configDir = GetConfigDir();
+            string configPath = GetConfigPath();
 
             //release 0.0.
             string defaultLauncherVersion = "0.0.3";
@@ -71,49 +71,49 @@ namespace Launchpad_Launcher
 
         private string GetConfigPath()
         {
-            string configPath = String.Format(@"{0}\config\launcherConfig.ini", GetLocalDir());
+			string configPath = String.Format(@"{0}config{1}launcherConfig.ini", GetLocalDir(), Path.DirectorySeparatorChar);
             return configPath;
         }
 
         private string GetConfigDir()
         {
-            string configDir = String.Format(@"{0}\config", GetLocalDir());
+			string configDir = String.Format(@"{0}config", GetLocalDir());
             return configDir;
         }
 
         public string GetUpdateCookie()
         {
-            string updateCookie = String.Format(@"{0}\.updatecookie", Directory.GetCurrentDirectory());
+            string updateCookie = String.Format(@"{0}.updatecookie", Directory.GetCurrentDirectory());
             return updateCookie;
         }
 
         public string GetLocalDir()
         {
-            string localDir = String.Format(@"{0}", Directory.GetCurrentDirectory());
+			string localDir = String.Format(@"{0}{1}", Directory.GetCurrentDirectory(), Path.DirectorySeparatorChar);
             return localDir;
         }
 
         public string GetTempDir()
         {
-            string tempDir = String.Format(@"{0}", Environment.GetEnvironmentVariable("TEMP"));
+			string tempDir = Path.GetTempPath ();
             return tempDir;
         }
 
         public string GetManifestPath()
         {
-            string manifestPath = String.Format(@"{0}\launcherManifest.txt", Directory.GetCurrentDirectory());
+            string manifestPath = String.Format(@"{0}launcherManifest.txt", GetLocalDir());
             return manifestPath;
         }
 
         public string GetGamePath()
         {
-            string gamePath = String.Format(@"{0}\game", Directory.GetCurrentDirectory());
+			string gamePath = String.Format(@"{0}game", GetLocalDir());
             return gamePath;
         }
 
         public string GetGameExecutable()
         {
-            string executablePath = String.Format(@"{0}\{1}\Binaries\{2}\{1}.exe", GetGamePath(), GetGameName(), GetSystemTarget());
+			string executablePath = String.Format(@"{0}{3}{1}{3}Binaries{3}{2}{3}{1}.exe", GetGamePath(), GetGameName(), GetSystemTarget(), Path.DirectorySeparatorChar);
             return executablePath;
         }
 

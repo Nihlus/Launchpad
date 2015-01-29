@@ -72,10 +72,11 @@ namespace Launchpad_Launcher
 			this.hbox4.Spacing = 6;
 			// Container child hbox4.Gtk.Box+BoxChild
 			this.button4 = new global::Gtk.Button ();
+			this.button4.Sensitive = false;
 			this.button4.CanFocus = true;
 			this.button4.Name = "button4";
 			this.button4.UseUnderline = true;
-			this.button4.Label = global::Mono.Unix.Catalog.GetString ("GtkButton");
+			this.button4.Label = global::Mono.Unix.Catalog.GetString ("Verify Installation");
 			this.hbox4.Add (this.button4);
 			global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.button4]));
 			w6.Position = 0;
@@ -86,7 +87,7 @@ namespace Launchpad_Launcher
 			this.button3.CanFocus = true;
 			this.button3.Name = "button3";
 			this.button3.UseUnderline = true;
-			this.button3.Label = global::Mono.Unix.Catalog.GetString ("GtkButton");
+			this.button3.Label = global::Mono.Unix.Catalog.GetString ("MainButton");
 			this.hbox4.Add (this.button3);
 			global::Gtk.Box.BoxChild w7 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.button3]));
 			w7.Position = 1;

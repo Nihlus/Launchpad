@@ -50,6 +50,11 @@ namespace Launchpad_Launcher
 				base(Gtk.WindowType.Toplevel)
 		{
 			this.Build ();
+
+			Console.WriteLine (Config.GetLocalDir ());
+			Console.WriteLine (Config.GetChangelogURL ());
+			Console.WriteLine (Config.GetGameExecutable ());
+			Console.WriteLine (Config.GetTempDir ());
 		}
 
 		protected void OnDeleteEvent (object sender, DeleteEventArgs a)

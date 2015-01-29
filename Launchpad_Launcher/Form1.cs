@@ -48,7 +48,7 @@ namespace Launchpad_Launcher
         public const int WM_NCLBUTTONDOWN = 0xA1;
         public const int HT_CAPTION = 0x2;
 
-		/*
+
         [DllImportAttribute("user32.dll")]
         public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
         [DllImportAttribute("user32.dll")]
@@ -57,10 +57,10 @@ namespace Launchpad_Launcher
         [DllImport("wininet.dll", SetLastError = true)]
         private static extern long DeleteUrlCacheEntry(string lpszUrlName);*/
 
-        //set up Handler references
-        MD5Handler md5 = new MD5Handler();
-        ConfigHandler Config = new ConfigHandler();
-        FTPHandler FTP = new FTPHandler();
+		//set up Handler references
+		MD5Handler md5 = new MD5Handler();
+		ConfigHandler Config = new ConfigHandler();
+		FTPHandler FTP = new FTPHandler();
 
         ImageButton mainButton = new ImageButton();
         ImageButton exitButton = new ImageButton();
