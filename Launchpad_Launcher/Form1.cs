@@ -144,7 +144,7 @@ namespace Launchpad_Launcher
             }
             catch (Exception ex)
             {
-
+				Console.WriteLine (ex.StackTrace);
             }
             
 
@@ -197,6 +197,7 @@ namespace Launchpad_Launcher
                 }
                 catch (WebException ex)
                 {
+					Console.WriteLine (ex.StackTrace);
                     webBrowser1.DocumentText = "Error: Could not load change log from server.";
                 }
 
@@ -249,6 +250,7 @@ namespace Launchpad_Launcher
                 }
                 catch (WebException ex)
                 {
+					Console.WriteLine (ex.StackTrace);
                     Console.WriteLine("Failed to find backgroundImage.png at {0}", backgroundImageURL);
                 }
 
@@ -389,10 +391,12 @@ namespace Launchpad_Launcher
                 try
                 {
                     WebResponse response = requestDir.GetResponse();
+
                     Console.WriteLine("Can connect to FTP at: {0} username: {1} password: {2}", FTPURL, FTPUserName, FTPPassword);
                     requestDir.Abort();//important otherwise FTP remains open and further attemps to access it hang
-                    bCanConnectToFTP = true;
+					response.Close();
 
+                    bCanConnectToFTP = true;
                 }
                 catch
                 {
@@ -649,9 +653,10 @@ namespace Launchpad_Launcher
                 {
                     localVersion = File.ReadAllText(String.Format(@"{0}\gameVersion.txt", Config.GetGamePath()));
                 }
-                catch (IOException ioEx)
+                catch (IOException ex)
                 {
                     //if we fail then continue with our version of 0.0.0 to compare against remoteVersion
+					Console.WriteLine(ex.StackTrace);
                 }
 
                 //get the remote version from the ftp
@@ -1004,7 +1009,6 @@ namespace Launchpad_Launcher
                 }
 
                 IEnumerable<string> manifestFiles = File.ReadLines(Config.GetManifestPath());
-                int fileAmount = File.ReadLines(Config.GetManifestPath()).Count();
                 int currentProgress = 0;
 
                 foreach (string value in manifestFiles)
@@ -1050,7 +1054,7 @@ namespace Launchpad_Launcher
             {
                 bInstallCompleted = false;
 
-                DialogResult result = MessageBox.Show("Could not connect to server! Unable to install.", "IOException", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Could not connect to server! Unable to install.", "IOException", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Console.WriteLine("Could not read launcher manifest from server.");
                 Console.WriteLine("GameInstallIOException: ");
                 Console.WriteLine(ex.StackTrace);
@@ -1172,7 +1176,8 @@ namespace Launchpad_Launcher
                 string FTPPath = String.Format("{0}/game{1}", Config.GetFTPUrl(), manifestFile[0].Replace(@"\", "/"));
                 string localPath = String.Format(@"{0}{1}", Config.GetGamePath(), manifestFile[0]);
 
-                long fileSize = Convert.ToInt64(manifestFile[2]);
+				//Should be used to compare against downloaded bytes.
+                //long fileSize = Convert.ToInt64(manifestFile[2]);
 
                 //check if the file exists locally
                 if (!File.Exists(filePath))

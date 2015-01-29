@@ -23,6 +23,9 @@ namespace Launchpad_Launcher
             //release 0.0.
             string defaultLauncherVersion = "0.0.3";
 
+			//Check for pre-unix config. If it exists, fix the values and copy it.
+			CheckForOldConfig ();
+
             if (!Directory.Exists(configDir))
             {
                 Directory.CreateDirectory(configDir);
@@ -280,8 +283,64 @@ namespace Launchpad_Launcher
             }
             catch (Exception ex)
             {
+				Console.WriteLine (ex.StackTrace);
                 return true;
             }
         }
+
+		private bool CheckForOldConfig()
+		{
+			string oldConfigPath = String.Format(@"{0}config{1}launcherConfig.ini", GetLocalDir(), Path.DirectorySeparatorChar);
+			string oldConfigDir = String.Format(@"{0}config", GetLocalDir());
+
+			//Is there an old config file?
+			if (File.Exists (oldConfigPath))
+			{
+				//Have not we already created the new config dir?
+				if (!Directory.Exists (GetConfigDir ()))
+				{
+					//if not, create it.
+					Directory.CreateDirectory (GetConfigDir ());
+
+					//Copy the old config file to the new location.
+					File.Copy (oldConfigPath, GetConfigPath ());
+
+					//read our new file.
+					FileIniDataParser Parser = new FileIniDataParser();
+					IniData data = Parser.ReadFile(GetConfigPath());
+
+					//replace the old invalid keys with new, updated keys.
+					string launcherVersion = data["Local"]["launcherVersion"];
+					string gameName = data["Local"]["gameName"];
+					string systemTarget = data["Local"]["systemTarget"];
+
+					data ["Local"].RemoveKey ("launcherVersion");
+					data ["Local"].RemoveKey ("gameName");
+					data ["Local"].RemoveKey ("systemTarget");
+
+					data ["Local"].AddKey ("LauncherVersion", launcherVersion);
+					data ["Local"].AddKey ("GameName", gameName);
+					data ["Local"].AddKey ("SystemTarget", systemTarget);
+
+					Parser.WriteFile(GetConfigPath(), data);
+					//We were successful, so return true.
+
+					File.Delete (oldConfigPath);
+					Directory.Delete (oldConfigDir, true);
+					return true;
+				}
+				else
+				{
+					//Delete the old config
+					File.Delete (oldConfigPath);
+					Directory.Delete (oldConfigDir, true);
+					return false;
+				}
+			} 
+			else
+			{
+				return false;
+			}
+		}
     }
 }
