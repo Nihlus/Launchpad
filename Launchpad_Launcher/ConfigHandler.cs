@@ -42,9 +42,9 @@ namespace Launchpad_Launcher
                     data.Sections.AddSection("Remote");
                     data.Sections.AddSection("Launchpad");
 
-                    data["Local"].AddKey("launcherVersion", defaultLauncherVersion);
-                    data["Local"].AddKey("gameName", "Example");
-                    data["Local"].AddKey("systemTarget", "Win64");
+                    data["Local"].AddKey("LauncherVersion", defaultLauncherVersion);
+                    data["Local"].AddKey("GameName", "Example");
+                    data["Local"].AddKey("SystemTarget", "Win64");
 
                     data["Remote"].AddKey("FTPUsername", "anonymous");
                     data["Remote"].AddKey("FTPPassword", "anonymous");
@@ -63,7 +63,7 @@ namespace Launchpad_Launcher
             else
             {
                 IniData data = Parser.ReadFile(configPath);
-                data["Local"]["launcherVersion"] = defaultLauncherVersion;
+                data["Local"]["LauncherVersion"] = defaultLauncherVersion;
 
                 Parser.WriteFile(configPath, data);
             }
@@ -71,13 +71,13 @@ namespace Launchpad_Launcher
 
         private string GetConfigPath()
         {
-			string configPath = String.Format(@"{0}config{1}launcherConfig.ini", GetLocalDir(), Path.DirectorySeparatorChar);
+			string configPath = String.Format(@"{0}Config{1}LauncherConfig.ini", GetLocalDir(), Path.DirectorySeparatorChar);
             return configPath;
         }
 
         private string GetConfigDir()
         {
-			string configDir = String.Format(@"{0}config", GetLocalDir());
+			string configDir = String.Format(@"{0}Config", GetLocalDir());
             return configDir;
         }
 
@@ -101,13 +101,13 @@ namespace Launchpad_Launcher
 
         public string GetManifestPath()
         {
-            string manifestPath = String.Format(@"{0}launcherManifest.txt", GetLocalDir());
+            string manifestPath = String.Format(@"{0}LauncherManifest.txt", GetLocalDir());
             return manifestPath;
         }
 
         public string GetGamePath()
         {
-			string gamePath = String.Format(@"{0}game", GetLocalDir());
+			string gamePath = String.Format(@"{0}Game", GetLocalDir());
             return gamePath;
         }
 
@@ -119,31 +119,31 @@ namespace Launchpad_Launcher
 
         public string GetManifestURL()
         {
-            string manifestURL = String.Format("{0}/launcher/launcherManifest.txt", GetFTPUrl());
+            string manifestURL = String.Format("{0}/Launcher/LauncherManifest.txt", GetFTPUrl());
             return manifestURL;
         }
 
         public string GetManifestChecksumURL()
         {
-            string manifestChecksumURL = String.Format("{0}/launcher/launcherManifest.checksum", GetFTPUrl());
+            string manifestChecksumURL = String.Format("{0}/Launcher/LauncherManifest.checksum", GetFTPUrl());
             return manifestChecksumURL;
         }
 
         public string GetLauncherURL()
         {
-            string launcherURL = String.Format("{0}/launcher/bin/Launchpad.exe", GetFTPUrl());
+            string launcherURL = String.Format("{0}/Launcher/bin/Launchpad.exe", GetFTPUrl());
             return launcherURL;
         }
 
         public string GetChangelogURL()
         {
-            string changelogURL = String.Format("{0}/launcher/changelog.html", GetFTPUrl());
+            string changelogURL = String.Format("{0}/Launcher/changelog.html", GetFTPUrl());
             return changelogURL;
         }
 
         public string GetGameURL()
         {
-            string gameURL = String.Format("{0}/game", GetFTPUrl());
+            string gameURL = String.Format("{0}/Game", GetFTPUrl());
             return gameURL;
         }
 
@@ -154,7 +154,7 @@ namespace Launchpad_Launcher
                 FileIniDataParser Parser = new FileIniDataParser();
                 IniData data = Parser.ReadFile(GetConfigPath());
 
-                string launcherVersion = data["Local"]["launcherVersion"];
+                string launcherVersion = data["Local"]["LauncherVersion"];
 
                 return launcherVersion;
             }
@@ -174,7 +174,7 @@ namespace Launchpad_Launcher
                 FileIniDataParser Parser = new FileIniDataParser();
                 IniData data = Parser.ReadFile(GetConfigPath());
 
-                string gameName = data["Local"]["gameName"];
+                string gameName = data["Local"]["GameName"];
 
                 return gameName;
             }
@@ -193,7 +193,7 @@ namespace Launchpad_Launcher
                 FileIniDataParser Parser = new FileIniDataParser();
                 IniData data = Parser.ReadFile(GetConfigPath());
 
-                string systemTarget = data["Local"]["systemTarget"];
+                string systemTarget = data["Local"]["SystemTarget"];
 
                 return systemTarget;
             }
