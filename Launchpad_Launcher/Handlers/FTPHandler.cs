@@ -13,6 +13,14 @@ namespace Launchpad_Launcher
     {
         public int FTPbytesDownloaded = 0;
 
+
+		/// <summary>
+		/// Reads a text file from a remote FTP server.
+		/// </summary>
+		/// <returns>The FTP file.</returns>
+		/// <param name="username">Username.</param>
+		/// <param name="password">Password.</param>
+		/// <param name="ftpSourceFilePath">FTP file path.</param>
         public string ReadFTPFile(string username, string password, string ftpSourceFilePath)
         {
             int bytesRead = 0;
@@ -62,6 +70,13 @@ namespace Launchpad_Launcher
             }
         }
 
+		/// <summary>
+		/// Downloads an FTP file.
+		/// </summary>
+		/// <param name="username">Username.</param>
+		/// <param name="password">Password.</param>
+		/// <param name="ftpSourceFilePath">Ftp source file path.</param>
+		/// <param name="localDestination">Local destination.</param>
         public void DownloadFTPFile(string username, string password, string ftpSourceFilePath, string localDestination)
         {
             int bytesRead = 0;
@@ -114,6 +129,14 @@ namespace Launchpad_Launcher
             }
         }
 
+		/// <summary>
+		/// Creates an ftp web request.
+		/// </summary>
+		/// <returns>The ftp web request.</returns>
+		/// <param name="ftpDirectoryPath">Ftp directory path.</param>
+		/// <param name="username">Username.</param>
+		/// <param name="password">Password.</param>
+		/// <param name="keepAlive">If set to <c>true</c> keep alive.</param>
         public FtpWebRequest CreateFtpWebRequest(string ftpDirectoryPath, string username, string password, bool keepAlive = false)
         {
             try

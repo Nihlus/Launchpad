@@ -53,12 +53,27 @@ namespace Launchpad_Launcher
 
 			this.Build ();
 
-			//this section sends some anonymous useage stats back home. If you don't want to do this for your game, simply change this boolean to false.
-			bool bSendAnonStats = false;
-			if (bSendAnonStats)
+			if (!Checks.CanConnectToFTP ())
 			{
-				StatsHandler stats = new StatsHandler ();
-				stats.SendUseageStats(Config.GetGUID(), Config.GetLauncherVersion(), Config.GetGameName(), Config.GetDoOfficialUpdates());
+				MessageDialog dialog = new MessageDialog (null, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok, "Failed to connect to the FTP server. Please check your FTP settings.");
+				dialog.Run ();
+				dialog.Destroy ();
+				bCanConnectToFTP = false;
+			} 
+			else
+			{
+				//if we can connect, proceeed with the rest of our checks.
+
+				//this section sends some anonymous useage stats back home. If you don't want to do this for your game, simply change this boolean to false.
+				bool bSendAnonStats = false;
+				if (bSendAnonStats)
+				{
+					Console.WriteLine ("Sending anonymous useage stats to hambase 1 :) Thanks!");
+					StatsHandler stats = new StatsHandler ();
+					stats.SendUseageStats(Config.GetGUID(), Config.GetLauncherVersion(), Config.GetGameName(), Config.GetDoOfficialUpdates());
+				}
+
+				//check if this is the first time we're starting the launcher.
 			}
 		}
 

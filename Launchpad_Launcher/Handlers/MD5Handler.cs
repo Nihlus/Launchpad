@@ -11,7 +11,11 @@ namespace Launchpad_Launcher
 {
     public class MD5Handler
     {
-        //function that takes a file stream, then computes the MD5 hash for the stream
+        /// <summary>
+        /// Gets the file hash from a file stream.
+        /// </summary>
+        /// <returns>The file hash.</returns>
+        /// <param name="fileStream">File stream.</param>
         public string GetFileHash(Stream fileStream)
         {
 

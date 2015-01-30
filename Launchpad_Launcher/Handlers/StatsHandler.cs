@@ -10,6 +10,13 @@ namespace Launchpad_Launcher
 
 		}
 
+		/// <summary>
+		/// Sends the useage stats.
+		/// </summary>
+		/// <param name="guid">GUID.</param>
+		/// <param name="version">Version.</param>
+		/// <param name="gameName">Game name.</param>
+		/// <param name="officialUpdates">If set to <c>true</c> official updates.</param>
 		public void SendUseageStats(string guid, string version, string gameName, bool officialUpdates)
 		{
 			try
@@ -30,8 +37,6 @@ namespace Launchpad_Launcher
 			{
 				Console.WriteLine (ex.StackTrace);
 			}
-
-
 		}
 	}
 }

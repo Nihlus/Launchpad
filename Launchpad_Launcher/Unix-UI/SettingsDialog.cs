@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Gtk;
 
 namespace Launchpad_Launcher
 {
@@ -67,6 +68,12 @@ namespace Launchpad_Launcher
 				if (Checks.CanConnectToFTP ())
 				{
 					this.Destroy ();
+				}
+				else
+				{
+					MessageDialog dialog = new MessageDialog (null, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok, "Failed to connect to the FTP server. Please check your FTP settings.");
+					dialog.Run ();
+					dialog.Destroy ();
 				}
 			}
 

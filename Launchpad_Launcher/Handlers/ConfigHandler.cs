@@ -12,7 +12,9 @@ namespace Launchpad_Launcher
 {
     public class ConfigHandler
     {
-        //constructor
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Launchpad_Launcher.ConfigHandler"/> class.
+        /// </summary>
         public ConfigHandler()
         {
             FileIniDataParser Parser = new FileIniDataParser();
@@ -77,78 +79,131 @@ namespace Launchpad_Launcher
             }
         }
 
+		/// <summary>
+		/// Gets the config path.
+		/// </summary>
+		/// <returns>The config path.</returns>
         private string GetConfigPath()
         {
 			string configPath = String.Format(@"{0}Config{1}LauncherConfig.ini", GetLocalDir(), Path.DirectorySeparatorChar);
             return configPath;
         }
 
+		/// <summary>
+		/// Gets the config dir.
+		/// </summary>
+		/// <returns>The config dir.</returns>
         private string GetConfigDir()
         {
 			string configDir = String.Format(@"{0}Config", GetLocalDir());
             return configDir;
         }
 
+		/// <summary>
+		/// Gets the update cookie.
+		/// </summary>
+		/// <returns>The update cookie.</returns>
         public string GetUpdateCookie()
         {
             string updateCookie = String.Format(@"{0}.updatecookie", Directory.GetCurrentDirectory());
             return updateCookie;
         }
 
+		/// <summary>
+		/// Gets the local dir.
+		/// </summary>
+		/// <returns>The local dir.</returns>
         public string GetLocalDir()
         {
 			string localDir = String.Format(@"{0}{1}", Directory.GetCurrentDirectory(), Path.DirectorySeparatorChar);
             return localDir;
         }
 
+		/// <summary>
+		/// Gets the temp dir.
+		/// </summary>
+		/// <returns>The temp dir.</returns>
         public string GetTempDir()
         {
 			string tempDir = Path.GetTempPath ();
             return tempDir;
         }
 
+		/// <summary>
+		/// Gets the manifest path.
+		/// </summary>
+		/// <returns>The manifest path.</returns>
         public string GetManifestPath()
         {
             string manifestPath = String.Format(@"{0}LauncherManifest.txt", GetLocalDir());
             return manifestPath;
         }
 
+		/// <summary>
+		/// Gets the game path.
+		/// </summary>
+		/// <returns>The game path.</returns>
         public string GetGamePath()
         {
 			string gamePath = String.Format(@"{0}Game", GetLocalDir());
             return gamePath;
         }
 
+		/// <summary>
+		/// Gets the game executable.
+		/// </summary>
+		/// <returns>The game executable.</returns>
         public string GetGameExecutable()
         {
 			string executablePath = String.Format(@"{0}{3}{1}{3}Binaries{3}{2}{3}{1}.exe", GetGamePath(), GetGameName(), GetSystemTarget(), Path.DirectorySeparatorChar);
             return executablePath;
         }
 
+		/// <summary>
+		/// Gets the manifest URL.
+		/// </summary>
+		/// <returns>The manifest URL.</returns>
         public string GetManifestURL()
         {
             string manifestURL = String.Format("{0}/launcher/LauncherManifest.txt", GetFTPUrl());
             return manifestURL;
         }
 
+		/// <summary>
+		/// Gets the manifest checksum URL.
+		/// </summary>
+		/// <returns>The manifest checksum URL.</returns>
         public string GetManifestChecksumURL()
         {
             string manifestChecksumURL = String.Format("{0}/launcher/LauncherManifest.checksum", GetFTPUrl());
             return manifestChecksumURL;
         }
 
+		/// <summary>
+		/// Gets the custom launcher download URL.
+		/// </summary>
+		/// <returns>The custom launcher download URL.</returns>
         public string GetLauncherURL()
         {
             string launcherURL = String.Format("{0}/launcher/bin/Launchpad.exe", GetFTPUrl());
             return launcherURL;
         }
 
+		/// <summary>
+		/// Gets the changelog URL.
+		/// </summary>
+		/// <returns>The changelog URL.</returns>
         public string GetChangelogURL()
         {
             string changelogURL = String.Format("{0}/launcher/changelog.html", GetFTPUrl());
             return changelogURL;
         }
 
+		/// <summary>
+		/// Gets the game URL.
+		/// </summary>
+		/// <returns>The game URL.</returns>
+		/// <param name="bGetSystemGame">If set to <c>true</c> b gets a platform-specific game.</param>
         public string GetGameURL(bool bGetSystemGame)
         {
 			string gameURL;
@@ -164,6 +219,10 @@ namespace Launchpad_Launcher
             return gameURL;
         }
 
+		/// <summary>
+		/// Gets the launcher version.
+		/// </summary>
+		/// <returns>The launcher version.</returns>
         public string GetLauncherVersion()
         {
             try
@@ -184,6 +243,10 @@ namespace Launchpad_Launcher
 
         }
 
+		/// <summary>
+		/// Gets the name of the game.
+		/// </summary>
+		/// <returns>The game name.</returns>
         public string GetGameName()
         {
             try
@@ -203,6 +266,10 @@ namespace Launchpad_Launcher
             }
         }
 
+		/// <summary>
+		/// Sets the name of the game.
+		/// </summary>
+		/// <param name="GameName">Game name.</param>
 		public void SetGameName(string GameName)
 		{
 			try
@@ -220,6 +287,10 @@ namespace Launchpad_Launcher
 			}
 		}
 
+		/// <summary>
+		/// Gets the system target.
+		/// </summary>
+		/// <returns>The system target.</returns>
         public string GetSystemTarget()
         {
 			//possible values are:
@@ -245,6 +316,10 @@ namespace Launchpad_Launcher
             }
         }
 
+		/// <summary>
+		/// Sets the system target.
+		/// </summary>
+		/// <param name="SystemTarget">System target.</param>
 		public void SetSystemTarget(string SystemTarget)
 		{
 			//possible values are:
@@ -269,6 +344,10 @@ namespace Launchpad_Launcher
 			}
 		}
 
+		/// <summary>
+		/// Gets the FTP username.
+		/// </summary>
+		/// <returns>The FTP username.</returns>
         public string GetFTPUsername()
         {
             try
@@ -288,6 +367,10 @@ namespace Launchpad_Launcher
             }
         }
 
+		/// <summary>
+		/// Sets the FTP username.
+		/// </summary>
+		/// <param name="Username">Username.</param>
 		public void SetFTPUsername(string Username)
 		{
 			try
@@ -306,6 +389,10 @@ namespace Launchpad_Launcher
 
 		}
 
+		/// <summary>
+		/// Gets the FTP password.
+		/// </summary>
+		/// <returns>The FTP password.</returns>
         public string GetFTPPassword()
         {
             try
@@ -325,6 +412,10 @@ namespace Launchpad_Launcher
             }
         }
 
+		/// <summary>
+		/// Sets the FTP password.
+		/// </summary>
+		/// <param name="Password">Password.</param>
 		public void SetFTPPassword(string Password)
 		{
 			try
@@ -343,6 +434,10 @@ namespace Launchpad_Launcher
 
 		}
 
+		/// <summary>
+		/// Gets the base FTP URL.
+		/// </summary>
+		/// <returns>The base FTP URL.</returns>
 		public string GetBaseFTPUrl()
 		{
 			try
@@ -362,6 +457,11 @@ namespace Launchpad_Launcher
 			}
 		}
 
+
+		/// <summary>
+		/// Sets the base FTP URL.
+		/// </summary>
+		/// <param name="Url">URL.</param>
 		public void SetBaseFTPUrl(string Url)
 		{
 			try
@@ -379,6 +479,10 @@ namespace Launchpad_Launcher
 			}
 		}
 
+		/// <summary>
+		/// Gets the FTP URL.
+		/// </summary>
+		/// <returns>The FTP URL.</returns>
         public string GetFTPUrl()
         {
             try
@@ -404,6 +508,10 @@ namespace Launchpad_Launcher
             }
         }
 
+		/// <summary>
+		/// Gets if the launcher should receive official updates.
+		/// </summary>
+		/// <returns><c>true</c>, if the launcher should receive official updates, <c>false</c> otherwise.</returns>
         public bool GetDoOfficialUpdates()
         {
             try
@@ -421,6 +529,10 @@ namespace Launchpad_Launcher
             }
         }
 
+		/// <summary>
+		/// Gets the launcher's unique GUID.
+		/// </summary>
+		/// <returns>The GUID.</returns>
 		public string GetGUID()
 		{
 			try
@@ -438,6 +550,10 @@ namespace Launchpad_Launcher
 			}
 		}
 
+		/// <summary>
+		/// Checks for old config.
+		/// </summary>
+		/// <returns><c>true</c>, if an old config was found, <c>false</c> otherwise.</returns>
 		private bool CheckForOldConfig()
 		{
 			string oldConfigPath = String.Format(@"{0}config{1}launcherConfig.ini", GetLocalDir(), Path.DirectorySeparatorChar);
