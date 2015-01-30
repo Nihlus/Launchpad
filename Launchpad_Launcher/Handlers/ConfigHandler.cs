@@ -32,7 +32,7 @@ namespace Launchpad_Launcher
             {
                 Directory.CreateDirectory(configDir);
             }
-            if (!File.Exists(configPath))
+            if (!File.Exists(configPath) && !IsRunningOnUnix())
             {
                 //here we create a new empty file
                 FileStream configStream = File.Create(configPath);
@@ -42,18 +42,20 @@ namespace Launchpad_Launcher
                 try
                 {
                     IniData data = Parser.ReadFile(configPath);
+                    string GeneratedGUID = Guid.NewGuid ().ToString ();
 
                     data.Sections.AddSection("Local");
                     data.Sections.AddSection("Remote");
                     data.Sections.AddSection("Launchpad");
 
                     data["Local"].AddKey("LauncherVersion", defaultLauncherVersion);
-                    data["Local"].AddKey("GameName", "Example");
+                    data["Local"].AddKey("GameName", "LaunchpadExample");
                     data["Local"].AddKey("SystemTarget", "Win64");
+                    data["Local"].AddKey("GUID", GeneratedGUID);
 
                     data["Remote"].AddKey("FTPUsername", "anonymous");
                     data["Remote"].AddKey("FTPPassword", "anonymous");
-                    data["Remote"].AddKey("FTPUrl", "ftp://example.example.com");
+                    data["Remote"].AddKey("FTPUrl", "ftp://directorate.asuscomm.com");
 
                     data["Launchpad"].AddKey("bOfficialUpdates", "true");
 
@@ -88,7 +90,8 @@ namespace Launchpad_Launcher
 			string configPath = String.Format(@"{0}Config{1}LauncherConfig.ini", 
 			                                  GetLocalDir(), 
 			                                  Path.DirectorySeparatorChar);
-
+            Console.WriteLine(configPath);
+            
             return configPath;
         }
 
@@ -185,10 +188,9 @@ namespace Launchpad_Launcher
 		/// <returns>The game executable.</returns>
         public string GetGameExecutable()
         {
-			string executablePath = String.Format(@"{0}{3}{1}{3}Binaries{3}{2}{3}{1}.exe", 
+			string executablePath = String.Format(@"{0}{2}{1}.exe", 
 			                                      GetGamePath(), 
-			                                      GetGameName(), 
-			                                      GetSystemTarget(), 
+			                                      GetGameName(),  
 			                                      Path.DirectorySeparatorChar);
             return executablePath;
         }
@@ -596,54 +598,98 @@ namespace Launchpad_Launcher
 
 			string oldConfigDir = String.Format(@"{0}config", GetLocalDir());
 
-			//Is there an old config file?
-			if (File.Exists (oldConfigPath))
-			{
-				//Have not we already created the new config dir?
-				if (!Directory.Exists (GetConfigDir ()))
-				{
-					//if not, create it.
-					Directory.CreateDirectory (GetConfigDir ());
+            if (IsRunningOnUnix())
+            {
+                //Case sensitive
+                //Is there an old config file?
+                if (File.Exists(oldConfigPath))
+                {
+                    //Have not we already created the new config dir?
+                    if (!Directory.Exists(GetConfigDir()))
+                    {
+                        //if not, create it.
+                        Directory.CreateDirectory(GetConfigDir());
 
-					//Copy the old config file to the new location.
-					File.Copy (oldConfigPath, GetConfigPath ());
+                        //Copy the old config file to the new location.
+                        File.Copy(oldConfigPath, GetConfigPath());
 
-					//read our new file.
-					FileIniDataParser Parser = new FileIniDataParser();
-					IniData data = Parser.ReadFile(GetConfigPath());
+                        //read our new file.
+                        FileIniDataParser Parser = new FileIniDataParser();
+                        IniData data = Parser.ReadFile(GetConfigPath());
 
-					//replace the old invalid keys with new, updated keys.
-					string launcherVersion = data["Local"]["launcherVersion"];
-					string gameName = data["Local"]["gameName"];
-					string systemTarget = data["Local"]["systemTarget"];
+                        //replace the old invalid keys with new, updated keys.
+                        string launcherVersion = data["Local"]["launcherVersion"];
+                        string gameName = data["Local"]["gameName"];
+                        string systemTarget = data["Local"]["systemTarget"];
 
-					data ["Local"].RemoveKey ("launcherVersion");
-					data ["Local"].RemoveKey ("gameName");
-					data ["Local"].RemoveKey ("systemTarget");
+                        data["Local"].RemoveKey("launcherVersion");
+                        data["Local"].RemoveKey("gameName");
+                        data["Local"].RemoveKey("systemTarget");
 
-					data ["Local"].AddKey ("LauncherVersion", launcherVersion);
-					data ["Local"].AddKey ("GameName", gameName);
-					data ["Local"].AddKey ("SystemTarget", systemTarget);
+                        data["Local"].AddKey("LauncherVersion", launcherVersion);
+                        data["Local"].AddKey("GameName", gameName);
+                        data["Local"].AddKey("SystemTarget", systemTarget);
 
-					Parser.WriteFile(GetConfigPath(), data);
-					//We were successful, so return true.
+                        Parser.WriteFile(GetConfigPath(), data);
+                        //We were successful, so return true.
 
-					File.Delete (oldConfigPath);
-					Directory.Delete (oldConfigDir, true);
-					return true;
-				}
-				else
-				{
-					//Delete the old config
-					File.Delete (oldConfigPath);
-					Directory.Delete (oldConfigDir, true);
-					return false;
-				}
-			} 
-			else
-			{
-				return false;
-			}
+                        File.Delete(oldConfigPath);
+                        Directory.Delete(oldConfigDir, true);
+                        return true;
+                    }
+                    else
+                    {
+                        //Delete the old config
+                        File.Delete(oldConfigPath);
+                        Directory.Delete(oldConfigDir, true);
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                //Windows, so direct access without copying.
+                //read our new file.
+                FileIniDataParser Parser = new FileIniDataParser();
+                IniData data = Parser.ReadFile(GetConfigPath());
+
+                //replace the old invalid keys with new, updated keys.
+                string launcherVersion = data["Local"]["launcherVersion"];
+                string gameName = data["Local"]["gameName"];
+                string systemTarget = data["Local"]["systemTarget"];
+
+                data["Local"].RemoveKey("launcherVersion");
+                data["Local"].RemoveKey("gameName");
+                data["Local"].RemoveKey("systemTarget");
+
+                data["Local"].AddKey("LauncherVersion", launcherVersion);
+                data["Local"].AddKey("GameName", gameName);
+                data["Local"].AddKey("SystemTarget", systemTarget);
+
+                Parser.WriteFile(GetConfigPath(), data);
+                //We were successful, so return true.
+                return true;
+            }
+			
 		}
+
+        private bool IsRunningOnUnix()
+        {
+            int p = (int)Environment.OSVersion.Platform;
+            if ((p == 4) || (p == 6) || (p == 128))
+            {
+                Console.WriteLine("Running on Unix");
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("Not running on Unix");
+                return false;
+            }
+        }
     }
 }
