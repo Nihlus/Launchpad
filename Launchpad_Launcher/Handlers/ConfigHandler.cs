@@ -42,6 +42,7 @@ namespace Launchpad_Launcher
                 try
                 {
                     IniData data = Parser.ReadFile(configPath);
+                    string GeneratedGUID = Guid.NewGuid ().ToString ();
 
                     data.Sections.AddSection("Local");
                     data.Sections.AddSection("Remote");
@@ -50,6 +51,7 @@ namespace Launchpad_Launcher
                     data["Local"].AddKey("LauncherVersion", defaultLauncherVersion);
                     data["Local"].AddKey("GameName", "Example");
                     data["Local"].AddKey("SystemTarget", "Win64");
+                    data["Local"].AddKey("GUID", GeneratedGUID);
 
                     data["Remote"].AddKey("FTPUsername", "anonymous");
                     data["Remote"].AddKey("FTPPassword", "anonymous");
