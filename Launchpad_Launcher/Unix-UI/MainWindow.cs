@@ -49,13 +49,19 @@ namespace Launchpad_Launcher
 
 		public MainWindow () : 
 				base(Gtk.WindowType.Toplevel)
-		{
-
+		{		
 			this.Build ();
 
+			//First of all, check if we can connect to the FTP server.
 			if (!Checks.CanConnectToFTP ())
 			{
-				MessageDialog dialog = new MessageDialog (null, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok, "Failed to connect to the FTP server. Please check your FTP settings.");
+				MessageDialog dialog = new MessageDialog (
+					null, 
+				    DialogFlags.Modal, 
+				    MessageType.Warning, 
+				    ButtonsType.Ok, 
+				    "Failed to connect to the FTP server. Please check your FTP settings.");
+
 				dialog.Run ();
 				dialog.Destroy ();
 				bCanConnectToFTP = false;
@@ -63,14 +69,49 @@ namespace Launchpad_Launcher
 			else
 			{
 				//if we can connect, proceeed with the rest of our checks.
+				if (Checks.IsInitialStartup ())
+				{
+					MessageDialog dialog = new MessageDialog (
+						null, 
+						DialogFlags.Modal, 
+						MessageType.Question, 
+						ButtonsType.OkCancel, 
+						String.Format (
+						"This appears to be the first time you're starting the launcher." +
+						"Is this the location where you would like to install the game?" +
+						"\n\n{0}", Config.GetLocalDir ()
+					));
 
-				//this section sends some anonymous useage stats back home. If you don't want to do this for your game, simply change this boolean to false.
+					if (dialog.Run () == (int)Gtk.ResponseType.Ok)
+					{
+						dialog.Destroy ();
+						//yes, install here
+						Console.WriteLine ("Installing in current directory.");
+						Config.CreateUpdateCookie ();
+					} else
+					{
+						dialog.Destroy ();
+						//no, don't install here
+						Console.WriteLine ("Exiting...");
+						Gtk.Application.Quit ();
+					}
+
+				} 
+
+				Console.WriteLine (Config.GetUpdateCookie ());
+
+
+				//this section sends some anonymous useage stats back home. 
+				//If you don't want to do this for your game, simply change this boolean to false.
 				bool bSendAnonStats = false;
 				if (bSendAnonStats)
 				{
 					Console.WriteLine ("Sending anonymous useage stats to hambase 1 :) Thanks!");
 					StatsHandler stats = new StatsHandler ();
-					stats.SendUseageStats(Config.GetGUID(), Config.GetLauncherVersion(), Config.GetGameName(), Config.GetDoOfficialUpdates());
+					stats.SendUseageStats(Config.GetGUID(), 
+					                      Config.GetLauncherVersion(), 
+					                      Config.GetGameName(), 
+					                      Config.GetDoOfficialUpdates());
 				}
 
 				//check if this is the first time we're starting the launcher.

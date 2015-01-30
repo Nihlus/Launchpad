@@ -44,7 +44,8 @@ namespace Launchpad_Launcher
 				bAreAllSettingsOK = false;
 				Gdk.Color col = new Gdk.Color(255, 128, 128);
 				SystemTarget_entry.ModifyBase(Gtk.StateType.Normal, col);
-				SystemTarget_entry.TooltipText = "The system target needs to be one of the following: \"Win64\", \"Win32\", \"Linux\" or \"Mac\". Please correct the target.";
+				SystemTarget_entry.TooltipText = "The system target needs to be one of the following:" + 
+					"\"Win64\", \"Win32\", \"Linux\" or \"Mac\". Please correct the target.";
 			}
 
 			if (FTPURL_entry.Text.StartsWith ("ftp://"))
@@ -71,7 +72,12 @@ namespace Launchpad_Launcher
 				}
 				else
 				{
-					MessageDialog dialog = new MessageDialog (null, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok, "Failed to connect to the FTP server. Please check your FTP settings.");
+					MessageDialog dialog = new MessageDialog (
+						null, DialogFlags.Modal, 
+						MessageType.Warning, 
+						ButtonsType.Ok, 
+						"Failed to connect to the FTP server. Please check your FTP settings.");
+
 					dialog.Run ();
 					dialog.Destroy ();
 				}

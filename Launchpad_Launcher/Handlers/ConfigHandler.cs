@@ -22,7 +22,7 @@ namespace Launchpad_Launcher
             string configDir = GetConfigDir();
             string configPath = GetConfigPath();
 
-            //release 0.0.
+            //Major release 0.1.1, linux support
             string defaultLauncherVersion = "0.0.4";
 
 			//Check for pre-unix config. If it exists, fix the values and copy it.
@@ -85,7 +85,10 @@ namespace Launchpad_Launcher
 		/// <returns>The config path.</returns>
         private string GetConfigPath()
         {
-			string configPath = String.Format(@"{0}Config{1}LauncherConfig.ini", GetLocalDir(), Path.DirectorySeparatorChar);
+			string configPath = String.Format(@"{0}Config{1}LauncherConfig.ini", 
+			                                  GetLocalDir(), 
+			                                  Path.DirectorySeparatorChar);
+
             return configPath;
         }
 
@@ -105,9 +108,36 @@ namespace Launchpad_Launcher
 		/// <returns>The update cookie.</returns>
         public string GetUpdateCookie()
         {
-            string updateCookie = String.Format(@"{0}.updatecookie", Directory.GetCurrentDirectory());
+			string updateCookie = String.Format(@"{0}{1}.updatecookie", 
+			                                    Directory.GetCurrentDirectory(), 
+			                                    Path.DirectorySeparatorChar);
             return updateCookie;
         }
+
+		/// <summary>
+		/// Creates the update cookie.
+		/// </summary>
+		/// <returns>The update cookie's path.</returns>
+		public string CreateUpdateCookie()
+		{
+			bool bCookieExists = File.Exists (String.Format (@"{0}{1}.updatecookie", 
+			                                                Directory.GetCurrentDirectory (), 
+			                                                Path.DirectorySeparatorChar));
+			if (!bCookieExists)
+			{
+				File.Create (String.Format(@"{0}{1}.updatecookie", 
+				                           Directory.GetCurrentDirectory(), 
+				                           Path.DirectorySeparatorChar));
+
+				return String.Format(@"{0}{1}.updatecookie", 
+				                      Directory.GetCurrentDirectory(), 
+				                      Path.DirectorySeparatorChar);
+			}
+			else
+			{
+				return GetUpdateCookie ();
+			}
+		}
 
 		/// <summary>
 		/// Gets the local dir.
@@ -155,7 +185,11 @@ namespace Launchpad_Launcher
 		/// <returns>The game executable.</returns>
         public string GetGameExecutable()
         {
-			string executablePath = String.Format(@"{0}{3}{1}{3}Binaries{3}{2}{3}{1}.exe", GetGamePath(), GetGameName(), GetSystemTarget(), Path.DirectorySeparatorChar);
+			string executablePath = String.Format(@"{0}{3}{1}{3}Binaries{3}{2}{3}{1}.exe", 
+			                                      GetGamePath(), 
+			                                      GetGameName(), 
+			                                      GetSystemTarget(), 
+			                                      Path.DirectorySeparatorChar);
             return executablePath;
         }
 
@@ -556,7 +590,10 @@ namespace Launchpad_Launcher
 		/// <returns><c>true</c>, if an old config was found, <c>false</c> otherwise.</returns>
 		private bool CheckForOldConfig()
 		{
-			string oldConfigPath = String.Format(@"{0}config{1}launcherConfig.ini", GetLocalDir(), Path.DirectorySeparatorChar);
+			string oldConfigPath = String.Format(@"{0}config{1}launcherConfig.ini", 
+			                                     GetLocalDir(), 
+			                                     Path.DirectorySeparatorChar);
+
 			string oldConfigDir = String.Format(@"{0}config", GetLocalDir());
 
 			//Is there an old config file?
