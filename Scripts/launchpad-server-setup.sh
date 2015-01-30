@@ -25,10 +25,13 @@ then
     if [[ $REPLY =~ ^[Yy]$ ]]
     then
         apt-get install vsftpd
+    else
+        exit 1;
     fi
 else
     echo "Vsftpd was installed, proceeding."
     
+fi
 #if yes, 
 #modify the config options, uncommenting each
     echo "Allowing anonymous downloading of files..."
@@ -71,7 +74,7 @@ else
     read -p "You will need an account in the ftp group to upload files to the server. Would you like to use an existing account, or create a new one? [Create - y/ Existing - n] " -r
     if [[ $REPLY =~ ^[Yy]$ ]]
     then
-        useradd -M --comment Launchpad-system -G ftp launchpad
+        useradd -d /srv/ftp --comment Launchpad-system -G ftp launchpad
         passwd launchpad
     else
         read -p "Input account name: " -r
@@ -83,7 +86,6 @@ else
 #/game/
     
     echo "Setup successful. You can now start uploading your game and/or launcher via your selected accounts."
-fi
 
     
 

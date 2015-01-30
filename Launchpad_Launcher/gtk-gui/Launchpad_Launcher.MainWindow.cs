@@ -4,7 +4,11 @@ namespace Launchpad_Launcher
 {
 	public partial class MainWindow
 	{
+		private global::Gtk.UIManager UIManager;
+		private global::Gtk.Action EditAction;
+		private global::Gtk.Action SettingsAction;
 		private global::Gtk.VBox vbox1;
+		private global::Gtk.MenuBar menubar1;
 		private global::Gtk.HBox hbox2;
 		private global::Gtk.VBox vbox2;
 		private global::Gtk.Alignment alignment1;
@@ -19,6 +23,16 @@ namespace Launchpad_Launcher
 		{
 			global::Stetic.Gui.Initialize (this);
 			// Widget Launchpad_Launcher.MainWindow
+			this.UIManager = new global::Gtk.UIManager ();
+			global::Gtk.ActionGroup w1 = new global::Gtk.ActionGroup ("Default");
+			this.EditAction = new global::Gtk.Action ("EditAction", global::Mono.Unix.Catalog.GetString ("Edit"), null, null);
+			this.EditAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("Options");
+			w1.Add (this.EditAction, null);
+			this.SettingsAction = new global::Gtk.Action ("SettingsAction", global::Mono.Unix.Catalog.GetString ("Settings"), null, null);
+			this.SettingsAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("Settings");
+			w1.Add (this.SettingsAction, null);
+			this.UIManager.InsertActionGroup (w1, 0);
+			this.AddAccelGroup (this.UIManager.AccelGroup);
 			this.Name = "Launchpad_Launcher.MainWindow";
 			this.Title = global::Mono.Unix.Catalog.GetString ("MainWindow");
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
@@ -26,6 +40,15 @@ namespace Launchpad_Launcher
 			this.vbox1 = new global::Gtk.VBox ();
 			this.vbox1.Name = "vbox1";
 			this.vbox1.Spacing = 6;
+			// Container child vbox1.Gtk.Box+BoxChild
+			this.UIManager.AddUiFromString ("<ui><menubar name='menubar1'><menu name='EditAction' action='EditAction'><menuitem name='SettingsAction' action='SettingsAction'/></menu></menubar></ui>");
+			this.menubar1 = ((global::Gtk.MenuBar)(this.UIManager.GetWidget ("/menubar1")));
+			this.menubar1.Name = "menubar1";
+			this.vbox1.Add (this.menubar1);
+			global::Gtk.Box.BoxChild w2 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.menubar1]));
+			w2.Position = 0;
+			w2.Expand = false;
+			w2.Fill = false;
 			// Container child vbox1.Gtk.Box+BoxChild
 			this.hbox2 = new global::Gtk.HBox ();
 			this.hbox2.Name = "hbox2";
@@ -43,19 +66,19 @@ namespace Launchpad_Launcher
 			this.label2.LabelProp = global::Mono.Unix.Catalog.GetString ("label2");
 			this.alignment1.Add (this.label2);
 			this.vbox2.Add (this.alignment1);
-			global::Gtk.Box.BoxChild w2 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.alignment1]));
-			w2.PackType = ((global::Gtk.PackType)(1));
-			w2.Position = 2;
-			w2.Expand = false;
-			w2.Fill = false;
+			global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.alignment1]));
+			w4.PackType = ((global::Gtk.PackType)(1));
+			w4.Position = 2;
+			w4.Expand = false;
+			w4.Fill = false;
 			this.hbox2.Add (this.vbox2);
-			global::Gtk.Box.BoxChild w3 = ((global::Gtk.Box.BoxChild)(this.hbox2 [this.vbox2]));
-			w3.Position = 0;
-			w3.Expand = false;
-			w3.Fill = false;
+			global::Gtk.Box.BoxChild w5 = ((global::Gtk.Box.BoxChild)(this.hbox2 [this.vbox2]));
+			w5.Position = 0;
+			w5.Expand = false;
+			w5.Fill = false;
 			this.vbox1.Add (this.hbox2);
-			global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.hbox2]));
-			w4.Position = 0;
+			global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.hbox2]));
+			w6.Position = 1;
 			// Container child vbox1.Gtk.Box+BoxChild
 			this.hbox3 = new global::Gtk.HBox ();
 			this.hbox3.Name = "hbox3";
@@ -64,8 +87,8 @@ namespace Launchpad_Launcher
 			this.progressbar2 = new global::Gtk.ProgressBar ();
 			this.progressbar2.Name = "progressbar2";
 			this.hbox3.Add (this.progressbar2);
-			global::Gtk.Box.BoxChild w5 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.progressbar2]));
-			w5.Position = 0;
+			global::Gtk.Box.BoxChild w7 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.progressbar2]));
+			w7.Position = 0;
 			// Container child hbox3.Gtk.Box+BoxChild
 			this.hbox4 = new global::Gtk.HBox ();
 			this.hbox4.Name = "hbox4";
@@ -78,10 +101,10 @@ namespace Launchpad_Launcher
 			this.button4.UseUnderline = true;
 			this.button4.Label = global::Mono.Unix.Catalog.GetString ("Verify Installation");
 			this.hbox4.Add (this.button4);
-			global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.button4]));
-			w6.Position = 0;
-			w6.Expand = false;
-			w6.Fill = false;
+			global::Gtk.Box.BoxChild w8 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.button4]));
+			w8.Position = 0;
+			w8.Expand = false;
+			w8.Fill = false;
 			// Container child hbox4.Gtk.Box+BoxChild
 			this.button3 = new global::Gtk.Button ();
 			this.button3.CanFocus = true;
@@ -89,20 +112,20 @@ namespace Launchpad_Launcher
 			this.button3.UseUnderline = true;
 			this.button3.Label = global::Mono.Unix.Catalog.GetString ("MainButton");
 			this.hbox4.Add (this.button3);
-			global::Gtk.Box.BoxChild w7 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.button3]));
-			w7.Position = 1;
-			w7.Expand = false;
-			w7.Fill = false;
-			this.hbox3.Add (this.hbox4);
-			global::Gtk.Box.BoxChild w8 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.hbox4]));
-			w8.Position = 1;
-			w8.Expand = false;
-			w8.Fill = false;
-			this.vbox1.Add (this.hbox3);
-			global::Gtk.Box.BoxChild w9 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.hbox3]));
+			global::Gtk.Box.BoxChild w9 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.button3]));
 			w9.Position = 1;
 			w9.Expand = false;
 			w9.Fill = false;
+			this.hbox3.Add (this.hbox4);
+			global::Gtk.Box.BoxChild w10 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.hbox4]));
+			w10.Position = 1;
+			w10.Expand = false;
+			w10.Fill = false;
+			this.vbox1.Add (this.hbox3);
+			global::Gtk.Box.BoxChild w11 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.hbox3]));
+			w11.Position = 2;
+			w11.Expand = false;
+			w11.Fill = false;
 			this.Add (this.vbox1);
 			if ((this.Child != null)) {
 				this.Child.ShowAll ();
@@ -111,6 +134,7 @@ namespace Launchpad_Launcher
 			this.DefaultHeight = 385;
 			this.Show ();
 			this.DeleteEvent += new global::Gtk.DeleteEventHandler (this.OnDeleteEvent);
+			this.SettingsAction.Activated += new global::System.EventHandler (this.OnSettingsActionActivated);
 		}
 	}
 }

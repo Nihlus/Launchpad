@@ -19,7 +19,10 @@ namespace Launchpad_Launcher
 			if (main.IsRunningOnUnix ())
 			{
 				Gtk.Application.Init ();
+
 				MainWindow win = new MainWindow ();
+				win.SetDefaultSize (800, 600);
+
 				win.Show ();
 				Gtk.Application.Run ();
 			}

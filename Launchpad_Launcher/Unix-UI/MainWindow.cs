@@ -39,6 +39,7 @@ namespace Launchpad_Launcher
 
 
 		//set up handlers
+		ChecksHandler Checks = new ChecksHandler();
 		//MD5 hashing handler - allows us to create and match MD5 hashes for files.
 		MD5Handler md5 = new MD5Handler();
 		//Config handler - allows us to read values from the configuration file.
@@ -49,18 +50,29 @@ namespace Launchpad_Launcher
 		public MainWindow () : 
 				base(Gtk.WindowType.Toplevel)
 		{
+
 			this.Build ();
 
-			Console.WriteLine (Config.GetLocalDir ());
-			Console.WriteLine (Config.GetChangelogURL ());
-			Console.WriteLine (Config.GetGameExecutable ());
-			Console.WriteLine (Config.GetTempDir ());
+			//this section sends some anonymous useage stats back home. If you don't want to do this for your game, simply change this boolean to false.
+			bool bSendAnonStats = false;
+			if (bSendAnonStats)
+			{
+				StatsHandler stats = new StatsHandler ();
+				stats.SendUseageStats(Config.GetGUID(), Config.GetLauncherVersion(), Config.GetGameName(), Config.GetDoOfficialUpdates());
+			}
 		}
 
 		protected void OnDeleteEvent (object sender, DeleteEventArgs a)
 		{
 			Application.Quit ();
 			a.RetVal = true;
+		}
+
+		protected void OnSettingsActionActivated (object sender, EventArgs e)
+		{
+			SettingsDialog Settings = new SettingsDialog ();
+			Settings.Run ();
+
 		}
 	}
 }

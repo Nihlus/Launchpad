@@ -67,6 +67,11 @@ namespace Launchpad_Launcher
             {
                 IniData data = Parser.ReadFile(configPath);
                 data["Local"]["LauncherVersion"] = defaultLauncherVersion;
+				if (!data ["Local"].ContainsKey ("GUID"))
+				{
+					string GeneratedGUID = Guid.NewGuid ().ToString ();
+					data ["Local"].AddKey ("GUID", GeneratedGUID);
+				}
 
                 Parser.WriteFile(configPath, data);
             }
@@ -198,6 +203,23 @@ namespace Launchpad_Launcher
             }
         }
 
+		public void SetGameName(string GameName)
+		{
+			try
+			{
+				FileIniDataParser Parser = new FileIniDataParser();
+				IniData data = Parser.ReadFile(GetConfigPath());
+
+				data["Local"]["GameName"] = GameName;
+				Parser.WriteFile(GetConfigPath(), data);
+			}
+			catch (Exception ex)
+			{
+				Console.Write("SetGameName: ");
+				Console.WriteLine(ex.StackTrace);
+			}
+		}
+
         public string GetSystemTarget()
         {
 			//possible values are:
@@ -223,6 +245,30 @@ namespace Launchpad_Launcher
             }
         }
 
+		public void SetSystemTarget(string SystemTarget)
+		{
+			//possible values are:
+			//Win64
+			//Win32
+			//Linux
+			//Mac
+
+			try
+			{
+				FileIniDataParser Parser = new FileIniDataParser();
+				IniData data = Parser.ReadFile(GetConfigPath());
+
+				data["Local"]["SystemTarget"] = SystemTarget;
+
+				Parser.WriteFile(GetConfigPath(), data);
+			}
+			catch (Exception ex)
+			{
+				Console.Write("SetSystemTarget: ");
+				Console.WriteLine(ex.StackTrace);
+			}
+		}
+
         public string GetFTPUsername()
         {
             try
@@ -242,6 +288,24 @@ namespace Launchpad_Launcher
             }
         }
 
+		public void SetFTPUsername(string Username)
+		{
+			try
+			{
+				FileIniDataParser Parser = new FileIniDataParser();
+				IniData data = Parser.ReadFile(GetConfigPath());
+
+				data["Remote"]["FTPUsername"] = Username;
+				Parser.WriteFile(GetConfigPath(), data);
+			}
+			catch (Exception ex)
+			{
+				Console.Write("SetFTPUsername: ");
+				Console.WriteLine(ex.StackTrace);
+			}
+
+		}
+
         public string GetFTPPassword()
         {
             try
@@ -260,6 +324,60 @@ namespace Launchpad_Launcher
                 return "";
             }
         }
+
+		public void SetFTPPassword(string Password)
+		{
+			try
+			{
+				FileIniDataParser Parser = new FileIniDataParser();
+				IniData data = Parser.ReadFile(GetConfigPath());
+
+				data["Remote"]["FTPPassword"] = Password;
+				Parser.WriteFile(GetConfigPath(), data);
+			}
+			catch (Exception ex)
+			{
+				Console.Write("GetFTPPassword: ");
+				Console.WriteLine(ex.StackTrace);
+			}
+
+		}
+
+		public string GetBaseFTPUrl()
+		{
+			try
+			{
+				FileIniDataParser Parser = new FileIniDataParser();
+				IniData data = Parser.ReadFile(GetConfigPath());
+
+				string FTPURL = data["Remote"]["FTPUrl"];
+
+				return FTPURL;
+			}
+			catch (Exception ex)
+			{
+				Console.Write("GetRawFTPURL: ");
+				Console.WriteLine(ex.StackTrace);
+				return "";
+			}
+		}
+
+		public void SetBaseFTPUrl(string Url)
+		{
+			try
+			{
+				FileIniDataParser Parser = new FileIniDataParser();
+				IniData data = Parser.ReadFile(GetConfigPath());
+
+				data["Remote"]["FTPUrl"] = Url;
+				Parser.WriteFile(GetConfigPath(), data);
+			}
+			catch (Exception ex)
+			{
+				Console.Write("GetFTPPassword: ");
+				Console.WriteLine(ex.StackTrace);
+			}
+		}
 
         public string GetFTPUrl()
         {
@@ -302,6 +420,23 @@ namespace Launchpad_Launcher
                 return true;
             }
         }
+
+		public string GetGUID()
+		{
+			try
+			{
+				FileIniDataParser Parser = new FileIniDataParser();
+				IniData data = Parser.ReadFile(GetConfigPath());
+
+				string guid = data["Local"]["GUID"];
+				return guid;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine (ex.StackTrace);
+				return "";
+			}
+		}
 
 		private bool CheckForOldConfig()
 		{

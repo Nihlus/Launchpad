@@ -62,32 +62,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AboutBox1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="AboutBox1.Designer.cs">
-      <DependentUpon>AboutBox1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ImageButton.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="ConfigHandler.cs" />
-    <Compile Include="Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FTPHandler.cs" />
-    <Compile Include="MD5Handler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="AboutBox1.resx">
-      <DependentUpon>AboutBox1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -112,8 +88,36 @@
       <LogicalName>gui.stetic</LogicalName>
     </EmbeddedResource>
     <Compile Include="gtk-gui\generated.cs" />
-    <Compile Include="MainWindow.cs" />
     <Compile Include="gtk-gui\Launchpad_Launcher.MainWindow.cs" />
+    <Compile Include="Handlers\MD5Handler.cs" />
+    <Compile Include="Handlers\ConfigHandler.cs" />
+    <Compile Include="Handlers\ChecksHandler.cs" />
+    <Compile Include="Handlers\StatsHandler.cs" />
+    <Compile Include="Handlers\FTPHandler.cs" />
+    <Compile Include="Windows-UI\AboutBox1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows-UI\AboutBox1.Designer.cs">
+      <DependentUpon>AboutBox1.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Windows-UI\AboutBox1.resx">
+      <DependentUpon>AboutBox1.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Include="Windows-UI\Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows-UI\Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Windows-UI\Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Include="Windows-UI\ImageButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Unix-UI\MainWindow.cs" />
+    <Compile Include="Unix-UI\SettingsDialog.cs" />
+    <Compile Include="gtk-gui\Launchpad_Launcher.SettingsDialog.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -145,4 +149,9 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Folder Include="Handlers\" />
+    <Folder Include="Windows-UI\" />
+    <Folder Include="Unix-UI\" />
+  </ItemGroup>
 </Project>
