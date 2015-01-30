@@ -22,7 +22,7 @@ namespace Launchpad_Launcher
             string configDir = GetConfigDir();
             string configPath = GetConfigPath();
 
-            //Major release 0.1.1, linux support
+            //Major release 0.1.0, linux support
             string defaultLauncherVersion = "0.0.4";
 
 			//Check for pre-unix config. If it exists, fix the values and copy it.
