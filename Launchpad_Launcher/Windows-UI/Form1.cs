@@ -74,10 +74,24 @@ namespace Launchpad_Launcher
             bool bSendAnonStats = true;
             if (bSendAnonStats)
             {
-				StatsHandler stats = new StatsHandler ();
-                stats.SendUseageStats(Config.GetGUID(), Config.GetLauncherVersion(), Config.GetGameName(), Config.GetDoOfficialUpdates());
+                StatsHandler Stats = new StatsHandler();
+                Stats.SendUseageStats(Config.GetGUID(), Config.GetLauncherVersion(), Config.GetGameName(), Config.GetDoOfficialUpdates());                  
             }
-            
+
+            SetupImageButtons();
+
+            //Setup background image
+            if (File.Exists("launcherBackground.png"))
+            {
+                this.BackgroundImage = new Bitmap(Image.FromFile("launcherBackground.png"));
+            }
+
+            //Update main window based on our initial state
+            UpdateMainWindow();
+        }		      
+
+        private void SetupImageButtons()
+        {
             //Setup main button
             mainButton.Parent = this;
             mainButton.Bounds = new Rectangle(738, 460, 105, 40);
@@ -117,26 +131,10 @@ namespace Launchpad_Launcher
             minimizeButton.PressedImage = new Bitmap(Image.FromStream(miniPressed), new Size(24, 24));
 
             minimizeButton.Click += new EventHandler(minimizeButton_Click);
-
-            //Setup background image
-            if (File.Exists("launcherBackground.png"))
-            {
-                this.BackgroundImage = new Bitmap(Image.FromFile("launcherBackground.png"));
-            }
-
-            //Update main window based on our initial state
-            UpdateMainWindow();
-        }		      
-
-        private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
-        {
-
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Console.WriteLine("\nForm1_Load()");
-
             PerformLauncherChecks();
         }
 

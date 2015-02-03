@@ -32,6 +32,7 @@ namespace Launchpad_Launcher
 				WebRequest getRequest;
 				getRequest = WebRequest.Create(formattedURL);
 				getRequest.GetResponse();
+                getRequest.Abort();                
 			}
 			catch (Exception ex)
 			{

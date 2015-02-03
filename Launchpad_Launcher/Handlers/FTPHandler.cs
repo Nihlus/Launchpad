@@ -13,7 +13,7 @@ namespace Launchpad_Launcher
     {
         public int FTPbytesDownloaded = 0;
 
-
+        
 		/// <summary>
 		/// Reads a text file from a remote FTP server.
 		/// </summary>
@@ -24,7 +24,7 @@ namespace Launchpad_Launcher
         public string ReadFTPFile(string username, string password, string ftpSourceFilePath)
         {
             int bytesRead = 0;
-            byte[] buffer = new byte[64];
+            byte[] buffer = new byte[1024];
 
             FtpWebRequest request = CreateFtpWebRequest(ftpSourceFilePath, username, password, true);
             FtpWebRequest sizerequest = CreateFtpWebRequest(ftpSourceFilePath, username, password, true);

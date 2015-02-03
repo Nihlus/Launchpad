@@ -51,6 +51,8 @@ namespace Launchpad_Launcher
 		public MainWindow () : 
 				base(Gtk.WindowType.Toplevel)
 		{		
+            //window size should be 855, 512 to match windows
+            //browser should be 390, 400
 			this.Build ();
 			// Add a WebView for our changelog
 			WebView Browser = new WebView ();

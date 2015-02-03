@@ -34,7 +34,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Icons8-Android-Transport-Rocket.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="INIFileParser">
@@ -64,7 +65,7 @@
       <Package>glib-sharp-2.0</Package>
     </Reference>
     <Reference Include="webkit-sharp">
-      <HintPath>..\..\..\..\usr\lib\cli\webkit-sharp-1.1\webkit-sharp.dll</HintPath>
+      <HintPath>..\..\User Files\Programming\Linux Libraries\webkit-sharp-1.1\webkit-sharp.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -132,9 +133,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Icons8-Android-Transport-Rocket.ico">
-      <DeployService-UseProjectRelativePath>True</DeployService-UseProjectRelativePath>
-    </Content>
     <EmbeddedResource Include="resource\Button_Mini_Hover.png" />
     <EmbeddedResource Include="resource\Button_Install_Hover.png" />
     <EmbeddedResource Include="resource\Button_Update_Hover.png" />
