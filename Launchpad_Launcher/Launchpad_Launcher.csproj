@@ -37,7 +37,6 @@
     <ApplicationIcon>Icons8-Android-Transport-Rocket.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL" />
     <Reference Include="INIFileParser">
       <HintPath>..\packages\ini-parser.2.1.1\lib\INIFileParser.dll</HintPath>
     </Reference>
@@ -60,6 +59,12 @@
     <Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
       <Private>False</Private>
       <Package>gtk-sharp-2.0</Package>
+    </Reference>
+    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <Package>glib-sharp-2.0</Package>
+    </Reference>
+    <Reference Include="webkit-sharp">
+      <HintPath>..\..\..\..\usr\lib\cli\webkit-sharp-1.1\webkit-sharp.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -119,12 +124,17 @@
     <Compile Include="Unix-UI\MainWindow.cs" />
     <Compile Include="Unix-UI\SettingsDialog.cs" />
     <Compile Include="gtk-gui\Launchpad_Launcher.SettingsDialog.cs" />
+    <EmbeddedResource Include="resource\Icons8-Android-Transport-Rocket.ico" />
+    <Compile Include="Handlers\GameHandler.cs" />
+    <Compile Include="Handlers\LauncherHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Icons8-Android-Transport-Rocket.ico" />
+    <Content Include="Icons8-Android-Transport-Rocket.ico">
+      <DeployService-UseProjectRelativePath>True</DeployService-UseProjectRelativePath>
+    </Content>
     <EmbeddedResource Include="resource\Button_Mini_Hover.png" />
     <EmbeddedResource Include="resource\Button_Install_Hover.png" />
     <EmbeddedResource Include="resource\Button_Update_Hover.png" />

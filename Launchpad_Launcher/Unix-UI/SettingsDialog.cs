@@ -28,7 +28,7 @@ namespace Launchpad_Launcher
 		{
 			Gtk.Application.Invoke(delegate 
 			                       {
-				progressbar3.Text = "Verifying...";
+				progressbar3.Text = "Verifying...";			
 			});
 
 			bool bAreAllSettingsOK = true;
@@ -93,11 +93,13 @@ namespace Launchpad_Launcher
 
 		protected void OnSystemTargetEntryChanged (object sender, EventArgs e)
 		{
+			//Set the base colour back to normal
 			SystemTarget_entry.ModifyBase (Gtk.StateType.Normal);
 		}
 
 		protected void OnFTPURLEntryChanged (object sender, EventArgs e)
 		{
+			//Set the base colour back to normal
 			FTPURL_entry.ModifyBase (Gtk.StateType.Normal);
 		}
 	}

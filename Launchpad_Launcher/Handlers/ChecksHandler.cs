@@ -4,7 +4,7 @@ using System.Net;
 
 /*
  * This class handles all the launcher's checks, returning bools for each function.
- * Since this class is mean to be used in both the Forms UI and the GTK UI, 
+ * Since this class is meant to be used in both the Forms UI and the GTK UI, 
  * there must be no useage of UI code in this class. Keep it clean!
  * 
  */
@@ -78,8 +78,6 @@ namespace Launchpad_Launcher
 		/// <returns><c>true</c> if this is the first time; otherwise, <c>false</c>.</returns>
 		public bool IsInitialStartup()
 		{
-			Console.WriteLine("DoInitialSetupCheck()");
-
 			//we use an empty file to determine if this is the first launch or not
 			if (!File.Exists(Config.GetUpdateCookie()))
 			{

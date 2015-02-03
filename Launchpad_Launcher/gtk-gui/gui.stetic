@@ -6,6 +6,7 @@
   </configuration>
   <import>
     <widget-library name="../bin/Debug/Launchpad.exe" internal="true" />
+    <widget-library name="../../../../../usr/lib/cli/webkit-sharp-1.1/webkit-sharp.dll" />
   </import>
   <widget class="Gtk.Window" id="Launchpad_Launcher.MainWindow" design-size="760 385">
     <action-group name="Default">
@@ -22,8 +23,11 @@
       </action>
     </action-group>
     <property name="MemberName" />
-    <property name="Title" translatable="yes">MainWindow</property>
+    <property name="Title" translatable="yes">Launchpad</property>
+    <property name="Icon">resource:Launchpad_Launcher.resource.Icons8-Android-Transport-Rocket.ico</property>
     <property name="WindowPosition">CenterOnParent</property>
+    <property name="DefaultWidth">725</property>
+    <property name="DefaultHeight">375</property>
     <signal name="DeleteEvent" handler="OnDeleteEvent" />
     <child>
       <widget class="Gtk.VBox" id="vbox1">
@@ -49,15 +53,35 @@
           <widget class="Gtk.HBox" id="hbox2">
             <property name="MemberName" />
             <property name="Spacing">6</property>
+            <property name="BorderWidth">4</property>
             <child>
               <widget class="Gtk.VBox" id="vbox2">
                 <property name="MemberName" />
                 <property name="Spacing">6</property>
                 <child>
-                  <placeholder />
-                </child>
-                <child>
-                  <placeholder />
+                  <widget class="Gtk.Alignment" id="alignment2">
+                    <property name="MemberName" />
+                    <child>
+                      <widget class="Gtk.ScrolledWindow" id="scrolledwindow2">
+                        <property name="MemberName" />
+                        <property name="CanFocus">True</property>
+                        <property name="ShadowType">In</property>
+                        <child>
+                          <widget class="Gtk.Viewport" id="GtkViewport">
+                            <property name="MemberName" />
+                            <property name="ShadowType">None</property>
+                            <child>
+                              <placeholder />
+                            </child>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="Position">0</property>
+                    <property name="AutoSize">True</property>
+                  </packing>
                 </child>
                 <child>
                   <widget class="Gtk.Alignment" id="alignment1">
@@ -65,13 +89,14 @@
                     <child>
                       <widget class="Gtk.Label" id="label2">
                         <property name="MemberName" />
+                        <property name="Xalign">0</property>
                         <property name="LabelProp" translatable="yes">label2</property>
                       </widget>
                     </child>
                   </widget>
                   <packing>
                     <property name="PackType">End</property>
-                    <property name="Position">2</property>
+                    <property name="Position">1</property>
                     <property name="AutoSize">True</property>
                     <property name="Expand">False</property>
                     <property name="Fill">False</property>
@@ -98,6 +123,7 @@
           <widget class="Gtk.HBox" id="hbox3">
             <property name="MemberName" />
             <property name="Spacing">6</property>
+            <property name="BorderWidth">4</property>
             <child>
               <widget class="Gtk.ProgressBar" id="progressbar2">
                 <property name="MemberName" />

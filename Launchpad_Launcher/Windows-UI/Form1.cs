@@ -1269,7 +1269,7 @@ namespace Launchpad_Launcher
                 }
                 catch(IOException ioEx)
                 {
-                    Console.WriteLine("Failed to delete .gameNeedsUpdate after succesfull update: {0}", ioEx);
+                    Console.WriteLine("Failed to delete .gameNeedsUpdate after succesful update: {0}", ioEx);
                 }
             }
 

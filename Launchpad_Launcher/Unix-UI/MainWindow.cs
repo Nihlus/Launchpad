@@ -1,5 +1,6 @@
 using System;
 using Gtk;
+using WebKit;
 
 namespace Launchpad_Launcher
 {
@@ -51,6 +52,12 @@ namespace Launchpad_Launcher
 				base(Gtk.WindowType.Toplevel)
 		{		
 			this.Build ();
+			// Add a WebView for our changelog
+			WebView Browser = new WebView ();
+			Browser.SetSizeRequest (250, 150);
+
+			scrolledwindow2.Add (Browser);
+			scrolledwindow2.ShowAll ();
 
 			//First of all, check if we can connect to the FTP server.
 			if (!Checks.CanConnectToFTP ())
@@ -69,6 +76,7 @@ namespace Launchpad_Launcher
 			else
 			{
 				//if we can connect, proceeed with the rest of our checks.
+				//check if this is the first time we're starting the launcher.
 				if (Checks.IsInitialStartup ())
 				{
 					MessageDialog dialog = new MessageDialog (
@@ -98,8 +106,13 @@ namespace Launchpad_Launcher
 
 				} 
 
-				Console.WriteLine (Config.GetUpdateCookie ());
+				//Load the changelog from the server
+				string changelog = FTP.ReadFTPFile (Config.GetFTPUsername (),
+				                                    Config.GetFTPPassword (), 
+				                                    Config.GetChangelogURL ());
+				Console.WriteLine (changelog);
 
+				Browser.LoadHtmlString (changelog, Config.GetChangelogURL ());
 
 				//this section sends some anonymous useage stats back home. 
 				//If you don't want to do this for your game, simply change this boolean to false.
@@ -113,8 +126,6 @@ namespace Launchpad_Launcher
 					                      Config.GetGameName(), 
 					                      Config.GetDoOfficialUpdates());
 				}
-
-				//check if this is the first time we're starting the launcher.
 			}
 		}
 

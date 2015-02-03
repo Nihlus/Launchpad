@@ -32,7 +32,7 @@ namespace Launchpad_Launcher
             {
                 Directory.CreateDirectory(configDir);
             }
-            if (!File.Exists(configPath) && !IsRunningOnUnix())
+            if (!File.Exists(configPath))
             {
                 //here we create a new empty file
                 FileStream configStream = File.Create(configPath);
@@ -231,7 +231,7 @@ namespace Launchpad_Launcher
 		/// <returns>The changelog URL.</returns>
         public string GetChangelogURL()
         {
-            string changelogURL = String.Format("{0}/launcher/changelog.html", GetFTPUrl());
+            string changelogURL = String.Format("{0}/launcher/changelog.html", GetBaseFTPUrl());
             return changelogURL;
         }
 
