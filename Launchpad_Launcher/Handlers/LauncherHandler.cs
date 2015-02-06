@@ -6,16 +6,27 @@ namespace Launchpad_Launcher
 	public class LauncherHandler
 	{
 		public delegate void ProgressChangedEventHandler(object sender, ProgressEventArgs e);
-		public event ProgressChangedEventHandler ProgressChanged;
+		public event ProgressChangedEventHandler LauncherProgressChanged;
 
-		public delegate void DownloadFinishedEventHandler(object sender, EventArgs e);
-		public event DownloadFinishedEventHandler DownloadFinished;
+		public delegate void DownloadFinishedEventHandler (object sender, DownloadFinishedEventArgs e);
+		public event DownloadFinishedEventHandler LauncherDownloadFinished;
+
+		public delegate void ChangelogProgressChangedEventHandler(object sender, ProgressEventArgs e);
+		public event ChangelogProgressChangedEventHandler ChangelogProgressChanged;
+
+		public delegate void ChangelogDownloadFinishedEventHandler (object sender, DownloadFinishedEventArgs e);
+		public event ChangelogDownloadFinishedEventHandler ChangelogDownloadFinished;
+
 
 		private ProgressEventArgs ProgressArgs;
+		private DownloadFinishedEventArgs DownloadFinishedArgs;
+
+		ConfigHandler Config = new ConfigHandler ();
 
 		public LauncherHandler ()
 		{
-
+			ProgressArgs = new ProgressEventArgs ();
+			DownloadFinishedArgs = new DownloadFinishedEventArgs ();
 		}
 
 		/// <summary>
@@ -38,21 +49,48 @@ namespace Launchpad_Launcher
 		private void LoadChangelogAsync()
 		{
 			FTPHandler FTP = new FTPHandler ();
+			string content = FTP.ReadFTPFile (Config.GetChangelogURL ());
+
+			DownloadFinishedArgs.Value = content;
+			DownloadFinishedArgs.URL = Config.GetChangelogURL ();
+
+			OnChangelogDownloadFinished ();
 		}
 
-		protected virtual void OnProgressChanged()
+		protected virtual void OnLauncherProgressChanged()
 		{
-			if (ProgressChanged != null)
+			if (LauncherProgressChanged != null)
 			{
-				ProgressChanged (this, ProgressArgs);
+				//raise the event
+				LauncherProgressChanged (this, ProgressArgs);
 			}
 		}
 
-		protected virtual void OnDownloadFinished()
+		protected virtual void OnLauncherDownloadFinished()
 		{
-			if (DownloadFinished != null)
+			if (LauncherDownloadFinished != null)
 			{
-				DownloadFinished (this, EventArgs.Empty);
+				//raise the event
+				LauncherDownloadFinished (this, DownloadFinishedArgs);
+			}
+		}
+
+		protected virtual void OnChangelogProgressChanged()
+		{
+			if (ChangelogProgressChanged != null)
+			{
+				//raise the event
+				ChangelogProgressChanged (this, ProgressArgs);
+			}
+		}
+
+		protected virtual void OnChangelogDownloadFinished()
+		{
+			if (ChangelogDownloadFinished != null)
+			{
+				Console.WriteLine (DownloadFinishedArgs.Value);
+				//raise the event
+				ChangelogDownloadFinished (this, DownloadFinishedArgs);
 			}
 		}
 	}
@@ -82,6 +120,33 @@ namespace Launchpad_Launcher
 		public string Filename {
 			get;
 			set;
+		}
+
+		public void Empty()
+		{
+			DownloadedBytes = 0;
+			TotalBytes = 0;
+			DownloadedFiles = 0;
+			TotalFiles = 0;
+			Filename = "";
+		}
+	}
+
+	public class DownloadFinishedEventArgs : EventArgs
+	{
+		public string Value {
+			get;
+			set;
+		}
+
+		public string URL {
+			get;
+			set;
+		}
+
+		public void Empty()
+		{
+			Value = "";
 		}
 	}
 }

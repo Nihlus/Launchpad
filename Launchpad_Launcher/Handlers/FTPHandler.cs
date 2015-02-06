@@ -147,8 +147,6 @@ namespace Launchpad_Launcher
 		/// </summary>
 		/// <returns>The ftp web request.</returns>
 		/// <param name="ftpDirectoryPath">Ftp directory path.</param>
-		/// <param name="username">Username.</param>
-		/// <param name="password">Password.</param>
 		/// <param name="keepAlive">If set to <c>true</c> keep alive.</param>
         public FtpWebRequest CreateFtpWebRequest(string ftpDirectoryPath, string username, string password, bool keepAlive = false)
         {
@@ -156,7 +154,8 @@ namespace Launchpad_Launcher
             {
                 FtpWebRequest request = (FtpWebRequest)WebRequest.Create(new Uri(ftpDirectoryPath));
 
-                //Set proxy to null. Under current configuration if this option is not set then the proxy that is used will get an html response from the web content gateway (firewall monitoring system)
+                //Set proxy to null. Under current configuration if this option is not set then the proxy 
+				//that is used will get an html response from the web content gateway (firewall monitoring system)
                 request.Proxy = null;
 
                 request.UsePassive = true;

@@ -129,9 +129,8 @@ namespace Launchpad_Launcher
 				}
 
 				//Start loading the changelog asynchronously;
-				//STUBBED
-				Browser.LoadHtmlString(FTP.ReadFTPFile(Config.GetChangelogURL()), Config.GetChangelogURL());
-
+				Launcher.ChangelogDownloadFinished += OnChangelogDownloadFinished;
+				Launcher.LoadChangelog ();
 			}
 		}
 
@@ -148,7 +147,7 @@ namespace Launchpad_Launcher
 
 		}
 
-		protected void OnDownloadProgressChanged(object sender, ProgressEventArgs e)
+		protected void OnGameDownloadProgressChanged(object sender, ProgressEventArgs e)
 		{
 			Gtk.Application.Invoke(delegate {
 
@@ -162,9 +161,19 @@ namespace Launchpad_Launcher
 			});
 		}
 
-		protected void OnDownloadFinished(object sender, EventArgs e)
+		protected void OnGameDownloadFinished(object sender, DownloadFinishedEventArgs e)
 		{
 
+		}
+
+		protected void OnChangelogDownloadFinished (object sender, DownloadFinishedEventArgs e)
+		{
+			Console.WriteLine ("Raised!");
+			Gtk.Application.Invoke (delegate {
+				Console.WriteLine (e.Value);
+				Browser.LoadHtmlString(e.Value, e.URL);
+
+			});
 		}
 	}
 }
