@@ -14,7 +14,7 @@ namespace Launchpad_Launcher.Buttons
         bool isPressed = false;
         bool mouseIsOver = false;
 
-        public Image BackgroundImage
+        public override Image BackgroundImage
         {
             get
             {

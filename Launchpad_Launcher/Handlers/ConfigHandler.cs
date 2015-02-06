@@ -61,6 +61,9 @@ namespace Launchpad_Launcher
 			//Check for pre-unix config. If it exists, fix the values and copy it.
 			CheckForOldConfig ();
 
+			//Check for old cookie file. If it exists, rename it.
+			CheckForOldUpdateCookie ();
+
 			if (!Directory.Exists(configDir))
 			{
 				Directory.CreateDirectory(configDir);
@@ -120,7 +123,7 @@ namespace Launchpad_Launcher
 		/// <returns>The update cookie.</returns>
         public string GetUpdateCookie()
         {
-			string updateCookie = String.Format(@"{0}{1}.updatecookie", 
+			string updateCookie = String.Format(@"{0}{1}.update", 
 			                                    Directory.GetCurrentDirectory(), 
 			                                    Path.DirectorySeparatorChar);
             return updateCookie;
@@ -132,22 +135,59 @@ namespace Launchpad_Launcher
 		/// <returns>The update cookie's path.</returns>
 		public string CreateUpdateCookie()
 		{
-			bool bCookieExists = File.Exists (String.Format (@"{0}{1}.updatecookie", 
+			bool bCookieExists = File.Exists (String.Format (@"{0}{1}.update", 
 			                                                Directory.GetCurrentDirectory (), 
 			                                                Path.DirectorySeparatorChar));
 			if (!bCookieExists)
 			{
-				File.Create (String.Format(@"{0}{1}.updatecookie", 
+				File.Create (String.Format(@"{0}{1}.update", 
 				                           Directory.GetCurrentDirectory(), 
 				                           Path.DirectorySeparatorChar));
 
-				return String.Format(@"{0}{1}.updatecookie", 
+				return String.Format(@"{0}{1}.update", 
 				                      Directory.GetCurrentDirectory(), 
 				                      Path.DirectorySeparatorChar);
 			}
 			else
 			{
 				return GetUpdateCookie ();
+			}
+		}
+
+		/// <summary>
+		/// Gets the install cookie.
+		/// </summary>
+		/// <returns>The install cookie.</returns>
+		public string GetInstallCookie()
+		{
+			string installCookie = String.Format(@"{0}{1}.install", 
+			                                    Directory.GetCurrentDirectory(), 
+			                                    Path.DirectorySeparatorChar);
+			return installCookie;
+		}
+
+		/// <summary>
+		/// Creates the install cookie.
+		/// </summary>
+		/// <returns>The install cookie's path.</returns>
+		public string CreateInstallCookie()
+		{
+			bool bCookieExists = File.Exists (String.Format (@"{0}{1}.install", 
+			                                                 Directory.GetCurrentDirectory (), 
+			                                                 Path.DirectorySeparatorChar));
+			if (!bCookieExists)
+			{
+				File.Create (String.Format(@"{0}{1}.install", 
+				                           Directory.GetCurrentDirectory(), 
+				                           Path.DirectorySeparatorChar));
+
+				return String.Format(@"{0}{1}.install", 
+				                     Directory.GetCurrentDirectory(), 
+				                     Path.DirectorySeparatorChar);
+			}
+			else
+			{
+				return GetInstallCookie ();
 			}
 		}
 
@@ -686,5 +726,15 @@ namespace Launchpad_Launcher
             }
 
 		}		      
+
+		private void CheckForOldUpdateCookie ()
+		{
+			string oldUpdateCookie = String.Format (@"{0}{1}.updatecookie", Directory.GetCurrentDirectory (), Path.DirectorySeparatorChar);
+			if (File.Exists (oldUpdateCookie))
+			{
+				string updateCookie = String.Format (@"{0}{1}.update", Directory.GetCurrentDirectory (), Path.DirectorySeparatorChar);
+				File.Move (oldUpdateCookie, updateCookie);
+			}
+		}
     }
 }

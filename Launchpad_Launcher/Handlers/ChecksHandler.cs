@@ -119,8 +119,22 @@ namespace Launchpad_Launcher
 		/// <returns><c>true</c> if the game is installed; otherwise, <c>false</c>.</returns>
 		public bool IsGameInstalled()
 		{
+			//Criteria for considering the game 'installed'
+			//Does the game directory exist?
+			bool bHasDirectory = Directory.Exists(Config.GetGamePath());
+			//Is there an .install file in the directory?
+			bool bHasInstallationCookie = File.Exists(Config.GetInstallCookie());
+			//Is the .install file empty? Assume false.
+			bool bIsInstallCookieEmpty = false;
 
-			return false;
+			if (bHasInstallationCookie)
+			{
+
+				bIsInstallCookieEmpty = (File.ReadAllText(Config.GetInstallCookie()) == "");
+			}
+
+			//If any of these criteria are false, the game is not considered fully installed.
+			return bHasDirectory && bHasInstallationCookie && bIsInstallCookieEmpty;
 		}
 
 		/// <summary>
@@ -139,10 +153,8 @@ namespace Launchpad_Launcher
 		public bool IsLauncherOutdated()
 		{
 			Version local = new Version(Config.GetLocalLauncherVersion());
-			Console.WriteLine (local.ToString());
 
-			Version remote = new Version(FTP.GetRemoteLauncherVersion ());
-			Console.WriteLine (remote.ToString());   	
+			Version remote = new Version(FTP.GetRemoteLauncherVersion ());	
 
 			if (local < remote)
 			{

@@ -13,11 +13,6 @@ namespace Launchpad_Launcher
 {
 	public class LauncherHandler
 	{
-		public delegate void ProgressChangedEventHandler(object sender, ProgressEventArgs e);
-		public event ProgressChangedEventHandler LauncherProgressChanged;
-
-		public delegate void DownloadFinishedEventHandler (object sender, DownloadFinishedEventArgs e);
-		public event DownloadFinishedEventHandler LauncherDownloadFinished;
 
 		public delegate void ChangelogProgressChangedEventHandler(object sender, ProgressEventArgs e);
 		public event ChangelogProgressChangedEventHandler ChangelogProgressChanged;
@@ -38,7 +33,7 @@ namespace Launchpad_Launcher
 		}
 
 		/// <summary>
-		/// Updates the launcher asynchronously.
+		/// Updates the launcher synchronously.
 		/// </summary>
 		public void UpdateLauncher()
 		{
@@ -63,24 +58,6 @@ namespace Launchpad_Launcher
 			DownloadFinishedArgs.URL = Config.GetChangelogURL ();
 
 			OnChangelogDownloadFinished ();
-		}
-
-		protected virtual void OnLauncherProgressChanged()
-		{
-			if (LauncherProgressChanged != null)
-			{
-				//raise the event
-				LauncherProgressChanged (this, ProgressArgs);
-			}
-		}
-
-		protected virtual void OnLauncherDownloadFinished()
-		{
-			if (LauncherDownloadFinished != null)
-			{
-				//raise the event
-				LauncherDownloadFinished (this, DownloadFinishedArgs);
-			}
 		}
 
 		protected virtual void OnChangelogProgressChanged()
