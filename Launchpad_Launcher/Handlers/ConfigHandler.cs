@@ -13,6 +13,8 @@ namespace Launchpad_Launcher
 {
     public class ConfigHandler
     {
+		FTPHandler FTP = new FTPHandler();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Launchpad_Launcher.ConfigHandler"/> class.
         /// </summary>
@@ -268,7 +270,7 @@ namespace Launchpad_Launcher
 		/// Gets the launcher version.
 		/// </summary>
 		/// <returns>The launcher version.</returns>
-        public string GetLauncherVersion()
+        public string GetLocalLauncherVersion()
         {
             try
             {
@@ -287,6 +289,18 @@ namespace Launchpad_Launcher
             }
 
         }
+
+		/// <summary>
+		/// Gets the remote launcher version.
+		/// </summary>
+		/// <returns>The remote launcher version.</returns>
+		public string GetRemoteLauncherVersion()
+		{
+			string remoteVersionPath = String.Format ("{0}/launcher/LauncherVersion.txt", GetFTPUrl());
+			string remoteVersion = FTP.ReadFTPFile (remoteVersionPath);
+
+			return remoteVersion;
+		}
 
 		/// <summary>
 		/// Gets the name of the game.

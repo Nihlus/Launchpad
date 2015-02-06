@@ -5,6 +5,7 @@ namespace Launchpad_Launcher
 {
 	public class StatsHandler
 	{
+		ConfigHandler Config = new ConfigHandler();
 		public StatsHandler ()
 		{
 
@@ -17,16 +18,16 @@ namespace Launchpad_Launcher
 		/// <param name="version">Version.</param>
 		/// <param name="gameName">Game name.</param>
 		/// <param name="officialUpdates">If set to <c>true</c> official updates.</param>
-		public void SendUseageStats(string guid, string version, string gameName, bool officialUpdates)
+		public void SendUseageStats()
 		{
 			try
 			{
 				string baseURL = "http://directorate.asuscomm.com/launchpad/stats.php?";
 				string formattedURL = String.Format(baseURL + "guid={0}&launcherVersion={1}&gameName={2}&officialUpdates={3}",
-				                                    guid,
-				                                    version,
-				                                    gameName,
-				                                    officialUpdates.ToString()
+				                                    Config.GetGUID(),
+				                                    Config.GetLocalLauncherVersion(),
+				                                    Config.GetGameName(),
+				                                    Config.GetDoOfficialUpdates().ToString()
 				                                    );
 
 				WebRequest getRequest;

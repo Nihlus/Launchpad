@@ -75,7 +75,7 @@ namespace Launchpad_Launcher
             if (bSendAnonStats)
             {
                 StatsHandler Stats = new StatsHandler();
-                Stats.SendUseageStats(Config.GetGUID(), Config.GetLauncherVersion(), Config.GetGameName(), Config.GetDoOfficialUpdates());                  
+				Stats.SendUseageStats ();
             }
 
             SetupImageButtons();
@@ -420,7 +420,7 @@ namespace Launchpad_Launcher
                         //write the launcher version to the update cookie
                         TextWriter tw = new StreamWriter(Config.GetUpdateCookie());
 
-                        tw.WriteLine(Config.GetLauncherVersion());
+                        tw.WriteLine(Config.GetLocalLauncherVersion());
                         tw.Close();
                     }
                     catch (Exception ex)
@@ -459,7 +459,7 @@ namespace Launchpad_Launcher
                 string remoteLauncherVersion = FTP.ReadFTPFile(remoteLauncherVersionTXTURL).Replace("\0", string.Empty);
 
                 //get the current launcher version from file
-                string launcherVersion = Config.GetLauncherVersion();
+                string launcherVersion = Config.GetLocalLauncherVersion();
 
                 //we create version objects to format the versions correctly to remove unnecessary spaces or new line characters that may exist
                 System.Version RemoteVersion = new System.Version(remoteLauncherVersion);

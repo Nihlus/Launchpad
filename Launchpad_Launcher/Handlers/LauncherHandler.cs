@@ -1,6 +1,14 @@
 using System;
 using System.Threading;
 
+/*
+ * This class has a lot of async stuff going on. It handles updating the launcher
+ * and loading the changelog from the server.
+ * Since this class starts new threads in which it does the larger computations,
+ * there must be no useage of UI code in this class. Keep it clean!
+ * 
+ */
+
 namespace Launchpad_Launcher
 {
 	public class LauncherHandler
@@ -122,7 +130,7 @@ namespace Launchpad_Launcher
 			set;
 		}
 
-		public void Empty()
+		new public void Empty()
 		{
 			DownloadedBytes = 0;
 			TotalBytes = 0;
@@ -144,7 +152,7 @@ namespace Launchpad_Launcher
 			set;
 		}
 
-		public void Empty()
+		new public void Empty()
 		{
 			Value = "";
 		}

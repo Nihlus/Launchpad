@@ -14,6 +14,8 @@ namespace Launchpad_Launcher
 	public class ChecksHandler
 	{
 		ConfigHandler Config = new ConfigHandler();
+		FTPHandler FTP = new FTPHandler();
+
 		public ChecksHandler ()
 		{
 
@@ -108,6 +110,44 @@ namespace Launchpad_Launcher
 			{
 				Console.WriteLine("Not running on Unix");
 				return false;
+			}
+		}
+
+		/// <summary>
+		/// Determines whether the game is installed.
+		/// </summary>
+		/// <returns><c>true</c> if the game is installed; otherwise, <c>false</c>.</returns>
+		public bool IsGameInstalled()
+		{
+
+			return false;
+		}
+
+		/// <summary>
+		/// Determines whether the game is outdated.
+		/// </summary>
+		/// <returns><c>true</c> if the game is outdated; otherwise, <c>false</c>.</returns>
+		public bool IsGameOutdated()
+		{
+			return false;
+		}
+
+		/// <summary>
+		/// Determines whether the launcher is outdated.
+		/// </summary>
+		/// <returns><c>true</c> if the launcher is outdated; otherwise, <c>false</c>.</returns>
+		public bool IsLauncherOutdated()
+		{
+			string local = Config.GetLocalLauncherVersion();
+			string remote = Config.GetRemoteLauncherVersion ();
+
+			if (local == remote)
+			{
+				return false;
+			} 
+			else
+			{
+				return true;
 			}
 		}
 	}

@@ -122,10 +122,7 @@ namespace Launchpad_Launcher
 				{
 					Console.WriteLine ("Sending anonymous useage stats to hambase 1 :) Thanks!");
 					StatsHandler stats = new StatsHandler ();
-					stats.SendUseageStats(Config.GetGUID(), 
-					                      Config.GetLauncherVersion(), 
-					                      Config.GetGameName(), 
-					                      Config.GetDoOfficialUpdates());
+					stats.SendUseageStats ();
 				}
 
 				//Start loading the changelog asynchronously;
@@ -168,9 +165,7 @@ namespace Launchpad_Launcher
 
 		protected void OnChangelogDownloadFinished (object sender, DownloadFinishedEventArgs e)
 		{
-			Console.WriteLine ("Raised!");
 			Gtk.Application.Invoke (delegate {
-				Console.WriteLine (e.Value);
 				Browser.LoadHtmlString(e.Value, e.URL);
 
 			});
