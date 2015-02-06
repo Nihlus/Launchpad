@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Gtk;
 using WebKit;
 
@@ -47,16 +48,22 @@ namespace Launchpad_Launcher
 		ConfigHandler Config = new ConfigHandler();
 		//FTP handler - allows us to read and download files from a remote server.
 		FTPHandler FTP = new FTPHandler();
+		//Launcher handler - allows async changelog loading and launcher updating
+		LauncherHandler Launcher = new LauncherHandler();
+
+		// Add a WebView for our changelog
+		WebView Browser = new WebView ();
 
 		public MainWindow () : 
 				base(Gtk.WindowType.Toplevel)
 		{		
-            //window size should be 855, 512 to match windows
-            //browser should be 390, 400
 			this.Build ();
-			// Add a WebView for our changelog
-			WebView Browser = new WebView ();
-			Browser.SetSizeRequest (250, 150);
+
+			//Initialize the config files and check values.
+			Config.Initialize ();
+
+			// Configure the WebView for our changelog
+			Browser.SetSizeRequest (290, 300);
 
 			scrolledwindow2.Add (Browser);
 			scrolledwindow2.ShowAll ();
@@ -108,14 +115,6 @@ namespace Launchpad_Launcher
 
 				} 
 
-				//Load the changelog from the server
-				string changelog = FTP.ReadFTPFile (Config.GetFTPUsername (),
-				                                    Config.GetFTPPassword (), 
-				                                    Config.GetChangelogURL ());
-				Console.WriteLine (changelog);
-
-				Browser.LoadHtmlString (changelog, Config.GetChangelogURL ());
-
 				//this section sends some anonymous useage stats back home. 
 				//If you don't want to do this for your game, simply change this boolean to false.
 				bool bSendAnonStats = false;
@@ -128,6 +127,11 @@ namespace Launchpad_Launcher
 					                      Config.GetGameName(), 
 					                      Config.GetDoOfficialUpdates());
 				}
+
+				//Start loading the changelog asynchronously;
+				//STUBBED
+				Browser.LoadHtmlString(FTP.ReadFTPFile(Config.GetChangelogURL()), Config.GetChangelogURL());
+
 			}
 		}
 
@@ -141,6 +145,25 @@ namespace Launchpad_Launcher
 		{
 			SettingsDialog Settings = new SettingsDialog ();
 			Settings.Run ();
+
+		}
+
+		protected void OnDownloadProgressChanged(object sender, ProgressEventArgs e)
+		{
+			Gtk.Application.Invoke(delegate {
+
+				string progressbarText = String.Format("Downloading file {0}: {1} of {2} bytes.", 
+				                                       System.IO.Path.GetFileNameWithoutExtension(e.Filename), 
+				                                       e.DownloadedBytes.ToString(), 
+				                                       e.TotalBytes.ToString());
+				progressbar2.Text = progressbarText;
+				progressbar2.Fraction = (double)e.DownloadedBytes / (double)e.TotalBytes;
+
+			});
+		}
+
+		protected void OnDownloadFinished(object sender, EventArgs e)
+		{
 
 		}
 	}

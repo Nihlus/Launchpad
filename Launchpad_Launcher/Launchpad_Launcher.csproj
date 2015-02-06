@@ -33,10 +33,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="INIFileParser">
       <HintPath>..\packages\ini-parser.2.1.1\lib\INIFileParser.dll</HintPath>
@@ -65,7 +61,7 @@
       <Package>glib-sharp-2.0</Package>
     </Reference>
     <Reference Include="webkit-sharp">
-      <HintPath>..\..\User Files\Programming\Linux Libraries\webkit-sharp-1.1\webkit-sharp.dll</HintPath>
+      <HintPath>..\..\..\..\usr\lib\cli\webkit-sharp-1.1\webkit-sharp.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

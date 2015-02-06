@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 using IniParser;
 using IniParser.Model;
-using System.IO;
+
 
 namespace Launchpad_Launcher
 {
@@ -17,69 +18,8 @@ namespace Launchpad_Launcher
         /// </summary>
         public ConfigHandler()
         {
-            FileIniDataParser Parser = new FileIniDataParser();
-
-            string configDir = GetConfigDir();
-            string configPath = GetConfigPath();
-
-            //Major release 0.1.0, linux support
-            string defaultLauncherVersion = "0.0.4";
-
-			//Check for pre-unix config. If it exists, fix the values and copy it.
-			CheckForOldConfig ();
-
-            if (!Directory.Exists(configDir))
-            {
-                Directory.CreateDirectory(configDir);
-            }
-            if (!File.Exists(configPath))
-            {
-                //here we create a new empty file
-                FileStream configStream = File.Create(configPath);
-                configStream.Close();
-
-                //read the file as an INI file
-                try
-                {
-                    IniData data = Parser.ReadFile(configPath);
-                    string GeneratedGUID = Guid.NewGuid ().ToString ();
-
-                    data.Sections.AddSection("Local");
-                    data.Sections.AddSection("Remote");
-                    data.Sections.AddSection("Launchpad");
-
-                    data["Local"].AddKey("LauncherVersion", defaultLauncherVersion);
-                    data["Local"].AddKey("GameName", "LaunchpadExample");
-                    data["Local"].AddKey("SystemTarget", "Win64");
-                    data["Local"].AddKey("GUID", GeneratedGUID);
-
-                    data["Remote"].AddKey("FTPUsername", "anonymous");
-                    data["Remote"].AddKey("FTPPassword", "anonymous");
-                    data["Remote"].AddKey("FTPUrl", "ftp://directorate.asuscomm.com");
-
-                    data["Launchpad"].AddKey("bOfficialUpdates", "true");
-
-                    Parser.WriteFile(configPath, data);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.StackTrace);
-                }
-
-            }
-            else
-            {
-                IniData data = Parser.ReadFile(configPath);
-                data["Local"]["LauncherVersion"] = defaultLauncherVersion;
-				if (!data ["Local"].ContainsKey ("GUID"))
-				{
-					string GeneratedGUID = Guid.NewGuid ().ToString ();
-					data ["Local"].AddKey ("GUID", GeneratedGUID);
-				}
-
-                Parser.WriteFile(configPath, data);
-            }
-        }
+            
+        }	
 
 		/// <summary>
 		/// Gets the config path.
@@ -90,7 +30,6 @@ namespace Launchpad_Launcher
 			string configPath = String.Format(@"{0}Config{1}LauncherConfig.ini", 
 			                                  GetLocalDir(), 
 			                                  Path.DirectorySeparatorChar);
-            Console.WriteLine(configPath);
             
             return configPath;
         }
@@ -104,6 +43,76 @@ namespace Launchpad_Launcher
 			string configDir = String.Format(@"{0}Config", GetLocalDir());
             return configDir;
         }
+
+		/// <summary>
+		/// Initializes the config by checking for bad values or files. 
+		/// Run once when the launcher starts, then avoid unless absolutely neccesary.
+		/// </summary>
+		public void Initialize()
+		{
+			FileIniDataParser Parser = new FileIniDataParser();
+
+			string configDir = GetConfigDir();
+			string configPath = GetConfigPath();
+
+			//Major release 0.1.0, linux support
+			string defaultLauncherVersion = "0.0.4";
+
+			//Check for pre-unix config. If it exists, fix the values and copy it.
+			CheckForOldConfig ();
+
+			if (!Directory.Exists(configDir))
+			{
+				Directory.CreateDirectory(configDir);
+			}
+			if (!File.Exists(configPath))
+			{
+				//here we create a new empty file
+				FileStream configStream = File.Create(configPath);
+				configStream.Close();
+
+				//read the file as an INI file
+				try
+				{
+					IniData data = Parser.ReadFile(configPath);
+					string GeneratedGUID = Guid.NewGuid ().ToString ();
+
+					data.Sections.AddSection("Local");
+					data.Sections.AddSection("Remote");
+					data.Sections.AddSection("Launchpad");
+
+					data["Local"].AddKey("LauncherVersion", defaultLauncherVersion);
+					data["Local"].AddKey("GameName", "LaunchpadExample");
+					data["Local"].AddKey("SystemTarget", "Win64");
+					data["Local"].AddKey("GUID", GeneratedGUID);
+
+					data["Remote"].AddKey("FTPUsername", "anonymous");
+					data["Remote"].AddKey("FTPPassword", "anonymous");
+					data["Remote"].AddKey("FTPUrl", "ftp://directorate.asuscomm.com");
+
+					data["Launchpad"].AddKey("bOfficialUpdates", "true");
+
+					Parser.WriteFile(configPath, data);
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.StackTrace);
+				}
+
+			}
+			else
+			{
+				IniData data = Parser.ReadFile(configPath);
+				data["Local"]["LauncherVersion"] = defaultLauncherVersion;
+				if (!data ["Local"].ContainsKey ("GUID"))
+				{
+					string GeneratedGUID = Guid.NewGuid ().ToString ();
+					data ["Local"].AddKey ("GUID", GeneratedGUID);
+				}
+
+				Parser.WriteFile(configPath, data);
+			}
+		}
 
 		/// <summary>
 		/// Gets the update cookie.
@@ -592,13 +601,14 @@ namespace Launchpad_Launcher
 		/// <returns><c>true</c>, if an old config was found, <c>false</c> otherwise.</returns>
 		private bool CheckForOldConfig()
 		{
+			ChecksHandler Checks = new ChecksHandler ();
 			string oldConfigPath = String.Format(@"{0}config{1}launcherConfig.ini", 
 			                                     GetLocalDir(), 
 			                                     Path.DirectorySeparatorChar);
 
 			string oldConfigDir = String.Format(@"{0}config", GetLocalDir());
 
-            if (IsRunningOnUnix())
+            if (Checks.IsRunningOnUnix())
             {
                 //Case sensitive
                 //Is there an old config file?
@@ -674,22 +684,7 @@ namespace Launchpad_Launcher
                 //We were successful, so return true.
                 return true;
             }
-			
-		}
 
-        private bool IsRunningOnUnix()
-        {
-            int p = (int)Environment.OSVersion.Platform;
-            if ((p == 4) || (p == 6) || (p == 128))
-            {
-                Console.WriteLine("Running on Unix");
-                return true;
-            }
-            else
-            {
-                Console.WriteLine("Not running on Unix");
-                return false;
-            }
-        }
+		}		      
     }
 }

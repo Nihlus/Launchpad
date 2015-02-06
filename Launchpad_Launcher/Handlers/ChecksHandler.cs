@@ -16,6 +16,7 @@ namespace Launchpad_Launcher
 		ConfigHandler Config = new ConfigHandler();
 		public ChecksHandler ()
 		{
+
 		}
 
 
@@ -87,6 +88,25 @@ namespace Launchpad_Launcher
 			else
 			{
 				Console.WriteLine("Initial setup already complete.");
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Determines whether this instance is running on unix.
+		/// </summary>
+		/// <returns><c>true</c> if this instance is running on unix; otherwise, <c>false</c>.</returns>
+		public bool IsRunningOnUnix()
+		{
+			int p = (int)Environment.OSVersion.Platform;
+			if ((p == 4) || (p == 6) || (p == 128))
+			{
+				Console.WriteLine("Running on Unix");
+				return true;
+			}
+			else
+			{
+				Console.WriteLine("Not running on Unix");
 				return false;
 			}
 		}

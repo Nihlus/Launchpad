@@ -11,6 +11,13 @@ namespace Launchpad_Launcher
 {
     public class MD5Handler
     {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Launchpad_Launcher.MD5Handler"/> class.
+		/// </summary>
+		public MD5Handler()
+		{
+
+		}
         /// <summary>
         /// Gets the file hash from a file stream.
         /// </summary>

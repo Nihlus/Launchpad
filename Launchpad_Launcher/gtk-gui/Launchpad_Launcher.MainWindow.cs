@@ -39,8 +39,8 @@ namespace Launchpad_Launcher
 			this.Title = global::Mono.Unix.Catalog.GetString ("Launchpad");
 			this.Icon = global::Gdk.Pixbuf.LoadFromResource ("Launchpad_Launcher.resource.Icons8-Android-Transport-Rocket.ico");
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
-			this.DefaultWidth = 725;
-			this.DefaultHeight = 375;
+			this.DefaultWidth = 755;
+			this.DefaultHeight = 412;
 			// Container child Launchpad_Launcher.MainWindow.Gtk.Container+ContainerChild
 			this.vbox1 = new global::Gtk.VBox ();
 			this.vbox1.Name = "vbox1";

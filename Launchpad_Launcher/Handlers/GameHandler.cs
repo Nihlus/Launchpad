@@ -4,6 +4,14 @@ namespace Launchpad_Launcher
 {
 	public class GameHandler
 	{
+		public delegate void ProgressChangedEventHandler(object sender, ProgressEventArgs e);
+		public event ProgressChangedEventHandler ProgressChanged;
+
+		public delegate void DownloadFinishedEventHandler(object sender, EventArgs e);
+		public event DownloadFinishedEventHandler DownloadFinished;
+
+		private ProgressEventArgs ProgressArgs;
+
 		public GameHandler ()
 		{
 		}
@@ -23,6 +31,21 @@ namespace Launchpad_Launcher
 
 		}
 
+		protected virtual void OnProgressChanged()
+		{
+			if (ProgressChanged != null)
+			{
+				ProgressChanged (this, ProgressArgs);
+			}
+		}
+
+		protected virtual void OnDownloadFinished()
+		{
+			if (DownloadFinished != null)
+			{
+				DownloadFinished (this, EventArgs.Empty);
+			}
+		}
 	}
 }
 

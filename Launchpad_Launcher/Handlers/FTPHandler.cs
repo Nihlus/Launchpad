@@ -12,17 +12,18 @@ namespace Launchpad_Launcher
     public class FTPHandler
     {
         public int FTPbytesDownloaded = 0;
-
+		ConfigHandler Config = new ConfigHandler();
         
 		/// <summary>
 		/// Reads a text file from a remote FTP server.
 		/// </summary>
-		/// <returns>The FTP file.</returns>
-		/// <param name="username">Username.</param>
-		/// <param name="password">Password.</param>
+		/// <returns>The FTP file contents.</returns>
 		/// <param name="ftpSourceFilePath">FTP file path.</param>
-        public string ReadFTPFile(string username, string password, string ftpSourceFilePath)
+        public string ReadFTPFile(string ftpSourceFilePath)
         {
+			string username = Config.GetFTPUsername();
+			string password = Config.GetFTPPassword();
+
             int bytesRead = 0;
             byte[] buffer = new byte[1024];
 
@@ -72,13 +73,25 @@ namespace Launchpad_Launcher
 
 		/// <summary>
 		/// Downloads an FTP file.
-		/// </summary>
-		/// <param name="username">Username.</param>
-		/// <param name="password">Password.</param>
+		/// </summary>>
 		/// <param name="ftpSourceFilePath">Ftp source file path.</param>
 		/// <param name="localDestination">Local destination.</param>
-        public void DownloadFTPFile(string username, string password, string ftpSourceFilePath, string localDestination)
+        public void DownloadFTPFile(string ftpSourceFilePath, string localDestination, bool bUseAnonymous)
         {
+			string username;
+			string password;
+			if (!bUseAnonymous)
+			{
+				username = Config.GetFTPUsername ();
+				password = Config.GetFTPPassword ();
+			}
+			else
+			{
+				username = "anonymous";
+				password = "anonymous";
+			}
+
+
             int bytesRead = 0;
             byte[] buffer = new byte[2048];
 

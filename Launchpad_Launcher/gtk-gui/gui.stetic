@@ -26,8 +26,8 @@
     <property name="Title" translatable="yes">Launchpad</property>
     <property name="Icon">resource:Launchpad_Launcher.resource.Icons8-Android-Transport-Rocket.ico</property>
     <property name="WindowPosition">CenterOnParent</property>
-    <property name="DefaultWidth">725</property>
-    <property name="DefaultHeight">375</property>
+    <property name="DefaultWidth">755</property>
+    <property name="DefaultHeight">412</property>
     <signal name="DeleteEvent" handler="OnDeleteEvent" />
     <child>
       <widget class="Gtk.VBox" id="vbox1">

@@ -15,13 +15,12 @@ namespace Launchpad_Launcher
         [STAThread]
         static void Main()
         {
-			Program main = new Program ();
-			if (main.IsRunningOnUnix ())
+			ChecksHandler Checks = new ChecksHandler ();
+			if (Checks.IsRunningOnUnix ())
 			{
 				Gtk.Application.Init ();
 
 				MainWindow win = new MainWindow ();
-				win.SetDefaultSize (800, 600);
 
 				win.Show ();
 				Gtk.Application.Run ();
@@ -34,20 +33,5 @@ namespace Launchpad_Launcher
 			}
             
         }
-
-		private bool IsRunningOnUnix()
-		{
-			int p = (int) Environment.OSVersion.Platform;
-			if ((p == 4) || (p == 6) || (p == 128)) 
-			{
-				Console.WriteLine ("Running on Unix");
-				return true;
-			} 
-			else 
-			{
-				Console.WriteLine ("Not running on Unix");
-				return false;
-			}
-		}
     }
 }

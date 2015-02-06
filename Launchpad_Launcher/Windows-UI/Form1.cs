@@ -454,10 +454,9 @@ namespace Launchpad_Launcher
             {
                 //get the latest launcher version from the FTP
                 string remoteLauncherVersionTXTURL = String.Format("{0}/launcher/launcherVersion.txt", Config.GetFTPUrl());
-                string FTPUsername = Config.GetFTPUsername();
-                string FTPPassword = Config.GetFTPPassword();
+
                 //Console.WriteLine("Attempting to ReadFTPFile: userName: {0}, pass:{1}, remoteLauncherVersionTXTURL: {2}", FTPUsername, FTPPassword, remoteLauncherVersionTXTURL);
-                string remoteLauncherVersion = FTP.ReadFTPFile(FTPUsername, FTPPassword, remoteLauncherVersionTXTURL).Replace("\0", string.Empty);
+                string remoteLauncherVersion = FTP.ReadFTPFile(remoteLauncherVersionTXTURL).Replace("\0", string.Empty);
 
                 //get the current launcher version from file
                 string launcherVersion = Config.GetLauncherVersion();
@@ -520,7 +519,7 @@ namespace Launchpad_Launcher
                 {
                     Console.WriteLine("DoManifestUpdate(): Warning - No Manifest attempting to download");
 
-                    FTP.DownloadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), Config.GetManifestURL(), Config.GetManifestPath());
+                    FTP.DownloadFTPFile(Config.GetManifestURL(), Config.GetManifestPath(), false);
 
                     if (File.Exists(Config.GetManifestPath()))
                     {
@@ -557,7 +556,7 @@ namespace Launchpad_Launcher
                 FileStream localManifestStream = File.OpenRead(Config.GetManifestPath());
                 string localManifestChecksum = md5.GetFileHash(localManifestStream);
                 localManifestStream.Close();
-                string remoteManifestChecksum = FTP.ReadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), Config.GetManifestChecksumURL()).Replace("\0", string.Empty);
+                string remoteManifestChecksum = FTP.ReadFTPFile(Config.GetManifestChecksumURL()).Replace("\0", string.Empty);
 
                 Console.WriteLine("Remote: {0}", remoteManifestChecksum);
                 Console.WriteLine("Local:  {0}", localManifestChecksum);
@@ -573,7 +572,7 @@ namespace Launchpad_Launcher
 
                     //delete old manifest
                     File.Delete(Config.GetManifestPath());
-                    FTP.DownloadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), Config.GetManifestURL(), Config.GetManifestPath());
+                    FTP.DownloadFTPFile(Config.GetManifestURL(), Config.GetManifestPath(), false);
 
                     //create .gameNeedsUpdate file to signal that game needs update between launches of the application
                     FileStream fs = File.Create(String.Format(@"{0}\.gameNeedsUpdate", Config.GetLocalDir()));
@@ -637,7 +636,7 @@ namespace Launchpad_Launcher
 
                 //get the remote version from the ftp
                 string remoteVersionURL = String.Format("{0}/game/gameVersion.txt", Config.GetFTPUrl());
-                string remoteVersion = FTP.ReadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), remoteVersionURL);
+                string remoteVersion = FTP.ReadFTPFile(remoteVersionURL);
                 //note remote version may have a trailing '\0' which will cause the console to hang if written
 
                 //we create version objects to format the versions correctly to remove unnecessary spaces, new line characters or '\0' that may exist
@@ -907,12 +906,12 @@ namespace Launchpad_Launcher
             //if the client wants official updates of Launchpad
             if (Config.GetDoOfficialUpdates() == true)
             {
-                FTP.DownloadFTPFile("anonymous", "anonymous", "ftp://directorate.asuscomm.com/launcher/bin/Launchpad.exe", String.Format(@"{0}\{1}.exe", Config.GetTempDir(), executableName));
+                FTP.DownloadFTPFile("ftp://directorate.asuscomm.com/launcher/bin/Launchpad.exe", String.Format(@"{0}\{1}.exe", Config.GetTempDir(), executableName), true);
             }
             else
             {
                 //you've forked the launcher and want to update it yourself
-                FTP.DownloadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), Config.GetLauncherURL(), String.Format(@"{0}\{1}.exe", Config.GetTempDir(), executableName));
+                FTP.DownloadFTPFile(Config.GetLauncherURL(), String.Format(@"{0}\{1}.exe", Config.GetTempDir(), executableName), false);
             }
 
             //create a .bat file that will replace the old Launchpad.exe
@@ -1009,7 +1008,7 @@ namespace Launchpad_Launcher
                     //skip existing files to allow a failed or stopped download to resume
                     if (!File.Exists(String.Format(@"{0}{1}", Config.GetGamePath(), path)))
                     {
-                        FTP.DownloadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), String.Format(@"{0}{1}", Config.GetGameURL(false), path.Replace(@"\", "/")), String.Format(@"{0}{1}", Config.GetGamePath(), path));
+                        FTP.DownloadFTPFile(String.Format(@"{0}{1}", Config.GetGameURL(false), path.Replace(@"\", "/")), String.Format(@"{0}{1}", Config.GetGamePath(), path), false);
                     }
 
 
@@ -1055,7 +1054,7 @@ namespace Launchpad_Launcher
 
             try
             {
-                FTP.DownloadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), FTPPath, localPath);
+                FTP.DownloadFTPFile(FTPPath, localPath, false);
                 string newVersion = File.ReadAllText(String.Format(@"{0}\gameVersion.txt", Config.GetGamePath()));
                 Console.WriteLine("Write new gameVersion: {0} succeeded", newVersion);
             }
@@ -1159,7 +1158,7 @@ namespace Launchpad_Launcher
                     //if it does not, download it
                     try
                     {
-                        FTP.DownloadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), FTPPath, localPath);
+                        FTP.DownloadFTPFile(FTPPath, localPath, false);
                         //Console.WriteLine("GameUpdateWorker - FileUpdate: ");
                         //Console.WriteLine(localPath);
                         i++;
@@ -1190,7 +1189,7 @@ namespace Launchpad_Launcher
                             //if they do not match, download and replace the file
                             try
                             {
-                                FTP.DownloadFTPFile(Config.GetFTPUsername(), Config.GetFTPPassword(), FTPPath, localPath);
+                                FTP.DownloadFTPFile(FTPPath, localPath, false);
                                 Console.WriteLine("GameUpdateWorker - MD5Update: {0}", localPath);
                                 localFile.Close();
                                 i++;
