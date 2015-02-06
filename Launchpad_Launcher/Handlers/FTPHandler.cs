@@ -175,5 +175,17 @@ namespace Launchpad_Launcher
             }
             
         }
+
+		/// <summary>
+		/// Gets the remote launcher version.
+		/// </summary>
+		/// <returns>The remote launcher version.</returns>
+		public string GetRemoteLauncherVersion()
+		{
+			string remoteVersionPath = String.Format ("{0}/launcher/LauncherVersion.txt", Config.GetFTPUrl());
+			string remoteVersion = ReadFTPFile (remoteVersionPath);
+
+			return remoteVersion;
+		}
     }
 }

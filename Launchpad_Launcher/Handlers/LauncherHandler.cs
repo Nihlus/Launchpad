@@ -96,7 +96,6 @@ namespace Launchpad_Launcher
 		{
 			if (ChangelogDownloadFinished != null)
 			{
-				Console.WriteLine (DownloadFinishedArgs.Value);
 				//raise the event
 				ChangelogDownloadFinished (this, DownloadFinishedArgs);
 			}

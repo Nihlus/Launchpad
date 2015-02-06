@@ -125,9 +125,27 @@ namespace Launchpad_Launcher
 					stats.SendUseageStats ();
 				}
 
-				//Start loading the changelog asynchronously;
+				//check if the launcher is outdated
+				if (Checks.IsLauncherOutdated ())
+				{
+					Console.WriteLine ("Outdated!");
+					//Download the new launcher
+				}
+
+				//Start loading the changelog asynchronously
 				Launcher.ChangelogDownloadFinished += OnChangelogDownloadFinished;
 				Launcher.LoadChangelog ();
+
+
+
+
+				//if the game is not installed, offer to install it
+
+				//if the game is installed (which it should be at this point), check if it needs to be updated
+
+				//if it does, offer to update it
+
+				//if not, enable launching the game
 			}
 		}
 

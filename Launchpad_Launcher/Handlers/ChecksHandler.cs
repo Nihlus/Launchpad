@@ -138,16 +138,19 @@ namespace Launchpad_Launcher
 		/// <returns><c>true</c> if the launcher is outdated; otherwise, <c>false</c>.</returns>
 		public bool IsLauncherOutdated()
 		{
-			string local = Config.GetLocalLauncherVersion();
-			string remote = Config.GetRemoteLauncherVersion ();
+			Version local = new Version(Config.GetLocalLauncherVersion());
+			Console.WriteLine (local.ToString());
 
-			if (local == remote)
+			Version remote = new Version(FTP.GetRemoteLauncherVersion ());
+			Console.WriteLine (remote.ToString());   	
+
+			if (local < remote)
 			{
-				return false;
+				return true;
 			} 
 			else
 			{
-				return true;
+				return false;
 			}
 		}
 	}
