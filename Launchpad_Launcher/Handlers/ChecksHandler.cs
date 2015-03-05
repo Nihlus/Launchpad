@@ -128,6 +128,11 @@ namespace Launchpad_Launcher
 			//Is there an .install file in the directory?
 			bool bHasInstallationCookie = File.Exists(Config.GetInstallCookie());
 
+			Console.WriteLine (String.Format ("{0} {1} {2}", 
+			              bHasDirectory.ToString (), 
+			              bHasInstallationCookie.ToString (),
+			              IsInstallCookieEmpty ().ToString ()));
+
 			//If any of these criteria are false, the game is not considered fully installed.
 			return bHasDirectory && bHasInstallationCookie && IsInstallCookieEmpty();
 		}

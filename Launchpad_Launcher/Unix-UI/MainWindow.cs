@@ -101,7 +101,7 @@ namespace Launchpad_Launcher
 				//check if the launcher is outdated
 				if (Checks.IsLauncherOutdated ())
 				{
-					Console.WriteLine ("Outdated!");
+					Console.WriteLine ("Launcher outdated.");
 					PrimaryButton.Sensitive = true;
 					PrimaryButton.Label = "Update";
 					bLauncherNeedsUpdate = true;

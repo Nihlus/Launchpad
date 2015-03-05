@@ -73,14 +73,16 @@ namespace Launchpad_Launcher
 				{
 					//download the file
 					//this is the first substring in the manifest line, delimited by :
-					string ManifestFileName = (ManifestFiles [i].Split (':'))[1];
+					string ManifestFileName = (ManifestFiles [i].Split (':'))[0];
 
-					string RemotePath = String.Format ("{0}{1}", 
+					string RemotePath = String.Format ("{0}/game/{1}/{2}", 
 					                                   Config.GetFTPUrl (), 
+					                                   Config.GetSystemTarget(), 
 					                                   ManifestFileName);
 
-					string LocalPath = String.Format ("{0}{1}", 
+					string LocalPath = String.Format ("{0}{1}{2}", 
 					                                  Config.GetGamePath (),
+					                                  System.IO.Path.DirectorySeparatorChar, 
 					                                  ManifestFileName);
 
 					//write the current file progress to the install cookie
@@ -88,9 +90,26 @@ namespace Launchpad_Launcher
 					tw.WriteLine (ManifestFiles [i]);
 					tw.Close ();
 
+					if (File.Exists(LocalPath))
+					{
+						//whoa, why is there a file here? Is it correct?
+						MD5Handler MD5 = new MD5Handler();
+						string localHash = MD5.GetFileHash(File.OpenRead(LocalPath));
+						string manifestHash = (ManifestFiles [i].Split (':'))[1];
+						if (localHash == manifestHash)
+						{
+							//apparently we already had the proper version of this file. 
+							//Moving on!
+							continue;
+						}
+					}
 					//raise the progress changed event by binding to the 
 					//event in the FTP class
 					FTP.FileProgressChanged += OnDownloadProgressChanged;
+
+					//make sure we have a game directory to put files in
+					Directory.CreateDirectory(LocalPath);
+					//now download the file
 					FTP.DownloadFTPFile (RemotePath, LocalPath, false);
 				}
 
