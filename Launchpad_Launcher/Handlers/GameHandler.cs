@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Threading;
 
 /*
  * This class has a lot of async stuff going on. It handles installing the game
@@ -15,22 +17,97 @@ namespace Launchpad_Launcher
 		public delegate void ProgressChangedEventHandler(object sender, ProgressEventArgs e);
 		public event ProgressChangedEventHandler ProgressChanged;
 
-		public delegate void DownloadFinishedEventHandler(object sender, EventArgs e);
+		public delegate void DownloadFinishedEventHandler(object sender, DownloadFinishedEventArgs e);
 		public event DownloadFinishedEventHandler DownloadFinished;
 
 		private ProgressEventArgs ProgressArgs;
+		private DownloadFinishedEventArgs DownloadFinishedArgs;
+		//Checks handler
+		ChecksHandler Checks = new ChecksHandler ();
+		//config handler
+		ConfigHandler Config = new ConfigHandler ();
 
 		public GameHandler ()
 		{
+			ProgressArgs = new ProgressEventArgs ();
+			DownloadFinishedArgs = new DownloadFinishedEventArgs ();
 		}
 
-		public void DownloadGame()
+		public void InstallGame()
 		{
-
+			Thread t = new Thread (InstallGameAsync);
+			t.Start ();
 		}
-		private void DownloadGameAsync()
+		private void InstallGameAsync()
 		{
+			try
+			{
+				FTPHandler FTP = new FTPHandler ();
 
+				//create the .install file to mark that an installation has begun
+				File.Create (Config.GetInstallCookie ()).Close();
+
+				string LastFile = File.ReadAllText (Config.GetInstallCookie ());
+				string[] ManifestFiles = File.ReadAllLines (Config.GetManifestPath ());
+
+				//in order to be able to resume downloading, we check if there is a file
+				//stored in the install cookie.
+				int line = 0;
+
+				if (Checks.IsInstallCookieEmpty())
+				{
+					//loop through all the lines in the manifest until we encounter
+					//a line which matches the one in the install cookie
+					for (int i = 0; i < ManifestFiles.Length; ++i)
+					{
+						if (LastFile == ManifestFiles[i])
+						{
+							line = i;
+						}
+					}
+				}
+
+				//then, start downloading files from that line. If no line was found, we start 
+				//at 0.
+				for (int i = line; i < ManifestFiles.Length; ++i)
+				{
+					//download the file
+					//this is the first substring in the manifest line, delimited by :
+					string ManifestFileName = (ManifestFiles [i].Split (':'))[1];
+
+					string RemotePath = String.Format ("{0}{1}", 
+					                                   Config.GetFTPUrl (), 
+					                                   ManifestFileName);
+
+					string LocalPath = String.Format ("{0}{1}", 
+					                                  Config.GetGamePath (),
+					                                  ManifestFileName);
+
+					//write the current file progress to the install cookie
+					TextWriter tw = new StreamWriter(Config.GetInstallCookie ());
+					tw.WriteLine (ManifestFiles [i]);
+					tw.Close ();
+
+					//raise the progress changed event by binding to the 
+					//event in the FTP class
+					FTP.FileProgressChanged += OnDownloadProgressChanged;
+					FTP.DownloadFTPFile (RemotePath, LocalPath, false);
+				}
+
+				//we've finished the download, so empty the cookie
+				File.WriteAllText (Config.GetInstallCookie (), String.Empty);
+
+				//raise the finished event
+				OnDownloadFinished ();			
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine ("InstallGameAsync(): " + ex.StackTrace);
+				DownloadFinishedArgs.Value = "1";
+				DownloadFinishedArgs.URL = "Install";
+
+				OnDownloadFinished ();
+			}		
 		}
 
 		public void UpdateGame()
@@ -42,9 +119,24 @@ namespace Launchpad_Launcher
 
 		}
 
+		public void RepairGame()
+		{
+
+		}
+		private void RepairGameAsync()
+		{
+
+		}
+
 		public void LaunchGame()
 		{
 
+		}
+
+		protected void OnDownloadProgressChanged(object sender, ProgressEventArgs e)
+		{
+			ProgressArgs = e;
+			OnProgressChanged ();
 		}
 
 		protected virtual void OnProgressChanged()
@@ -59,7 +151,7 @@ namespace Launchpad_Launcher
 		{
 			if (DownloadFinished != null)
 			{
-				DownloadFinished (this, EventArgs.Empty);
+				DownloadFinished (this, DownloadFinishedArgs);
 			}
 		}
 	}

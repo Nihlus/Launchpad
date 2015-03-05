@@ -245,6 +245,29 @@ namespace Launchpad_Launcher
         }
 
 		/// <summary>
+		/// Gets the local game version.
+		/// </summary>
+		/// <returns>The local game version.</returns>
+		public string GetLocalGameVersion()
+		{
+			string GameVersion = File.ReadAllText(GetGameVersionPath());
+
+			return GameVersion;
+		}
+
+		/// <summary>
+		/// Gets the game version path.
+		/// </summary>
+		/// <returns>The game version path.</returns>
+		public string GetGameVersionPath()
+		{
+			string VersionPath = String.Format(@"{0}{1}GameVersion.txt",
+			                            GetGamePath(), 
+			                            Path.DirectorySeparatorChar);
+
+			return VersionPath;
+		}
+		/// <summary>
 		/// Gets the manifest URL.
 		/// </summary>
 		/// <returns>The manifest URL.</returns>

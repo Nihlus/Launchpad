@@ -87,7 +87,7 @@
                   <widget class="Gtk.Alignment" id="alignment1">
                     <property name="MemberName" />
                     <child>
-                      <widget class="Gtk.Label" id="label2">
+                      <widget class="Gtk.Label" id="MessageLabel">
                         <property name="MemberName" />
                         <property name="Xalign">0</property>
                         <property name="LabelProp" translatable="yes">label2</property>
@@ -138,7 +138,7 @@
                 <property name="MemberName" />
                 <property name="Spacing">6</property>
                 <child>
-                  <widget class="Gtk.Button" id="button4">
+                  <widget class="Gtk.Button" id="VerifyButton">
                     <property name="MemberName" />
                     <property name="Sensitive">False</property>
                     <property name="CanFocus">True</property>
@@ -154,12 +154,13 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="Gtk.Button" id="button3">
+                  <widget class="Gtk.Button" id="PrimaryButton">
                     <property name="MemberName" />
                     <property name="CanFocus">True</property>
                     <property name="Type">TextOnly</property>
                     <property name="Label" translatable="yes">MainButton</property>
                     <property name="UseUnderline">True</property>
+                    <signal name="Clicked" handler="OnPrimaryButtonClicked" />
                   </widget>
                   <packing>
                     <property name="Position">1</property>

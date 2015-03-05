@@ -13,6 +13,22 @@ namespace Launchpad_Launcher
     {
         public int FTPbytesDownloaded = 0;
 		ConfigHandler Config = new ConfigHandler();
+
+		//events for progress change and download completion
+		public delegate void FileProgressChangedEventHandler(object sender, ProgressEventArgs e);
+		public event FileProgressChangedEventHandler FileProgressChanged;
+
+		public delegate void FileDownloadFinishedEventHandler (object sender, DownloadFinishedEventArgs e);
+		public event FileDownloadFinishedEventHandler FileDownloadFinished;
+
+		private ProgressEventArgs ProgressArgs;
+		private DownloadFinishedEventArgs DownloadFinishedArgs;
+
+		public FTPHandler()
+		{
+			ProgressArgs = new ProgressEventArgs ();
+			DownloadFinishedArgs = new DownloadFinishedEventArgs ();
+		}
         
 		/// <summary>
 		/// Reads a text file from a remote FTP server.
@@ -186,6 +202,34 @@ namespace Launchpad_Launcher
 			string remoteVersion = ReadFTPFile (remoteVersionPath);
 
 			return remoteVersion;
+		}
+
+		/// <summary>
+		/// Gets the remote game version.
+		/// </summary>
+		/// <returns>The remote game version.</returns>
+		public string GetRemoteGameVersion()
+		{
+			string remoteVersionPath = String.Format ("{0}/game/GameVersion.txt", Config.GetFTPUrl());
+			string remoteVersion = ReadFTPFile (remoteVersionPath);
+
+			return remoteVersion;
+		}
+
+		protected virtual void OnProgressChanged()
+		{
+			if (FileProgressChanged != null)
+			{
+				FileProgressChanged (this, ProgressArgs);
+			}
+		}
+
+		protected virtual void OnDownloadFinished()
+		{
+			if (FileDownloadFinished != null)
+			{
+				FileDownloadFinished (this, DownloadFinishedArgs);
+			}
 		}
     }
 }

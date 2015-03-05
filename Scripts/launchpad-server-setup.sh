@@ -49,7 +49,7 @@ fi
     echo "Prohibiting anonymous uploading of files..."
     sed -i "s/^#anon_upload_enable/anon_upload_enable/" /etc/vsftpd.conf
     sed -i "s/\(anon_upload_enable *= *\).*/\1NO/" /etc/vsftpd.conf
-
+    service vsftpd restart
     
 #create folders
 
@@ -71,7 +71,7 @@ fi
     chmod g+rwX launcher
     chmod o+r launcher
 
-    read -p "You will need an account in the ftp group to upload files to the server. Would you like to use an existing account, or create a new one? [Create - y/ Existing - n] " -r
+    read -p "You will need an account in the ftp group to upload files to the server. Would you like to use an existing account, or create a new one? Note that you may need to log out and back in if you use an existing account. [Create - y/ Existing - n] " -r
     if [[ $REPLY =~ ^[Yy]$ ]]
     then
         useradd -d /srv/ftp --comment Launchpad-system -G ftp launchpad

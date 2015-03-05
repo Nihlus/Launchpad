@@ -14,12 +14,12 @@ namespace Launchpad_Launcher
 		private global::Gtk.Alignment alignment2;
 		private global::Gtk.ScrolledWindow scrolledwindow2;
 		private global::Gtk.Alignment alignment1;
-		private global::Gtk.Label label2;
+		private global::Gtk.Label MessageLabel;
 		private global::Gtk.HBox hbox3;
 		private global::Gtk.ProgressBar progressbar2;
 		private global::Gtk.HBox hbox4;
-		private global::Gtk.Button button4;
-		private global::Gtk.Button button3;
+		private global::Gtk.Button VerifyButton;
+		private global::Gtk.Button PrimaryButton;
 
 		protected virtual void Build ()
 		{
@@ -79,11 +79,11 @@ namespace Launchpad_Launcher
 			this.alignment1 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
 			this.alignment1.Name = "alignment1";
 			// Container child alignment1.Gtk.Container+ContainerChild
-			this.label2 = new global::Gtk.Label ();
-			this.label2.Name = "label2";
-			this.label2.Xalign = 0F;
-			this.label2.LabelProp = global::Mono.Unix.Catalog.GetString ("label2");
-			this.alignment1.Add (this.label2);
+			this.MessageLabel = new global::Gtk.Label ();
+			this.MessageLabel.Name = "MessageLabel";
+			this.MessageLabel.Xalign = 0F;
+			this.MessageLabel.LabelProp = global::Mono.Unix.Catalog.GetString ("label2");
+			this.alignment1.Add (this.MessageLabel);
 			this.vbox2.Add (this.alignment1);
 			global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.alignment1]));
 			w6.PackType = ((global::Gtk.PackType)(1));
@@ -114,25 +114,25 @@ namespace Launchpad_Launcher
 			this.hbox4.Name = "hbox4";
 			this.hbox4.Spacing = 6;
 			// Container child hbox4.Gtk.Box+BoxChild
-			this.button4 = new global::Gtk.Button ();
-			this.button4.Sensitive = false;
-			this.button4.CanFocus = true;
-			this.button4.Name = "button4";
-			this.button4.UseUnderline = true;
-			this.button4.Label = global::Mono.Unix.Catalog.GetString ("Verify Installation");
-			this.hbox4.Add (this.button4);
-			global::Gtk.Box.BoxChild w10 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.button4]));
+			this.VerifyButton = new global::Gtk.Button ();
+			this.VerifyButton.Sensitive = false;
+			this.VerifyButton.CanFocus = true;
+			this.VerifyButton.Name = "VerifyButton";
+			this.VerifyButton.UseUnderline = true;
+			this.VerifyButton.Label = global::Mono.Unix.Catalog.GetString ("Verify Installation");
+			this.hbox4.Add (this.VerifyButton);
+			global::Gtk.Box.BoxChild w10 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.VerifyButton]));
 			w10.Position = 0;
 			w10.Expand = false;
 			w10.Fill = false;
 			// Container child hbox4.Gtk.Box+BoxChild
-			this.button3 = new global::Gtk.Button ();
-			this.button3.CanFocus = true;
-			this.button3.Name = "button3";
-			this.button3.UseUnderline = true;
-			this.button3.Label = global::Mono.Unix.Catalog.GetString ("MainButton");
-			this.hbox4.Add (this.button3);
-			global::Gtk.Box.BoxChild w11 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.button3]));
+			this.PrimaryButton = new global::Gtk.Button ();
+			this.PrimaryButton.CanFocus = true;
+			this.PrimaryButton.Name = "PrimaryButton";
+			this.PrimaryButton.UseUnderline = true;
+			this.PrimaryButton.Label = global::Mono.Unix.Catalog.GetString ("MainButton");
+			this.hbox4.Add (this.PrimaryButton);
+			global::Gtk.Box.BoxChild w11 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.PrimaryButton]));
 			w11.Position = 1;
 			w11.Expand = false;
 			w11.Fill = false;
@@ -153,6 +153,7 @@ namespace Launchpad_Launcher
 			this.Show ();
 			this.DeleteEvent += new global::Gtk.DeleteEventHandler (this.OnDeleteEvent);
 			this.SettingsAction.Activated += new global::System.EventHandler (this.OnSettingsActionActivated);
+			this.PrimaryButton.Clicked += new global::System.EventHandler (this.OnPrimaryButtonClicked);
 		}
 	}
 }

@@ -14,7 +14,6 @@ namespace Launchpad_Launcher
 	public class ChecksHandler
 	{
 		ConfigHandler Config = new ConfigHandler();
-		FTPHandler FTP = new FTPHandler();
 
 		public ChecksHandler ()
 		{
@@ -28,6 +27,8 @@ namespace Launchpad_Launcher
 		/// <returns><c>true</c> if this instance can connect to the FTP server; otherwise, <c>false</c>.</returns>
 		public bool CanConnectToFTP()
 		{
+			FTPHandler FTP = new FTPHandler();
+
 			bool bCanConnectToFTP;
 			Console.WriteLine("\nChecking for FTP connection...");
 
@@ -40,9 +41,11 @@ namespace Launchpad_Launcher
 				FtpWebRequest requestDir = (FtpWebRequest)FtpWebRequest.Create(FTPURL);
 				requestDir.Credentials = new NetworkCredential(FTPUserName, FTPPassword);
 				requestDir.Method = WebRequestMethods.Ftp.ListDirectory;
+				requestDir.Timeout = 20000;
 
 				try
 				{
+
 					WebResponse response = requestDir.GetResponse();
 
 					Console.WriteLine("Can connect to FTP at: {0} username: {1} password: {2}", FTPURL, FTPUserName, FTPPassword);
@@ -124,17 +127,9 @@ namespace Launchpad_Launcher
 			bool bHasDirectory = Directory.Exists(Config.GetGamePath());
 			//Is there an .install file in the directory?
 			bool bHasInstallationCookie = File.Exists(Config.GetInstallCookie());
-			//Is the .install file empty? Assume false.
-			bool bIsInstallCookieEmpty = false;
-
-			if (bHasInstallationCookie)
-			{
-
-				bIsInstallCookieEmpty = (File.ReadAllText(Config.GetInstallCookie()) == "");
-			}
 
 			//If any of these criteria are false, the game is not considered fully installed.
-			return bHasDirectory && bHasInstallationCookie && bIsInstallCookieEmpty;
+			return bHasDirectory && bHasInstallationCookie && IsInstallCookieEmpty();
 		}
 
 		/// <summary>
@@ -143,7 +138,26 @@ namespace Launchpad_Launcher
 		/// <returns><c>true</c> if the game is outdated; otherwise, <c>false</c>.</returns>
 		public bool IsGameOutdated()
 		{
-			return false;
+			FTPHandler FTP = new FTPHandler ();
+			try
+			{
+				Version local = new Version(Config.GetLocalGameVersion());
+				Version remote = new Version(FTP.GetRemoteGameVersion());
+
+				if (local < remote)
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine ("IsGameOutdated(): " + ex.StackTrace);
+				return false;
+			}
 		}
 
 		/// <summary>
@@ -152,18 +166,42 @@ namespace Launchpad_Launcher
 		/// <returns><c>true</c> if the launcher is outdated; otherwise, <c>false</c>.</returns>
 		public bool IsLauncherOutdated()
 		{
-			Version local = new Version(Config.GetLocalLauncherVersion());
-
-			Version remote = new Version(FTP.GetRemoteLauncherVersion ());	
-
-			if (local < remote)
+			FTPHandler FTP = new FTPHandler();
+			try
 			{
-				return true;
+				Version local = new Version(Config.GetLocalLauncherVersion());
+
+				Version remote = new Version(FTP.GetRemoteLauncherVersion ());	
+
+				if (local < remote)
+				{
+					return true;
+				} 
+				else
+				{
+					return false;
+				}
 			} 
-			else
+			catch (Exception ex)
 			{
-				return false;
+				Console.WriteLine ("IsLauncherOutdated(): " + ex.StackTrace);
+				return false;	
 			}
+		}
+
+		public bool IsInstallCookieEmpty()
+		{
+			//Is there an .install file in the directory?
+			bool bHasInstallationCookie = File.Exists(Config.GetInstallCookie());
+			//Is the .install file empty? Assume false.
+			bool bIsInstallCookieEmpty = false;
+
+			if (bHasInstallationCookie)
+			{
+				bIsInstallCookieEmpty = (File.ReadAllText(Config.GetInstallCookie()) == "");
+			}
+
+			return bIsInstallCookieEmpty;
 		}
 	}
 }
