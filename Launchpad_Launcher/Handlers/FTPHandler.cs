@@ -77,6 +77,7 @@ namespace Launchpad_Launcher
             {
                 Console.Write("ReadFTPFileWebException: ");
                 Console.WriteLine(ex.Status.ToString());
+
                 return ex.Status.ToString();
             }
             catch (Exception ex)
@@ -150,6 +151,8 @@ namespace Launchpad_Launcher
             {
                 Console.Write("DownloadFTPFileWebException: ");
                 Console.WriteLine(ex.Status.ToString());
+				Console.WriteLine (ex.StackTrace);
+				Console.WriteLine (ftpSourceFilePath);
             }
             catch (Exception ex)
             {

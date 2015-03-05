@@ -208,6 +208,31 @@ namespace Launchpad_Launcher
 
 			return bIsInstallCookieEmpty;
 		}
+
+		public bool IsManifestOutdated()
+		{
+			if (File.Exists(Config.GetManifestPath()))
+			{
+				FTPHandler FTP = new FTPHandler ();
+				MD5Handler MD5 = new MD5Handler ();
+
+				string remoteHash = FTP.ReadFTPFile (Config.GetManifestURL ());
+				string localHash = MD5.GetFileHash (File.OpenRead (Config.GetManifestPath ()));
+
+				if (remoteHash != localHash)
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else
+			{
+				return true;
+			}
+		}
 	}
 }
 

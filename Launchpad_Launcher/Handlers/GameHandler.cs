@@ -75,7 +75,7 @@ namespace Launchpad_Launcher
 					//this is the first substring in the manifest line, delimited by :
 					string ManifestFileName = (ManifestFiles [i].Split (':'))[0];
 
-					string RemotePath = String.Format ("{0}/game/{1}/{2}", 
+					string RemotePath = String.Format ("{0}/game/{1}{2}", 
 					                                   Config.GetFTPUrl (), 
 					                                   Config.GetSystemTarget(), 
 					                                   ManifestFileName);
@@ -108,7 +108,7 @@ namespace Launchpad_Launcher
 					FTP.FileProgressChanged += OnDownloadProgressChanged;
 
 					//make sure we have a game directory to put files in
-					Directory.CreateDirectory(LocalPath);
+					Directory.CreateDirectory(Path.GetDirectoryName(LocalPath));
 					//now download the file
 					FTP.DownloadFTPFile (RemotePath, LocalPath, false);
 				}

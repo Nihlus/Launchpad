@@ -105,7 +105,8 @@ namespace Launchpad_Launcher
 			}
 			else
 			{
-				IniData data = Parser.ReadFile(configPath);
+				IniData data = Parser.ReadFile (configPath);
+
 				data["Local"]["LauncherVersion"] = defaultLauncherVersion;
 				if (!data ["Local"].ContainsKey ("GUID"))
 				{
