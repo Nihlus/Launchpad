@@ -146,6 +146,11 @@ namespace Launchpad_Launcher
                 }
 
                 fileStream.Close();
+
+				request.Abort();
+				sizerequest.Abort();
+				sizereader.Close();
+
             }
             catch (WebException ex)
             {

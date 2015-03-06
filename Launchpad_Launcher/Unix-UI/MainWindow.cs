@@ -133,7 +133,7 @@ namespace Launchpad_Launcher
 						if (Checks.IsGameOutdated())
 						{
 							//if it does, offer to update it
-							Console.WriteLine ("Game is outdated.");
+							Console.WriteLine ("Game is outdated or not installed");
 						}
 						else
 						{

@@ -47,6 +47,12 @@ namespace Launchpad_Launcher
 				//create the .install file to mark that an installation has begun
 				File.Create (Config.GetInstallCookie ()).Close();
 
+				//write the current file progress to the install cookie
+				TextWriter tw = new StreamWriter(Config.GetInstallCookie ());
+				tw.WriteLine ("START");
+				tw.Close ();
+
+
 				string LastFile = File.ReadAllText (Config.GetInstallCookie ());
 				string[] ManifestFiles = File.ReadAllLines (Config.GetManifestPath ());
 
@@ -86,9 +92,9 @@ namespace Launchpad_Launcher
 					                                  ManifestFileName);
 
 					//write the current file progress to the install cookie
-					TextWriter tw = new StreamWriter(Config.GetInstallCookie ());
-					tw.WriteLine (ManifestFiles [i]);
-					tw.Close ();
+					TextWriter twp = new StreamWriter(Config.GetInstallCookie ());
+					twp.WriteLine (ManifestFiles [i]);
+					twp.Close ();
 
 					if (File.Exists(LocalPath))
 					{

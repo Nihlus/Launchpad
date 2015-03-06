@@ -161,7 +161,7 @@ namespace Launchpad_Launcher
 			catch (Exception ex)
 			{
 				Console.WriteLine ("IsGameOutdated(): " + ex.Message);
-				return false;
+				return true;
 			}
 		}
 
