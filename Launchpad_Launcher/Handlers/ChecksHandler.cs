@@ -147,7 +147,7 @@ namespace Launchpad_Launcher
 			try
 			{
 				Version local = new Version(Config.GetLocalGameVersion());
-				Version remote = new Version(FTP.GetRemoteGameVersion());
+				Version remote = new Version(FTP.GetRemoteGameVersion(true));
 
 				if (local < remote)
 				{
@@ -216,7 +216,8 @@ namespace Launchpad_Launcher
 				FTPHandler FTP = new FTPHandler ();
 				MD5Handler MD5 = new MD5Handler ();
 
-				string remoteHash = FTP.ReadFTPFile (Config.GetManifestURL ());
+				string manifestURL = Config.GetManifestURL ();
+				string remoteHash = FTP.ReadFTPFile (manifestURL);
 				string localHash = MD5.GetFileHash (File.OpenRead (Config.GetManifestPath ()));
 
 				if (remoteHash != localHash)

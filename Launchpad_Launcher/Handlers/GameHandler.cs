@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Threading;
+using System.Diagnostics;
 
 /*
  * This class has a lot of async stuff going on. It handles installing the game
@@ -52,6 +53,9 @@ namespace Launchpad_Launcher
 				tw.WriteLine ("START");
 				tw.Close ();
 
+				//raise the progress changed event by binding to the 
+				//event in the FTP class
+				FTP.FileProgressChanged += OnDownloadProgressChanged;
 
 				string LastFile = File.ReadAllText (Config.GetInstallCookie ());
 				string[] ManifestFiles = File.ReadAllLines (Config.GetManifestPath ());
@@ -109,13 +113,12 @@ namespace Launchpad_Launcher
 							continue;
 						}
 					}
-					//raise the progress changed event by binding to the 
-					//event in the FTP class
-					FTP.FileProgressChanged += OnDownloadProgressChanged;
+
 
 					//make sure we have a game directory to put files in
 					Directory.CreateDirectory(Path.GetDirectoryName(LocalPath));
 					//now download the file
+					OnProgressChanged();
 					FTP.DownloadFTPFile (RemotePath, LocalPath, false);
 				}
 
@@ -137,25 +140,41 @@ namespace Launchpad_Launcher
 
 		public void UpdateGame()
 		{
-
+			Thread t = new Thread (UpdateGameAsync);
+			t.Start ();
 		}
 		private void UpdateGameAsync()
 		{
+			//check all local files against the manifest for file size changes.
+			//if the file is missing or the wrong size, download it.
 
+			//better system - compare old & new manifests for changes and download those?
 		}
 
 		public void RepairGame()
 		{
-
+			Thread t = new Thread (RepairGameAsync);
+			t.Start ();
 		}
 		private void RepairGameAsync()
 		{
-
+			//check all local file MD5s against latest manifest. Download broken files.
 		}
 
 		public void LaunchGame()
 		{
+			//start new process of the game executable
+			try
+			{
+				ProcessStartInfo gameStartInfo = new ProcessStartInfo ();
+				gameStartInfo.FileName = Config.GetGameExecutable ();
 
+				Process.Start (gameStartInfo);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine (ex.Message);
+			}
 		}
 
 		protected void OnDownloadProgressChanged(object sender, ProgressEventArgs e)

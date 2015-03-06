@@ -40,6 +40,16 @@ namespace Launchpad_Launcher
 
 		}
 
+		public void DownloadManifest()
+		{
+			FTPHandler FTP = new FTPHandler ();
+
+			string remote = Config.GetManifestURL ();
+			string local = Config.GetManifestPath ();
+
+			FTP.DownloadFTPFile (remote, local, false);
+		}
+
 		/// <summary>
 		/// Gets the changelog from the server asynchronously.
 		/// </summary>

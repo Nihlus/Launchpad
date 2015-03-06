@@ -115,10 +115,10 @@ namespace Launchpad_Launcher
 				//if the launcher does not need an update at this point, we can continue checks for the game
 				if (!bLauncherNeedsUpdate)
 				{
-//					if (Checks.IsManifestOutdated ())
-//					{
-//
-//					}
+					if (Checks.IsManifestOutdated ())
+					{
+						Launcher.DownloadManifest ();
+					}
 
 					if (!Checks.IsGameInstalled ())
 					{
@@ -134,6 +134,8 @@ namespace Launchpad_Launcher
 						{
 							//if it does, offer to update it
 							Console.WriteLine ("Game is outdated or not installed");
+							PrimaryButton.Sensitive = true;
+							PrimaryButton.Label = "Update";
 						}
 						else
 						{
@@ -184,6 +186,9 @@ namespace Launchpad_Launcher
 			}
 			else //the game has finished downloading, and we should be OK to launch
 			{
+				MessageLabel.Text = "Idle";
+				progressbar2.Text = "";
+
 				PrimaryButton.Label = "Launch";
 				PrimaryButton.Sensitive = true;
 			}

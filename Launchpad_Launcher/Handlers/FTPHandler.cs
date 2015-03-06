@@ -40,20 +40,31 @@ namespace Launchpad_Launcher
 			string username = Config.GetFTPUsername();
 			string password = Config.GetFTPPassword();
 
+			if (!ftpSourceFilePath.StartsWith(Config.GetFTPUrl()))
+			{
+				//whoa, weird input! Let's try to fix it.
+				//this is a temporary fix until I find out why
+				//GetFTPUrl sometimes can't get a lock
+				ftpSourceFilePath = Config.GetFTPUrl () + ftpSourceFilePath;
+				Console.WriteLine (ftpSourceFilePath);
+			}
+
             int bytesRead = 0;
             byte[] buffer = new byte[1024];
 
-            FtpWebRequest request = CreateFtpWebRequest(ftpSourceFilePath, username, password, true);
-            FtpWebRequest sizerequest = CreateFtpWebRequest(ftpSourceFilePath, username, password, true);
+			try
+			{
 
-            request.Method = WebRequestMethods.Ftp.DownloadFile;
-            sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
+	            FtpWebRequest request = CreateFtpWebRequest(ftpSourceFilePath, username, password, true);
+	            FtpWebRequest sizerequest = CreateFtpWebRequest(ftpSourceFilePath, username, password, true);
 
-            string data = "";
-            long fileSize = 0;
+	            request.Method = WebRequestMethods.Ftp.DownloadFile;
+	            sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
 
-            try
-            {
+	            string data = "";
+	            long fileSize = 0;
+
+            
                 Stream reader = request.GetResponse().GetResponseStream();
                 FtpWebResponse sizereader = (FtpWebResponse)sizerequest.GetResponse();
 
@@ -76,9 +87,9 @@ namespace Launchpad_Launcher
             catch (WebException ex)
             {
                 Console.Write("ReadFTPFileWebException: ");
-                Console.WriteLine(ex.Status.ToString());
+                Console.WriteLine(ex.Message);
 
-                return ex.Status.ToString();
+                return ex.Message;
             }
             catch (Exception ex)
             {
@@ -129,13 +140,15 @@ namespace Launchpad_Launcher
 
                 //reset byte counter
                 FTPbytesDownloaded = 0;
+				fileSize = sizereader.ContentLength;
+
+				ProgressArgs.Filename = Path.GetFileNameWithoutExtension(ftpSourceFilePath);
+				ProgressArgs.TotalBytes = (int)fileSize;
 
                 while (true)
                 {
                     bytesRead = reader.Read(buffer, 0, buffer.Length);
-
-                    fileSize = sizereader.ContentLength;
-
+					                    
                     if (bytesRead == 0)
                     {
                         break;
@@ -143,8 +156,14 @@ namespace Launchpad_Launcher
 
                     FTPbytesDownloaded = FTPbytesDownloaded + bytesRead;
                     fileStream.Write(buffer, 0, bytesRead);
+
+					ProgressArgs.DownloadedBytes = FTPbytesDownloaded;
+
+					OnProgressChanged();
                 }
 
+
+				OnProgressChanged();
                 fileStream.Close();
 
 				request.Abort();
@@ -216,9 +235,22 @@ namespace Launchpad_Launcher
 		/// Gets the remote game version.
 		/// </summary>
 		/// <returns>The remote game version.</returns>
-		public string GetRemoteGameVersion()
+		public string GetRemoteGameVersion(bool bUseSystemTarget)
 		{
-			string remoteVersionPath = String.Format ("{0}/game/GameVersion.txt", Config.GetFTPUrl());
+			string remoteVersionPath = "";
+			if (bUseSystemTarget)
+			{
+				remoteVersionPath = String.Format ("{0}/game/{1}/GameVersion.txt", 
+				                                   Config.GetFTPUrl(), 
+				                                   Config.GetSystemTarget());
+
+			}
+			else
+			{
+				remoteVersionPath = String.Format ("{0}/game/GameVersion.txt", 
+				                                   Config.GetFTPUrl());
+
+			}
 			string remoteVersion = ReadFTPFile (remoteVersionPath);
 
 			return remoteVersion;

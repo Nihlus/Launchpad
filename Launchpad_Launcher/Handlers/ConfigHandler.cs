@@ -300,7 +300,8 @@ namespace Launchpad_Launcher
 		/// <returns>The manifest URL.</returns>
         public string GetManifestURL()
         {
-            string manifestURL = String.Format("{0}/launcher/LauncherManifest.txt", GetFTPUrl());
+			string FTPUrl = GetFTPUrl ();
+            string manifestURL = String.Format("{0}/launcher/LauncherManifest.txt", FTPUrl);
             return manifestURL;
         }
 
@@ -330,7 +331,7 @@ namespace Launchpad_Launcher
 		/// <returns>The changelog URL.</returns>
         public string GetChangelogURL()
         {
-            string changelogURL = String.Format("{0}/launcher/changelog.html", GetBaseFTPUrl());
+            string changelogURL = String.Format("{0}/launcher/changelog.html", GetFTPUrl());
             return changelogURL;
         }
 
@@ -607,7 +608,9 @@ namespace Launchpad_Launcher
 				try
 				{
 					FileIniDataParser Parser = new FileIniDataParser();
-					IniData data = Parser.ReadFile(GetConfigPath());
+
+					string configPath = GetConfigPath();
+					IniData data = Parser.ReadFile(configPath);
 
 					string FTPURL = data["Remote"]["FTPUrl"];
 
@@ -615,8 +618,10 @@ namespace Launchpad_Launcher
 				}
 				catch (Exception ex)
 				{
-					Console.Write("GetRawFTPURL: ");
+					Console.Write("GetBaseFTPURL: ");
 					Console.WriteLine(ex.Message);
+					Console.WriteLine (ex.StackTrace);
+					Console.WriteLine (ex.InnerException);
 					return "";
 				}
 			}
