@@ -121,7 +121,7 @@ namespace Launchpad_Launcher
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine ("InstallGameAsync(): " + ex.StackTrace);
+				Console.WriteLine ("InstallGameAsync(): " + ex.Message);
 				DownloadFinishedArgs.Value = "1";
 				DownloadFinishedArgs.URL = "Install";
 

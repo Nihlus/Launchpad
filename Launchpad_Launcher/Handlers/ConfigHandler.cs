@@ -13,6 +13,8 @@ namespace Launchpad_Launcher
 {
     public class ConfigHandler
     {
+		private object ConfigLock = new Object ();
+		private object WriteLock = new Object ();
         /// <summary>
         /// Initializes a new instance of the <see cref="Launchpad_Launcher.ConfigHandler"/> class.
         /// </summary>
@@ -20,6 +22,14 @@ namespace Launchpad_Launcher
         {
             
         }	
+
+		private void WriteConfig(FileIniDataParser Parser, IniData Data)
+		{
+			lock (WriteLock)
+			{
+				Parser.WriteFile (GetConfigPath (), Data);
+			}
+		}
 
 		/// <summary>
 		/// Gets the config path.
@@ -50,6 +60,7 @@ namespace Launchpad_Launcher
 		/// </summary>
 		public void Initialize()
 		{
+			//Since Initialize will write to the config, we'll load the file later
 			FileIniDataParser Parser = new FileIniDataParser();
 
 			string configDir = GetConfigDir();
@@ -64,57 +75,64 @@ namespace Launchpad_Launcher
 			//Check for old cookie file. If it exists, rename it.
 			CheckForOldUpdateCookie ();
 
-			if (!Directory.Exists(configDir))
+			//should be safe to lock the config now for initializing it
+			lock (ConfigLock)
 			{
-				Directory.CreateDirectory(configDir);
-			}
-			if (!File.Exists(configPath))
-			{
-				//here we create a new empty file
-				FileStream configStream = File.Create(configPath);
-				configStream.Close();
-
-				//read the file as an INI file
-				try
+				if (!Directory.Exists(configDir))
 				{
-					IniData data = Parser.ReadFile(configPath);
-					string GeneratedGUID = Guid.NewGuid ().ToString ();
-
-					data.Sections.AddSection("Local");
-					data.Sections.AddSection("Remote");
-					data.Sections.AddSection("Launchpad");
-
-					data["Local"].AddKey("LauncherVersion", defaultLauncherVersion);
-					data["Local"].AddKey("GameName", "LaunchpadExample");
-					data["Local"].AddKey("SystemTarget", "Win64");
-					data["Local"].AddKey("GUID", GeneratedGUID);
-
-					data["Remote"].AddKey("FTPUsername", "anonymous");
-					data["Remote"].AddKey("FTPPassword", "anonymous");
-					data["Remote"].AddKey("FTPUrl", "ftp://directorate.asuscomm.com");
-
-					data["Launchpad"].AddKey("bOfficialUpdates", "true");
-
-					Parser.WriteFile(configPath, data);
+					Directory.CreateDirectory(configDir);
 				}
-				catch (Exception ex)
+				if (!File.Exists(configPath))
 				{
-					Console.WriteLine(ex.StackTrace);
+					//here we create a new empty file
+					FileStream configStream = File.Create(configPath);
+					configStream.Close();
+
+					//read the file as an INI file
+					try
+					{
+						IniData data = Parser.ReadFile(GetConfigPath());
+
+						string GeneratedGUID = Guid.NewGuid ().ToString ();
+
+						data.Sections.AddSection("Local");
+						data.Sections.AddSection("Remote");
+						data.Sections.AddSection("Launchpad");
+
+						data["Local"].AddKey("LauncherVersion", defaultLauncherVersion);
+						data["Local"].AddKey("GameName", "LaunchpadExample");
+						data["Local"].AddKey("SystemTarget", "Win64");
+						data["Local"].AddKey("GUID", GeneratedGUID);
+
+						data["Remote"].AddKey("FTPUsername", "anonymous");
+						data["Remote"].AddKey("FTPPassword", "anonymous");
+						data["Remote"].AddKey("FTPUrl", "ftp://directorate.asuscomm.com");
+
+						data["Launchpad"].AddKey("bOfficialUpdates", "true");
+
+						WriteConfig(Parser, data);
+					}
+					catch (Exception ex)
+					{
+						Console.WriteLine(ex.Message);
+					}
+
 				}
-
-			}
-			else
-			{
-				IniData data = Parser.ReadFile (configPath);
-
-				data["Local"]["LauncherVersion"] = defaultLauncherVersion;
-				if (!data ["Local"].ContainsKey ("GUID"))
+				else
 				{
-					string GeneratedGUID = Guid.NewGuid ().ToString ();
-					data ["Local"].AddKey ("GUID", GeneratedGUID);
-				}
+					IniData data = Parser.ReadFile(GetConfigPath());
 
-				Parser.WriteFile(configPath, data);
+					data["Local"]["LauncherVersion"] = defaultLauncherVersion;
+					if (!data ["Local"].ContainsKey ("GUID"))
+					{
+						string GeneratedGUID = Guid.NewGuid ().ToString ();
+						data ["Local"].AddKey ("GUID", GeneratedGUID);
+					}
+
+					WriteConfig (Parser, data);
+
+					//Parser.WriteFile(configPath, data);
+				}
 			}
 		}
 
@@ -251,7 +269,15 @@ namespace Launchpad_Launcher
 		/// <returns>The local game version.</returns>
 		public string GetLocalGameVersion()
 		{
-			string GameVersion = File.ReadAllText(GetGameVersionPath());
+			string GameVersion = "";
+			try
+			{
+				GameVersion = File.ReadAllText(GetGameVersionPath());
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine ("GetLocalGameVersion(): " + ex.Message);
+			}
 
 			return GameVersion;
 		}
@@ -329,50 +355,56 @@ namespace Launchpad_Launcher
         }
 
 		/// <summary>
-		/// Gets the launcher version.
+		/// Gets the launcher version. Locks the config file - DO NOT USE INSIDE OTHER LOCKING FUNCTIONS
 		/// </summary>
 		/// <returns>The launcher version.</returns>
         public string GetLocalLauncherVersion()
         {
-            try
-            {
-                FileIniDataParser Parser = new FileIniDataParser();
-                IniData data = Parser.ReadFile(GetConfigPath());
+			lock (ConfigLock)
+			{
+				try
+				{
+					FileIniDataParser Parser = new FileIniDataParser();
+					IniData data = Parser.ReadFile(GetConfigPath());
 
-                string launcherVersion = data["Local"]["LauncherVersion"];
+					string launcherVersion = data["Local"]["LauncherVersion"];
 
-                return launcherVersion;
-            }
-            catch (Exception ex)
-            {
-                Console.Write("GetLauncherVersion: ");
-                Console.WriteLine(ex.StackTrace);
-                return "";
-            }
+					return launcherVersion;
 
+				}
+				catch (Exception ex)
+				{
+					Console.Write("GetLauncherVersion: ");
+					Console.WriteLine(ex.Message);
+					return "";
+				}
+			}            
         }
 
 		/// <summary>
-		/// Gets the name of the game.
+		/// Gets the name of the game. Locks the config file - DO NOT USE INSIDE OTHER LOCKING FUNCTIONS
 		/// </summary>
 		/// <returns>The game name.</returns>
         public string GetGameName()
         {
-            try
-            {
-                FileIniDataParser Parser = new FileIniDataParser();
-                IniData data = Parser.ReadFile(GetConfigPath());
+			lock (ConfigLock)
+			{
+				try
+				{
+					FileIniDataParser Parser = new FileIniDataParser();
+					IniData data = Parser.ReadFile(GetConfigPath());;
 
-                string gameName = data["Local"]["GameName"];
+					string gameName = data["Local"]["GameName"];
 
-                return gameName;
-            }
-            catch (Exception ex)
-            {
-                Console.Write("GetGameName: ");
-                Console.WriteLine(ex.StackTrace);
-                return "";
-            }
+					return gameName;
+				}
+				catch (Exception ex)
+				{
+					Console.Write("GetGameName: ");
+					Console.WriteLine(ex.Message);
+					return "";
+				}
+			}            
         }
 
 		/// <summary>
@@ -381,18 +413,23 @@ namespace Launchpad_Launcher
 		/// <param name="GameName">Game name.</param>
 		public void SetGameName(string GameName)
 		{
-			try
+			lock (ConfigLock)
 			{
-				FileIniDataParser Parser = new FileIniDataParser();
-				IniData data = Parser.ReadFile(GetConfigPath());
+				try
+				{
+					FileIniDataParser Parser = new FileIniDataParser();
+					IniData data = Parser.ReadFile(GetConfigPath());
 
-				data["Local"]["GameName"] = GameName;
-				Parser.WriteFile(GetConfigPath(), data);
-			}
-			catch (Exception ex)
-			{
-				Console.Write("SetGameName: ");
-				Console.WriteLine(ex.StackTrace);
+					data["Local"]["GameName"] = GameName;
+
+					WriteConfig(Parser, data);
+				}
+				catch (Exception ex)
+				{
+					Console.Write("SetGameName: ");
+					Console.WriteLine(ex.Message);
+				}
+
 			}
 		}
 
@@ -407,22 +444,24 @@ namespace Launchpad_Launcher
 			//Win32
 			//Linux
 			//Mac
+			lock (ConfigLock)
+			{
+				try
+				{
+					FileIniDataParser Parser = new FileIniDataParser();
+					IniData data = Parser.ReadFile(GetConfigPath());
 
-            try
-            {
-                FileIniDataParser Parser = new FileIniDataParser();
-                IniData data = Parser.ReadFile(GetConfigPath());
+					string systemTarget = data["Local"]["SystemTarget"];
 
-                string systemTarget = data["Local"]["SystemTarget"];
-
-                return systemTarget;
-            }
-            catch (Exception ex)
-            {
-                Console.Write("GetSystemTarget: ");
-                Console.WriteLine(ex.StackTrace);
-                return "";
-            }
+					return systemTarget;
+				}
+				catch (Exception ex)
+				{
+					Console.Write("GetSystemTarget: ");
+					Console.WriteLine(ex.Message);
+					return "";
+				}
+			}            
         }
 
 		/// <summary>
@@ -436,20 +475,22 @@ namespace Launchpad_Launcher
 			//Win32
 			//Linux
 			//Mac
-
-			try
+			lock (ConfigLock)
 			{
-				FileIniDataParser Parser = new FileIniDataParser();
-				IniData data = Parser.ReadFile(GetConfigPath());
+				try
+				{
+					FileIniDataParser Parser = new FileIniDataParser();
+					IniData data = Parser.ReadFile(GetConfigPath());
 
-				data["Local"]["SystemTarget"] = SystemTarget;
+					data["Local"]["SystemTarget"] = SystemTarget;
 
-				Parser.WriteFile(GetConfigPath(), data);
-			}
-			catch (Exception ex)
-			{
-				Console.Write("SetSystemTarget: ");
-				Console.WriteLine(ex.StackTrace);
+					WriteConfig(Parser, data);
+				}
+				catch (Exception ex)
+				{
+					Console.Write("SetSystemTarget: ");
+					Console.WriteLine(ex.Message);
+				}
 			}
 		}
 
@@ -459,21 +500,24 @@ namespace Launchpad_Launcher
 		/// <returns>The FTP username.</returns>
         public string GetFTPUsername()
         {
-            try
-            {
-                FileIniDataParser Parser = new FileIniDataParser();
-                IniData data = Parser.ReadFile(GetConfigPath());
+            lock (ConfigLock)
+			{
+				try
+				{
+					FileIniDataParser Parser = new FileIniDataParser();
+					IniData data = Parser.ReadFile(GetConfigPath());
 
-                string FTPUsername = data["Remote"]["FTPUsername"];
+					string FTPUsername = data["Remote"]["FTPUsername"];
 
-                return FTPUsername;
-            }
-            catch (Exception ex)
-            {
-                Console.Write("GetFTPUsername: ");
-                Console.WriteLine(ex.StackTrace);
-                return "";
-            }
+					return FTPUsername;
+				}
+				catch (Exception ex)
+				{
+					Console.Write("GetFTPUsername: ");
+					Console.WriteLine(ex.Message);
+					return "";
+				}
+			}
         }
 
 		/// <summary>
@@ -482,20 +526,23 @@ namespace Launchpad_Launcher
 		/// <param name="Username">Username.</param>
 		public void SetFTPUsername(string Username)
 		{
-			try
+			lock (ConfigLock)
 			{
-				FileIniDataParser Parser = new FileIniDataParser();
-				IniData data = Parser.ReadFile(GetConfigPath());
+				try
+				{
+					FileIniDataParser Parser = new FileIniDataParser();
+					IniData data = Parser.ReadFile(GetConfigPath());
 
-				data["Remote"]["FTPUsername"] = Username;
-				Parser.WriteFile(GetConfigPath(), data);
-			}
-			catch (Exception ex)
-			{
-				Console.Write("SetFTPUsername: ");
-				Console.WriteLine(ex.StackTrace);
-			}
+					data["Remote"]["FTPUsername"] = Username;
 
+					WriteConfig(Parser, data);
+				}
+				catch (Exception ex)
+				{
+					Console.Write("SetFTPUsername: ");
+					Console.WriteLine(ex.Message);
+				}
+			}
 		}
 
 		/// <summary>
@@ -504,21 +551,24 @@ namespace Launchpad_Launcher
 		/// <returns>The FTP password.</returns>
         public string GetFTPPassword()
         {
-            try
-            {
-                FileIniDataParser Parser = new FileIniDataParser();
-                IniData data = Parser.ReadFile(GetConfigPath());
+            lock (ConfigLock)
+			{
+				try
+				{
+					FileIniDataParser Parser = new FileIniDataParser();
+					IniData data = Parser.ReadFile(GetConfigPath());
 
-                string FTPPassword = data["Remote"]["FTPPassword"];
+					string FTPPassword = data["Remote"]["FTPPassword"];
 
-                return FTPPassword;
-            }
-            catch (Exception ex)
-            {
-                Console.Write("GetFTPPassword: ");
-                Console.WriteLine(ex.StackTrace);
-                return "";
-            }
+					return FTPPassword;
+				}
+				catch (Exception ex)
+				{
+					Console.Write("GetFTPPassword: ");
+					Console.WriteLine(ex.Message);
+					return "";
+				}
+			}
         }
 
 		/// <summary>
@@ -527,20 +577,23 @@ namespace Launchpad_Launcher
 		/// <param name="Password">Password.</param>
 		public void SetFTPPassword(string Password)
 		{
-			try
+			lock (ConfigLock)
 			{
-				FileIniDataParser Parser = new FileIniDataParser();
-				IniData data = Parser.ReadFile(GetConfigPath());
+				try
+				{
+					FileIniDataParser Parser = new FileIniDataParser();
+					IniData data = Parser.ReadFile(GetConfigPath());
 
-				data["Remote"]["FTPPassword"] = Password;
-				Parser.WriteFile(GetConfigPath(), data);
-			}
-			catch (Exception ex)
-			{
-				Console.Write("GetFTPPassword: ");
-				Console.WriteLine(ex.StackTrace);
-			}
+					data["Remote"]["FTPPassword"] = Password;
 
+					WriteConfig(Parser, data);
+				}
+				catch (Exception ex)
+				{
+					Console.Write("GetFTPPassword: ");
+					Console.WriteLine(ex.Message);
+				}
+			}
 		}
 
 		/// <summary>
@@ -549,20 +602,23 @@ namespace Launchpad_Launcher
 		/// <returns>The base FTP URL.</returns>
 		public string GetBaseFTPUrl()
 		{
-			try
+			lock (ConfigLock)
 			{
-				FileIniDataParser Parser = new FileIniDataParser();
-				IniData data = Parser.ReadFile(GetConfigPath());
+				try
+				{
+					FileIniDataParser Parser = new FileIniDataParser();
+					IniData data = Parser.ReadFile(GetConfigPath());
 
-				string FTPURL = data["Remote"]["FTPUrl"];
+					string FTPURL = data["Remote"]["FTPUrl"];
 
-				return FTPURL;
-			}
-			catch (Exception ex)
-			{
-				Console.Write("GetRawFTPURL: ");
-				Console.WriteLine(ex.StackTrace);
-				return "";
+					return FTPURL;
+				}
+				catch (Exception ex)
+				{
+					Console.Write("GetRawFTPURL: ");
+					Console.WriteLine(ex.Message);
+					return "";
+				}
 			}
 		}
 
@@ -573,18 +629,22 @@ namespace Launchpad_Launcher
 		/// <param name="Url">URL.</param>
 		public void SetBaseFTPUrl(string Url)
 		{
-			try
+			lock (ConfigLock)
 			{
-				FileIniDataParser Parser = new FileIniDataParser();
-				IniData data = Parser.ReadFile(GetConfigPath());
+				try
+				{
+					FileIniDataParser Parser = new FileIniDataParser();
+					IniData data = Parser.ReadFile(GetConfigPath());
 
-				data["Remote"]["FTPUrl"] = Url;
-				Parser.WriteFile(GetConfigPath(), data);
-			}
-			catch (Exception ex)
-			{
-				Console.Write("GetFTPPassword: ");
-				Console.WriteLine(ex.StackTrace);
+					data["Remote"]["FTPUrl"] = Url;
+
+					WriteConfig(Parser, data);
+				}
+				catch (Exception ex)
+				{
+					Console.Write("GetFTPPassword: ");
+					Console.WriteLine(ex.Message);
+				}
 			}
 		}
 
@@ -594,27 +654,30 @@ namespace Launchpad_Launcher
 		/// <returns>The FTP URL.</returns>
         public string GetFTPUrl()
         {
-            try
-            {
-                FileIniDataParser Parser = new FileIniDataParser();
-                IniData data = Parser.ReadFile(GetConfigPath());
+            lock (ConfigLock)
+			{
+				try
+				{
+					FileIniDataParser Parser = new FileIniDataParser();
+					IniData data = Parser.ReadFile(GetConfigPath());
 
-                string FTPUrl = data["Remote"]["FTPUrl"];
-                string FTPAuthUrl = FTPUrl.Substring(0, 6); // Gets ftp://
-                FTPAuthUrl += data["Remote"]["FTPUsername"]; // Add the username
-                FTPAuthUrl += ":";
-                FTPAuthUrl += data["Remote"]["FTPPassword"]; // Add the password
-                FTPAuthUrl += "@";
-                FTPAuthUrl += FTPUrl.Substring(6);
+					string FTPUrl = data["Remote"]["FTPUrl"];
+					string FTPAuthUrl = FTPUrl.Substring(0, 6); // Gets ftp://
+					FTPAuthUrl += data["Remote"]["FTPUsername"]; // Add the username
+					FTPAuthUrl += ":";
+					FTPAuthUrl += data["Remote"]["FTPPassword"]; // Add the password
+					FTPAuthUrl += "@";
+					FTPAuthUrl += FTPUrl.Substring(6);
 
-                return FTPAuthUrl;
-            }
-            catch (Exception ex)
-            {
-                Console.Write("GetFTPUrl: ");
-                Console.WriteLine(ex.StackTrace);
-                return "";
-            }
+					return FTPAuthUrl;
+				}
+				catch (Exception ex)
+				{
+					Console.Write("GetFTPUrl: ");
+					Console.WriteLine(ex.Message);
+					return "";
+				}
+			}
         }
 
 		/// <summary>
@@ -623,19 +686,23 @@ namespace Launchpad_Launcher
 		/// <returns><c>true</c>, if the launcher should receive official updates, <c>false</c> otherwise.</returns>
         public bool GetDoOfficialUpdates()
         {
-            try
-            {
-                FileIniDataParser Parser = new FileIniDataParser();
-                IniData data = Parser.ReadFile(GetConfigPath());
+            lock (ConfigLock)
+			{
+				try
+				{
+					FileIniDataParser Parser = new FileIniDataParser();
+					IniData data = Parser.ReadFile(GetConfigPath());
 
-                string officialUpdatesStr = data["Launchpad"]["bOfficialUpdates"];
-                return bool.Parse(officialUpdatesStr);
-            }
-            catch (Exception ex)
-            {
-				Console.WriteLine (ex.StackTrace);
-                return true;
-            }
+					string officialUpdatesStr = data["Launchpad"]["bOfficialUpdates"];
+
+					return bool.Parse(officialUpdatesStr);
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine (ex.Message);
+					return true;
+				}
+			}
         }
 
 		/// <summary>
@@ -644,18 +711,22 @@ namespace Launchpad_Launcher
 		/// <returns>The GUID.</returns>
 		public string GetGUID()
 		{
-			try
+			lock (ConfigLock)
 			{
-				FileIniDataParser Parser = new FileIniDataParser();
-				IniData data = Parser.ReadFile(GetConfigPath());
+				try
+				{
+					FileIniDataParser Parser = new FileIniDataParser();
+					IniData data = Parser.ReadFile(GetConfigPath());
 
-				string guid = data["Local"]["GUID"];
-				return guid;
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine (ex.StackTrace);
-				return "";
+					string guid = data["Local"]["GUID"];
+
+					return guid;
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine (ex.Message);
+					return "";
+				}
 			}
 		}
 
@@ -678,46 +749,49 @@ namespace Launchpad_Launcher
                 //Is there an old config file?
                 if (File.Exists(oldConfigPath))
                 {
-                    //Have not we already created the new config dir?
-                    if (!Directory.Exists(GetConfigDir()))
-                    {
-                        //if not, create it.
-                        Directory.CreateDirectory(GetConfigDir());
+                    lock (ConfigLock)
+					{
+						//Have not we already created the new config dir?
+						if (!Directory.Exists(GetConfigDir()))
+						{
+							//if not, create it.
+							Directory.CreateDirectory(GetConfigDir());
 
-                        //Copy the old config file to the new location.
-                        File.Copy(oldConfigPath, GetConfigPath());
+							//Copy the old config file to the new location.
+							File.Copy(oldConfigPath, GetConfigPath());
 
-                        //read our new file.
-                        FileIniDataParser Parser = new FileIniDataParser();
-                        IniData data = Parser.ReadFile(GetConfigPath());
+							//read our new file.
+							FileIniDataParser Parser = new FileIniDataParser();
+							IniData data = Parser.ReadFile(GetConfigPath());
 
-                        //replace the old invalid keys with new, updated keys.
-                        string launcherVersion = data["Local"]["launcherVersion"];
-                        string gameName = data["Local"]["gameName"];
-                        string systemTarget = data["Local"]["systemTarget"];
+							//replace the old invalid keys with new, updated keys.
+							string launcherVersion = data["Local"]["launcherVersion"];
+							string gameName = data["Local"]["gameName"];
+							string systemTarget = data["Local"]["systemTarget"];
 
-                        data["Local"].RemoveKey("launcherVersion");
-                        data["Local"].RemoveKey("gameName");
-                        data["Local"].RemoveKey("systemTarget");
+							data["Local"].RemoveKey("launcherVersion");
+							data["Local"].RemoveKey("gameName");
+							data["Local"].RemoveKey("systemTarget");
 
-                        data["Local"].AddKey("LauncherVersion", launcherVersion);
-                        data["Local"].AddKey("GameName", gameName);
-                        data["Local"].AddKey("SystemTarget", systemTarget);
+							data["Local"].AddKey("LauncherVersion", launcherVersion);
+							data["Local"].AddKey("GameName", gameName);
+							data["Local"].AddKey("SystemTarget", systemTarget);
 
-                        Parser.WriteFile(GetConfigPath(), data);
-                        //We were successful, so return true.
+							WriteConfig (Parser, data);
+							//We were successful, so return true.
 
-                        File.Delete(oldConfigPath);
-                        Directory.Delete(oldConfigDir, true);
-                        return true;
-                    }
-                    else
-                    {
-                        //Delete the old config
-                        File.Delete(oldConfigPath);
-                        Directory.Delete(oldConfigDir, true);
-                        return false;
-                    }
+							File.Delete(oldConfigPath);
+							Directory.Delete(oldConfigDir, true);
+							return true;
+						}
+						else
+						{
+							//Delete the old config
+							File.Delete(oldConfigPath);
+							Directory.Delete(oldConfigDir, true);
+							return false;
+						}
+					}
                 }
                 else
                 {
@@ -726,27 +800,30 @@ namespace Launchpad_Launcher
             }
             else
             {
-                //Windows, so direct access without copying.
-                //read our new file.
-                FileIniDataParser Parser = new FileIniDataParser();
-                IniData data = Parser.ReadFile(GetConfigPath());
+				lock (ConfigLock)
+				{
+					//Windows, so direct access without copying.
+					//read our new file.
+					FileIniDataParser Parser = new FileIniDataParser();
+					IniData data = Parser.ReadFile(GetConfigPath());
 
-                //replace the old invalid keys with new, updated keys.
-                string launcherVersion = data["Local"]["launcherVersion"];
-                string gameName = data["Local"]["gameName"];
-                string systemTarget = data["Local"]["systemTarget"];
+					//replace the old invalid keys with new, updated keys.
+					string launcherVersion = data["Local"]["launcherVersion"];
+					string gameName = data["Local"]["gameName"];
+					string systemTarget = data["Local"]["systemTarget"];
 
-                data["Local"].RemoveKey("launcherVersion");
-                data["Local"].RemoveKey("gameName");
-                data["Local"].RemoveKey("systemTarget");
+					data["Local"].RemoveKey("launcherVersion");
+					data["Local"].RemoveKey("gameName");
+					data["Local"].RemoveKey("systemTarget");
 
-                data["Local"].AddKey("LauncherVersion", launcherVersion);
-                data["Local"].AddKey("GameName", gameName);
-                data["Local"].AddKey("SystemTarget", systemTarget);
+					data["Local"].AddKey("LauncherVersion", launcherVersion);
+					data["Local"].AddKey("GameName", gameName);
+					data["Local"].AddKey("SystemTarget", systemTarget);
 
-                Parser.WriteFile(GetConfigPath(), data);
-                //We were successful, so return true.
-                return true;
+					WriteConfig (Parser, data);
+					//We were successful, so return true.
+					return true;
+				}               
             }
 
 		}		      

@@ -160,7 +160,7 @@ namespace Launchpad_Launcher
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine ("IsGameOutdated(): " + ex.StackTrace);
+				Console.WriteLine ("IsGameOutdated(): " + ex.Message);
 				return false;
 			}
 		}
@@ -189,7 +189,7 @@ namespace Launchpad_Launcher
 			} 
 			catch (Exception ex)
 			{
-				Console.WriteLine ("IsLauncherOutdated(): " + ex.StackTrace);
+				Console.WriteLine ("IsLauncherOutdated(): " + ex.Message);
 				return false;	
 			}
 		}

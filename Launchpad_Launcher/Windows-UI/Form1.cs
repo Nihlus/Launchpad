@@ -173,7 +173,7 @@ namespace Launchpad_Launcher
                 }
                 catch (WebException ex)
                 {
-					Console.WriteLine (ex.StackTrace);
+					Console.WriteLine (ex.Message);
                     webBrowser1.DocumentText = "Error: Could not load change log from server.";
                 }
 
@@ -226,7 +226,7 @@ namespace Launchpad_Launcher
                 }
                 catch (WebException ex)
                 {
-					Console.WriteLine (ex.StackTrace);
+					Console.WriteLine (ex.Message);
                     Console.WriteLine("Failed to find backgroundImage.png at {0}", backgroundImageURL);
                 }
 
@@ -426,7 +426,7 @@ namespace Launchpad_Launcher
                     catch (Exception ex)
                     {
                         Console.WriteLine("Failed to write launcher version to update cookie");
-                        Console.WriteLine(ex.StackTrace);
+                        Console.WriteLine(ex.Message);
                     }
                 }
                 else
@@ -496,7 +496,7 @@ namespace Launchpad_Launcher
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.StackTrace);
+                Console.WriteLine(ex.Message);
                 bLauncherVersionCheckFailed = true;
             }
         }
@@ -536,13 +536,13 @@ namespace Launchpad_Launcher
                 }
                 catch (WebException ex)
                 {
-                    Console.WriteLine("DoManifestUpdate() download failed {0}", ex.StackTrace);
+                    Console.WriteLine("DoManifestUpdate() download failed {0}", ex.Message);
 
                     bManifestDownloadFailed = true;
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("DoManifestUpdate() download failed: {0}", ex.StackTrace);
+                    Console.WriteLine("DoManifestUpdate() download failed: {0}", ex.Message);
                 }
             }
             else
@@ -587,7 +587,7 @@ namespace Launchpad_Launcher
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Manifest download failed: {0}", ex.StackTrace);
+                Console.WriteLine("Manifest download failed: {0}", ex.Message);
             }
         }
 
@@ -631,7 +631,7 @@ namespace Launchpad_Launcher
                 catch (IOException ex)
                 {
                     //if we fail then continue with our version of 0.0.0 to compare against remoteVersion
-					Console.WriteLine(ex.StackTrace);
+					Console.WriteLine(ex.Message);
                 }
 
                 //get the remote version from the ftp
@@ -665,11 +665,11 @@ namespace Launchpad_Launcher
             }
             catch (IOException ioEx)
             {
-                Console.WriteLine("DoGameUpdateCheck IOException: {0}", ioEx.StackTrace);
+                Console.WriteLine("DoGameUpdateCheck IOException: {0}", ioEx.Message);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("DoGameUpdateCheck exception: {0}", ex.StackTrace);
+                Console.WriteLine("DoGameUpdateCheck exception: {0}", ex.Message);
             }
         }
 
@@ -1002,7 +1002,7 @@ namespace Launchpad_Launcher
                         bInstallCompleted = false;
 
                         Console.WriteLine("I failed :( Sorry.");
-                        Console.WriteLine(ex.StackTrace);
+                        Console.WriteLine(ex.Message);
                     }
 
                     //skip existing files to allow a failed or stopped download to resume
@@ -1030,14 +1030,14 @@ namespace Launchpad_Launcher
                 MessageBox.Show("Could not connect to server! Unable to install.", "IOException", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Console.WriteLine("Could not read launcher manifest from server.");
                 Console.WriteLine("GameInstallIOException: ");
-                Console.WriteLine(ex.StackTrace);
+                Console.WriteLine(ex.Message);
             }
             catch (Exception ex)
             {
                 bInstallCompleted = false;
 
                 Console.WriteLine("GameInstallException: ");
-                Console.WriteLine(ex.StackTrace);
+                Console.WriteLine(ex.Message);
             }
 
             if (bInstallCompleted)
@@ -1173,7 +1173,7 @@ namespace Launchpad_Launcher
                     {
                         GameUpdateCompletedSuccessfully = false;
                         Console.WriteLine("GameUpdateWorker - NoFile: ");
-                        Console.WriteLine(ex.StackTrace);
+                        Console.WriteLine(ex.Message);
                     }
                 }
                 else
@@ -1225,7 +1225,7 @@ namespace Launchpad_Launcher
                         GameUpdateCompletedSuccessfully = false;
 
                         Console.WriteLine("GameUpdateWorker - MD5: ");
-                        Console.WriteLine(ex.StackTrace);
+                        Console.WriteLine(ex.Message);
                     }
                 }
             }
