@@ -40,15 +40,6 @@ namespace Launchpad_Launcher
 			string username = Config.GetFTPUsername();
 			string password = Config.GetFTPPassword();
 
-			if (!ftpSourceFilePath.StartsWith(Config.GetFTPUrl()))
-			{
-				//whoa, weird input! Let's try to fix it.
-				//this is a temporary fix until I find out why
-				//GetFTPUrl sometimes can't get a lock
-				ftpSourceFilePath = Config.GetFTPUrl () + ftpSourceFilePath;
-				Console.WriteLine (ftpSourceFilePath);
-			}
-
             int bytesRead = 0;
             byte[] buffer = new byte[1024];
 
@@ -123,16 +114,17 @@ namespace Launchpad_Launcher
             int bytesRead = 0;
             byte[] buffer = new byte[2048];
 
-            FtpWebRequest request = CreateFtpWebRequest(ftpSourceFilePath, username, password, true);
-            FtpWebRequest sizerequest = CreateFtpWebRequest(ftpSourceFilePath, username, password, true);
+			try
+			{
+	            FtpWebRequest request = CreateFtpWebRequest(ftpSourceFilePath, username, password, true);
+	            FtpWebRequest sizerequest = CreateFtpWebRequest(ftpSourceFilePath, username, password, true);
 
-            request.Method = WebRequestMethods.Ftp.DownloadFile;
-            sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
+	            request.Method = WebRequestMethods.Ftp.DownloadFile;
+	            sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
 
-            long fileSize = 0;
+	            long fileSize = 0;
 
-            try
-            {
+            
                 Stream reader = request.GetResponse().GetResponseStream();
                 FtpWebResponse sizereader = (FtpWebResponse)sizerequest.GetResponse();
 
@@ -142,6 +134,7 @@ namespace Launchpad_Launcher
                 FTPbytesDownloaded = 0;
 				fileSize = sizereader.ContentLength;
 
+				//set file info for progress reporting
 				ProgressArgs.Filename = Path.GetFileNameWithoutExtension(ftpSourceFilePath);
 				ProgressArgs.TotalBytes = (int)fileSize;
 
@@ -157,6 +150,7 @@ namespace Launchpad_Launcher
                     FTPbytesDownloaded = FTPbytesDownloaded + bytesRead;
                     fileStream.Write(buffer, 0, bytesRead);
 
+					//set file progress info
 					ProgressArgs.DownloadedBytes = FTPbytesDownloaded;
 
 					OnProgressChanged();

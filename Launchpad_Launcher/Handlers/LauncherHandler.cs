@@ -1,4 +1,7 @@
 using System;
+using System.IO;
+using System.Reflection;
+using System.Diagnostics;
 using System.Threading;
 
 /*
@@ -37,7 +40,27 @@ namespace Launchpad_Launcher
 		/// </summary>
 		public void UpdateLauncher()
 		{
+			try
+			{
+				FTPHandler FTP = new FTPHandler ();
+				string fullName = Assembly.GetEntryAssembly().Location;
+				string executableName = Path.GetFileName(fullName); // "Launchpad"
 
+				string local = String.Format("{0}{1}", 
+				                             Config.GetTempDir(), 
+				                             executableName);
+
+				FTP.DownloadFTPFile(Config.GetLauncherURL(), local, false);
+				//first, create a script that will update our launcher
+				ProcessStartInfo script = CreateUpdateScript ();
+
+				Process.Start(script);
+				Environment.Exit(0);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine ("UpdateLauncher(): " + ex.Message);
+			}
 		}
 
 		public void DownloadManifest()
@@ -68,6 +91,97 @@ namespace Launchpad_Launcher
 			DownloadFinishedArgs.URL = Config.GetChangelogURL ();
 
 			OnChangelogDownloadFinished ();
+		}
+
+		private ProcessStartInfo CreateUpdateScript()
+		{
+			try
+			{
+				ChecksHandler Checks = new ChecksHandler ();
+
+				//maintain the executable name if it was renamed to something other than 'Launchpad' 
+				string fullName = Assembly.GetEntryAssembly().Location;
+				string executableName = Path.GetFileName(fullName); // "Launchpad"
+				bool bIsRunningOnUnix = Checks.IsRunningOnUnix();
+
+				if (bIsRunningOnUnix)
+				{
+					//creating a .sh script
+					string scriptPath = String.Format (@"{0}launchpadupdate.sh", 
+					                                   Config.GetTempDir ()) ;
+
+
+					FileStream updateScript = File.Create (scriptPath);
+					TextWriter tw = new StreamWriter (updateScript);
+
+					//write commands to the script
+					//wait five seconds, then copy the new executable
+					string copyCom = String.Format ("mv -f {0} {1}", 
+					                                Config.GetTempDir() + executableName,
+					                                Config.GetLocalDir() + executableName);
+
+					string dirCom = String.Format ("cd {0}", Config.GetLocalDir ());
+					string launchCom = String.Format (@"nohup ./{0} &", executableName);
+					tw.WriteLine (@"#!/bin/sh");
+					tw.WriteLine ("sleep 5");
+					tw.WriteLine (copyCom);
+					tw.WriteLine (dirCom);
+					tw.WriteLine("chmod +x " + executableName);
+					tw.WriteLine (launchCom);
+					tw.Close();
+					updateScript.Close();
+
+					UnixHandler Unix = new UnixHandler();
+					Unix.MakeExecutable(scriptPath);
+
+
+					//Now create some ProcessStartInfo for this script
+					ProcessStartInfo updateShellProcess = new ProcessStartInfo ();
+									
+					updateShellProcess.FileName = scriptPath;
+					updateShellProcess.UseShellExecute = false;
+					updateShellProcess.RedirectStandardOutput = false;
+					updateShellProcess.WindowStyle = ProcessWindowStyle.Hidden;
+
+					return updateShellProcess;
+				}
+				else
+				{
+					//creating a .bat script
+					string scriptPath = String.Format (@"{0}{1}update.bat", 
+					                                   Config.GetLocalDir (), 
+					                                   Path.DirectorySeparatorChar);
+
+					FileStream updateScript = File.Create(scriptPath);
+
+					TextWriter tw = new StreamWriter(updateScript);
+
+					//write commands to the script
+					//wait three seconds, then copy the new executable
+					tw.WriteLine(String.Format(@"timeout 3 & xcopy /s /y ""{0}\{2}"" ""{1}\{2}"" && del ""{0}\{2}""", 
+					                           Config.GetTempDir(), 
+					                           Config.GetLocalDir(), 
+					                           executableName));
+					//then start the new executable
+					tw.WriteLine(String.Format(@"start {0}", executableName));
+					tw.Close();
+
+					ProcessStartInfo updateBatchProcess = new ProcessStartInfo();
+
+					updateBatchProcess.FileName = scriptPath;
+					updateBatchProcess.UseShellExecute = true;
+					updateBatchProcess.RedirectStandardOutput = false;
+					updateBatchProcess.WindowStyle = ProcessWindowStyle.Hidden;
+
+					return updateBatchProcess;
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine ("CreateUpdateScript(): " + ex.Message);
+
+				return new ProcessStartInfo ();
+			}
 		}
 
 		private void OnChangelogProgressChanged()

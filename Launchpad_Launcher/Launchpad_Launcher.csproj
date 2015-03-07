@@ -124,6 +124,7 @@
     <EmbeddedResource Include="resource\Icons8-Android-Transport-Rocket.ico" />
     <Compile Include="Handlers\GameHandler.cs" />
     <Compile Include="Handlers\LauncherHandler.cs" />
+    <Compile Include="Handlers\UnixHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

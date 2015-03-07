@@ -238,6 +238,8 @@ namespace Launchpad_Launcher
 						Console.WriteLine ("Updating launcher...");
 					PrimaryButton.Label = "Updating...";
 					PrimaryButton.Sensitive = false;
+
+					Launcher.UpdateLauncher ();
 					}
 					else
 					{
