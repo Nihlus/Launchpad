@@ -11,7 +11,7 @@ using System.Threading;
 
 namespace Launchpad_Launcher
 {
-	public class LauncherHandler
+	public sealed class LauncherHandler
 	{
 
 		public delegate void ChangelogProgressChangedEventHandler(object sender, ProgressEventArgs e);
@@ -24,7 +24,7 @@ namespace Launchpad_Launcher
 		private ProgressEventArgs ProgressArgs;
 		private DownloadFinishedEventArgs DownloadFinishedArgs;
 
-		ConfigHandler Config = new ConfigHandler ();
+		ConfigHandler Config = ConfigHandler._instance;
 
 		public LauncherHandler ()
 		{
@@ -70,7 +70,7 @@ namespace Launchpad_Launcher
 			OnChangelogDownloadFinished ();
 		}
 
-		protected virtual void OnChangelogProgressChanged()
+		private void OnChangelogProgressChanged()
 		{
 			if (ChangelogProgressChanged != null)
 			{
@@ -79,7 +79,7 @@ namespace Launchpad_Launcher
 			}
 		}
 
-		protected virtual void OnChangelogDownloadFinished()
+		private void OnChangelogDownloadFinished()
 		{
 			if (ChangelogDownloadFinished != null)
 			{

@@ -11,14 +11,18 @@ using IniParser.Model;
 
 namespace Launchpad_Launcher
 {
-    public class ConfigHandler
+    public sealed class ConfigHandler
     {
 		private object ConfigLock = new Object ();
 		private object WriteLock = new Object ();
+
+		//singleton pattern - we only ever want one instance of the config class
+		public static readonly ConfigHandler _instance = new ConfigHandler ();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Launchpad_Launcher.ConfigHandler"/> class.
         /// </summary>
-        public ConfigHandler()
+        private ConfigHandler()
         {
             
         }	

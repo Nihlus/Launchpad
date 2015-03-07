@@ -9,7 +9,7 @@ using System.Security.Cryptography;
 
 namespace Launchpad_Launcher
 {
-    public class MD5Handler
+    public sealed class MD5Handler
     {
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Launchpad_Launcher.MD5Handler"/> class.

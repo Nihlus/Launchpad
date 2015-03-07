@@ -3,9 +3,10 @@ using System.Net;
 
 namespace Launchpad_Launcher
 {
-	public class StatsHandler
+	public sealed class StatsHandler
 	{
-		ConfigHandler Config = new ConfigHandler();
+		ConfigHandler Config = ConfigHandler._instance;
+
 		public StatsHandler ()
 		{
 

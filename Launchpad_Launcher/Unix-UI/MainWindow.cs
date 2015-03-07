@@ -14,7 +14,8 @@ namespace Launchpad_Launcher
 		//set up handlers
 		ChecksHandler Checks = new ChecksHandler ();
 		//Config handler - allows us to read values from the configuration file.
-		ConfigHandler Config = new ConfigHandler ();
+		ConfigHandler Config = ConfigHandler._instance;
+
 		//Launcher handler - allows async changelog loading and launcher updating
 		LauncherHandler Launcher = new LauncherHandler ();
 		//Game handler - allows installing, updating and launching the game

@@ -59,7 +59,7 @@ namespace Launchpad_Launcher
 
 		//set up Handler references
 		MD5Handler md5 = new MD5Handler();
-		ConfigHandler Config = new ConfigHandler();
+		ConfigHandler Config = ConfigHandler._instance;
 		FTPHandler FTP = new FTPHandler();
 
         ImageButton mainButton = new ImageButton();

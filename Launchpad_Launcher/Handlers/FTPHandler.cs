@@ -9,10 +9,10 @@ using System.IO;
 
 namespace Launchpad_Launcher
 {
-    public class FTPHandler
+    public sealed class FTPHandler
     {
         public int FTPbytesDownloaded = 0;
-		ConfigHandler Config = new ConfigHandler();
+		ConfigHandler Config = ConfigHandler._instance;
 
 		//events for progress change and download completion
 		public delegate void FileProgressChangedEventHandler(object sender, ProgressEventArgs e);
@@ -256,7 +256,7 @@ namespace Launchpad_Launcher
 			return remoteVersion;
 		}
 
-		protected virtual void OnProgressChanged()
+		private void OnProgressChanged()
 		{
 			if (FileProgressChanged != null)
 			{
@@ -264,7 +264,7 @@ namespace Launchpad_Launcher
 			}
 		}
 
-		protected virtual void OnDownloadFinished()
+		private void OnDownloadFinished()
 		{
 			if (FileDownloadFinished != null)
 			{

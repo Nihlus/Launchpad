@@ -11,9 +11,9 @@ using System.Net;
 
 namespace Launchpad_Launcher
 {
-	public class ChecksHandler
+	public sealed class ChecksHandler
 	{
-		ConfigHandler Config = new ConfigHandler();
+		ConfigHandler Config = ConfigHandler._instance;
 
 		public ChecksHandler ()
 		{

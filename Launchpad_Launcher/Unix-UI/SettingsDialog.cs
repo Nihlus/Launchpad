@@ -6,7 +6,7 @@ namespace Launchpad_Launcher
 {
 	public partial class SettingsDialog : Gtk.Dialog
 	{
-		ConfigHandler Config = new ConfigHandler();
+		ConfigHandler Config = ConfigHandler._instance;
 		ChecksHandler Checks = new ChecksHandler ();
 		public SettingsDialog ()
 		{

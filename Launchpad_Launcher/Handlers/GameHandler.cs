@@ -13,7 +13,7 @@ using System.Diagnostics;
 
 namespace Launchpad_Launcher
 {
-	public class GameHandler
+	public sealed class GameHandler
 	{
 		public delegate void ProgressChangedEventHandler(object sender, ProgressEventArgs e);
 		public event ProgressChangedEventHandler ProgressChanged;
@@ -26,7 +26,7 @@ namespace Launchpad_Launcher
 		//Checks handler
 		ChecksHandler Checks = new ChecksHandler ();
 		//config handler
-		ConfigHandler Config = new ConfigHandler ();
+		ConfigHandler Config = ConfigHandler._instance;
 
 		public GameHandler ()
 		{
@@ -177,13 +177,13 @@ namespace Launchpad_Launcher
 			}
 		}
 
-		protected void OnDownloadProgressChanged(object sender, ProgressEventArgs e)
+		private void OnDownloadProgressChanged(object sender, ProgressEventArgs e)
 		{
 			ProgressArgs = e;
 			OnProgressChanged ();
 		}
 
-		protected virtual void OnProgressChanged()
+		private void OnProgressChanged()
 		{
 			if (ProgressChanged != null)
 			{
@@ -191,7 +191,7 @@ namespace Launchpad_Launcher
 			}
 		}
 
-		protected virtual void OnDownloadFinished()
+		private void OnDownloadFinished()
 		{
 			if (DownloadFinished != null)
 			{
