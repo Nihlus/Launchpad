@@ -13,8 +13,14 @@ namespace Launchpad_Launcher
 {
 	public sealed class ChecksHandler
 	{
-		ConfigHandler Config = ConfigHandler._instance;
+		/// <summary>
+		/// The config handler reference.
+		/// </summary>
+		private ConfigHandler Config = ConfigHandler._instance;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Launchpad_Launcher.ChecksHandler"/> class.
+		/// </summary>
 		public ChecksHandler ()
 		{
 
@@ -27,8 +33,6 @@ namespace Launchpad_Launcher
 		/// <returns><c>true</c> if this instance can connect to the FTP server; otherwise, <c>false</c>.</returns>
 		public bool CanConnectToFTP()
 		{
-			FTPHandler FTP = new FTPHandler();
-
 			bool bCanConnectToFTP;
 			Console.WriteLine("\nChecking for FTP connection...");
 
@@ -48,7 +52,7 @@ namespace Launchpad_Launcher
 
 					WebResponse response = requestDir.GetResponse();
 
-					Console.WriteLine("Can connect to FTP at: {0} username: {1} password: {2}", FTPURL, FTPUserName, FTPPassword);
+					Console.WriteLine("Can connect to FTP at: {0}", Config.GetBaseFTPUrl());
 					requestDir.Abort();//important otherwise FTP remains open and further attemps to access it hang
 					response.Close();
 
@@ -71,7 +75,7 @@ namespace Launchpad_Launcher
 
 			if (!bCanConnectToFTP)
 			{
-				Console.WriteLine("Failed to connect to FTP server at: {0} username: {1} password: {2}", FTPURL, FTPUserName, FTPPassword);
+				Console.WriteLine("Failed to connect to FTP server at: {0}", Config.GetBaseFTPUrl());
 				bCanConnectToFTP = false;
 			}
 
@@ -194,6 +198,10 @@ namespace Launchpad_Launcher
 			}
 		}
 
+		/// <summary>
+		/// Determines whether the install cookie is empty
+		/// </summary>
+		/// <returns><c>true</c> if the install cookie is empty, otherwise, <c>false</c>.</returns>
 		public bool IsInstallCookieEmpty()
 		{
 			//Is there an .install file in the directory?
@@ -209,6 +217,10 @@ namespace Launchpad_Launcher
 			return bIsInstallCookieEmpty;
 		}
 
+		/// <summary>
+		/// Determines whether the  manifest is outdated.
+		/// </summary>
+		/// <returns><c>true</c> if the manifest is outdated; otherwise, <c>false</c>.</returns>
 		public bool IsManifestOutdated()
 		{
 			if (File.Exists(Config.GetManifestPath()))

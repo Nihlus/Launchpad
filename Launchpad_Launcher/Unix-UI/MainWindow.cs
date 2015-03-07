@@ -7,21 +7,34 @@ namespace Launchpad_Launcher
 {
 	public partial class MainWindow : Gtk.Window
 	{
-		//Can we connect to the specified FTP server?
-		//assume we can connect until we cannot.
-		bool bCanConnectToFTP = true;
+		/// <summary>
+		/// Does the launcher need an update?
+		/// </summary>
 		bool bLauncherNeedsUpdate = false;
-		//set up handlers
+
+		/// <summary>
+		/// The checks handler reference.
+		/// </summary>
 		ChecksHandler Checks = new ChecksHandler ();
-		//Config handler - allows us to read values from the configuration file.
+
+		/// <summary>
+		/// The config handler reference.
+		/// </summary>
 		ConfigHandler Config = ConfigHandler._instance;
 
-		//Launcher handler - allows async changelog loading and launcher updating
+		/// <summary>
+		/// The launcher handler. Allows updating the launcher and loading the changelog
+		/// </summary>
 		LauncherHandler Launcher = new LauncherHandler ();
-		//Game handler - allows installing, updating and launching the game
+
+		/// <summary>
+		/// The game handler. Allows updating, installing and repairing the game.
+		/// </summary>
 		GameHandler Game = new GameHandler();
 
-		// Add a WebView for our changelog
+		/// <summary>
+		/// The changelog browser.
+		/// </summary>
 		WebView Browser = new WebView ();
 
 		public MainWindow () : 
@@ -52,8 +65,6 @@ namespace Launchpad_Launcher
 				dialog.Run ();
 				dialog.Destroy ();
 				MessageLabel.Text = "No FTP connection.";
-
-				bCanConnectToFTP = false;
 			}
 			else
 			{
@@ -147,20 +158,36 @@ namespace Launchpad_Launcher
 					}
 				}
 			}
+			Console.WriteLine ("REMEMBER: TURN ON ANON STATS BEFORE RELEASE");
 		}
 
+		/// <summary>
+		/// Raises the window delete event event.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="a">The alpha component.</param>
 		protected void OnDeleteEvent (object sender, DeleteEventArgs a)
 		{
 			Application.Quit ();
 			a.RetVal = true;
 		}
 
+		/// <summary>
+		/// Raises the settings action activated event.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
 		protected void OnSettingsActionActivated (object sender, EventArgs e)
 		{
 			SettingsDialog Settings = new SettingsDialog ();
 			Settings.Run ();
 		}
 
+		/// <summary>
+		/// Raises the game download progress changed event.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
 		protected void OnGameDownloadProgressChanged (object sender, ProgressEventArgs e)
 		{
 			Gtk.Application.Invoke (delegate
@@ -176,6 +203,11 @@ namespace Launchpad_Launcher
 			});
 		}
 
+		/// <summary>
+		/// Raises the game download finished event.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
 		protected void OnGameDownloadFinished (object sender, DownloadFinishedEventArgs e)
 		{
 			if (e.Value == "1") //there was an error
@@ -195,6 +227,11 @@ namespace Launchpad_Launcher
 			}
 		}
 
+		/// <summary>
+		/// Raises the changelog download finished event.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
 		protected void OnChangelogDownloadFinished (object sender, DownloadFinishedEventArgs e)
 		{
 			Gtk.Application.Invoke (delegate
@@ -204,6 +241,11 @@ namespace Launchpad_Launcher
 			});
 		}
 
+		/// <summary>
+		/// Raises the primary button clicked event.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
 		protected void OnPrimaryButtonClicked (object sender, EventArgs e)
 		{
 			string Mode = PrimaryButton.Label;
@@ -256,6 +298,7 @@ namespace Launchpad_Launcher
 				case "Launch":
 				{
 					Console.WriteLine ("Launching game...");
+					Game.LaunchGame ();
 					break;
 				}
 				default:

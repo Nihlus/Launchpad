@@ -16,24 +16,42 @@ namespace Launchpad_Launcher
 	public sealed class GameHandler
 	{
 		public delegate void ProgressChangedEventHandler(object sender, ProgressEventArgs e);
+		/// <summary>
+		/// Occurs when progress changed.
+		/// </summary>
 		public event ProgressChangedEventHandler ProgressChanged;
 
 		public delegate void DownloadFinishedEventHandler(object sender, DownloadFinishedEventArgs e);
+		/// <summary>
+		/// Occurs when download finishes.
+		/// </summary>
 		public event DownloadFinishedEventHandler DownloadFinished;
 
 		private ProgressEventArgs ProgressArgs;
 		private DownloadFinishedEventArgs DownloadFinishedArgs;
-		//Checks handler
-		ChecksHandler Checks = new ChecksHandler ();
-		//config handler
-		ConfigHandler Config = ConfigHandler._instance;
 
+		/// <summary>
+		/// The checks handler reference
+		/// </summary>
+		private ChecksHandler Checks = new ChecksHandler ();
+
+		/// <summary>
+		/// The config handler reference.
+		/// </summary>
+		private ConfigHandler Config = ConfigHandler._instance;
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Launchpad_Launcher.GameHandler"/> class.
+		/// </summary>
 		public GameHandler ()
 		{
 			ProgressArgs = new ProgressEventArgs ();
 			DownloadFinishedArgs = new DownloadFinishedEventArgs ();
 		}
 
+		/// <summary>
+		/// Starts an asynchronous game installation task.
+		/// </summary>
 		public void InstallGame()
 		{
 			Thread t = new Thread (InstallGameAsync);
@@ -138,6 +156,9 @@ namespace Launchpad_Launcher
 			}		
 		}
 
+		/// <summary>
+		/// Starts an asynchronous game update task.
+		/// </summary>
 		public void UpdateGame()
 		{
 			Thread t = new Thread (UpdateGameAsync);
@@ -151,6 +172,9 @@ namespace Launchpad_Launcher
 			//better system - compare old & new manifests for changes and download those?
 		}
 
+		/// <summary>
+		/// Starts an asynchronous game repair task.
+		/// </summary>
 		public void RepairGame()
 		{
 			Thread t = new Thread (RepairGameAsync);
@@ -161,6 +185,9 @@ namespace Launchpad_Launcher
 			//check all local file MD5s against latest manifest. Download broken files.
 		}
 
+		/// <summary>
+		/// Launches the game.
+		/// </summary>
 		public void LaunchGame()
 		{
 			//start new process of the game executable
@@ -173,16 +200,24 @@ namespace Launchpad_Launcher
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine (ex.Message);
+				Console.WriteLine ("LaunchGame(): " + ex.Message);
 			}
 		}
 
+		/// <summary>
+		/// Raises the download progress changed event.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
 		private void OnDownloadProgressChanged(object sender, ProgressEventArgs e)
 		{
 			ProgressArgs = e;
 			OnProgressChanged ();
 		}
 
+		/// <summary>
+		/// Raises the progress changed event.
+		/// </summary>
 		private void OnProgressChanged()
 		{
 			if (ProgressChanged != null)
@@ -191,6 +226,9 @@ namespace Launchpad_Launcher
 			}
 		}
 
+		/// <summary>
+		/// Raises the download finished event.
+		/// </summary>
 		private void OnDownloadFinished()
 		{
 			if (DownloadFinished != null)

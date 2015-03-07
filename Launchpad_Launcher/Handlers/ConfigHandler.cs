@@ -13,10 +13,18 @@ namespace Launchpad_Launcher
 {
     public sealed class ConfigHandler
     {
+		/// <summary>
+		/// The config lock object.
+		/// </summary>
 		private object ConfigLock = new Object ();
+		/// <summary>
+		/// The write lock object.
+		/// </summary>
 		private object WriteLock = new Object ();
 
-		//singleton pattern - we only ever want one instance of the config class
+		/// <summary>
+		/// The singleton Instance. Will always point to one shared object.
+		/// </summary>
 		public static readonly ConfigHandler _instance = new ConfigHandler ();
 
         /// <summary>
@@ -27,6 +35,12 @@ namespace Launchpad_Launcher
             
         }	
 
+		/// <summary>
+		/// Writes the config to disk. This method is thread-locking, and all write operations 
+		/// are synchronized via lock(WriteLock).
+		/// </summary>
+		/// <param name="Parser">Parser.</param>
+		/// <param name="Data">Data.</param>
 		private void WriteConfig(FileIniDataParser Parser, IniData Data)
 		{
 			lock (WriteLock)
@@ -837,6 +851,9 @@ namespace Launchpad_Launcher
 
 		}		      
 
+		/// <summary>
+		/// Checks for old update cookie.
+		/// </summary>
 		private void CheckForOldUpdateCookie ()
 		{
 			string oldUpdateCookie = String.Format (@"{0}{1}.updatecookie", Directory.GetCurrentDirectory (), Path.DirectorySeparatorChar);

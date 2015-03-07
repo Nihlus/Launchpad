@@ -18,17 +18,29 @@ namespace Launchpad_Launcher
 	{
 
 		public delegate void ChangelogProgressChangedEventHandler(object sender, ProgressEventArgs e);
+		/// <summary>
+		/// Occurs when changelog download progress changes.
+		/// </summary>
 		public event ChangelogProgressChangedEventHandler ChangelogProgressChanged;
 
 		public delegate void ChangelogDownloadFinishedEventHandler (object sender, DownloadFinishedEventArgs e);
+		/// <summary>
+		/// Occurs when changelog download finishes.
+		/// </summary>
 		public event ChangelogDownloadFinishedEventHandler ChangelogDownloadFinished;
 
 
 		private ProgressEventArgs ProgressArgs;
 		private DownloadFinishedEventArgs DownloadFinishedArgs;
 
+		/// <summary>
+		/// The config handler reference.
+		/// </summary>
 		ConfigHandler Config = ConfigHandler._instance;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Launchpad_Launcher.LauncherHandler"/> class.
+		/// </summary>
 		public LauncherHandler ()
 		{
 			ProgressArgs = new ProgressEventArgs ();
@@ -63,6 +75,9 @@ namespace Launchpad_Launcher
 			}
 		}
 
+		/// <summary>
+		/// Downloads the manifest.
+		/// </summary>
 		public void DownloadManifest()
 		{
 			FTPHandler FTP = new FTPHandler ();
@@ -93,6 +108,10 @@ namespace Launchpad_Launcher
 			OnChangelogDownloadFinished ();
 		}
 
+		/// <summary>
+		/// Creates the update script on disk.
+		/// </summary>
+		/// <returns>ProcessStartInfo for the update script.</returns>
 		private ProcessStartInfo CreateUpdateScript()
 		{
 			try
@@ -184,6 +203,9 @@ namespace Launchpad_Launcher
 			}
 		}
 
+		/// <summary>
+		/// Raises the changelog progress changed event.
+		/// </summary>
 		private void OnChangelogProgressChanged()
 		{
 			if (ChangelogProgressChanged != null)
@@ -193,6 +215,9 @@ namespace Launchpad_Launcher
 			}
 		}
 
+		/// <summary>
+		/// Raises the changelog download finished event.
+		/// </summary>
 		private void OnChangelogDownloadFinished()
 		{
 			if (ChangelogDownloadFinished != null)
@@ -203,6 +228,9 @@ namespace Launchpad_Launcher
 		}
 	}
 
+	/// <summary>
+	/// Progress event arguments.
+	/// </summary>
 	public class ProgressEventArgs : EventArgs
 	{
 		public int DownloadedBytes {
@@ -240,6 +268,9 @@ namespace Launchpad_Launcher
 		}
 	}
 
+	/// <summary>
+	/// Download finished event arguments.
+	/// </summary>
 	public class DownloadFinishedEventArgs : EventArgs
 	{
 		public string Value {
