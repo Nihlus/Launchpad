@@ -9,21 +9,47 @@ using System.IO;
 
 namespace Launchpad_Launcher
 {
+	/// <summary>
+	/// FTP handler. Handles downloading and reading files on a remote FTP server.
+	/// There are also functions for retrieving remote version information of the game and the launcher.
+	/// </summary>
     public sealed class FTPHandler
     {
+		/// <summary>
+		/// How many bytes of the target file that have been downloaded.
+		/// </summary>
         public int FTPbytesDownloaded = 0;
+
+		/// <summary>
+		/// The config handler reference.
+		/// </summary>
 		ConfigHandler Config = ConfigHandler._instance;
 
-		//events for progress change and download completion
 		public delegate void FileProgressChangedEventHandler(object sender, ProgressEventArgs e);
+		/// <summary>
+		/// Occurs when file progress changed.
+		/// </summary>
 		public event FileProgressChangedEventHandler FileProgressChanged;
 
 		public delegate void FileDownloadFinishedEventHandler (object sender, DownloadFinishedEventArgs e);
+		/// <summary>
+		/// Occurs when file download finished.
+		/// </summary>
 		public event FileDownloadFinishedEventHandler FileDownloadFinished;
 
+		/// <summary>
+		/// The progress arguments object. Is updated during file download operations.
+		/// </summary>
 		private ProgressEventArgs ProgressArgs;
+
+		/// <summary>
+		/// The download finished arguments object. Is updated once a file download finishes.
+		/// </summary>
 		private DownloadFinishedEventArgs DownloadFinishedArgs;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Launchpad_Launcher.FTPHandler"/> class.
+		/// </summary>
 		public FTPHandler()
 		{
 			ProgressArgs = new ProgressEventArgs ();
@@ -158,12 +184,11 @@ namespace Launchpad_Launcher
 
 
 				OnProgressChanged();
-                fileStream.Close();
 
 				request.Abort();
 				sizerequest.Abort();
+				fileStream.Close();
 				sizereader.Close();
-
             }
             catch (WebException ex)
             {

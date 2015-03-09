@@ -16,7 +16,7 @@ namespace Launchpad_Launcher
         static void Main()
         {
 			ChecksHandler Checks = new ChecksHandler ();
-			if (Checks.IsRunningOnUnix ())
+			if (Checks.IsRunningOnUnix ()) // run a GTK UI instead of WinForms
 			{
 				Gtk.Application.Init ();
 
@@ -25,7 +25,7 @@ namespace Launchpad_Launcher
 				win.Show ();
 				Gtk.Application.Run ();
 			}
-			else
+			else // run a WinForms UI instead of GTK
 			{
 				System.Windows.Forms.Application.EnableVisualStyles();
 				System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);

@@ -14,6 +14,12 @@ using System.Threading;
 
 namespace Launchpad_Launcher
 {
+	/// <summary>
+	/// This class has a lot of async stuff going on. It handles updating the launcher
+	/// and loading the changelog from the server.
+	/// Since this class starts new threads in which it does the larger computations,
+	/// there must be no useage of UI code in this class. Keep it clean!
+	/// </summary>
 	public sealed class LauncherHandler
 	{
 
@@ -29,8 +35,14 @@ namespace Launchpad_Launcher
 		/// </summary>
 		public event ChangelogDownloadFinishedEventHandler ChangelogDownloadFinished;
 
-
+		/// <summary>
+		/// The progress arguments object. Is updated during file download operations.
+		/// </summary>
 		private ProgressEventArgs ProgressArgs;
+
+		/// <summary>
+		/// The download finished arguments object. Is updated once a file download finishes.
+		/// </summary>
 		private DownloadFinishedEventArgs DownloadFinishedArgs;
 
 		/// <summary>

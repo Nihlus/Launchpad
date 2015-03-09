@@ -3,16 +3,14 @@ using System.IO;
 using System.Threading;
 using System.Diagnostics;
 
-/*
- * This class has a lot of async stuff going on. It handles installing the game
- * and updating it when it needs to.
- * Since this class starts new threads in which it does the larger computations,
- * there must be no useage of UI code in this class. Keep it clean!
- * 
- */
-
 namespace Launchpad_Launcher
 {
+	/// <summary>
+	///  This class has a lot of async stuff going on. It handles installing the game
+	///  and updating it when it needs to.
+	///	 Since this class starts new threads in which it does the larger computations,
+	///	 there must be no useage of UI code in this class. Keep it clean!
+	/// </summary>
 	public sealed class GameHandler
 	{
 		public delegate void ProgressChangedEventHandler(object sender, ProgressEventArgs e);
@@ -27,7 +25,14 @@ namespace Launchpad_Launcher
 		/// </summary>
 		public event DownloadFinishedEventHandler DownloadFinished;
 
+		/// <summary>
+		/// The progress arguments object. Is updated during file download operations.
+		/// </summary>
 		private ProgressEventArgs ProgressArgs;
+
+		/// <summary>
+		/// The download finished arguments object. Is updated once a file download finishes.
+		/// </summary>
 		private DownloadFinishedEventArgs DownloadFinishedArgs;
 
 		/// <summary>

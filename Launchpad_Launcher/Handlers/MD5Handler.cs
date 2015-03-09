@@ -9,6 +9,9 @@ using System.Security.Cryptography;
 
 namespace Launchpad_Launcher
 {
+	/// <summary>
+	/// MD5 hashing handler. Used to ensure file integrity.
+	/// </summary>
     public sealed class MD5Handler
     {
 		/// <summary>

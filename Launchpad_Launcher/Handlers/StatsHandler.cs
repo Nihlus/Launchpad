@@ -3,10 +3,19 @@ using System.Net;
 
 namespace Launchpad_Launcher
 {
+	/// <summary>
+	/// Anonymous stat sending handler.
+	/// </summary>
 	public sealed class StatsHandler
 	{
+		/// <summary>
+		/// The config handler reference.
+		/// </summary>
 		ConfigHandler Config = ConfigHandler._instance;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Launchpad_Launcher.StatsHandler"/> class.
+		/// </summary>
 		public StatsHandler ()
 		{
 

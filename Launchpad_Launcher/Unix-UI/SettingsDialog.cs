@@ -4,10 +4,24 @@ using Gtk;
 
 namespace Launchpad_Launcher
 {
+	/// <summary>
+	/// Settings dialog box.
+	/// </summary>
 	public partial class SettingsDialog : Gtk.Dialog
 	{
+		/// <summary>
+		/// The config handler reference.
+		/// </summary>
 		ConfigHandler Config = ConfigHandler._instance;
+
+		/// <summary>
+		/// The checks handler reference.
+		/// </summary>
 		ChecksHandler Checks = new ChecksHandler ();
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Launchpad_Launcher.SettingsDialog"/> class.
+		/// </summary>
 		public SettingsDialog ()
 		{
 			this.Build ();
@@ -24,6 +38,11 @@ namespace Launchpad_Launcher
 
 		}
 
+		/// <summary>
+		/// Raises the button ok clicked event.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
 		protected void OnButtonOkClicked (object sender, EventArgs e)
 		{
 			Gtk.Application.Invoke(delegate 
@@ -86,17 +105,32 @@ namespace Launchpad_Launcher
 			progressbar3.Text = "Idle";
 		}
 
+		/// <summary>
+		/// Raises the button cancel clicked event.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
 		protected void OnButtonCancelClicked (object sender, EventArgs e)
 		{
 			this.Destroy ();
 		}
 
+		/// <summary>
+		/// Raises the system target entry changed event.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
 		protected void OnSystemTargetEntryChanged (object sender, EventArgs e)
 		{
 			//Set the base colour back to normal
 			SystemTarget_entry.ModifyBase (Gtk.StateType.Normal);
 		}
 
+		/// <summary>
+		/// Raises the FTPURL entry changed event.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
 		protected void OnFTPURLEntryChanged (object sender, EventArgs e)
 		{
 			//Set the base colour back to normal

@@ -2,15 +2,13 @@ using System;
 using System.IO;
 using System.Net;
 
-/*
- * This class handles all the launcher's checks, returning bools for each function.
- * Since this class is meant to be used in both the Forms UI and the GTK UI, 
- * there must be no useage of UI code in this class. Keep it clean!
- * 
- */
-
 namespace Launchpad_Launcher
 {
+	/// <summary>
+	/// This class handles all the launcher's checks, returning bools for each function.
+	/// Since this class is meant to be used in both the Forms UI and the GTK UI, 
+	/// there must be no useage of UI code in this class. Keep it clean!
+	/// </summary>
 	public sealed class ChecksHandler
 	{
 		/// <summary>
