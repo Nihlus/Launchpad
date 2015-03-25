@@ -129,6 +129,8 @@ namespace Launchpad_Launcher
 			bool bHasDirectory = Directory.Exists(Config.GetGamePath());
 			//Is there an .install file in the directory?
 			bool bHasInstallationCookie = File.Exists(Config.GetInstallCookie());
+			//is there a version file?
+			bool bHasGameVersion = File.Exists (Config.GetGameVersionPath ());
 
 			Console.WriteLine (String.Format ("{0} {1} {2}", 
 			              bHasDirectory.ToString (), 
@@ -136,7 +138,7 @@ namespace Launchpad_Launcher
 			              IsInstallCookieEmpty ().ToString ()));
 
 			//If any of these criteria are false, the game is not considered fully installed.
-			return bHasDirectory && bHasInstallationCookie && IsInstallCookieEmpty();
+			return bHasDirectory && bHasInstallationCookie && IsInstallCookieEmpty() && bHasGameVersion;
 		}
 
 		/// <summary>
@@ -148,8 +150,8 @@ namespace Launchpad_Launcher
 			FTPHandler FTP = new FTPHandler ();
 			try
 			{
-				Version local = new Version(Config.GetLocalGameVersion());
-				Version remote = new Version(FTP.GetRemoteGameVersion(true));
+				Version local = Config.GetLocalGameVersion();
+				Version remote = FTP.GetRemoteGameVersion(true);
 
 				if (local < remote)
 				{
@@ -176,9 +178,8 @@ namespace Launchpad_Launcher
 			FTPHandler FTP = new FTPHandler();
 			try
 			{
-				Version local = new Version(Config.GetLocalLauncherVersion());
-
-				Version remote = new Version(FTP.GetRemoteLauncherVersion ());	
+				Version local = Config.GetLocalLauncherVersion ();
+				Version remote = FTP.GetRemoteLauncherVersion ();	
 
 				if (local < remote)
 				{
@@ -243,6 +244,18 @@ namespace Launchpad_Launcher
 			{
 				return true;
 			}
+		}
+
+		public bool DoesServerProvidePlatform(ESystemTarget Platform)
+		{
+			FTPHandler FTP = new FTPHandler ();
+
+			string remote = String.Format ("{0}/game/{1}/.provides",
+			                                        Config.GetFTPUrl(),
+			                                        Platform.ToString());
+
+			return FTP.DoesItemExist (remote);
+			
 		}
 	}
 }

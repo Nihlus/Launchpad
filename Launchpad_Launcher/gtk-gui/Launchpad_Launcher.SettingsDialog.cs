@@ -10,10 +10,12 @@ namespace Launchpad_Launcher
 		private global::Gtk.VBox vbox3;
 		private global::Gtk.HBox hbox1;
 		private global::Gtk.Label label1;
+		private global::Gtk.Alignment alignment6;
 		private global::Gtk.Entry GameName_entry;
 		private global::Gtk.HBox hbox2;
 		private global::Gtk.Label label2;
-		private global::Gtk.Entry SystemTarget_entry;
+		private global::Gtk.Alignment alignment5;
+		private global::Gtk.ComboBox combobox_SystemTarget;
 		private global::Gtk.Label GtkLabel2;
 		private global::Gtk.HSeparator hseparator1;
 		private global::Gtk.Frame frame2;
@@ -78,22 +80,25 @@ namespace Launchpad_Launcher
 			w2.Expand = false;
 			w2.Fill = false;
 			// Container child hbox1.Gtk.Box+BoxChild
+			this.alignment6 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
+			this.alignment6.Name = "alignment6";
+			this.alignment6.LeftPadding = ((uint)(77));
+			// Container child alignment6.Gtk.Container+ContainerChild
 			this.GameName_entry = new global::Gtk.Entry ();
 			this.GameName_entry.CanFocus = true;
 			this.GameName_entry.Name = "GameName_entry";
 			this.GameName_entry.IsEditable = true;
 			this.GameName_entry.InvisibleChar = '●';
-			this.hbox1.Add (this.GameName_entry);
-			global::Gtk.Box.BoxChild w3 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.GameName_entry]));
-			w3.PackType = ((global::Gtk.PackType)(1));
-			w3.Position = 1;
-			w3.Expand = false;
-			w3.Fill = false;
+			this.alignment6.Add (this.GameName_entry);
+			this.hbox1.Add (this.alignment6);
+			global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.alignment6]));
+			w4.PackType = ((global::Gtk.PackType)(1));
+			w4.Position = 1;
 			this.vbox3.Add (this.hbox1);
-			global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(this.vbox3 [this.hbox1]));
-			w4.Position = 0;
-			w4.Expand = false;
-			w4.Fill = false;
+			global::Gtk.Box.BoxChild w5 = ((global::Gtk.Box.BoxChild)(this.vbox3 [this.hbox1]));
+			w5.Position = 0;
+			w5.Expand = false;
+			w5.Fill = false;
 			// Container child vbox3.Gtk.Box+BoxChild
 			this.hbox2 = new global::Gtk.HBox ();
 			this.hbox2.Name = "hbox2";
@@ -103,27 +108,32 @@ namespace Launchpad_Launcher
 			this.label2.Name = "label2";
 			this.label2.LabelProp = global::Mono.Unix.Catalog.GetString ("System Target: ");
 			this.hbox2.Add (this.label2);
-			global::Gtk.Box.BoxChild w5 = ((global::Gtk.Box.BoxChild)(this.hbox2 [this.label2]));
-			w5.Position = 0;
-			w5.Expand = false;
-			w5.Fill = false;
-			// Container child hbox2.Gtk.Box+BoxChild
-			this.SystemTarget_entry = new global::Gtk.Entry ();
-			this.SystemTarget_entry.CanFocus = true;
-			this.SystemTarget_entry.Name = "SystemTarget_entry";
-			this.SystemTarget_entry.IsEditable = true;
-			this.SystemTarget_entry.InvisibleChar = '●';
-			this.hbox2.Add (this.SystemTarget_entry);
-			global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(this.hbox2 [this.SystemTarget_entry]));
-			w6.PackType = ((global::Gtk.PackType)(1));
-			w6.Position = 1;
+			global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(this.hbox2 [this.label2]));
+			w6.Position = 0;
 			w6.Expand = false;
 			w6.Fill = false;
+			// Container child hbox2.Gtk.Box+BoxChild
+			this.alignment5 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
+			this.alignment5.Name = "alignment5";
+			this.alignment5.LeftPadding = ((uint)(67));
+			// Container child alignment5.Gtk.Container+ContainerChild
+			this.combobox_SystemTarget = global::Gtk.ComboBox.NewText ();
+			this.combobox_SystemTarget.AppendText (global::Mono.Unix.Catalog.GetString ("Linux"));
+			this.combobox_SystemTarget.AppendText (global::Mono.Unix.Catalog.GetString ("Mac"));
+			this.combobox_SystemTarget.AppendText (global::Mono.Unix.Catalog.GetString ("Win64"));
+			this.combobox_SystemTarget.AppendText (global::Mono.Unix.Catalog.GetString ("Win32"));
+			this.combobox_SystemTarget.Name = "combobox_SystemTarget";
+			this.combobox_SystemTarget.Active = 0;
+			this.alignment5.Add (this.combobox_SystemTarget);
+			this.hbox2.Add (this.alignment5);
+			global::Gtk.Box.BoxChild w8 = ((global::Gtk.Box.BoxChild)(this.hbox2 [this.alignment5]));
+			w8.PackType = ((global::Gtk.PackType)(1));
+			w8.Position = 1;
 			this.vbox3.Add (this.hbox2);
-			global::Gtk.Box.BoxChild w7 = ((global::Gtk.Box.BoxChild)(this.vbox3 [this.hbox2]));
-			w7.Position = 1;
-			w7.Expand = false;
-			w7.Fill = false;
+			global::Gtk.Box.BoxChild w9 = ((global::Gtk.Box.BoxChild)(this.vbox3 [this.hbox2]));
+			w9.Position = 1;
+			w9.Expand = false;
+			w9.Fill = false;
 			this.GtkAlignment2.Add (this.vbox3);
 			this.frame1.Add (this.GtkAlignment2);
 			this.GtkLabel2 = new global::Gtk.Label ();
@@ -132,18 +142,18 @@ namespace Launchpad_Launcher
 			this.GtkLabel2.UseMarkup = true;
 			this.frame1.LabelWidget = this.GtkLabel2;
 			this.vbox2.Add (this.frame1);
-			global::Gtk.Box.BoxChild w10 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.frame1]));
-			w10.Position = 0;
-			w10.Expand = false;
-			w10.Fill = false;
+			global::Gtk.Box.BoxChild w12 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.frame1]));
+			w12.Position = 0;
+			w12.Expand = false;
+			w12.Fill = false;
 			// Container child vbox2.Gtk.Box+BoxChild
 			this.hseparator1 = new global::Gtk.HSeparator ();
 			this.hseparator1.Name = "hseparator1";
 			this.vbox2.Add (this.hseparator1);
-			global::Gtk.Box.BoxChild w11 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.hseparator1]));
-			w11.Position = 1;
-			w11.Expand = false;
-			w11.Fill = false;
+			global::Gtk.Box.BoxChild w13 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.hseparator1]));
+			w13.Position = 1;
+			w13.Expand = false;
+			w13.Fill = false;
 			// Container child vbox2.Gtk.Box+BoxChild
 			this.frame2 = new global::Gtk.Frame ();
 			this.frame2.Name = "frame2";
@@ -165,10 +175,10 @@ namespace Launchpad_Launcher
 			this.label3.Name = "label3";
 			this.label3.LabelProp = global::Mono.Unix.Catalog.GetString ("FTP URL: ");
 			this.hbox3.Add (this.label3);
-			global::Gtk.Box.BoxChild w12 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.label3]));
-			w12.Position = 0;
-			w12.Expand = false;
-			w12.Fill = false;
+			global::Gtk.Box.BoxChild w14 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.label3]));
+			w14.Position = 0;
+			w14.Expand = false;
+			w14.Fill = false;
 			// Container child hbox3.Gtk.Box+BoxChild
 			this.alignment1 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
 			this.alignment1.Name = "alignment1";
@@ -181,14 +191,14 @@ namespace Launchpad_Launcher
 			this.FTPURL_entry.InvisibleChar = '●';
 			this.alignment1.Add (this.FTPURL_entry);
 			this.hbox3.Add (this.alignment1);
-			global::Gtk.Box.BoxChild w14 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.alignment1]));
-			w14.PackType = ((global::Gtk.PackType)(1));
-			w14.Position = 1;
+			global::Gtk.Box.BoxChild w16 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.alignment1]));
+			w16.PackType = ((global::Gtk.PackType)(1));
+			w16.Position = 1;
 			this.vbox4.Add (this.hbox3);
-			global::Gtk.Box.BoxChild w15 = ((global::Gtk.Box.BoxChild)(this.vbox4 [this.hbox3]));
-			w15.Position = 0;
-			w15.Expand = false;
-			w15.Fill = false;
+			global::Gtk.Box.BoxChild w17 = ((global::Gtk.Box.BoxChild)(this.vbox4 [this.hbox3]));
+			w17.Position = 0;
+			w17.Expand = false;
+			w17.Fill = false;
 			// Container child vbox4.Gtk.Box+BoxChild
 			this.hbox4 = new global::Gtk.HBox ();
 			this.hbox4.Name = "hbox4";
@@ -198,10 +208,10 @@ namespace Launchpad_Launcher
 			this.label4.Name = "label4";
 			this.label4.LabelProp = global::Mono.Unix.Catalog.GetString ("FTP Username: ");
 			this.hbox4.Add (this.label4);
-			global::Gtk.Box.BoxChild w16 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.label4]));
-			w16.Position = 0;
-			w16.Expand = false;
-			w16.Fill = false;
+			global::Gtk.Box.BoxChild w18 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.label4]));
+			w18.Position = 0;
+			w18.Expand = false;
+			w18.Fill = false;
 			// Container child hbox4.Gtk.Box+BoxChild
 			this.alignment2 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
 			this.alignment2.Name = "alignment2";
@@ -213,14 +223,14 @@ namespace Launchpad_Launcher
 			this.FTPUsername_entry.InvisibleChar = '●';
 			this.alignment2.Add (this.FTPUsername_entry);
 			this.hbox4.Add (this.alignment2);
-			global::Gtk.Box.BoxChild w18 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.alignment2]));
-			w18.PackType = ((global::Gtk.PackType)(1));
-			w18.Position = 1;
+			global::Gtk.Box.BoxChild w20 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.alignment2]));
+			w20.PackType = ((global::Gtk.PackType)(1));
+			w20.Position = 1;
 			this.vbox4.Add (this.hbox4);
-			global::Gtk.Box.BoxChild w19 = ((global::Gtk.Box.BoxChild)(this.vbox4 [this.hbox4]));
-			w19.Position = 1;
-			w19.Expand = false;
-			w19.Fill = false;
+			global::Gtk.Box.BoxChild w21 = ((global::Gtk.Box.BoxChild)(this.vbox4 [this.hbox4]));
+			w21.Position = 1;
+			w21.Expand = false;
+			w21.Fill = false;
 			// Container child vbox4.Gtk.Box+BoxChild
 			this.hbox5 = new global::Gtk.HBox ();
 			this.hbox5.Name = "hbox5";
@@ -230,10 +240,10 @@ namespace Launchpad_Launcher
 			this.label5.Name = "label5";
 			this.label5.LabelProp = global::Mono.Unix.Catalog.GetString ("FTP Password: ");
 			this.hbox5.Add (this.label5);
-			global::Gtk.Box.BoxChild w20 = ((global::Gtk.Box.BoxChild)(this.hbox5 [this.label5]));
-			w20.Position = 0;
-			w20.Expand = false;
-			w20.Fill = false;
+			global::Gtk.Box.BoxChild w22 = ((global::Gtk.Box.BoxChild)(this.hbox5 [this.label5]));
+			w22.Position = 0;
+			w22.Expand = false;
+			w22.Fill = false;
 			// Container child hbox5.Gtk.Box+BoxChild
 			this.alignment3 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
 			this.alignment3.Name = "alignment3";
@@ -246,14 +256,14 @@ namespace Launchpad_Launcher
 			this.FTPPassword_entry.InvisibleChar = '●';
 			this.alignment3.Add (this.FTPPassword_entry);
 			this.hbox5.Add (this.alignment3);
-			global::Gtk.Box.BoxChild w22 = ((global::Gtk.Box.BoxChild)(this.hbox5 [this.alignment3]));
-			w22.PackType = ((global::Gtk.PackType)(1));
-			w22.Position = 1;
+			global::Gtk.Box.BoxChild w24 = ((global::Gtk.Box.BoxChild)(this.hbox5 [this.alignment3]));
+			w24.PackType = ((global::Gtk.PackType)(1));
+			w24.Position = 1;
 			this.vbox4.Add (this.hbox5);
-			global::Gtk.Box.BoxChild w23 = ((global::Gtk.Box.BoxChild)(this.vbox4 [this.hbox5]));
-			w23.Position = 2;
-			w23.Expand = false;
-			w23.Fill = false;
+			global::Gtk.Box.BoxChild w25 = ((global::Gtk.Box.BoxChild)(this.vbox4 [this.hbox5]));
+			w25.Position = 2;
+			w25.Expand = false;
+			w25.Fill = false;
 			this.GtkAlignment3.Add (this.vbox4);
 			this.frame2.Add (this.GtkAlignment3);
 			this.GtkLabel3 = new global::Gtk.Label ();
@@ -262,15 +272,15 @@ namespace Launchpad_Launcher
 			this.GtkLabel3.UseMarkup = true;
 			this.frame2.LabelWidget = this.GtkLabel3;
 			this.vbox2.Add (this.frame2);
-			global::Gtk.Box.BoxChild w26 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.frame2]));
-			w26.Position = 2;
-			w26.Expand = false;
-			w26.Fill = false;
+			global::Gtk.Box.BoxChild w28 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.frame2]));
+			w28.Position = 2;
+			w28.Expand = false;
+			w28.Fill = false;
 			w1.Add (this.vbox2);
-			global::Gtk.Box.BoxChild w27 = ((global::Gtk.Box.BoxChild)(w1 [this.vbox2]));
-			w27.Position = 0;
-			w27.Expand = false;
-			w27.Fill = false;
+			global::Gtk.Box.BoxChild w29 = ((global::Gtk.Box.BoxChild)(w1 [this.vbox2]));
+			w29.Position = 0;
+			w29.Expand = false;
+			w29.Fill = false;
 			// Container child dialog1_VBox.Gtk.Box+BoxChild
 			this.alignment4 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
 			this.alignment4.Name = "alignment4";
@@ -279,16 +289,16 @@ namespace Launchpad_Launcher
 			this.progressbar3.Name = "progressbar3";
 			this.alignment4.Add (this.progressbar3);
 			w1.Add (this.alignment4);
-			global::Gtk.Box.BoxChild w29 = ((global::Gtk.Box.BoxChild)(w1 [this.alignment4]));
-			w29.Position = 1;
-			w29.Expand = false;
-			w29.Fill = false;
+			global::Gtk.Box.BoxChild w31 = ((global::Gtk.Box.BoxChild)(w1 [this.alignment4]));
+			w31.Position = 1;
+			w31.Expand = false;
+			w31.Fill = false;
 			// Internal child Launchpad_Launcher.SettingsDialog.ActionArea
-			global::Gtk.HButtonBox w30 = this.ActionArea;
-			w30.Name = "dialog1_ActionArea";
-			w30.Spacing = 10;
-			w30.BorderWidth = ((uint)(5));
-			w30.LayoutStyle = ((global::Gtk.ButtonBoxStyle)(4));
+			global::Gtk.HButtonBox w32 = this.ActionArea;
+			w32.Name = "dialog1_ActionArea";
+			w32.Spacing = 10;
+			w32.BorderWidth = ((uint)(5));
+			w32.LayoutStyle = ((global::Gtk.ButtonBoxStyle)(4));
 			// Container child dialog1_ActionArea.Gtk.ButtonBox+ButtonBoxChild
 			this.buttonCancel = new global::Gtk.Button ();
 			this.buttonCancel.CanDefault = true;
@@ -298,9 +308,9 @@ namespace Launchpad_Launcher
 			this.buttonCancel.UseUnderline = true;
 			this.buttonCancel.Label = "gtk-cancel";
 			this.AddActionWidget (this.buttonCancel, -6);
-			global::Gtk.ButtonBox.ButtonBoxChild w31 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w30 [this.buttonCancel]));
-			w31.Expand = false;
-			w31.Fill = false;
+			global::Gtk.ButtonBox.ButtonBoxChild w33 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w32 [this.buttonCancel]));
+			w33.Expand = false;
+			w33.Fill = false;
 			// Container child dialog1_ActionArea.Gtk.ButtonBox+ButtonBoxChild
 			this.buttonOk = new global::Gtk.Button ();
 			this.buttonOk.CanDefault = true;
@@ -310,17 +320,16 @@ namespace Launchpad_Launcher
 			this.buttonOk.UseUnderline = true;
 			this.buttonOk.Label = "gtk-ok";
 			this.AddActionWidget (this.buttonOk, -5);
-			global::Gtk.ButtonBox.ButtonBoxChild w32 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w30 [this.buttonOk]));
-			w32.Position = 1;
-			w32.Expand = false;
-			w32.Fill = false;
+			global::Gtk.ButtonBox.ButtonBoxChild w34 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w32 [this.buttonOk]));
+			w34.Position = 1;
+			w34.Expand = false;
+			w34.Fill = false;
 			if ((this.Child != null)) {
 				this.Child.ShowAll ();
 			}
 			this.DefaultWidth = 345;
-			this.DefaultHeight = 294;
+			this.DefaultHeight = 295;
 			this.Show ();
-			this.SystemTarget_entry.Changed += new global::System.EventHandler (this.OnSystemTargetEntryChanged);
 			this.FTPURL_entry.Changed += new global::System.EventHandler (this.OnFTPURLEntryChanged);
 			this.buttonCancel.Clicked += new global::System.EventHandler (this.OnButtonCancelClicked);
 			this.buttonOk.Clicked += new global::System.EventHandler (this.OnButtonOkClicked);

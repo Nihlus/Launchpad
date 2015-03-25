@@ -269,7 +269,11 @@ namespace Launchpad_Launcher
 		/// <returns>The game path.</returns>
         public string GetGamePath()
         {
-			string gamePath = String.Format(@"{0}Game", GetLocalDir());
+			string gamePath = String.Format(@"{0}Game{2}{1}", 
+			                                GetLocalDir(),
+			                                GetSystemTarget().ToString(),
+			                                Path.DirectorySeparatorChar);
+
             return gamePath;
         }
 
@@ -290,7 +294,7 @@ namespace Launchpad_Launcher
 		/// Gets the local game version.
 		/// </summary>
 		/// <returns>The local game version.</returns>
-		public string GetLocalGameVersion()
+		public Version GetLocalGameVersion()
 		{
 			string GameVersion = "";
 			try
@@ -302,7 +306,7 @@ namespace Launchpad_Launcher
 				Console.WriteLine ("GetLocalGameVersion(): " + ex.Message);
 			}
 
-			return GameVersion;
+			return Version.Parse(GameVersion);
 		}
 
 		/// <summary>
@@ -382,7 +386,7 @@ namespace Launchpad_Launcher
 		/// Gets the launcher version. Locks the config file - DO NOT USE INSIDE OTHER LOCKING FUNCTIONS
 		/// </summary>
 		/// <returns>The launcher version.</returns>
-        public string GetLocalLauncherVersion()
+        public Version GetLocalLauncherVersion()
         {
 			lock (ConfigLock)
 			{
@@ -393,14 +397,14 @@ namespace Launchpad_Launcher
 
 					string launcherVersion = data["Local"]["LauncherVersion"];
 
-					return launcherVersion;
+					return Version.Parse(launcherVersion);
 
 				}
 				catch (Exception ex)
 				{
 					Console.Write("GetLauncherVersion: ");
 					Console.WriteLine(ex.Message);
-					return "";
+					return new Version ();
 				}
 			}            
         }
@@ -461,7 +465,7 @@ namespace Launchpad_Launcher
 		/// Gets the system target.
 		/// </summary>
 		/// <returns>The system target.</returns>
-        public string GetSystemTarget()
+        public ESystemTarget GetSystemTarget()
         {
 			//possible values are:
 			//Win64
@@ -477,13 +481,13 @@ namespace Launchpad_Launcher
 
 					string systemTarget = data["Local"]["SystemTarget"];
 
-					return systemTarget;
+					return Utilities.ParseSystemTarget(systemTarget);
 				}
 				catch (Exception ex)
 				{
 					Console.Write("GetSystemTarget: ");
 					Console.WriteLine(ex.Message);
-					return "";
+					return ESystemTarget.Invalid;
 				}
 			}            
         }
@@ -492,7 +496,7 @@ namespace Launchpad_Launcher
 		/// Sets the system target.
 		/// </summary>
 		/// <param name="SystemTarget">System target.</param>
-		public void SetSystemTarget(string SystemTarget)
+		public void SetSystemTarget(ESystemTarget SystemTarget)
 		{
 			//possible values are:
 			//Win64
@@ -506,7 +510,7 @@ namespace Launchpad_Launcher
 					FileIniDataParser Parser = new FileIniDataParser();
 					IniData data = Parser.ReadFile(GetConfigPath());
 
-					data["Local"]["SystemTarget"] = SystemTarget;
+					data["Local"]["SystemTarget"] = SystemTarget.ToString();
 
 					WriteConfig(Parser, data);
 				}

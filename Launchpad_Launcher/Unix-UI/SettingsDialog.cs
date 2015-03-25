@@ -27,7 +27,8 @@ namespace Launchpad_Launcher
 			this.Build ();
 			//fill in Local settings
 			GameName_entry.Text = Config.GetGameName ();
-			SystemTarget_entry.Text = Config.GetSystemTarget ();
+
+			combobox_SystemTarget.Active = (int)Config.GetSystemTarget();
 
 			//fill in remote settings
 			FTPURL_entry.Text = Config.GetBaseFTPUrl ();
@@ -53,18 +54,14 @@ namespace Launchpad_Launcher
 			bool bAreAllSettingsOK = true;
 			Config.SetGameName (GameName_entry.Text);
 
-			var AllowedValues = new List<string> () { "Win64", "Win32", "Linux", "Mac" };
-			if (AllowedValues.Contains(SystemTarget_entry.Text))
+			ESystemTarget SystemTarget = Utilities.ParseSystemTarget (combobox_SystemTarget.ActiveText);
+			if (SystemTarget != ESystemTarget.Invalid)
 			{
-				Config.SetSystemTarget (SystemTarget_entry.Text);
+				Config.SetSystemTarget (SystemTarget);
 			}
 			else
 			{
 				bAreAllSettingsOK = false;
-				Gdk.Color col = new Gdk.Color(255, 128, 128);
-				SystemTarget_entry.ModifyBase(Gtk.StateType.Normal, col);
-				SystemTarget_entry.TooltipText = "The system target needs to be one of the following:" + 
-					"\"Win64\", \"Win32\", \"Linux\" or \"Mac\". Please correct the target.";
 			}
 
 			if (FTPURL_entry.Text.StartsWith ("ftp://"))
@@ -113,17 +110,6 @@ namespace Launchpad_Launcher
 		protected void OnButtonCancelClicked (object sender, EventArgs e)
 		{
 			this.Destroy ();
-		}
-
-		/// <summary>
-		/// Raises the system target entry changed event.
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="e">E.</param>
-		protected void OnSystemTargetEntryChanged (object sender, EventArgs e)
-		{
-			//Set the base colour back to normal
-			SystemTarget_entry.ModifyBase (Gtk.StateType.Normal);
 		}
 
 		/// <summary>

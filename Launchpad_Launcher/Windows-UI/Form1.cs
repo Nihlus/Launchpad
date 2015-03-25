@@ -459,11 +459,11 @@ namespace Launchpad_Launcher
                 string remoteLauncherVersion = FTP.ReadFTPFile(remoteLauncherVersionTXTURL).Replace("\0", string.Empty);
 
                 //get the current launcher version from file
-                string launcherVersion = Config.GetLocalLauncherVersion();
+                Version launcherVersion = Config.GetLocalLauncherVersion();
 
                 //we create version objects to format the versions correctly to remove unnecessary spaces or new line characters that may exist
                 System.Version RemoteVersion = new System.Version(remoteLauncherVersion);
-                System.Version LauncherVersion = new System.Version(launcherVersion);
+                System.Version LauncherVersion = launcherVersion;
 
                 //update the progress label to let the user know what we are doing
                 progress_label.Text = "Checking launcher version...";

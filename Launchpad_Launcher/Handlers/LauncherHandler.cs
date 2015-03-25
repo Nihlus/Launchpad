@@ -93,6 +93,10 @@ namespace Launchpad_Launcher
 		public void DownloadManifest()
 		{
 			FTPHandler FTP = new FTPHandler ();
+			MD5Handler MD5 = new MD5Handler ();
+
+			string remoteChecksum = FTP.GetRemoteManifestChecksum ();
+			string localChecksum = MD5.GetFileHash (File.OpenRead (Config.GetManifestPath ()));
 
 			string remote = Config.GetManifestURL ();
 			string local = Config.GetManifestPath ();
@@ -114,8 +118,8 @@ namespace Launchpad_Launcher
 			FTPHandler FTP = new FTPHandler ();
 			string content = FTP.ReadFTPFile (Config.GetChangelogURL ());
 
-			DownloadFinishedArgs.Value = content;
-			DownloadFinishedArgs.URL = Config.GetChangelogURL ();
+			DownloadFinishedArgs.Result = content;
+			DownloadFinishedArgs.Metadata = Config.GetChangelogURL ();
 
 			OnChangelogDownloadFinished ();
 		}
@@ -285,19 +289,25 @@ namespace Launchpad_Launcher
 	/// </summary>
 	public class DownloadFinishedEventArgs : EventArgs
 	{
-		public string Value {
+		public string Result {
 			get;
 			set;
 		}
 
-		public string URL {
+		public string Type {
+			get;
+			set;
+		}
+
+		public string Metadata {
 			get;
 			set;
 		}
 
 		new public void Empty()
 		{
-			Value = "";
+			Result = "";
+			Metadata = "";
 		}
 	}
 }

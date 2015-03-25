@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using Gtk;
 using WebKit;
+using Notifications;
 
 namespace Launchpad_Launcher
 {
@@ -109,6 +110,17 @@ namespace Launchpad_Launcher
 					StatsHandler stats = new StatsHandler ();
 					stats.SendUseageStats ();
 				}
+				else
+				{
+					Notification noStatsNot = new Notification ();
+
+					noStatsNot.IconName = Stock.DialogWarning;
+					noStatsNot.Urgency = Urgency.Normal;
+					noStatsNot.Summary = "Launchpad - Warning";
+					noStatsNot.Body = "Anonymous useage stats are not enabled.";
+
+					noStatsNot.Show ();
+				}
 
 				//check if the launcher is outdated
 				if (Checks.IsLauncherOutdated ())
@@ -128,7 +140,7 @@ namespace Launchpad_Launcher
 				if (!bLauncherNeedsUpdate)
 				{
 					if (Checks.IsManifestOutdated ())
-					{
+					{					
 						Launcher.DownloadManifest ();
 					}
 
@@ -210,17 +222,31 @@ namespace Launchpad_Launcher
 		/// <param name="e">E.</param>
 		protected void OnGameDownloadFinished (object sender, DownloadFinishedEventArgs e)
 		{
-			if (e.Value == "1") //there was an error
+			if (e.Result == "1") //there was an error
 			{
 				MessageLabel.Text = "Game download failed. Are you missing the manifest?";
 
-				PrimaryButton.Label = e.URL; //URL is used here to set the desired retry action
+				Notification failedNot = new Notification ();
+				failedNot.IconName = Stock.DialogError;
+				failedNot.Summary = "Launchpad - Error";
+				failedNot.Body = "The game failed to download. Are you missing the manifest?";
+
+				failedNot.Show ();
+
+				PrimaryButton.Label = e.Type; //URL is used here to set the desired retry action
 				PrimaryButton.Sensitive = true;
 			}
 			else //the game has finished downloading, and we should be OK to launch
 			{
 				MessageLabel.Text = "Idle";
 				progressbar2.Text = "";
+
+				Notification completedNot = new Notification ();
+				completedNot.IconName = Stock.Info;
+				completedNot.Summary = "Launchpad - Info";
+				completedNot.Body = "Game download finished. Play away!";
+
+				completedNot.Show ();
 
 				PrimaryButton.Label = "Launch";
 				PrimaryButton.Sensitive = true;
@@ -236,7 +262,7 @@ namespace Launchpad_Launcher
 		{
 			Gtk.Application.Invoke (delegate
 			{
-				Browser.LoadHtmlString (e.Value, e.URL);
+				Browser.LoadHtmlString (e.Result, e.Type);
 
 			});
 		}
@@ -254,9 +280,12 @@ namespace Launchpad_Launcher
 				case "Repair":
 				{
 					Console.WriteLine ("Repairing installation...");
-					//bind events for UI updating
-					Game.DownloadFinished += OnGameDownloadFinished;
+					//bind events for UI updating					
 					Game.ProgressChanged += OnGameDownloadProgressChanged;
+					Game.VerificationFinished += OnVerificationFinished;
+					Game.GameDownloadFailed += OnGameDownloadFailed;
+
+					Game.RepairGame ();
 
 					break;
 				}
@@ -268,9 +297,26 @@ namespace Launchpad_Launcher
 					//bind events for UI updating
 					Game.DownloadFinished += OnGameDownloadFinished;
 					Game.ProgressChanged += OnGameDownloadProgressChanged;
-					
-					//install the game asynchronously
-					Game.InstallGame ();
+					Game.GameDownloadFailed += OnGameDownloadFailed;
+						
+					//check for a .provides file in the platform directory on the server
+					//if there is none, the server does not provide a game for that platform
+					if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
+					{
+						//install the game asynchronously
+						Game.InstallGame ();
+					}	
+					else
+					{
+						Notification noProvide = new Notification ();
+						noProvide.IconName = Stock.DialogError;
+						noProvide.Summary = "Launchpad - Platform not provided!";
+						noProvide.Body = "The server does not provide the game for the selected platform.";
+						noProvide.Show();
+
+						PrimaryButton.Label = "Install";
+						PrimaryButton.Sensitive = true;
+					}
 					break;
 				}
 				case "Update":
@@ -289,6 +335,7 @@ namespace Launchpad_Launcher
 						//bind events for UI updating
 						Game.DownloadFinished += OnGameDownloadFinished;
 						Game.ProgressChanged += OnGameDownloadProgressChanged;
+						Game.GameDownloadFailed += OnGameDownloadFailed;
 
 						//update the game asynchronously
 						Game.UpdateGame ();
@@ -298,7 +345,9 @@ namespace Launchpad_Launcher
 				case "Launch":
 				{
 					Console.WriteLine ("Launching game...");
+					Game.GameLaunchFailed += OnGameLaunchFailed;
 					Game.LaunchGame ();
+
 					break;
 				}
 				default:
@@ -307,6 +356,57 @@ namespace Launchpad_Launcher
 					break;
 				}
 			}
+		}
+
+		private void OnGameLaunchFailed(object sender, EventArgs e)
+		{
+			Notification launchFailed = new Notification ();
+			launchFailed.IconName = Stock.DialogError;
+			launchFailed.Summary = "Launchpad - Failed to launch the game!";
+			launchFailed.Body = "The game failed to launch. Try repairing the installation.";
+			launchFailed.Show();
+
+			PrimaryButton.Label = "Repair";	
+			PrimaryButton.Sensitive = true;
+		}
+
+		private void OnVerificationFinished (object sender, EventArgs e)
+		{
+			Notification repairComplete = new Notification ();
+			repairComplete.IconName = Stock.Info;
+			repairComplete.Summary = "Launchpad - Game verification finished";
+			repairComplete.Body = "Launchpad has finished verifying the game installation. Play away!";
+			repairComplete.Show ();
+
+			progressbar2.Text = "";
+
+			PrimaryButton.Label = "Launch";	
+			PrimaryButton.Sensitive = true;
+		}
+
+		private void OnGameDownloadFailed(object sender, DownloadFinishedEventArgs e)
+		{
+			switch(e.Type)
+			{
+				case "Install":
+				{
+					Console.WriteLine (e.Metadata);
+					break;
+				}
+				case "Update":
+				{
+					Console.WriteLine (e.Metadata);
+					break;
+				}
+				case "Repair":
+				{
+					Console.WriteLine (e.Metadata);
+					break;
+				}
+			}
+
+			PrimaryButton.Label = e.Type;
+			PrimaryButton.Sensitive = true;
 		}
 	}
 }

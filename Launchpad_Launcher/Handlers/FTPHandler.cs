@@ -69,11 +69,17 @@ namespace Launchpad_Launcher
             int bytesRead = 0;
             byte[] buffer = new byte[1024];
 
+			FtpWebRequest request = null;
+			FtpWebRequest sizerequest = null;
+
+			Stream reader = null;
+			FtpWebResponse sizereader = null;
+
 			try
 			{
 
-	            FtpWebRequest request = CreateFtpWebRequest(ftpSourceFilePath, username, password, true);
-	            FtpWebRequest sizerequest = CreateFtpWebRequest(ftpSourceFilePath, username, password, true);
+	            request = CreateFtpWebRequest(ftpSourceFilePath, username, password, true);
+	            sizerequest = CreateFtpWebRequest(ftpSourceFilePath, username, password, true);
 
 	            request.Method = WebRequestMethods.Ftp.DownloadFile;
 	            sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
@@ -82,8 +88,8 @@ namespace Launchpad_Launcher
 	            long fileSize = 0;
 
             
-                Stream reader = request.GetResponse().GetResponseStream();
-                FtpWebResponse sizereader = (FtpWebResponse)sizerequest.GetResponse();
+                reader = request.GetResponse().GetResponseStream();
+                sizereader = (FtpWebResponse)sizerequest.GetResponse();
 
                 while (true)
                 {
@@ -99,14 +105,9 @@ namespace Launchpad_Launcher
                     FTPbytesDownloaded = FTPbytesDownloaded + bytesRead;
                     data = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
                 }
-                return data;
-            }
-            catch (WebException ex)
-            {
-                Console.Write("ReadFTPFileWebException: ");
-                Console.WriteLine(ex.Message);
 
-                return ex.Message;
+				//clean the output from \n and \0, then return
+				return Utilities.Clean (data);
             }
             catch (Exception ex)
             {
@@ -114,15 +115,31 @@ namespace Launchpad_Launcher
                 Console.WriteLine(ex.Message);
                 return ex.Message;
             }
+			finally
+			{
+				request.Abort ();
+				sizerequest.Abort ();
+
+				reader.Close ();
+				reader.Dispose ();
+
+				sizereader.Close ();
+				sizereader.Dispose ();
+			}
+
+
         }
 
 		/// <summary>
 		/// Downloads an FTP file.
-		/// </summary>>
+		/// </summary>
+		/// <returns>The FTP file's location on disk, or the exception message.</returns>
 		/// <param name="ftpSourceFilePath">Ftp source file path.</param>
 		/// <param name="localDestination">Local destination.</param>
-        public void DownloadFTPFile(string ftpSourceFilePath, string localDestination, bool bUseAnonymous)
+		/// <param name="bUseAnonymous">If set to <c>true</c> b use anonymous.</param>
+        public string DownloadFTPFile(string ftpSourceFilePath, string localDestination, bool bUseAnonymous)
         {
+
 			string username;
 			string password;
 			if (!bUseAnonymous)
@@ -140,10 +157,21 @@ namespace Launchpad_Launcher
             int bytesRead = 0;
             byte[] buffer = new byte[2048];
 
+			FtpWebRequest request = null;
+			FtpWebRequest sizerequest = null;
+
+			Stream reader = null;
+			FtpWebResponse sizereader = null;
+
+			FileStream fileStream = null;
+
+			//either a path to the file or an error message
+			string returnValue = "";
+
 			try
 			{
-	            FtpWebRequest request = CreateFtpWebRequest(ftpSourceFilePath, username, password, true);
-	            FtpWebRequest sizerequest = CreateFtpWebRequest(ftpSourceFilePath, username, password, true);
+	            request = CreateFtpWebRequest(ftpSourceFilePath, username, password, true);
+	            sizerequest = CreateFtpWebRequest(ftpSourceFilePath, username, password, true);
 
 	            request.Method = WebRequestMethods.Ftp.DownloadFile;
 	            sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
@@ -151,57 +179,96 @@ namespace Launchpad_Launcher
 	            long fileSize = 0;
 
             
-                Stream reader = request.GetResponse().GetResponseStream();
-                FtpWebResponse sizereader = (FtpWebResponse)sizerequest.GetResponse();
+				using (reader = request.GetResponse().GetResponseStream())
+				{
+					using (sizereader = (FtpWebResponse)sizerequest.GetResponse())
+					{
+						fileStream = new FileStream(localDestination, FileMode.Create);
 
-                FileStream fileStream = new FileStream(localDestination, FileMode.Create);
+						//reset byte counter
+						FTPbytesDownloaded = 0;
 
-                //reset byte counter
-                FTPbytesDownloaded = 0;
-				fileSize = sizereader.ContentLength;
+						fileSize = sizereader.ContentLength;
 
-				//set file info for progress reporting
-				ProgressArgs.Filename = Path.GetFileNameWithoutExtension(ftpSourceFilePath);
-				ProgressArgs.TotalBytes = (int)fileSize;
+						//set file info for progress reporting
+						ProgressArgs.Filename = Path.GetFileNameWithoutExtension(ftpSourceFilePath);
+						ProgressArgs.TotalBytes = (int)fileSize;
 
-                while (true)
-                {
-                    bytesRead = reader.Read(buffer, 0, buffer.Length);
-					                    
-                    if (bytesRead == 0)
-                    {
-                        break;
-                    }
+						while (true)
+						{
+							bytesRead = reader.Read(buffer, 0, buffer.Length);
 
-                    FTPbytesDownloaded = FTPbytesDownloaded + bytesRead;
-                    fileStream.Write(buffer, 0, bytesRead);
+							if (bytesRead == 0)
+							{
+								break;
+							}
 
-					//set file progress info
-					ProgressArgs.DownloadedBytes = FTPbytesDownloaded;
+							FTPbytesDownloaded = FTPbytesDownloaded + bytesRead;
+							fileStream.Write(buffer, 0, bytesRead);
 
-					OnProgressChanged();
-                }
+							//set file progress info
+							ProgressArgs.DownloadedBytes = FTPbytesDownloaded;
 
+							OnProgressChanged();
+						}
 
-				OnProgressChanged();
+						OnProgressChanged();
 
-				request.Abort();
-				sizerequest.Abort();
-				fileStream.Close();
-				sizereader.Close();
-            }
-            catch (WebException ex)
-            {
-                Console.Write("DownloadFTPFileWebException: ");
-                Console.WriteLine(ex.Status.ToString());
-				Console.WriteLine (ex.Message);
-				Console.WriteLine (ftpSourceFilePath);
+						returnValue = localDestination;
+						return returnValue;
+					}
+				}                				                             
             }
             catch (Exception ex)
             {
                 Console.Write("DownloadFTPFileException: ");
                 Console.WriteLine(ex.Message);
+				returnValue = ex.Message;
+
+				if (ex.Message == "Server returned an error: 421 There are too many connections from your internet address.")
+				{
+					Console.WriteLine ("Breakpoint!");
+				}
+
+				return returnValue;
             }
+			finally
+			{
+				//clean up all open requests
+				//first, close and dispose of the file stream
+				if (fileStream != null)
+				{
+					fileStream.Close();
+					fileStream.Dispose ();
+				}
+
+				//then, the responses that are reading from the requests.
+				if (reader != null)
+				{
+					reader.Close ();
+					reader.Dispose ();
+					reader = null;
+				}
+				if (sizereader != null)
+				{
+					sizereader.Close();
+					sizereader.Dispose ();
+					sizereader = null;
+				}
+
+				//and finally, the requests themselves.
+				if (request != null)
+				{
+					request.Abort();
+					request = null;
+				}
+
+				if (sizerequest != null)
+				{
+					sizerequest.Abort();
+					sizerequest = null;
+				}
+			}
         }
 
 		/// <summary>
@@ -242,19 +309,19 @@ namespace Launchpad_Launcher
 		/// Gets the remote launcher version.
 		/// </summary>
 		/// <returns>The remote launcher version.</returns>
-		public string GetRemoteLauncherVersion()
+		public Version GetRemoteLauncherVersion()
 		{
 			string remoteVersionPath = String.Format ("{0}/launcher/LauncherVersion.txt", Config.GetFTPUrl());
 			string remoteVersion = ReadFTPFile (remoteVersionPath);
 
-			return remoteVersion;
+			return Version.Parse (remoteVersion);
 		}
 
 		/// <summary>
 		/// Gets the remote game version.
 		/// </summary>
 		/// <returns>The remote game version.</returns>
-		public string GetRemoteGameVersion(bool bUseSystemTarget)
+		public Version GetRemoteGameVersion(bool bUseSystemTarget)
 		{
 			string remoteVersionPath = "";
 			if (bUseSystemTarget)
@@ -272,7 +339,48 @@ namespace Launchpad_Launcher
 			}
 			string remoteVersion = ReadFTPFile (remoteVersionPath);
 
-			return remoteVersion;
+			return Version.Parse(remoteVersion);
+		}
+
+		public string GetRemoteManifestChecksum()
+		{
+			string checksum = "";
+
+			try
+			{
+				checksum = ReadFTPFile (Config.GetManifestChecksumURL ());
+				checksum = Utilities.Clean(checksum);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine (ex.Message);
+			}
+
+			return checksum;
+		}
+
+		public bool DoesItemExist(string item)
+		{
+			FtpWebRequest request = CreateFtpWebRequest (item, 
+			                                            Config.GetFTPUsername (),
+			                                            Config.GetFTPPassword (),
+			                                            false);
+
+			try
+			{
+				FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+			}
+			catch (WebException ex)
+			{
+				FtpWebResponse response = (FtpWebResponse)ex.Response;
+				if (response.StatusCode ==
+				    FtpStatusCode.ActionNotTakenFileUnavailable)
+				{
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 		private void OnProgressChanged()
@@ -290,5 +398,7 @@ namespace Launchpad_Launcher
 				FileDownloadFinished (this, DownloadFinishedArgs);
 			}
 		}
+
+
     }
 }

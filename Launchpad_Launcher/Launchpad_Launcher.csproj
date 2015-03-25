@@ -63,6 +63,10 @@
     <Reference Include="webkit-sharp">
       <HintPath>..\..\..\..\usr\lib\cli\webkit-sharp-1.1\webkit-sharp.dll</HintPath>
     </Reference>
+    <Reference Include="notify-sharp, Version=0.4.0.0, Culture=neutral, PublicKeyToken=2df29c54e245917a">
+      <Private>False</Private>
+      <Package>notify-sharp</Package>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -125,6 +129,8 @@
     <Compile Include="Handlers\GameHandler.cs" />
     <Compile Include="Handlers\LauncherHandler.cs" />
     <Compile Include="Handlers\UnixHandler.cs" />
+    <Compile Include="Utility\Utilities.cs" />
+    <Compile Include="Utility\Enums\ESystemTarget.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -156,4 +162,8 @@
   </Target>
   -->
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Utility\" />
+    <Folder Include="Utility\Enums\" />
+  </ItemGroup>
 </Project>
