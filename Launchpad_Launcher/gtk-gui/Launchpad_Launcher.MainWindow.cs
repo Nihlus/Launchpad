@@ -16,9 +16,10 @@ namespace Launchpad_Launcher
 		private global::Gtk.Alignment alignment1;
 		private global::Gtk.Label MessageLabel;
 		private global::Gtk.HBox hbox3;
+		private global::Gtk.Alignment alignment4;
 		private global::Gtk.ProgressBar progressbar2;
 		private global::Gtk.HBox hbox4;
-		private global::Gtk.Button VerifyButton;
+		private global::Gtk.Alignment alignment3;
 		private global::Gtk.Button PrimaryButton;
 
 		protected virtual void Build ()
@@ -104,48 +105,43 @@ namespace Launchpad_Launcher
 			this.hbox3.Spacing = 6;
 			this.hbox3.BorderWidth = ((uint)(4));
 			// Container child hbox3.Gtk.Box+BoxChild
+			this.alignment4 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
+			this.alignment4.Name = "alignment4";
+			// Container child alignment4.Gtk.Container+ContainerChild
 			this.progressbar2 = new global::Gtk.ProgressBar ();
 			this.progressbar2.Name = "progressbar2";
-			this.hbox3.Add (this.progressbar2);
-			global::Gtk.Box.BoxChild w9 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.progressbar2]));
-			w9.Position = 0;
+			this.alignment4.Add (this.progressbar2);
+			this.hbox3.Add (this.alignment4);
+			global::Gtk.Box.BoxChild w10 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.alignment4]));
+			w10.Position = 0;
 			// Container child hbox3.Gtk.Box+BoxChild
 			this.hbox4 = new global::Gtk.HBox ();
 			this.hbox4.Name = "hbox4";
 			this.hbox4.Spacing = 6;
 			// Container child hbox4.Gtk.Box+BoxChild
-			this.VerifyButton = new global::Gtk.Button ();
-			this.VerifyButton.Sensitive = false;
-			this.VerifyButton.CanFocus = true;
-			this.VerifyButton.Name = "VerifyButton";
-			this.VerifyButton.UseUnderline = true;
-			this.VerifyButton.Label = global::Mono.Unix.Catalog.GetString ("Verify Installation");
-			this.hbox4.Add (this.VerifyButton);
-			global::Gtk.Box.BoxChild w10 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.VerifyButton]));
-			w10.Position = 0;
-			w10.Expand = false;
-			w10.Fill = false;
-			// Container child hbox4.Gtk.Box+BoxChild
+			this.alignment3 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
+			this.alignment3.WidthRequest = 100;
+			this.alignment3.Name = "alignment3";
+			// Container child alignment3.Gtk.Container+ContainerChild
 			this.PrimaryButton = new global::Gtk.Button ();
 			this.PrimaryButton.CanFocus = true;
 			this.PrimaryButton.Name = "PrimaryButton";
 			this.PrimaryButton.UseUnderline = true;
-			this.PrimaryButton.Label = global::Mono.Unix.Catalog.GetString ("MainButton");
-			this.hbox4.Add (this.PrimaryButton);
-			global::Gtk.Box.BoxChild w11 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.PrimaryButton]));
-			w11.Position = 1;
-			w11.Expand = false;
-			w11.Fill = false;
+			this.PrimaryButton.Label = "";
+			this.alignment3.Add (this.PrimaryButton);
+			this.hbox4.Add (this.alignment3);
+			global::Gtk.Box.BoxChild w12 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.alignment3]));
+			w12.Position = 0;
 			this.hbox3.Add (this.hbox4);
-			global::Gtk.Box.BoxChild w12 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.hbox4]));
-			w12.Position = 1;
-			w12.Expand = false;
-			w12.Fill = false;
-			this.vbox1.Add (this.hbox3);
-			global::Gtk.Box.BoxChild w13 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.hbox3]));
-			w13.Position = 2;
+			global::Gtk.Box.BoxChild w13 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.hbox4]));
+			w13.Position = 1;
 			w13.Expand = false;
 			w13.Fill = false;
+			this.vbox1.Add (this.hbox3);
+			global::Gtk.Box.BoxChild w14 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.hbox3]));
+			w14.Position = 2;
+			w14.Expand = false;
+			w14.Fill = false;
 			this.Add (this.vbox1);
 			if ((this.Child != null)) {
 				this.Child.ShowAll ();

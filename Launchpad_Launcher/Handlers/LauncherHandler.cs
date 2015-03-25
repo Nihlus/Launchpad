@@ -98,10 +98,13 @@ namespace Launchpad_Launcher
 			string remoteChecksum = FTP.GetRemoteManifestChecksum ();
 			string localChecksum = MD5.GetFileHash (File.OpenRead (Config.GetManifestPath ()));
 
-			string remote = Config.GetManifestURL ();
-			string local = Config.GetManifestPath ();
+			if (!(remoteChecksum == localChecksum))
+			{
+				string remote = Config.GetManifestURL ();
+				string local = Config.GetManifestPath ();
 
-			FTP.DownloadFTPFile (remote, local, false);
+				FTP.DownloadFTPFile (remote, local, false);
+			}
 		}
 
 		/// <summary>
