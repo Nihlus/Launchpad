@@ -21,14 +21,12 @@ namespace Launchpad_Launcher
 		public event ProgressChangedEventHandler ProgressChanged;
 
 		public delegate void DownloadFinishedEventHandler (object sender, DownloadFinishedEventArgs e);
-
 		/// <summary>
 		/// Occurs when download finishes.
 		/// </summary>
 		public event DownloadFinishedEventHandler DownloadFinished;
 
 		public delegate void VerificationFinishedEventHandler (object sender, EventArgs e);
-
 		/// <summary>
 		/// Occurs when game verification finishes.
 		/// </summary>
@@ -46,16 +44,15 @@ namespace Launchpad_Launcher
 		/// </summary>
 		public event GameDownloadFailedEventHander GameDownloadFailed;
 
+
 		/// <summary>
 		/// The progress arguments object. Is updated during file download operations.
 		/// </summary>
 		private ProgressEventArgs ProgressArgs;
-
 		/// <summary>
 		/// The download finished arguments object. Is updated once a file download finishes.
 		/// </summary>
 		private DownloadFinishedEventArgs DownloadFinishedArgs;
-
 		/// <summary>
 		/// The download failed arguments.
 		/// </summary>

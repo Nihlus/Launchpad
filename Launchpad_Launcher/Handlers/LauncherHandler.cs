@@ -68,7 +68,7 @@ namespace Launchpad_Launcher
 			{
 				FTPHandler FTP = new FTPHandler ();
 				string fullName = Assembly.GetEntryAssembly().Location;
-				string executableName = Path.GetFileName(fullName); // "Launchpad"
+				string executableName = Path.GetFileName(fullName); // should be "Launchpad", unless the user has renamed the file
 
 				string local = String.Format("{0}{1}", 
 				                             Config.GetTempDir(), 
@@ -119,8 +119,10 @@ namespace Launchpad_Launcher
 		private void LoadChangelogAsync()
 		{
 			FTPHandler FTP = new FTPHandler ();
-			string content = FTP.ReadFTPFile (Config.GetChangelogURL ());
 
+			//load the HTML from the server as a string
+			string content = FTP.ReadFTPFile (Config.GetChangelogURL ());
+					
 			DownloadFinishedArgs.Result = content;
 			DownloadFinishedArgs.Metadata = Config.GetChangelogURL ();
 
@@ -139,10 +141,9 @@ namespace Launchpad_Launcher
 
 				//maintain the executable name if it was renamed to something other than 'Launchpad' 
 				string fullName = Assembly.GetEntryAssembly().Location;
-				string executableName = Path.GetFileName(fullName); // "Launchpad"
-				bool bIsRunningOnUnix = Checks.IsRunningOnUnix();
+				string executableName = Path.GetFileName(fullName); // should be "Launchpad", unless the user has renamed it
 
-				if (bIsRunningOnUnix)
+				if (Checks.IsRunningOnUnix())
 				{
 					//creating a .sh script
 					string scriptPath = String.Format (@"{0}launchpadupdate.sh", 

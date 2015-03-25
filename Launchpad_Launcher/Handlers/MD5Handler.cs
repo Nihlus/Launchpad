@@ -36,17 +36,21 @@ namespace Launchpad_Launcher
                     //we got a valid file, calculate the MD5 and return it
                     var resultString = BitConverter.ToString(md5.ComputeHash(fileStream)).Replace("-", "");
 
-                    //release the file
-                    fileStream.Close();
                     return resultString;
                 }
             }
-            catch (IOException)
+            catch (Exception ex)
             {
-                //release the file (if we had one)
-                fileStream.Close();
-                return "ERROR - IOException";
+				Console.Write ("MD5 Hash Computing: ");
+				Console.WriteLine (ex.Message);
+
+                return "";
             }
+			finally
+			{
+				//release the file (if we had one)
+				fileStream.Close();
+			}
         }
     }
 }
