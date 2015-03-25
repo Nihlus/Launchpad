@@ -284,7 +284,22 @@ namespace Launchpad_Launcher
 					Game.VerificationFinished += OnVerificationFinished;
 					Game.GameDownloadFailed += OnGameDownloadFailed;
 
+				if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
+				{
+					//install the game asynchronously
 					Game.RepairGame ();
+				}	
+				else
+				{
+					Notification noProvide = new Notification ();
+					noProvide.IconName = Stock.DialogError;
+					noProvide.Summary = "Launchpad - Platform not provided!";
+					noProvide.Body = "The server does not provide the game for the selected platform.";
+					noProvide.Show();
+
+					PrimaryButton.Label = "Install";
+					PrimaryButton.Sensitive = true;
+				}
 
 					break;
 				}
@@ -337,7 +352,22 @@ namespace Launchpad_Launcher
 						Game.GameDownloadFailed += OnGameDownloadFailed;
 
 						//update the game asynchronously
+					if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
+					{
+						//install the game asynchronously
 						Game.UpdateGame ();
+					}	
+					else
+					{
+						Notification noProvide = new Notification ();
+						noProvide.IconName = Stock.DialogError;
+						noProvide.Summary = "Launchpad - Platform not provided!";
+						noProvide.Body = "The server does not provide the game for the selected platform.";
+						noProvide.Show();
+
+						PrimaryButton.Label = "Install";
+						PrimaryButton.Sensitive = true;
+					}
 					}					
 					break;
 				}

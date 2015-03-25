@@ -117,14 +117,33 @@ namespace Launchpad_Launcher
             }
 			finally
 			{
-				request.Abort ();
-				sizerequest.Abort ();
+				//clean up all open requests
+				//then, the responses that are reading from the requests.
+				if (reader != null)
+				{
+					reader.Close ();
+					reader.Dispose ();
+					reader = null;
+				}
+				if (sizereader != null)
+				{
+					sizereader.Close();
+					sizereader.Dispose ();
+					sizereader = null;
+				}
 
-				reader.Close ();
-				reader.Dispose ();
+				//and finally, the requests themselves.
+				if (request != null)
+				{
+					request.Abort();
+					request = null;
+				}
 
-				sizereader.Close ();
-				sizereader.Dispose ();
+				if (sizerequest != null)
+				{
+					sizerequest.Abort();
+					sizerequest = null;
+				}
 			}
 
 
@@ -365,18 +384,26 @@ namespace Launchpad_Launcher
 			                                            Config.GetFTPUsername (),
 			                                            Config.GetFTPPassword (),
 			                                            false);
-
+			FtpWebResponse response = null;
 			try
 			{
-				FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+				response = (FtpWebResponse)request.GetResponse();
 			}
 			catch (WebException ex)
 			{
-				FtpWebResponse response = (FtpWebResponse)ex.Response;
+				response = (FtpWebResponse)ex.Response;
 				if (response.StatusCode ==
 				    FtpStatusCode.ActionNotTakenFileUnavailable)
 				{
 					return false;
+				}
+			}
+			finally
+			{
+				if (response != null)
+				{
+					response.Close();
+					response.Dispose();
 				}
 			}
 

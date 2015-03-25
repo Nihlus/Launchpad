@@ -75,6 +75,7 @@ namespace Launchpad_Launcher
 		{
 			ProgressArgs = new ProgressEventArgs ();
 			DownloadFinishedArgs = new DownloadFinishedEventArgs ();
+			DownloadFailedArgs = new DownloadFailedEventArgs ();
 		}
 
 		/// <summary>
@@ -250,7 +251,7 @@ namespace Launchpad_Launcher
 
 					string filepath = Config.GetGamePath() + elements [0];
 					string manifestMD5 = elements [1];
-					string size = elements [2];
+					//string size = elements [2];
 
 					ProgressArgs.Filename = Path.GetFileName(filepath);
 
