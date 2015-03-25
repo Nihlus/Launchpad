@@ -384,23 +384,26 @@ namespace Launchpad_Launcher
 			PrimaryButton.Sensitive = true;
 		}
 
-		private void OnGameDownloadFailed(object sender, DownloadFinishedEventArgs e)
+		private void OnGameDownloadFailed(object sender, DownloadFailedEventArgs e)
 		{
 			switch(e.Type)
 			{
 				case "Install":
 				{
 					Console.WriteLine (e.Metadata);
+					MessageLabel.Text = e.Metadata;
 					break;
 				}
 				case "Update":
 				{
 					Console.WriteLine (e.Metadata);
+					MessageLabel.Text = e.Metadata;
 					break;
 				}
 				case "Repair":
 				{
 					Console.WriteLine (e.Metadata);
+					MessageLabel.Text = e.Metadata;
 					break;
 				}
 			}

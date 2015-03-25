@@ -40,7 +40,7 @@ namespace Launchpad_Launcher
 		/// </summary>
 		public event GameLaunchFailedEventHandler GameLaunchFailed;
 
-		public delegate void GameDownloadFailedEventHander (object sender, DownloadFinishedEventArgs e);
+		public delegate void GameDownloadFailedEventHander (object sender, DownloadFailedEventArgs e);
 		/// <summary>
 		/// Occurs when the download failed.
 		/// </summary>
@@ -57,10 +57,15 @@ namespace Launchpad_Launcher
 		private DownloadFinishedEventArgs DownloadFinishedArgs;
 
 		/// <summary>
+		/// The download failed arguments.
+		/// </summary>
+		private DownloadFailedEventArgs DownloadFailedArgs;
+
+
+		/// <summary>
 		/// The checks handler reference
 		/// </summary>
 		private ChecksHandler Checks = new ChecksHandler ();
-
 		/// <summary>
 		/// The config handler reference.
 		/// </summary>
@@ -178,9 +183,9 @@ namespace Launchpad_Launcher
 			catch (Exception ex)
 			{
 				Console.WriteLine ("InstallGameAsync(): " + ex.Message);
-				DownloadFinishedArgs.Result = "1";
-				DownloadFinishedArgs.Type = "Install";
 
+				DownloadFailedArgs.Result = "1";
+				DownloadFailedArgs.Type = "Install";
 				DownloadFinishedArgs.Metadata = fileReturn;
 
 				OnGameDownloadFailed ();
@@ -240,7 +245,7 @@ namespace Launchpad_Launcher
 				string[] entries = File.ReadAllLines (Config.GetManifestPath ());
 
 				ProgressArgs.TotalFiles = entries.Length;
-
+			
 				int i = 0;
 				foreach (string entry in entries)
 				{
@@ -300,10 +305,10 @@ namespace Launchpad_Launcher
 			catch (Exception ex)
 			{
 				Console.WriteLine ("RepairGameAsync(): " + ex.Message);
-				DownloadFinishedArgs.Result = "1";
-				DownloadFinishedArgs.Type = "Repair";
 
-				DownloadFinishedArgs.Metadata = fileReturn;
+				DownloadFailedArgs.Result = "1";
+				DownloadFailedArgs.Type = "Repair";
+				DownloadFailedArgs.Metadata = fileReturn;
 
 				OnGameDownloadFailed ();
 			}
@@ -386,7 +391,7 @@ namespace Launchpad_Launcher
 		{
 			if (GameDownloadFailed != null)
 			{
-				GameDownloadFailed (this, DownloadFinishedArgs);
+				GameDownloadFailed (this, DownloadFailedArgs);
 			}
 		}
 	}
