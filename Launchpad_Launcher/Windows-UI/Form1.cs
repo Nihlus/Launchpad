@@ -74,8 +74,7 @@ namespace Launchpad_Launcher
             bool bSendAnonStats = true;
             if (bSendAnonStats)
             {
-                StatsHandler Stats = new StatsHandler();
-				Stats.SendUseageStats ();
+				StatsHandler.SendUseageStats ();
             }
 
             SetupImageButtons();

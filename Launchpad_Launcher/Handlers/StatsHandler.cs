@@ -6,20 +6,12 @@ namespace Launchpad_Launcher
 	/// <summary>
 	/// Anonymous stat sending handler.
 	/// </summary>
-	public sealed class StatsHandler
+	public static class StatsHandler
 	{
 		/// <summary>
 		/// The config handler reference.
 		/// </summary>
-		ConfigHandler Config = ConfigHandler._instance;
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Launchpad_Launcher.StatsHandler"/> class.
-		/// </summary>
-		public StatsHandler ()
-		{
-
-		}
+		static ConfigHandler Config = ConfigHandler._instance;
 
 		/// <summary>
 		/// Sends the useage stats.
@@ -28,7 +20,7 @@ namespace Launchpad_Launcher
 		/// <param name="version">Version.</param>
 		/// <param name="gameName">Game name.</param>
 		/// <param name="officialUpdates">If set to <c>true</c> official updates.</param>
-		public void SendUseageStats()
+		static public void SendUseageStats()
 		{
 			try
 			{

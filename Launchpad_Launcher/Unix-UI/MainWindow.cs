@@ -107,8 +107,7 @@ namespace Launchpad_Launcher
 				if (bSendAnonStats)
 				{
 					Console.WriteLine ("Sending anonymous useage stats to hambase 1 :) Thanks!");
-					StatsHandler stats = new StatsHandler ();
-					stats.SendUseageStats ();
+					StatsHandler.SendUseageStats ();
 				}
 				else
 				{
