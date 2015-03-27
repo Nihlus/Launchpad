@@ -283,10 +283,24 @@ namespace Launchpad_Launcher
 		/// <returns>The game executable.</returns>
         public string GetGameExecutable()
         {
-			string executablePath = String.Format(@"{0}{2}{1}.exe", 
-			                                      GetGamePath(), 
-			                                      GetGameName(),  
-			                                      Path.DirectorySeparatorChar);
+			ChecksHandler Checks = new ChecksHandler ();
+			string executablePath = "";
+
+			if (Checks.IsRunningOnUnix())
+			{
+				executablePath = String.Format(@"{0}{2}{1}", 
+				                               GetGamePath(), 
+				                               GetGameName(),  
+				                               Path.DirectorySeparatorChar);
+			}
+			else
+			{
+				executablePath = String.Format(@"{0}{2}{1}.exe", 
+				                               GetGamePath(), 
+				                               GetGameName(),  
+				                               Path.DirectorySeparatorChar);
+			}
+
             return executablePath;
         }
 
