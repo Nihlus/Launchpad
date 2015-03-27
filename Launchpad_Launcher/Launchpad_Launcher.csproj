@@ -131,7 +131,7 @@
     <Compile Include="Handlers\UnixHandler.cs" />
     <Compile Include="Utility\Utilities.cs" />
     <Compile Include="Utility\Enums\ESystemTarget.cs" />
-    <Compile Include="Handlers\LaunchpadEventArgs.cs" />
+    <Compile Include="Utility\EventArgs\LaunchpadEventArgs.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -166,5 +166,6 @@
   <ItemGroup>
     <Folder Include="Utility\" />
     <Folder Include="Utility\Enums\" />
+    <Folder Include="Utility\EventArgs\" />
   </ItemGroup>
 </Project>

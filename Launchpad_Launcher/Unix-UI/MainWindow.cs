@@ -338,10 +338,10 @@ namespace Launchpad_Launcher
 					if (bLauncherNeedsUpdate)
 					{
 						Console.WriteLine ("Updating launcher...");
-					PrimaryButton.Label = "Updating...";
-					PrimaryButton.Sensitive = false;
+						PrimaryButton.Label = "Updating...";
+						PrimaryButton.Sensitive = false;
 
-					Launcher.UpdateLauncher ();
+						Launcher.UpdateLauncher ();
 					}
 					else
 					{
@@ -350,6 +350,8 @@ namespace Launchpad_Launcher
 						Game.DownloadFinished += OnGameDownloadFinished;
 						Game.ProgressChanged += OnGameDownloadProgressChanged;
 						Game.GameDownloadFailed += OnGameDownloadFailed;
+					}
+
 
 						//update the game asynchronously
 					if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
@@ -367,8 +369,7 @@ namespace Launchpad_Launcher
 
 						PrimaryButton.Label = "Install";
 						PrimaryButton.Sensitive = true;
-					}
-					}					
+					}								
 					break;
 				}
 				case "Launch":

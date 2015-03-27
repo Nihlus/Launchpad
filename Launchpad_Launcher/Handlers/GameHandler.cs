@@ -170,6 +170,16 @@ namespace Launchpad_Launcher
 					//now download the file
 					OnProgressChanged();
 					fileReturn = FTP.DownloadFTPFile (RemotePath, LocalPath, false);
+
+					//if we're dealing with a file that should be executable, 
+					bool bFileIsGameExecutable = (Path.GetFileName(LocalPath).EndsWith(".exe")) || (Path.GetFileNameWithoutExtension(LocalPath) == Config.GetGameName());
+
+					if (Checks.IsRunningOnUnix() && bFileIsGameExecutable)
+					{
+						UnixHandler Unix = new UnixHandler();
+
+						Unix.MakeExecutable(LocalPath);
+					}
 				}
 
 				//we've finished the download, so empty the cookie
@@ -255,20 +265,19 @@ namespace Launchpad_Launcher
 
 					ProgressArgs.Filename = Path.GetFileName(filepath);
 
+					string RemotePath = String.Format ("{0}/game/{1}{2}", 
+					                                   Config.GetFTPUrl (), 
+					                                   Config.GetSystemTarget(), 
+					                                   elements[0]);
+
+					string LocalPath = String.Format ("{0}{1}{2}", 
+					                                  Config.GetGamePath (),
+					                                  System.IO.Path.DirectorySeparatorChar, 
+					                                  elements[0]);
+
 					if (!File.Exists(filepath))
 					{
 						//download the file, since it was missing
-						string RemotePath = String.Format ("{0}/game/{1}{2}", 
-						                                   Config.GetFTPUrl (), 
-						                                   Config.GetSystemTarget(), 
-						                                   elements[0]);
-
-						string LocalPath = String.Format ("{0}{1}{2}", 
-						                                  Config.GetGamePath (),
-						                                  System.IO.Path.DirectorySeparatorChar, 
-						                                  elements[0]);
-
-
 						OnProgressChanged ();
 						fileReturn = FTP.DownloadFTPFile (RemotePath, LocalPath, false);
 					}
@@ -278,19 +287,22 @@ namespace Launchpad_Launcher
 						if (fileMD5 != manifestMD5)
 						{
 							//download the file, since it was broken
-							string RemotePath = String.Format ("{0}/game/{1}{2}", 
-							                                   Config.GetFTPUrl (), 
-							                                   Config.GetSystemTarget(), 
-							                                   elements[0]);
-
-							string LocalPath = String.Format ("{0}{1}{2}", 
-							                                  Config.GetGamePath (),
-							                                  System.IO.Path.DirectorySeparatorChar, 
-							                                  elements[0]);
-
-
 							OnProgressChanged ();
 							fileReturn = FTP.DownloadFTPFile (RemotePath, LocalPath, false);
+						}
+					}
+
+					//if we're dealing with a file that should be executable, 
+					bool bFileIsGameExecutable = (Path.GetFileName(LocalPath).EndsWith(".exe")) || (Path.GetFileNameWithoutExtension(LocalPath) == Config.GetGameName());
+
+					if (Checks.IsRunningOnUnix() && bFileIsGameExecutable)
+					{
+						UnixHandler Unix = new UnixHandler();
+
+						//if we couldn't set the execute bit on the executable, raise an exception, since we won't be able to launch the game
+						if (!Unix.MakeExecutable(LocalPath))
+						{
+							throw new Exception("[LPAD001]: Could not set the execute bit on the game executable.");
 						}
 					}
 
