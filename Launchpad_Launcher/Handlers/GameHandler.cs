@@ -44,6 +44,17 @@ namespace Launchpad_Launcher
 		/// </summary>
 		public event GameDownloadFailedEventHander GameDownloadFailed;
 
+		public delegate void GameUpdateFailedEventHandler (object sender, UpdateFailedEventArgs e);
+		/// <summary>
+		/// Occurs when game update failed.
+		/// </summary>
+		public event GameUpdateFailedEventHandler GameUpdateFailed;
+
+		public delegate void GameRepairFailedEventHandler (object sender, RepairFailedEventArgs e);
+		/// <summary>
+		/// Occurs when game repair failed.
+		/// </summary>
+		public event GameRepairFailedEventHandler GameRepairFailed;
 
 		/// <summary>
 		/// The progress arguments object. Is updated during file download operations.
@@ -57,6 +68,14 @@ namespace Launchpad_Launcher
 		/// The download failed arguments.
 		/// </summary>
 		private DownloadFailedEventArgs DownloadFailedArgs;
+		/// <summary>
+		/// The update failed arguments.
+		/// </summary>
+		private UpdateFailedEventArgs UpdateFailedArgs;
+		/// <summary>
+		/// The repaired failed arguments.
+		/// </summary>
+		private RepairFailedEventArgs RepairFailedArgs;
 
 
 		/// <summary>
@@ -76,6 +95,8 @@ namespace Launchpad_Launcher
 			ProgressArgs = new ProgressEventArgs ();
 			DownloadFinishedArgs = new DownloadFinishedEventArgs ();
 			DownloadFailedArgs = new DownloadFailedEventArgs ();
+			UpdateFailedArgs = new UpdateFailedEventArgs ();
+			RepairFailedArgs = new RepairFailedEventArgs ();
 		}
 
 		/// <summary>

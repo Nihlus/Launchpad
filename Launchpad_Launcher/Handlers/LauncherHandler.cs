@@ -92,18 +92,32 @@ namespace Launchpad_Launcher
 		/// </summary>
 		public void DownloadManifest()
 		{
-			FTPHandler FTP = new FTPHandler ();
-			MD5Handler MD5 = new MD5Handler ();
-
-			string remoteChecksum = FTP.GetRemoteManifestChecksum ();
-			string localChecksum = MD5.GetFileHash (File.OpenRead (Config.GetManifestPath ()));
-
-			if (!(remoteChecksum == localChecksum))
+			Stream manifestStream = null;
+			try
 			{
-				string remote = Config.GetManifestURL ();
-				string local = Config.GetManifestPath ();
+				FTPHandler FTP = new FTPHandler ();
+				MD5Handler MD5 = new MD5Handler ();
 
-				FTP.DownloadFTPFile (remote, local, false);
+				string remoteChecksum = FTP.GetRemoteManifestChecksum ();
+
+				manifestStream = File.OpenRead (Config.GetManifestPath ());
+				string localChecksum = MD5.GetFileHash (manifestStream);
+
+				if (!(remoteChecksum == localChecksum))
+				{
+					string remote = Config.GetManifestURL ();
+					string local = Config.GetManifestPath ();
+
+					FTP.DownloadFTPFile (remote, local, false);
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine ("DownloadManifest(): " + ex.Message);
+			}
+			finally
+			{
+				manifestStream.Close ();
 			}
 		}
 

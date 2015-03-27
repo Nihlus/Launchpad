@@ -259,6 +259,7 @@ namespace Launchpad_Launcher
 		/// <param name="e">E.</param>
 		protected void OnChangelogDownloadFinished (object sender, DownloadFinishedEventArgs e)
 		{
+			//Take the resulting HTML string from the changelog download and send it to the Webkit browser
 			Gtk.Application.Invoke (delegate
 			{
 				Browser.LoadHtmlString (e.Result, e.Type);

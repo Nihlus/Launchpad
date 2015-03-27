@@ -95,5 +95,35 @@ namespace Launchpad_Launcher
 			Metadata = "";
 		}
 	}
+
+	public class UpdateFailedEventArgs : EventArgs
+	{
+		public string Result
+		{
+			get;
+			set;
+		}
+
+		public string MetaData
+		{
+			get;
+			set;
+		}
+	}
+
+	public class RepairFailedEventArgs : EventArgs
+	{
+		public string Result
+		{
+			get;
+			set;
+		}
+
+		public string MetaData
+		{
+			get;
+			set;
+		}
+	}
 }
 
