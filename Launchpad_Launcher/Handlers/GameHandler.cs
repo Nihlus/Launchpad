@@ -135,7 +135,7 @@ namespace Launchpad_Launcher
 				//stored in the install cookie.
 				int line = 0;
 
-				if (Checks.IsInstallCookieEmpty())
+				if (!Checks.IsInstallCookieEmpty())
 				{
 					//loop through all the lines in the manifest until we encounter
 					//a line which matches the one in the install cookie

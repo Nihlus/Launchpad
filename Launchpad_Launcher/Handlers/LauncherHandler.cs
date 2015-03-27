@@ -74,6 +74,7 @@ namespace Launchpad_Launcher
 				                             Config.GetTempDir(), 
 				                             executableName);
 
+				//download the new launcher binary to the system's temp dir
 				FTP.DownloadFTPFile(Config.GetLauncherURL(), local, false);
 				//first, create a script that will update our launcher
 				ProcessStartInfo script = CreateUpdateScript ();
@@ -92,24 +93,30 @@ namespace Launchpad_Launcher
 		/// </summary>
 		public void DownloadManifest()
 		{
-			Stream manifestStream = null;
+			Stream manifestStream = null;														
 			try
 			{
 				FTPHandler FTP = new FTPHandler ();
 				MD5Handler MD5 = new MD5Handler ();
 
 				string remoteChecksum = FTP.GetRemoteManifestChecksum ();
+				string localChecksum = "";
 
-				manifestStream = File.OpenRead (Config.GetManifestPath ());
-				string localChecksum = MD5.GetFileHash (manifestStream);
+				string local = Config.GetManifestPath ();
+
+				if (File.Exists(Config.GetManifestPath()))
+				{
+					manifestStream = File.OpenRead (Config.GetManifestPath ());
+					localChecksum = MD5.GetFileHash (manifestStream);
+
+					//Copy the old manifest so that we can compare them when updating the game
+					File.Copy(local, local + ".old");
+				}
 
 				if (!(remoteChecksum == localChecksum))
 				{
 					string remote = Config.GetManifestURL ();
-					string local = Config.GetManifestPath ();
 
-					//Copy the old manifest so that we can compare them when updating the game
-					File.Copy(local, local + ".old");
 					FTP.DownloadFTPFile (remote, local, false);
 				}
 			}
@@ -119,7 +126,11 @@ namespace Launchpad_Launcher
 			}
 			finally
 			{
-				manifestStream.Close ();
+				if (manifestStream != null)
+				{
+					manifestStream.Close ();
+					manifestStream.Dispose ();
+				}
 			}
 		}
 
