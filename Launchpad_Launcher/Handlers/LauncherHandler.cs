@@ -108,6 +108,8 @@ namespace Launchpad_Launcher
 					string remote = Config.GetManifestURL ();
 					string local = Config.GetManifestPath ();
 
+					//Copy the old manifest so that we can compare them when updating the game
+					File.Copy(local, local + ".old");
 					FTP.DownloadFTPFile (remote, local, false);
 				}
 			}
