@@ -102,6 +102,7 @@ namespace Launchpad_Launcher
 				string remoteChecksum = FTP.GetRemoteManifestChecksum ();
 				string localChecksum = "";
 
+				string remote = Config.GetManifestURL ();
 				string local = Config.GetManifestPath ();
 
 				if (File.Exists(Config.GetManifestPath()))
@@ -109,16 +110,20 @@ namespace Launchpad_Launcher
 					manifestStream = File.OpenRead (Config.GetManifestPath ());
 					localChecksum = MD5.GetFileHash (manifestStream);
 
-					//Copy the old manifest so that we can compare them when updating the game
-					File.Copy(local, local + ".old");
+					if (!(remoteChecksum == localChecksum))
+					{
+						//Copy the old manifest so that we can compare them when updating the game
+						File.Copy(local, local + ".old");
+
+						FTP.DownloadFTPFile (remote, local, false);
+					}
 				}
-
-				if (!(remoteChecksum == localChecksum))
+				else
 				{
-					string remote = Config.GetManifestURL ();
-
 					FTP.DownloadFTPFile (remote, local, false);
 				}
+
+
 			}
 			catch (Exception ex)
 			{
