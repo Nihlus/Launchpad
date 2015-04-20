@@ -23,37 +23,34 @@ namespace Launchpad_Launcher
 		/// <summary>
 		/// The config handler reference.
 		/// </summary>
-		ConfigHandler Config = ConfigHandler._instance;
+		ConfigHandler Config = ConfigHandler._instance;	
 
-		public delegate void FileProgressChangedEventHandler(object sender, ProgressEventArgs e);
 		/// <summary>
 		/// Occurs when file progress changed.
 		/// </summary>
-		public event FileProgressChangedEventHandler FileProgressChanged;
-
-		public delegate void FileDownloadFinishedEventHandler (object sender, DownloadFinishedEventArgs e);
+		public event LaunchpadEventDelegates.FileProgressChangedEventHandler FileProgressChanged;
 		/// <summary>
 		/// Occurs when file download finished.
 		/// </summary>
-		public event FileDownloadFinishedEventHandler FileDownloadFinished;
+		public event LaunchpadEventDelegates.FileDownloadFinishedEventHandler FileDownloadFinished;
 
 		/// <summary>
 		/// The progress arguments object. Is updated during file download operations.
 		/// </summary>
-		private ProgressEventArgs ProgressArgs;
+		private FileDownloadProgressChangedEventArgs ProgressArgs;
 
 		/// <summary>
 		/// The download finished arguments object. Is updated once a file download finishes.
 		/// </summary>
-		private DownloadFinishedEventArgs DownloadFinishedArgs;
+		private FileDownloadFinishedEventArgs DownloadFinishedArgs;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Launchpad_Launcher.FTPHandler"/> class.
 		/// </summary>
 		public FTPHandler()
 		{
-			ProgressArgs = new ProgressEventArgs ();
-			DownloadFinishedArgs = new DownloadFinishedEventArgs ();
+			ProgressArgs = new FileDownloadProgressChangedEventArgs ();
+			DownloadFinishedArgs = new FileDownloadFinishedEventArgs ();
 		}
         
 		/// <summary>
@@ -158,7 +155,7 @@ namespace Launchpad_Launcher
 		/// <param name="bUseAnonymous">If set to <c>true</c> b use anonymous.</param>
         public string DownloadFTPFile(string ftpSourceFilePath, string localDestination, bool bUseAnonymous)
         {
-
+			Console.WriteLine (ftpSourceFilePath);
 			string username;
 			string password;
 			if (!bUseAnonymous)

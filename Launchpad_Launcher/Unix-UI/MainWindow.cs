@@ -199,7 +199,7 @@ namespace Launchpad_Launcher
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		protected void OnGameDownloadProgressChanged (object sender, ProgressEventArgs e)
+		protected void OnGameDownloadProgressChanged (object sender, FileDownloadProgressChangedEventArgs e)
 		{
 			Gtk.Application.Invoke (delegate
 			{
@@ -219,7 +219,7 @@ namespace Launchpad_Launcher
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		protected void OnGameDownloadFinished (object sender, DownloadFinishedEventArgs e)
+		protected void OnGameDownloadFinished (object sender, GameDownloadFinishedEventArgs e)
 		{
 			if (e.Result == "1") //there was an error
 			{
@@ -257,7 +257,7 @@ namespace Launchpad_Launcher
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		protected void OnChangelogDownloadFinished (object sender, DownloadFinishedEventArgs e)
+		protected void OnChangelogDownloadFinished (object sender, GameDownloadFinishedEventArgs e)
 		{
 			//Take the resulting HTML string from the changelog download and send it to the Webkit browser
 			Gtk.Application.Invoke (delegate
@@ -282,7 +282,7 @@ namespace Launchpad_Launcher
 					Console.WriteLine ("Repairing installation...");
 					//bind events for UI updating					
 					Game.ProgressChanged += OnGameDownloadProgressChanged;
-					Game.VerificationFinished += OnVerificationFinished;
+					Game.GameRepairFinished += OnRepairFinished;
 					Game.GameDownloadFailed += OnGameDownloadFailed;
 
 				if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
@@ -310,7 +310,7 @@ namespace Launchpad_Launcher
 					PrimaryButton.Label = "Installing...";
 					PrimaryButton.Sensitive = false;
 					//bind events for UI updating
-					Game.DownloadFinished += OnGameDownloadFinished;
+					Game.GameDownloadFinished += OnGameDownloadFinished;
 					Game.ProgressChanged += OnGameDownloadProgressChanged;
 					Game.GameDownloadFailed += OnGameDownloadFailed;
 						
@@ -347,30 +347,32 @@ namespace Launchpad_Launcher
 					else
 					{
 						Console.WriteLine ("Updating game...");
+						PrimaryButton.Label = "Updating...";
+						PrimaryButton.Sensitive = false;
+
 						//bind events for UI updating
-						Game.DownloadFinished += OnGameDownloadFinished;
+						Game.GameDownloadFinished += OnGameDownloadFinished;
 						Game.ProgressChanged += OnGameDownloadProgressChanged;
 						Game.GameDownloadFailed += OnGameDownloadFailed;
-					}
-
 
 						//update the game asynchronously
-					if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
-					{
-						//install the game asynchronously
-						Game.UpdateGame ();
-					}	
-					else
-					{
-						Notification noProvide = new Notification ();
-						noProvide.IconName = Stock.DialogError;
-						noProvide.Summary = "Launchpad - Platform not provided!";
-						noProvide.Body = "The server does not provide the game for the selected platform.";
-						noProvide.Show();
+						if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
+						{
+							//install the game asynchronously
+							Game.UpdateGame ();
+						}	
+						else
+						{
+							Notification noProvide = new Notification ();
+							noProvide.IconName = Stock.DialogError;
+							noProvide.Summary = "Launchpad - Platform not provided!";
+							noProvide.Body = "The server does not provide the game for the selected platform.";
+							noProvide.Show();
 
-						PrimaryButton.Label = "Install";
-						PrimaryButton.Sensitive = true;
-					}								
+							PrimaryButton.Label = "Install";
+							PrimaryButton.Sensitive = true;
+						}								
+					}												
 					break;
 				}
 				case "Launch":
@@ -401,12 +403,12 @@ namespace Launchpad_Launcher
 			PrimaryButton.Sensitive = true;
 		}
 
-		private void OnVerificationFinished (object sender, EventArgs e)
+		private void OnRepairFinished (object sender, EventArgs e)
 		{
 			Notification repairComplete = new Notification ();
 			repairComplete.IconName = Stock.Info;
-			repairComplete.Summary = "Launchpad - Game verification finished";
-			repairComplete.Body = "Launchpad has finished verifying the game installation. Play away!";
+			repairComplete.Summary = "Launchpad - Game repair finished";
+			repairComplete.Body = "Launchpad has finished repairing the game installation. Play away!";
 			repairComplete.Show ();
 
 			progressbar2.Text = "";
@@ -415,7 +417,7 @@ namespace Launchpad_Launcher
 			PrimaryButton.Sensitive = true;
 		}
 
-		private void OnGameDownloadFailed(object sender, DownloadFailedEventArgs e)
+		private void OnGameDownloadFailed(object sender, GameDownloadFailedEventArgs e)
 		{
 			switch(e.Type)
 			{

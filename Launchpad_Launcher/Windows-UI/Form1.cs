@@ -594,7 +594,7 @@ namespace Launchpad_Launcher
         {
             Console.WriteLine("\nDoGameIsInstalledCheck()");
 
-            if (File.Exists(String.Format(@"{0}\.installComplete", Config.GetGamePath())))
+			if (File.Exists(String.Format(@"{0}\.installComplete", Config.GetGamePath(true))))
             {
                 bGameIsInstalled = true;
                 bInstallCompleted = true;
@@ -625,7 +625,7 @@ namespace Launchpad_Launcher
                 //try to get the local version from file
                 try
                 {
-                    localVersion = File.ReadAllText(String.Format(@"{0}\gameVersion.txt", Config.GetGamePath()));
+					localVersion = File.ReadAllText(String.Format(@"{0}\gameVersion.txt", Config.GetGamePath(true)));
                 }
                 catch (IOException ex)
                 {
@@ -691,7 +691,7 @@ namespace Launchpad_Launcher
         private string GetCurrentGameVersion()
         {
             string currentGameVersion = null;
-            string gameVersionTxtPath = String.Format(@"{0}\gameVersion.txt", Config.GetGamePath());
+			string gameVersionTxtPath = String.Format(@"{0}\gameVersion.txt", Config.GetGamePath(true));
 
             if (File.Exists(gameVersionTxtPath))
             {
@@ -975,9 +975,9 @@ namespace Launchpad_Launcher
 
             try
             {
-                if (!Directory.Exists(Config.GetGamePath()))
+				if (!Directory.Exists(Config.GetGamePath(true)))
                 {
-                    Directory.CreateDirectory(Config.GetGamePath());
+					Directory.CreateDirectory(Config.GetGamePath(true));
                 }
 
                 IEnumerable<string> manifestFiles = File.ReadLines(Config.GetManifestPath());
@@ -992,8 +992,8 @@ namespace Launchpad_Launcher
 
                     try
                     {
-                        int fileBeginningPosition = String.Format(@"{0}{1}", Config.GetGamePath(), path).LastIndexOf(@"\");
-                        string truncatedPath = String.Format(@"{0}{1}", Config.GetGamePath(), path).Remove(fileBeginningPosition);
+						int fileBeginningPosition = String.Format(@"{0}{1}", Config.GetGamePath(true), path).LastIndexOf(@"\");
+						string truncatedPath = String.Format(@"{0}{1}", Config.GetGamePath(true), path).Remove(fileBeginningPosition);
                         Directory.CreateDirectory(truncatedPath);
                     }
                     catch (Exception ex)
@@ -1005,14 +1005,14 @@ namespace Launchpad_Launcher
                     }
 
                     //skip existing files to allow a failed or stopped download to resume
-                    if (!File.Exists(String.Format(@"{0}{1}", Config.GetGamePath(), path)))
+					if (!File.Exists(String.Format(@"{0}{1}", Config.GetGamePath(true), path)))
                     {
-                        FTP.DownloadFTPFile(String.Format(@"{0}{1}", Config.GetGameURL(false), path.Replace(@"\", "/")), String.Format(@"{0}{1}", Config.GetGamePath(), path), false);
+						FTP.DownloadFTPFile(String.Format(@"{0}{1}", Config.GetGameURL(false), path.Replace(@"\", "/")), String.Format(@"{0}{1}", Config.GetGamePath(true), path), false);
                     }
 
 
-                    int fileBeginningPosition_2 = String.Format(@"{0}{1}", Config.GetGamePath(), path).LastIndexOf(@"\");
-                    string fileName = String.Format(@"{0}{1}", Config.GetGamePath(), path).Substring(fileBeginningPosition_2);
+					int fileBeginningPosition_2 = String.Format(@"{0}{1}", Config.GetGamePath(true), path).LastIndexOf(@"\");
+					string fileName = String.Format(@"{0}{1}", Config.GetGamePath(true), path).Substring(fileBeginningPosition_2);
                     currentProgress++;
 
                     backgroundWorker_GameInstall.ReportProgress(currentProgress, new Tuple<string, int, int>(fileName, FTP.FTPbytesDownloaded, Convert.ToInt32(size)));
@@ -1048,13 +1048,13 @@ namespace Launchpad_Launcher
 
         private void UpdateVersionNumber()
         {
-            string localPath = String.Format(@"{0}\gameVersion.txt", Config.GetGamePath());
+			string localPath = String.Format(@"{0}\gameVersion.txt", Config.GetGamePath(true));
             string FTPPath = String.Format("{0}/game/gameVersion.txt", Config.GetFTPUrl());
 
             try
             {
                 FTP.DownloadFTPFile(FTPPath, localPath, false);
-                string newVersion = File.ReadAllText(String.Format(@"{0}\gameVersion.txt", Config.GetGamePath()));
+				string newVersion = File.ReadAllText(String.Format(@"{0}\gameVersion.txt", Config.GetGamePath(true)));
                 Console.WriteLine("Write new gameVersion: {0} succeeded", newVersion);
             }
             catch (IOException ioEx)
@@ -1095,7 +1095,7 @@ namespace Launchpad_Launcher
         {
             if (bInstallCompleted)
             {
-                string installCompleteFilePath = String.Format(@"{0}\.installComplete", Config.GetGamePath());
+				string installCompleteFilePath = String.Format(@"{0}\.installComplete", Config.GetGamePath(true));
 
                 try
                 {
@@ -1142,11 +1142,11 @@ namespace Launchpad_Launcher
                 //read the value from the manifest as an array with split values (path, MD5 and size)
                 string[] manifestFile = value.Split(':');
 
-                string filePath = String.Format(@"{0}{1}", Config.GetGamePath(), manifestFile[0]);
+				string filePath = String.Format(@"{0}{1}", Config.GetGamePath(true), manifestFile[0]);
                 string fileManifestMD5 = manifestFile[1];
 
                 string FTPPath = String.Format("{0}/game{1}", Config.GetFTPUrl(), manifestFile[0].Replace(@"\", "/"));
-                string localPath = String.Format(@"{0}{1}", Config.GetGamePath(), manifestFile[0]);
+				string localPath = String.Format(@"{0}{1}", Config.GetGamePath(true), manifestFile[0]);
 
 				//Should be used to compare against downloaded bytes.
                 //long fileSize = Convert.ToInt64(manifestFile[2]);

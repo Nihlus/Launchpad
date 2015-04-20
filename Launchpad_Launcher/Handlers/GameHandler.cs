@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Diagnostics;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Launchpad_Launcher
@@ -14,68 +15,77 @@ namespace Launchpad_Launcher
 	/// </summary>
 	public sealed class GameHandler
 	{
-		public delegate void ProgressChangedEventHandler(object sender, ProgressEventArgs e);
 		/// <summary>
 		/// Occurs when progress changed.
 		/// </summary>
-		public event ProgressChangedEventHandler ProgressChanged;
-
-		public delegate void DownloadFinishedEventHandler (object sender, DownloadFinishedEventArgs e);
+		public event LaunchpadEventDelegates.GameProgressChangedEventHandler ProgressChanged;
 		/// <summary>
-		/// Occurs when download finishes.
+			/// Occurs when download finishes.
+			/// </summary>
+		public event LaunchpadEventDelegates.GameDownloadFinishedEventHandler GameDownloadFinished;
+		/// <summary>
+		/// Occurs when game update finished.
 		/// </summary>
-		public event DownloadFinishedEventHandler DownloadFinished;
-
-		public delegate void VerificationFinishedEventHandler (object sender, EventArgs e);
+		public event LaunchpadEventDelegates.GameUpdateFinishedEventHandler GameUpdateFinished;
 		/// <summary>
 		/// Occurs when game verification finishes.
 		/// </summary>
-		public event VerificationFinishedEventHandler VerificationFinished;
+		public event LaunchpadEventDelegates.GameRepairFinishedEventHandler GameRepairFinished;
 
-		public delegate void GameLaunchFailedEventHandler (object sender, EventArgs e);
-		/// <summary>
-		/// Occurs when game launch failed.
-		/// </summary>
-		public event GameLaunchFailedEventHandler GameLaunchFailed;
 
-		public delegate void GameDownloadFailedEventHander (object sender, DownloadFailedEventArgs e);
 		/// <summary>
 		/// Occurs when the download failed.
 		/// </summary>
-		public event GameDownloadFailedEventHander GameDownloadFailed;
-
-		public delegate void GameUpdateFailedEventHandler (object sender, UpdateFailedEventArgs e);
+		public event LaunchpadEventDelegates.GameDownloadFailedEventHander GameDownloadFailed;
 		/// <summary>
 		/// Occurs when game update failed.
 		/// </summary>
-		public event GameUpdateFailedEventHandler GameUpdateFailed;
-
-		public delegate void GameRepairFailedEventHandler (object sender, RepairFailedEventArgs e);
+		public event LaunchpadEventDelegates.GameUpdateFailedEventHandler GameUpdateFailed;
 		/// <summary>
 		/// Occurs when game repair failed.
 		/// </summary>
-		public event GameRepairFailedEventHandler GameRepairFailed;
-
+		public event LaunchpadEventDelegates.GameRepairFailedEventHandler GameRepairFailed;
+		/// <summary>
+		/// Occurs when game launch failed.
+		/// </summary>
+		public event LaunchpadEventDelegates.GameLaunchFailedEventHandler GameLaunchFailed;
+			
+		//Progress event arguments
 		/// <summary>
 		/// The progress arguments object. Is updated during file download operations.
 		/// </summary>
-		private ProgressEventArgs ProgressArgs;
+		private FileDownloadProgressChangedEventArgs ProgressArgs;
+
+		//Success event arguments
 		/// <summary>
 		/// The download finished arguments object. Is updated once a file download finishes.
 		/// </summary>
-		private DownloadFinishedEventArgs DownloadFinishedArgs;
+		private GameDownloadFinishedEventArgs DownloadFinishedArgs;
 		/// <summary>
-		/// The download failed arguments.
+		/// The update finished arguments.
 		/// </summary>
-		private DownloadFailedEventArgs DownloadFailedArgs;
+		private GameUpdateFinishedEventArgs UpdateFinishedArgs;
+		/// <summary>
+		/// The repair finished arguments.
+		/// </summary>
+		private GameRepairFinishedEventArgs RepairFinishedArgs;
+
+		//Failure event arguments
+		/// <summary>
+		/// The download failed arguments.                
+		private GameDownloadFailedEventArgs DownloadFailedArgs;
 		/// <summary>
 		/// The update failed arguments.
 		/// </summary>
-		private UpdateFailedEventArgs UpdateFailedArgs;
+		private GameUpdateFailedEventArgs UpdateFailedArgs;
 		/// <summary>
 		/// The repaired failed arguments.
 		/// </summary>
-		private RepairFailedEventArgs RepairFailedArgs;
+		private GameRepairFailedEventArgs RepairFailedArgs;
+		/// <summary>
+		/// The launch failed arguments.
+		/// </summary>
+		private GameLaunchFailedEventArgs LaunchFailedArgs;
 
 
 		/// <summary>
@@ -92,11 +102,16 @@ namespace Launchpad_Launcher
 		/// </summary>
 		public GameHandler ()
 		{
-			ProgressArgs = new ProgressEventArgs ();
-			DownloadFinishedArgs = new DownloadFinishedEventArgs ();
-			DownloadFailedArgs = new DownloadFailedEventArgs ();
-			UpdateFailedArgs = new UpdateFailedEventArgs ();
-			RepairFailedArgs = new RepairFailedEventArgs ();
+			ProgressArgs = new FileDownloadProgressChangedEventArgs ();
+			DownloadFinishedArgs = new GameDownloadFinishedEventArgs ();
+			UpdateFinishedArgs = new GameUpdateFinishedEventArgs ();
+			RepairFinishedArgs = new GameRepairFinishedEventArgs ();
+
+
+			DownloadFailedArgs = new GameDownloadFailedEventArgs ();
+			UpdateFailedArgs = new GameUpdateFailedEventArgs ();
+			RepairFailedArgs = new GameRepairFailedEventArgs ();
+			LaunchFailedArgs = new GameLaunchFailedEventArgs ();
 		}
 
 		/// <summary>
@@ -156,15 +171,18 @@ namespace Launchpad_Launcher
 					//this is the first substring in the manifest line, delimited by :
 					string ManifestFileName = (ManifestFiles [i].Split (':'))[0];
 
-					string RemotePath = String.Format ("{0}/game/{1}{2}", 
+					string RemotePath = String.Format ("{0}/game/{1}{2}{3}", 
 					                                   Config.GetFTPUrl (), 
 					                                   Config.GetSystemTarget(), 
+					                                   System.IO.Path.DirectorySeparatorChar,
 					                                   ManifestFileName);
 
 					string LocalPath = String.Format ("{0}{1}{2}", 
-					                                  Config.GetGamePath (),
+					                                  Config.GetGamePath (true),
 					                                  System.IO.Path.DirectorySeparatorChar, 
 					                                  ManifestFileName);
+
+					Directory.CreateDirectory(Directory.GetParent(LocalPath).ToString());
 
 					//write the current file progress to the install cookie
 					TextWriter twp = new StreamWriter(Config.GetInstallCookie ());
@@ -207,7 +225,7 @@ namespace Launchpad_Launcher
 				File.WriteAllText (Config.GetInstallCookie (), String.Empty);
 
 				//raise the finished event
-				OnDownloadFinished ();			
+				OnGameDownloadFinished ();			
 			}
 			catch (Exception ex)
 			{
@@ -233,8 +251,63 @@ namespace Launchpad_Launcher
 		{
 			//check all local files against the manifest for file size changes.
 			//if the file is missing or the wrong size, download it.
-
 			//better system - compare old & new manifests for changes and download those?
+			List<string> manifestItems = new List<string> ();
+			List<string> oldManifestItems = new List<string> ();
+			List<string> localFiles = new List<string> ();
+
+			string manifestPath = Config.GetManifestPath ();
+			string oldManifestPath = Config.GetManifestPath () + ".old";
+
+			try
+			{
+				//fill our manifest lists
+				manifestItems = new List<string> (File.ReadAllLines(manifestPath));
+
+				//if we have an old manifest, load it
+				if (File.Exists(oldManifestPath))
+				{
+					oldManifestItems = new List<string> (File.ReadAllLines(oldManifestPath));
+				}
+				//first check old manifest against new manifest, download anything that isn't exactly the same as before
+
+				FTPHandler FTP = new FTPHandler();
+				FTP.FileProgressChanged += OnDownloadProgressChanged;
+				FTP.FileDownloadFinished += OnFileDownloadFinished;
+
+				foreach (string item in manifestItems)
+				{
+					if (!oldManifestItems.Contains(item))
+					{
+						//download
+						string ManifestFileName = (item.Split (':'))[0];
+
+						string RemotePath = String.Format ("{0}/game/{1}{2}{3}", 
+						                                   Config.GetFTPUrl (), 
+						                                   Config.GetSystemTarget(), 
+						                                   System.IO.Path.DirectorySeparatorChar,
+						                                   ManifestFileName);
+
+						string LocalPath = String.Format ("{0}{1}{2}", 
+						                                  Config.GetGamePath (true),
+						                                  System.IO.Path.DirectorySeparatorChar, 
+						                                  ManifestFileName);
+
+						OnProgressChanged();
+
+						Directory.CreateDirectory(Directory.GetParent(LocalPath).ToString());
+
+						FTP.DownloadFTPFile(RemotePath, LocalPath, false);
+					}
+				}
+
+				OnGameUpdateFinished();
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine ("UpdateGameAsync(): " + ex.Message);
+				OnGameUpdateFailed ();
+			}
 		}
 
 		/// <summary>
@@ -280,21 +353,24 @@ namespace Launchpad_Launcher
 				{
 					string[] elements = entry.Split(':');
 
-					string filepath = Config.GetGamePath() + elements [0];
+					string filepath = Config.GetGamePath(true) + elements [0];
 					string manifestMD5 = elements [1];
 					//string size = elements [2];
 
 					ProgressArgs.Filename = Path.GetFileName(filepath);
 
-					string RemotePath = String.Format ("{0}/game/{1}{2}", 
+					string RemotePath = String.Format ("{0}/game/{1}{2}{3}", 
 					                                   Config.GetFTPUrl (), 
 					                                   Config.GetSystemTarget(), 
+					                                   System.IO.Path.DirectorySeparatorChar,
 					                                   elements[0]);
 
 					string LocalPath = String.Format ("{0}{1}{2}", 
-					                                  Config.GetGamePath (),
+					                                  Config.GetGamePath (true),
 					                                  System.IO.Path.DirectorySeparatorChar, 
 					                                  elements[0]);
+
+					Directory.CreateDirectory(Directory.GetParent(LocalPath).ToString());
 
 					if (!File.Exists(filepath))
 					{
@@ -331,7 +407,7 @@ namespace Launchpad_Launcher
 					ProgressArgs.DownloadedFiles = i;
 					OnProgressChanged ();
 				}
-				OnVerificationFinished ();
+				OnGameRepairFinished ();
 			}
 			catch (Exception ex)
 			{
@@ -341,7 +417,7 @@ namespace Launchpad_Launcher
 				DownloadFailedArgs.Type = "Repair";
 				DownloadFailedArgs.Metadata = fileReturn;
 
-				OnGameDownloadFailed ();
+				OnGameRepairFailed ();
 			}
 		}
 
@@ -354,13 +430,17 @@ namespace Launchpad_Launcher
 			try
 			{
 				ProcessStartInfo gameStartInfo = new ProcessStartInfo ();
-				gameStartInfo.FileName = Config.GetGameExecutable ();
-				if (!File.Exists(Config.GetGameExecutable()))
-				{
-					throw new FileNotFoundException();
-				}
+				gameStartInfo.UseShellExecute = false;
 
-				Process.Start (gameStartInfo);
+				gameStartInfo.FileName = Config.GetGameExecutable ();
+
+				Process game = new Process();
+				game.ErrorDataReceived += delegate(object sender, DataReceivedEventArgs e) 
+				{
+					Console.WriteLine (e.Data);
+				};
+
+				game = Process.Start(gameStartInfo);
 			}
 			catch (Exception ex)
 			{
@@ -374,9 +454,14 @@ namespace Launchpad_Launcher
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		private void OnDownloadProgressChanged(object sender, ProgressEventArgs e)
+		private void OnDownloadProgressChanged(object sender, FileDownloadProgressChangedEventArgs e)
 		{
 			ProgressArgs = e;
+			OnProgressChanged ();
+		}
+
+		private void OnFileDownloadFinished(object sender, FileDownloadFinishedEventArgs e)
+		{
 			OnProgressChanged ();
 		}
 
@@ -394,19 +479,27 @@ namespace Launchpad_Launcher
 		/// <summary>
 		/// Raises the download finished event.
 		/// </summary>
-		private void OnDownloadFinished()
+		private void OnGameDownloadFinished()
 		{
-			if (DownloadFinished != null)
+			if (GameDownloadFinished != null)
 			{
-				DownloadFinished (this, DownloadFinishedArgs);
+				GameDownloadFinished (this, DownloadFinishedArgs);
 			}
 		}
 
-		private void OnVerificationFinished()
+		private void OnGameUpdateFinished()
 		{
-			if (VerificationFinished != null)
+			if (GameUpdateFinished != null)
 			{
-				VerificationFinished (this, EventArgs.Empty);
+				GameUpdateFinished (this, UpdateFinishedArgs);
+			}
+		}
+
+		private void OnGameRepairFinished()
+		{
+			if (GameRepairFinished != null)
+			{
+				GameRepairFinished (this, RepairFinishedArgs);
 			}
 		}
 
@@ -414,7 +507,7 @@ namespace Launchpad_Launcher
 		{
 			if (GameLaunchFailed != null)
 			{
-				GameLaunchFailed (this, EventArgs.Empty);
+				GameLaunchFailed (this, LaunchFailedArgs);
 			}
 		}
 
@@ -423,6 +516,22 @@ namespace Launchpad_Launcher
 			if (GameDownloadFailed != null)
 			{
 				GameDownloadFailed (this, DownloadFailedArgs);
+			}
+		}
+
+		private void OnGameUpdateFailed()
+		{
+			if (GameUpdateFailed != null)
+			{
+				GameUpdateFailed (this, UpdateFailedArgs);
+			}
+		}
+
+		private void OnGameRepairFailed()
+		{
+			if (GameRepairFailed != null)
+			{
+				GameRepairFailed (this, RepairFailedArgs);
 			}
 		}
 	}

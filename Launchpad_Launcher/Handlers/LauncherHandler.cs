@@ -23,27 +23,24 @@ namespace Launchpad_Launcher
 	public sealed class LauncherHandler
 	{
 
-		public delegate void ChangelogProgressChangedEventHandler(object sender, ProgressEventArgs e);
+
 		/// <summary>
 		/// Occurs when changelog download progress changes.
 		/// </summary>
-		public event ChangelogProgressChangedEventHandler ChangelogProgressChanged;
-
-		public delegate void ChangelogDownloadFinishedEventHandler (object sender, DownloadFinishedEventArgs e);
+		public event LaunchpadEventDelegates.ChangelogProgressChangedEventHandler ChangelogProgressChanged;
 		/// <summary>
 		/// Occurs when changelog download finishes.
 		/// </summary>
-		public event ChangelogDownloadFinishedEventHandler ChangelogDownloadFinished;
+		public event LaunchpadEventDelegates.ChangelogDownloadFinishedEventHandler ChangelogDownloadFinished;
 
 		/// <summary>
 		/// The progress arguments object. Is updated during file download operations.
 		/// </summary>
-		private ProgressEventArgs ProgressArgs;
-
+		private FileDownloadProgressChangedEventArgs ProgressArgs;
 		/// <summary>
 		/// The download finished arguments object. Is updated once a file download finishes.
 		/// </summary>
-		private DownloadFinishedEventArgs DownloadFinishedArgs;
+		private GameDownloadFinishedEventArgs DownloadFinishedArgs;
 
 		/// <summary>
 		/// The config handler reference.
@@ -55,8 +52,8 @@ namespace Launchpad_Launcher
 		/// </summary>
 		public LauncherHandler ()
 		{
-			ProgressArgs = new ProgressEventArgs ();
-			DownloadFinishedArgs = new DownloadFinishedEventArgs ();
+			ProgressArgs = new FileDownloadProgressChangedEventArgs ();
+			DownloadFinishedArgs = new GameDownloadFinishedEventArgs ();
 		}
 
 		/// <summary>
@@ -121,9 +118,7 @@ namespace Launchpad_Launcher
 				else
 				{
 					FTP.DownloadFTPFile (remote, local, false);
-				}
-
-
+				}						
 			}
 			catch (Exception ex)
 			{

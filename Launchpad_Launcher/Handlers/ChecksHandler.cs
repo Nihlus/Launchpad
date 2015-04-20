@@ -126,7 +126,7 @@ namespace Launchpad_Launcher
 		{
 			//Criteria for considering the game 'installed'
 			//Does the game directory exist?
-			bool bHasDirectory = Directory.Exists(Config.GetGamePath());
+			bool bHasDirectory = Directory.Exists(Config.GetGamePath(true));
 			//Is there an .install file in the directory?
 			bool bHasInstallationCookie = File.Exists(Config.GetInstallCookie());
 			//is there a version file?

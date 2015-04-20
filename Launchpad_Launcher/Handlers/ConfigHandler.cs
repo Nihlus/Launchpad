@@ -264,15 +264,25 @@ namespace Launchpad_Launcher
         }
 
 		/// <summary>
-		/// Gets the game path.
+		/// Gets the game path, terminated by a separator char.
 		/// </summary>
-		/// <returns>The game path.</returns>
-        public string GetGamePath()
+		/// <returns>The game path, terminated by a separator char.</returns>
+        public string GetGamePath(bool bIncludeSystemTarget)
         {
-			string gamePath = String.Format(@"{0}Game{2}{1}", 
-			                                GetLocalDir(),
-			                                GetSystemTarget().ToString(),
-			                                Path.DirectorySeparatorChar);
+			string gamePath = "";
+			if (bIncludeSystemTarget)
+			{
+				gamePath = String.Format(@"{0}Game{2}{1}", 
+				                                GetLocalDir(),
+				                                GetSystemTarget().ToString(),
+				                                Path.DirectorySeparatorChar);
+			}
+			else
+			{
+				gamePath = String.Format(@"{0}Game{1}", 
+				                                GetLocalDir(),
+				                                Path.DirectorySeparatorChar);
+			}
 
             return gamePath;
         }
@@ -284,24 +294,52 @@ namespace Launchpad_Launcher
         public string GetGameExecutable()
         {
 			ChecksHandler Checks = new ChecksHandler ();
-			string executablePath = "";
+			string executablePathRootLevel = "";
+			string executablePathTargetLevel = "";
 
+			//unix doesn't need (or have!) the .exe extension. Just start it directly.
 			if (Checks.IsRunningOnUnix())
 			{
-				executablePath = String.Format(@"{0}{2}{1}", 
-				                               GetGamePath(), 
-				                               GetGameName(),  
-				                               Path.DirectorySeparatorChar);
+				//should return something along the lines of "./Game/<ExecutableName>"
+				executablePathRootLevel = String.Format(@"{0}{1}", 
+				                               GetGamePath(true), 
+				                               GetGameName());
+
+				//should return something along the lines of "./Game/<GameName>/Binaries/<SystemTarget>/<ExecutableName>"
+				executablePathTargetLevel = String.Format(@"{0}{1}{3}Binaries{3}{2}{3}{1}", 
+				                                          GetGamePath(true), 
+				                                          GetGameName(), 
+				                                          GetSystemTarget(),
+				                                          Path.DirectorySeparatorChar);
 			}
 			else
 			{
-				executablePath = String.Format(@"{0}{2}{1}.exe", 
-				                               GetGamePath(), 
-				                               GetGameName(),  
-				                               Path.DirectorySeparatorChar);
+				//should return something along the lines of "./Game/<ExecutableName>.exe"
+				executablePathRootLevel = String.Format(@"{0}{1}.exe", 
+				                                        GetGamePath(true), 
+				                               GetGameName());
+
+				//should return something along the lines of "./Game/<GameName>/Binaries/<SystemTarget>/<ExecutableName>.exe"
+				executablePathTargetLevel = String.Format(@"{0}{1}{3}Binaries{3}{2}{3}{1}.exe", 
+				                                          GetGamePath(true), 
+				                                          GetGameName(), 
+				                                          GetSystemTarget(),
+				                                          Path.DirectorySeparatorChar);
 			}
 
-            return executablePath;
+
+			if (File.Exists(executablePathRootLevel))
+			{
+				return executablePathRootLevel;
+			}
+			else if (File.Exists(executablePathTargetLevel))
+			{
+				return executablePathTargetLevel;
+			}       
+			else
+			{
+				throw new FileNotFoundException ("The game executable could not be found.");
+			}
         }
 
 		/// <summary>
@@ -330,8 +368,8 @@ namespace Launchpad_Launcher
 		public string GetGameVersionPath()
 		{
 			string VersionPath = String.Format(@"{0}{1}GameVersion.txt",
-			                            GetGamePath(), 
-			                            Path.DirectorySeparatorChar);
+			                                GetGamePath(true), 
+			                            	Path.DirectorySeparatorChar);
 
 			return VersionPath;
 		}
