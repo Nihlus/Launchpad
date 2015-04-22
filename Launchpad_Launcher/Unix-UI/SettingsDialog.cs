@@ -7,7 +7,7 @@ namespace Launchpad
 	/// <summary>
 	/// Settings dialog box.
 	/// </summary>
-	public partial class SettingsDialog : Gtk.Dialog
+    public partial class SettingsDialog : Gtk.Dialog
 	{
 		/// <summary>
 		/// The config handler reference.

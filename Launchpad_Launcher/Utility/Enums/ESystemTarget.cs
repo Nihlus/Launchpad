@@ -2,7 +2,7 @@ using System;
 
 namespace Launchpad
 {
-	public enum ESystemTarget
+    internal enum ESystemTarget
 	{
 		Linux,
 		Mac, 

@@ -2,7 +2,7 @@ using System;
 
 namespace Launchpad
 {
-	public static class Utilities
+	internal static class Utilities
 	{
 		/// <summary>
 		/// Clean the specified input.

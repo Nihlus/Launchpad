@@ -6,7 +6,7 @@ using Notifications;
 
 namespace Launchpad
 {
-	public partial class MainWindow : Gtk.Window
+    public partial class MainWindow : Gtk.Window
 	{
 		/// <summary>
 		/// Does the launcher need an update?

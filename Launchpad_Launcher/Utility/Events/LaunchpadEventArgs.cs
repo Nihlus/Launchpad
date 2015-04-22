@@ -6,7 +6,7 @@ namespace Launchpad
 	/// <summary>
 	/// Progress event arguments.
 	/// </summary>
-	public class FileDownloadProgressChangedEventArgs : EventArgs
+    public class FileDownloadProgressChangedEventArgs : EventArgs
 	{
 		public int DownloadedBytes 
 		{
@@ -48,7 +48,7 @@ namespace Launchpad
 		}
 	}
 
-	public class FileDownloadFinishedEventArgs : EventArgs
+    public class FileDownloadFinishedEventArgs : EventArgs
 	{
 		public int Result
 		{
@@ -71,7 +71,7 @@ namespace Launchpad
 	/// <summary>
 	/// Download finished event arguments.
 	/// </summary>
-	public class GameDownloadFinishedEventArgs : EventArgs
+    public class GameDownloadFinishedEventArgs : EventArgs
 	{
 		public string Result {
 			get;
@@ -95,7 +95,7 @@ namespace Launchpad
 		}
 	}
 
-	public class GameUpdateFinishedEventArgs : EventArgs
+    public class GameUpdateFinishedEventArgs : EventArgs
 	{
 		public string Result {
 			get;
@@ -119,7 +119,7 @@ namespace Launchpad
 		}
 	}
 
-	public class GameRepairFinishedEventArgs : EventArgs
+    public class GameRepairFinishedEventArgs : EventArgs
 	{
 		public string Result {
 			get;
@@ -152,7 +152,7 @@ namespace Launchpad
 	/// <summary>
 	/// Download failed event arguments.
 	/// </summary>
-	public class GameDownloadFailedEventArgs : EventArgs
+    public class GameDownloadFailedEventArgs : EventArgs
 	{
 		public string Result {
 			get;
@@ -176,7 +176,7 @@ namespace Launchpad
 		}
 	}
 
-	public class GameUpdateFailedEventArgs : EventArgs
+    public class GameUpdateFailedEventArgs : EventArgs
 	{
 		public string Result
 		{
@@ -191,7 +191,7 @@ namespace Launchpad
 		}
 	}
 
-	public class GameRepairFailedEventArgs : EventArgs
+    public class GameRepairFailedEventArgs : EventArgs
 	{
 		public string Result
 		{
@@ -206,7 +206,7 @@ namespace Launchpad
 		}
 	}
 
-	public class GameLaunchFailedEventArgs : EventArgs
+    public class GameLaunchFailedEventArgs : EventArgs
 	{
 		public string Result
 		{

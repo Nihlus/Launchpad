@@ -16,7 +16,7 @@ using System.Reflection;
 
 namespace Launchpad
 {
-    public partial class MainForm : Form
+    internal partial class MainForm : Form
     {
         /// <summary>
         /// Does the launcher need an update?

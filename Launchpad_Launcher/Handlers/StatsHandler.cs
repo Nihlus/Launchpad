@@ -6,7 +6,7 @@ namespace Launchpad
 	/// <summary>
 	/// Anonymous stat sending handler.
 	/// </summary>
-	public static class StatsHandler
+	internal static class StatsHandler
 	{
 		/// <summary>
 		/// The config handler reference.

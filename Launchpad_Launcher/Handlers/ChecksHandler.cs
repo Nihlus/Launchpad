@@ -9,7 +9,7 @@ namespace Launchpad
 	/// Since this class is meant to be used in both the Forms UI and the GTK UI, 
 	/// there must be no useage of UI code in this class. Keep it clean!
 	/// </summary>
-	public sealed class ChecksHandler
+	internal sealed class ChecksHandler
 	{
 		/// <summary>
 		/// The config handler reference.

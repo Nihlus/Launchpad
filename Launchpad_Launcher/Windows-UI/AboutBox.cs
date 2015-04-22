@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace Launchpad
 {
-    partial class LaunchpadAboutBox : Form
+    internal partial class LaunchpadAboutBox : Form
     {
         public LaunchpadAboutBox()
         {

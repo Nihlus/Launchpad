@@ -12,7 +12,7 @@ namespace Launchpad
 	/// <summary>
 	/// MD5 hashing handler. Used to ensure file integrity.
 	/// </summary>
-    public sealed class MD5Handler
+    internal sealed class MD5Handler
     {
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Launchpad_Launcher.MD5Handler"/> class.

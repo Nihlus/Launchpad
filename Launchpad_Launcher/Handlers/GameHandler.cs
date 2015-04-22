@@ -13,7 +13,7 @@ namespace Launchpad
 	///	 Since this class starts new threads in which it does the larger computations,
 	///	 there must be no useage of UI code in this class. Keep it clean!
 	/// </summary>
-	public sealed class GameHandler
+	internal sealed class GameHandler
 	{
 		/// <summary>
 		/// Occurs when progress changed.

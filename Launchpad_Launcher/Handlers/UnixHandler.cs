@@ -6,7 +6,7 @@ namespace Launchpad
 	/// <summary>
 	/// Unix-specific functionality handler.
 	/// </summary>
-	public sealed class UnixHandler
+	internal sealed class UnixHandler
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Launchpad_Launcher.UnixHandler"/> class.

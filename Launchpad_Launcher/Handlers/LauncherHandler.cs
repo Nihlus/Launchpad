@@ -20,7 +20,7 @@ namespace Launchpad
 	/// Since this class starts new threads in which it does the larger computations,
 	/// there must be no useage of UI code in this class. Keep it clean!
 	/// </summary>
-	public sealed class LauncherHandler
+	internal sealed class LauncherHandler
 	{
 
 
