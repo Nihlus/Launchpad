@@ -172,18 +172,18 @@ namespace Launchpad
 		}
 
 		/// <summary>
-		/// Raises the window delete event event.
+		/// Exits the application properly when the window is deleted.
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="a">The alpha component.</param>
 		protected void OnDeleteEvent (object sender, DeleteEventArgs a)
 		{
-			Application.Quit ();
+			Gtk.Application.Quit ();
 			a.RetVal = true;
 		}
 
 		/// <summary>
-		/// Raises the settings action activated event.
+		/// Opens the settings editor, which allows the user to change the FTP and game settings.
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
@@ -191,86 +191,17 @@ namespace Launchpad
 		{
 			SettingsDialog Settings = new SettingsDialog ();
 			Settings.Run ();
-		}
-
-		/// <summary>
-		/// Raises the game download progress changed event.
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="e">E.</param>
-		protected void OnGameDownloadProgressChanged (object sender, FileDownloadProgressChangedEventArgs e)
-		{
-			Gtk.Application.Invoke (delegate
-			{
-
-				string progressbarText = String.Format ("Downloading file {0}: {1} of {2} bytes.", 
-				                                       System.IO.Path.GetFileNameWithoutExtension (e.Filename), 
-				                                       e.DownloadedBytes.ToString (), 
-				                                       e.TotalBytes.ToString ());
-				progressbar2.Text = progressbarText;
-				progressbar2.Fraction = (double)e.DownloadedBytes / (double)e.TotalBytes;
-
-			});
-		}
-
-		/// <summary>
-		/// Raises the game download finished event.
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="e">E.</param>
-		protected void OnGameDownloadFinished (object sender, GameDownloadFinishedEventArgs e)
-		{
-			if (e.Result == "1") //there was an error
-			{
-				MessageLabel.Text = "Game download failed. Are you missing the manifest?";
-
-				Notification failedNot = new Notification ();
-				failedNot.IconName = Stock.DialogError;
-				failedNot.Summary = "Launchpad - Error";
-				failedNot.Body = "The game failed to download. Are you missing the manifest?";
-
-				failedNot.Show ();
-
-				PrimaryButton.Label = e.Type; //URL is used here to set the desired retry action
-				PrimaryButton.Sensitive = true;
-			}
-			else //the game has finished downloading, and we should be OK to launch
-			{
-				MessageLabel.Text = "Idle";
-				progressbar2.Text = "";
-
-				Notification completedNot = new Notification ();
-				completedNot.IconName = Stock.Info;
-				completedNot.Summary = "Launchpad - Info";
-				completedNot.Body = "Game download finished. Play away!";
-
-				completedNot.Show ();
-
-				PrimaryButton.Label = "Launch";
-				PrimaryButton.Sensitive = true;
-			}
-		}
-
-		/// <summary>
-		/// Raises the changelog download finished event.
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="e">E.</param>
-		protected void OnChangelogDownloadFinished (object sender, GameDownloadFinishedEventArgs e)
-		{
-			//Take the resulting HTML string from the changelog download and send it to the Webkit browser
-			Gtk.Application.Invoke (delegate
-			{
-				Browser.LoadHtmlString (e.Result, e.Type);
-
-			});
-		}
-
-		/// <summary>
-		/// Raises the primary button clicked event.
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="e">E.</param>
+		}			
+		
+        /// <summary>
+        /// Handles switching between different functionalities depending on what is visible on the button to the user, such as
+        /// * Installing
+        /// * Updating
+        /// * Repairing
+        /// * Launching
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">Empty arguments.</param>
 		protected void OnPrimaryButtonClicked (object sender, EventArgs e)
 		{
 			string Mode = PrimaryButton.Label;
@@ -390,6 +321,26 @@ namespace Launchpad
 			}
 		}
 
+        /// <summary>
+        /// Updates the web browser with the asynchronously loaded changelog from the server.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The arguments containing the HTML from the server.</param>
+        protected void OnChangelogDownloadFinished(object sender, GameDownloadFinishedEventArgs e)
+        {
+            //Take the resulting HTML string from the changelog download and send it to the Webkit browser
+            Gtk.Application.Invoke(delegate
+            {
+                Browser.LoadHtmlString(e.Result, e.Type);
+
+            });
+        }
+
+        /// <summary>
+        /// Warns the user when the game fails to launch, and offers to attempt a repair.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">Empty event args.</param>
 		private void OnGameLaunchFailed(object sender, EventArgs e)
 		{
 			Notification launchFailed = new Notification ();
@@ -402,20 +353,11 @@ namespace Launchpad
 			PrimaryButton.Sensitive = true;
 		}
 
-		private void OnRepairFinished (object sender, EventArgs e)
-		{
-			Notification repairComplete = new Notification ();
-			repairComplete.IconName = Stock.Info;
-			repairComplete.Summary = "Launchpad - Game repair finished";
-			repairComplete.Body = "Launchpad has finished repairing the game installation. Play away!";
-			repairComplete.Show ();
-
-			progressbar2.Text = "";
-
-			PrimaryButton.Label = "Launch";	
-			PrimaryButton.Sensitive = true;
-		}
-
+        /// <summary>
+        /// Provides alternatives when the game fails to download, either through an update or through an installation.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">Contains the type of failure that occurred.</param>
 		private void OnGameDownloadFailed(object sender, GameDownloadFailedEventArgs e)
 		{
 			switch(e.Type)
@@ -443,6 +385,83 @@ namespace Launchpad
 			PrimaryButton.Label = e.Type;
 			PrimaryButton.Sensitive = true;
 		}
+
+        /// <summary>
+        /// Updates the progress bar and progress label during installations, repairs and updates.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">Contains the progress values and current filename.</param>
+        protected void OnGameDownloadProgressChanged(object sender, FileDownloadProgressChangedEventArgs e)
+        {
+            Gtk.Application.Invoke(delegate
+            {
+
+                string progressbarText = String.Format("Downloading file {0}: {1} of {2} bytes.",
+                                                       System.IO.Path.GetFileNameWithoutExtension(e.Filename),
+                                                       e.DownloadedBytes.ToString(),
+                                                       e.TotalBytes.ToString());
+                progressbar2.Text = progressbarText;
+                progressbar2.Fraction = (double)e.DownloadedBytes / (double)e.TotalBytes;
+
+            });
+        }
+
+        /// <summary>
+        /// Allows the user to launch or repair the game once installation finishes.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">Contains the result of the download.</param>
+        protected void OnGameDownloadFinished(object sender, GameDownloadFinishedEventArgs e)
+        {
+            if (e.Result == "1") //there was an error
+            {
+                MessageLabel.Text = "Game download failed. Are you missing the manifest?";
+
+                Notification failedNot = new Notification();
+                failedNot.IconName = Stock.DialogError;
+                failedNot.Summary = "Launchpad - Error";
+                failedNot.Body = "The game failed to download. Are you missing the manifest?";
+
+                failedNot.Show();
+
+                PrimaryButton.Label = e.Type; //URL is used here to set the desired retry action
+                PrimaryButton.Sensitive = true;
+            }
+            else //the game has finished downloading, and we should be OK to launch
+            {
+                MessageLabel.Text = "Idle";
+                progressbar2.Text = "";
+
+                Notification completedNot = new Notification();
+                completedNot.IconName = Stock.Info;
+                completedNot.Summary = "Launchpad - Info";
+                completedNot.Body = "Game download finished. Play away!";
+
+                completedNot.Show();
+
+                PrimaryButton.Label = "Launch";
+                PrimaryButton.Sensitive = true;
+            }
+        }
+
+        /// <summary>
+        /// Alerts the user that a repair action has finished.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">Empty arguments.</param>
+        private void OnRepairFinished(object sender, EventArgs e)
+        {
+            Notification repairComplete = new Notification();
+            repairComplete.IconName = Stock.Info;
+            repairComplete.Summary = "Launchpad - Game repair finished";
+            repairComplete.Body = "Launchpad has finished repairing the game installation. Play away!";
+            repairComplete.Show();
+
+            progressbar2.Text = "";
+
+            PrimaryButton.Label = "Launch";
+            PrimaryButton.Sensitive = true;
+        }
 	}
 }
 

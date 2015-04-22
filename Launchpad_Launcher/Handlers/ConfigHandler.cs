@@ -83,7 +83,7 @@ namespace Launchpad
 		/// </summary>
 		public void Initialize()
 		{
-			//Since Initialize will write to the config, we'll load the file later
+			//Since Initialize will write to the config, we'll create the parser here and load the file later
 			FileIniDataParser Parser = new FileIniDataParser();
 
 			string configDir = GetConfigDir();
@@ -153,8 +153,6 @@ namespace Launchpad
 					}
 
 					WriteConfig (Parser, data);
-
-					//Parser.WriteFile(configPath, data);
 				}
 			}
 		}

@@ -50,6 +50,9 @@ namespace Launchpad
             Config.Initialize();
             MessageLabel.Text = "Idle";
 
+            //set the window text to match the game name
+            this.Text = "Launchpad - " + Config.GetGameName();
+
             //first of all, check if we can connect to the FTP server.
             if (!Checks.CanConnectToFTP())
             {
@@ -158,17 +161,15 @@ namespace Launchpad
             //this is after the CanConnect check. Nothing should be done here.
         }		      
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            //set the window text to match the game name
-            this.Text = "Launchpad - " + Config.GetGameName();
-        }
-
-        private void Form1_Shown(object sender, EventArgs e)
-        {
-
-        }
-
+        /// <summary>
+        /// Handles switching between different functionalities depending on what is visible on the button to the user, such as
+        /// * Installing
+        /// * Updating
+        /// * Repairing
+        /// * Launching
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">Empty arguments.</param>
         private void mainButton_Click(object sender, EventArgs e)
         {
             string Mode = PrimaryButton.Text;
@@ -239,7 +240,9 @@ namespace Launchpad
                                 launchFailedNotification.BalloonTipText = "The server does not provide the game for the selected platform.";
 
                                 launchFailedNotification.ShowBalloonTip(10000);
-                            } 
+                            }
+
+                            MessageLabel.Text = "Server does not provide the game for the selected platform.";
 
                             PrimaryButton.Text = "Install";
                             PrimaryButton.Enabled = true;
@@ -302,12 +305,22 @@ namespace Launchpad
             }
         }
 
+        /// <summary>
+        /// Updates the web browser with the asynchronously loaded changelog from the server.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The arguments containing the HTML from the server.</param>
         private void OnChangelogDownloadFinished(object sender, GameDownloadFinishedEventArgs e)
         {
             changelogBrowser.DocumentText = e.Result;
             changelogBrowser.Refresh();
         }
 
+        /// <summary>
+        /// Warns the user when the game fails to launch, and offers to attempt a repair.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">Empty event args.</param>
         private void OnGameLaunchFailed(object sender, EventArgs e)
         {
             Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Resources.RocketIcon.ico");
@@ -327,6 +340,11 @@ namespace Launchpad
             PrimaryButton.Enabled = true;
         }
 
+        /// <summary>
+        /// Provides alternatives when the game fails to download, either through an update or through an installation.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">Contains the type of failure that occurred.</param>
         private void OnGameDownloadFailed(object sender, GameDownloadFailedEventArgs e)
         {
             switch (e.Type)
@@ -356,10 +374,10 @@ namespace Launchpad
         }
 
         /// <summary>
-        /// Raises the game download progress changed event.
+        /// Updates the progress bar and progress label during installations, repairs and updates.
         /// </summary>
-        /// <param name="sender">Sender.</param>
-        /// <param name="e">E.</param>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">Contains the progress values and current filename.</param>
         protected void OnGameDownloadProgressChanged(object sender, FileDownloadProgressChangedEventArgs e)
         {
             string progressbarText = String.Format("Downloading file {0}: {1} of {2} bytes.",
@@ -372,10 +390,10 @@ namespace Launchpad
         }
 
         /// <summary>
-        /// Raises the game download finished event.
+        /// Allows the user to launch or repair the game once installation finishes.
         /// </summary>
-        /// <param name="sender">Sender.</param>
-        /// <param name="e">E.</param>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">Contains the result of the download.</param>
         protected void OnGameDownloadFinished(object sender, GameDownloadFinishedEventArgs e)
         {
             if (e.Result == "1") //there was an error
@@ -421,6 +439,11 @@ namespace Launchpad
             }
         }
 
+        /// <summary>
+        /// Alerts the user that a repair action has finished.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">Empty arguments.</param>
         private void OnRepairFinished(object sender, EventArgs e)
         {
             Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Resources.RocketIcon.ico");

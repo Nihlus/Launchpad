@@ -61,7 +61,12 @@ fi
     mkdir game/Win32
     mkdir game/Linux
     mkdir game/Mac
+    mkdir game/Win64/bin
+    mkdir game/Win32/bin
+    mkdir game/Linux/bin
+    mkdir game/Mac/bin
     mkdir launcher
+    mkdir launcher/bin
 
     chown -R root:ftp game
     chown root:ftp launcher
