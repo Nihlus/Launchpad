@@ -143,8 +143,8 @@ namespace Launchpad_Launcher
 				//event in the FTP class
 				FTP.FileProgressChanged += OnDownloadProgressChanged;
 
-				string LastFile = File.ReadAllText (Config.GetInstallCookie ());
-				string[] ManifestFiles = File.ReadAllLines (Config.GetManifestPath ());
+				string lastDownloadedFile = File.ReadAllText (Config.GetInstallCookie ());
+				string[] manifestEntries = File.ReadAllLines (Config.GetManifestPath ());
 
 				//in order to be able to resume downloading, we check if there is a file
 				//stored in the install cookie.
@@ -154,9 +154,9 @@ namespace Launchpad_Launcher
 				{
 					//loop through all the lines in the manifest until we encounter
 					//a line which matches the one in the install cookie
-					for (int i = 0; i < ManifestFiles.Length; ++i)
+					for (int i = 0; i < manifestEntries.Length; ++i)
 					{
-						if (LastFile == ManifestFiles[i])
+						if (lastDownloadedFile == manifestEntries[i])
 						{
 							line = i;
 						}
@@ -165,59 +165,69 @@ namespace Launchpad_Launcher
 
 				//then, start downloading files from that line. If no line was found, we start 
 				//at 0.
-				for (int i = line; i < ManifestFiles.Length; ++i)
+				for (int i = line; i < manifestEntries.Length; ++i)
 				{
 					//download the file
 					//this is the first substring in the manifest line, delimited by :
-					string ManifestFileName = (ManifestFiles [i].Split (':'))[0];
+					string[] elements = manifestEntries [i].Split (':');
+					string relativeFileName = elements[0];
 
-					string RemotePath = String.Format ("{0}/game/{1}{2}{3}", 
+					string remotePath = String.Format ("{0}/game/{1}{2}{3}", 
 					                                   Config.GetFTPUrl (), 
 					                                   Config.GetSystemTarget(), 
 					                                   System.IO.Path.DirectorySeparatorChar,
-					                                   ManifestFileName);
+					                                   relativeFileName);
 
-					string LocalPath = String.Format ("{0}{1}{2}", 
+					string localPath = String.Format ("{0}{1}{2}", 
 					                                  Config.GetGamePath (true),
 					                                  System.IO.Path.DirectorySeparatorChar, 
-					                                  ManifestFileName);
+					                                  relativeFileName);
 
-					Directory.CreateDirectory(Directory.GetParent(LocalPath).ToString());
+					Directory.CreateDirectory(Directory.GetParent(localPath).ToString());
 
 					//write the current file progress to the install cookie
-					TextWriter twp = new StreamWriter(Config.GetInstallCookie ());
-					twp.WriteLine (ManifestFiles [i]);
-					twp.Close ();
+					TextWriter textWriterProgress = new StreamWriter(Config.GetInstallCookie ());
+					textWriterProgress.WriteLine (manifestEntries [i]);
+					textWriterProgress.Close ();
 
-					if (File.Exists(LocalPath))
+					if (File.Exists(localPath))
 					{
-						//whoa, why is there a file here? Is it correct?
-						MD5Handler MD5 = new MD5Handler();
-						string localHash = MD5.GetFileHash(File.OpenRead(LocalPath));
-						string manifestHash = (ManifestFiles [i].Split (':'))[1];
-						if (localHash == manifestHash)
+						FileInfo fileInfo = new FileInfo(localPath);
+						long manifestFileLength = 0;
+						long.TryParse(elements[2], out manifestFileLength);
+						if (fileInfo.Length == manifestFileLength)
 						{
-							//apparently we already had the proper version of this file. 
-							//Moving on!
-							continue;
+							//should resume download here
+
+							//whoa, why is there a file here? Is it correct?
+							MD5Handler MD5 = new MD5Handler();
+							string localHash = MD5.GetFileHash(File.OpenRead(localPath));
+							string manifestHash = elements[1];
+
+							if (localHash == manifestHash)
+							{
+								//apparently we already had the proper version of this file. 
+								//Moving on!
+								continue;
+							}
 						}
 					}
 
 
 					//make sure we have a game directory to put files in
-					Directory.CreateDirectory(Path.GetDirectoryName(LocalPath));
+					Directory.CreateDirectory(Path.GetDirectoryName(localPath));
 					//now download the file
 					OnProgressChanged();
-					fileReturn = FTP.DownloadFTPFile (RemotePath, LocalPath, false);
+					fileReturn = FTP.DownloadFTPFile (remotePath, localPath, false);
 
 					//if we're dealing with a file that should be executable, 
-					bool bFileIsGameExecutable = (Path.GetFileName(LocalPath).EndsWith(".exe")) || (Path.GetFileNameWithoutExtension(LocalPath) == Config.GetGameName());
+					bool bFileIsGameExecutable = (Path.GetFileName(localPath).EndsWith(".exe")) || (Path.GetFileNameWithoutExtension(localPath) == Config.GetGameName());
 
 					if (Checks.IsRunningOnUnix() && bFileIsGameExecutable)
 					{
 						UnixHandler Unix = new UnixHandler();
 
-						Unix.MakeExecutable(LocalPath);
+						Unix.MakeExecutable(localPath);
 					}
 				}
 
@@ -353,26 +363,27 @@ namespace Launchpad_Launcher
 				{
 					string[] elements = entry.Split(':');
 
-					string filepath = Config.GetGamePath(true) + elements [0];
+					string relativeFilePath = elements[0];
+					string completeFilePath = Config.GetGamePath(true) + relativeFilePath;
 					string manifestMD5 = elements [1];
 					//string size = elements [2];
 
-					ProgressArgs.Filename = Path.GetFileName(filepath);
+					ProgressArgs.Filename = Path.GetFileName(completeFilePath);
 
 					string RemotePath = String.Format ("{0}/game/{1}{2}{3}", 
 					                                   Config.GetFTPUrl (), 
 					                                   Config.GetSystemTarget(), 
 					                                   System.IO.Path.DirectorySeparatorChar,
-					                                   elements[0]);
+					                                   relativeFilePath);
 
 					string LocalPath = String.Format ("{0}{1}{2}", 
 					                                  Config.GetGamePath (true),
 					                                  System.IO.Path.DirectorySeparatorChar, 
-					                                  elements[0]);
+					                                  relativeFilePath);
 
 					Directory.CreateDirectory(Directory.GetParent(LocalPath).ToString());
 
-					if (!File.Exists(filepath))
+					if (!File.Exists(completeFilePath))
 					{
 						//download the file, since it was missing
 						OnProgressChanged ();
@@ -380,9 +391,10 @@ namespace Launchpad_Launcher
 					}
 					else
 					{
-						string fileMD5 = MD5.GetFileHash (File.OpenRead (filepath));
+						string fileMD5 = MD5.GetFileHash (File.OpenRead (completeFilePath));
 						if (fileMD5 != manifestMD5)
 						{
+							Console.WriteLine (fileMD5 + ":" + manifestMD5);
 							//download the file, since it was broken
 							OnProgressChanged ();
 							fileReturn = FTP.DownloadFTPFile (RemotePath, LocalPath, false);
@@ -431,15 +443,23 @@ namespace Launchpad_Launcher
 			{
 				ProcessStartInfo gameStartInfo = new ProcessStartInfo ();
 				gameStartInfo.UseShellExecute = false;
-
 				gameStartInfo.FileName = Config.GetGameExecutable ();
 
 				Process game = new Process();
-				game.ErrorDataReceived += delegate(object sender, DataReceivedEventArgs e) 
+				game.EnableRaisingEvents = true;
+
+				game.OutputDataReceived += delegate(object sender, DataReceivedEventArgs e) 
 				{
 					Console.WriteLine (e.Data);
 				};
 
+				game.Exited += delegate(object sender, EventArgs e) 
+				{
+					Console.WriteLine("Game exited.");
+				};
+
+
+				Console.WriteLine (gameStartInfo.FileName);
 				game = Process.Start(gameStartInfo);
 			}
 			catch (Exception ex)

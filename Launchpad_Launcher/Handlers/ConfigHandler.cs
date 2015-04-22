@@ -93,10 +93,10 @@ namespace Launchpad_Launcher
 			string defaultLauncherVersion = "0.1.0";
 
 			//Check for pre-unix config. If it exists, fix the values and copy it.
-			CheckForOldConfig ();
+			UpdateOldConfig ();
 
 			//Check for old cookie file. If it exists, rename it.
-			CheckForOldUpdateCookie ();
+			ReplaceOldUpdateCookie ();
 
 			//should be safe to lock the config now for initializing it
 			lock (ConfigLock)
@@ -272,7 +272,7 @@ namespace Launchpad_Launcher
 			string gamePath = "";
 			if (bIncludeSystemTarget)
 			{
-				gamePath = String.Format(@"{0}Game{2}{1}", 
+				gamePath = String.Format(@"{0}Game{2}{1}{2}", 
 				                                GetLocalDir(),
 				                                GetSystemTarget().ToString(),
 				                                Path.DirectorySeparatorChar);
@@ -317,7 +317,7 @@ namespace Launchpad_Launcher
 				//should return something along the lines of "./Game/<ExecutableName>.exe"
 				executablePathRootLevel = String.Format(@"{0}{1}.exe", 
 				                                        GetGamePath(true), 
-				                               GetGameName());
+				                               			GetGameName());
 
 				//should return something along the lines of "./Game/<GameName>/Binaries/<SystemTarget>/<ExecutableName>.exe"
 				executablePathTargetLevel = String.Format(@"{0}{1}{3}Binaries{3}{2}{3}{1}.exe", 
@@ -338,6 +338,8 @@ namespace Launchpad_Launcher
 			}       
 			else
 			{
+				Console.WriteLine (executablePathRootLevel);
+				Console.WriteLine (executablePathTargetLevel);
 				throw new FileNotFoundException ("The game executable could not be found.");
 			}
         }
@@ -815,10 +817,10 @@ namespace Launchpad_Launcher
 		}
 
 		/// <summary>
-		/// Checks for old config.
+		/// Replaces and updates the old pre-unix config.
 		/// </summary>
 		/// <returns><c>true</c>, if an old config was found, <c>false</c> otherwise.</returns>
-		private bool CheckForOldConfig()
+		private bool UpdateOldConfig()
 		{
 			ChecksHandler Checks = new ChecksHandler ();
 			string oldConfigPath = String.Format(@"{0}config{1}launcherConfig.ini", 
@@ -913,9 +915,9 @@ namespace Launchpad_Launcher
 		}		      
 
 		/// <summary>
-		/// Checks for old update cookie.
+		/// Replaces the old update cookie.
 		/// </summary>
-		private void CheckForOldUpdateCookie ()
+		private void ReplaceOldUpdateCookie ()
 		{
 			string oldUpdateCookie = String.Format (@"{0}{1}.updatecookie", Directory.GetCurrentDirectory (), Path.DirectorySeparatorChar);
 			if (File.Exists (oldUpdateCookie))
