@@ -61,11 +61,10 @@
       <Package>glib-sharp-2.0</Package>
     </Reference>
     <Reference Include="webkit-sharp">
-      <HintPath>..\..\..\..\usr\lib\cli\webkit-sharp-1.1\webkit-sharp.dll</HintPath>
+      <HintPath>External Assemblies\webkit-sharp-1.1\webkit-sharp.dll</HintPath>
     </Reference>
-    <Reference Include="notify-sharp, Version=0.4.0.0, Culture=neutral, PublicKeyToken=2df29c54e245917a">
-      <Private>False</Private>
-      <Package>notify-sharp</Package>
+    <Reference Include="notify-sharp">
+      <HintPath>External Assemblies\notify-sharp-0.4\notify-sharp.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

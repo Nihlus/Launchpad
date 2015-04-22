@@ -6,8 +6,8 @@
   </configuration>
   <import>
     <widget-library name="../bin/Debug/Launchpad.exe" internal="true" />
-    <widget-library name="../../../../../usr/lib/cli/webkit-sharp-1.1/webkit-sharp.dll" />
-    <widget-library name="notify-sharp, Version=0.4.0.0, Culture=neutral, PublicKeyToken=2df29c54e245917a" />
+    <widget-library name="../External Assemblies/notify-sharp-0.4/notify-sharp.dll" />
+    <widget-library name="../External Assemblies/webkit-sharp-1.1/webkit-sharp.dll" />
   </import>
   <widget class="Gtk.Window" id="Launchpad_Launcher.MainWindow" design-size="760 385">
     <action-group name="Default">
