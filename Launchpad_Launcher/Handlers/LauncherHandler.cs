@@ -109,7 +109,7 @@ namespace Launchpad
 					if (!(remoteChecksum == localChecksum))
 					{
 						//Copy the old manifest so that we can compare them when updating the game
-						File.Copy(local, local + ".old");
+						File.Copy(local, local + ".old", true);
 
 						FTP.DownloadFTPFile (remote, local, false);
 					}

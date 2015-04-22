@@ -38,7 +38,7 @@ namespace Launchpad
 			this.AddAccelGroup (this.UIManager.AccelGroup);
 			this.Name = "Launchpad_Launcher.MainWindow";
 			this.Title = global::Mono.Unix.Catalog.GetString ("Launchpad");
-			this.Icon = global::Gdk.Pixbuf.LoadFromResource ("Launchpad_Launcher.resource.Icons8-Android-Transport-Rocket.ico");
+			this.Icon = global::Gdk.Pixbuf.LoadFromResource ("Launchpad.Resources.RocketIcon.ico");
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
 			this.DefaultWidth = 755;
 			this.DefaultHeight = 412;
