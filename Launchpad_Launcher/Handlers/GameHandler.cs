@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Launchpad_Launcher
+namespace Launchpad
 {
 	/// <summary>
 	///  This class has a lot of async stuff going on. It handles installing the game

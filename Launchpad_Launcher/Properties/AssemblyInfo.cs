@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Jarl Gullberg")]
 [assembly: AssemblyProduct("Launchpad_Launcher")]
-[assembly: AssemblyCopyright("Copyright ©  2014 Jarl Gullberg")]
+[assembly: AssemblyCopyright("Copyright ©  2015 Jarl Gullberg")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

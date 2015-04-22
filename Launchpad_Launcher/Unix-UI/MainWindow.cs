@@ -4,7 +4,7 @@ using Gtk;
 using WebKit;
 using Notifications;
 
-namespace Launchpad_Launcher
+namespace Launchpad
 {
 	public partial class MainWindow : Gtk.Window
 	{
@@ -38,7 +38,7 @@ namespace Launchpad_Launcher
 		/// </summary>
 		WebView Browser = new WebView ();
 
-		public MainWindow () : 
+        public MainWindow () : 
 				base(Gtk.WindowType.Toplevel)
 		{		
 			this.Build ();
@@ -70,10 +70,9 @@ namespace Launchpad_Launcher
 			else
 			{
 				//if we can connect, proceeed with the rest of our checks.
-				//check if this is the first time we're starting the launcher.
 				if (Checks.IsInitialStartup ())
 				{
-					MessageDialog dialog = new MessageDialog (
+					MessageDialog shouldInstallHereDialog = new MessageDialog (
 						null, 
 						DialogFlags.Modal, 
 						MessageType.Question, 
@@ -84,16 +83,16 @@ namespace Launchpad_Launcher
 						"\n\n{0}", Config.GetLocalDir ()
 					));
 
-					if (dialog.Run () == (int)Gtk.ResponseType.Ok)
+					if (shouldInstallHereDialog.Run () == (int)Gtk.ResponseType.Ok)
 					{
-						dialog.Destroy ();
+						shouldInstallHereDialog.Destroy ();
 						//yes, install here
 						Console.WriteLine ("Installing in current directory.");
 						Config.CreateUpdateCookie ();
 					}
 					else
 					{
-						dialog.Destroy ();
+						shouldInstallHereDialog.Destroy ();
 						//no, don't install here
 						Console.WriteLine ("Exiting...");
 						Gtk.Application.Quit ();
@@ -285,22 +284,22 @@ namespace Launchpad_Launcher
 					Game.GameRepairFinished += OnRepairFinished;
 					Game.GameDownloadFailed += OnGameDownloadFailed;
 
-				if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
-				{
-					//install the game asynchronously
-					Game.RepairGame ();
-				}	
-				else
-				{
-					Notification noProvide = new Notification ();
-					noProvide.IconName = Stock.DialogError;
-					noProvide.Summary = "Launchpad - Platform not provided!";
-					noProvide.Body = "The server does not provide the game for the selected platform.";
-					noProvide.Show();
+				    if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
+				    {
+					    //install the game asynchronously
+					    Game.RepairGame ();
+				    }	
+				    else
+				    {
+					    Notification noProvide = new Notification ();
+					    noProvide.IconName = Stock.DialogError;
+					    noProvide.Summary = "Launchpad - Platform not provided!";
+					    noProvide.Body = "The server does not provide the game for the selected platform.";
+					    noProvide.Show();
 
-					PrimaryButton.Label = "Install";
-					PrimaryButton.Sensitive = true;
-				}
+					    PrimaryButton.Label = "Install";
+					    PrimaryButton.Sensitive = true;
+				    }
 
 					break;
 				}

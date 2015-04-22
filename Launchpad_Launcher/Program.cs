@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Gtk;
 
-namespace Launchpad_Launcher
+namespace Launchpad
 {
     class Program
     {

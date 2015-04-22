@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.IO;
 
-namespace Launchpad_Launcher
+namespace Launchpad
 {
 	/// <summary>
 	/// FTP handler. Handles downloading and reading files on a remote FTP server.
@@ -119,27 +119,21 @@ namespace Launchpad_Launcher
 				if (reader != null)
 				{
 					reader.Close ();
-					reader.Dispose ();
-					reader = null;
 				}
 				if (sizereader != null)
 				{
 					sizereader.Close();
-					sizereader.Dispose ();
-					sizereader = null;
 				}
 
 				//and finally, the requests themselves.
 				if (request != null)
 				{
 					request.Abort();
-					request = null;
 				}
 
 				if (sizerequest != null)
 				{
 					sizerequest.Abort();
-					sizerequest = null;
 				}
 			}
 
@@ -195,45 +189,42 @@ namespace Launchpad_Launcher
 	            long fileSize = 0;
 
             
-				using (reader = request.GetResponse().GetResponseStream())
+				reader = request.GetResponse().GetResponseStream();
+                sizereader = (FtpWebResponse)sizerequest.GetResponse();
+					
+				fileStream = new FileStream(localDestination, FileMode.Create);
+
+				//reset byte counter
+				FTPbytesDownloaded = 0;
+
+				fileSize = sizereader.ContentLength;
+
+				//set file info for progress reporting
+				ProgressArgs.Filename = Path.GetFileNameWithoutExtension(ftpSourceFilePath);
+				ProgressArgs.TotalBytes = (int)fileSize;
+
+				while (true)
 				{
-					using (sizereader = (FtpWebResponse)sizerequest.GetResponse())
+					bytesRead = reader.Read(buffer, 0, buffer.Length);
+
+					if (bytesRead == 0)
 					{
-						fileStream = new FileStream(localDestination, FileMode.Create);
-
-						//reset byte counter
-						FTPbytesDownloaded = 0;
-
-						fileSize = sizereader.ContentLength;
-
-						//set file info for progress reporting
-						ProgressArgs.Filename = Path.GetFileNameWithoutExtension(ftpSourceFilePath);
-						ProgressArgs.TotalBytes = (int)fileSize;
-
-						while (true)
-						{
-							bytesRead = reader.Read(buffer, 0, buffer.Length);
-
-							if (bytesRead == 0)
-							{
-								break;
-							}
-
-							FTPbytesDownloaded = FTPbytesDownloaded + bytesRead;
-							fileStream.Write(buffer, 0, bytesRead);
-
-							//set file progress info
-							ProgressArgs.DownloadedBytes = FTPbytesDownloaded;
-
-							OnProgressChanged();
-						}
-
-						OnProgressChanged();
-
-						returnValue = localDestination;
-						return returnValue;
+						break;
 					}
-				}                				                             
+
+					FTPbytesDownloaded = FTPbytesDownloaded + bytesRead;
+					fileStream.Write(buffer, 0, bytesRead);
+
+					//set file progress info
+					ProgressArgs.DownloadedBytes = FTPbytesDownloaded;
+
+					OnProgressChanged();
+				}
+
+				OnProgressChanged();
+
+				returnValue = localDestination;
+				return returnValue;             				                             
             }
             catch (Exception ex)
             {
@@ -255,34 +246,27 @@ namespace Launchpad_Launcher
 				if (fileStream != null)
 				{
 					fileStream.Close();
-					fileStream.Dispose ();
 				}
 
 				//then, the responses that are reading from the requests.
 				if (reader != null)
 				{
 					reader.Close ();
-					reader.Dispose ();
-					reader = null;
 				}
 				if (sizereader != null)
 				{
 					sizereader.Close();
-					sizereader.Dispose ();
-					sizereader = null;
 				}
 
 				//and finally, the requests themselves.
 				if (request != null)
 				{
 					request.Abort();
-					request = null;
 				}
 
 				if (sizerequest != null)
 				{
 					sizerequest.Abort();
-					sizerequest = null;
 				}
 			}
         }
@@ -400,7 +384,6 @@ namespace Launchpad_Launcher
 				if (response != null)
 				{
 					response.Close();
-					response.Dispose();
 				}
 			}
 

@@ -1,4 +1,4 @@
-﻿namespace Launchpad_Launcher
+﻿namespace Launchpad
 {
     partial class MainForm
     {
@@ -31,10 +31,10 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.changelogBrowser = new System.Windows.Forms.WebBrowser();
             this.mainProgressBar = new System.Windows.Forms.ProgressBar();
-            this.progress_label = new System.Windows.Forms.Label();
+            this.MessageLabel = new System.Windows.Forms.Label();
             this.downloadProgressLabel = new System.Windows.Forms.Label();
             this.aboutLink = new System.Windows.Forms.LinkLabel();
-            this.mainButton = new System.Windows.Forms.Button();
+            this.PrimaryButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // changelogBrowser
@@ -53,15 +53,15 @@
             this.mainProgressBar.Size = new System.Drawing.Size(400, 23);
             this.mainProgressBar.TabIndex = 2;
             // 
-            // progress_label
+            // MessageLabel
             // 
-            this.progress_label.AutoSize = true;
-            this.progress_label.BackColor = System.Drawing.Color.Transparent;
-            this.progress_label.Location = new System.Drawing.Point(13, 460);
-            this.progress_label.Name = "progress_label";
-            this.progress_label.Size = new System.Drawing.Size(41, 13);
-            this.progress_label.TabIndex = 5;
-            this.progress_label.Text = "Default";
+            this.MessageLabel.AutoSize = true;
+            this.MessageLabel.BackColor = System.Drawing.Color.Transparent;
+            this.MessageLabel.Location = new System.Drawing.Point(13, 460);
+            this.MessageLabel.Name = "MessageLabel";
+            this.MessageLabel.Size = new System.Drawing.Size(41, 13);
+            this.MessageLabel.TabIndex = 5;
+            this.MessageLabel.Text = "Default";
             // 
             // downloadProgressLabel
             // 
@@ -84,15 +84,15 @@
             this.aboutLink.TabStop = true;
             this.aboutLink.Text = "About";
             // 
-            // mainButton
+            // PrimaryButton
             // 
-            this.mainButton.Location = new System.Drawing.Point(739, 460);
-            this.mainButton.Name = "mainButton";
-            this.mainButton.Size = new System.Drawing.Size(104, 39);
-            this.mainButton.TabIndex = 11;
-            this.mainButton.Text = "MainButton";
-            this.mainButton.UseVisualStyleBackColor = true;
-            this.mainButton.Click += new System.EventHandler(this.mainButton_Click);
+            this.PrimaryButton.Location = new System.Drawing.Point(739, 460);
+            this.PrimaryButton.Name = "PrimaryButton";
+            this.PrimaryButton.Size = new System.Drawing.Size(104, 39);
+            this.PrimaryButton.TabIndex = 11;
+            this.PrimaryButton.Text = "PrimaryButton";
+            this.PrimaryButton.UseVisualStyleBackColor = true;
+            this.PrimaryButton.Click += new System.EventHandler(this.mainButton_Click);
             // 
             // MainForm
             // 
@@ -101,10 +101,10 @@
             this.BackColor = System.Drawing.SystemColors.Control;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(855, 512);
-            this.Controls.Add(this.mainButton);
+            this.Controls.Add(this.PrimaryButton);
             this.Controls.Add(this.aboutLink);
             this.Controls.Add(this.downloadProgressLabel);
-            this.Controls.Add(this.progress_label);
+            this.Controls.Add(this.MessageLabel);
             this.Controls.Add(this.mainProgressBar);
             this.Controls.Add(this.changelogBrowser);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -121,10 +121,10 @@
 
         private System.Windows.Forms.WebBrowser changelogBrowser;
         private System.Windows.Forms.ProgressBar mainProgressBar;
-        private System.Windows.Forms.Label progress_label;
+        private System.Windows.Forms.Label MessageLabel;
         private System.Windows.Forms.Label downloadProgressLabel;
         private System.Windows.Forms.LinkLabel aboutLink;
-        private System.Windows.Forms.Button mainButton;
+        private System.Windows.Forms.Button PrimaryButton;
     }
 }
 

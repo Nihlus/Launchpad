@@ -9,7 +9,7 @@ using IniParser;
 using IniParser.Model;
 
 
-namespace Launchpad_Launcher
+namespace Launchpad
 {
 	/// <summary>
 	/// Config handler. This class handles reading and writing to the launcher's configuration.
@@ -400,7 +400,7 @@ namespace Launchpad_Launcher
 		/// Gets the custom launcher download URL.
 		/// </summary>
 		/// <returns>The custom launcher download URL.</returns>
-        public string GetLauncherURL()
+        public string GetLauncherBinaryURL()
         {
             string launcherURL = String.Format("{0}/launcher/bin/Launchpad.exe", GetFTPUrl());
             return launcherURL;
@@ -837,7 +837,7 @@ namespace Launchpad_Launcher
                 {
                     lock (ConfigLock)
 					{
-						//Have not we already created the new config dir?
+						//Have we not already created the new config dir?
 						if (!Directory.Exists(GetConfigDir()))
 						{
 							//if not, create it.
@@ -890,25 +890,34 @@ namespace Launchpad_Launcher
 				{
 					//Windows, so direct access without copying.
 					//read our new file.
-					FileIniDataParser Parser = new FileIniDataParser();
-					IniData data = Parser.ReadFile(GetConfigPath());
+                    if (File.Exists(oldConfigPath))
+                    {
+                        FileIniDataParser Parser = new FileIniDataParser();
+					    IniData data = Parser.ReadFile(GetConfigPath());
 
-					//replace the old invalid keys with new, updated keys.
-					string launcherVersion = data["Local"]["launcherVersion"];
-					string gameName = data["Local"]["gameName"];
-					string systemTarget = data["Local"]["systemTarget"];
+					    //replace the old invalid keys with new, updated keys.
+					    string launcherVersion = data["Local"]["launcherVersion"];
+					    string gameName = data["Local"]["gameName"];
+					    string systemTarget = data["Local"]["systemTarget"];
 
-					data["Local"].RemoveKey("launcherVersion");
-					data["Local"].RemoveKey("gameName");
-					data["Local"].RemoveKey("systemTarget");
+					    data["Local"].RemoveKey("launcherVersion");
+					    data["Local"].RemoveKey("gameName");
+					    data["Local"].RemoveKey("systemTarget");
 
-					data["Local"].AddKey("LauncherVersion", launcherVersion);
-					data["Local"].AddKey("GameName", gameName);
-					data["Local"].AddKey("SystemTarget", systemTarget);
+					    data["Local"].AddKey("LauncherVersion", launcherVersion);
+					    data["Local"].AddKey("GameName", gameName);
+					    data["Local"].AddKey("SystemTarget", systemTarget);
 
-					WriteConfig (Parser, data);
-					//We were successful, so return true.
-					return true;
+					    WriteConfig (Parser, data);
+
+					    //We were successful, so return true.
+					    return true;
+                    }	
+				    else
+                    {
+                        return false;
+                    }
+
 				}               
             }
 

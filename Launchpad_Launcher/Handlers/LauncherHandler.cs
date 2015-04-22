@@ -12,7 +12,7 @@ using System.Threading;
  * 
  */
 
-namespace Launchpad_Launcher
+namespace Launchpad
 {
 	/// <summary>
 	/// This class has a lot of async stuff going on. It handles updating the launcher
@@ -72,7 +72,7 @@ namespace Launchpad_Launcher
 				                             executableName);
 
 				//download the new launcher binary to the system's temp dir
-				FTP.DownloadFTPFile(Config.GetLauncherURL(), local, false);
+				FTP.DownloadFTPFile(Config.GetLauncherBinaryURL(), local, false);
 				//first, create a script that will update our launcher
 				ProcessStartInfo script = CreateUpdateScript ();
 
@@ -129,7 +129,6 @@ namespace Launchpad_Launcher
 				if (manifestStream != null)
 				{
 					manifestStream.Close ();
-					manifestStream.Dispose ();
 				}
 			}
 		}
@@ -195,7 +194,6 @@ namespace Launchpad_Launcher
 					tw.WriteLine("chmod +x " + executableName);
 					tw.WriteLine (launchCom);
 					tw.Close();
-					updateScript.Close();
 
 					UnixHandler Unix = new UnixHandler();
 					Unix.MakeExecutable(scriptPath);

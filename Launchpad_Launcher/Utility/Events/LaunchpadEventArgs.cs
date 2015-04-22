@@ -1,6 +1,6 @@
 using System;
 
-namespace Launchpad_Launcher
+namespace Launchpad
 {	
 	//FTP arguments for progress events
 	/// <summary>

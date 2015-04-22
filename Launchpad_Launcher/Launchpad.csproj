@@ -7,12 +7,27 @@
     <ProjectGuid>{676312FB-AF67-4340-B86F-9CCEB22D802F}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Launchpad_Launcher</RootNamespace>
+    <RootNamespace>Launchpad</RootNamespace>
     <AssemblyName>Launchpad</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProductVersion>12.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -23,6 +38,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -32,6 +48,12 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\RocketIcon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Launchpad.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="INIFileParser">
@@ -68,6 +90,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -78,6 +101,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="LICENSE" />
     <None Include="packages.config" />
@@ -100,31 +124,28 @@
     <Compile Include="Handlers\ChecksHandler.cs" />
     <Compile Include="Handlers\StatsHandler.cs" />
     <Compile Include="Handlers\FTPHandler.cs" />
-    <Compile Include="Windows-UI\AboutBox1.cs">
+    <Compile Include="Windows-UI\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Windows-UI\AboutBox1.Designer.cs">
-      <DependentUpon>AboutBox1.cs</DependentUpon>
+    <Compile Include="Windows-UI\AboutBox.Designer.cs">
+      <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Windows-UI\AboutBox1.resx">
-      <DependentUpon>AboutBox1.cs</DependentUpon>
+    <EmbeddedResource Include="Windows-UI\AboutBox.resx">
+      <DependentUpon>AboutBox.cs</DependentUpon>
     </EmbeddedResource>
-    <Compile Include="Windows-UI\Form1.cs">
+    <Compile Include="Windows-UI\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Windows-UI\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Windows-UI\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Windows-UI\Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="Windows-UI\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <Compile Include="Windows-UI\ImageButton.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Unix-UI\MainWindow.cs" />
     <Compile Include="Unix-UI\SettingsDialog.cs" />
     <Compile Include="gtk-gui\Launchpad_Launcher.SettingsDialog.cs" />
-    <EmbeddedResource Include="resource\Icons8-Android-Transport-Rocket.ico" />
+    <EmbeddedResource Include="Resources\RocketIcon.ico" />
     <Compile Include="Handlers\GameHandler.cs" />
     <Compile Include="Handlers\LauncherHandler.cs" />
     <Compile Include="Handlers\UnixHandler.cs" />
@@ -137,22 +158,22 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="resource\Button_Mini_Hover.png" />
-    <EmbeddedResource Include="resource\Button_Install_Hover.png" />
-    <EmbeddedResource Include="resource\Button_Update_Hover.png" />
-    <EmbeddedResource Include="resource\Button_Play_Hover.png" />
-    <EmbeddedResource Include="resource\Background_hexagon.png" />
-    <EmbeddedResource Include="resource\Background_hexagon_textbox.png" />
-    <EmbeddedResource Include="resource\Button_Install_Default.png" />
-    <EmbeddedResource Include="resource\Button_Install_Pressed.png" />
-    <EmbeddedResource Include="resource\Button_Launch_Default.png" />
-    <EmbeddedResource Include="resource\Button_Launch_Pressed.png" />
-    <EmbeddedResource Include="resource\Button_Mini_Default.png" />
-    <EmbeddedResource Include="resource\Button_Mini_Pressed.png" />
-    <EmbeddedResource Include="resource\Button_Play_Default.png" />
-    <EmbeddedResource Include="resource\Button_Play_Pressed.png" />
-    <EmbeddedResource Include="resource\Button_Update_Default.png" />
-    <EmbeddedResource Include="resource\Button_Update_Pressed.png" />
+    <EmbeddedResource Include="Resources\Button_Mini_Hover.png" />
+    <EmbeddedResource Include="Resources\Button_Install_Hover.png" />
+    <EmbeddedResource Include="Resources\Button_Update_Hover.png" />
+    <EmbeddedResource Include="Resources\Button_Play_Hover.png" />
+    <EmbeddedResource Include="Resources\Background_hexagon.png" />
+    <EmbeddedResource Include="Resources\Background_hexagon_textbox.png" />
+    <EmbeddedResource Include="Resources\Button_Install_Default.png" />
+    <EmbeddedResource Include="Resources\Button_Install_Pressed.png" />
+    <EmbeddedResource Include="Resources\Button_Launch_Default.png" />
+    <EmbeddedResource Include="Resources\Button_Launch_Pressed.png" />
+    <EmbeddedResource Include="Resources\Button_Mini_Default.png" />
+    <EmbeddedResource Include="Resources\Button_Mini_Pressed.png" />
+    <EmbeddedResource Include="Resources\Button_Play_Default.png" />
+    <EmbeddedResource Include="Resources\Button_Play_Pressed.png" />
+    <EmbeddedResource Include="Resources\Button_Update_Default.png" />
+    <EmbeddedResource Include="Resources\Button_Update_Pressed.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -162,10 +183,22 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Utility\" />
-    <Folder Include="Utility\Enums\" />
-    <Folder Include="Utility\Events\" />
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
 </Project>

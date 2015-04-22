@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Net;
 
-namespace Launchpad_Launcher
+namespace Launchpad
 {
 	/// <summary>
 	/// This class handles all the launcher's checks, returning bools for each function.
@@ -43,7 +43,7 @@ namespace Launchpad_Launcher
 				FtpWebRequest requestDir = (FtpWebRequest)FtpWebRequest.Create(FTPURL);
 				requestDir.Credentials = new NetworkCredential(FTPUserName, FTPPassword);
 				requestDir.Method = WebRequestMethods.Ftp.ListDirectory;
-				requestDir.Timeout = 20000;
+				requestDir.Timeout = 8000;
 
 				try
 				{

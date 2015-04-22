@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Security.Cryptography;
 
-namespace Launchpad_Launcher
+namespace Launchpad
 {
 	/// <summary>
 	/// MD5 hashing handler. Used to ensure file integrity.

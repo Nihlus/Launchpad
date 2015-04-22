@@ -1,7 +1,7 @@
 using System;
 using System.Net;
 
-namespace Launchpad_Launcher
+namespace Launchpad
 {
 	/// <summary>
 	/// Anonymous stat sending handler.

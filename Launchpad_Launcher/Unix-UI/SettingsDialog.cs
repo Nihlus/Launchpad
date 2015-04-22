@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Gtk;
 
-namespace Launchpad_Launcher
+namespace Launchpad
 {
 	/// <summary>
 	/// Settings dialog box.

@@ -7,11 +7,11 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Launchpad_Launcher
+namespace Launchpad
 {
-    partial class AboutBox1 : Form
+    partial class LaunchpadAboutBox : Form
     {
-        public AboutBox1()
+        public LaunchpadAboutBox()
         {
             InitializeComponent();
             this.Text = String.Format("About {0}", AssemblyTitle);

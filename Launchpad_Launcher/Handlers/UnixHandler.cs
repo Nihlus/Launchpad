@@ -1,7 +1,7 @@
 using System;
 using Mono.Unix.Native;
 
-namespace Launchpad_Launcher
+namespace Launchpad
 {
 	/// <summary>
 	/// Unix-specific functionality handler.

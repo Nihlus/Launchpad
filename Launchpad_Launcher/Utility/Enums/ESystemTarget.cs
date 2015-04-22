@@ -1,6 +1,6 @@
 using System;
 
-namespace Launchpad_Launcher
+namespace Launchpad
 {
 	public enum ESystemTarget
 	{
