@@ -381,8 +381,10 @@ namespace Launchpad
 		/// <returns>The manifest URL.</returns>
         public string GetManifestURL()
         {
-			string FTPUrl = GetFTPUrl ();
-            string manifestURL = String.Format("{0}/launcher/LauncherManifest.txt", FTPUrl);
+            string manifestURL = String.Format("{0}/game/{1}/LauncherManifest.txt", 
+                GetFTPUrl(),
+                GetSystemTarget());
+
             return manifestURL;
         }
 
@@ -392,7 +394,10 @@ namespace Launchpad
 		/// <returns>The manifest checksum URL.</returns>
         public string GetManifestChecksumURL()
         {
-            string manifestChecksumURL = String.Format("{0}/launcher/LauncherManifest.checksum", GetFTPUrl());
+            string manifestChecksumURL = String.Format("{0}/game/{1}/LauncherManifest.checksum", 
+                GetFTPUrl(), 
+                GetSystemTarget());
+
             return manifestChecksumURL;
         }
 
@@ -426,11 +431,14 @@ namespace Launchpad
 			string gameURL;
 			if (bGetSystemGame)
 			{
-				gameURL = String.Format ("{0}/game/{1}/bin", GetFTPUrl (), GetSystemTarget ());
+				gameURL = String.Format ("{0}/game/{1}/bin", 
+                    GetFTPUrl (), 
+                    GetSystemTarget ());
 			}
 			else
 			{
-				gameURL = String.Format("{0}/game", GetFTPUrl());
+				gameURL = String.Format("{0}/game", 
+                    GetFTPUrl());
 			}
 
             return gameURL;
