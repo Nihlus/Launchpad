@@ -82,8 +82,6 @@ namespace Launchpad
 	            sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
 
 	            string data = "";
-	            long fileSize = 0;
-
             
                 reader = request.GetResponse().GetResponseStream();
                 sizereader = (FtpWebResponse)sizerequest.GetResponse();
@@ -91,8 +89,6 @@ namespace Launchpad
                 while (true)
                 {
                     bytesRead = reader.Read(buffer, 0, buffer.Length);
-
-                    fileSize = sizereader.ContentLength;
 
                     if (bytesRead == 0)
                     {
@@ -106,11 +102,11 @@ namespace Launchpad
 				//clean the output from \n and \0, then return
 				return Utilities.Clean (data);
             }
-            catch (Exception ex)
+            catch (WebException wex)
             {
                 Console.Write("ReadFTPFileException: ");
-                Console.WriteLine(ex.Message);
-                return ex.Message;
+                Console.WriteLine(wex.Message);
+                return wex.Message;
             }
 			finally
 			{
@@ -200,7 +196,7 @@ namespace Launchpad
 				fileSize = sizereader.ContentLength;
 
 				//set file info for progress reporting
-				ProgressArgs.Filename = Path.GetFileNameWithoutExtension(ftpSourceFilePath);
+				ProgressArgs.FileName = Path.GetFileNameWithoutExtension(ftpSourceFilePath);
 				ProgressArgs.TotalBytes = (int)fileSize;
 
 				while (true)
@@ -221,23 +217,27 @@ namespace Launchpad
 					OnProgressChanged();
 				}
 
-				OnProgressChanged();
+                OnProgressChanged();
+				OnDownloadFinished();
 
 				returnValue = localDestination;
 				return returnValue;             				                             
             }
-            catch (Exception ex)
+            catch (WebException wex)
             {
-                Console.Write("DownloadFTPFileException: ");
-                Console.WriteLine(ex.Message);
-				returnValue = ex.Message;
-
-				if (ex.Message == "Server returned an error: 421 There are too many connections from your internet address.")
-				{
-					Console.WriteLine ("Breakpoint!");
-				}
+                Console.Write("WebException in DownloadFTPFile: ");
+                Console.WriteLine(wex.Message);
+                returnValue = wex.Message;
 
 				return returnValue;
+            }
+            catch (IOException ioex)
+            {
+                Console.Write("IOException in DownloadFTPFile: ");
+                Console.WriteLine(ioex.Message);
+                returnValue = ioex.Message;
+
+                return returnValue;
             }
 			finally
 			{
@@ -277,7 +277,7 @@ namespace Launchpad
 		/// <returns>The ftp web request.</returns>
 		/// <param name="ftpDirectoryPath">Ftp directory path.</param>
 		/// <param name="keepAlive">If set to <c>true</c> keep alive.</param>
-        public FtpWebRequest CreateFtpWebRequest(string ftpDirectoryPath, string username, string password, bool keepAlive = false)
+        public static FtpWebRequest CreateFtpWebRequest(string ftpDirectoryPath, string username, string password, bool keepAlive = false)
         {
             try
             {
@@ -295,10 +295,10 @@ namespace Launchpad
 
                 return request;
             }
-            catch (Exception ex)
+            catch (WebException wex)
             {
                 Console.Write("CreateFTPWebRequestException: ");
-                Console.WriteLine(ex.Message);
+                Console.WriteLine(wex.Message);
 
                 return null;
             }
@@ -351,17 +351,17 @@ namespace Launchpad
 				checksum = ReadFTPFile (Config.GetManifestChecksumURL ());
 				checksum = Utilities.Clean(checksum);
 			}
-			catch (Exception ex)
+			catch (IOException ioex)
 			{
-				Console.WriteLine (ex.Message);
+				Console.WriteLine (ioex.Message);
 			}
 
 			return checksum;
 		}
 
-		public bool DoesItemExist(string item)
+		public bool DoesFileExist(string remotePath)
 		{
-			FtpWebRequest request = CreateFtpWebRequest (item, 
+			FtpWebRequest request = CreateFtpWebRequest (remotePath, 
 			                                            Config.GetFTPUsername (),
 			                                            Config.GetFTPPassword (),
 			                                            false);

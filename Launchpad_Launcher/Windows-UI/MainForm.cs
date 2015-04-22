@@ -49,6 +49,7 @@ namespace Launchpad
 
             Config.Initialize();
             MessageLabel.Text = "Idle";
+            downloadProgressLabel.Text = String.Empty;
 
             //set the window text to match the game name
             this.Text = "Launchpad - " + Config.GetGameName();
@@ -69,14 +70,14 @@ namespace Launchpad
             else
             {
                 //if we can connect, proceed with the rest of our checks.                
-                if (Checks.IsInitialStartup())
+                if (ChecksHandler.IsInitialStartup())
                 {
                     DialogResult shouldInstallHere = MessageBox.Show(
                         this,
                         String.Format(
                         "This appears to be the first time you're starting the launcher.\n" +
                         "Is this the location where you would like to install the game?" +
-                        "\n\n{0}", Config.GetLocalDir()),
+                        "\n\n{0}", ConfigHandler.GetLocalDir()),
                         "Initial Startup",
                         MessageBoxButtons.YesNo,
                         MessageBoxIcon.Question,
@@ -86,7 +87,7 @@ namespace Launchpad
                     {
                         //yes, install here
                         Console.WriteLine("Installing in current directory.");
-                        Config.CreateUpdateCookie();
+                        ConfigHandler.CreateUpdateCookie();
                     }
                     else
                     {
@@ -100,7 +101,7 @@ namespace Launchpad
                 bool bSendAnonStats = false;
                 if (bSendAnonStats)
                 {
-                    StatsHandler.SendUseageStats();
+                    StatsHandler.SendUsageStats();
                 }
                 else
                 {
@@ -347,7 +348,7 @@ namespace Launchpad
         /// <param name="e">Contains the type of failure that occurred.</param>
         private void OnGameDownloadFailed(object sender, GameDownloadFailedEventArgs e)
         {
-            switch (e.Type)
+            switch (e.ResultType)
             {
                 case "Install":
                     {
@@ -369,7 +370,7 @@ namespace Launchpad
                     }
             }
 
-            PrimaryButton.Text = e.Type;
+            PrimaryButton.Text = e.ResultType;
             PrimaryButton.Enabled = true;
         }
 
@@ -381,7 +382,7 @@ namespace Launchpad
         protected void OnGameDownloadProgressChanged(object sender, FileDownloadProgressChangedEventArgs e)
         {
             string progressbarText = String.Format("Downloading file {0}: {1} of {2} bytes.",
-                                                       System.IO.Path.GetFileNameWithoutExtension(e.Filename),
+                                                       System.IO.Path.GetFileNameWithoutExtension(e.FileName),
                                                        e.DownloadedBytes.ToString(),
                                                        e.TotalBytes.ToString());
 
@@ -413,7 +414,7 @@ namespace Launchpad
                     launchFailedNotification.ShowBalloonTip(10000);
                 }
 
-                PrimaryButton.Text = e.Type; //URL is used here to set the desired retry action
+                PrimaryButton.Text = e.ResultType; //URL is used here to set the desired retry action
                 PrimaryButton.Enabled = true;
             }
             else //the game has finished downloading, and we should be OK to launch

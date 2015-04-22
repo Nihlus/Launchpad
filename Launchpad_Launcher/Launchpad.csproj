@@ -56,6 +56,12 @@
   <PropertyGroup>
     <StartupObject>Launchpad.Program</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Launchpad-StrongKey.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="INIFileParser">
       <HintPath>..\packages\ini-parser.2.1.1\lib\INIFileParser.dll</HintPath>
@@ -104,6 +110,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="Launchpad-StrongKey.pfx" />
     <None Include="LICENSE" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

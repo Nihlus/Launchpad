@@ -14,13 +14,13 @@ namespace Launchpad
 		static ConfigHandler Config = ConfigHandler._instance;
 
 		/// <summary>
-		/// Sends the useage stats.
+		/// Sends the usage stats.
 		/// </summary>
 		/// <param name="guid">GUID.</param>
 		/// <param name="version">Version.</param>
 		/// <param name="gameName">Game name.</param>
 		/// <param name="officialUpdates">If set to <c>true</c> official updates.</param>
-		static public void SendUseageStats()
+		static public void SendUsageStats()
 		{
 			try
 			{
@@ -37,9 +37,9 @@ namespace Launchpad
 				getRequest.GetResponse();
                 getRequest.Abort();                
 			}
-			catch (Exception ex)
+			catch (WebException wex)
 			{
-				Console.WriteLine (ex.Message);
+				Console.WriteLine ("WebException in SendUsageStats(): " + wex.Message);
 			}
 		}
 	}

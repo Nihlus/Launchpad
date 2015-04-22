@@ -24,10 +24,18 @@ namespace Launchpad
 			{
 				Target = (ESystemTarget)Enum.Parse (typeof(ESystemTarget), input);
 			}
-			catch (Exception ex)
+			catch (ArgumentNullException anex)
 			{ 
-				Console.WriteLine (ex.Message);
+				Console.WriteLine ("ArgumentNullException in ParseSystemTarget(): " + anex.Message);
 			}
+            catch (ArgumentException aex)
+            {
+                Console.WriteLine("ArgumentException in ParseSystemTarget(): " + aex.Message);
+            }
+            catch (OverflowException oex)
+            {
+                Console.WriteLine("OverflowException in ParseSystemTarget(): " + oex.Message);
+            }
 
 			return Target;
 		}

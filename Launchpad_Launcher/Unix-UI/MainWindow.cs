@@ -70,7 +70,7 @@ namespace Launchpad
 			else
 			{
 				//if we can connect, proceeed with the rest of our checks.
-				if (Checks.IsInitialStartup ())
+				if (ChecksHandler.IsInitialStartup ())
 				{
 					MessageDialog shouldInstallHereDialog = new MessageDialog (
 						null, 
@@ -80,7 +80,7 @@ namespace Launchpad
 						String.Format (
 						"This appears to be the first time you're starting the launcher." +
 						"Is this the location where you would like to install the game?" +
-						"\n\n{0}", Config.GetLocalDir ()
+						"\n\n{0}", ConfigHandler.GetLocalDir ()
 					));
 
 					if (shouldInstallHereDialog.Run () == (int)Gtk.ResponseType.Ok)
@@ -88,7 +88,7 @@ namespace Launchpad
 						shouldInstallHereDialog.Destroy ();
 						//yes, install here
 						Console.WriteLine ("Installing in current directory.");
-						Config.CreateUpdateCookie ();
+						ConfigHandler.CreateUpdateCookie ();
 					}
 					else
 					{
@@ -106,7 +106,7 @@ namespace Launchpad
 				if (bSendAnonStats)
 				{
 					Console.WriteLine ("Sending anonymous useage stats to hambase 1 :) Thanks!");
-					StatsHandler.SendUseageStats ();
+					StatsHandler.SendUsageStats ();
 				}
 				else
 				{
@@ -331,7 +331,7 @@ namespace Launchpad
             //Take the resulting HTML string from the changelog download and send it to the Webkit browser
             Gtk.Application.Invoke(delegate
             {
-                Browser.LoadHtmlString(e.Result, e.Type);
+                Browser.LoadHtmlString(e.Result, e.ResultType);
 
             });
         }
@@ -360,7 +360,7 @@ namespace Launchpad
         /// <param name="e">Contains the type of failure that occurred.</param>
 		private void OnGameDownloadFailed(object sender, GameDownloadFailedEventArgs e)
 		{
-			switch(e.Type)
+			switch(e.ResultType)
 			{
 				case "Install":
 				{
@@ -382,7 +382,7 @@ namespace Launchpad
 				}
 			}
 
-			PrimaryButton.Label = e.Type;
+			PrimaryButton.Label = e.ResultType;
 			PrimaryButton.Sensitive = true;
 		}
 
@@ -397,7 +397,7 @@ namespace Launchpad
             {
 
                 string progressbarText = String.Format("Downloading file {0}: {1} of {2} bytes.",
-                                                       System.IO.Path.GetFileNameWithoutExtension(e.Filename),
+                                                       System.IO.Path.GetFileNameWithoutExtension(e.FileName),
                                                        e.DownloadedBytes.ToString(),
                                                        e.TotalBytes.ToString());
                 progressbar2.Text = progressbarText;
@@ -413,35 +413,38 @@ namespace Launchpad
         /// <param name="e">Contains the result of the download.</param>
         protected void OnGameDownloadFinished(object sender, GameDownloadFinishedEventArgs e)
         {
-            if (e.Result == "1") //there was an error
+            if (e != null)
             {
-                MessageLabel.Text = "Game download failed. Are you missing the manifest?";
+                if (e.Result == "1") //there was an error
+                {
+                    MessageLabel.Text = "Game download failed. Are you missing the manifest?";
 
-                Notification failedNot = new Notification();
-                failedNot.IconName = Stock.DialogError;
-                failedNot.Summary = "Launchpad - Error";
-                failedNot.Body = "The game failed to download. Are you missing the manifest?";
+                    Notification failedNot = new Notification();
+                    failedNot.IconName = Stock.DialogError;
+                    failedNot.Summary = "Launchpad - Error";
+                    failedNot.Body = "The game failed to download. Are you missing the manifest?";
 
-                failedNot.Show();
+                    failedNot.Show();
 
-                PrimaryButton.Label = e.Type; //URL is used here to set the desired retry action
-                PrimaryButton.Sensitive = true;
-            }
-            else //the game has finished downloading, and we should be OK to launch
-            {
-                MessageLabel.Text = "Idle";
-                progressbar2.Text = "";
+                    PrimaryButton.Label = e.ResultType; //URL is used here to set the desired retry action
+                    PrimaryButton.Sensitive = true;
+                }
+                else //the game has finished downloading, and we should be OK to launch
+                {
+                    MessageLabel.Text = "Idle";
+                    progressbar2.Text = "";
 
-                Notification completedNot = new Notification();
-                completedNot.IconName = Stock.Info;
-                completedNot.Summary = "Launchpad - Info";
-                completedNot.Body = "Game download finished. Play away!";
+                    Notification completedNot = new Notification();
+                    completedNot.IconName = Stock.Info;
+                    completedNot.Summary = "Launchpad - Info";
+                    completedNot.Body = "Game download finished. Play away!";
 
-                completedNot.Show();
+                    completedNot.Show();
 
-                PrimaryButton.Label = "Launch";
-                PrimaryButton.Sensitive = true;
-            }
+                    PrimaryButton.Label = "Launch";
+                    PrimaryButton.Sensitive = true;
+                }
+            }           
         }
 
         /// <summary>

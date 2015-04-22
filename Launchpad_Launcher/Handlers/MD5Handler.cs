@@ -12,21 +12,14 @@ namespace Launchpad
 	/// <summary>
 	/// MD5 hashing handler. Used to ensure file integrity.
 	/// </summary>
-    internal sealed class MD5Handler
+    internal static class MD5Handler
     {
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Launchpad_Launcher.MD5Handler"/> class.
-		/// </summary>
-		public MD5Handler()
-		{
-
-		}
         /// <summary>
         /// Gets the file hash from a file stream.
         /// </summary>
         /// <returns>The file hash.</returns>
         /// <param name="fileStream">File stream.</param>
-        public string GetFileHash(Stream fileStream)
+        public static string GetFileHash(Stream fileStream)
         {
 
             try
@@ -39,10 +32,10 @@ namespace Launchpad
                     return resultString;
                 }
             }
-            catch (Exception ex)
+            catch (IOException ioex)
             {
-				Console.Write ("MD5 Hash Computing: ");
-				Console.WriteLine (ex.Message);
+				Console.Write ("IOException in GetFileHash(): ");
+				Console.WriteLine (ioex.Message);
 
                 return "";
             }

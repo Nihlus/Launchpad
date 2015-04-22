@@ -40,32 +40,32 @@ namespace Launchpad
 
 			try
 			{
-				FtpWebRequest requestDir = (FtpWebRequest)FtpWebRequest.Create(FTPURL);
-				requestDir.Credentials = new NetworkCredential(FTPUserName, FTPPassword);
-				requestDir.Method = WebRequestMethods.Ftp.ListDirectory;
-				requestDir.Timeout = 8000;
+				FtpWebRequest plainRequest = (FtpWebRequest)FtpWebRequest.Create(FTPURL);
+				plainRequest.Credentials = new NetworkCredential(FTPUserName, FTPPassword);
+				plainRequest.Method = WebRequestMethods.Ftp.ListDirectory;
+				plainRequest.Timeout = 8000;
 
 				try
 				{
+					WebResponse response = plainRequest.GetResponse();
 
-					WebResponse response = requestDir.GetResponse();
-
-					Console.WriteLine("Can connect to FTP at: {0}", Config.GetBaseFTPUrl());
-					requestDir.Abort();//important otherwise FTP remains open and further attemps to access it hang
+					plainRequest.Abort();
 					response.Close();
 
 					bCanConnectToFTP = true;
 				}
-				catch
+				catch (WebException wex)
 				{
-					requestDir.Abort();
+                    Console.WriteLine("CanConnectToFTP(): " + wex.Message);
+
+					plainRequest.Abort();
 					bCanConnectToFTP = false;
 				}
 			}
-			catch
+			catch (WebException wex)
 			{
-				//case where ftp url in config is not valid
-				Console.WriteLine ("Failed to connect to FTP server. It seems like the specified URL was invalid - please check the configuration.");;
+				//case where FTP URL in config is not valid
+				Console.WriteLine ("CanConnectToFTP(): " + wex.Message);
 
 				bCanConnectToFTP = false;
 				return bCanConnectToFTP;
@@ -84,10 +84,10 @@ namespace Launchpad
 		/// Determines whether this is the first time the launcher starts.
 		/// </summary>
 		/// <returns><c>true</c> if this is the first time; otherwise, <c>false</c>.</returns>
-		public bool IsInitialStartup()
+		public static bool IsInitialStartup()
 		{
 			//we use an empty file to determine if this is the first launch or not
-			if (!File.Exists(Config.GetUpdateCookie()))
+			if (!File.Exists(ConfigHandler.GetUpdateCookiePath()))
 			{
 				Console.WriteLine ("First time starting launcher.");
 				return true;
@@ -100,10 +100,10 @@ namespace Launchpad
 		}
 
 		/// <summary>
-		/// Determines whether this instance is running on unix.
+		/// Determines whether this instance is running on Unix.
 		/// </summary>
 		/// <returns><c>true</c> if this instance is running on unix; otherwise, <c>false</c>.</returns>
-		public bool IsRunningOnUnix()
+		public static bool IsRunningOnUnix()
 		{
 			int p = (int)Environment.OSVersion.Platform;
 			if ((p == 4) || (p == 6) || (p == 128))
@@ -128,7 +128,7 @@ namespace Launchpad
 			//Does the game directory exist?
 			bool bHasDirectory = Directory.Exists(Config.GetGamePath(true));
 			//Is there an .install file in the directory?
-			bool bHasInstallationCookie = File.Exists(Config.GetInstallCookie());
+			bool bHasInstallationCookie = File.Exists(ConfigHandler.GetInstallCookiePath());
 			//is there a version file?
 			bool bHasGameVersion = File.Exists (Config.GetGameVersionPath ());
 
@@ -162,9 +162,9 @@ namespace Launchpad
 					return false;
 				}
 			}
-			catch (Exception ex)
+			catch (WebException wex)
 			{
-				Console.WriteLine ("IsGameOutdated(): " + ex.Message);
+				Console.WriteLine ("IsGameOutdated(): " + wex.Message);
 				return true;
 			}
 		}
@@ -190,9 +190,9 @@ namespace Launchpad
 					return false;
 				}
 			} 
-			catch (Exception ex)
+			catch (WebException wex)
 			{
-				Console.WriteLine ("IsLauncherOutdated(): " + ex.Message);
+				Console.WriteLine ("IsLauncherOutdated(): " + wex.Message);
 				return false;	
 			}
 		}
@@ -201,16 +201,16 @@ namespace Launchpad
 		/// Determines whether the install cookie is empty
 		/// </summary>
 		/// <returns><c>true</c> if the install cookie is empty, otherwise, <c>false</c>.</returns>
-		public bool IsInstallCookieEmpty()
+		public static bool IsInstallCookieEmpty()
 		{
 			//Is there an .install file in the directory?
-			bool bHasInstallationCookie = File.Exists(Config.GetInstallCookie());
+			bool bHasInstallationCookie = File.Exists(ConfigHandler.GetInstallCookiePath());
 			//Is the .install file empty? Assume false.
 			bool bIsInstallCookieEmpty = false;
 
 			if (bHasInstallationCookie)
 			{
-				bIsInstallCookieEmpty = (File.ReadAllText(Config.GetInstallCookie()) == "");
+				bIsInstallCookieEmpty = String.IsNullOrEmpty(File.ReadAllText(ConfigHandler.GetInstallCookiePath()));
 			}
 
 			return bIsInstallCookieEmpty;
@@ -222,14 +222,13 @@ namespace Launchpad
 		/// <returns><c>true</c> if the manifest is outdated; otherwise, <c>false</c>.</returns>
 		public bool IsManifestOutdated()
 		{
-			if (File.Exists(Config.GetManifestPath()))
+			if (File.Exists(ConfigHandler.GetManifestPath()))
 			{
 				FTPHandler FTP = new FTPHandler ();
-				MD5Handler MD5 = new MD5Handler ();
 
 				string manifestURL = Config.GetManifestURL ();
 				string remoteHash = FTP.ReadFTPFile (manifestURL);
-				string localHash = MD5.GetFileHash (File.OpenRead (Config.GetManifestPath ()));
+                string localHash = MD5Handler.GetFileHash(File.OpenRead(ConfigHandler.GetManifestPath()));
 
 				if (remoteHash != localHash)
 				{
@@ -254,7 +253,7 @@ namespace Launchpad
 			                                        Config.GetFTPUrl(),
 			                                        Platform.ToString());
 
-			return FTP.DoesItemExist (remote);
+			return FTP.DoesFileExist (remote);
 			
 		}
 	}

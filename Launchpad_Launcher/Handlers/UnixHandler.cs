@@ -6,31 +6,24 @@ namespace Launchpad
 	/// <summary>
 	/// Unix-specific functionality handler.
 	/// </summary>
-	internal sealed class UnixHandler
+	internal static class UnixHandler
 	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Launchpad_Launcher.UnixHandler"/> class.
-		/// </summary>
-		public UnixHandler ()
-		{
-		}
-
 		/// <summary>
 		/// Sets the execute bit on target file. Note that this replaces all previous
 		/// permissions on the file, resulting in RWXRWXR-- permissions.
 		/// </summary>
 		/// <returns><c>true</c>, if operation succeeded, <c>false</c> otherwise.</returns>
 		/// <param name="fileName">File name.</param>
-		public bool MakeExecutable(string fileName)
+		public static bool MakeExecutable(string fileName)
 		{
 			try
 			{
 				Syscall.chmod (fileName, FilePermissions.S_IRWXU | FilePermissions.S_IRWXG | FilePermissions.S_IROTH);
 				return true;
 			}
-			catch (Exception ex)
+			catch (ApplicationException aex)
 			{
-				Console.WriteLine ("MakeExecutable(): " + ex.Message);
+				Console.WriteLine ("ApplicationException in MakeExecutable(): " + aex.Message);
 				return false;
 			}
 		}

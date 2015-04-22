@@ -32,7 +32,7 @@ namespace Launchpad
 			set;
 		}
 
-		public string Filename 
+		public string FileName 
 		{
 			get;
 			set;
@@ -44,7 +44,7 @@ namespace Launchpad
 			TotalBytes = 0;
 			DownloadedFiles = 0;
 			TotalFiles = 0;
-			Filename = "";
+			FileName = "";
 		}
 	}
 
@@ -56,7 +56,7 @@ namespace Launchpad
 			set;
 		}
 
-		public string Filename 
+		public string FileName 
 		{
 			get;
 			set;
@@ -78,7 +78,8 @@ namespace Launchpad
 			set;
 		}
 
-		public string Type {
+		public string ResultType 
+        {
 			get;
 			set;
 		}
@@ -102,7 +103,7 @@ namespace Launchpad
 			set;
 		}
 
-		public string Type {
+		public string ResultType {
 			get;
 			set;
 		}
@@ -126,7 +127,7 @@ namespace Launchpad
 			set;
 		}
 
-		public string Type {
+		public string ResultType {
 			get;
 			set;
 		}
@@ -159,7 +160,7 @@ namespace Launchpad
 			set;
 		}
 
-		public string Type {
+		public string ResultType {
 			get;
 			set;
 		}
@@ -184,7 +185,7 @@ namespace Launchpad
 			set;
 		}
 
-		public string MetaData
+		public string Metadata
 		{
 			get;
 			set;
@@ -199,7 +200,7 @@ namespace Launchpad
 			set;
 		}
 
-		public string MetaData
+		public string Metadata
 		{
 			get;
 			set;
@@ -214,7 +215,7 @@ namespace Launchpad
 			set;
 		}
 
-		public string MetaData
+		public string Metadata
 		{
 			get;
 			set;

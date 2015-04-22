@@ -48,16 +48,16 @@
             // 
             // mainProgressBar
             // 
-            this.mainProgressBar.Location = new System.Drawing.Point(13, 477);
+            this.mainProgressBar.Location = new System.Drawing.Point(18, 460);
             this.mainProgressBar.Name = "mainProgressBar";
-            this.mainProgressBar.Size = new System.Drawing.Size(400, 23);
+            this.mainProgressBar.Size = new System.Drawing.Size(390, 23);
             this.mainProgressBar.TabIndex = 2;
             // 
             // MessageLabel
             // 
             this.MessageLabel.AutoSize = true;
             this.MessageLabel.BackColor = System.Drawing.Color.Transparent;
-            this.MessageLabel.Location = new System.Drawing.Point(13, 460);
+            this.MessageLabel.Location = new System.Drawing.Point(15, 444);
             this.MessageLabel.Name = "MessageLabel";
             this.MessageLabel.Size = new System.Drawing.Size(41, 13);
             this.MessageLabel.TabIndex = 5;
@@ -67,7 +67,7 @@
             // 
             this.downloadProgressLabel.AutoSize = true;
             this.downloadProgressLabel.BackColor = System.Drawing.Color.Transparent;
-            this.downloadProgressLabel.Location = new System.Drawing.Point(13, 447);
+            this.downloadProgressLabel.Location = new System.Drawing.Point(15, 431);
             this.downloadProgressLabel.Name = "downloadProgressLabel";
             this.downloadProgressLabel.Size = new System.Drawing.Size(69, 13);
             this.downloadProgressLabel.TabIndex = 7;

@@ -68,7 +68,7 @@ namespace Launchpad
 				string executableName = Path.GetFileName(fullName); // should be "Launchpad", unless the user has renamed the file
 
 				string local = String.Format("{0}{1}", 
-				                             Config.GetTempDir(), 
+				                             ConfigHandler.GetTempDir(), 
 				                             executableName);
 
 				//download the new launcher binary to the system's temp dir
@@ -79,9 +79,9 @@ namespace Launchpad
 				Process.Start(script);
 				Environment.Exit(0);
 			}
-			catch (Exception ex)
+			catch (IOException ioex)
 			{
-				Console.WriteLine ("UpdateLauncher(): " + ex.Message);
+				Console.WriteLine ("IOException in UpdateLauncher(): " + ioex.Message);
 			}
 		}
 
@@ -94,18 +94,17 @@ namespace Launchpad
 			try
 			{
 				FTPHandler FTP = new FTPHandler ();
-				MD5Handler MD5 = new MD5Handler ();
 
 				string remoteChecksum = FTP.GetRemoteManifestChecksum ();
 				string localChecksum = "";
 
 				string remote = Config.GetManifestURL ();
-				string local = Config.GetManifestPath ();
+				string local = ConfigHandler.GetManifestPath ();
 
-				if (File.Exists(Config.GetManifestPath()))
+				if (File.Exists(ConfigHandler.GetManifestPath()))
 				{
-					manifestStream = File.OpenRead (Config.GetManifestPath ());
-					localChecksum = MD5.GetFileHash (manifestStream);
+					manifestStream = File.OpenRead (ConfigHandler.GetManifestPath ());
+                    localChecksum = MD5Handler.GetFileHash(manifestStream);
 
 					if (!(remoteChecksum == localChecksum))
 					{
@@ -120,9 +119,9 @@ namespace Launchpad
 					FTP.DownloadFTPFile (remote, local, false);
 				}						
 			}
-			catch (Exception ex)
+			catch (IOException ioex)
 			{
-				Console.WriteLine ("DownloadManifest(): " + ex.Message);
+				Console.WriteLine ("IOException in DownloadManifest(): " + ioex.Message);
 			}
 			finally
 			{
@@ -148,6 +147,7 @@ namespace Launchpad
 
 			//load the HTML from the server as a string
 			string content = FTP.ReadFTPFile (Config.GetChangelogURL ());
+            OnChangelogProgressChanged();
 					
 			DownloadFinishedArgs.Result = content;
 			DownloadFinishedArgs.Metadata = Config.GetChangelogURL ();
@@ -159,21 +159,19 @@ namespace Launchpad
 		/// Creates the update script on disk.
 		/// </summary>
 		/// <returns>ProcessStartInfo for the update script.</returns>
-		private ProcessStartInfo CreateUpdateScript()
+		private static ProcessStartInfo CreateUpdateScript()
 		{
 			try
 			{
-				ChecksHandler Checks = new ChecksHandler ();
-
 				//maintain the executable name if it was renamed to something other than 'Launchpad' 
 				string fullName = Assembly.GetEntryAssembly().Location;
 				string executableName = Path.GetFileName(fullName); // should be "Launchpad", unless the user has renamed it
 
-				if (Checks.IsRunningOnUnix())
+				if (ChecksHandler.IsRunningOnUnix())
 				{
 					//creating a .sh script
 					string scriptPath = String.Format (@"{0}launchpadupdate.sh", 
-					                                   Config.GetTempDir ()) ;
+					                                   ConfigHandler.GetTempDir ()) ;
 
 
 					FileStream updateScript = File.Create (scriptPath);
@@ -182,10 +180,10 @@ namespace Launchpad
 					//write commands to the script
 					//wait five seconds, then copy the new executable
 					string copyCom = String.Format ("mv -f {0} {1}", 
-					                                Config.GetTempDir() + executableName,
-					                                Config.GetLocalDir() + executableName);
+					                                ConfigHandler.GetTempDir() + executableName,
+					                                ConfigHandler.GetLocalDir() + executableName);
 
-					string dirCom = String.Format ("cd {0}", Config.GetLocalDir ());
+					string dirCom = String.Format ("cd {0}", ConfigHandler.GetLocalDir ());
 					string launchCom = String.Format (@"nohup ./{0} &", executableName);
 					tw.WriteLine (@"#!/bin/sh");
 					tw.WriteLine ("sleep 5");
@@ -195,8 +193,7 @@ namespace Launchpad
 					tw.WriteLine (launchCom);
 					tw.Close();
 
-					UnixHandler Unix = new UnixHandler();
-					Unix.MakeExecutable(scriptPath);
+                    UnixHandler.MakeExecutable(scriptPath);
 
 
 					//Now create some ProcessStartInfo for this script
@@ -213,7 +210,7 @@ namespace Launchpad
 				{
 					//creating a .bat script
 					string scriptPath = String.Format (@"{0}{1}update.bat", 
-					                                   Config.GetLocalDir (), 
+					                                   ConfigHandler.GetLocalDir (), 
 					                                   Path.DirectorySeparatorChar);
 
 					FileStream updateScript = File.Create(scriptPath);
@@ -223,8 +220,8 @@ namespace Launchpad
 					//write commands to the script
 					//wait three seconds, then copy the new executable
 					tw.WriteLine(String.Format(@"timeout 3 & xcopy /s /y ""{0}\{2}"" ""{1}\{2}"" && del ""{0}\{2}""", 
-					                           Config.GetTempDir(), 
-					                           Config.GetLocalDir(), 
+					                           ConfigHandler.GetTempDir(), 
+					                           ConfigHandler.GetLocalDir(), 
 					                           executableName));
 					//then start the new executable
 					tw.WriteLine(String.Format(@"start {0}", executableName));
@@ -240,16 +237,17 @@ namespace Launchpad
 					return updateBatchProcess;
 				}
 			}
-			catch (Exception ex)
+			catch (IOException ioex)
 			{
-				Console.WriteLine ("CreateUpdateScript(): " + ex.Message);
+				Console.WriteLine ("IOException in CreateUpdateScript(): " + ioex.Message);
 
-				return new ProcessStartInfo ();
+                return null;
 			}
 		}
 
 		/// <summary>
 		/// Raises the changelog progress changed event.
+        /// Fires once after the changelog has been downloaded, but the values have not been assigned yet.
 		/// </summary>
 		private void OnChangelogProgressChanged()
 		{
@@ -262,6 +260,7 @@ namespace Launchpad
 
 		/// <summary>
 		/// Raises the changelog download finished event.
+        /// Fires when the changelog has finished downloading and all values have been assigned.
 		/// </summary>
 		private void OnChangelogDownloadFinished()
 		{

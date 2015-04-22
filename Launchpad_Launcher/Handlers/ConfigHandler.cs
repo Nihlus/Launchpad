@@ -58,7 +58,7 @@ namespace Launchpad
 		/// Gets the config path.
 		/// </summary>
 		/// <returns>The config path.</returns>
-        private string GetConfigPath()
+        private static string GetConfigPath()
         {
 			string configPath = String.Format(@"{0}Config{1}LauncherConfig.ini", 
 			                                  GetLocalDir(), 
@@ -71,7 +71,7 @@ namespace Launchpad
 		/// Gets the config dir.
 		/// </summary>
 		/// <returns>The config dir.</returns>
-        private string GetConfigDir()
+        private static string GetConfigDir()
         {
 			string configDir = String.Format(@"{0}Config", GetLocalDir());
             return configDir;
@@ -135,9 +135,9 @@ namespace Launchpad
 
 						WriteConfig(Parser, data);
 					}
-					catch (Exception ex)
+					catch (IOException ioex)
 					{
-						Console.WriteLine(ex.Message);
+						Console.WriteLine(ioex.Message);
 					}
 
 				}
@@ -161,7 +161,7 @@ namespace Launchpad
 		/// Gets the update cookie.
 		/// </summary>
 		/// <returns>The update cookie.</returns>
-        public string GetUpdateCookie()
+        public static string GetUpdateCookiePath()
         {
 			string updateCookie = String.Format(@"{0}{1}.update", 
 			                                    Directory.GetCurrentDirectory(), 
@@ -173,7 +173,7 @@ namespace Launchpad
 		/// Creates the update cookie.
 		/// </summary>
 		/// <returns>The update cookie's path.</returns>
-		public string CreateUpdateCookie()
+		public static string CreateUpdateCookie()
 		{
 			bool bCookieExists = File.Exists (String.Format (@"{0}{1}.update", 
 			                                                Directory.GetCurrentDirectory (), 
@@ -190,7 +190,7 @@ namespace Launchpad
 			}
 			else
 			{
-				return GetUpdateCookie ();
+				return GetUpdateCookiePath ();
 			}
 		}
 
@@ -198,7 +198,7 @@ namespace Launchpad
 		/// Gets the install cookie.
 		/// </summary>
 		/// <returns>The install cookie.</returns>
-		public string GetInstallCookie()
+		public static string GetInstallCookiePath()
 		{
 			string installCookie = String.Format(@"{0}{1}.install", 
 			                                    Directory.GetCurrentDirectory(), 
@@ -210,7 +210,7 @@ namespace Launchpad
 		/// Creates the install cookie.
 		/// </summary>
 		/// <returns>The install cookie's path.</returns>
-		public string CreateInstallCookie()
+		public static string CreateInstallCookie()
 		{
 			bool bCookieExists = File.Exists (String.Format (@"{0}{1}.install", 
 			                                                 Directory.GetCurrentDirectory (), 
@@ -227,7 +227,7 @@ namespace Launchpad
 			}
 			else
 			{
-				return GetInstallCookie ();
+				return GetInstallCookiePath ();
 			}
 		}
 
@@ -235,7 +235,7 @@ namespace Launchpad
 		/// Gets the local dir.
 		/// </summary>
 		/// <returns>The local dir.</returns>
-        public string GetLocalDir()
+        public static string GetLocalDir()
         {
 			string localDir = String.Format(@"{0}{1}", Directory.GetCurrentDirectory(), Path.DirectorySeparatorChar);
             return localDir;
@@ -245,7 +245,7 @@ namespace Launchpad
 		/// Gets the temp dir.
 		/// </summary>
 		/// <returns>The temp dir.</returns>
-        public string GetTempDir()
+        public static string GetTempDir()
         {
 			string tempDir = Path.GetTempPath ();
             return tempDir;
@@ -255,7 +255,7 @@ namespace Launchpad
 		/// Gets the manifest path.
 		/// </summary>
 		/// <returns>The manifest path.</returns>
-        public string GetManifestPath()
+        public static string GetManifestPath()
         {
             string manifestPath = String.Format(@"{0}LauncherManifest.txt", GetLocalDir());
             return manifestPath;
@@ -291,12 +291,11 @@ namespace Launchpad
 		/// <returns>The game executable.</returns>
         public string GetGameExecutable()
         {
-			ChecksHandler Checks = new ChecksHandler ();
 			string executablePathRootLevel = "";
 			string executablePathTargetLevel = "";
 
 			//unix doesn't need (or have!) the .exe extension. Just start it directly.
-			if (Checks.IsRunningOnUnix())
+			if (ChecksHandler.IsRunningOnUnix())
 			{
 				//should return something along the lines of "./Game/<ExecutableName>"
 				executablePathRootLevel = String.Format(@"{0}{1}", 
@@ -353,9 +352,9 @@ namespace Launchpad
 			{
 				GameVersion = File.ReadAllText(GetGameVersionPath());
 			}
-			catch (Exception ex)
+			catch (IOException ioex)
 			{
-				Console.WriteLine ("GetLocalGameVersion(): " + ex.Message);
+				Console.WriteLine ("GetLocalGameVersion(): " + ioex.Message);
 			}
 
 			return Version.Parse(GameVersion);
@@ -460,10 +459,10 @@ namespace Launchpad
 					return Version.Parse(launcherVersion);
 
 				}
-				catch (Exception ex)
+				catch (IOException ioex)
 				{
 					Console.Write("GetLauncherVersion: ");
-					Console.WriteLine(ex.Message);
+					Console.WriteLine(ioex.Message);
 					return new Version ();
 				}
 			}            
@@ -486,10 +485,10 @@ namespace Launchpad
 
 					return gameName;
 				}
-				catch (Exception ex)
+				catch (IOException ioex)
 				{
 					Console.Write("GetGameName: ");
-					Console.WriteLine(ex.Message);
+					Console.WriteLine(ioex.Message);
 					return "";
 				}
 			}            
@@ -512,10 +511,10 @@ namespace Launchpad
 
 					WriteConfig(Parser, data);
 				}
-				catch (Exception ex)
+				catch (IOException ioex)
 				{
 					Console.Write("SetGameName: ");
-					Console.WriteLine(ex.Message);
+					Console.WriteLine(ioex.Message);
 				}
 
 			}
@@ -543,10 +542,10 @@ namespace Launchpad
 
 					return Utilities.ParseSystemTarget(systemTarget);
 				}
-				catch (Exception ex)
+				catch (IOException ioex)
 				{
 					Console.Write("GetSystemTarget: ");
-					Console.WriteLine(ex.Message);
+					Console.WriteLine(ioex.Message);
 					return ESystemTarget.Invalid;
 				}
 			}            
@@ -574,10 +573,10 @@ namespace Launchpad
 
 					WriteConfig(Parser, data);
 				}
-				catch (Exception ex)
+				catch (IOException ioex)
 				{
 					Console.Write("SetSystemTarget: ");
-					Console.WriteLine(ex.Message);                    
+					Console.WriteLine(ioex.Message);                    
 				}
 			}
 		}
@@ -599,10 +598,10 @@ namespace Launchpad
 
 					return FTPUsername;
 				}
-				catch (Exception ex)
+				catch (IOException ioex)
 				{
 					Console.Write("GetFTPUsername: ");
-					Console.WriteLine(ex.Message);
+					Console.WriteLine(ioex.Message);
 					return "";
 				}
 			}
@@ -625,10 +624,10 @@ namespace Launchpad
 
 					WriteConfig(Parser, data);
 				}
-				catch (Exception ex)
+				catch (IOException ioex)
 				{
 					Console.Write("SetFTPUsername: ");
-					Console.WriteLine(ex.Message);
+					Console.WriteLine(ioex.Message);
 				}
 			}
 		}
@@ -650,10 +649,10 @@ namespace Launchpad
 
 					return FTPPassword;
 				}
-				catch (Exception ex)
+				catch (IOException ioex)
 				{
 					Console.Write("GetFTPPassword: ");
-					Console.WriteLine(ex.Message);
+					Console.WriteLine(ioex.Message);
 					return "";
 				}
 			}
@@ -676,10 +675,10 @@ namespace Launchpad
 
 					WriteConfig(Parser, data);
 				}
-				catch (Exception ex)
+				catch (IOException ioex)
 				{
 					Console.Write("GetFTPPassword: ");
-					Console.WriteLine(ex.Message);
+					Console.WriteLine(ioex.Message);
 				}
 			}
 		}
@@ -703,12 +702,12 @@ namespace Launchpad
 
 					return FTPURL;
 				}
-				catch (Exception ex)
+				catch (IOException ioex)
 				{
 					Console.Write("GetBaseFTPURL: ");
-					Console.WriteLine(ex.Message);
-					Console.WriteLine (ex.StackTrace);
-					Console.WriteLine (ex.InnerException);
+					Console.WriteLine(ioex.Message);
+					Console.WriteLine (ioex.StackTrace);
+					Console.WriteLine (ioex.InnerException);
 					return "";
 				}
 			}
@@ -732,10 +731,10 @@ namespace Launchpad
 
 					WriteConfig(Parser, data);
 				}
-				catch (Exception ex)
+				catch (IOException ioex)
 				{
 					Console.Write("GetFTPPassword: ");
-					Console.WriteLine(ex.Message);
+					Console.WriteLine(ioex.Message);
 				}
 			}
 		}
@@ -763,10 +762,10 @@ namespace Launchpad
 
 					return FTPAuthUrl;
 				}
-				catch (Exception ex)
+				catch (IOException ioex)
 				{
 					Console.Write("GetFTPUrl: ");
-					Console.WriteLine(ex.Message);
+					Console.WriteLine(ioex.Message);
 					return "";
 				}
 			}
@@ -789,9 +788,9 @@ namespace Launchpad
 
 					return bool.Parse(officialUpdatesStr);
 				}
-				catch (Exception ex)
+				catch (IOException ioex)
 				{
-					Console.WriteLine (ex.Message);
+					Console.WriteLine (ioex.Message);
 					return true;
 				}
 			}
@@ -814,9 +813,9 @@ namespace Launchpad
 
 					return guid;
 				}
-				catch (Exception ex)
+				catch (IOException ioex)
 				{
-					Console.WriteLine (ex.Message);
+					Console.WriteLine (ioex.Message);
 					return "";
 				}
 			}
@@ -828,14 +827,13 @@ namespace Launchpad
 		/// <returns><c>true</c>, if an old config was found, <c>false</c> otherwise.</returns>
 		private bool UpdateOldConfig()
 		{
-			ChecksHandler Checks = new ChecksHandler ();
 			string oldConfigPath = String.Format(@"{0}config{1}launcherConfig.ini", 
 			                                     GetLocalDir(), 
 			                                     Path.DirectorySeparatorChar);
 
 			string oldConfigDir = String.Format(@"{0}config", GetLocalDir());
 
-            if (Checks.IsRunningOnUnix())
+            if (ChecksHandler.IsRunningOnUnix())
             {
                 //Case sensitive
                 //Is there an old config file?
@@ -932,7 +930,7 @@ namespace Launchpad
 		/// <summary>
 		/// Replaces the old update cookie.
 		/// </summary>
-		private void ReplaceOldUpdateCookie ()
+		private static void ReplaceOldUpdateCookie ()
 		{
 			string oldUpdateCookie = String.Format (@"{0}{1}.updatecookie", Directory.GetCurrentDirectory (), Path.DirectorySeparatorChar);
 			if (File.Exists (oldUpdateCookie))

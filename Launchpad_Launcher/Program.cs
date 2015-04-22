@@ -15,8 +15,7 @@ namespace Launchpad
         [STAThread]
         static void Main()
         {
-			ChecksHandler Checks = new ChecksHandler ();
-			if (Checks.IsRunningOnUnix ()) // run a GTK UI instead of WinForms
+			if (ChecksHandler.IsRunningOnUnix ()) // run a GTK UI instead of WinForms
 			{
 				Gtk.Application.Init ();
 

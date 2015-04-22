@@ -4,6 +4,7 @@ using System.Threading;
 using System.Diagnostics;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace Launchpad
 {
@@ -89,10 +90,6 @@ namespace Launchpad
 
 
 		/// <summary>
-		/// The checks handler reference
-		/// </summary>
-		private ChecksHandler Checks = new ChecksHandler ();
-		/// <summary>
 		/// The config handler reference.
 		/// </summary>
 		private ConfigHandler Config = ConfigHandler._instance;
@@ -132,10 +129,10 @@ namespace Launchpad
 				FTPHandler FTP = new FTPHandler ();
 
 				//create the .install file to mark that an installation has begun
-				File.Create (Config.GetInstallCookie ()).Close();
+                ConfigHandler.CreateInstallCookie();
 
 				//write the current file progress to the install cookie
-				TextWriter tw = new StreamWriter(Config.GetInstallCookie ());
+				TextWriter tw = new StreamWriter(ConfigHandler.GetInstallCookiePath ());
 				tw.WriteLine ("START");
 				tw.Close ();
 
@@ -143,14 +140,14 @@ namespace Launchpad
 				//event in the FTP class
 				FTP.FileProgressChanged += OnDownloadProgressChanged;
 
-				string lastDownloadedFile = File.ReadAllText (Config.GetInstallCookie ());
-				string[] manifestEntries = File.ReadAllLines (Config.GetManifestPath ());
+				string lastDownloadedFile = File.ReadAllText (ConfigHandler.GetInstallCookiePath ());
+				string[] manifestEntries = File.ReadAllLines (ConfigHandler.GetManifestPath ());
 
 				//in order to be able to resume downloading, we check if there is a file
 				//stored in the install cookie.
 				int line = 0;
 
-				if (!Checks.IsInstallCookieEmpty())
+				if (!ChecksHandler.IsInstallCookieEmpty())
 				{
 					//loop through all the lines in the manifest until we encounter
 					//a line which matches the one in the install cookie
@@ -170,83 +167,80 @@ namespace Launchpad
 					//download the file
 					//this is the first substring in the manifest line, delimited by :
 					string[] elements = manifestEntries [i].Split (':');
-					string relativeFileName = elements[0];
+					string relativeFilePath = elements[0];
 
-					string remotePath = String.Format ("{0}/game/{1}{2}{3}", 
-					                                   Config.GetFTPUrl (), 
-					                                   Config.GetSystemTarget(), 
-					                                   System.IO.Path.DirectorySeparatorChar,
-					                                   relativeFileName);
+					string RemotePath = String.Format ("{0}{1}", 
+					                                   Config.GetGameURL (true), 
+					                                   relativeFilePath);
 
-					string localPath = String.Format ("{0}{1}{2}", 
+					string LocalPath = String.Format ("{0}{1}{2}", 
 					                                  Config.GetGamePath (true),
 					                                  System.IO.Path.DirectorySeparatorChar, 
-					                                  relativeFileName);
+					                                  relativeFilePath);
 
-					Directory.CreateDirectory(Directory.GetParent(localPath).ToString());
+					Directory.CreateDirectory(Directory.GetParent(LocalPath).ToString());
 
 					//write the current file progress to the install cookie
-					TextWriter textWriterProgress = new StreamWriter(Config.GetInstallCookie ());
+					TextWriter textWriterProgress = new StreamWriter(ConfigHandler.GetInstallCookiePath ());
 					textWriterProgress.WriteLine (manifestEntries [i]);
 					textWriterProgress.Close ();
 
-					if (File.Exists(localPath))
+					if (File.Exists(LocalPath))
 					{
-						FileInfo fileInfo = new FileInfo(localPath);
+						FileInfo fileInfo = new FileInfo(LocalPath);
 						long manifestFileLength = 0;
-						long.TryParse(elements[2], out manifestFileLength);
-						if (fileInfo.Length == manifestFileLength)
-						{
-							//should resume download here
+						if (long.TryParse(elements[2], out manifestFileLength))
+                        {
+                            if (fileInfo.Length == manifestFileLength)
+                            {
+                                //should resume download here
 
-							//whoa, why is there a file here? Is it correct?
-							MD5Handler MD5 = new MD5Handler();
-							string localHash = MD5.GetFileHash(File.OpenRead(localPath));
-							string manifestHash = elements[1];
+                                //whoa, why is there a file here? Is it correct?
+                                string localHash = MD5Handler.GetFileHash(File.OpenRead(LocalPath));
+                                string manifestHash = elements[1];
 
-							if (localHash == manifestHash)
-							{
-								//apparently we already had the proper version of this file. 
-								//Moving on!
-								continue;
-							}
-						}
+                                if (localHash == manifestHash)
+                                {
+                                    //apparently we already had the proper version of this file. 
+                                    //Moving on!
+                                    continue;
+                                }
+                            }
+                        }						
 					}
 
 
 					//make sure we have a game directory to put files in
-					Directory.CreateDirectory(Path.GetDirectoryName(localPath));
+					Directory.CreateDirectory(Path.GetDirectoryName(LocalPath));
 					//now download the file
 					OnProgressChanged();
-					fileReturn = FTP.DownloadFTPFile (remotePath, localPath, false);
+					fileReturn = FTP.DownloadFTPFile (RemotePath, LocalPath, false);
 
 					//if we're dealing with a file that should be executable, 
-					bool bFileIsGameExecutable = (Path.GetFileName(localPath).EndsWith(".exe")) || (Path.GetFileNameWithoutExtension(localPath) == Config.GetGameName());
+					bool bFileIsGameExecutable = (Path.GetFileName(LocalPath).EndsWith(".exe")) || (Path.GetFileNameWithoutExtension(LocalPath) == Config.GetGameName());
 
-					if (Checks.IsRunningOnUnix() && bFileIsGameExecutable)
+					if (ChecksHandler.IsRunningOnUnix() && bFileIsGameExecutable)
 					{
-						UnixHandler Unix = new UnixHandler();
-
-						Unix.MakeExecutable(localPath);
+						UnixHandler.MakeExecutable(LocalPath);
 					}
 				}
 
 				//we've finished the download, so empty the cookie
-				File.WriteAllText (Config.GetInstallCookie (), String.Empty);
+				File.WriteAllText (ConfigHandler.GetInstallCookiePath (), String.Empty);
 
 				//raise the finished event
 				OnGameDownloadFinished ();			
 			}
-			catch (Exception ex)
-			{
-				Console.WriteLine ("InstallGameAsync(): " + ex.Message);
+	        catch (IOException ioex)
+            {
+                Console.WriteLine("IOException in InstallGameAsync(): " + ioex.Message);
 
-				DownloadFailedArgs.Result = "1";
-				DownloadFailedArgs.Type = "Install";
-				DownloadFinishedArgs.Metadata = fileReturn;
+                DownloadFailedArgs.Result = "1";
+                DownloadFailedArgs.ResultType = "Install";
+                DownloadFinishedArgs.Metadata = fileReturn;
 
-				OnGameDownloadFailed ();
-			}		
+                OnGameDownloadFailed();
+            }
 		}
 
 		/// <summary>
@@ -264,10 +258,9 @@ namespace Launchpad
 			//better system - compare old & new manifests for changes and download those?
 			List<string> manifestItems = new List<string> ();
 			List<string> oldManifestItems = new List<string> ();
-			List<string> localFiles = new List<string> ();
 
-			string manifestPath = Config.GetManifestPath ();
-			string oldManifestPath = Config.GetManifestPath () + ".old";
+			string manifestPath = ConfigHandler.GetManifestPath ();
+			string oldManifestPath = ConfigHandler.GetManifestPath () + ".old";
 
 			try
 			{
@@ -290,18 +283,16 @@ namespace Launchpad
 					if (!oldManifestItems.Contains(item))
 					{
 						//download
-						string ManifestFileName = (item.Split (':'))[0];
+						string relativeFilePath = (item.Split (':'))[0];
 
-						string RemotePath = String.Format ("{0}/game/{1}{2}{3}", 
-						                                   Config.GetFTPUrl (), 
-						                                   Config.GetSystemTarget(), 
-						                                   System.IO.Path.DirectorySeparatorChar,
-						                                   ManifestFileName);
+                        string RemotePath = String.Format("{0}{1}",
+                                                       Config.GetGameURL(true),
+                                                       relativeFilePath);
 
 						string LocalPath = String.Format ("{0}{1}{2}", 
 						                                  Config.GetGamePath (true),
 						                                  System.IO.Path.DirectorySeparatorChar, 
-						                                  ManifestFileName);
+						                                  relativeFilePath);
 
 						OnProgressChanged();
 
@@ -313,11 +304,11 @@ namespace Launchpad
 
 				OnGameUpdateFinished();
 			}
-			catch (Exception ex)
-			{
-				Console.WriteLine ("UpdateGameAsync(): " + ex.Message);
-				OnGameUpdateFailed ();
-			}
+            catch (IOException ioex)
+            {
+                Console.WriteLine("IOException in UpdateGameAsync(): " + ioex.Message);
+                OnGameUpdateFailed();
+            }
 		}
 
 		/// <summary>
@@ -337,14 +328,13 @@ namespace Launchpad
 			{
 				//check all local file MD5s against latest manifest. Download broken files.
 				FTPHandler FTP = new FTPHandler ();
-				MD5Handler MD5 = new MD5Handler ();
 
 				//bind our events
 				FTP.FileProgressChanged += OnDownloadProgressChanged;
 
 
 				//first, verify that the manifest is correct.
-				string localsum = MD5.GetFileHash(File.OpenRead(Config.GetManifestPath ()));
+				string localsum = MD5Handler.GetFileHash(File.OpenRead(ConfigHandler.GetManifestPath ()));
 				string remotesum = FTP.GetRemoteManifestChecksum ();
 
 				//if it is not, download a new copy.
@@ -354,7 +344,7 @@ namespace Launchpad
 					Launcher.DownloadManifest ();
 				}
 
-				string[] entries = File.ReadAllLines (Config.GetManifestPath ());
+				string[] entries = File.ReadAllLines (ConfigHandler.GetManifestPath ());
 
 				ProgressArgs.TotalFiles = entries.Length;
 			
@@ -368,13 +358,11 @@ namespace Launchpad
 					string manifestMD5 = elements [1];
 					//string size = elements [2];
 
-					ProgressArgs.Filename = Path.GetFileName(completeFilePath);
+					ProgressArgs.FileName = Path.GetFileName(completeFilePath);
 
-					string RemotePath = String.Format ("{0}/game/{1}{2}{3}", 
-					                                   Config.GetFTPUrl (), 
-					                                   Config.GetSystemTarget(), 
-					                                   System.IO.Path.DirectorySeparatorChar,
-					                                   relativeFilePath);
+                    string RemotePath = String.Format("{0}{1}",
+                                                       Config.GetGameURL(true),
+                                                       relativeFilePath);
 
 					string LocalPath = String.Format ("{0}{1}{2}", 
 					                                  Config.GetGamePath (true),
@@ -391,7 +379,7 @@ namespace Launchpad
 					}
 					else
 					{
-						string fileMD5 = MD5.GetFileHash (File.OpenRead (completeFilePath));
+                        string fileMD5 = MD5Handler.GetFileHash(File.OpenRead(completeFilePath));
 						if (fileMD5 != manifestMD5)
 						{
 							Console.WriteLine (fileMD5 + ":" + manifestMD5);
@@ -404,14 +392,12 @@ namespace Launchpad
 					//if we're dealing with a file that should be executable, 
 					bool bFileIsGameExecutable = (Path.GetFileName(LocalPath).EndsWith(".exe")) || (Path.GetFileNameWithoutExtension(LocalPath) == Config.GetGameName());
 
-					if (Checks.IsRunningOnUnix() && bFileIsGameExecutable)
+					if (ChecksHandler.IsRunningOnUnix() && bFileIsGameExecutable)
 					{
-						UnixHandler Unix = new UnixHandler();
-
 						//if we couldn't set the execute bit on the executable, raise an exception, since we won't be able to launch the game
-						if (!Unix.MakeExecutable(LocalPath))
-						{
-							throw new Exception("[LPAD001]: Could not set the execute bit on the game executable.");
+                        if (!UnixHandler.MakeExecutable(LocalPath))
+						{                           
+							throw new BitOperationException("[LPAD001]: Could not set the execute bit on the game executable.");
 						}
 					}
 
@@ -421,12 +407,12 @@ namespace Launchpad
 				}
 				OnGameRepairFinished ();
 			}
-			catch (Exception ex)
+			catch (IOException ioex)
 			{
-				Console.WriteLine ("RepairGameAsync(): " + ex.Message);
+				Console.WriteLine ("IOException in RepairGameAsync(): " + ioex.Message);
 
 				DownloadFailedArgs.Result = "1";
-				DownloadFailedArgs.Type = "Repair";
+				DownloadFailedArgs.ResultType = "Repair";
 				DownloadFailedArgs.Metadata = fileReturn;
 
 				OnGameRepairFailed ();
@@ -462,9 +448,9 @@ namespace Launchpad
 				Console.WriteLine (gameStartInfo.FileName);
 				game = Process.Start(gameStartInfo);
 			}
-			catch (Exception ex)
+			catch (IOException ioex)
 			{
-				Console.WriteLine ("LaunchGame(): " + ex.Message);
+				Console.WriteLine ("IOException in LaunchGame(): " + ioex.Message);
 				OnGameLaunchFailed ();
 			}
 		}
@@ -555,5 +541,32 @@ namespace Launchpad
 			}
 		}
 	}
+
+    [Serializable]
+    public class BitOperationException : Exception
+    {
+        public BitOperationException()
+        {
+
+        }
+
+        public BitOperationException(string message)
+            : base(message)
+        {
+
+        }
+
+        public BitOperationException(string message, Exception inner)
+            : base(message, inner)
+        {
+
+        }
+
+        protected BitOperationException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+
+        }
+    }
 }
 

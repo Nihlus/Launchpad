@@ -2,7 +2,7 @@ using System;
 
 namespace Launchpad
 {
-	internal class LaunchpadEventDelegates
+	internal static class LaunchpadEventDelegates
 	{
 		//FTP delegates
 		public delegate void FileProgressChangedEventHandler(object sender, FileDownloadProgressChangedEventArgs e);	
