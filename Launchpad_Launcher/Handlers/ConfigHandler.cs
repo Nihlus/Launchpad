@@ -21,7 +21,7 @@ namespace Launchpad
 		/// <summary>
 		/// The config lock object.
 		/// </summary>
-		private object ConfigLock = new Object ();
+		private object ReadLock = new Object ();
 		/// <summary>
 		/// The write lock object.
 		/// </summary>
@@ -99,7 +99,7 @@ namespace Launchpad
 			ReplaceOldUpdateCookie ();
 
 			//should be safe to lock the config now for initializing it
-			lock (ConfigLock)
+			lock (ReadLock)
 			{
 				if (!Directory.Exists(configDir))
 				{
@@ -450,7 +450,7 @@ namespace Launchpad
 		/// <returns>The launcher version.</returns>
         public Version GetLocalLauncherVersion()
         {
-			lock (ConfigLock)
+			lock (ReadLock)
 			{
 				try
 				{
@@ -477,7 +477,7 @@ namespace Launchpad
 		/// <returns>The game name.</returns>
         public string GetGameName()
         {
-			lock (ConfigLock)
+			lock (ReadLock)
 			{
 				try
 				{
@@ -503,7 +503,7 @@ namespace Launchpad
 		/// <param name="GameName">Game name.</param>
 		public void SetGameName(string GameName)
 		{
-			lock (ConfigLock)
+			lock (ReadLock)
 			{
 				try
 				{
@@ -534,7 +534,7 @@ namespace Launchpad
 			//Win32
 			//Linux
 			//Mac
-			lock (ConfigLock)
+			lock (ReadLock)
 			{
 				try
 				{
@@ -565,12 +565,12 @@ namespace Launchpad
 			//Win32
 			//Linux
 			//Mac
-			lock (ConfigLock)
+			lock (ReadLock)
 			{
 				try
 				{
 					FileIniDataParser Parser = new FileIniDataParser();
-					IniData data = Parser.ReadFile(GetConfigPath());
+					IniData data = Parser.ReadFile(GetConfigPath());                    
 
 					data["Local"]["SystemTarget"] = SystemTarget.ToString();
 
@@ -579,7 +579,7 @@ namespace Launchpad
 				catch (Exception ex)
 				{
 					Console.Write("SetSystemTarget: ");
-					Console.WriteLine(ex.Message);
+					Console.WriteLine(ex.Message);                    
 				}
 			}
 		}
@@ -590,7 +590,7 @@ namespace Launchpad
 		/// <returns>The FTP username.</returns>
         public string GetFTPUsername()
         {
-            lock (ConfigLock)
+            lock (ReadLock)
 			{
 				try
 				{
@@ -616,7 +616,7 @@ namespace Launchpad
 		/// <param name="Username">Username.</param>
 		public void SetFTPUsername(string Username)
 		{
-			lock (ConfigLock)
+			lock (ReadLock)
 			{
 				try
 				{
@@ -641,7 +641,7 @@ namespace Launchpad
 		/// <returns>The FTP password.</returns>
         public string GetFTPPassword()
         {
-            lock (ConfigLock)
+            lock (ReadLock)
 			{
 				try
 				{
@@ -667,7 +667,7 @@ namespace Launchpad
 		/// <param name="Password">Password.</param>
 		public void SetFTPPassword(string Password)
 		{
-			lock (ConfigLock)
+			lock (ReadLock)
 			{
 				try
 				{
@@ -692,7 +692,7 @@ namespace Launchpad
 		/// <returns>The base FTP URL.</returns>
 		public string GetBaseFTPUrl()
 		{
-			lock (ConfigLock)
+			lock (ReadLock)
 			{
 				try
 				{
@@ -723,7 +723,7 @@ namespace Launchpad
 		/// <param name="Url">URL.</param>
 		public void SetBaseFTPUrl(string Url)
 		{
-			lock (ConfigLock)
+			lock (ReadLock)
 			{
 				try
 				{
@@ -748,7 +748,7 @@ namespace Launchpad
 		/// <returns>The FTP URL.</returns>
         public string GetFTPUrl()
         {
-            lock (ConfigLock)
+            lock (ReadLock)
 			{
 				try
 				{
@@ -780,7 +780,7 @@ namespace Launchpad
 		/// <returns><c>true</c>, if the launcher should receive official updates, <c>false</c> otherwise.</returns>
         public bool GetDoOfficialUpdates()
         {
-            lock (ConfigLock)
+            lock (ReadLock)
 			{
 				try
 				{
@@ -805,7 +805,7 @@ namespace Launchpad
 		/// <returns>The GUID.</returns>
 		public string GetGUID()
 		{
-			lock (ConfigLock)
+			lock (ReadLock)
 			{
 				try
 				{
@@ -843,7 +843,7 @@ namespace Launchpad
                 //Is there an old config file?
                 if (File.Exists(oldConfigPath))
                 {
-                    lock (ConfigLock)
+                    lock (ReadLock)
 					{
 						//Have we not already created the new config dir?
 						if (!Directory.Exists(GetConfigDir()))
@@ -894,7 +894,7 @@ namespace Launchpad
             }
             else
             {
-				lock (ConfigLock)
+				lock (ReadLock)
 				{
 					//Windows, so direct access without copying.
 					//read our new file.
