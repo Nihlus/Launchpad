@@ -1,5 +1,5 @@
-using System;
 using Mono.Unix.Native;
+using System;
 
 namespace Launchpad
 {

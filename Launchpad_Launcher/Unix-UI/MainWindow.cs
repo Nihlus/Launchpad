@@ -1,8 +1,7 @@
-using System;
-using System.IO;
 using Gtk;
-using WebKit;
 using Notifications;
+using System;
+using WebKit;
 
 namespace Launchpad
 {
