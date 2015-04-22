@@ -1,6 +1,6 @@
 ﻿namespace Launchpad_Launcher
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,35 +28,30 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.webBrowser1 = new System.Windows.Forms.WebBrowser();
-            this.mainPanel_progressBar = new System.Windows.Forms.ProgressBar();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            this.changelogBrowser = new System.Windows.Forms.WebBrowser();
+            this.mainProgressBar = new System.Windows.Forms.ProgressBar();
             this.progress_label = new System.Windows.Forms.Label();
-            this.warning_label = new System.Windows.Forms.Label();
-            this.backgroundWorker_GameInstall = new System.ComponentModel.BackgroundWorker();
-            this.backgroundWorker_GameVerify = new System.ComponentModel.BackgroundWorker();
-            this.backgroundWorker_GameUpdate = new System.ComponentModel.BackgroundWorker();
-            this.fileSizeProgress_label = new System.Windows.Forms.Label();
-            this.verifyInstallation_button = new System.Windows.Forms.Button();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.downloadProgressLabel = new System.Windows.Forms.Label();
+            this.aboutLink = new System.Windows.Forms.LinkLabel();
+            this.mainButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // webBrowser1
+            // changelogBrowser
             // 
-            this.webBrowser1.Location = new System.Drawing.Point(18, 18);
-            this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
-            this.webBrowser1.Name = "webBrowser1";
-            this.webBrowser1.ScrollBarsEnabled = false;
-            this.webBrowser1.Size = new System.Drawing.Size(390, 400);
-            this.webBrowser1.TabIndex = 0;
+            this.changelogBrowser.Location = new System.Drawing.Point(18, 18);
+            this.changelogBrowser.MinimumSize = new System.Drawing.Size(20, 20);
+            this.changelogBrowser.Name = "changelogBrowser";
+            this.changelogBrowser.ScrollBarsEnabled = false;
+            this.changelogBrowser.Size = new System.Drawing.Size(390, 400);
+            this.changelogBrowser.TabIndex = 0;
             // 
-            // mainPanel_progressBar
+            // mainProgressBar
             // 
-            this.mainPanel_progressBar.Location = new System.Drawing.Point(13, 477);
-            this.mainPanel_progressBar.Name = "mainPanel_progressBar";
-            this.mainPanel_progressBar.Size = new System.Drawing.Size(400, 23);
-            this.mainPanel_progressBar.TabIndex = 2;
+            this.mainProgressBar.Location = new System.Drawing.Point(13, 477);
+            this.mainProgressBar.Name = "mainProgressBar";
+            this.mainProgressBar.Size = new System.Drawing.Size(400, 23);
+            this.mainProgressBar.TabIndex = 2;
             // 
             // progress_label
             // 
@@ -68,81 +63,55 @@
             this.progress_label.TabIndex = 5;
             this.progress_label.Text = "Default";
             // 
-            // warning_label
+            // downloadProgressLabel
             // 
-            this.warning_label.AutoSize = true;
-            this.warning_label.BackColor = System.Drawing.Color.Transparent;
-            this.warning_label.Location = new System.Drawing.Point(13, 434);
-            this.warning_label.Name = "warning_label";
-            this.warning_label.Size = new System.Drawing.Size(0, 13);
-            this.warning_label.TabIndex = 6;
+            this.downloadProgressLabel.AutoSize = true;
+            this.downloadProgressLabel.BackColor = System.Drawing.Color.Transparent;
+            this.downloadProgressLabel.Location = new System.Drawing.Point(13, 447);
+            this.downloadProgressLabel.Name = "downloadProgressLabel";
+            this.downloadProgressLabel.Size = new System.Drawing.Size(69, 13);
+            this.downloadProgressLabel.TabIndex = 7;
+            this.downloadProgressLabel.Text = "filename: 0/0";
             // 
-            // backgroundWorker_GameInstall
+            // aboutLink
             // 
-            this.backgroundWorker_GameInstall.WorkerReportsProgress = true;
-            this.backgroundWorker_GameInstall.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_GameInstall_DoWork);
-            this.backgroundWorker_GameInstall.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_GameInstall_ProgressChanged);
-            this.backgroundWorker_GameInstall.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_GameInstall_RunWorkerCompleted);
+            this.aboutLink.AutoSize = true;
+            this.aboutLink.BackColor = System.Drawing.Color.Transparent;
+            this.aboutLink.Location = new System.Drawing.Point(414, 18);
+            this.aboutLink.Name = "aboutLink";
+            this.aboutLink.Size = new System.Drawing.Size(35, 13);
+            this.aboutLink.TabIndex = 10;
+            this.aboutLink.TabStop = true;
+            this.aboutLink.Text = "About";
             // 
-            // backgroundWorker_GameUpdate
+            // mainButton
             // 
-            this.backgroundWorker_GameUpdate.WorkerReportsProgress = true;
-            this.backgroundWorker_GameUpdate.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_GameUpdate_DoWork);
-            this.backgroundWorker_GameUpdate.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_GameUpdate_ProgressChanged);
-            this.backgroundWorker_GameUpdate.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_GameUpdate_RunWorkerCompleted);
+            this.mainButton.Location = new System.Drawing.Point(739, 460);
+            this.mainButton.Name = "mainButton";
+            this.mainButton.Size = new System.Drawing.Size(104, 39);
+            this.mainButton.TabIndex = 11;
+            this.mainButton.Text = "MainButton";
+            this.mainButton.UseVisualStyleBackColor = true;
+            this.mainButton.Click += new System.EventHandler(this.mainButton_Click);
             // 
-            // fileSizeProgress_label
-            // 
-            this.fileSizeProgress_label.AutoSize = true;
-            this.fileSizeProgress_label.BackColor = System.Drawing.Color.Transparent;
-            this.fileSizeProgress_label.Location = new System.Drawing.Point(13, 447);
-            this.fileSizeProgress_label.Name = "fileSizeProgress_label";
-            this.fileSizeProgress_label.Size = new System.Drawing.Size(0, 13);
-            this.fileSizeProgress_label.TabIndex = 7;
-            // 
-            // verifyInstallation_button
-            // 
-            this.verifyInstallation_button.Location = new System.Drawing.Point(738, 431);
-            this.verifyInstallation_button.Name = "verifyInstallation_button";
-            this.verifyInstallation_button.Size = new System.Drawing.Size(105, 23);
-            this.verifyInstallation_button.TabIndex = 9;
-            this.verifyInstallation_button.Text = "Verify Installation";
-            this.verifyInstallation_button.UseVisualStyleBackColor = true;
-            this.verifyInstallation_button.Click += new System.EventHandler(this.verifyInstallation_button_Click);
-            // 
-            // linkLabel1
-            // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.BackColor = System.Drawing.Color.Transparent;
-            this.linkLabel1.Location = new System.Drawing.Point(414, 18);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(35, 13);
-            this.linkLabel1.TabIndex = 10;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "About";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
-            // 
-            // Form1
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(855, 512);
-            this.Controls.Add(this.linkLabel1);
-            this.Controls.Add(this.verifyInstallation_button);
-            this.Controls.Add(this.fileSizeProgress_label);
-            this.Controls.Add(this.warning_label);
+            this.Controls.Add(this.mainButton);
+            this.Controls.Add(this.aboutLink);
+            this.Controls.Add(this.downloadProgressLabel);
             this.Controls.Add(this.progress_label);
-            this.Controls.Add(this.mainPanel_progressBar);
-            this.Controls.Add(this.webBrowser1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Controls.Add(this.mainProgressBar);
+            this.Controls.Add(this.changelogBrowser);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "MainForm";
+            this.Text = "Launchpad - <GameName>";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Shown += new System.EventHandler(this.Form1_Shown);
-            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -150,17 +119,12 @@
 
         #endregion
 
-        private System.Windows.Forms.WebBrowser webBrowser1;
-        private System.Windows.Forms.ProgressBar mainPanel_progressBar;
+        private System.Windows.Forms.WebBrowser changelogBrowser;
+        private System.Windows.Forms.ProgressBar mainProgressBar;
         private System.Windows.Forms.Label progress_label;
-        private System.Windows.Forms.Label warning_label;
-        private System.ComponentModel.BackgroundWorker backgroundWorker_GameInstall;
-        private System.ComponentModel.BackgroundWorker backgroundWorker_GameVerify;
-        private System.ComponentModel.BackgroundWorker backgroundWorker_GameUpdate;
-        private System.Windows.Forms.Label fileSizeProgress_label;
-        private System.Windows.Forms.Button verifyInstallation_button;
-        private System.Windows.Forms.LinkLabel linkLabel1;
-        private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.Label downloadProgressLabel;
+        private System.Windows.Forms.LinkLabel aboutLink;
+        private System.Windows.Forms.Button mainButton;
     }
 }
 
