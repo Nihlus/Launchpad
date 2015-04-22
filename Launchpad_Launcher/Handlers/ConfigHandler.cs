@@ -426,7 +426,7 @@ namespace Launchpad
 			string gameURL;
 			if (bGetSystemGame)
 			{
-				gameURL = String.Format ("{0}/game/{1}", GetFTPUrl (), GetSystemTarget ());
+				gameURL = String.Format ("{0}/game/{1}/bin", GetFTPUrl (), GetSystemTarget ());
 			}
 			else
 			{
