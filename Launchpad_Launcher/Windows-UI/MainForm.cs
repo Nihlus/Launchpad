@@ -453,5 +453,11 @@ namespace Launchpad
             PrimaryButton.Text = "Launch";
             PrimaryButton.Enabled = true;
         }
+
+        private void aboutLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            LaunchpadAboutBox about = new LaunchpadAboutBox();
+            about.ShowDialog();
+        }
     }
 }

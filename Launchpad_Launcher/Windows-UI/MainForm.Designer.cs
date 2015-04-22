@@ -83,6 +83,7 @@
             this.aboutLink.TabIndex = 10;
             this.aboutLink.TabStop = true;
             this.aboutLink.Text = "About";
+            this.aboutLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.aboutLink_LinkClicked);
             // 
             // PrimaryButton
             // 
