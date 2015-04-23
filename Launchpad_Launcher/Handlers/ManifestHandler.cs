@@ -143,7 +143,15 @@ namespace Launchpad
 				if (elements.Length == 3)
 				{
 					//clean the manifest path, converting \ to / on unix and / to \ on Windows.
-					entry.RelativePath = elements [0].Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+					if (ChecksHandler.IsRunningOnUnix())
+					{
+						entry.RelativePath = elements [0].Replace ("\\", "/");
+					}
+					else
+					{
+						entry.RelativePath = elements [0].Replace("/", "\\");
+					}
+
 					entry.Hash = elements [1];
 
 					long parsedSize = 0;
