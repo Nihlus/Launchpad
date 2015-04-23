@@ -63,19 +63,18 @@ namespace Launchpad
 			string password = Config.GetFTPPassword();
 
             int bytesRead = 0;
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[262144];
 
 			FtpWebRequest request = null;
 			FtpWebRequest sizerequest = null;
 
 			Stream reader = null;
-			FtpWebResponse sizereader = null;
 
 			try
 			{
 
-	            request = CreateFtpWebRequest(remoteURL, username, password, true);
-	            sizerequest = CreateFtpWebRequest(remoteURL, username, password, true);
+	            request = CreateFtpWebRequest(remoteURL, username, password, false);
+                sizerequest = CreateFtpWebRequest(remoteURL, username, password, false);
 
 	            request.Method = WebRequestMethods.Ftp.DownloadFile;
 	            sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
@@ -83,7 +82,6 @@ namespace Launchpad
 	            string data = "";
             
                 reader = request.GetResponse().GetResponseStream();
-                sizereader = (FtpWebResponse)sizerequest.GetResponse();
 
                 while (true)
                 {
@@ -114,10 +112,6 @@ namespace Launchpad
 				if (reader != null)
 				{
 					reader.Close ();
-				}
-				if (sizereader != null)
-				{
-					sizereader.Close();
 				}
 
 				//and finally, the requests themselves.
@@ -163,7 +157,7 @@ namespace Launchpad
 
 
             int bytesRead = 0;
-            byte[] buffer = new byte[2048];
+            byte[] buffer = new byte[262144];
 
 			FtpWebRequest request = null;
 			FtpWebRequest sizerequest = null;
@@ -178,8 +172,8 @@ namespace Launchpad
 
 			try
 			{
-	            request = CreateFtpWebRequest(remoteURL, username, password, true);
-	            sizerequest = CreateFtpWebRequest(remoteURL, username, password, true);
+                request = CreateFtpWebRequest(remoteURL, username, password, false);
+                sizerequest = CreateFtpWebRequest(remoteURL, username, password, false);
 
 	            request.Method = WebRequestMethods.Ftp.DownloadFile;
 	            sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
@@ -302,7 +296,7 @@ namespace Launchpad
 
 
 			int bytesRead = 0;
-			byte[] buffer = new byte[2048];
+            byte[] buffer = new byte[262144];
 
 			FtpWebRequest request = null;
 			FtpWebRequest sizerequest = null;
@@ -355,7 +349,7 @@ namespace Launchpad
 					fileStream.Write(buffer, 0, bytesRead);
 
 					//set file progress info
-					ProgressArgs.DownloadedBytes = FTPbytesDownloaded;
+					ProgressArgs.DownloadedBytes = (int)contentOffset + FTPbytesDownloaded;
 
 					OnProgressChanged();
 				}
@@ -420,7 +414,7 @@ namespace Launchpad
 		/// <returns>The ftp web request.</returns>
 		/// <param name="ftpDirectoryPath">Ftp directory path.</param>
 		/// <param name="keepAlive">If set to <c>true</c> keep alive.</param>
-        public static FtpWebRequest CreateFtpWebRequest(string ftpDirectoryPath, string username, string password, bool keepAlive = false)
+        public static FtpWebRequest CreateFtpWebRequest(string ftpDirectoryPath, string username, string password, bool keepAlive)
         {
             try
             {

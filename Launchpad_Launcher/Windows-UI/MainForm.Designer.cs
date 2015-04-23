@@ -51,6 +51,7 @@
             this.mainProgressBar.Location = new System.Drawing.Point(18, 460);
             this.mainProgressBar.Name = "mainProgressBar";
             this.mainProgressBar.Size = new System.Drawing.Size(390, 23);
+            this.mainProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.mainProgressBar.TabIndex = 2;
             // 
             // MessageLabel
@@ -100,7 +101,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+            this.BackgroundImage = global::Launchpad.Properties.Resources.Background_hexagon_textbox;
             this.ClientSize = new System.Drawing.Size(855, 512);
             this.Controls.Add(this.PrimaryButton);
             this.Controls.Add(this.aboutLink);

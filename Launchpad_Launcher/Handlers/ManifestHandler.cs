@@ -126,27 +126,6 @@ namespace Launchpad
 			Size = 0;
 		}
 
-		public ManifestEntry(string relativePath)
-		{
-			RelativePath = relativePath;
-			Hash = String.Empty;
-			Size = 0;
-		}
-
-		public ManifestEntry(string relativePath, string hash)
-		{
-			RelativePath = relativePath;
-			Hash = hash;
-			Size = 0;
-		}
-
-		public ManifestEntry(string relativePath, string hash, long size)
-		{
-			RelativePath = relativePath;
-			Hash = hash;
-			Size = size;
-		}
-
 		public static bool TryParse(string rawInput, out ManifestEntry entry)
 		{
 			//clear out the entry for the new data

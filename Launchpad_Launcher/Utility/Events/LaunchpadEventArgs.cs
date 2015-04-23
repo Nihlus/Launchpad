@@ -8,13 +8,13 @@ namespace Launchpad
 	/// </summary>
     public class FileDownloadProgressChangedEventArgs : EventArgs
 	{
-		public int DownloadedBytes 
+		public long DownloadedBytes 
 		{
 			get;
 			set;
 		}
 
-		public int TotalBytes 
+        public long TotalBytes 
 		{
 			get;
 			set;

@@ -59,5 +59,15 @@ namespace Launchpad.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Background_hexagon_textbox {
+            get {
+                object obj = ResourceManager.GetObject("Background_hexagon_textbox", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

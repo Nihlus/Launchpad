@@ -164,21 +164,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Button_Mini_Hover.png" />
-    <EmbeddedResource Include="Resources\Button_Install_Hover.png" />
-    <EmbeddedResource Include="Resources\Button_Update_Hover.png" />
-    <EmbeddedResource Include="Resources\Button_Play_Hover.png" />
     <EmbeddedResource Include="Resources\Background_hexagon_textbox.png" />
-    <EmbeddedResource Include="Resources\Button_Install_Default.png" />
-    <EmbeddedResource Include="Resources\Button_Install_Pressed.png" />
-    <EmbeddedResource Include="Resources\Button_Launch_Default.png" />
-    <EmbeddedResource Include="Resources\Button_Launch_Pressed.png" />
-    <EmbeddedResource Include="Resources\Button_Mini_Default.png" />
-    <EmbeddedResource Include="Resources\Button_Mini_Pressed.png" />
-    <EmbeddedResource Include="Resources\Button_Play_Default.png" />
-    <EmbeddedResource Include="Resources\Button_Play_Pressed.png" />
-    <EmbeddedResource Include="Resources\Button_Update_Default.png" />
-    <EmbeddedResource Include="Resources\Button_Update_Pressed.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

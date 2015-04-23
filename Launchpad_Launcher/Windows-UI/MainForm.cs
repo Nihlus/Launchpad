@@ -54,6 +54,8 @@ namespace Launchpad
                     MessageBoxDefaultButton.Button1);
 
                 MessageLabel.Text = "No FTP connection.";
+                PrimaryButton.Text = ":(";
+                PrimaryButton.Enabled = false;
             }
             else
             {
@@ -201,6 +203,8 @@ namespace Launchpad
                 case "Install":
                     {
                         Console.WriteLine("Installing game...");
+
+                        MessageLabel.Text = "Installing...";
                         PrimaryButton.Text = "Installing...";
                         PrimaryButton.Enabled = false;
 
@@ -302,7 +306,7 @@ namespace Launchpad
         private void OnChangelogDownloadFinished(object sender, GameDownloadFinishedEventArgs e)
         {
             changelogBrowser.DocumentText = e.Result;
-            changelogBrowser.Refresh();
+            changelogBrowser.Refresh();         
         }
 
         /// <summary>
@@ -312,21 +316,24 @@ namespace Launchpad
         /// <param name="e">Empty event args.</param>
         private void OnGameLaunchFailed(object sender, EventArgs e)
         {
-            Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Resources.RocketIcon.ico");
-            if (iconStream != null)
+            this.Invoke((MethodInvoker)delegate
             {
-                NotifyIcon launchFailedNotification = new NotifyIcon();
-                launchFailedNotification.Icon = new System.Drawing.Icon(iconStream);
-                launchFailedNotification.Visible = true;
+                Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Resources.RocketIcon.ico");
+                if (iconStream != null)
+                {
+                    NotifyIcon launchFailedNotification = new NotifyIcon();
+                    launchFailedNotification.Icon = new System.Drawing.Icon(iconStream);
+                    launchFailedNotification.Visible = true;
 
-                launchFailedNotification.BalloonTipTitle = "Launch Failed";
-                launchFailedNotification.BalloonTipText = "The game failed to launch. Try repairing the installation.";
+                    launchFailedNotification.BalloonTipTitle = "Launch Failed";
+                    launchFailedNotification.BalloonTipText = "The game failed to launch. Try repairing the installation.";
 
-                launchFailedNotification.ShowBalloonTip(10000);                
-            }
+                    launchFailedNotification.ShowBalloonTip(10000);
+                }
 
-            PrimaryButton.Text = "Repair";
-            PrimaryButton.Enabled = true;
+                PrimaryButton.Text = "Repair";
+                PrimaryButton.Enabled = true;
+            });
         }
 
         /// <summary>
@@ -336,30 +343,33 @@ namespace Launchpad
         /// <param name="e">Contains the type of failure that occurred.</param>
         private void OnGameDownloadFailed(object sender, GameDownloadFailedEventArgs e)
         {
-            switch (e.ResultType)
+            this.Invoke((MethodInvoker)delegate
             {
-                case "Install":
-                    {
-                        Console.WriteLine(e.Metadata);
-                        MessageLabel.Text = e.Metadata;
-                        break;
-                    }
-                case "Update":
-                    {
-                        Console.WriteLine(e.Metadata);
-                        MessageLabel.Text = e.Metadata;
-                        break;
-                    }
-                case "Repair":
-                    {
-                        Console.WriteLine(e.Metadata);
-                        MessageLabel.Text = e.Metadata;
-                        break;
-                    }
-            }
+                switch (e.ResultType)
+                {
+                    case "Install":
+                        {
+                            Console.WriteLine(e.Metadata);
+                            MessageLabel.Text = e.Metadata;
+                            break;
+                        }
+                    case "Update":
+                        {
+                            Console.WriteLine(e.Metadata);
+                            MessageLabel.Text = e.Metadata;
+                            break;
+                        }
+                    case "Repair":
+                        {
+                            Console.WriteLine(e.Metadata);
+                            MessageLabel.Text = e.Metadata;
+                            break;
+                        }
+                }
 
-            PrimaryButton.Text = e.ResultType;
-            PrimaryButton.Enabled = true;
+                PrimaryButton.Text = e.ResultType;
+                PrimaryButton.Enabled = true; 
+            });                                   
         }
 
         /// <summary>
@@ -367,15 +377,31 @@ namespace Launchpad
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">Contains the progress values and current filename.</param>
-        protected void OnGameDownloadProgressChanged(object sender, FileDownloadProgressChangedEventArgs e)
+        private void OnGameDownloadProgressChanged(object sender, FileDownloadProgressChangedEventArgs e)
         {
-            string progressbarText = String.Format("Downloading file {0}: {1} of {2} bytes.",
-                                                       System.IO.Path.GetFileNameWithoutExtension(e.FileName),
-                                                       e.DownloadedBytes.ToString(),
-                                                       e.TotalBytes.ToString());
+            this.Invoke((MethodInvoker)delegate
+            {
+                if (!String.IsNullOrEmpty(e.FileName))
+                {
+                    string progressbarText = String.Format("Downloading file {0}: {1} of {2} bytes.",
+                                                        System.IO.Path.GetFileNameWithoutExtension(e.FileName),
+                                                        e.DownloadedBytes.ToString(),
+                                                        e.TotalBytes.ToString());
 
-            downloadProgressLabel.Text = progressbarText;
-            mainProgressBar.Value = (int)e.DownloadedBytes / (int)e.TotalBytes;
+                    downloadProgressLabel.Text = progressbarText;
+
+                    mainProgressBar.Minimum = 0;
+                    mainProgressBar.Maximum = 10000;
+                    
+                    if (e.DownloadedBytes > 0 && e.TotalBytes > 0)
+                    {
+                        double fraction = ((double)e.DownloadedBytes / (double)e.TotalBytes) * 10000;
+
+                        mainProgressBar.Value = (int)fraction;
+                        mainProgressBar.Update();
+                    }                    
+                }                
+            });                      
         }
 
         /// <summary>
@@ -385,47 +411,50 @@ namespace Launchpad
         /// <param name="e">Contains the result of the download.</param>
         protected void OnGameDownloadFinished(object sender, GameDownloadFinishedEventArgs e)
         {
-            if (e.Result == "1") //there was an error
+            this.Invoke((MethodInvoker)delegate
             {
-                MessageLabel.Text = "Game download failed. Are you missing the manifest?";
-
-                Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Resources.RocketIcon.ico");
-                if (iconStream != null)
+                if (e.Result == "1") //there was an error
                 {
-                    NotifyIcon launchFailedNotification = new NotifyIcon();
-                    launchFailedNotification.Icon = new System.Drawing.Icon(iconStream);
-                    launchFailedNotification.Visible = true;
+                    MessageLabel.Text = "Game download failed. Are you missing the manifest?";
 
-                    launchFailedNotification.BalloonTipTitle = "Download Failed";
-                    launchFailedNotification.BalloonTipText = "The game failed to install. Are you missing the manifest?";
+                    Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Resources.RocketIcon.ico");
+                    if (iconStream != null)
+                    {
+                        NotifyIcon launchFailedNotification = new NotifyIcon();
+                        launchFailedNotification.Icon = new System.Drawing.Icon(iconStream);
+                        launchFailedNotification.Visible = true;
 
-                    launchFailedNotification.ShowBalloonTip(10000);
+                        launchFailedNotification.BalloonTipTitle = "Download Failed";
+                        launchFailedNotification.BalloonTipText = "The game failed to install. Are you missing the manifest?";
+
+                        launchFailedNotification.ShowBalloonTip(10000);
+                    }
+
+                    PrimaryButton.Text = e.ResultType; //URL is used here to set the desired retry action
+                    PrimaryButton.Enabled = true;
                 }
-
-                PrimaryButton.Text = e.ResultType; //URL is used here to set the desired retry action
-                PrimaryButton.Enabled = true;
-            }
-            else //the game has finished downloading, and we should be OK to launch
-            {
-                MessageLabel.Text = "Idle";
-                downloadProgressLabel.Text = "";
-
-                Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Resources.RocketIcon.ico");
-                if (iconStream != null)
+                else //the game has finished downloading, and we should be OK to launch
                 {
-                    NotifyIcon launchFailedNotification = new NotifyIcon();
-                    launchFailedNotification.Icon = new System.Drawing.Icon(iconStream);
-                    launchFailedNotification.Visible = true;
+                    MessageLabel.Text = "Idle";
+                    downloadProgressLabel.Text = "";
 
-                    launchFailedNotification.BalloonTipTitle = "Installation complete";
-                    launchFailedNotification.BalloonTipText = "Game download finished. Play away!";
+                    Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Resources.RocketIcon.ico");
+                    if (iconStream != null)
+                    {
+                        NotifyIcon launchFailedNotification = new NotifyIcon();
+                        launchFailedNotification.Icon = new System.Drawing.Icon(iconStream);
+                        launchFailedNotification.Visible = true;
 
-                    launchFailedNotification.ShowBalloonTip(10000);
-                }
+                        launchFailedNotification.BalloonTipTitle = "Installation complete";
+                        launchFailedNotification.BalloonTipText = "Game download finished. Play away!";
 
-                PrimaryButton.Text = "Launch";
-                PrimaryButton.Enabled = true;
-            }
+                        launchFailedNotification.ShowBalloonTip(10000);
+                    }
+
+                    PrimaryButton.Text = "Launch";
+                    PrimaryButton.Enabled = true;
+                }             
+            });            
         }
 
         /// <summary>
@@ -435,23 +464,26 @@ namespace Launchpad
         /// <param name="e">Empty arguments.</param>
         private void OnRepairFinished(object sender, EventArgs e)
         {
-            Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Resources.RocketIcon.ico");
-            if (iconStream != null)
+            this.Invoke((MethodInvoker)delegate
             {
-                NotifyIcon launchFailedNotification = new NotifyIcon();
-                launchFailedNotification.Icon = new System.Drawing.Icon(iconStream);
-                launchFailedNotification.Visible = true;
+                Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Resources.RocketIcon.ico");
+                if (iconStream != null)
+                {
+                    NotifyIcon launchFailedNotification = new NotifyIcon();
+                    launchFailedNotification.Icon = new System.Drawing.Icon(iconStream);
+                    launchFailedNotification.Visible = true;
 
-                launchFailedNotification.BalloonTipTitle = "IGame repair finished";
-                launchFailedNotification.BalloonTipText = "Launchpad has finished repairing the game installation. Play away!";
+                    launchFailedNotification.BalloonTipTitle = "IGame repair finished";
+                    launchFailedNotification.BalloonTipText = "Launchpad has finished repairing the game installation. Play away!";
 
-                launchFailedNotification.ShowBalloonTip(10000);
-            }
+                    launchFailedNotification.ShowBalloonTip(10000);
+                }
 
-            downloadProgressLabel.Text = "";
+                downloadProgressLabel.Text = "";
 
-            PrimaryButton.Text = "Launch";
-            PrimaryButton.Enabled = true;
+                PrimaryButton.Text = "Launch";
+                PrimaryButton.Enabled = true; 
+            });                       
         }
 
         private void aboutLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

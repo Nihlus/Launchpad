@@ -26,7 +26,7 @@ namespace Launchpad
 
 
 		/// <summary>
-		/// Determines whether this instance can connect to the FTP server. Run as little as possible, since it blocks the main while checking.
+		/// Determines whether this instance can connect to the FTP server. Run as little as possible, since it blocks the main thread while checking.
 		/// </summary>
 		/// <returns><c>true</c> if this instance can connect to the FTP server; otherwise, <c>false</c>.</returns>
 		public bool CanConnectToFTP()
@@ -57,6 +57,7 @@ namespace Launchpad
 				catch (WebException wex)
 				{
                     Console.WriteLine("CanConnectToFTP(): " + wex.Message);
+                    Console.WriteLine(FTPURL);
 
 					plainRequest.Abort();
 					bCanConnectToFTP = false;

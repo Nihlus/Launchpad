@@ -213,13 +213,17 @@ namespace Launchpad
 							else
 							{
 								Console.WriteLine ("InstallGameAsync: Resumed file hash was invalid, downloading fresh copy from server.");
+                                OnProgressChanged();
+                                fileReturn = FTP.DownloadFTPFile(RemotePath, LocalPath, false);
 							}
 						}									
 					}
-
-					//If the hash is incorrect or the file is missing, download it.
-					OnProgressChanged();
-					fileReturn = FTP.DownloadFTPFile (RemotePath, LocalPath, false);
+                    else
+                    {
+                        //no file, download it
+                        OnProgressChanged();
+                        fileReturn = FTP.DownloadFTPFile(RemotePath, LocalPath, false);
+                    }					
 
 					if (ChecksHandler.IsRunningOnUnix())
 					{
