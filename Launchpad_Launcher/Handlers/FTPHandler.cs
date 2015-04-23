@@ -54,8 +54,11 @@ namespace Launchpad
 		/// </summary>
 		/// <returns>The FTP file contents.</returns>
 		/// <param name="ftpSourceFilePath">FTP file path.</param>
-        public string ReadFTPFile(string ftpSourceFilePath)
+        public string ReadFTPFile(string rawRemoteURL)
         {
+			//clean the input URL first
+			string remoteURL = rawRemoteURL.Replace (Path.DirectorySeparatorChar, '/');
+
 			string username = Config.GetFTPUsername();
 			string password = Config.GetFTPPassword();
 
@@ -71,8 +74,8 @@ namespace Launchpad
 			try
 			{
 
-	            request = CreateFtpWebRequest(ftpSourceFilePath, username, password, true);
-	            sizerequest = CreateFtpWebRequest(ftpSourceFilePath, username, password, true);
+	            request = CreateFtpWebRequest(remoteURL, username, password, true);
+	            sizerequest = CreateFtpWebRequest(remoteURL, username, password, true);
 
 	            request.Method = WebRequestMethods.Ftp.DownloadFile;
 	            sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
