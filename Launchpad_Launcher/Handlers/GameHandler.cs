@@ -564,33 +564,6 @@ namespace Launchpad
 				GameRepairFailed (this, RepairFailedArgs);
 			}
 		}
-	}
-
-    [Serializable]
-    public class BitOperationException : Exception
-    {
-        public BitOperationException()
-        {
-
-        }
-
-        public BitOperationException(string message)
-            : base(message)
-        {
-
-        }
-
-        public BitOperationException(string message, Exception inner)
-            : base(message, inner)
-        {
-
-        }
-
-        protected BitOperationException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-
-        }
-    }
+	}	   
 }
 

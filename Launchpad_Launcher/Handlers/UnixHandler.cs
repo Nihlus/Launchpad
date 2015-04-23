@@ -1,5 +1,6 @@
 using Mono.Unix.Native;
 using System;
+using System.Runtime.Serialization;
 
 namespace Launchpad
 {
@@ -24,8 +25,35 @@ namespace Launchpad
 			catch (ApplicationException aex)
 			{
 				Console.WriteLine ("ApplicationException in MakeExecutable(): " + aex.Message);
-				return false;
+				throw new BitOperationException ("Failed to set the execute bit on " + fileName, aex);
 			}
+		}
+	}
+
+	[Serializable]
+	public class BitOperationException : Exception
+	{
+		public BitOperationException()
+		{
+
+		}
+
+		public BitOperationException(string message)
+			: base(message)
+		{
+
+		}
+
+		public BitOperationException(string message, Exception inner)
+			: base(message, inner)
+		{
+
+		}
+
+		protected BitOperationException(SerializationInfo info, StreamingContext context)
+			: base(info, context)
+		{
+
 		}
 	}
 }
