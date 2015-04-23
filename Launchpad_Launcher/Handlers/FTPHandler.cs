@@ -139,9 +139,12 @@ namespace Launchpad
 		/// <param name="ftpSourceFilePath">Ftp source file path.</param>
 		/// <param name="localDestination">Local destination.</param>
 		/// <param name="bUseAnonymous">If set to <c>true</c> b use anonymous.</param>
-        public string DownloadFTPFile(string ftpSourceFilePath, string localDestination, bool bUseAnonymous)
+        public string DownloadFTPFile(string rawRemoteURL, string localPath, bool bUseAnonymous)
         {
-			Console.WriteLine (ftpSourceFilePath);
+			//clean the URL string
+			string remoteURL = rawRemoteURL.Replace (Path.DirectorySeparatorChar, '/');
+
+			Console.WriteLine (remoteURL);
 			string username;
 			string password;
 			if (!bUseAnonymous)
@@ -172,8 +175,8 @@ namespace Launchpad
 
 			try
 			{
-	            request = CreateFtpWebRequest(ftpSourceFilePath, username, password, true);
-	            sizerequest = CreateFtpWebRequest(ftpSourceFilePath, username, password, true);
+	            request = CreateFtpWebRequest(remoteURL, username, password, true);
+	            sizerequest = CreateFtpWebRequest(remoteURL, username, password, true);
 
 	            request.Method = WebRequestMethods.Ftp.DownloadFile;
 	            sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
@@ -184,7 +187,7 @@ namespace Launchpad
 				reader = request.GetResponse().GetResponseStream();
                 sizereader = (FtpWebResponse)sizerequest.GetResponse();
 					
-				fileStream = new FileStream(localDestination, FileMode.Create);
+				fileStream = new FileStream(localPath, FileMode.Create);
 
 				//reset byte counter
 				FTPbytesDownloaded = 0;
@@ -192,7 +195,7 @@ namespace Launchpad
 				fileSize = sizereader.ContentLength;
 
 				//set file info for progress reporting
-				ProgressArgs.FileName = Path.GetFileNameWithoutExtension(ftpSourceFilePath);
+				ProgressArgs.FileName = Path.GetFileNameWithoutExtension(remoteURL);
 				ProgressArgs.TotalBytes = (int)fileSize;
 
 				while (true)
@@ -216,7 +219,7 @@ namespace Launchpad
                 OnProgressChanged();
 				OnDownloadFinished();
 
-				returnValue = localDestination;
+				returnValue = localPath;
 				return returnValue;             				                             
             }
             catch (WebException wex)
@@ -266,6 +269,147 @@ namespace Launchpad
 				}
 			}
         }
+
+		/// <summary>
+		/// Downloads an FTP file.
+		/// </summary>
+		/// <returns>The FTP file's location on disk, or the exception message.</returns>
+		/// <param name="ftpSourceFilePath">Ftp source file path.</param>
+		/// <param name="localDestination">Local destination.</param>
+		/// <param name="bUseAnonymous">If set to <c>true</c> b use anonymous.</param>
+		/// <param name="contentOffset">The content offset where the download should resume.</param>
+		public string DownloadFTPFile(string rawRemoteURL, string localPath, long contentOffset, bool bUseAnonymous)
+		{
+			//clean the URL string first
+			string remoteURL = rawRemoteURL.Replace (Path.DirectorySeparatorChar, '/');
+
+			Console.WriteLine (remoteURL);
+			string username;
+			string password;
+			if (!bUseAnonymous)
+			{
+				username = Config.GetFTPUsername ();
+				password = Config.GetFTPPassword ();
+			}
+			else
+			{
+				username = "anonymous";
+				password = "anonymous";
+			}
+
+
+			int bytesRead = 0;
+			byte[] buffer = new byte[2048];
+
+			FtpWebRequest request = null;
+			FtpWebRequest sizerequest = null;
+
+			Stream reader = null;
+			FtpWebResponse sizereader = null;
+
+			FileStream fileStream = null;
+
+			//either a path to the file or an error message
+			string returnValue = "";
+
+			try
+			{
+				request = CreateFtpWebRequest(remoteURL, username, password, true);
+				sizerequest = CreateFtpWebRequest(remoteURL, username, password, true);
+
+				request.Method = WebRequestMethods.Ftp.DownloadFile;
+				sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
+
+				request.ContentOffset = contentOffset;
+
+				long fileSize = 0;
+
+
+				reader = request.GetResponse().GetResponseStream();
+				sizereader = (FtpWebResponse)sizerequest.GetResponse();
+
+				fileStream = new FileStream(localPath, FileMode.Create);
+
+				//reset byte counter
+				FTPbytesDownloaded = 0;
+
+				fileSize = sizereader.ContentLength;
+
+				//set file info for progress reporting
+				ProgressArgs.FileName = Path.GetFileNameWithoutExtension(remoteURL);
+				ProgressArgs.TotalBytes = (int)fileSize;
+
+				while (true)
+				{
+					bytesRead = reader.Read(buffer, 0, buffer.Length);
+
+					if (bytesRead == 0)
+					{
+						break;
+					}
+
+					FTPbytesDownloaded = FTPbytesDownloaded + bytesRead;
+					fileStream.Write(buffer, 0, bytesRead);
+
+					//set file progress info
+					ProgressArgs.DownloadedBytes = FTPbytesDownloaded;
+
+					OnProgressChanged();
+				}
+
+				OnProgressChanged();
+				OnDownloadFinished();
+
+				returnValue = localPath;
+				return returnValue;             				                             
+			}
+			catch (WebException wex)
+			{
+				Console.Write("WebException in DownloadFTPFile: ");
+				Console.WriteLine(wex.Message);
+				returnValue = wex.Message;
+
+				return returnValue;
+			}
+			catch (IOException ioex)
+			{
+				Console.Write("IOException in DownloadFTPFile: ");
+				Console.WriteLine(ioex.Message);
+				returnValue = ioex.Message;
+
+				return returnValue;
+			}
+			finally
+			{
+				//clean up all open requests
+				//first, close and dispose of the file stream
+				if (fileStream != null)
+				{
+					fileStream.Close();
+				}
+
+				//then, the responses that are reading from the requests.
+				if (reader != null)
+				{
+					reader.Close ();
+				}
+				if (sizereader != null)
+				{
+					sizereader.Close();
+				}
+
+				//and finally, the requests themselves.
+				if (request != null)
+				{
+					request.Abort();
+				}
+
+				if (sizerequest != null)
+				{
+					sizerequest.Abort();
+				}
+			}
+		}
 
 		/// <summary>
 		/// Creates an ftp web request.
