@@ -433,13 +433,13 @@ namespace Launchpad
 			string gameURL;
 			if (bGetSystemGame)
 			{
-				gameURL = String.Format ("{0}/game/{1}/bin", 
+				gameURL = String.Format ("{0}/game/{1}/bin/", 
                     GetFTPUrl (), 
                     GetSystemTarget ());
 			}
 			else
 			{
-				gameURL = String.Format("{0}/game", 
+				gameURL = String.Format("{0}/game/", 
                     GetFTPUrl());
 			}
 

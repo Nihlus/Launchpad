@@ -173,9 +173,7 @@ namespace Launchpad
 					                                  System.IO.Path.DirectorySeparatorChar, 
 					                                  Entry.RelativePath);
 
-					//TODO: Investigate if we need both of these
 					//make sure we have a game directory to put files in
-					Directory.CreateDirectory(Directory.GetParent(LocalPath).ToString());
 					Directory.CreateDirectory(Path.GetDirectoryName(LocalPath));
 
 					//write the current file progress to the install cookie
@@ -186,7 +184,7 @@ namespace Launchpad
 					if (File.Exists(LocalPath))
 					{
 						FileInfo fileInfo = new FileInfo(LocalPath);
-						if (fileInfo.Length == Entry.Size)
+						if (fileInfo.Length != Entry.Size)
 						{
 							//Resume the download of this partial file.
 							OnProgressChanged();
@@ -368,10 +366,9 @@ namespace Launchpad
 
 					if (File.Exists(LocalPath))
 					{
-						//download the file, since it was missing
 
 						FileInfo fileInfo = new FileInfo(LocalPath);
-						if (fileInfo.Length == Entry.Size)
+						if (fileInfo.Length != Entry.Size)
 						{
 							//Resume the download of this partial file.
 							OnProgressChanged();

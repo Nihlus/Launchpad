@@ -103,8 +103,8 @@ namespace Launchpad
             }
             catch (WebException wex)
             {
-                Console.Write("ReadFTPFileException: ");
-                Console.WriteLine(wex.Message);
+                Console.Write("WebException in ReadFTPFileException: ");
+				Console.WriteLine(wex.Message + " (" + remoteURL + ")");
                 return wex.Message;
             }
 			finally
@@ -228,7 +228,7 @@ namespace Launchpad
             catch (WebException wex)
             {
                 Console.Write("WebException in DownloadFTPFile: ");
-                Console.WriteLine(wex.Message);
+                Console.WriteLine(wex.Message + " (" + remoteURL + ")");
                 returnValue = wex.Message;
 
 				return returnValue;
@@ -236,7 +236,7 @@ namespace Launchpad
             catch (IOException ioex)
             {
                 Console.Write("IOException in DownloadFTPFile: ");
-                Console.WriteLine(ioex.Message);
+				Console.WriteLine(ioex.Message  + " (" + remoteURL + ")");
                 returnValue = ioex.Message;
 
                 return returnValue;
@@ -368,16 +368,16 @@ namespace Launchpad
 			}
 			catch (WebException wex)
 			{
-				Console.Write("WebException in DownloadFTPFile: ");
-				Console.WriteLine(wex.Message);
+				Console.Write("WebException in DownloadFTPFile (appending): ");
+				Console.WriteLine(wex.Message  + " (" + remoteURL + ")");
 				returnValue = wex.Message;
 
 				return returnValue;
 			}
 			catch (IOException ioex)
 			{
-				Console.Write("IOException in DownloadFTPFile: ");
-				Console.WriteLine(ioex.Message);
+				Console.Write("IOException in DownloadFTPFile (appending): ");
+				Console.WriteLine(ioex.Message  + " (" + remoteURL + ")");
 				returnValue = ioex.Message;
 
 				return returnValue;
@@ -469,20 +469,27 @@ namespace Launchpad
 			string remoteVersionPath = "";
 			if (bUseSystemTarget)
 			{
-				remoteVersionPath = String.Format ("{0}/game/{1}/GameVersion.txt", 
+				remoteVersionPath = String.Format ("{0}/game/{1}/bin/GameVersion.txt", 
 				                                   Config.GetFTPUrl(), 
 				                                   Config.GetSystemTarget());
 
 			}
 			else
 			{
-				remoteVersionPath = String.Format ("{0}/game/GameVersion.txt", 
+				remoteVersionPath = String.Format ("{0}/game/bin/GameVersion.txt", 
 				                                   Config.GetFTPUrl());
 
 			}
 			string remoteVersion = ReadFTPFile (remoteVersionPath);
 
-			return Version.Parse(remoteVersion);
+			if (!string.IsNullOrEmpty (remoteVersion))
+			{
+				return Version.Parse (remoteVersion);
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		public string GetRemoteManifestChecksum()
