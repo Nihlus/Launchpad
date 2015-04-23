@@ -10,7 +10,7 @@ using System.Resources;
 [assembly: AssemblyDescription("A free, open-source UE4-compatible game launcher\n\nIcons used were taken from www.icons8.com\n\n\nUI graphics were made by Isaac Nichols")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Jarl Gullberg")]
-[assembly: AssemblyProduct("Launchpad_Launcher")]
+[assembly: AssemblyProduct("Launchpad")]
 [assembly: AssemblyCopyright("Copyright ©  2015 Jarl Gullberg")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

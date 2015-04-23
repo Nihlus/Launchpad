@@ -36,7 +36,7 @@ namespace Launchpad
 			w1.Add (this.SettingsAction, null);
 			this.UIManager.InsertActionGroup (w1, 0);
 			this.AddAccelGroup (this.UIManager.AccelGroup);
-			this.Name = "Launchpad_Launcher.MainWindow";
+			this.Name = "Launchpad.MainWindow";
 			this.Title = global::Mono.Unix.Catalog.GetString ("Launchpad");
 			this.Icon = global::Gdk.Pixbuf.LoadFromResource ("Launchpad.Resources.RocketIcon.ico");
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
