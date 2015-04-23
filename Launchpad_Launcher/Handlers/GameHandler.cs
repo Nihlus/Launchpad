@@ -126,6 +126,8 @@ namespace Launchpad
 			try
 			{
 				FTPHandler FTP = new FTPHandler ();
+				ManifestHandler manifestHandler = new ManifestHandler();
+				List<ManifestEntry> Manifest = manifestHandler.Manifest;
 
 				//create the .install file to mark that an installation has begun
                 ConfigHandler.CreateInstallCookie();
@@ -139,88 +141,98 @@ namespace Launchpad
 				//event in the FTP class
 				FTP.FileProgressChanged += OnDownloadProgressChanged;
 
-				string lastDownloadedFile = File.ReadAllText (ConfigHandler.GetInstallCookiePath ());
-				string[] manifestEntries = File.ReadAllLines (ConfigHandler.GetManifestPath ());
-
-				//in order to be able to resume downloading, we check if there is a file
+				//in order to be able to resume downloading, we check if there is an entry
 				//stored in the install cookie.
-				int line = 0;
+				ManifestEntry lastDownloadedFile = null;
+				string installCookiePath = ConfigHandler.GetInstallCookiePath ();
 
-				if (!ChecksHandler.IsInstallCookieEmpty())
+				if (ManifestEntry.TryParse(File.ReadAllText (installCookiePath), out lastDownloadedFile))
 				{
-					//loop through all the lines in the manifest until we encounter
+					//loop through all the entries in the manifest until we encounter
 					//a line which matches the one in the install cookie
-					for (int i = 0; i < manifestEntries.Length; ++i)
+
+					foreach (ManifestEntry Entry in Manifest)
 					{
-						if (lastDownloadedFile == manifestEntries[i])
+						if (lastDownloadedFile == Entry)
 						{
-							line = i;
+							//remove all entries before the one we were last at.
+							Manifest.RemoveRange(0, Manifest.IndexOf(Entry));
 						}
 					}
 				}
 
-				//then, start downloading files from that line. If no line was found, we start 
-				//at 0.
-				for (int i = line; i < manifestEntries.Length; ++i)
+				//then, start downloading the entries that remain in the manifest.
+				foreach (ManifestEntry Entry in Manifest)
 				{
-					//download the file
-					//this is the first substring in the manifest line, delimited by :
-					string[] elements = manifestEntries [i].Split (':');
-					string relativeFilePath = elements[0];
-
 					string RemotePath = String.Format ("{0}{1}", 
 					                                   Config.GetGameURL (true), 
-					                                   relativeFilePath);
+					                                   Entry.RelativePath);
 
 					string LocalPath = String.Format ("{0}{1}{2}", 
 					                                  Config.GetGamePath (true),
 					                                  System.IO.Path.DirectorySeparatorChar, 
-					                                  relativeFilePath);
+					                                  Entry.RelativePath);
 
+					//TODO: Investigate if we need both of these
+					//make sure we have a game directory to put files in
 					Directory.CreateDirectory(Directory.GetParent(LocalPath).ToString());
+					Directory.CreateDirectory(Path.GetDirectoryName(LocalPath));
 
 					//write the current file progress to the install cookie
 					TextWriter textWriterProgress = new StreamWriter(ConfigHandler.GetInstallCookiePath ());
-					textWriterProgress.WriteLine (manifestEntries [i]);
+					textWriterProgress.WriteLine (Entry.ToString());
 					textWriterProgress.Close ();
 
 					if (File.Exists(LocalPath))
 					{
 						FileInfo fileInfo = new FileInfo(LocalPath);
-						long manifestFileLength = 0;
-						if (long.TryParse(elements[2], out manifestFileLength))
-                        {
-                            if (fileInfo.Length == manifestFileLength)
-                            {
-                                //should resume download here
+						if (fileInfo.Length == Entry.Size)
+						{
+							//Resume the download of this partial file.
+							OnProgressChanged();
+							fileReturn = FTP.DownloadFTPFile(RemotePath, LocalPath, fileInfo.Length, false);
 
-                                //whoa, why is there a file here? Is it correct?
-                                string localHash = MD5Handler.GetFileHash(File.OpenRead(LocalPath));
-                                string manifestHash = elements[1];
+							//Now verify the file
+							string localHash = MD5Handler.GetFileHash(File.OpenRead(LocalPath));
 
-                                if (localHash == manifestHash)
-                                {
-                                    //apparently we already had the proper version of this file. 
-                                    //Moving on!
-                                    continue;
-                                }
-                            }
-                        }						
+							if (localHash == Entry.Hash)
+							{
+								//We've successfully retrieved the rest of this file, so we can move on.
+								if (ChecksHandler.IsRunningOnUnix())
+								{
+									//if we're dealing with a file that should be executable, 
+									string gameName = Config.GetGameName();
+									bool bFileIsGameExecutable = (Path.GetFileName(LocalPath).EndsWith(".exe")) || (Path.GetFileNameWithoutExtension(LocalPath) == gameName);
+									if (bFileIsGameExecutable)
+									{
+										//set the execute bits.
+										UnixHandler.MakeExecutable(LocalPath);
+									}
+								}
+
+								continue;
+							}
+							else
+							{
+								Console.WriteLine ("InstallGameAsync: Resumed file hash was invalid, downloading fresh copy from server.");
+							}
+						}									
 					}
 
-
-					//make sure we have a game directory to put files in
-					Directory.CreateDirectory(Path.GetDirectoryName(LocalPath));
-					//now download the file
+					//If the hash is incorrect or the file is missing, download it.
 					OnProgressChanged();
 					fileReturn = FTP.DownloadFTPFile (RemotePath, LocalPath, false);
 
-					//if we're dealing with a file that should be executable, 
-					bool bFileIsGameExecutable = (Path.GetFileName(LocalPath).EndsWith(".exe")) || (Path.GetFileNameWithoutExtension(LocalPath) == Config.GetGameName());
-
-					if (ChecksHandler.IsRunningOnUnix() && bFileIsGameExecutable)
+					if (ChecksHandler.IsRunningOnUnix())
 					{
-						UnixHandler.MakeExecutable(LocalPath);
+						//if we're dealing with a file that should be executable, 
+						string gameName = Config.GetGameName();
+						bool bFileIsGameExecutable = (Path.GetFileName(LocalPath).EndsWith(".exe")) || (Path.GetFileNameWithoutExtension(LocalPath) == gameName);
+						if (bFileIsGameExecutable)
+						{
+							//set the execute bits
+							UnixHandler.MakeExecutable(LocalPath);
+						}					
 					}
 				}
 
@@ -228,7 +240,7 @@ namespace Launchpad
 				File.WriteAllText (ConfigHandler.GetInstallCookiePath (), String.Empty);
 
 				//raise the finished event
-				OnGameDownloadFinished ();			
+				OnGameDownloadFinished ();	
 			}
 	        catch (IOException ioex)
             {
@@ -252,51 +264,38 @@ namespace Launchpad
 		}
 		private void UpdateGameAsync()
 		{
+			ManifestHandler manifestHandler = new ManifestHandler ();
+
 			//check all local files against the manifest for file size changes.
 			//if the file is missing or the wrong size, download it.
 			//better system - compare old & new manifests for changes and download those?
-			List<string> manifestItems = new List<string> ();
-			List<string> oldManifestItems = new List<string> ();
+			List<ManifestEntry> Manifest = manifestHandler.Manifest;
+			List<ManifestEntry> OldManifest = manifestHandler.OldManifest;
 
-			string manifestPath = ConfigHandler.GetManifestPath ();
-			string oldManifestPath = ConfigHandler.GetManifestPath () + ".old";
 
 			try
 			{
-				//fill our manifest lists
-				manifestItems = new List<string> (File.ReadAllLines(manifestPath));
-
-				//if we have an old manifest, load it
-				if (File.Exists(oldManifestPath))
-				{
-					oldManifestItems = new List<string> (File.ReadAllLines(oldManifestPath));
-				}
-				//first check old manifest against new manifest, download anything that isn't exactly the same as before
+				//Check old manifest against new manifest, download anything that isn't exactly the same as before
 
 				FTPHandler FTP = new FTPHandler();
 				FTP.FileProgressChanged += OnDownloadProgressChanged;
 				FTP.FileDownloadFinished += OnFileDownloadFinished;
 
-				foreach (string item in manifestItems)
+				foreach (ManifestEntry Entry in Manifest)
 				{
-					if (!oldManifestItems.Contains(item))
+					if (!OldManifest.Contains(Entry))
 					{
-						//download
-						string relativeFilePath = (item.Split (':'))[0];
-
                         string RemotePath = String.Format("{0}{1}",
-                                                       Config.GetGameURL(true),
-                                                       relativeFilePath);
+                                                       	  Config.GetGameURL(true),
+                                                          Entry.RelativePath);
 
-						string LocalPath = String.Format ("{0}{1}{2}", 
+						string LocalPath = String.Format ("{0}{1}", 
 						                                  Config.GetGamePath (true),
-						                                  System.IO.Path.DirectorySeparatorChar, 
-						                                  relativeFilePath);
-
-						OnProgressChanged();
+						                                  Entry.RelativePath);
 
 						Directory.CreateDirectory(Directory.GetParent(LocalPath).ToString());
 
+						OnProgressChanged();
 						FTP.DownloadFTPFile(RemotePath, LocalPath, false);
 					}
 				}
@@ -322,10 +321,10 @@ namespace Launchpad
 		{
 			//This value is filled with either a path to the last downloaded file, or with an exception message
 			//this message is used in the main UI to determine how it responds to a failed download.
-			string fileReturn = "";
+			string repairMetadata = "";
 			try
 			{
-				//check all local file MD5s against latest manifest. Download broken files.
+				//check all local file MD5s against latest manifest. Resume partial files, download broken files.
 				FTPHandler FTP = new FTPHandler ();
 
 				//bind our events
@@ -333,70 +332,99 @@ namespace Launchpad
 
 
 				//first, verify that the manifest is correct.
-				string localsum = MD5Handler.GetFileHash(File.OpenRead(ConfigHandler.GetManifestPath ()));
-				string remotesum = FTP.GetRemoteManifestChecksum ();
+				string LocalManifestHash = MD5Handler.GetFileHash(File.OpenRead(ConfigHandler.GetManifestPath ()));
+				string RemoteManifestHash = FTP.GetRemoteManifestChecksum ();
 
 				//if it is not, download a new copy.
-				if (!(localsum == remotesum))
+				if (!(LocalManifestHash == RemoteManifestHash))
 				{
 					LauncherHandler Launcher = new LauncherHandler ();
 					Launcher.DownloadManifest ();
 				}
 
-				string[] entries = File.ReadAllLines (ConfigHandler.GetManifestPath ());
+				//then, begin repairing the game
+				ManifestHandler manifestHandler = new ManifestHandler ();
+				List<ManifestEntry> Manifest = manifestHandler.Manifest;			
 
-				ProgressArgs.TotalFiles = entries.Length;
+				ProgressArgs.TotalFiles = Manifest.Count;
 			
 				int i = 0;
-				foreach (string entry in entries)
-				{
-					string[] elements = entry.Split(':');
+				foreach (ManifestEntry Entry in Manifest)
+				{				
 
-					string relativeFilePath = elements[0];
-					string completeFilePath = Config.GetGamePath(true) + relativeFilePath;
-					string manifestMD5 = elements [1];
-					//string size = elements [2];
-
-					ProgressArgs.FileName = Path.GetFileName(completeFilePath);
 
                     string RemotePath = String.Format("{0}{1}",
                                                        Config.GetGameURL(true),
-                                                       relativeFilePath);
+                                                       Entry.RelativePath);
 
-					string LocalPath = String.Format ("{0}{1}{2}", 
+					string LocalPath = String.Format ("{0}{1}", 
 					                                  Config.GetGamePath (true),
-					                                  System.IO.Path.DirectorySeparatorChar, 
-					                                  relativeFilePath);
+					                                  Entry.RelativePath);
 
+					ProgressArgs.FileName = Path.GetFileName(LocalPath);
+
+					//make sure the directory for the file exists
 					Directory.CreateDirectory(Directory.GetParent(LocalPath).ToString());
 
-					if (!File.Exists(completeFilePath))
+					if (File.Exists(LocalPath))
 					{
 						//download the file, since it was missing
-						OnProgressChanged ();
-						fileReturn = FTP.DownloadFTPFile (RemotePath, LocalPath, false);
+
+						FileInfo fileInfo = new FileInfo(LocalPath);
+						if (fileInfo.Length == Entry.Size)
+						{
+							//Resume the download of this partial file.
+							OnProgressChanged();
+							repairMetadata = FTP.DownloadFTPFile(RemotePath, LocalPath, fileInfo.Length, false);
+
+							//Now verify the file
+							string localHash = MD5Handler.GetFileHash(File.OpenRead(LocalPath));
+
+							if (localHash == Entry.Hash)
+							{
+								//We've successfully retrieved the rest of this file.
+
+								//Should it be executable on Unix?
+								if (ChecksHandler.IsRunningOnUnix())
+								{
+									//if we're dealing with a file that should be executable, 
+									string gameName = Config.GetGameName();
+									bool bFileIsGameExecutable = (Path.GetFileName(LocalPath).EndsWith(".exe")) || (Path.GetFileNameWithoutExtension(LocalPath) == gameName);
+									if (bFileIsGameExecutable)
+									{
+										//set the execute bits.																
+										UnixHandler.MakeExecutable(LocalPath);
+									}
+								}
+
+								continue;
+							}
+							else
+							{
+								Console.WriteLine ("RepairGameAsync: Resumed file hash was invalid, downloading fresh copy from server.");
+
+								//download the file, since it was broken
+								OnProgressChanged ();
+								repairMetadata = FTP.DownloadFTPFile (RemotePath, LocalPath, false);
+							}
+						}					
 					}
 					else
 					{
-                        string fileMD5 = MD5Handler.GetFileHash(File.OpenRead(completeFilePath));
-						if (fileMD5 != manifestMD5)
-						{
-							Console.WriteLine (fileMD5 + ":" + manifestMD5);
-							//download the file, since it was broken
-							OnProgressChanged ();
-							fileReturn = FTP.DownloadFTPFile (RemotePath, LocalPath, false);
-						}
+						//download the file, since it was missing
+						OnProgressChanged ();
+						repairMetadata = FTP.DownloadFTPFile (RemotePath, LocalPath, false);
 					}
 
-					//if we're dealing with a file that should be executable, 
-					bool bFileIsGameExecutable = (Path.GetFileName(LocalPath).EndsWith(".exe")) || (Path.GetFileNameWithoutExtension(LocalPath) == Config.GetGameName());
-
-					if (ChecksHandler.IsRunningOnUnix() && bFileIsGameExecutable)
+					if (ChecksHandler.IsRunningOnUnix())
 					{
-						//if we couldn't set the execute bit on the executable, raise an exception, since we won't be able to launch the game
-                        if (!UnixHandler.MakeExecutable(LocalPath))
-						{                           
-							throw new BitOperationException("[LPAD001]: Could not set the execute bit on the game executable.");
+						//if we're dealing with a file that should be executable, 
+						string gameName = Config.GetGameName();
+						bool bFileIsGameExecutable = (Path.GetFileName(LocalPath).EndsWith(".exe")) || (Path.GetFileNameWithoutExtension(LocalPath) == gameName);
+						if (bFileIsGameExecutable)
+						{
+							//set the execute bits.																
+							UnixHandler.MakeExecutable(LocalPath);
 						}
 					}
 
@@ -412,7 +440,7 @@ namespace Launchpad
 
 				DownloadFailedArgs.Result = "1";
 				DownloadFailedArgs.ResultType = "Repair";
-				DownloadFailedArgs.Metadata = fileReturn;
+				DownloadFailedArgs.Metadata = repairMetadata;
 
 				OnGameRepairFailed ();
 			}

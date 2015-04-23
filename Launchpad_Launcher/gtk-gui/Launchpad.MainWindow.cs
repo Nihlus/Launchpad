@@ -25,7 +25,7 @@ namespace Launchpad
 		protected virtual void Build ()
 		{
 			global::Stetic.Gui.Initialize (this);
-			// Widget Launchpad_Launcher.MainWindow
+			// Widget Launchpad.MainWindow
 			this.UIManager = new global::Gtk.UIManager ();
 			global::Gtk.ActionGroup w1 = new global::Gtk.ActionGroup ("Default");
 			this.EditAction = new global::Gtk.Action ("EditAction", global::Mono.Unix.Catalog.GetString ("Edit"), null, null);
@@ -36,13 +36,13 @@ namespace Launchpad
 			w1.Add (this.SettingsAction, null);
 			this.UIManager.InsertActionGroup (w1, 0);
 			this.AddAccelGroup (this.UIManager.AccelGroup);
-			this.Name = "Launchpad_Launcher.MainWindow";
+			this.Name = "Launchpad.MainWindow";
 			this.Title = global::Mono.Unix.Catalog.GetString ("Launchpad");
 			this.Icon = global::Gdk.Pixbuf.LoadFromResource ("Launchpad.Resources.RocketIcon.ico");
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
 			this.DefaultWidth = 755;
 			this.DefaultHeight = 412;
-			// Container child Launchpad_Launcher.MainWindow.Gtk.Container+ContainerChild
+			// Container child Launchpad.MainWindow.Gtk.Container+ContainerChild
 			this.vbox1 = new global::Gtk.VBox ();
 			this.vbox1.Name = "vbox1";
 			this.vbox1.Spacing = 6;
@@ -69,6 +69,8 @@ namespace Launchpad
 			this.alignment2.Name = "alignment2";
 			// Container child alignment2.Gtk.Container+ContainerChild
 			this.scrolledwindow2 = new global::Gtk.ScrolledWindow ();
+			this.scrolledwindow2.WidthRequest = 290;
+			this.scrolledwindow2.HeightRequest = 300;
 			this.scrolledwindow2.CanFocus = true;
 			this.scrolledwindow2.Name = "scrolledwindow2";
 			this.scrolledwindow2.ShadowType = ((global::Gtk.ShadowType)(1));

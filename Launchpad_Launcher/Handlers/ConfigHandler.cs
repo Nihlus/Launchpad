@@ -257,6 +257,16 @@ namespace Launchpad
         }
 
 		/// <summary>
+		/// Gets the old manifest's path.
+		/// </summary>
+		/// <returns>The old manifest's path.</returns>
+		public static string GetOldManifestPath()
+		{
+			string manifestPath = String.Format(@"{0}LauncherManifest.txt.old", GetLocalDir());
+			return manifestPath;
+		}
+
+		/// <summary>
 		/// Gets the game path, terminated by a separator char.
 		/// </summary>
 		/// <returns>The game path, terminated by a separator char.</returns>

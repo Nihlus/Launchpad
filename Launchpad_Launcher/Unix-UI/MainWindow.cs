@@ -32,6 +32,7 @@ namespace Launchpad
 		/// </summary>
 		GameHandler Game = new GameHandler();
 
+		//webkit
 		/// <summary>
 		/// The changelog browser.
 		/// </summary>
@@ -46,8 +47,9 @@ namespace Launchpad
 			Config.Initialize ();
 
 			// Configure the WebView for our changelog
-			Browser.SetSizeRequest (290, 300);
+			Browser.SetSizeRequest (290, 300);		
 
+			//webkit
 			scrolledwindow2.Add (Browser);
 			scrolledwindow2.ShowAll ();
 
@@ -330,8 +332,8 @@ namespace Launchpad
             //Take the resulting HTML string from the changelog download and send it to the Webkit browser
             Gtk.Application.Invoke(delegate
             {
+				//webkit
                 Browser.LoadHtmlString(e.Result, e.ResultType);
-
             });
         }
 

@@ -12,7 +12,7 @@ namespace Launchpad
 		{
 			string output = "";
 
-			output = input.Replace ("\n", String.Empty).Replace ("\0", String.Empty);
+			output = input.Replace ("\n", String.Empty).Replace ("\0", String.Empty).Replace("\r", String.Empty);
 
 			return output;
 		}
