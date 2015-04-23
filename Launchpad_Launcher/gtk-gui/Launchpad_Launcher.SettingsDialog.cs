@@ -43,7 +43,7 @@ namespace Launchpad
 		{
 			global::Stetic.Gui.Initialize (this);
 			// Widget Launchpad_Launcher.SettingsDialog
-			this.Name = "Launchpad.SettingsDialog";
+			this.Name = "Launchpad_Launcher.SettingsDialog";
 			this.Title = global::Mono.Unix.Catalog.GetString ("Edit Settings");
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
 			// Internal child Launchpad_Launcher.SettingsDialog.VBox

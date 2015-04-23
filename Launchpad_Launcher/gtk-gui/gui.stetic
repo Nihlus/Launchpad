@@ -9,7 +9,7 @@
     <widget-library name="../External Assemblies/notify-sharp-0.4/notify-sharp.dll" />
     <widget-library name="../External Assemblies/webkit-sharp-1.1/webkit-sharp.dll" />
   </import>
-  <widget class="Gtk.Window" id="Launchpad.MainWindow" design-size="760 385">
+  <widget class="Gtk.Window" id="Launchpad_Launcher.MainWindow" design-size="760 385">
     <action-group name="Default">
       <action id="EditAction">
         <property name="Type">Action</property>
@@ -25,7 +25,7 @@
     </action-group>
     <property name="MemberName" />
     <property name="Title" translatable="yes">Launchpad</property>
-    <property name="Icon">resource:Launchpad.Resources.RocketIcon.ico</property>
+    <property name="Icon">resource:Launchpad_Launcher.resource.Icons8-Android-Transport-Rocket.ico</property>
     <property name="WindowPosition">CenterOnParent</property>
     <property name="DefaultWidth">755</property>
     <property name="DefaultHeight">412</property>
@@ -182,7 +182,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Dialog" id="Launchpad.SettingsDialog" design-size="345 295">
+  <widget class="Gtk.Dialog" id="Launchpad_Launcher.SettingsDialog" design-size="345 295">
     <property name="MemberName" />
     <property name="Title" translatable="yes">Edit Settings</property>
     <property name="WindowPosition">CenterOnParent</property>
