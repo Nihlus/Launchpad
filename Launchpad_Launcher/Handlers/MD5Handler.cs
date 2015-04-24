@@ -17,28 +17,33 @@ namespace Launchpad
         /// <param name="fileStream">File stream.</param>
         public static string GetFileHash(Stream fileStream)
         {
-
-            try
-            {
-                using (var md5 = MD5.Create())
-                {
-                    //we got a valid file, calculate the MD5 and return it
-                    var resultString = BitConverter.ToString(md5.ComputeHash(fileStream)).Replace("-", "");
-
-                    return resultString;
-                }
-            }
-            catch (IOException ioex)
-            {
-				Console.Write ("IOException in GetFileHash(): ");
-				Console.WriteLine (ioex.Message);
-
-                return "";
-            }
-			finally
+			if (fileStream != null)
 			{
-				//release the file (if we had one)
-				fileStream.Close();
+				try
+				{
+					using (MD5 md5 = MD5.Create())
+					{
+						//calculate the hash of the stream.
+						string resultString = BitConverter.ToString(md5.ComputeHash(fileStream)).Replace("-", "");
+
+						return resultString;
+					}
+				}
+				catch (IOException ioex)
+				{
+					Console.WriteLine ("IOException in GetFileHash(): " + ioex.Message);
+
+					return String.Empty;
+				}
+				finally
+				{
+					//release the file (if we had one)
+					fileStream.Close();
+				}
+			}     
+			else
+			{ 
+				return String.Empty;
 			}
         }
     }

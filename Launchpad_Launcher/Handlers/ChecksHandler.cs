@@ -32,7 +32,6 @@ namespace Launchpad
 		public bool CanConnectToFTP()
 		{
 			bool bCanConnectToFTP;
-			Console.WriteLine("\nChecking for FTP connection...");
 
 			string FTPURL = Config.GetFTPUrl();
 			string FTPUserName = Config.GetFTPUsername();
@@ -56,7 +55,7 @@ namespace Launchpad
 				}
 				catch (WebException wex)
 				{
-                    Console.WriteLine("CanConnectToFTP(): " + wex.Message);
+                    Console.WriteLine("WebException in CanConnectToFTP(): " + wex.Message);
                     Console.WriteLine(FTPURL);
 
 					plainRequest.Abort();
@@ -66,7 +65,7 @@ namespace Launchpad
 			catch (WebException wex)
 			{
 				//case where FTP URL in config is not valid
-				Console.WriteLine ("CanConnectToFTP(): " + wex.Message);
+				Console.WriteLine ("WebException CanConnectToFTP() (Invalid URL): " + wex.Message);
 
 				bCanConnectToFTP = false;
 				return bCanConnectToFTP;
@@ -109,12 +108,10 @@ namespace Launchpad
 			int p = (int)Environment.OSVersion.Platform;
 			if ((p == 4) || (p == 6) || (p == 128))
 			{
-				Console.WriteLine("Running on Unix");
 				return true;
 			}
 			else
 			{
-				Console.WriteLine("Not running on Unix");
 				return false;
 			}
 		}
@@ -132,11 +129,6 @@ namespace Launchpad
 			bool bHasInstallationCookie = File.Exists(ConfigHandler.GetInstallCookiePath());
 			//is there a version file?
 			bool bHasGameVersion = File.Exists (Config.GetGameVersionPath ());
-
-			Console.WriteLine (String.Format ("{0} {1} {2}", 
-			              bHasDirectory.ToString (), 
-			              bHasInstallationCookie.ToString (),
-			              IsInstallCookieEmpty ().ToString ()));
 
 			//If any of these criteria are false, the game is not considered fully installed.
 			return bHasDirectory && bHasInstallationCookie && IsInstallCookieEmpty() && bHasGameVersion;
@@ -165,7 +157,7 @@ namespace Launchpad
 			}
 			catch (WebException wex)
 			{
-				Console.WriteLine ("IsGameOutdated(): " + wex.Message);
+				Console.WriteLine ("WebException in IsGameOutdated(): " + wex.Message);
 				return true;
 			}
 		}
@@ -193,7 +185,7 @@ namespace Launchpad
 			} 
 			catch (WebException wex)
 			{
-				Console.WriteLine ("IsLauncherOutdated(): " + wex.Message);
+				Console.WriteLine ("WebException in IsLauncherOutdated(): " + wex.Message);
 				return false;	
 			}
 		}

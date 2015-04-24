@@ -184,9 +184,10 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Dialog" id="Launchpad.SettingsDialog" design-size="345 295">
+  <widget class="Gtk.Dialog" id="Launchpad.SettingsDialog" design-size="430 295">
     <property name="MemberName" />
     <property name="Title" translatable="yes">Edit Settings</property>
+    <property name="Icon">resource:Launchpad.Resources.RocketIcon.ico</property>
     <property name="WindowPosition">CenterOnParent</property>
     <property name="Buttons">2</property>
     <property name="HelpButton">False</property>

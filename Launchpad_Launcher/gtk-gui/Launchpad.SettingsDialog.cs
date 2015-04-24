@@ -42,11 +42,12 @@ namespace Launchpad
 		protected virtual void Build ()
 		{
 			global::Stetic.Gui.Initialize (this);
-			// Widget Launchpad_Launcher.SettingsDialog
+			// Widget Launchpad.SettingsDialog
 			this.Name = "Launchpad.SettingsDialog";
 			this.Title = global::Mono.Unix.Catalog.GetString ("Edit Settings");
+			this.Icon = global::Gdk.Pixbuf.LoadFromResource ("Launchpad.Resources.RocketIcon.ico");
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
-			// Internal child Launchpad_Launcher.SettingsDialog.VBox
+			// Internal child Launchpad.SettingsDialog.VBox
 			global::Gtk.VBox w1 = this.VBox;
 			w1.Name = "dialog1_VBox";
 			w1.BorderWidth = ((uint)(2));
@@ -119,9 +120,10 @@ namespace Launchpad
 			// Container child alignment5.Gtk.Container+ContainerChild
 			this.combobox_SystemTarget = global::Gtk.ComboBox.NewText ();
 			this.combobox_SystemTarget.AppendText (global::Mono.Unix.Catalog.GetString ("Linux"));
-			this.combobox_SystemTarget.AppendText (global::Mono.Unix.Catalog.GetString ("Mac"));
-			this.combobox_SystemTarget.AppendText (global::Mono.Unix.Catalog.GetString ("Win64"));
-			this.combobox_SystemTarget.AppendText (global::Mono.Unix.Catalog.GetString ("Win32"));
+			this.combobox_SystemTarget.AppendText (global::Mono.Unix.Catalog.GetString ("                                                           Mac"));
+			this.combobox_SystemTarget.AppendText (global::Mono.Unix.Catalog.GetString ("                                                           Win64"));
+			this.combobox_SystemTarget.AppendText (global::Mono.Unix.Catalog.GetString ("                                                           Win32"));
+			this.combobox_SystemTarget.AppendText (global::Mono.Unix.Catalog.GetString ("                                                "));
 			this.combobox_SystemTarget.Name = "combobox_SystemTarget";
 			this.combobox_SystemTarget.Active = 0;
 			this.alignment5.Add (this.combobox_SystemTarget);
@@ -293,7 +295,7 @@ namespace Launchpad
 			w31.Position = 1;
 			w31.Expand = false;
 			w31.Fill = false;
-			// Internal child Launchpad_Launcher.SettingsDialog.ActionArea
+			// Internal child Launchpad.SettingsDialog.ActionArea
 			global::Gtk.HButtonBox w32 = this.ActionArea;
 			w32.Name = "dialog1_ActionArea";
 			w32.Spacing = 10;
@@ -327,7 +329,7 @@ namespace Launchpad
 			if ((this.Child != null)) {
 				this.Child.ShowAll ();
 			}
-			this.DefaultWidth = 345;
+			this.DefaultWidth = 430;
 			this.DefaultHeight = 295;
 			this.Show ();
 			this.FTPURL_entry.Changed += new global::System.EventHandler (this.OnFTPURLEntryChanged);

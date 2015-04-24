@@ -63,6 +63,8 @@ namespace Launchpad
 			string password = Config.GetFTPPassword();
 
             int bytesRead = 0;
+
+			//the buffer size is 256kb. More or less than this reduces download speeds.
             byte[] buffer = new byte[262144];
 
 			FtpWebRequest request = null;
@@ -157,6 +159,8 @@ namespace Launchpad
 
 
             int bytesRead = 0;
+
+			//the buffer size is 256kb. More or less than this reduces download speeds.
             byte[] buffer = new byte[262144];
 
 			FtpWebRequest request = null;
@@ -296,6 +300,8 @@ namespace Launchpad
 
 
 			int bytesRead = 0;
+
+			//the buffer size is 256kb. More or less than this reduces download speeds.
             byte[] buffer = new byte[262144];
 
 			FtpWebRequest request = null;
@@ -434,11 +440,16 @@ namespace Launchpad
             }
             catch (WebException wex)
             {
-                Console.Write("CreateFTPWebRequestException: ");
-                Console.WriteLine(wex.Message);
+                Console.WriteLine ("WebException in CreateFTPWebRequest(): " + wex.Message);
 
                 return null;
             }
+			catch (ArgumentException aex)
+			{
+				Console.WriteLine ("ArgumentException in CreateFTPWebRequest(): " + aex.Message);
+
+				return null;
+			}
             
         }
 
@@ -488,17 +499,10 @@ namespace Launchpad
 
 		public string GetRemoteManifestChecksum()
 		{
-			string checksum = "";
+			string checksum = String.Empty;
 
-			try
-			{
-				checksum = ReadFTPFile (Config.GetManifestChecksumURL ());
-				checksum = Utilities.Clean(checksum);
-			}
-			catch (IOException ioex)
-			{
-				Console.WriteLine (ioex.Message);
-			}
+			checksum = ReadFTPFile (Config.GetManifestChecksumURL ());
+			checksum = Utilities.Clean(checksum);
 
 			return checksum;
 		}
@@ -517,8 +521,7 @@ namespace Launchpad
 			catch (WebException ex)
 			{
 				response = (FtpWebResponse)ex.Response;
-				if (response.StatusCode ==
-				    FtpStatusCode.ActionNotTakenFileUnavailable)
+				if (response.StatusCode == FtpStatusCode.ActionNotTakenFileUnavailable)
 				{
 					return false;
 				}

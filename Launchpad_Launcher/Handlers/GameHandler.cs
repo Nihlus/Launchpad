@@ -130,12 +130,9 @@ namespace Launchpad
 				List<ManifestEntry> Manifest = manifestHandler.Manifest;
 
 				//create the .install file to mark that an installation has begun
+				//if it exists, do nothing.
                 ConfigHandler.CreateInstallCookie();
 
-				//write the current file progress to the install cookie
-				TextWriter tw = new StreamWriter(ConfigHandler.GetInstallCookiePath ());
-				tw.WriteLine ("START");
-				tw.Close ();
 
 				//raise the progress changed event by binding to the 
 				//event in the FTP class
@@ -146,10 +143,11 @@ namespace Launchpad
 				ManifestEntry lastDownloadedFile = null;
 				string installCookiePath = ConfigHandler.GetInstallCookiePath ();
 
+				//attempt to parse whatever is inside the install cookie
 				if (ManifestEntry.TryParse(File.ReadAllText (installCookiePath), out lastDownloadedFile))
 				{
 					//loop through all the entries in the manifest until we encounter
-					//a line which matches the one in the install cookie
+					//an entry which matches the one in the install cookie
 
 					foreach (ManifestEntry Entry in Manifest)
 					{
@@ -193,28 +191,11 @@ namespace Launchpad
 							//Now verify the file
 							string localHash = MD5Handler.GetFileHash(File.OpenRead(LocalPath));
 
-							if (localHash == Entry.Hash)
-							{
-								//We've successfully retrieved the rest of this file, so we can move on.
-								if (ChecksHandler.IsRunningOnUnix())
-								{
-									//if we're dealing with a file that should be executable, 
-									string gameName = Config.GetGameName();
-									bool bFileIsGameExecutable = (Path.GetFileName(LocalPath).EndsWith(".exe")) || (Path.GetFileNameWithoutExtension(LocalPath) == gameName);
-									if (bFileIsGameExecutable)
-									{
-										//set the execute bits.
-										UnixHandler.MakeExecutable(LocalPath);
-									}
-								}
-
-								continue;
-							}
-							else
+							if (localHash != Entry.Hash)
 							{
 								Console.WriteLine ("InstallGameAsync: Resumed file hash was invalid, downloading fresh copy from server.");
-                                OnProgressChanged();
-                                fileReturn = FTP.DownloadFTPFile(RemotePath, LocalPath, false);
+								OnProgressChanged();
+								fileReturn = FTP.DownloadFTPFile(RemotePath, LocalPath, false);
 							}
 						}									
 					}
@@ -243,6 +224,9 @@ namespace Launchpad
 
 				//raise the finished event
 				OnGameDownloadFinished ();	
+
+				//clear out the event handler
+				FTP.FileProgressChanged -= OnDownloadProgressChanged;
 			}
 	        catch (IOException ioex)
             {
@@ -274,11 +258,9 @@ namespace Launchpad
 			List<ManifestEntry> Manifest = manifestHandler.Manifest;
 			List<ManifestEntry> OldManifest = manifestHandler.OldManifest;
 
-
 			try
 			{
 				//Check old manifest against new manifest, download anything that isn't exactly the same as before
-
 				FTPHandler FTP = new FTPHandler();
 				FTP.FileProgressChanged += OnDownloadProgressChanged;
 				FTP.FileDownloadFinished += OnFileDownloadFinished;
@@ -303,6 +285,10 @@ namespace Launchpad
 				}
 
 				OnGameUpdateFinished();
+
+				//clear out the event handlers
+				FTP.FileProgressChanged -= OnDownloadProgressChanged;
+				FTP.FileDownloadFinished -= OnFileDownloadFinished;
 			}
             catch (IOException ioex)
             {
@@ -329,9 +315,8 @@ namespace Launchpad
 				//check all local file MD5s against latest manifest. Resume partial files, download broken files.
 				FTPHandler FTP = new FTPHandler ();
 
-				//bind our events
+				//bind event handlers
 				FTP.FileProgressChanged += OnDownloadProgressChanged;
-
 
 				//first, verify that the manifest is correct.
 				string LocalManifestHash = MD5Handler.GetFileHash(File.OpenRead(ConfigHandler.GetManifestPath ()));
@@ -381,26 +366,7 @@ namespace Launchpad
 							//Now verify the file
 							string localHash = MD5Handler.GetFileHash(File.OpenRead(LocalPath));
 
-							if (localHash == Entry.Hash)
-							{
-								//We've successfully retrieved the rest of this file.
-
-								//Should it be executable on Unix?
-								if (ChecksHandler.IsRunningOnUnix())
-								{
-									//if we're dealing with a file that should be executable, 
-									string gameName = Config.GetGameName();
-									bool bFileIsGameExecutable = (Path.GetFileName(LocalPath).EndsWith(".exe")) || (Path.GetFileNameWithoutExtension(LocalPath) == gameName);
-									if (bFileIsGameExecutable)
-									{
-										//set the execute bits.																
-										UnixHandler.MakeExecutable(LocalPath);
-									}
-								}
-
-								continue;
-							}
-							else
+							if (localHash != Entry.Hash)
 							{
 								Console.WriteLine ("RepairGameAsync: Resumed file hash was invalid, downloading fresh copy from server.");
 
@@ -433,7 +399,11 @@ namespace Launchpad
 					ProgressArgs.DownloadedFiles = i;
 					OnProgressChanged ();
 				}
+
 				OnGameRepairFinished ();
+
+				//clear out the event handler
+				FTP.FileProgressChanged -= OnDownloadProgressChanged;
 			}
 			catch (IOException ioex)
 			{
@@ -459,21 +429,7 @@ namespace Launchpad
 				gameStartInfo.UseShellExecute = false;
 				gameStartInfo.FileName = Config.GetGameExecutable ();
 
-				Process game = new Process();
-				game.EnableRaisingEvents = true;
-
-				game.OutputDataReceived += delegate(object sender, DataReceivedEventArgs e) 
-				{
-					Console.WriteLine (e.Data);
-				};
-
-				game.Exited += delegate(object sender, EventArgs e) 
-				{
-					Console.WriteLine("Game exited.");
-				};
-
-
-				Console.WriteLine (gameStartInfo.FileName);
+				Process game = new Process();			
 				game = Process.Start(gameStartInfo);
 			}
 			catch (IOException ioex)

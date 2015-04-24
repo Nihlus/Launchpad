@@ -14,14 +14,11 @@ namespace Launchpad
 		static ConfigHandler Config = ConfigHandler._instance;
 
 		/// <summary>
-		/// Sends the usage stats.
+		/// Sends the usage stats to the official launchpad server.
 		/// </summary>
-		/// <param name="guid">GUID.</param>
-		/// <param name="version">Version.</param>
-		/// <param name="gameName">Game name.</param>
-		/// <param name="officialUpdates">If set to <c>true</c> official updates.</param>
 		static public void SendUsageStats()
 		{
+			WebRequest sendStatsRequest = null;
 			try
 			{
 				string baseURL = "http://directorate.asuscomm.com/launchpad/stats.php?";
@@ -32,14 +29,17 @@ namespace Launchpad
 				                                    Config.GetDoOfficialUpdates().ToString()
 				                                    );
 
-				WebRequest getRequest;
-				getRequest = WebRequest.Create(formattedURL);
-				getRequest.GetResponse();
-                getRequest.Abort();                
+
+				sendStatsRequest = WebRequest.Create(formattedURL);
+				sendStatsRequest.GetResponse();                            
 			}
 			catch (WebException wex)
 			{
 				Console.WriteLine ("WebException in SendUsageStats(): " + wex.Message);
+			}
+			finally
+			{
+				sendStatsRequest.Abort();   
 			}
 		}
 	}

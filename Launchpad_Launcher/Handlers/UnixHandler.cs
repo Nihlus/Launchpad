@@ -30,6 +30,9 @@ namespace Launchpad
 		}
 	}
 
+	/// <summary>
+	/// Generic bit operation exception for Unix file permissions.
+	/// </summary>
 	[Serializable]
 	public class BitOperationException : Exception
 	{

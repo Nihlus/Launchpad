@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Launchpad", "Launchpad_Launcher\Launchpad.csproj", "{676312FB-AF67-4340-B86F-9CCEB22D802F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{797F29CF-7CFF-4BD2-B3A6-702DE172D8DD}"
@@ -20,6 +18,15 @@ Global
 		{676312FB-AF67-4340-B86F-9CCEB22D802F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{676312FB-AF67-4340-B86F-9CCEB22D802F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{676312FB-AF67-4340-B86F-9CCEB22D802F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Launchpad_Launcher\Launchpad.csproj
+		Policies = $0
+		$0.DotNetNamingPolicy = $1
+		$1.DirectoryNamespaceAssociation = None
+		$1.ResourceNamePolicy = FileFormatDefault
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
