@@ -15,7 +15,7 @@ Note for users installing on Unix - you may need to install some additional libr
 Simply run /Scripts/launchpad-dependencies.sh if your system is Debian or Debian-based, and it'll install them for you.
 
 If you are not on a Debian-based system, you have to install these packages:
-* notify-sharp
+* libnotify-cil-dev
 * libwebkitgtk-dev
 
 # Code contributors

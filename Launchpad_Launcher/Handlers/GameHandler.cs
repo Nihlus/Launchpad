@@ -429,8 +429,7 @@ namespace Launchpad
 				gameStartInfo.UseShellExecute = false;
 				gameStartInfo.FileName = Config.GetGameExecutable ();
 
-				Process game = new Process();			
-				game = Process.Start(gameStartInfo);
+				Process.Start(gameStartInfo);
 			}
 			catch (IOException ioex)
 			{
