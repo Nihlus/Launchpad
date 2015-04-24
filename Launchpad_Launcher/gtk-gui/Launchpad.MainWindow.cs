@@ -126,6 +126,7 @@ namespace Launchpad
 			this.alignment3.Name = "alignment3";
 			// Container child alignment3.Gtk.Container+ContainerChild
 			this.PrimaryButton = new global::Gtk.Button ();
+			this.PrimaryButton.CanDefault = true;
 			this.PrimaryButton.CanFocus = true;
 			this.PrimaryButton.Name = "PrimaryButton";
 			this.PrimaryButton.UseUnderline = true;
@@ -148,6 +149,7 @@ namespace Launchpad
 			if ((this.Child != null)) {
 				this.Child.ShowAll ();
 			}
+			this.PrimaryButton.HasDefault = true;
 			this.Show ();
 			this.DeleteEvent += new global::Gtk.DeleteEventHandler (this.OnDeleteEvent);
 			this.SettingsAction.Activated += new global::System.EventHandler (this.OnSettingsActionActivated);

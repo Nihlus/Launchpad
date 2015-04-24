@@ -331,6 +331,7 @@ namespace Launchpad
 			}
 			this.DefaultWidth = 430;
 			this.DefaultHeight = 295;
+			this.buttonOk.HasDefault = true;
 			this.Show ();
 			this.FTPURL_entry.Changed += new global::System.EventHandler (this.OnFTPURLEntryChanged);
 			this.buttonCancel.Clicked += new global::System.EventHandler (this.OnButtonCancelClicked);
