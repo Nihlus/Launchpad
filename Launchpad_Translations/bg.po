@@ -1,0 +1,203 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: launchpad\n"
+"POT-Creation-Date: 2015-04-26 12:58:08+0200\n"
+"PO-Revision-Date: 2015-04-26 09:35-0400\n"
+"Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
+"Language-Team: Bulgarian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: crowdin.com\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: launchpad\n"
+"X-Crowdin-Language: bg\n"
+"X-Crowdin-File: messages.po\n"
+"Language: bg_BG\n"
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
+msgid "Edit"
+msgstr "Редактирай"
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
+msgid "Options"
+msgstr "Опции"
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
+msgid "Settings"
+msgstr "Настройки"
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
+msgid "Language"
+msgstr "Език"
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
+msgid "Launchpad"
+msgstr "Launchpad"
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:14
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:58
+#: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:6
+#: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:16
+msgid "Idle"
+msgstr "Свободен"
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:15
+#: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:14
+msgid "Failed to connect to the FTP server. Please check your FTP settings."
+msgstr "Грешка при свързването с FTP сървъра. Моля проверете FTP настройките."
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:16
+msgid "Could not connect to server."
+msgstr "Няма връзка със сървъра."
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:16
+msgid "This appears to be the first time you're starting the launcher.\nIs this the location where you would like to install the game?\n\n{0}"
+msgstr "Вие стартирате launcher-а за първи път.\n\n"
+"Това ли е директорията, в която искате да инсталирате играта?\n\n{0}"
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:20
+msgid "Launchpad - Warning"
+msgstr "Launchpad - Предупреждение"
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:20
+msgid "Anonymous useage stats are not enabled."
+msgstr "Не е позволена употребата на анонимни статистики."
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:24
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
+msgid "Update"
+msgstr "Обновяване"
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:32
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:36
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:41
+msgid "Install"
+msgstr "Инсталиране"
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:61
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:65
+msgid "Launch"
+msgstr "Стартиране"
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:31
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:35
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:40
+msgid "Launchpad - Platform not provided!"
+msgstr "Launchpad - Не е предоставена платформа!"
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:31
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:35
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:40
+msgid "The server does not provide the game for the selected platform."
+msgstr "Сървърът не предоставя играта за избраната платформа."
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:34
+msgid "Installing..."
+msgstr "Инсталиране..."
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:37
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:38
+msgid "Updating..."
+msgstr "Обновяване..."
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:45
+msgid "Launchpad - Failed to launch the game!"
+msgstr "Launchpad - Грешка при стартирането на играта!"
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:45
+msgid "The game failed to launch. Try repairing the installation."
+msgstr "Играта не можа да стартира. Опитайте да поправите инсталацията."
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:46
+msgid "Repair"
+msgstr "Поправяне"
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:52
+msgid "Downloading file {0}: {1} of {2} bytes."
+msgstr "Изтегляне на файла {0}: {1} от {2} байта."
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:54
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:55
+msgid "Game download failed. Are you missing the manifest?"
+msgstr "Неуспешно изтегляне на играта. Да не би да липсва манифеста?"
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:55
+msgid "Launchpad - Error"
+msgstr "Launchpad - Грешка"
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:59
+msgid "Launchpad - Info"
+msgstr "Launchpad - Информация"
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:59
+msgid "Game download finished. Play away!"
+msgstr "Играта е свалена. Приятна игра!"
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:63
+msgid "Launchpad - Game repair finished"
+msgstr "Launchpad - Ремонта на играта е завършен"
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:63
+msgid "Launchpad has finished repairing the game installation. Play away!"
+msgstr "Launchpad приключи с ремонта на играта. Приятна игра!"
+
+#: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:8
+msgid "Verifying..."
+msgstr "Проверяване..."
+
+#: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:11
+msgid "The URL needs to begin with \"ftp://\". Please correct the URL."
+msgstr "URL адресът трябва да започва с \"ftp: / /\". Моля коригирайте URL адреса."
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
+msgid "Edit Settings"
+msgstr "Промяна на настройки"
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
+msgid "Game Name: "
+msgstr "Име на играта: "
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
+msgid "System Target: "
+msgstr "Цел на системата: "
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
+msgid "Linux"
+msgstr "Linux"
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
+msgid "Mac"
+msgstr "Mac"
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
+msgid "Win64"
+msgstr "Win64"
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
+msgid "Win32"
+msgstr "Win32"
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
+msgid "<b>Local</b>"
+msgstr "<b>Локално</b>"
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
+msgid "FTP URL: "
+msgstr "FTP URL: "
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
+msgid "FTP Username: "
+msgstr "Потребителско име: "
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
+msgid "FTP Password: "
+msgstr "Парола: "
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
+msgid "<b>Remote</b>"
+msgstr "<b>Дистанционно</b>"
+

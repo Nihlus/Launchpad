@@ -15,6 +15,7 @@
         <Translation isoCode="sv" />
         <Translation isoCode="da" />
         <Translation isoCode="nl" />
+        <Translation isoCode="bg" />
       </translations>
     </translations>
   </PropertyGroup>
