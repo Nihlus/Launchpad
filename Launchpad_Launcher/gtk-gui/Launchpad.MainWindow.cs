@@ -157,7 +157,6 @@ namespace Launchpad
 			this.Show ();
 			this.DeleteEvent += new global::Gtk.DeleteEventHandler (this.OnDeleteEvent);
 			this.SettingsAction.Activated += new global::System.EventHandler (this.OnSettingsActionActivated);
-			this.LanguageAction.Activated += new global::System.EventHandler (this.OnLanguageActionActivated);
 			this.PrimaryButton.Clicked += new global::System.EventHandler (this.OnPrimaryButtonClicked);
 		}
 	}
