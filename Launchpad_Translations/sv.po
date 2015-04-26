@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: launchpad\n"
-"POT-Creation-Date: 2015-04-26 14:26:59+0200\n"
-"PO-Revision-Date: 2015-04-26 07:09-0400\n"
+"POT-Creation-Date: 2015-04-26 17:28:38+0200\n"
+"PO-Revision-Date: 2015-04-26 17:30:13+0200\n"
 "Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
 "Language-Team: Swedish\n"
 "Language: sv_SE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: crowdin.com\n"
+"X-Generator: MonoDevelop Gettext addin\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Crowdin-Project: launchpad\n"
 "X-Crowdin-Language: sv-SE\n"
@@ -31,14 +31,14 @@ msgstr "Inställningar"
 msgid "Language"
 msgstr "Språk"
 
+# There is no need to translate this, as its derived from the game name in the config. You can do it if you want to.
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
-#, fuzzy
 msgid "Launchpad - <GameName>"
-msgstr "Launchpad - Spelreparation avslutad"
+msgstr "Launchpad - <Spelnamn>"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:14
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:59
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:53
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:6
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:16
 msgid "Idle"
@@ -75,85 +75,94 @@ msgstr "Launchpad - Varning"
 msgid "Anonymous useage stats are not enabled."
 msgstr "Anonyma användardata skickas inte."
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:24
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
+msgid "Installing..."
+msgstr "Installerar..."
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
+msgid "Install"
+msgstr "Installera"
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
+msgid "Updating..."
+msgstr "Uppdaterar..."
+
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
 msgid "Update"
 msgstr "Uppdatera"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:33
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:37
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:42
-msgid "Install"
-msgstr "Installera"
+msgid "Repairing..."
+msgstr "Reparerar..."
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:62
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:66
+msgid "Repair"
+msgstr "Reparera"
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
+msgid "Launching..."
+msgstr "Startar..."
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
 msgid "Launch"
 msgstr "Starta"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:32
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:36
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:41
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:35
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:39
 msgid "Launchpad - Platform not provided!"
 msgstr "Launchpad - Plattformen stöds inte!"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:32
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:36
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:41
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:35
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:39
 msgid "The server does not provide the game for the selected platform."
 msgstr "Server erbjuder inte spelet för den valda plattformen."
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:35
-msgid "Installing..."
-msgstr "Installerar..."
-
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:38
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:39
-msgid "Updating..."
-msgstr "Uppdaterar..."
-
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:46
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:43
 msgid "Launchpad - Failed to launch the game!"
 msgstr "Launchpad - Kunde inte starta spelet!"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:46
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:43
 msgid "The game failed to launch. Try repairing the installation."
 msgstr "Spelet kunde inte starta. Försök att reparera installationen."
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:47
-msgid "Repair"
-msgstr "Reparera"
-
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:53
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:48
 msgid "Downloading file {0}: {1} of {2} bytes."
 msgstr "Laddar ned {0}: {1} av {2} bytes."
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:55
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:56
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:50
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:51
 msgid "Game download failed. Are you missing the manifest?"
 msgstr "Nedladdningen misslyckades. Saknas manifestet?"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:56
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:51
 msgid "Launchpad - Error"
 msgstr "Launchpad - Fel"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:60
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:54
 msgid "Launchpad - Info"
 msgstr "Launchpad - Information"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:60
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:54
 msgid "Game download finished. Play away!"
 msgstr "Nedladdningen har avslutats. Spela på!"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:64
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:57
 msgid "Launchpad - Game repair finished"
 msgstr "Launchpad - Spelreparation avslutad"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:64
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:57
 msgid "Launchpad has finished repairing the game installation. Play away!"
 msgstr "Launchpad har avslutat reparationen av installationen. Spela på!"
+
+#: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:6
+msgid "OK"
+msgstr "OK"
+
+#: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:6
+msgid "Cancel"
+msgstr "Avbryt"
 
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:8
 msgid "Verifying..."
@@ -213,3 +222,4 @@ msgstr "<b>Fjärrinställningar</b>"
 
 #~ msgid "Launchpad"
 #~ msgstr "Launchpad"
+

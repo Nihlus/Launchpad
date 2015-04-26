@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2015-04-26 15:03:01+0200\n"
-"PO-Revision-Date: 2015-04-26 15:03:01+0200\n"
+"POT-Creation-Date: 2015-04-26 17:28:38+0200\n"
+"PO-Revision-Date: 2015-04-26 17:28:38+0200\n"
 "Last-Translator: jarl\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -32,7 +32,7 @@ msgstr ""
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:14
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:59
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:53
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:6
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:16
 msgid "Idle"
@@ -63,84 +63,93 @@ msgstr ""
 msgid "Anonymous useage stats are not enabled."
 msgstr ""
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:24
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
+msgid "Installing..."
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
+msgid "Install"
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
+msgid "Updating..."
+msgstr ""
+
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
 msgid "Update"
 msgstr ""
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:33
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:37
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:42
-msgid "Install"
+msgid "Repairing..."
 msgstr ""
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:62
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:66
+msgid "Repair"
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
+msgid "Launching..."
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
 msgid "Launch"
 msgstr ""
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:32
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:36
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:41
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:35
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:39
 msgid "Launchpad - Platform not provided!"
 msgstr ""
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:32
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:36
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:41
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:35
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:39
 msgid "The server does not provide the game for the selected platform."
 msgstr ""
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:35
-msgid "Installing..."
-msgstr ""
-
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:38
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:39
-msgid "Updating..."
-msgstr ""
-
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:46
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:43
 msgid "Launchpad - Failed to launch the game!"
 msgstr ""
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:46
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:43
 msgid "The game failed to launch. Try repairing the installation."
 msgstr ""
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:47
-msgid "Repair"
-msgstr ""
-
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:53
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:48
 msgid "Downloading file {0}: {1} of {2} bytes."
 msgstr ""
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:55
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:56
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:50
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:51
 msgid "Game download failed. Are you missing the manifest?"
 msgstr ""
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:56
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:51
 msgid "Launchpad - Error"
 msgstr ""
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:60
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:54
 msgid "Launchpad - Info"
 msgstr ""
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:60
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:54
 msgid "Game download finished. Play away!"
 msgstr ""
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:64
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:57
 msgid "Launchpad - Game repair finished"
 msgstr ""
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:64
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:57
 msgid "Launchpad has finished repairing the game installation. Play away!"
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:6
+msgid "OK"
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:6
+msgid "Cancel"
 msgstr ""
 
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:8

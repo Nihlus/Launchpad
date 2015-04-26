@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: launchpad\n"
-"POT-Creation-Date: 2015-04-26 15:03:01+0200\n"
+"POT-Creation-Date: 2015-04-26 17:28:38+0200\n"
 "PO-Revision-Date: 2015-04-26 08:27-0400\n"
 "Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
 "Language-Team: Dutch\n"
@@ -38,7 +38,7 @@ msgstr "Launchpad - Spel repareren klaar"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:14
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:59
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:53
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:6
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:16
 msgid "Idle"
@@ -75,86 +75,97 @@ msgstr "Launchpad - Waarschuwing"
 msgid "Anonymous useage stats are not enabled."
 msgstr "Anonieme gebruiksstatistieken zijn niet ingeschakeld."
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:24
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
+msgid "Installing..."
+msgstr "Installeren..."
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
+msgid "Install"
+msgstr "Installeren"
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
+msgid "Updating..."
+msgstr "Updaten..."
+
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
 msgid "Update"
 msgstr "Update"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:33
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:37
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:42
-msgid "Install"
-msgstr "Installeren"
+#, fuzzy
+msgid "Repairing..."
+msgstr "Updaten..."
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:62
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:66
+msgid "Repair"
+msgstr "Repareren"
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
+#, fuzzy
+msgid "Launching..."
+msgstr "Starten"
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
 msgid "Launch"
 msgstr "Starten"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:32
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:36
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:41
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:35
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:39
 msgid "Launchpad - Platform not provided!"
 msgstr "Launchpad - Geen platform gevonden!"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:32
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:36
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:41
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:35
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:39
 msgid "The server does not provide the game for the selected platform."
 msgstr "De server beschikt niet over het spel voor het geselecteerde platform."
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:35
-msgid "Installing..."
-msgstr "Installeren..."
-
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:38
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:39
-msgid "Updating..."
-msgstr "Updaten..."
-
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:46
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:43
 msgid "Launchpad - Failed to launch the game!"
 msgstr "Launchpad - Kan het spel niet starten!"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:46
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:43
 msgid "The game failed to launch. Try repairing the installation."
 msgstr "Het spel kon niet starten. Probeer de installatie te repareren."
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:47
-msgid "Repair"
-msgstr "Repareren"
-
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:53
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:48
 msgid "Downloading file {0}: {1} of {2} bytes."
 msgstr "Bestand downloaden: {0} - {1} van de {2} bytes."
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:55
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:56
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:50
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:51
 msgid "Game download failed. Are you missing the manifest?"
 msgstr "Spel download mislukt. Mankeert u het manifest?"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:56
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:51
 msgid "Launchpad - Error"
 msgstr "Launchpad - Fout"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:60
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:54
 msgid "Launchpad - Info"
 msgstr "Launchpad - Info"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:60
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:54
 msgid "Game download finished. Play away!"
 msgstr "Spel download klaar. Ga spelen!"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:64
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:57
 msgid "Launchpad - Game repair finished"
 msgstr "Launchpad - Spel repareren klaar"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:64
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:57
 msgid "Launchpad has finished repairing the game installation. Play away!"
 msgstr ""
 "Launchpad is klaar met het repareren van de spel installatie. Ga spelen!"
+
+#: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:6
+msgid "OK"
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:6
+msgid "Cancel"
+msgstr ""
 
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:8
 msgid "Verifying..."

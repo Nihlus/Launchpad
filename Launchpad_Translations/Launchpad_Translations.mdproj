@@ -16,6 +16,10 @@
         <Translation isoCode="da" />
         <Translation isoCode="nl" />
         <Translation isoCode="bg" />
+        <Translation isoCode="de" />
+        <Translation isoCode="zh" />
+        <Translation isoCode="zh_CN" />
+        <Translation isoCode="zh_TW" />
       </translations>
     </translations>
   </PropertyGroup>

@@ -182,7 +182,7 @@ namespace Launchpad
 		/// Sets the launcher mode and updates UI elements to match
 		/// </summary>
 		/// <param name="newMode">New mode.</param>
-		/// <param name="bInProgress">If set to <c>true</c> b in progress.</param>
+		/// <param name="bInProgress">If set to <c>true</c>, the selected mode is in progress.</param>
 		internal void SetLauncherMode(ELauncherMode newMode, bool bInProgress)
 		{
 			//set the global launcher mode

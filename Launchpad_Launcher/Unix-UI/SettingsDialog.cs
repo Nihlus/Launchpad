@@ -35,6 +35,8 @@ namespace Launchpad
 			FTPPassword_entry.Text = Config.GetFTPPassword ();
 
 			progressbar3.Text = Mono.Unix.Catalog.GetString("Idle");
+			buttonOk.Label = Mono.Unix.Catalog.GetString ("OK");
+			buttonCancel.Label = Mono.Unix.Catalog.GetString ("Cancel");
 
 		}
 

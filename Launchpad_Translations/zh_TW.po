@@ -2,39 +2,39 @@ msgid ""
 msgstr ""
 "Project-Id-Version: launchpad\n"
 "POT-Creation-Date: 2015-04-26 17:28:38+0200\n"
-"PO-Revision-Date: 2015-04-26 09:35-0400\n"
+"PO-Revision-Date: 2015-04-26 11:18-0400\n"
 "Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
-"Language-Team: Bulgarian\n"
-"Language: bg_BG\n"
+"Language-Team: Chinese Traditional\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: crowdin.com\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "X-Crowdin-Project: launchpad\n"
-"X-Crowdin-Language: bg\n"
+"X-Crowdin-Language: zh-TW\n"
 "X-Crowdin-File: messages.po\n"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
 msgid "Edit"
-msgstr "Редактирай"
+msgstr "編輯"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
 msgid "Options"
-msgstr "Опции"
+msgstr "選項"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
 msgid "Settings"
-msgstr "Настройки"
+msgstr "設置"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
 msgid "Language"
-msgstr "Език"
+msgstr "語言"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
 #, fuzzy
 msgid "Launchpad - <GameName>"
-msgstr "Launchpad - Ремонта на играта е завършен"
+msgstr "啟動台-遊戲修復完成"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:14
@@ -42,16 +42,16 @@ msgstr "Launchpad - Ремонта на играта е завършен"
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:6
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:16
 msgid "Idle"
-msgstr "Свободен"
+msgstr "閒置"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:15
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:14
 msgid "Failed to connect to the FTP server. Please check your FTP settings."
-msgstr "Грешка при свързването с FTP сървъра. Моля проверете FTP настройките."
+msgstr "未能連接到 FTP 伺服器。請檢查您的 FTP 設置。"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:16
 msgid "Could not connect to server."
-msgstr "Няма връзка със сървъра."
+msgstr "無法連接到伺服器。"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:16
 msgid ""
@@ -60,102 +60,101 @@ msgid ""
 "\n"
 "{0}"
 msgstr ""
-"Вие стартирате launcher-а за първи път.\n"
-"\n"
-"Това ли е директорията, в която искате да инсталирате играта?\n"
+"這似乎是第一次使用啟動器。 \n"
+"這是您想安裝遊戲的位置嗎？ \n"
 "\n"
 "{0}"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:20
 msgid "Launchpad - Warning"
-msgstr "Launchpad - Предупреждение"
+msgstr "Launchpad-警告"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:20
 msgid "Anonymous useage stats are not enabled."
-msgstr "Не е позволена употребата на анонимни статистики."
+msgstr "未啟用匿名用戶統計。"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
 msgid "Installing..."
-msgstr "Инсталиране..."
+msgstr "正在安裝..."
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
 msgid "Install"
-msgstr "Инсталиране"
+msgstr "安裝"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
 msgid "Updating..."
-msgstr "Обновяване..."
+msgstr "正在更新..."
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
 msgid "Update"
-msgstr "Обновяване"
+msgstr "更新"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
 #, fuzzy
 msgid "Repairing..."
-msgstr "Обновяване..."
+msgstr "正在更新..."
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
 msgid "Repair"
-msgstr "Поправяне"
+msgstr "修復"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
 #, fuzzy
 msgid "Launching..."
-msgstr "Стартиране"
+msgstr "啟動"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
 msgid "Launch"
-msgstr "Стартиране"
+msgstr "啟動"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:32
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:35
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:39
 msgid "Launchpad - Platform not provided!"
-msgstr "Launchpad - Не е предоставена платформа!"
+msgstr "啟動台-未提供平台！"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:32
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:35
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:39
 msgid "The server does not provide the game for the selected platform."
-msgstr "Сървърът не предоставя играта за избраната платформа."
+msgstr "伺服器未為選定平台提供這個遊戲。"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:43
 msgid "Launchpad - Failed to launch the game!"
-msgstr "Launchpad - Грешка при стартирането на играта!"
+msgstr "啟動台-啟動遊戲失敗 ！"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:43
 msgid "The game failed to launch. Try repairing the installation."
-msgstr "Играта не можа да стартира. Опитайте да поправите инсталацията."
+msgstr "遊戲無法啟動。嘗試修復安裝程序。"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:48
 msgid "Downloading file {0}: {1} of {2} bytes."
-msgstr "Изтегляне на файла {0}: {1} от {2} байта."
+msgstr "下載文件 {0}： {1} {2} bytes。"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:50
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:51
 msgid "Game download failed. Are you missing the manifest?"
-msgstr "Неуспешно изтегляне на играта. Да не би да липсва манифеста?"
+msgstr "遊戲下載失敗。你是否缺少檔案清單？"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:51
 msgid "Launchpad - Error"
-msgstr "Launchpad - Грешка"
+msgstr "啟動台-錯誤"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:54
 msgid "Launchpad - Info"
-msgstr "Launchpad - Информация"
+msgstr "啟動台-信息"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:54
 msgid "Game download finished. Play away!"
-msgstr "Играта е свалена. Приятна игра!"
+msgstr "遊戲下載完成。可立刻運行遊戲！"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:57
 msgid "Launchpad - Game repair finished"
-msgstr "Launchpad - Ремонта на играта е завършен"
+msgstr "啟動台-遊戲修復完成"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:57
 msgid "Launchpad has finished repairing the game installation. Play away!"
-msgstr "Launchpad приключи с ремонта на играта. Приятна игра!"
+msgstr "啟動台已完成遊戲安裝的修復程序。立刻運行遊戲！"
 
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:6
 msgid "OK"
@@ -167,24 +166,23 @@ msgstr ""
 
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:8
 msgid "Verifying..."
-msgstr "Проверяване..."
+msgstr "正在驗證..."
 
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:11
 msgid "The URL needs to begin with \"ftp://\". Please correct the URL."
-msgstr ""
-"URL адресът трябва да започва с \"ftp: / /\". Моля коригирайте URL адреса."
+msgstr "地址需要以\"ftp： / /\"開頭。請更正該 URL地址。"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "Edit Settings"
-msgstr "Промяна на настройки"
+msgstr "編輯設定"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "Game Name: "
-msgstr "Име на играта: "
+msgstr "遊戲名稱： "
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "System Target: "
-msgstr "Цел на системата: "
+msgstr "目標系統： "
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "Linux"
@@ -204,23 +202,23 @@ msgstr "Win32"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "<b>Local</b>"
-msgstr "<b>Локално</b>"
+msgstr "<b>本地</b>"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "FTP URL: "
-msgstr "FTP URL: "
+msgstr "FTP 地址： "
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "FTP Username: "
-msgstr "Потребителско име: "
+msgstr "FTP 用戶名： "
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "FTP Password: "
-msgstr "Парола: "
+msgstr "FTP 密碼： "
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "<b>Remote</b>"
-msgstr "<b>Дистанционно</b>"
+msgstr "<b>遠端</b>"
 
 #~ msgid "Launchpad"
 #~ msgstr "Launchpad"
