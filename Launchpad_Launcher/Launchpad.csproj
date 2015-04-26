@@ -158,6 +158,7 @@
     <Compile Include="Utility\Events\LaunchpadEventArgs.cs" />
     <Compile Include="Utility\Events\LaunchpadEventDelegates.cs" />
     <Compile Include="Handlers\ManifestHandler.cs" />
+    <Compile Include="Utility\Enums\ELauncherMode.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

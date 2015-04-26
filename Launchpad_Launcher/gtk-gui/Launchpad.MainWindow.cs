@@ -7,6 +7,7 @@ namespace Launchpad
 		private global::Gtk.UIManager UIManager;
 		private global::Gtk.Action EditAction;
 		private global::Gtk.Action SettingsAction;
+		private global::Gtk.Action LanguageAction;
 		private global::Gtk.VBox vbox1;
 		private global::Gtk.MenuBar menubar1;
 		private global::Gtk.HBox hbox2;
@@ -34,6 +35,9 @@ namespace Launchpad
 			this.SettingsAction = new global::Gtk.Action ("SettingsAction", global::Mono.Unix.Catalog.GetString ("Settings"), null, null);
 			this.SettingsAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("Settings");
 			w1.Add (this.SettingsAction, null);
+			this.LanguageAction = new global::Gtk.Action ("LanguageAction", global::Mono.Unix.Catalog.GetString ("Language"), null, null);
+			this.LanguageAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("Language");
+			w1.Add (this.LanguageAction, null);
 			this.UIManager.InsertActionGroup (w1, 0);
 			this.AddAccelGroup (this.UIManager.AccelGroup);
 			this.Name = "Launchpad.MainWindow";
@@ -47,7 +51,7 @@ namespace Launchpad
 			this.vbox1.Name = "vbox1";
 			this.vbox1.Spacing = 6;
 			// Container child vbox1.Gtk.Box+BoxChild
-			this.UIManager.AddUiFromString ("<ui><menubar name='menubar1'><menu name='EditAction' action='EditAction'><menuitem name='SettingsAction' action='SettingsAction'/></menu></menubar></ui>");
+			this.UIManager.AddUiFromString ("<ui><menubar name='menubar1'><menu name='EditAction' action='EditAction'><menuitem name='SettingsAction' action='SettingsAction'/><menuitem name='LanguageAction' action='LanguageAction'/></menu></menubar></ui>");
 			this.menubar1 = ((global::Gtk.MenuBar)(this.UIManager.GetWidget ("/menubar1")));
 			this.menubar1.Name = "menubar1";
 			this.vbox1.Add (this.menubar1);
@@ -85,7 +89,7 @@ namespace Launchpad
 			this.MessageLabel = new global::Gtk.Label ();
 			this.MessageLabel.Name = "MessageLabel";
 			this.MessageLabel.Xalign = 0F;
-			this.MessageLabel.LabelProp = global::Mono.Unix.Catalog.GetString ("label2");
+			this.MessageLabel.LabelProp = global::Mono.Unix.Catalog.GetString ("Idle");
 			this.alignment1.Add (this.MessageLabel);
 			this.vbox2.Add (this.alignment1);
 			global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.alignment1]));
@@ -153,6 +157,7 @@ namespace Launchpad
 			this.Show ();
 			this.DeleteEvent += new global::Gtk.DeleteEventHandler (this.OnDeleteEvent);
 			this.SettingsAction.Activated += new global::System.EventHandler (this.OnSettingsActionActivated);
+			this.LanguageAction.Activated += new global::System.EventHandler (this.OnLanguageActionActivated);
 			this.PrimaryButton.Clicked += new global::System.EventHandler (this.OnPrimaryButtonClicked);
 		}
 	}

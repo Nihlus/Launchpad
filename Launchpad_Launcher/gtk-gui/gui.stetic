@@ -9,7 +9,7 @@
     <widget-library name="../External Assemblies/notify-sharp-0.4/notify-sharp.dll" />
     <widget-library name="../External Assemblies/webkit-sharp-1.1/webkit-sharp.dll" />
   </import>
-  <widget class="Gtk.Window" id="Launchpad.MainWindow" design-size="760 430">
+  <widget class="Gtk.Window" id="Launchpad.MainWindow" design-size="760 439">
     <action-group name="Default">
       <action id="EditAction">
         <property name="Type">Action</property>
@@ -21,6 +21,12 @@
         <property name="Label" translatable="yes">Settings</property>
         <property name="ShortLabel" translatable="yes">Settings</property>
         <signal name="Activated" handler="OnSettingsActionActivated" />
+      </action>
+      <action id="LanguageAction">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">Language</property>
+        <property name="ShortLabel" translatable="yes">Language</property>
+        <signal name="Activated" handler="OnLanguageActionActivated" />
       </action>
     </action-group>
     <property name="MemberName" />
@@ -40,6 +46,7 @@
             <node name="menubar1" type="Menubar">
               <node type="Menu" action="EditAction">
                 <node type="Menuitem" action="SettingsAction" />
+                <node type="Menuitem" action="LanguageAction" />
               </node>
             </node>
           </widget>
@@ -93,7 +100,7 @@
                       <widget class="Gtk.Label" id="MessageLabel">
                         <property name="MemberName" />
                         <property name="Xalign">0</property>
-                        <property name="LabelProp" translatable="yes">label2</property>
+                        <property name="LabelProp" translatable="yes">Idle</property>
                       </widget>
                     </child>
                   </widget>
@@ -282,11 +289,10 @@
                                   <widget class="Gtk.ComboBox" id="combobox_SystemTarget">
                                     <property name="MemberName" />
                                     <property name="IsTextCombo">True</property>
-                                    <property name="Items">Linux
-                                                           Mac
-                                                           Win64
-                                                           Win32
-                                                </property>
+                                    <property name="Items" translatable="yes" context="yes" comments="No real use in translating these. Simply repeat what is already there.">System targets in settings dialog.|Linux
+Mac
+Win64
+Win32</property>
                                     <property name="Active">0</property>
                                   </widget>
                                 </child>

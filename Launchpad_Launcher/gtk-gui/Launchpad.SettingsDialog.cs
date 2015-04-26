@@ -120,10 +120,9 @@ namespace Launchpad
 			// Container child alignment5.Gtk.Container+ContainerChild
 			this.combobox_SystemTarget = global::Gtk.ComboBox.NewText ();
 			this.combobox_SystemTarget.AppendText (global::Mono.Unix.Catalog.GetString ("Linux"));
-			this.combobox_SystemTarget.AppendText (global::Mono.Unix.Catalog.GetString ("                                                           Mac"));
-			this.combobox_SystemTarget.AppendText (global::Mono.Unix.Catalog.GetString ("                                                           Win64"));
-			this.combobox_SystemTarget.AppendText (global::Mono.Unix.Catalog.GetString ("                                                           Win32"));
-			this.combobox_SystemTarget.AppendText (global::Mono.Unix.Catalog.GetString ("                                                "));
+			this.combobox_SystemTarget.AppendText (global::Mono.Unix.Catalog.GetString ("Mac"));
+			this.combobox_SystemTarget.AppendText (global::Mono.Unix.Catalog.GetString ("Win64"));
+			this.combobox_SystemTarget.AppendText (global::Mono.Unix.Catalog.GetString ("Win32"));
 			this.combobox_SystemTarget.Name = "combobox_SystemTarget";
 			this.combobox_SystemTarget.Active = 0;
 			this.alignment5.Add (this.combobox_SystemTarget);

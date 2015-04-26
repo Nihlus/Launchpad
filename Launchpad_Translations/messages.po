@@ -1,0 +1,80 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2015-04-26 11:28:58+0200\n"
+"PO-Revision-Date: 2015-04-26 11:28:58+0200\n"
+"Last-Translator: jarl\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: MonoDevelop Gettext addin\n"
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
+msgid "Edit"
+msgstr ""
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
+msgid "Options"
+msgstr ""
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
+msgid "Settings"
+msgstr ""
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
+msgid "Launchpad"
+msgstr ""
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
+msgid "Idle"
+msgstr ""
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
+msgid "Edit Settings"
+msgstr ""
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
+msgid "Game Name: "
+msgstr ""
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
+msgid "System Target: "
+msgstr ""
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
+msgid "Linux"
+msgstr ""
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
+msgid "Mac"
+msgstr ""
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
+msgid "Win64"
+msgstr ""
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
+msgid "Win32"
+msgstr ""
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
+msgid "<b>Local</b>"
+msgstr ""
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
+msgid "FTP URL: "
+msgstr ""
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
+msgid "FTP Username: "
+msgstr ""
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
+msgid "FTP Password: "
+msgstr ""
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
+msgid "<b>Remote</b>"
+msgstr ""
+

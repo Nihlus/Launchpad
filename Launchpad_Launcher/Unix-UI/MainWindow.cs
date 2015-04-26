@@ -2,6 +2,7 @@ using Gtk;
 using Notifications;
 using System;
 using WebKit;
+using Mono.Unix;
 
 namespace Launchpad
 {
@@ -11,6 +12,8 @@ namespace Launchpad
 		/// Does the launcher need an update?
 		/// </summary>
 		bool bLauncherNeedsUpdate = false;
+
+		ELauncherMode Mode = ELauncherMode.Invalid;
 
 		/// <summary>
 		/// The checks handler reference.
@@ -49,11 +52,14 @@ namespace Launchpad
 			// Configure the WebView for our changelog
 			Browser.SetSizeRequest (290, 300);		
 
+			Mono.Unix.Catalog.Init ("Launchpad", "./locale");
+
 			//webkit
 			scrolledwindow2.Add (Browser);
 			scrolledwindow2.ShowAll ();
 
-			MessageLabel.Text = "Idle";
+			MessageLabel.Text = Mono.Unix.Catalog.GetString ("Idle");
+
 			//First of all, check if we can connect to the FTP server.
 			if (!Checks.CanConnectToFTP ())
 			{
@@ -62,11 +68,11 @@ namespace Launchpad
 					DialogFlags.Modal, 
 					MessageType.Warning, 
 					ButtonsType.Ok, 
-					"Failed to connect to the FTP server. Please check your FTP settings.");
+					Mono.Unix.Catalog.GetString ("Failed to connect to the FTP server. Please check your FTP settings."));
 
 				dialog.Run ();
 				dialog.Destroy ();
-				MessageLabel.Text = "No FTP connection.";
+				MessageLabel.Text = Mono.Unix.Catalog.GetString ("Could not connect to server.");
 			}
 			else
 			{
@@ -78,10 +84,10 @@ namespace Launchpad
 						DialogFlags.Modal, 
 						MessageType.Question, 
 						ButtonsType.OkCancel, 
-						String.Format (
+						String.Format (Mono.Unix.Catalog.GetString (
 						"This appears to be the first time you're starting the launcher." +
 						"Is this the location where you would like to install the game?" +
-						"\n\n{0}", ConfigHandler.GetLocalDir ()
+						"\n\n{0}"), ConfigHandler.GetLocalDir ()
 					));
 
 					if (shouldInstallHereDialog.Run () == (int)Gtk.ResponseType.Ok)
@@ -115,8 +121,8 @@ namespace Launchpad
 
 					noStatsNot.IconName = Stock.DialogWarning;
 					noStatsNot.Urgency = Urgency.Normal;
-					noStatsNot.Summary = "Launchpad - Warning";
-					noStatsNot.Body = "Anonymous useage stats are not enabled.";
+					noStatsNot.Summary = Mono.Unix.Catalog.GetString ("Launchpad - Warning");
+					noStatsNot.Body = Mono.Unix.Catalog.GetString ("Anonymous useage stats are not enabled.");
 
 					noStatsNot.Show ();
 				}
@@ -125,10 +131,13 @@ namespace Launchpad
 				if (Checks.IsLauncherOutdated ())
 				{
 					Console.WriteLine ("Launcher outdated.");
+
+
 					PrimaryButton.Sensitive = true;
-					PrimaryButton.Label = "Update";
+					PrimaryButton.Label = Mono.Unix.Catalog.GetString("Update");
+					Mode = ELauncherMode.Update;
+
 					bLauncherNeedsUpdate = true;
-					//Download the new launcher
 				}
 
 				//Start loading the changelog asynchronously
@@ -148,7 +157,8 @@ namespace Launchpad
 						//if the game is not installed, offer to install it
 						Console.WriteLine ("Not installed.");
 						PrimaryButton.Sensitive = true;
-						PrimaryButton.Label = "Install";
+						PrimaryButton.Label = Mono.Unix.Catalog.GetString ("Install");
+						Mode = ELauncherMode.Install;
 					}
 					else
 					{
@@ -158,13 +168,15 @@ namespace Launchpad
 							//if it does, offer to update it
 							Console.WriteLine ("Game is outdated or not installed");
 							PrimaryButton.Sensitive = true;
-							PrimaryButton.Label = "Update";
+							PrimaryButton.Label = Mono.Unix.Catalog.GetString ("Update");
+							Mode = ELauncherMode.Update;
 						}
 						else
 						{
 							//if not, enable launching the game
 							PrimaryButton.Sensitive = true;
-							PrimaryButton.Label = "Launch";
+							PrimaryButton.Label = Mono.Unix.Catalog.GetString ("Launch");
+							Mode = ELauncherMode.Launch;
 						}
 					}
 				}
@@ -205,10 +217,9 @@ namespace Launchpad
         /// <param name="e">Empty arguments.</param>
 		protected void OnPrimaryButtonClicked (object sender, EventArgs e)
 		{
-			string Mode = PrimaryButton.Label;
 			switch (Mode)
 			{
-				case "Repair":
+				case ELauncherMode.Repair:
 				{
 					Console.WriteLine ("Repairing installation...");
 					//bind events for UI updating					
@@ -225,21 +236,24 @@ namespace Launchpad
 				    {
 					    Notification noProvide = new Notification ();
 					    noProvide.IconName = Stock.DialogError;
-					    noProvide.Summary = "Launchpad - Platform not provided!";
-					    noProvide.Body = "The server does not provide the game for the selected platform.";
+						noProvide.Summary = Mono.Unix.Catalog.GetString ("Launchpad - Platform not provided!");
+						noProvide.Body = Mono.Unix.Catalog.GetString ("The server does not provide the game for the selected platform.");
 					    noProvide.Show();
 
-					    PrimaryButton.Label = "Install";
+						PrimaryButton.Label = Mono.Unix.Catalog.GetString ("Install");
 					    PrimaryButton.Sensitive = true;
+
+						Mode = ELauncherMode.Install;
 				    }
 
 					break;
 				}
-				case "Install":
+				case ELauncherMode.Install:
 				{
 					Console.WriteLine ("Installing game...");
-					PrimaryButton.Label = "Installing...";
+					PrimaryButton.Label = Mono.Unix.Catalog.GetString ("Installing...");
 					PrimaryButton.Sensitive = false;
+
 					//bind events for UI updating
 					Game.GameDownloadFinished += OnGameDownloadFinished;
 					Game.ProgressChanged += OnGameDownloadProgressChanged;
@@ -256,21 +270,23 @@ namespace Launchpad
 					{
 						Notification noProvide = new Notification ();
 						noProvide.IconName = Stock.DialogError;
-						noProvide.Summary = "Launchpad - Platform not provided!";
-						noProvide.Body = "The server does not provide the game for the selected platform.";
+						noProvide.Summary = Mono.Unix.Catalog.GetString ("Launchpad - Platform not provided!");
+						noProvide.Body = Mono.Unix.Catalog.GetString ("The server does not provide the game for the selected platform.");
 						noProvide.Show();
 
-						PrimaryButton.Label = "Install";
+						PrimaryButton.Label = Catalog.GetString ("Install");
 						PrimaryButton.Sensitive = true;
+
+						Mode = ELauncherMode.Install;
 					}
 					break;
 				}
-				case "Update":
+				case ELauncherMode.Update:
 				{
 					if (bLauncherNeedsUpdate)
 					{
 						Console.WriteLine ("Updating launcher...");
-						PrimaryButton.Label = "Updating...";
+						PrimaryButton.Label = Mono.Unix.Catalog.GetString ("Updating...");
 						PrimaryButton.Sensitive = false;
 
 						Launcher.UpdateLauncher ();
@@ -278,7 +294,7 @@ namespace Launchpad
 					else
 					{
 						Console.WriteLine ("Updating game...");
-						PrimaryButton.Label = "Updating...";
+						PrimaryButton.Label = Mono.Unix.Catalog.GetString ("Updating...");
 						PrimaryButton.Sensitive = false;
 
 						//bind events for UI updating
@@ -296,17 +312,19 @@ namespace Launchpad
 						{
 							Notification noProvide = new Notification ();
 							noProvide.IconName = Stock.DialogError;
-							noProvide.Summary = "Launchpad - Platform not provided!";
-							noProvide.Body = "The server does not provide the game for the selected platform.";
+							noProvide.Summary = Mono.Unix.Catalog.GetString ("Launchpad - Platform not provided!");
+							noProvide.Body = Mono.Unix.Catalog.GetString ("The server does not provide the game for the selected platform.");
 							noProvide.Show();
 
-							PrimaryButton.Label = "Install";
+							PrimaryButton.Label = Mono.Unix.Catalog.GetString("Install");
 							PrimaryButton.Sensitive = true;
+
+							Mode = ELauncherMode.Install;
 						}								
 					}												
 					break;
 				}
-				case "Launch":
+				case ELauncherMode.Launch:
 				{
 					Console.WriteLine ("Launching game...");
 					Game.GameLaunchFailed += OnGameLaunchFailed;
@@ -346,12 +364,14 @@ namespace Launchpad
 		{
 			Notification launchFailed = new Notification ();
 			launchFailed.IconName = Stock.DialogError;
-			launchFailed.Summary = "Launchpad - Failed to launch the game!";
-			launchFailed.Body = "The game failed to launch. Try repairing the installation.";
+			launchFailed.Summary = Mono.Unix.Catalog.GetString ("Launchpad - Failed to launch the game!");
+			launchFailed.Body = Mono.Unix.Catalog.GetString ("The game failed to launch. Try repairing the installation.");
 			launchFailed.Show();
 
-			PrimaryButton.Label = "Repair";	
+			PrimaryButton.Label = Mono.Unix.Catalog.GetString ("Repair");	
 			PrimaryButton.Sensitive = true;
+
+			Mode = ELauncherMode.Repair;
 		}
 
         /// <summary>
@@ -361,30 +381,40 @@ namespace Launchpad
         /// <param name="e">Contains the type of failure that occurred.</param>
 		private void OnGameDownloadFailed(object sender, GameDownloadFailedEventArgs e)
 		{
-			switch(e.ResultType)
+			ELauncherMode parsedMode = ELauncherMode.Invalid;
+			if (Enum.TryParse(e.ResultType, out parsedMode))
 			{
-				case "Install":
+				switch(parsedMode)
 				{
-					Console.WriteLine (e.Metadata);
-					MessageLabel.Text = e.Metadata;
-					break;
+					case ELauncherMode.Install:
+					{
+						Console.WriteLine (e.Metadata);
+						MessageLabel.Text = e.Metadata;
+						break;
+					}
+					case ELauncherMode.Update:
+					{
+						Console.WriteLine (e.Metadata);
+						MessageLabel.Text = e.Metadata;
+						break;
+					}
+					case ELauncherMode.Repair:
+					{
+						Console.WriteLine (e.Metadata);
+						MessageLabel.Text = e.Metadata;
+						break;
+					}
+					default:
+					{
+						break;
+					}
 				}
-				case "Update":
-				{
-					Console.WriteLine (e.Metadata);
-					MessageLabel.Text = e.Metadata;
-					break;
-				}
-				case "Repair":
-				{
-					Console.WriteLine (e.Metadata);
-					MessageLabel.Text = e.Metadata;
-					break;
-				}
-			}
 
-			PrimaryButton.Label = e.ResultType;
-			PrimaryButton.Sensitive = true;
+				PrimaryButton.Label = Mono.Unix.Catalog.GetString (e.ResultType);
+				PrimaryButton.Sensitive = true;
+
+				Mode = parsedMode;
+			}
 		}
 
         /// <summary>
@@ -397,7 +427,7 @@ namespace Launchpad
             Gtk.Application.Invoke(delegate
             {
 
-                string progressbarText = String.Format("Downloading file {0}: {1} of {2} bytes.",
+				string progressbarText = String.Format(Mono.Unix.Catalog.GetString ("Downloading file {0}: {1} of {2} bytes."),
                                                        System.IO.Path.GetFileNameWithoutExtension(e.FileName),
                                                        e.DownloadedBytes.ToString(),
                                                        e.TotalBytes.ToString());
@@ -416,35 +446,43 @@ namespace Launchpad
         {
             if (e != null)
             {
-                if (e.Result == "1") //there was an error
-                {
-                    MessageLabel.Text = "Game download failed. Are you missing the manifest?";
+				ELauncherMode parsedMode = ELauncherMode.Invalid;
+				if (Enum.TryParse (e.ResultType, out parsedMode))
+				{
+					if (e.Result == "1") //there was an error
+					{
+						MessageLabel.Text = Mono.Unix.Catalog.GetString ("Game download failed. Are you missing the manifest?");
 
-                    Notification failedNot = new Notification();
-                    failedNot.IconName = Stock.DialogError;
-                    failedNot.Summary = "Launchpad - Error";
-                    failedNot.Body = "The game failed to download. Are you missing the manifest?";
+						Notification failedNot = new Notification();
+						failedNot.IconName = Stock.DialogError;
+						failedNot.Summary = Mono.Unix.Catalog.GetString ("Launchpad - Error");
+						failedNot.Body = Mono.Unix.Catalog.GetString ("The game failed to download. Are you missing the manifest?");
 
-                    failedNot.Show();
+						failedNot.Show();
 
-                    PrimaryButton.Label = e.ResultType; //URL is used here to set the desired retry action
-                    PrimaryButton.Sensitive = true;
-                }
-                else //the game has finished downloading, and we should be OK to launch
-                {
-                    MessageLabel.Text = "Idle";
-                    progressbar2.Text = "";
+						PrimaryButton.Label = Catalog.GetString (e.ResultType);
+						PrimaryButton.Sensitive = true;
 
-                    Notification completedNot = new Notification();
-                    completedNot.IconName = Stock.Info;
-                    completedNot.Summary = "Launchpad - Info";
-                    completedNot.Body = "Game download finished. Play away!";
+						Mode = parsedMode;
+					}
+					else //the game has finished downloading, and we should be OK to launch
+					{
+						MessageLabel.Text = Mono.Unix.Catalog.GetString ("Idle");
+						progressbar2.Text = "";
 
-                    completedNot.Show();
+						Notification completedNot = new Notification();
+						completedNot.IconName = Stock.Info;
+						completedNot.Summary = Mono.Unix.Catalog.GetString ("Launchpad - Info");
+						completedNot.Body = Mono.Unix.Catalog.GetString ("Game download finished. Play away!");
 
-                    PrimaryButton.Label = "Launch";
-                    PrimaryButton.Sensitive = true;
-                }
+						completedNot.Show();
+
+						PrimaryButton.Label = Mono.Unix.Catalog.GetString ("Launch");
+						PrimaryButton.Sensitive = true;
+
+						Mode = parsedMode;
+					}
+				}                
             }           
         }
 
@@ -457,15 +495,22 @@ namespace Launchpad
         {
             Notification repairComplete = new Notification();
             repairComplete.IconName = Stock.Info;
-            repairComplete.Summary = "Launchpad - Game repair finished";
-            repairComplete.Body = "Launchpad has finished repairing the game installation. Play away!";
+			repairComplete.Summary = Mono.Unix.Catalog.GetString ("Launchpad - Game repair finished");
+			repairComplete.Body = Mono.Unix.Catalog.GetString ("Launchpad has finished repairing the game installation. Play away!");
             repairComplete.Show();
 
             progressbar2.Text = "";
 
-            PrimaryButton.Label = "Launch";
+			PrimaryButton.Label = Mono.Unix.Catalog.GetString("Launch");
             PrimaryButton.Sensitive = true;
+
+			Mode = ELauncherMode.Launch;
         }
+
+		protected void OnLanguageActionActivated (object sender, EventArgs e)
+		{
+			throw new NotImplementedException ();
+		}
 	}
 }
 
