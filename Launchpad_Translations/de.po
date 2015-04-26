@@ -2,10 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: launchpad\n"
 "POT-Creation-Date: 2015-04-26 17:28:38+0200\n"
-"PO-Revision-Date: 2015-04-26 11:00-0400\n"
+"PO-Revision-Date: 2015-04-26 11:42-0400\n"
 "Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
 "Language-Team: German\n"
-"Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,6 +13,7 @@ msgstr ""
 "X-Crowdin-Project: launchpad\n"
 "X-Crowdin-Language: de\n"
 "X-Crowdin-File: messages.po\n"
+"Language: de_DE\n"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
 msgid "Edit"
@@ -32,9 +32,8 @@ msgid "Language"
 msgstr "Sprache"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
-#, fuzzy
 msgid "Launchpad - <GameName>"
-msgstr "Launchpad - Reparatur abgeschlossen"
+msgstr "Launchpad - <GameName>"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:14
@@ -47,25 +46,15 @@ msgstr "Inaktiv"
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:15
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:14
 msgid "Failed to connect to the FTP server. Please check your FTP settings."
-msgstr ""
-"Verbindung zum FTP-Server fehlgeschlagen. Bitte überprüfen sie Ihre FTP-"
-"Einstellungen."
+msgstr "Verbindung zum FTP-Server fehlgeschlagen. Bitte überprüfen sie Ihre FTP-Einstellungen."
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:16
 msgid "Could not connect to server."
 msgstr "Verbindung zum Server fehlgeschlagen."
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:16
-msgid ""
-"This appears to be the first time you're starting the launcher.\n"
-"Is this the location where you would like to install the game?\n"
-"\n"
-"{0}"
-msgstr ""
-"Anscheinend starten Sie den Launcher zum ersten Mal.\n"
-"Wollen Sie das Spiel in diesem Ordner installieren?\n"
-"\n"
-"{0}"
+msgid "This appears to be the first time you're starting the launcher.\nIs this the location where you would like to install the game?\n\n{0}"
+msgstr "Anscheinend starten Sie den Launcher zum ersten Mal.\nWollen Sie das Spiel in diesem Ordner installieren?\n\n{0}"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:20
 msgid "Launchpad - Warning"
@@ -92,18 +81,16 @@ msgid "Update"
 msgstr "Update"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
-#, fuzzy
 msgid "Repairing..."
-msgstr "Aktualisiere..."
+msgstr "Repariere..."
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
 msgid "Repair"
 msgstr "Reparieren"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
-#, fuzzy
 msgid "Launching..."
-msgstr "Starten"
+msgstr "Starte..."
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
 msgid "Launch"
@@ -119,8 +106,7 @@ msgstr "Launchpad - Plattform nicht vorhanden!"
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:35
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:39
 msgid "The server does not provide the game for the selected platform."
-msgstr ""
-"Der Server stellt das Spiel nicht für die ausgewählte Plattform bereit."
+msgstr "Der Server stellt das Spiel nicht für die ausgewählte Plattform bereit."
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:43
 msgid "Launchpad - Failed to launch the game!"
@@ -128,9 +114,7 @@ msgstr "Launchpad - Spiel konnte nicht gestartet werden!"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:43
 msgid "The game failed to launch. Try repairing the installation."
-msgstr ""
-"Das Spiel konnte nicht gestartet werden. Versuche die Installation zu "
-"reparieren."
+msgstr "Das Spiel konnte nicht gestartet werden. Versuche die Installation zu reparieren."
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:48
 msgid "Downloading file {0}: {1} of {2} bytes."
@@ -159,16 +143,15 @@ msgstr "Launchpad - Reparatur abgeschlossen"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:57
 msgid "Launchpad has finished repairing the game installation. Play away!"
-msgstr ""
-"Launchpad hat die Reparatur der Spiele-Installation abgeschlossen. Auf gehts!"
+msgstr "Launchpad hat die Reparatur der Spiele-Installation abgeschlossen. Auf gehts!"
 
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:6
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:6
 msgid "Cancel"
-msgstr ""
+msgstr "Abbrechen"
 
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:8
 msgid "Verifying..."
@@ -226,5 +209,3 @@ msgstr "FTP Passwort: "
 msgid "<b>Remote</b>"
 msgstr "<b>Remote</b>"
 
-#~ msgid "Launchpad"
-#~ msgstr "Launchpad"
