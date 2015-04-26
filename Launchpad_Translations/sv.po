@@ -1,15 +1,19 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: launchpad\n"
 "POT-Creation-Date: 2015-04-26 12:58:08+0200\n"
-"PO-Revision-Date: 2015-04-26 12:54:03+0200\n"
-"Last-Translator: jarl\n"
-"Language-Team: \n"
-"Language: \n"
+"PO-Revision-Date: 2015-04-26 07:09-0400\n"
+"Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
+"Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: MonoDevelop Gettext addin\n"
+"X-Generator: crowdin.com\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: launchpad\n"
+"X-Crowdin-Language: sv-SE\n"
+"X-Crowdin-File: messages.po\n"
+"Language: sv_SE\n"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
 msgid "Edit"
@@ -42,25 +46,15 @@ msgstr "Inaktiv"
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:15
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:14
 msgid "Failed to connect to the FTP server. Please check your FTP settings."
-msgstr ""
-"Kunde inte ansluta till servern. Var vänlig och kontrollera dina "
-"inställningar."
+msgstr "Kunde inte ansluta till servern. Var vänlig och kontrollera dina inställningar."
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:16
 msgid "Could not connect to server."
 msgstr "Kunde inte ansluta till servern."
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:16
-msgid ""
-"This appears to be the first time you're starting the launcher.\n"
-"Is this the location where you would like to install the game?\n"
-"\n"
-"{0}"
-msgstr ""
-"Detta verkar vara den första gången som du startar programmet.\n"
-"Är detta platsen du vill installera spelet i?\n"
-"\n"
-"{0}"
+msgid "This appears to be the first time you're starting the launcher.\nIs this the location where you would like to install the game?\n\n{0}"
+msgstr "Detta verkar vara den första gången som du startar programmet.\nÄr detta platsen du vill installera spelet i?\n\n{0}"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:20
 msgid "Launchpad - Warning"
@@ -205,3 +199,4 @@ msgstr "Lösenord: "
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "<b>Remote</b>"
 msgstr "<b>Fjärrinställningar</b>"
+
