@@ -13,6 +13,8 @@
     <translations>
       <translations>
         <Translation isoCode="sv" />
+        <Translation isoCode="da" />
+        <Translation isoCode="nl" />
       </translations>
     </translations>
   </PropertyGroup>

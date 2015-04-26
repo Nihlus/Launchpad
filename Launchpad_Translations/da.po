@@ -1,201 +1,202 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
-"POT-Creation-Date: 2015-04-26 14:27:06+0200\n"
-"PO-Revision-Date: 2015-04-26 14:27:06+0200\n"
-"Last-Translator: jarl\n"
-"Language-Team: \n"
+"Project-Id-Version: launchpad\n"
+"POT-Creation-Date: 2015-04-26 12:58:08+0200\n"
+"PO-Revision-Date: 2015-04-26 08:27-0400\n"
+"Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
+"Language-Team: Danish\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: MonoDevelop Gettext addin\n"
+"X-Generator: crowdin.com\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: launchpad\n"
+"X-Crowdin-Language: da\n"
+"X-Crowdin-File: messages.po\n"
+"Language: da_DK\n"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
 msgid "Edit"
-msgstr ""
+msgstr "Rediger"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
 msgid "Options"
-msgstr ""
+msgstr "Muligheder"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
 msgid "Settings"
-msgstr ""
+msgstr "Indstillinger"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
 msgid "Language"
-msgstr ""
+msgstr "Sprog"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
-msgid "Launchpad - <GameName>"
-msgstr ""
+msgid "Launchpad"
+msgstr "Launchpad"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:14
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:59
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:58
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:6
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:16
 msgid "Idle"
-msgstr ""
+msgstr "Slumre"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:15
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:14
 msgid "Failed to connect to the FTP server. Please check your FTP settings."
-msgstr ""
+msgstr "Kunne ikke forbinde til FTP serveren. Venligst tjek dine FTP indstillinger."
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:16
 msgid "Could not connect to server."
-msgstr ""
+msgstr "Kunne ikke forbinde til serveren."
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:16
-msgid ""
-"This appears to be the first time you're starting the launcher.\n"
-"Is this the location where you would like to install the game?\n"
-"\n"
-"{0}"
-msgstr ""
+msgid "This appears to be the first time you're starting the launcher.\nIs this the location where you would like to install the game?\n\n{0}"
+msgstr "Det virker til at være den første gang du starter launcheren. \nls det stedet du har lyst til at installere spillet?\n\n{0}"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:20
 msgid "Launchpad - Warning"
-msgstr ""
+msgstr "Launchpad - Advarsel"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:20
 msgid "Anonymous useage stats are not enabled."
-msgstr ""
+msgstr "Anonym brugbar statistik er ikke aktiveret."
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:24
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
 msgid "Update"
-msgstr ""
+msgstr "Opdater"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:33
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:37
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:42
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:32
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:36
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:41
 msgid "Install"
-msgstr ""
+msgstr "Installer"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:62
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:66
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:61
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:65
 msgid "Launch"
-msgstr ""
+msgstr "Start"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:32
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:36
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:41
-msgid "Launchpad - Platform not provided!"
-msgstr ""
-
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:32
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:36
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:41
-msgid "The server does not provide the game for the selected platform."
-msgstr ""
-
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:31
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:35
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:40
+msgid "Launchpad - Platform not provided!"
+msgstr "Launchpad - Platform er ikke tilgængelig!"
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:31
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:35
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:40
+msgid "The server does not provide the game for the selected platform."
+msgstr "Serveren tilegner ikke spillet for denne platform."
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:34
 msgid "Installing..."
-msgstr ""
+msgstr "Installerer..."
 
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:37
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:38
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:39
 msgid "Updating..."
-msgstr ""
+msgstr "Opdaterer..."
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:46
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:45
 msgid "Launchpad - Failed to launch the game!"
-msgstr ""
+msgstr "Launchpad - Kunne ikke starte spillet!"
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:45
+msgid "The game failed to launch. Try repairing the installation."
+msgstr "Spillet kunne ikke starte. Prøv at reparere installationen."
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:46
-msgid "The game failed to launch. Try repairing the installation."
-msgstr ""
-
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:47
 msgid "Repair"
-msgstr ""
+msgstr "Reparere"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:53
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:52
 msgid "Downloading file {0}: {1} of {2} bytes."
-msgstr ""
+msgstr "Downloader fil {0}: {1} af {2} bytes."
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:54
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:55
+msgid "Game download failed. Are you missing the manifest?"
+msgstr "Spil download mislykkedes. Mangler du manifestet?"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:55
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:56
-msgid "Game download failed. Are you missing the manifest?"
-msgstr ""
-
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:56
 msgid "Launchpad - Error"
-msgstr ""
+msgstr "Launchpad - Fejl"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:60
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:59
 msgid "Launchpad - Info"
-msgstr ""
+msgstr "Launchpad - Info"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:60
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:59
 msgid "Game download finished. Play away!"
-msgstr ""
+msgstr "Download af spil er færdig. Spil endelig!"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:64
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:63
 msgid "Launchpad - Game repair finished"
-msgstr ""
+msgstr "Launchpad - Reparation af spil er færdig"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:64
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:63
 msgid "Launchpad has finished repairing the game installation. Play away!"
-msgstr ""
+msgstr "Launchpad har færdiggjort reparation af spil installationen. Spil endelig!"
 
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:8
 msgid "Verifying..."
-msgstr ""
+msgstr "Validerer..."
 
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:11
 msgid "The URL needs to begin with \"ftp://\". Please correct the URL."
-msgstr ""
+msgstr "URL-adressen skal begynde med \"ftp://\". Ret venligst URL'et."
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "Edit Settings"
-msgstr ""
+msgstr "Rediger indstillinger"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "Game Name: "
-msgstr ""
+msgstr "Spil navn: "
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "System Target: "
-msgstr ""
+msgstr "Valg af operativsystem: "
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "Linux"
-msgstr ""
+msgstr "Linux"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "Mac"
-msgstr ""
+msgstr "Mac"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "Win64"
-msgstr ""
+msgstr "Win64"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "Win32"
-msgstr ""
+msgstr "Win32"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "<b>Local</b>"
-msgstr ""
+msgstr "<b>Lokal</b>"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "FTP URL: "
-msgstr ""
+msgstr "FTP URL: "
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "FTP Username: "
-msgstr ""
+msgstr "Brugernavn: "
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "FTP Password: "
-msgstr ""
+msgstr "Kodeord: "
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "<b>Remote</b>"
-msgstr ""
+msgstr "<b>Trådløs</b>"
 
