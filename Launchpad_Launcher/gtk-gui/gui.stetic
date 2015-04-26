@@ -30,7 +30,7 @@
       </action>
     </action-group>
     <property name="MemberName" />
-    <property name="Title" translatable="yes">Launchpad</property>
+    <property name="Title" translatable="yes">Launchpad - &lt;GameName&gt;</property>
     <property name="Icon">resource:Launchpad.Resources.RocketIcon.ico</property>
     <property name="WindowPosition">CenterOnParent</property>
     <property name="DefaultWidth">755</property>
@@ -46,7 +46,6 @@
             <node name="menubar1" type="Menubar">
               <node type="Menu" action="EditAction">
                 <node type="Menuitem" action="SettingsAction" />
-                <node type="Menuitem" action="LanguageAction" />
               </node>
             </node>
           </widget>
@@ -193,11 +192,12 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Dialog" id="Launchpad.SettingsDialog" design-size="430 295">
+  <widget class="Gtk.Dialog" id="Launchpad.SettingsDialog" design-size="344 295">
     <property name="MemberName" />
     <property name="Title" translatable="yes">Edit Settings</property>
     <property name="Icon">resource:Launchpad.Resources.RocketIcon.ico</property>
     <property name="WindowPosition">CenterOnParent</property>
+    <property name="Resizable">False</property>
     <property name="Buttons">2</property>
     <property name="HelpButton">False</property>
     <child internal-child="VBox">
@@ -241,7 +241,7 @@
                             <child>
                               <widget class="Gtk.Alignment" id="alignment6">
                                 <property name="MemberName" />
-                                <property name="LeftPadding">77</property>
+                                <property name="WidthRequest">200</property>
                                 <child>
                                   <widget class="Gtk.Entry" id="GameName_entry">
                                     <property name="MemberName" />
@@ -255,6 +255,7 @@
                                 <property name="PackType">End</property>
                                 <property name="Position">1</property>
                                 <property name="AutoSize">False</property>
+                                <property name="Expand">False</property>
                               </packing>
                             </child>
                           </widget>
@@ -284,7 +285,7 @@
                             <child>
                               <widget class="Gtk.Alignment" id="alignment5">
                                 <property name="MemberName" />
-                                <property name="LeftPadding">67</property>
+                                <property name="WidthRequest">200</property>
                                 <child>
                                   <widget class="Gtk.ComboBox" id="combobox_SystemTarget">
                                     <property name="MemberName" />
@@ -301,6 +302,7 @@ Win32</property>
                                 <property name="PackType">End</property>
                                 <property name="Position">1</property>
                                 <property name="AutoSize">False</property>
+                                <property name="Expand">False</property>
                               </packing>
                             </child>
                           </widget>
@@ -377,7 +379,7 @@ Win32</property>
                             <child>
                               <widget class="Gtk.Alignment" id="alignment1">
                                 <property name="MemberName" />
-                                <property name="LeftPadding">37</property>
+                                <property name="WidthRequest">200</property>
                                 <child>
                                   <widget class="Gtk.Entry" id="FTPURL_entry">
                                     <property name="MemberName" />
@@ -391,7 +393,8 @@ Win32</property>
                               <packing>
                                 <property name="PackType">End</property>
                                 <property name="Position">1</property>
-                                <property name="AutoSize">True</property>
+                                <property name="AutoSize">False</property>
+                                <property name="Expand">False</property>
                               </packing>
                             </child>
                           </widget>
@@ -421,6 +424,7 @@ Win32</property>
                             <child>
                               <widget class="Gtk.Alignment" id="alignment2">
                                 <property name="MemberName" />
+                                <property name="WidthRequest">200</property>
                                 <child>
                                   <widget class="Gtk.Entry" id="FTPUsername_entry">
                                     <property name="MemberName" />
@@ -433,7 +437,8 @@ Win32</property>
                               <packing>
                                 <property name="PackType">End</property>
                                 <property name="Position">1</property>
-                                <property name="AutoSize">True</property>
+                                <property name="AutoSize">False</property>
+                                <property name="Expand">False</property>
                               </packing>
                             </child>
                           </widget>
@@ -463,7 +468,7 @@ Win32</property>
                             <child>
                               <widget class="Gtk.Alignment" id="alignment3">
                                 <property name="MemberName" />
-                                <property name="LeftPadding">5</property>
+                                <property name="WidthRequest">200</property>
                                 <child>
                                   <widget class="Gtk.Entry" id="FTPPassword_entry">
                                     <property name="MemberName" />
@@ -476,7 +481,8 @@ Win32</property>
                               <packing>
                                 <property name="PackType">End</property>
                                 <property name="Position">1</property>
-                                <property name="AutoSize">True</property>
+                                <property name="AutoSize">False</property>
+                                <property name="Expand">False</property>
                               </packing>
                             </child>
                           </widget>

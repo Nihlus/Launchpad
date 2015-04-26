@@ -44,15 +44,19 @@ namespace Launchpad
         public MainWindow () : 
 				base(Gtk.WindowType.Toplevel)
 		{		
+			//initialize localization
+			Mono.Unix.Catalog.Init ("Launchpad", "./locale");	
+
 			this.Build ();
 
 			//Initialize the config files and check values.
 			Config.Initialize ();
 
+			//set the window title
+			this.Title = "Launchpad - " + Config.GetGameName ();
+
 			// Configure the WebView for our changelog
 			Browser.SetSizeRequest (290, 300);		
-
-			Mono.Unix.Catalog.Init ("Launchpad", "./locale");
 
 			//webkit
 			scrolledwindow2.Add (Browser);
@@ -85,7 +89,7 @@ namespace Launchpad
 						MessageType.Question, 
 						ButtonsType.OkCancel, 
 						String.Format (Mono.Unix.Catalog.GetString (
-						"This appears to be the first time you're starting the launcher." +
+						"This appears to be the first time you're starting the launcher.\n" +
 						"Is this the location where you would like to install the game?" +
 						"\n\n{0}"), ConfigHandler.GetLocalDir ()
 					));
@@ -204,6 +208,9 @@ namespace Launchpad
 		{
 			SettingsDialog Settings = new SettingsDialog ();
 			Settings.Run ();
+
+			//set the window title, if it changed.
+			this.Title = "Launchpad - " + Config.GetGameName ();
 		}			
 		
         /// <summary>
@@ -456,7 +463,7 @@ namespace Launchpad
 						Notification failedNot = new Notification();
 						failedNot.IconName = Stock.DialogError;
 						failedNot.Summary = Mono.Unix.Catalog.GetString ("Launchpad - Error");
-						failedNot.Body = Mono.Unix.Catalog.GetString ("The game failed to download. Are you missing the manifest?");
+						failedNot.Body = Mono.Unix.Catalog.GetString ("Game download failed. Are you missing the manifest?");
 
 						failedNot.Show();
 

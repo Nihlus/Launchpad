@@ -47,6 +47,7 @@ namespace Launchpad
 			this.Title = global::Mono.Unix.Catalog.GetString ("Edit Settings");
 			this.Icon = global::Gdk.Pixbuf.LoadFromResource ("Launchpad.Resources.RocketIcon.ico");
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
+			this.Resizable = false;
 			// Internal child Launchpad.SettingsDialog.VBox
 			global::Gtk.VBox w1 = this.VBox;
 			w1.Name = "dialog1_VBox";
@@ -82,8 +83,8 @@ namespace Launchpad
 			w2.Fill = false;
 			// Container child hbox1.Gtk.Box+BoxChild
 			this.alignment6 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
+			this.alignment6.WidthRequest = 200;
 			this.alignment6.Name = "alignment6";
-			this.alignment6.LeftPadding = ((uint)(77));
 			// Container child alignment6.Gtk.Container+ContainerChild
 			this.GameName_entry = new global::Gtk.Entry ();
 			this.GameName_entry.CanFocus = true;
@@ -95,6 +96,7 @@ namespace Launchpad
 			global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.alignment6]));
 			w4.PackType = ((global::Gtk.PackType)(1));
 			w4.Position = 1;
+			w4.Expand = false;
 			this.vbox3.Add (this.hbox1);
 			global::Gtk.Box.BoxChild w5 = ((global::Gtk.Box.BoxChild)(this.vbox3 [this.hbox1]));
 			w5.Position = 0;
@@ -115,8 +117,8 @@ namespace Launchpad
 			w6.Fill = false;
 			// Container child hbox2.Gtk.Box+BoxChild
 			this.alignment5 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
+			this.alignment5.WidthRequest = 200;
 			this.alignment5.Name = "alignment5";
-			this.alignment5.LeftPadding = ((uint)(67));
 			// Container child alignment5.Gtk.Container+ContainerChild
 			this.combobox_SystemTarget = global::Gtk.ComboBox.NewText ();
 			this.combobox_SystemTarget.AppendText (global::Mono.Unix.Catalog.GetString ("Linux"));
@@ -130,6 +132,7 @@ namespace Launchpad
 			global::Gtk.Box.BoxChild w8 = ((global::Gtk.Box.BoxChild)(this.hbox2 [this.alignment5]));
 			w8.PackType = ((global::Gtk.PackType)(1));
 			w8.Position = 1;
+			w8.Expand = false;
 			this.vbox3.Add (this.hbox2);
 			global::Gtk.Box.BoxChild w9 = ((global::Gtk.Box.BoxChild)(this.vbox3 [this.hbox2]));
 			w9.Position = 1;
@@ -182,8 +185,8 @@ namespace Launchpad
 			w14.Fill = false;
 			// Container child hbox3.Gtk.Box+BoxChild
 			this.alignment1 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
+			this.alignment1.WidthRequest = 200;
 			this.alignment1.Name = "alignment1";
-			this.alignment1.LeftPadding = ((uint)(37));
 			// Container child alignment1.Gtk.Container+ContainerChild
 			this.FTPURL_entry = new global::Gtk.Entry ();
 			this.FTPURL_entry.CanFocus = true;
@@ -195,6 +198,7 @@ namespace Launchpad
 			global::Gtk.Box.BoxChild w16 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.alignment1]));
 			w16.PackType = ((global::Gtk.PackType)(1));
 			w16.Position = 1;
+			w16.Expand = false;
 			this.vbox4.Add (this.hbox3);
 			global::Gtk.Box.BoxChild w17 = ((global::Gtk.Box.BoxChild)(this.vbox4 [this.hbox3]));
 			w17.Position = 0;
@@ -215,6 +219,7 @@ namespace Launchpad
 			w18.Fill = false;
 			// Container child hbox4.Gtk.Box+BoxChild
 			this.alignment2 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
+			this.alignment2.WidthRequest = 200;
 			this.alignment2.Name = "alignment2";
 			// Container child alignment2.Gtk.Container+ContainerChild
 			this.FTPUsername_entry = new global::Gtk.Entry ();
@@ -227,6 +232,7 @@ namespace Launchpad
 			global::Gtk.Box.BoxChild w20 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.alignment2]));
 			w20.PackType = ((global::Gtk.PackType)(1));
 			w20.Position = 1;
+			w20.Expand = false;
 			this.vbox4.Add (this.hbox4);
 			global::Gtk.Box.BoxChild w21 = ((global::Gtk.Box.BoxChild)(this.vbox4 [this.hbox4]));
 			w21.Position = 1;
@@ -247,8 +253,8 @@ namespace Launchpad
 			w22.Fill = false;
 			// Container child hbox5.Gtk.Box+BoxChild
 			this.alignment3 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
+			this.alignment3.WidthRequest = 200;
 			this.alignment3.Name = "alignment3";
-			this.alignment3.LeftPadding = ((uint)(5));
 			// Container child alignment3.Gtk.Container+ContainerChild
 			this.FTPPassword_entry = new global::Gtk.Entry ();
 			this.FTPPassword_entry.CanFocus = true;
@@ -260,6 +266,7 @@ namespace Launchpad
 			global::Gtk.Box.BoxChild w24 = ((global::Gtk.Box.BoxChild)(this.hbox5 [this.alignment3]));
 			w24.PackType = ((global::Gtk.PackType)(1));
 			w24.Position = 1;
+			w24.Expand = false;
 			this.vbox4.Add (this.hbox5);
 			global::Gtk.Box.BoxChild w25 = ((global::Gtk.Box.BoxChild)(this.vbox4 [this.hbox5]));
 			w25.Position = 2;
@@ -328,7 +335,7 @@ namespace Launchpad
 			if ((this.Child != null)) {
 				this.Child.ShowAll ();
 			}
-			this.DefaultWidth = 430;
+			this.DefaultWidth = 344;
 			this.DefaultHeight = 295;
 			this.buttonOk.HasDefault = true;
 			this.Show ();

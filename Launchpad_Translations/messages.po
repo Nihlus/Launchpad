@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2015-04-26 11:28:58+0200\n"
-"PO-Revision-Date: 2015-04-26 11:28:58+0200\n"
+"POT-Creation-Date: 2015-04-26 12:58:08+0200\n"
+"PO-Revision-Date: 2015-04-26 12:58:08+0200\n"
 "Last-Translator: jarl\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,11 +23,132 @@ msgid "Settings"
 msgstr ""
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
+msgid "Language"
+msgstr ""
+
+#: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
 msgid "Launchpad"
 msgstr ""
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:14
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:58
+#: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:6
+#: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:16
 msgid "Idle"
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:15
+#: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:14
+msgid "Failed to connect to the FTP server. Please check your FTP settings."
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:16
+msgid "Could not connect to server."
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:16
+msgid ""
+"This appears to be the first time you're starting the launcher.\n"
+"Is this the location where you would like to install the game?\n"
+"\n"
+"{0}"
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:20
+msgid "Launchpad - Warning"
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:20
+msgid "Anonymous useage stats are not enabled."
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:24
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
+msgid "Update"
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:32
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:36
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:41
+msgid "Install"
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:61
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:65
+msgid "Launch"
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:31
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:35
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:40
+msgid "Launchpad - Platform not provided!"
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:31
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:35
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:40
+msgid "The server does not provide the game for the selected platform."
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:34
+msgid "Installing..."
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:37
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:38
+msgid "Updating..."
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:45
+msgid "Launchpad - Failed to launch the game!"
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:45
+msgid "The game failed to launch. Try repairing the installation."
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:46
+msgid "Repair"
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:52
+msgid "Downloading file {0}: {1} of {2} bytes."
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:54
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:55
+msgid "Game download failed. Are you missing the manifest?"
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:55
+msgid "Launchpad - Error"
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:59
+msgid "Launchpad - Info"
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:59
+msgid "Game download finished. Play away!"
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:63
+msgid "Launchpad - Game repair finished"
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:63
+msgid "Launchpad has finished repairing the game installation. Play away!"
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:8
+msgid "Verifying..."
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:11
+msgid "The URL needs to begin with \"ftp://\". Please correct the URL."
 msgstr ""
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2

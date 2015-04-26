@@ -34,7 +34,7 @@ namespace Launchpad
 			FTPUsername_entry.Text = Config.GetFTPUsername ();
 			FTPPassword_entry.Text = Config.GetFTPPassword ();
 
-			progressbar3.Text = "Idle";
+			progressbar3.Text = Mono.Unix.Catalog.GetString("Idle");
 
 		}
 
@@ -47,7 +47,7 @@ namespace Launchpad
 		{
 			Gtk.Application.Invoke(delegate 
 			                       {
-				progressbar3.Text = "Verifying...";			
+				progressbar3.Text = Mono.Unix.Catalog.GetString("Verifying...");			
 			});
 
 			bool bAreAllSettingsOK = true;
@@ -72,7 +72,7 @@ namespace Launchpad
 				bAreAllSettingsOK = false;
 				Gdk.Color col = new Gdk.Color(255, 128, 128);
 				FTPURL_entry.ModifyBase(Gtk.StateType.Normal, col);
-				FTPURL_entry.TooltipText = "The URL needs to begin with \"ftp://\". Please correct the URL.";
+				FTPURL_entry.TooltipText = Mono.Unix.Catalog.GetString("The URL needs to begin with \"ftp://\". Please correct the URL.");
 			}
 
 			Config.SetFTPPassword (FTPPassword_entry.Text);
@@ -91,14 +91,14 @@ namespace Launchpad
 						null, DialogFlags.Modal, 
 						MessageType.Warning, 
 						ButtonsType.Ok, 
-						"Failed to connect to the FTP server. Please check your FTP settings.");
+						Mono.Unix.Catalog.GetString("Failed to connect to the FTP server. Please check your FTP settings."));
 
 					dialog.Run ();
 					dialog.Destroy ();
 				}
 			}
 
-			progressbar3.Text = "Idle";
+			progressbar3.Text = Mono.Unix.Catalog.GetString("Idle");
 		}
 
 		/// <summary>
