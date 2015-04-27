@@ -342,6 +342,8 @@ namespace Launchpad
 				ProgressArgs.FileName = Path.GetFileNameWithoutExtension(remoteURL);
 				ProgressArgs.TotalBytes = (int)fileSize;
 
+                //sets the content offset for the file stream, allowing it to begin writing where it last stopped
+                fileStream.Position = contentOffset;
 				while (true)
 				{
 					bytesRead = reader.Read(buffer, 0, buffer.Length);

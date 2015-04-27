@@ -60,9 +60,9 @@
             this.MessageLabel.BackColor = System.Drawing.Color.Transparent;
             this.MessageLabel.Location = new System.Drawing.Point(15, 444);
             this.MessageLabel.Name = "MessageLabel";
-            this.MessageLabel.Size = new System.Drawing.Size(87, 13);
+            this.MessageLabel.Size = new System.Drawing.Size(24, 13);
             this.MessageLabel.TabIndex = 5;
-            this.MessageLabel.Text = "Default Message";
+            this.MessageLabel.Text = "Idle";
             // 
             // downloadProgressLabel
             // 
@@ -70,9 +70,8 @@
             this.downloadProgressLabel.BackColor = System.Drawing.Color.Transparent;
             this.downloadProgressLabel.Location = new System.Drawing.Point(15, 431);
             this.downloadProgressLabel.Name = "downloadProgressLabel";
-            this.downloadProgressLabel.Size = new System.Drawing.Size(135, 13);
+            this.downloadProgressLabel.Size = new System.Drawing.Size(0, 13);
             this.downloadProgressLabel.TabIndex = 7;
-            this.downloadProgressLabel.Text = "Example Filename.exe: 0/0";
             // 
             // aboutLink
             // 

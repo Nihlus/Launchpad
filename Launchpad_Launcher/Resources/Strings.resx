@@ -117,38 +117,145 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="logoPictureBox.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        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
-</value>
+  <data name="cancelString" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="editSettingsTitle" xml:space="preserve">
+    <value>Edit Settings</value>
+  </data>
+  <data name="editString" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="errorTitle" xml:space="preserve">
+    <value>Launchpad - Error</value>
+  </data>
+  <data name="fileDownloadMessage" xml:space="preserve">
+    <value>Downloading file {0}: {1} of {2} bytes.</value>
+  </data>
+  <data name="ftpConnectionFailureMessage" xml:space="preserve">
+    <value>Failed to connect to the FTP server. Please check your FTP settings.</value>
+  </data>
+  <data name="ftpConnectionFailureString" xml:space="preserve">
+    <value>Could not connect to server.</value>
+  </data>
+  <data name="ftpPasswordString" xml:space="preserve">
+    <value>FTP Password: </value>
+  </data>
+  <data name="ftpURLString" xml:space="preserve">
+    <value>FTP URL:</value>
+  </data>
+  <data name="ftpUsernameString" xml:space="preserve">
+    <value>FTP Username: </value>
+  </data>
+  <data name="gameDownloadFailMessage" xml:space="preserve">
+    <value>Game download failed. Are you missing the manifest?</value>
+  </data>
+  <data name="gameDownloadFinishedMessage" xml:space="preserve">
+    <value>Game download finished. Play away!</value>
+  </data>
+  <data name="gameNameString" xml:space="preserve">
+    <value>Game Name:</value>
+  </data>
+  <data name="idleString" xml:space="preserve">
+    <value>Idle</value>
+  </data>
+  <data name="infoTitle" xml:space="preserve">
+    <value>Launchpad - Info</value>
+  </data>
+  <data name="initialStartupMessage" xml:space="preserve">
+    <value>This appears to be the first time you're starting the launcher.
+Is this the location where you would like to install the game?
+
+{0}</value>
+  </data>
+  <data name="installingLabel" xml:space="preserve">
+    <value>Installing...</value>
+  </data>
+  <data name="installLabel" xml:space="preserve">
+    <value>Install</value>
+  </data>
+  <data name="languageString" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="launchFailMessage" xml:space="preserve">
+    <value>The game failed to launch. Try repairing the installation.</value>
+  </data>
+  <data name="launchFailTitle" xml:space="preserve">
+    <value>Launchpad - Failed to launch the game!</value>
+  </data>
+  <data name="launchingLabel" xml:space="preserve">
+    <value>Launching...</value>
+  </data>
+  <data name="launchLabel" xml:space="preserve">
+    <value>Launch</value>
+  </data>
+  <data name="linuxTarget" xml:space="preserve">
+    <value>Linux</value>
+  </data>
+  <data name="localSettingsTitle" xml:space="preserve">
+    <value>&lt;b&gt;Local&lt;/b&gt;</value>
+  </data>
+  <data name="macTarget" xml:space="preserve">
+    <value>Mac</value>
+  </data>
+  <data name="malformedFTPURLMessage" xml:space="preserve">
+    <value>The URL needs to begin with "ftp://". Please correct the URL.</value>
+  </data>
+  <data name="noPlatformMessage" xml:space="preserve">
+    <value>The server does not provide the game for the selected platform.</value>
+  </data>
+  <data name="noPlatformTitle" xml:space="preserve">
+    <value>Launchpad - Platform not provided!</value>
+  </data>
+  <data name="okString" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="optionsString" xml:space="preserve">
+    <value>Options</value>
+  </data>
+  <data name="remoteSettingsTitle" xml:space="preserve">
+    <value>&lt;b&gt;Remote&lt;/b&gt;</value>
+  </data>
+  <data name="repairFinishMessage" xml:space="preserve">
+    <value>Launchpad has finished repairing the game installation. Play away!</value>
+  </data>
+  <data name="repairFinishTitle" xml:space="preserve">
+    <value>Launchpad - Game repair finished</value>
+  </data>
+  <data name="repairingLabel" xml:space="preserve">
+    <value>Repairing...</value>
+  </data>
+  <data name="repairLabel" xml:space="preserve">
+    <value>Repair</value>
+  </data>
+  <data name="settingsString" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="systemTargetString" xml:space="preserve">
+    <value>System Target:</value>
+  </data>
+  <data name="updateLabel" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="updatingLabel" xml:space="preserve">
+    <value>Updating...</value>
+  </data>
+  <data name="usageTitle" xml:space="preserve">
+    <value>Anonymous useage stats are not enabled.</value>
+  </data>
+  <data name="verifyingMessage" xml:space="preserve">
+    <value>Verifying...</value>
+  </data>
+  <data name="warningTitle" xml:space="preserve">
+    <value>Launchpad - Warning</value>
+  </data>
+  <data name="win32Target" xml:space="preserve">
+    <value>Win32</value>
+  </data>
+  <data name="win64Target" xml:space="preserve">
+    <value>Win64</value>
+  </data>
+  <data name="windowTitle" xml:space="preserve">
+    <value>Launchpad - &lt;GameName&gt;</value>
   </data>
 </root>

@@ -1,11 +1,14 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using System.Resources;
+using System.Threading;
 
 namespace Launchpad
 {
     internal partial class MainForm : Form
     {
+        ResourceManager Catalog = new ResourceManager("Launchpad.Resources.Strings", typeof(MainForm).Assembly);
         /// <summary>
         /// Does the launcher need an update?
         /// </summary>
@@ -31,12 +34,18 @@ namespace Launchpad
         /// </summary>
         GameHandler Game = new GameHandler();
 
+        /// <summary>
+        /// The current mode that the launcher is in. Determines what the primary button does when pressed.
+        /// </summary>
+        ELauncherMode Mode = ELauncherMode.Invalid;
+
         public MainForm()
         {
             InitializeComponent();
 
             Config.Initialize();
-            MessageLabel.Text = "Idle";
+
+            MessageLabel.Text = Catalog.GetString("idleString");
             downloadProgressLabel.Text = String.Empty;
 
             //set the window text to match the game name
@@ -47,13 +56,13 @@ namespace Launchpad
             {
                 MessageBox.Show(
                     this,
-                    "Failed to connect to the FTP server. Please check your FTP settings.",
-                    "Connection Failed",
+                    Catalog.GetString("ftpConnectionFailureMessage"),
+                    Catalog.GetString("ftpConnectionFailureString"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error,
                     MessageBoxDefaultButton.Button1);
 
-                MessageLabel.Text = "No FTP connection.";
+                MessageLabel.Text = Catalog.GetString("ftpConnectionFailureString");
                 PrimaryButton.Text = ":(";
                 PrimaryButton.Enabled = false;
             }
@@ -65,10 +74,8 @@ namespace Launchpad
                     DialogResult shouldInstallHere = MessageBox.Show(
                         this,
                         String.Format(
-                        "This appears to be the first time you're starting the launcher.\n" +
-                        "Is this the location where you would like to install the game?" +
-                        "\n\n{0}", ConfigHandler.GetLocalDir()),
-                        "Initial Startup",
+                        Catalog.GetString("initialStartupMessage"), ConfigHandler.GetLocalDir()),
+                        Catalog.GetString("infoTitle"),
                         MessageBoxButtons.YesNo,
                         MessageBoxIcon.Question,
                         MessageBoxDefaultButton.Button1);
@@ -76,13 +83,11 @@ namespace Launchpad
                     if (shouldInstallHere == DialogResult.Yes)
                     {
                         //yes, install here
-                        Console.WriteLine("Installing in current directory.");
                         ConfigHandler.CreateUpdateCookie();
                     }
                     else
                     {
                         //no, don't install here
-                        Console.WriteLine("Exiting...");
                         Environment.Exit(2);
                     }
                 }
@@ -102,8 +107,8 @@ namespace Launchpad
                         noUsageStatsNotification.Icon = new System.Drawing.Icon(iconStream);
                         noUsageStatsNotification.Visible = true;
 
-                        noUsageStatsNotification.BalloonTipTitle = "Usage Stats";
-                        noUsageStatsNotification.BalloonTipText = "Not sending anonymous usage stats. TURN THIS ON BEFORE RELEASING.";
+                        noUsageStatsNotification.BalloonTipTitle = Catalog.GetString("infoTitle");
+                        noUsageStatsNotification.BalloonTipText = Catalog.GetString("usageTitle");
 
                         noUsageStatsNotification.ShowBalloonTip(10000);
                     }   
@@ -111,9 +116,7 @@ namespace Launchpad
 
                 if(Checks.IsLauncherOutdated())
                 {
-                    Console.WriteLine("Launcher is outdated.");
-                    PrimaryButton.Enabled = true;
-                    PrimaryButton.Text = "Update";
+                    SetLauncherMode(ELauncherMode.Update, false);
                     bLauncherNeedsUpdate = true;
                 }
 
@@ -129,28 +132,100 @@ namespace Launchpad
 
                     if(!Checks.IsGameInstalled())
                     {
-                        Console.WriteLine("Game is not installed.");
-                        PrimaryButton.Enabled = true;
-                        PrimaryButton.Text = "Install";
+                        SetLauncherMode(ELauncherMode.Install, false);
                     }
                     else
                     {
                         if (Checks.IsGameOutdated())
                         {
-                            Console.WriteLine("Game is outdated or not installed.");
-                            PrimaryButton.Enabled = true;
-                            PrimaryButton.Text = "Update";
+                            SetLauncherMode(ELauncherMode.Update, false);
                         }
                         else
                         {
-                            PrimaryButton.Enabled = true;
-                            PrimaryButton.Text = "Launch";
+                            SetLauncherMode(ELauncherMode.Launch, false);
                         }
                     }
                 }
             }
-            //this is after the CanConnect check. Nothing should be done here.
-        }		      
+            //this is after the CanConnect check. Nothing should be done here.        
+        }
+
+
+        /// <summary>
+        /// Sets the launcher mode and updates UI elements to match
+        /// </summary>
+        /// <param name="newMode">New mode.</param>
+        /// <param name="bInProgress">If set to <c>true</c>, the selected mode is in progress.</param>
+        private void SetLauncherMode(ELauncherMode newMode, bool bInProgress)
+        {
+		    //set the global launcher mode
+			Mode = newMode;
+
+			//set the UI elements to match
+			switch (newMode)
+			{
+				case ELauncherMode.Install:
+				{
+					if (bInProgress)
+					{
+						PrimaryButton.Enabled = false;
+                        PrimaryButton.Text = Catalog.GetString("installingLabel");
+					}
+					else
+					{
+						PrimaryButton.Enabled = true;
+                        PrimaryButton.Text = Catalog.GetString("installLabel");
+					}	
+					break;
+				}
+				case ELauncherMode.Update:
+				{
+					if (bInProgress)
+					{
+						PrimaryButton.Enabled = false;
+                        PrimaryButton.Text = Catalog.GetString("updatingLabel");
+					}
+					else
+					{
+						PrimaryButton.Enabled = true;
+                        PrimaryButton.Text = Catalog.GetString("updateLabel");
+					}					
+					break;
+				}					
+				case ELauncherMode.Repair:
+				{
+					if (bInProgress)
+					{
+						PrimaryButton.Enabled = false;
+                        PrimaryButton.Text = Catalog.GetString("repairingLabel");
+					}
+					else
+					{
+						PrimaryButton.Enabled = true;
+                        PrimaryButton.Text = Catalog.GetString("repairLabel");
+					}	
+					break;
+				}					
+				case ELauncherMode.Launch:
+				{
+					if (bInProgress)
+					{
+						PrimaryButton.Enabled = false;
+                        PrimaryButton.Text = Catalog.GetString("launchingLabel");
+					}
+					else
+					{
+						PrimaryButton.Enabled = true;
+                        PrimaryButton.Text = Catalog.GetString("launchLabel");
+					}	
+					break;
+				}					
+				default:
+				{
+					throw new ArgumentOutOfRangeException ("Invalid mode was passed to SetLauncherMode");
+				}
+			}
+		}
 
         /// <summary>
         /// Handles switching between different functionalities depending on what is visible on the button to the user, such as
@@ -163,12 +238,10 @@ namespace Launchpad
         /// <param name="e">Empty arguments.</param>
         private void mainButton_Click(object sender, EventArgs e)
         {
-            string Mode = PrimaryButton.Text;
             switch (Mode)
             {
-                case "Repair":
+                case ELauncherMode.Repair:
                     {
-                        Console.WriteLine("Repairing installation...");
                         //bind events for UI updating					
                         Game.ProgressChanged += OnGameDownloadProgressChanged;
                         Game.GameRepairFinished += OnRepairFinished;
@@ -192,21 +265,19 @@ namespace Launchpad
                                 launchFailedNotification.BalloonTipText = "The server does not provide the game for the selected platform.";
 
                                 launchFailedNotification.ShowBalloonTip(10000);
-                            } 
+                            }
 
-                            PrimaryButton.Text = "Install";
-                            PrimaryButton.Enabled = true;
+                            SetLauncherMode(ELauncherMode.Install, false);
                         }
 
                         break;
                     }
-                case "Install":
+                case ELauncherMode.Install:
                     {
                         Console.WriteLine("Installing game...");
 
                         MessageLabel.Text = "Installing...";
-                        PrimaryButton.Text = "Installing...";
-                        PrimaryButton.Enabled = false;
+                        SetLauncherMode(ELauncherMode.Install, true);
 
                         //bind events for UI updating
                         Game.GameDownloadFinished += OnGameDownloadFinished;
@@ -243,11 +314,10 @@ namespace Launchpad
 
                         break;
                     }
-                case "Update":
+                case ELauncherMode.Update:
                     {
                         Console.WriteLine("Updating game...");
-                        PrimaryButton.Text = "Updating...";
-                        PrimaryButton.Enabled = false;
+                        SetLauncherMode(ELauncherMode.Update, true);
 
                         //bind events for UI updating
                         Game.GameDownloadFinished += OnGameDownloadFinished;
@@ -273,15 +343,14 @@ namespace Launchpad
                                 launchFailedNotification.BalloonTipText = "The server does not provide the game for the selected platform.";
 
                                 launchFailedNotification.ShowBalloonTip(10000);
-                            } 
+                            }
 
-                            PrimaryButton.Text = "Install";
-                            PrimaryButton.Enabled = true;
+                            SetLauncherMode(ELauncherMode.Install, false);
                         }
 
                         break;
                     }
-                case "Launch":
+                case ELauncherMode.Launch:
                     {
                         Console.WriteLine("Launching game...");
                         Game.GameLaunchFailed += OnGameLaunchFailed;
@@ -292,7 +361,6 @@ namespace Launchpad
                 default:
                     {
                         Console.WriteLine("No functionality for this mode.");
-
                         break;
                     }
             }
@@ -331,8 +399,7 @@ namespace Launchpad
                     launchFailedNotification.ShowBalloonTip(10000);
                 }
 
-                PrimaryButton.Text = "Repair";
-                PrimaryButton.Enabled = true;
+                SetLauncherMode(ELauncherMode.Repair, false);
             });
         }
 
@@ -345,30 +412,28 @@ namespace Launchpad
         {
             this.Invoke((MethodInvoker)delegate
             {
-                switch (e.ResultType)
+                ELauncherMode parsedMode;
+                if (Enum.TryParse(e.Metadata, out parsedMode))
                 {
-                    case "Install":
-                        {
-                            Console.WriteLine(e.Metadata);
-                            MessageLabel.Text = e.Metadata;
-                            break;
-                        }
-                    case "Update":
-                        {
-                            Console.WriteLine(e.Metadata);
-                            MessageLabel.Text = e.Metadata;
-                            break;
-                        }
-                    case "Repair":
-                        {
-                            Console.WriteLine(e.Metadata);
-                            MessageLabel.Text = e.Metadata;
-                            break;
-                        }
-                }
-
-                PrimaryButton.Text = e.ResultType;
-                PrimaryButton.Enabled = true; 
+                    switch (parsedMode)
+                    {
+                        case ELauncherMode.Install:
+                            {
+                                SetLauncherMode(parsedMode, false);
+                                break;
+                            }
+                        case ELauncherMode.Update:
+                            {
+                                SetLauncherMode(parsedMode, false);
+                                break;
+                            }
+                        case ELauncherMode.Repair:
+                            {
+                                SetLauncherMode(parsedMode, false);
+                                break;
+                            }
+                    }
+                }                
             });                                   
         }
 
@@ -383,7 +448,8 @@ namespace Launchpad
             {
                 if (!String.IsNullOrEmpty(e.FileName))
                 {
-                    string progressbarText = String.Format("Downloading file {0}: {1} of {2} bytes.",
+                    string progressbarText = String.Format(
+                                                        Catalog.GetString("fileDownloadMessage"),
                                                         System.IO.Path.GetFileNameWithoutExtension(e.FileName),
                                                         e.DownloadedBytes.ToString(),
                                                         e.TotalBytes.ToString());
@@ -415,7 +481,7 @@ namespace Launchpad
             {
                 if (e.Result == "1") //there was an error
                 {
-                    MessageLabel.Text = "Game download failed. Are you missing the manifest?";
+                    MessageLabel.Text = Catalog.GetString("gameDownloadFailMessage");
 
                     Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Resources.RocketIcon.ico");
                     if (iconStream != null)
@@ -424,8 +490,8 @@ namespace Launchpad
                         launchFailedNotification.Icon = new System.Drawing.Icon(iconStream);
                         launchFailedNotification.Visible = true;
 
-                        launchFailedNotification.BalloonTipTitle = "Download Failed";
-                        launchFailedNotification.BalloonTipText = "The game failed to install. Are you missing the manifest?";
+                        launchFailedNotification.BalloonTipTitle = Catalog.GetString("errorTitle");
+                        launchFailedNotification.BalloonTipText = Catalog.GetString("gameDownloadFailMessage"); ;
 
                         launchFailedNotification.ShowBalloonTip(10000);
                     }
@@ -435,7 +501,7 @@ namespace Launchpad
                 }
                 else //the game has finished downloading, and we should be OK to launch
                 {
-                    MessageLabel.Text = "Idle";
+                    MessageLabel.Text = Catalog.GetString("idleString");
                     downloadProgressLabel.Text = "";
 
                     Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Resources.RocketIcon.ico");
@@ -445,14 +511,13 @@ namespace Launchpad
                         launchFailedNotification.Icon = new System.Drawing.Icon(iconStream);
                         launchFailedNotification.Visible = true;
 
-                        launchFailedNotification.BalloonTipTitle = "Installation complete";
-                        launchFailedNotification.BalloonTipText = "Game download finished. Play away!";
+                        launchFailedNotification.BalloonTipTitle = Catalog.GetString("infoTitle");
+                        launchFailedNotification.BalloonTipText = Catalog.GetString("gameDownloadFinishedMessage");
 
                         launchFailedNotification.ShowBalloonTip(10000);
                     }
 
-                    PrimaryButton.Text = "Launch";
-                    PrimaryButton.Enabled = true;
+                    SetLauncherMode(ELauncherMode.Launch, false);
                 }             
             });            
         }
@@ -473,16 +538,15 @@ namespace Launchpad
                     launchFailedNotification.Icon = new System.Drawing.Icon(iconStream);
                     launchFailedNotification.Visible = true;
 
-                    launchFailedNotification.BalloonTipTitle = "IGame repair finished";
-                    launchFailedNotification.BalloonTipText = "Launchpad has finished repairing the game installation. Play away!";
+                    launchFailedNotification.BalloonTipTitle = Catalog.GetString("repairFinishTitle");
+                    launchFailedNotification.BalloonTipText = Catalog.GetString("repairFinishMessage");
 
                     launchFailedNotification.ShowBalloonTip(10000);
                 }
 
                 downloadProgressLabel.Text = "";
 
-                PrimaryButton.Text = "Launch";
-                PrimaryButton.Enabled = true; 
+                SetLauncherMode(ELauncherMode.Launch, false);
             });                       
         }
 

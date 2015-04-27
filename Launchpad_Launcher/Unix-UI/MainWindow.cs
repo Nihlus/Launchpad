@@ -183,7 +183,7 @@ namespace Launchpad
 		/// </summary>
 		/// <param name="newMode">New mode.</param>
 		/// <param name="bInProgress">If set to <c>true</c>, the selected mode is in progress.</param>
-		internal void SetLauncherMode(ELauncherMode newMode, bool bInProgress)
+		private void SetLauncherMode(ELauncherMode newMode, bool bInProgress)
 		{
 			//set the global launcher mode
 			Mode = newMode;
@@ -249,7 +249,7 @@ namespace Launchpad
 				}					
 				default:
 				{
-					throw new ArgumentOutOfRangeException ();
+					throw new ArgumentOutOfRangeException ("Invalid mode was passed to SetLauncherMode");
 				}
 			}
 		}
