@@ -331,7 +331,7 @@ namespace Launchpad
 				reader = request.GetResponse().GetResponseStream();
 				sizereader = (FtpWebResponse)sizerequest.GetResponse();
 
-				fileStream = new FileStream(localPath, FileMode.Create);
+				fileStream = new FileStream(localPath, FileMode.Append);
 
 				//reset byte counter
 				FTPbytesDownloaded = 0;

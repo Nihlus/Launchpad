@@ -205,7 +205,7 @@ namespace Launchpad
 
 			if (!bCookieExists)
 			{
-				File.Create (GetInstallCookiePath());
+				File.Create (GetInstallCookiePath()).Close();
 
 				return GetInstallCookiePath ();
 			}
