@@ -143,7 +143,6 @@ namespace Launchpad
 			//clean the URL string
 			string remoteURL = rawRemoteURL.Replace (Path.DirectorySeparatorChar, '/');
 
-			Console.WriteLine (remoteURL);
 			string username;
 			string password;
 			if (!bUseAnonymous)
@@ -284,7 +283,6 @@ namespace Launchpad
 			//clean the URL string first
 			string remoteURL = rawRemoteURL.Replace (Path.DirectorySeparatorChar, '/');
 
-			Console.WriteLine (remoteURL);
 			string username;
 			string password;
 			if (!bUseAnonymous)

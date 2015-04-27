@@ -149,6 +149,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Strings.es-ES.resx</DependentUpon>
     </Compile>
+    <Compile Include="Resources\Strings.fi.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Strings.fi.resx</DependentUpon>
+    </Compile>
     <Compile Include="Resources\Strings.fr.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -201,6 +206,10 @@
     <EmbeddedResource Include="Resources\Strings.es-ES.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Strings.es-ES.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Strings.fi.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.fi.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Strings.fr.resx">
       <Generator>ResXFileCodeGenerator</Generator>
