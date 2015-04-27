@@ -20,6 +20,11 @@
         <Translation isoCode="zh" />
         <Translation isoCode="zh_CN" />
         <Translation isoCode="zh_TW" />
+        <Translation isoCode="fr" />
+        <Translation isoCode="pt_BR" />
+        <Translation isoCode="tr" />
+        <Translation isoCode="es_ES" />
+        <Translation isoCode="es" />
       </translations>
     </translations>
   </PropertyGroup>

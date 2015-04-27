@@ -1,39 +1,40 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: launchpad\n"
-"POT-Creation-Date: 2015-04-27 08:21:04+0200\n"
-"PO-Revision-Date: 2015-04-26 14:41-0400\n"
+"POT-Creation-Date: 2015-04-27 08:22:56+0200\n"
+"PO-Revision-Date: 2015-04-27 02:20-0400\n"
 "Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
-"Language-Team: Chinese Simplified\n"
-"Language: zh_CN\n"
+"Language-Team: Turkish\n"
+"Language: tr_TR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: crowdin.com\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"\n"
 "X-Crowdin-Project: launchpad\n"
-"X-Crowdin-Language: zh-CN\n"
+"X-Crowdin-Language: tr\n"
 "X-Crowdin-File: messages.po\n"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
 msgid "Edit"
-msgstr "编辑"
+msgstr "Düzenle"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
 msgid "Options"
-msgstr "选项"
+msgstr "Seçenekler"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
 msgid "Settings"
-msgstr "设置"
+msgstr "Ayarlar"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
 msgid "Language"
-msgstr "语言"
+msgstr "Dil"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
 msgid "Launchpad - <GameName>"
-msgstr "Launchpad-<GameName>"
+msgstr "Launchpad - <GameName>"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:14
@@ -41,16 +42,16 @@ msgstr "Launchpad-<GameName>"
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:6
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:16
 msgid "Idle"
-msgstr "闲置"
+msgstr "Boşta"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:15
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:14
 msgid "Failed to connect to the FTP server. Please check your FTP settings."
-msgstr "未能连接到 FTP 伺服器。请检查您的 FTP 设置。"
+msgstr "FTP sunucusuna bağlanılamadı. Lütfen FTP ayarlarınızı kontrol edin."
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:16
 msgid "Could not connect to server."
-msgstr "无法连接到伺服器。"
+msgstr "Sunucuya bağlanılamadı."
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:16
 msgid ""
@@ -59,127 +60,127 @@ msgid ""
 "\n"
 "{0}"
 msgstr ""
-"这似乎是第一次使用启动器。\n"
-"这是您想安装游戏的位置吗？\n"
+"Başlatıcıyı ilk kez açıyorsunuz gibi duruyor.\n"
+"Oyunu yüklemek istediğiniz konum bu mu?\n"
 "\n"
 "{0}"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:20
 msgid "Launchpad - Warning"
-msgstr "Launchpad-警告"
+msgstr "Launchpad - Uyarı"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:20
 msgid "Anonymous useage stats are not enabled."
-msgstr "未启用匿名用户统计。"
+msgstr "Anonim kullanım istatistikleri etkin değil."
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
 msgid "Installing..."
-msgstr "正在安装..."
+msgstr "Yükleniyor..."
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
 msgid "Install"
-msgstr "安装"
+msgstr "Yükle"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
 msgid "Updating..."
-msgstr "正在更新..."
+msgstr "Güncelleniyor..."
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
 msgid "Update"
-msgstr "更新"
+msgstr "Güncelle"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
 msgid "Repairing..."
-msgstr "正在修复..."
+msgstr "Tamir ediliyor..."
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
 msgid "Repair"
-msgstr "修复"
+msgstr "Tamir Et"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
 msgid "Launching..."
-msgstr "正在启动..."
+msgstr "Başlatılıyor..."
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
 msgid "Launch"
-msgstr "启动"
+msgstr "Başlat"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:32
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:35
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:39
 msgid "Launchpad - Platform not provided!"
-msgstr "Launchpad-未提供平台！"
+msgstr "Launchpad - Platform temin edilmemiş!"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:32
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:35
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:39
 msgid "The server does not provide the game for the selected platform."
-msgstr "伺服器未为选定平台提供这个游戏。"
+msgstr "Sunucu oyunu seçili platform için temin etmiyor."
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:43
 msgid "Launchpad - Failed to launch the game!"
-msgstr "Launchpad-启动游戏失败 ！"
+msgstr "Launchpad - Oyun başlatılamadı!"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:43
 msgid "The game failed to launch. Try repairing the installation."
-msgstr "游戏无法启动。尝试修复安装程序。"
+msgstr "Oyun başlayamadı. Yüklemeyi tamir etmeyi deneyin."
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:48
 msgid "Downloading file {0}: {1} of {2} bytes."
-msgstr "下载文件 {0}： {1} {2} bytes。"
+msgstr "{0} dosyası indiriliyor: {2} baytta {1} bayt."
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:50
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:51
 msgid "Game download failed. Are you missing the manifest?"
-msgstr "游戏下载失败。你是否缺少档案清单？"
+msgstr "Oyun indirme başarısız oldu. Manifestonuz mu eksik?"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:51
 msgid "Launchpad - Error"
-msgstr "Launchpad-错误"
+msgstr "Launchpad - Hata"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:54
 msgid "Launchpad - Info"
-msgstr "Launchpad-信息"
+msgstr "Launchpad - Bilgi"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:54
 msgid "Game download finished. Play away!"
-msgstr "游戏下载完成。可立刻运行游戏！"
+msgstr "Oyun indirme bitti. Hemen oyna!"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:57
 msgid "Launchpad - Game repair finished"
-msgstr "Launchpad-游戏修复完成"
+msgstr "Launchpad - Oyun tamiri bitti"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:57
 msgid "Launchpad has finished repairing the game installation. Play away!"
-msgstr "Launchpad已完成游戏安装的修复程序。立刻运行游戏！"
+msgstr "Launchpad oyun yüklemesini tamir etmeyi bitirdi. Hemen oyna!"
 
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:6
 msgid "OK"
-msgstr "确定"
+msgstr "Tamam"
 
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:6
 msgid "Cancel"
-msgstr "取消"
+msgstr "İptâl"
 
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:8
 msgid "Verifying..."
-msgstr "正在验证..."
+msgstr "Doğrulanıyor..."
 
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:11
 msgid "The URL needs to begin with \"ftp://\". Please correct the URL."
-msgstr "地址需要以\"ftp： / /\"开头。请更正该 URL地址。"
+msgstr "Adresin \"ftp://\" ile başlaması gerekiyor. Lütfen adresi düzeltin."
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "Edit Settings"
-msgstr "编辑设定"
+msgstr "Ayarları Düzenle"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "Game Name: "
-msgstr "游戏名称： "
+msgstr "Oyun Adı: "
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "System Target: "
-msgstr "目标系统： "
+msgstr "Sistem Hedefi: "
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "Linux"
@@ -199,20 +200,20 @@ msgstr "Win32"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "<b>Local</b>"
-msgstr "<b>本地</b>"
+msgstr "<b>Yerel</b>"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "FTP URL: "
-msgstr "FTP 地址： "
+msgstr "FTP Adresi: "
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "FTP Username: "
-msgstr "FTP 用户名： "
+msgstr "FTP Kullanıcı Adı: "
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "FTP Password: "
-msgstr "FTP 密码： "
+msgstr "FTP Şifresi: "
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "<b>Remote</b>"
-msgstr "<b>远端</b>"
+msgstr "<b>Sunucu</b>"

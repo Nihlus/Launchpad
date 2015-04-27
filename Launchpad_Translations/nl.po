@@ -1,10 +1,11 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: launchpad\n"
-"POT-Creation-Date: 2015-04-26 17:28:38+0200\n"
+"POT-Creation-Date: 2015-04-26 19:20:00+0200\n"
 "PO-Revision-Date: 2015-04-26 11:37-0400\n"
 "Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
 "Language-Team: Dutch\n"
+"Language: nl_NL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,7 +14,6 @@ msgstr ""
 "X-Crowdin-Project: launchpad\n"
 "X-Crowdin-Language: nl\n"
 "X-Crowdin-File: messages.po\n"
-"Language: nl_NL\n"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
 msgid "Edit"
@@ -46,15 +46,25 @@ msgstr "Inactief"
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:15
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:14
 msgid "Failed to connect to the FTP server. Please check your FTP settings."
-msgstr "Er kan geen verbinding gemaakt worden met de FTP server. Controleer de FTP instellingen."
+msgstr ""
+"Er kan geen verbinding gemaakt worden met de FTP server. Controleer de FTP "
+"instellingen."
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:16
 msgid "Could not connect to server."
 msgstr "Kan geen verbinding met de server maken."
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:16
-msgid "This appears to be the first time you're starting the launcher.\nIs this the location where you would like to install the game?\n\n{0}"
-msgstr "Dit lijkt de eerste keer dat je dit programma start.\nIs dit de locatie waar je het spel wilt installeren?\n\n{0}"
+msgid ""
+"This appears to be the first time you're starting the launcher.\n"
+"Is this the location where you would like to install the game?\n"
+"\n"
+"{0}"
+msgstr ""
+"Dit lijkt de eerste keer dat je dit programma start.\n"
+"Is dit de locatie waar je het spel wilt installeren?\n"
+"\n"
+"{0}"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:20
 msgid "Launchpad - Warning"
@@ -143,7 +153,8 @@ msgstr "Launchpad - Spel repareren klaar"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:57
 msgid "Launchpad has finished repairing the game installation. Play away!"
-msgstr "Launchpad is klaar met het repareren van de spel installatie. Ga spelen!"
+msgstr ""
+"Launchpad is klaar met het repareren van de spel installatie. Ga spelen!"
 
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:6
 msgid "OK"
@@ -208,4 +219,3 @@ msgstr "Paswoord: "
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "<b>Remote</b>"
 msgstr "<b>Extern</b>"
-

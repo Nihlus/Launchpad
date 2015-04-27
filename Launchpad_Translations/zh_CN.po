@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: launchpad\n"
-"POT-Creation-Date: 2015-04-26 17:28:38+0200\n"
-"PO-Revision-Date: 2015-04-26 11:16-0400\n"
+"POT-Creation-Date: 2015-04-27 08:21:04+0200\n"
+"PO-Revision-Date: 2015-04-26 14:41-0400\n"
 "Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -32,9 +32,8 @@ msgid "Language"
 msgstr "语言"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
-#, fuzzy
 msgid "Launchpad - <GameName>"
-msgstr "启动台-游戏修复完成"
+msgstr "Launchpad-<GameName>"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:14
@@ -67,7 +66,7 @@ msgstr ""
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:20
 msgid "Launchpad - Warning"
-msgstr "启动台-警告"
+msgstr "Launchpad-警告"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:20
 msgid "Anonymous useage stats are not enabled."
@@ -90,18 +89,16 @@ msgid "Update"
 msgstr "更新"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
-#, fuzzy
 msgid "Repairing..."
-msgstr "正在更新..."
+msgstr "正在修复..."
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
 msgid "Repair"
 msgstr "修复"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
-#, fuzzy
 msgid "Launching..."
-msgstr "启动"
+msgstr "正在启动..."
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
 msgid "Launch"
@@ -138,11 +135,11 @@ msgstr "游戏下载失败。你是否缺少档案清单？"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:51
 msgid "Launchpad - Error"
-msgstr "启动台-错误"
+msgstr "Launchpad-错误"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:54
 msgid "Launchpad - Info"
-msgstr "启动台-信息"
+msgstr "Launchpad-信息"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:54
 msgid "Game download finished. Play away!"
@@ -150,19 +147,19 @@ msgstr "游戏下载完成。可立刻运行游戏！"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:57
 msgid "Launchpad - Game repair finished"
-msgstr "启动台-游戏修复完成"
+msgstr "Launchpad-游戏修复完成"
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:57
 msgid "Launchpad has finished repairing the game installation. Play away!"
-msgstr "启动台已完成游戏安装的修复程序。立刻运行游戏！"
+msgstr "Launchpad已完成游戏安装的修复程序。立刻运行游戏！"
 
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:6
 msgid "OK"
-msgstr ""
+msgstr "确定"
 
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:6
 msgid "Cancel"
-msgstr ""
+msgstr "取消"
 
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:8
 msgid "Verifying..."
@@ -219,6 +216,3 @@ msgstr "FTP 密码： "
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "<b>Remote</b>"
 msgstr "<b>远端</b>"
-
-#~ msgid "Launchpad"
-#~ msgstr "Launchpad"
