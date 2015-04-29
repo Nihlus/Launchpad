@@ -86,7 +86,7 @@ namespace Launchpad
 			string configPath = GetConfigPath();
 
 			//Major release 0.1.0, linux support
-			string defaultLauncherVersion = "0.1.0";
+			Version defaultLauncherVersion = new Version("0.1.0");
 
 			//Check for pre-unix config. If it exists, fix the values and copy it.
 			UpdateOldConfig ();
@@ -106,7 +106,7 @@ namespace Launchpad
 					//here we create a new empty file
 					FileStream configStream = File.Create(configPath);
 					configStream.Close();
-
+                     
 					//read the file as an INI file
 					try
 					{
@@ -119,9 +119,12 @@ namespace Launchpad
 						data.Sections.AddSection("Remote");
 						data.Sections.AddSection("Launchpad");
 
-						data["Local"].AddKey("LauncherVersion", defaultLauncherVersion);
+						data["Local"].AddKey("LauncherVersion", defaultLauncherVersion.ToString());
 						data["Local"].AddKey("GameName", "LaunchpadExample");
-						data["Local"].AddKey("SystemTarget", "Win64");
+
+                        //set the default system target to what the launcher is running on. Developers will need 
+                        //to alter this in the config, based on where they're deploying to.
+						data["Local"].AddKey("SystemTarget", GetCurrentPlatform().ToString());
 						data["Local"].AddKey("GUID", GeneratedGUID);
 
 						data["Remote"].AddKey("FTPUsername", "anonymous");
@@ -142,7 +145,7 @@ namespace Launchpad
 				{
 					IniData data = Parser.ReadFile(GetConfigPath());
 
-					data["Local"]["LauncherVersion"] = defaultLauncherVersion;
+					data["Local"]["LauncherVersion"] = defaultLauncherVersion.ToString();
 					if (!data ["Local"].ContainsKey ("GUID"))
 					{
 						string GeneratedGUID = Guid.NewGuid ().ToString ();
@@ -952,5 +955,45 @@ namespace Launchpad
 				File.Move (oldUpdateCookiePath, updateCookiePath);
 			}
 		}
+
+        public static ESystemTarget GetCurrentPlatform()
+        {
+            string platformID = Environment.OSVersion.Platform.ToString();
+            switch (platformID)
+            {
+                case "MacOSX":
+                    {
+                        return ESystemTarget.Mac;
+                    }
+                case "Unix":
+                    {
+                        //Mac may sometimes be detected as Unix, so do an additional check for some Mac-only directories
+                        if (Directory.Exists("/Applications") && Directory.Exists("/System") && Directory.Exists("/Users") && Directory.Exists("/Volumes"))
+                        {
+                            return ESystemTarget.Mac;
+                        }
+                        else
+                        {
+                            return ESystemTarget.Linux;
+                        }                                                               
+                    }
+                case "Win32Windows":
+                    {
+                        if (Environment.Is64BitOperatingSystem)
+                        {
+                            return ESystemTarget.Win64;
+                        }
+                        else
+                        {
+                            return ESystemTarget.Win32;
+                        }
+                        break;
+                    }
+                default:
+                    {
+                        return ESystemTarget.Invalid;
+                    }
+            }
+        }
     }
 }
