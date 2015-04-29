@@ -1,7 +1,6 @@
-using System;
 using Gtk;
-using Mono.Unix;
 using Notifications;
+using System;
 using WebKit;
 
 namespace Launchpad
