@@ -7,11 +7,6 @@ namespace Launchpad
 {
     public partial class MainWindow : Gtk.Window
 	{
-		/// <summary>
-		/// Does the launcher need an update?
-		/// </summary>
-		bool bLauncherNeedsUpdate = false;
-
 		ELauncherMode Mode = ELauncherMode.Invalid;
 
 		/// <summary>
@@ -130,21 +125,13 @@ namespace Launchpad
 					noStatsNot.Show ();
 				}
 
-				//check if the launcher is outdated
-				if (Checks.IsLauncherOutdated ())
-				{
-					Console.WriteLine ("Launcher outdated.");
-
-					SetLauncherMode (ELauncherMode.Update, false);
-					bLauncherNeedsUpdate = true;
-				}
 
 				//Start loading the changelog asynchronously
 				Launcher.ChangelogDownloadFinished += OnChangelogDownloadFinished;
 				Launcher.LoadChangelog ();
 
 				//if the launcher does not need an update at this point, we can continue checks for the game
-				if (!bLauncherNeedsUpdate)
+				if (!Checks.IsLauncherOutdated ())
 				{
 					if (Checks.IsManifestOutdated ())
 					{					
@@ -173,6 +160,11 @@ namespace Launchpad
 						}
 					}
 				}
+                else
+                {
+                    //the launcher was outdated.
+                    SetLauncherMode (ELauncherMode.Update, false);
+                }
 			}
 			Console.WriteLine ("REMEMBER: TURN ON ANON STATS BEFORE RELEASE");
 		}
@@ -348,12 +340,10 @@ namespace Launchpad
 				}
 				case ELauncherMode.Update:
 				{
-					if (bLauncherNeedsUpdate)
-					{
-						Console.WriteLine ("Updating launcher...");
-						SetLauncherMode (ELauncherMode.Update, true);
-
+					if (Checks.IsLauncherOutdated())
+					{						
 						Launcher.UpdateLauncher ();
+                        SetLauncherMode(ELauncherMode.Update, true);
 					}
 					else
 					{

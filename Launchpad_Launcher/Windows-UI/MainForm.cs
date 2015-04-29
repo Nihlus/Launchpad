@@ -241,33 +241,42 @@ namespace Launchpad
                         Game.GameDownloadFinished += OnGameDownloadFinished;
                         Game.GameDownloadFailed += OnGameDownloadFailed;
 
-                        //update the game asynchronously
-                        if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
+                        if (Checks.IsLauncherOutdated())
                         {
-                            //update the game asynchronously
-                            Game.UpdateGame();
+                            //update the launcher synchronously.
+                            Launcher.UpdateLauncher();
                             SetLauncherMode(ELauncherMode.Update, true);
                         }
                         else
                         {
-                            //whoops, the server doesn't provide the game for the platform we requested (usually the on we're running on)
-                            //alert the user and revert back to the default install mode
-                            Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Resources.RocketIcon.ico");
-                            if (iconStream != null)
+                            //update the game asynchronously
+                            if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
                             {
-                                NotifyIcon platformNotProvidedNotification = new NotifyIcon();
-                                platformNotProvidedNotification.Icon = new System.Drawing.Icon(iconStream);
-                                platformNotProvidedNotification.Visible = true;
-
-                                platformNotProvidedNotification.BalloonTipTitle = Catalog.GetString("noPlatformTitle");
-                                platformNotProvidedNotification.BalloonTipText = Catalog.GetString("noPlatformMessage");
-
-                                platformNotProvidedNotification.ShowBalloonTip(10000);
+                                //update the game asynchronously
+                                Game.UpdateGame();
+                                SetLauncherMode(ELauncherMode.Update, true);
                             }
+                            else
+                            {
+                                //whoops, the server doesn't provide the game for the platform we requested (usually the on we're running on)
+                                //alert the user and revert back to the default install mode
+                                Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Resources.RocketIcon.ico");
+                                if (iconStream != null)
+                                {
+                                    NotifyIcon platformNotProvidedNotification = new NotifyIcon();
+                                    platformNotProvidedNotification.Icon = new System.Drawing.Icon(iconStream);
+                                    platformNotProvidedNotification.Visible = true;
 
-                            SetLauncherMode(ELauncherMode.Install, false);
+                                    platformNotProvidedNotification.BalloonTipTitle = Catalog.GetString("noPlatformTitle");
+                                    platformNotProvidedNotification.BalloonTipText = Catalog.GetString("noPlatformMessage");
+
+                                    platformNotProvidedNotification.ShowBalloonTip(10000);
+                                }
+
+                                SetLauncherMode(ELauncherMode.Install, false);
+                            }
                         }
-
+                        
                         break;
                     }
                 case ELauncherMode.Launch:

@@ -62,7 +62,7 @@
             this.MessageLabel.Name = "MessageLabel";
             this.MessageLabel.Size = new System.Drawing.Size(24, 13);
             this.MessageLabel.TabIndex = 5;
-            this.MessageLabel.Text = Catalog.GetString("idleString");
+            this.MessageLabel.Text = "Idle";
             // 
             // downloadProgressLabel
             // 
