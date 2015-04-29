@@ -8,11 +8,10 @@ namespace Launchpad
 {
     internal partial class MainForm : Form
     {
-        ResourceManager Catalog = new ResourceManager("Launchpad.Resources.Strings", typeof(MainForm).Assembly);
         /// <summary>
-        /// Does the launcher need an update?
+        /// The catalog responsible for handling all of the localizable strings
         /// </summary>
-        bool bLauncherNeedsUpdate = false;
+        ResourceManager Catalog = new ResourceManager("Launchpad.Resources.Strings", typeof(MainForm).Assembly);
 
         /// <summary>
         /// The checks handler reference.
@@ -114,16 +113,12 @@ namespace Launchpad
                     }   
                 }
 
-                if(Checks.IsLauncherOutdated())
-                {
-                    SetLauncherMode(ELauncherMode.Update, false);
-                    bLauncherNeedsUpdate = true;
-                }
-
+                //load the changelog from the server
                 Launcher.ChangelogDownloadFinished += OnChangelogDownloadFinished;
                 Launcher.LoadChangelog();
-
-                if (!bLauncherNeedsUpdate)
+                
+                //Does the launcher need an update?
+                if (!Checks.IsLauncherOutdated())
                 {
                     if (Checks.IsManifestOutdated())
                     {
@@ -146,86 +141,13 @@ namespace Launchpad
                         }
                     }
                 }
-            }
-            //this is after the CanConnect check. Nothing should be done here.        
+                else
+                {
+                    SetLauncherMode(ELauncherMode.Update, false);
+                }
+            }      
         }
 
-
-        /// <summary>
-        /// Sets the launcher mode and updates UI elements to match
-        /// </summary>
-        /// <param name="newMode">New mode.</param>
-        /// <param name="bInProgress">If set to <c>true</c>, the selected mode is in progress.</param>
-        private void SetLauncherMode(ELauncherMode newMode, bool bInProgress)
-        {
-		    //set the global launcher mode
-			Mode = newMode;
-
-			//set the UI elements to match
-			switch (newMode)
-			{
-				case ELauncherMode.Install:
-				{
-					if (bInProgress)
-					{
-						PrimaryButton.Enabled = false;
-                        PrimaryButton.Text = Catalog.GetString("installingLabel");
-					}
-					else
-					{
-						PrimaryButton.Enabled = true;
-                        PrimaryButton.Text = Catalog.GetString("installLabel");
-					}	
-					break;
-				}
-				case ELauncherMode.Update:
-				{
-					if (bInProgress)
-					{
-						PrimaryButton.Enabled = false;
-                        PrimaryButton.Text = Catalog.GetString("updatingLabel");
-					}
-					else
-					{
-						PrimaryButton.Enabled = true;
-                        PrimaryButton.Text = Catalog.GetString("updateLabel");
-					}					
-					break;
-				}					
-				case ELauncherMode.Repair:
-				{
-					if (bInProgress)
-					{
-						PrimaryButton.Enabled = false;
-                        PrimaryButton.Text = Catalog.GetString("repairingLabel");
-					}
-					else
-					{
-						PrimaryButton.Enabled = true;
-                        PrimaryButton.Text = Catalog.GetString("repairLabel");
-					}	
-					break;
-				}					
-				case ELauncherMode.Launch:
-				{
-					if (bInProgress)
-					{
-						PrimaryButton.Enabled = false;
-                        PrimaryButton.Text = Catalog.GetString("launchingLabel");
-					}
-					else
-					{
-						PrimaryButton.Enabled = true;
-                        PrimaryButton.Text = Catalog.GetString("launchLabel");
-					}	
-					break;
-				}					
-				default:
-				{
-					throw new ArgumentOutOfRangeException ("Invalid mode was passed to SetLauncherMode");
-				}
-			}
-		}
 
         /// <summary>
         /// Handles switching between different functionalities depending on what is visible on the button to the user, such as
@@ -249,100 +171,99 @@ namespace Launchpad
 
                         if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
                         {
-                            //install the game asynchronously
+                            //repair the game asynchronously
                             Game.RepairGame();
+                            SetLauncherMode(ELauncherMode.Repair, true);
                         }
                         else
                         {
+                            //whoops, the server doesn't provide the game for the platform we requested (usually the on we're running on)
+                            //alert the user and revert back to the default install mode
                             Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Resources.RocketIcon.ico");
                             if (iconStream != null)
                             {
-                                NotifyIcon launchFailedNotification = new NotifyIcon();
-                                launchFailedNotification.Icon = new System.Drawing.Icon(iconStream);
-                                launchFailedNotification.Visible = true;
+                                NotifyIcon platformNotProvidedNotification = new NotifyIcon();
+                                platformNotProvidedNotification.Icon = new System.Drawing.Icon(iconStream);
+                                platformNotProvidedNotification.Visible = true;
 
-                                launchFailedNotification.BalloonTipTitle = "Platform not provided";
-                                launchFailedNotification.BalloonTipText = "The server does not provide the game for the selected platform.";
+                                platformNotProvidedNotification.BalloonTipTitle = Catalog.GetString("noPlatformTitle");
+                                platformNotProvidedNotification.BalloonTipText = Catalog.GetString("noPlatformMessage");
 
-                                launchFailedNotification.ShowBalloonTip(10000);
+                                platformNotProvidedNotification.ShowBalloonTip(10000);
                             }
 
                             SetLauncherMode(ELauncherMode.Install, false);
                         }
-
                         break;
                     }
                 case ELauncherMode.Install:
                     {
-                        Console.WriteLine("Installing game...");
-
-                        MessageLabel.Text = "Installing...";
-                        SetLauncherMode(ELauncherMode.Install, true);
-
-                        //bind events for UI updating
-                        Game.GameDownloadFinished += OnGameDownloadFinished;
+                        //bind events for UI updating                        
                         Game.ProgressChanged += OnGameDownloadProgressChanged;
+                        Game.GameDownloadFinished += OnGameDownloadFinished;
                         Game.GameDownloadFailed += OnGameDownloadFailed;
-
-                        //check for a .provides file in the platform directory on the server
-                        //if there is none, the server does not provide a game for that platform
+                                                                       
                         if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
                         {
                             //install the game asynchronously
                             Game.InstallGame();
+
+                            MessageLabel.Text = Catalog.GetString("installingLabel");
+                            SetLauncherMode(ELauncherMode.Install, true); 
                         }
                         else
                         {
+                            //whoops, the server doesn't provide the game for the platform we requested (usually the on we're running on)
+                            //alert the user and revert back to the default install mode
                             Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Resources.RocketIcon.ico");
                             if (iconStream != null)
                             {
-                                NotifyIcon launchFailedNotification = new NotifyIcon();
-                                launchFailedNotification.Icon = new System.Drawing.Icon(iconStream);
-                                launchFailedNotification.Visible = true;
+                                NotifyIcon platformNotProvidedNotification = new NotifyIcon();
+                                platformNotProvidedNotification.Icon = new System.Drawing.Icon(iconStream);
+                                platformNotProvidedNotification.Visible = true;
 
-                                launchFailedNotification.BalloonTipTitle = "Platform not provided";
-                                launchFailedNotification.BalloonTipText = "The server does not provide the game for the selected platform.";
+                                platformNotProvidedNotification.BalloonTipTitle = Catalog.GetString("noPlatformTitle");
+                                platformNotProvidedNotification.BalloonTipText = Catalog.GetString("noPlatformMessage");
 
-                                launchFailedNotification.ShowBalloonTip(10000);
+                                platformNotProvidedNotification.ShowBalloonTip(10000);
                             }
 
-                            MessageLabel.Text = "Server does not provide the game for the selected platform.";
+                            MessageLabel.Text = Catalog.GetString("noPlatformMessage");
 
-                            PrimaryButton.Text = "Install";
-                            PrimaryButton.Enabled = true;
+                            SetLauncherMode(ELauncherMode.Install, false);
                         }   
 
                         break;
                     }
                 case ELauncherMode.Update:
-                    {
-                        Console.WriteLine("Updating game...");
-                        SetLauncherMode(ELauncherMode.Update, true);
-
-                        //bind events for UI updating
-                        Game.GameDownloadFinished += OnGameDownloadFinished;
+                    {                        
+                        //bind events for UI updating                        
                         Game.ProgressChanged += OnGameDownloadProgressChanged;
+                        Game.GameDownloadFinished += OnGameDownloadFinished;
                         Game.GameDownloadFailed += OnGameDownloadFailed;
 
                         //update the game asynchronously
                         if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
                         {
-                            //install the game asynchronously
+                            //update the game asynchronously
                             Game.UpdateGame();
+                            SetLauncherMode(ELauncherMode.Update, true);
                         }
                         else
                         {
+                            //whoops, the server doesn't provide the game for the platform we requested (usually the on we're running on)
+                            //alert the user and revert back to the default install mode
                             Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Resources.RocketIcon.ico");
                             if (iconStream != null)
                             {
-                                NotifyIcon launchFailedNotification = new NotifyIcon();
-                                launchFailedNotification.Icon = new System.Drawing.Icon(iconStream);
-                                launchFailedNotification.Visible = true;
+                                NotifyIcon platformNotProvidedNotification = new NotifyIcon();
+                                platformNotProvidedNotification.Icon = new System.Drawing.Icon(iconStream);
+                                platformNotProvidedNotification.Visible = true;
 
-                                launchFailedNotification.BalloonTipTitle = "Platform not provided";
-                                launchFailedNotification.BalloonTipText = "The server does not provide the game for the selected platform.";
+                                platformNotProvidedNotification.BalloonTipTitle = Catalog.GetString("noPlatformTitle");
+                                platformNotProvidedNotification.BalloonTipText = Catalog.GetString("noPlatformMessage");
 
-                                launchFailedNotification.ShowBalloonTip(10000);
+                                platformNotProvidedNotification.ShowBalloonTip(10000);
                             }
 
                             SetLauncherMode(ELauncherMode.Install, false);
@@ -352,7 +273,6 @@ namespace Launchpad
                     }
                 case ELauncherMode.Launch:
                     {
-                        Console.WriteLine("Launching game...");
                         Game.GameLaunchFailed += OnGameLaunchFailed;
                         Game.LaunchGame();
 
@@ -362,6 +282,82 @@ namespace Launchpad
                     {
                         Console.WriteLine("No functionality for this mode.");
                         break;
+                    }
+            }
+        }
+
+        /// <summary>
+        /// Sets the launcher mode and updates UI elements to match
+        /// </summary>
+        /// <param name="newMode">New mode.</param>
+        /// <param name="bInProgress">If set to <c>true</c>, the selected mode is in progress.</param>
+        private void SetLauncherMode(ELauncherMode newMode, bool bInProgress)
+        {
+            //set the global launcher mode
+            Mode = newMode;
+
+            //set the UI elements to match
+            switch (newMode)
+            {
+                case ELauncherMode.Install:
+                    {
+                        if (bInProgress)
+                        {
+                            PrimaryButton.Enabled = false;
+                            PrimaryButton.Text = Catalog.GetString("installingLabel");
+                        }
+                        else
+                        {
+                            PrimaryButton.Enabled = true;
+                            PrimaryButton.Text = Catalog.GetString("installLabel");
+                        }
+                        break;
+                    }
+                case ELauncherMode.Update:
+                    {
+                        if (bInProgress)
+                        {
+                            PrimaryButton.Enabled = false;
+                            PrimaryButton.Text = Catalog.GetString("updatingLabel");
+                        }
+                        else
+                        {
+                            PrimaryButton.Enabled = true;
+                            PrimaryButton.Text = Catalog.GetString("updateLabel");
+                        }
+                        break;
+                    }
+                case ELauncherMode.Repair:
+                    {
+                        if (bInProgress)
+                        {
+                            PrimaryButton.Enabled = false;
+                            PrimaryButton.Text = Catalog.GetString("repairingLabel");
+                        }
+                        else
+                        {
+                            PrimaryButton.Enabled = true;
+                            PrimaryButton.Text = Catalog.GetString("repairLabel");
+                        }
+                        break;
+                    }
+                case ELauncherMode.Launch:
+                    {
+                        if (bInProgress)
+                        {
+                            PrimaryButton.Enabled = false;
+                            PrimaryButton.Text = Catalog.GetString("launchingLabel");
+                        }
+                        else
+                        {
+                            PrimaryButton.Enabled = true;
+                            PrimaryButton.Text = Catalog.GetString("launchLabel");
+                        }
+                        break;
+                    }
+                default:
+                    {
+                        throw new ArgumentOutOfRangeException("Invalid mode was passed to SetLauncherMode");
                     }
             }
         }
@@ -393,8 +389,8 @@ namespace Launchpad
                     launchFailedNotification.Icon = new System.Drawing.Icon(iconStream);
                     launchFailedNotification.Visible = true;
 
-                    launchFailedNotification.BalloonTipTitle = "Launch Failed";
-                    launchFailedNotification.BalloonTipText = "The game failed to launch. Try repairing the installation.";
+                    launchFailedNotification.BalloonTipTitle = Catalog.GetString("errorTitle");
+                    launchFailedNotification.BalloonTipText = Catalog.GetString("launchFailMessage");
 
                     launchFailedNotification.ShowBalloonTip(10000);
                 }
@@ -432,8 +428,17 @@ namespace Launchpad
                                 SetLauncherMode(parsedMode, false);
                                 break;
                             }
+                        default:
+                            {
+                                SetLauncherMode(ELauncherMode.Repair, false);
+                                break;
+                            }
                     }
-                }                
+                }
+                else
+                {
+                    SetLauncherMode(ELauncherMode.Repair, false);
+                }
             });                                   
         }
 
@@ -496,8 +501,7 @@ namespace Launchpad
                         launchFailedNotification.ShowBalloonTip(10000);
                     }
 
-                    PrimaryButton.Text = e.ResultType; //URL is used here to set the desired retry action
-                    PrimaryButton.Enabled = true;
+                    SetLauncherMode(ELauncherMode.Repair, false);
                 }
                 else //the game has finished downloading, and we should be OK to launch
                 {

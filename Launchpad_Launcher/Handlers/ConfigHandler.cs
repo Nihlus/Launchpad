@@ -987,7 +987,6 @@ namespace Launchpad
                         {
                             return ESystemTarget.Win32;
                         }
-                        break;
                     }
                 default:
                     {
