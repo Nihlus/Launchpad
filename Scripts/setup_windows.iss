@@ -7,6 +7,11 @@
 #define MyAppURL "https://github.com/Nihlus/Launchpad/"
 #define MyAppExeName "Launchpad.exe"
 
+;
+ ; Fill this out with the path to your built launchpad binaries.
+;
+#define LaunchpadReleaseDir "C:\Users\Jarl\Desktop\launchpad-winpack"
+
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
@@ -23,7 +28,7 @@ DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 OutputDir=C:\Users\Jarl\Desktop
-OutputBaseFilename=launchpad-setup
+OutputBaseFilename=launchpad-setup-{#MyAppVersion}
 Compression=lzma
 SolidCompression=yes
 UninstallDisplayIcon={app}\{#MyAppExeName}
@@ -35,11 +40,11 @@ Type: filesandordirs; Name: "{app}"
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}";
 
 [Files]
-Source: "C:\Users\Jarl\Desktop\launchpad-winpack\Launchpad.exe"; DestDir: "{app}"; Flags: 
-Source: "C:\Users\Jarl\Desktop\launchpad-winpack\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs
+Source: "{#LaunchpadReleaseDir}\Launchpad.exe"; DestDir: "{app}";
+Source: "{#LaunchpadReleaseDir}\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
