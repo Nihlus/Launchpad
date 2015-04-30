@@ -6,9 +6,7 @@ using WebKit;
 namespace Launchpad
 {
     public partial class MainWindow : Gtk.Window
-	{
-		ELauncherMode Mode = ELauncherMode.Invalid;
-
+	{        
 		/// <summary>
 		/// The checks handler reference.
 		/// </summary>
@@ -29,11 +27,15 @@ namespace Launchpad
 		/// </summary>
 		GameHandler Game = new GameHandler();
 
-		//webkit
 		/// <summary>
 		/// The changelog browser.
 		/// </summary>
 		WebView Browser = new WebView ();
+
+        /// <summary>
+        /// The current mode that the launcher is in. Determines what the primary button does when pressed.
+        /// </summary>
+        ELauncherMode Mode = ELauncherMode.Invalid;
 
         public MainWindow () : 
 				base(Gtk.WindowType.Toplevel)
@@ -52,7 +54,6 @@ namespace Launchpad
 			// Configure the WebView for our changelog
 			Browser.SetSizeRequest (290, 300);		
 
-			//webkit
 			scrolledwindow2.Add (Browser);
 			scrolledwindow2.ShowAll ();
 
@@ -74,7 +75,7 @@ namespace Launchpad
 			}
 			else
 			{
-				//if we can connect, proceeed with the rest of our checks.
+				//if we can connect, proceed with the rest of our checks.
 				if (ChecksHandler.IsInitialStartup ())
 				{
 					MessageDialog shouldInstallHereDialog = new MessageDialog (
@@ -105,12 +106,11 @@ namespace Launchpad
 
 				} 
 
-				//this section sends some anonymous useage stats back home. 
+				//this section sends some anonymous usage stats back home. 
 				//If you don't want to do this for your game, simply change this boolean to false.
 				bool bSendAnonStats = false;
 				if (bSendAnonStats)
 				{
-					Console.WriteLine ("Sending anonymous useage stats to hambase 1 :) Thanks!");
 					StatsHandler.SendUsageStats ();
 				}
 				else
@@ -166,7 +166,6 @@ namespace Launchpad
                     SetLauncherMode (ELauncherMode.Update, false);
                 }
 			}
-			Console.WriteLine ("REMEMBER: TURN ON ANON STATS BEFORE RELEASE");
 		}
 
 		/// <summary>
@@ -285,7 +284,6 @@ namespace Launchpad
 			{
 				case ELauncherMode.Repair:
 				{
-					Console.WriteLine ("Repairing installation...");
 					//bind events for UI updating					
 					Game.ProgressChanged += OnGameDownloadProgressChanged;
 					Game.GameRepairFinished += OnRepairFinished;
@@ -295,6 +293,7 @@ namespace Launchpad
 				    {
 					    //install the game asynchronously
 					    Game.RepairGame ();
+                        SetLauncherMode(ELauncherMode.Repair, true);
 				    }	
 				    else
 				    {
@@ -306,17 +305,13 @@ namespace Launchpad
 
 						SetLauncherMode (ELauncherMode.Install, false);
 				    }
-
 					break;
 				}
 				case ELauncherMode.Install:
 				{
-					Console.WriteLine ("Installing game...");
-					SetLauncherMode (ELauncherMode.Install, true);
-
-					//bind events for UI updating
-					Game.GameDownloadFinished += OnGameDownloadFinished;
+					//bind events for UI updating					
 					Game.ProgressChanged += OnGameDownloadProgressChanged;
+                    Game.GameDownloadFinished += OnGameDownloadFinished;
 					Game.GameDownloadFailed += OnGameDownloadFailed;
 						
 					//check for a .provides file in the platform directory on the server
@@ -325,6 +320,7 @@ namespace Launchpad
 					{
 						//install the game asynchronously
 						Game.InstallGame ();
+                        SetLauncherMode(ELauncherMode.Install, true);
 					}	
 					else
 					{
@@ -341,15 +337,13 @@ namespace Launchpad
 				case ELauncherMode.Update:
 				{
 					if (Checks.IsLauncherOutdated())
-					{						
+					{				
+		                //TODO: Create events for launcher updating [Git-#9]
 						Launcher.UpdateLauncher ();
                         SetLauncherMode(ELauncherMode.Update, true);
 					}
 					else
-					{
-						Console.WriteLine ("Updating game...");
-						SetLauncherMode (ELauncherMode.Update, true);
-
+					{					
 						//bind events for UI updating
 						Game.GameDownloadFinished += OnGameDownloadFinished;
 						Game.ProgressChanged += OnGameDownloadProgressChanged;
@@ -360,6 +354,7 @@ namespace Launchpad
 						{
 							//install the game asynchronously
 							Game.UpdateGame ();
+                            SetLauncherMode(ELauncherMode.Update, true);
 						}	
 						else
 						{
@@ -376,7 +371,7 @@ namespace Launchpad
 				}
 				case ELauncherMode.Launch:
 				{
-					Console.WriteLine ("Launching game...");
+                    //TODO: Create events for game quit detection [Git-#10]
 					Game.GameLaunchFailed += OnGameLaunchFailed;
 					Game.LaunchGame ();
 
@@ -397,10 +392,9 @@ namespace Launchpad
         /// <param name="e">The arguments containing the HTML from the server.</param>
         protected void OnChangelogDownloadFinished(object sender, GameDownloadFinishedEventArgs e)
         {
-            //Take the resulting HTML string from the changelog download and send it to the Webkit browser
+            //Take the resulting HTML string from the changelog download and send it to the changelog browser
             Gtk.Application.Invoke(delegate
             {
-				//webkit
                 Browser.LoadHtmlString(e.Result, e.ResultType);
             });
         }
@@ -459,6 +453,11 @@ namespace Launchpad
 
 				SetLauncherMode (parsedMode, false);
 			}
+            else
+            {
+                //if we can't parse the result for some reason, offer to repair the installation.
+                SetLauncherMode(ELauncherMode.Repair, false);
+            }
 		}
 
         /// <summary>
@@ -489,38 +488,42 @@ namespace Launchpad
         protected void OnGameDownloadFinished(object sender, GameDownloadFinishedEventArgs e)
         {
             if (e != null)
-            {
-				ELauncherMode parsedMode = ELauncherMode.Invalid;
-				if (Enum.TryParse (e.ResultType, out parsedMode))
-				{
-					if (e.Result == "1") //there was an error
-					{
-						MessageLabel.Text = Mono.Unix.Catalog.GetString ("Game download failed. Are you missing the manifest?");
+            {				
+                if (e.Result == "1") //there was an error
+                {
+                    MessageLabel.Text = Mono.Unix.Catalog.GetString("Game download failed. Are you missing the manifest?");
 
-						Notification failedNot = new Notification();
-						failedNot.IconName = Stock.DialogError;
-						failedNot.Summary = Mono.Unix.Catalog.GetString ("Launchpad - Error");
-						failedNot.Body = Mono.Unix.Catalog.GetString ("Game download failed. Are you missing the manifest?");
+                    Notification failedNot = new Notification();
+                    failedNot.IconName = Stock.DialogError;
+                    failedNot.Summary = Mono.Unix.Catalog.GetString("Launchpad - Error");
+                    failedNot.Body = Mono.Unix.Catalog.GetString("Game download failed. Are you missing the manifest?");
 
-						failedNot.Show();
+                    failedNot.Show();
 
-						SetLauncherMode (parsedMode, false);
-					}
-					else //the game has finished downloading, and we should be OK to launch
-					{
-						MessageLabel.Text = Mono.Unix.Catalog.GetString ("Idle");
-						progressbar2.Text = "";
+                    ELauncherMode parsedMode = ELauncherMode.Invalid;
+                    if (Enum.TryParse(e.ResultType, out parsedMode))
+                    {
+                        SetLauncherMode(parsedMode, false);
+                    }
+                    else
+                    {
+                        SetLauncherMode(ELauncherMode.Repair, false);
+                    }                                        
+                }
+                else //the game has finished downloading, and we should be OK to launch
+                {
+                    MessageLabel.Text = Mono.Unix.Catalog.GetString("Idle");
+                    progressbar2.Text = "";
 
-						Notification completedNot = new Notification();
-						completedNot.IconName = Stock.Info;
-						completedNot.Summary = Mono.Unix.Catalog.GetString ("Launchpad - Info");
-						completedNot.Body = Mono.Unix.Catalog.GetString ("Game download finished. Play away!");
+                    Notification completedNot = new Notification();
+                    completedNot.IconName = Stock.Info;
+                    completedNot.Summary = Mono.Unix.Catalog.GetString("Launchpad - Info");
+                    completedNot.Body = Mono.Unix.Catalog.GetString("Game download finished. Play away!");
 
-						completedNot.Show();
+                    completedNot.Show();
 
-						SetLauncherMode (ELauncherMode.Launch, false);
-					}
-				}                
+                    SetLauncherMode(ELauncherMode.Launch, false);
+                }
             }           
         }
 
