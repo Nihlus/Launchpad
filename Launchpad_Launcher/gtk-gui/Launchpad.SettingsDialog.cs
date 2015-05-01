@@ -5,38 +5,71 @@ namespace Launchpad
 	public partial class SettingsDialog
 	{
 		private global::Gtk.VBox vbox2;
+		
 		private global::Gtk.Frame frame1;
+		
 		private global::Gtk.Alignment GtkAlignment2;
+		
 		private global::Gtk.VBox vbox3;
+		
 		private global::Gtk.HBox hbox1;
+		
 		private global::Gtk.Label label1;
+		
 		private global::Gtk.Alignment alignment6;
+		
 		private global::Gtk.Entry GameName_entry;
+		
 		private global::Gtk.HBox hbox2;
+		
 		private global::Gtk.Label label2;
+		
 		private global::Gtk.Alignment alignment5;
+		
 		private global::Gtk.ComboBox combobox_SystemTarget;
+		
 		private global::Gtk.Label GtkLabel2;
+		
 		private global::Gtk.HSeparator hseparator1;
+		
 		private global::Gtk.Frame frame2;
+		
 		private global::Gtk.Alignment GtkAlignment3;
+		
 		private global::Gtk.VBox vbox4;
+		
 		private global::Gtk.HBox hbox3;
+		
 		private global::Gtk.Label label3;
+		
 		private global::Gtk.Alignment alignment1;
+		
 		private global::Gtk.Entry FTPURL_entry;
+		
 		private global::Gtk.HBox hbox4;
+		
 		private global::Gtk.Label label4;
+		
 		private global::Gtk.Alignment alignment2;
+		
 		private global::Gtk.Entry FTPUsername_entry;
+		
 		private global::Gtk.HBox hbox5;
+		
 		private global::Gtk.Label label5;
+		
 		private global::Gtk.Alignment alignment3;
+		
 		private global::Gtk.Entry FTPPassword_entry;
+		
 		private global::Gtk.Label GtkLabel3;
+		
 		private global::Gtk.Alignment alignment4;
+		
 		private global::Gtk.ProgressBar progressbar3;
+		
 		private global::Gtk.Button buttonCancel;
+		
 		private global::Gtk.Button buttonOk;
 
 		protected virtual void Build ()

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: launchpad\n"
-"POT-Creation-Date: 2015-04-27 08:21:04+0200\n"
+"POT-Creation-Date: 2015-05-01 17:14:32+0200\n"
 "PO-Revision-Date: 2015-04-26 14:41-0400\n"
 "Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
 "Language-Team: Chinese Traditional\n"
@@ -36,23 +36,252 @@ msgid "Launchpad - <GameName>"
 msgstr "Launchpad-<GameName>"
 
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.MainWindow.cs:2
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:14
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:53
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:13
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:47
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:6
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:16
 msgid "Idle"
 msgstr "閒置"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:15
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+msgid "cancelString"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+#, fuzzy
+msgid "editSettingsTitle"
+msgstr "編輯設定"
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+msgid "editString"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:40
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:50
+msgid "errorTitle"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:44
+msgid "fileDownloadMessage"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:11
+msgid "ftpConnectionFailureMessage"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:11
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:12
+msgid "ftpConnectionFailureString"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+msgid "ftpPasswordString"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+msgid "ftpURLString"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+msgid "ftpUsernameString"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:48
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:50
+msgid "gameDownloadFailMessage"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:54
+msgid "gameDownloadFinishedMessage"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+msgid "gameNameString"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:9
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:52
+msgid "idleString"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:12
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:15
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:54
+msgid "infoTitle"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:12
+msgid "initialStartupMessage"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:25
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:37
+#, fuzzy
+msgid "installingLabel"
+msgstr "正在安裝..."
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:37
+#, fuzzy
+msgid "installLabel"
+msgstr "安裝"
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+#, fuzzy
+msgid "languageString"
+msgstr "語言"
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:40
+msgid "launchFailMessage"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+msgid "launchFailTitle"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:37
+#, fuzzy
+msgid "launchingLabel"
+msgstr "正在啟動..."
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:37
+msgid "launchLabel"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+msgid "linuxTarget"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+#, fuzzy
+msgid "localSettingsTitle"
+msgstr "設置"
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+msgid "macTarget"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+msgid "malformedFTPURLMessage"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:22
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:26
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:28
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:32
+msgid "noPlatformMessage"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:22
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:26
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:32
+msgid "noPlatformTitle"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+msgid "okString"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+#, fuzzy
+msgid "optionsString"
+msgstr "選項"
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+msgid "remoteSettingsTitle"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:58
+msgid "repairFinishMessage"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:58
+msgid "repairFinishTitle"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:37
+#, fuzzy
+msgid "repairingLabel"
+msgstr "正在修復..."
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:37
+msgid "repairLabel"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+#, fuzzy
+msgid "settingsString"
+msgstr "設置"
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+#, fuzzy
+msgid "systemTargetString"
+msgstr "目標系統： "
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:37
+msgid "updateLabel"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:37
+msgid "updatingLabel"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+#: ../Launchpad_Launcher/Windows-UI/MainForm.cs:15
+msgid "usageTitle"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+msgid "verifyingMessage"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+msgid "warningTitle"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+msgid "win32Target"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+msgid "win64Target"
+msgstr ""
+
+#: ../Launchpad_Launcher/Resources/Strings.Designer.cs:1
+msgid "windowTitle"
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:14
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:14
 msgid "Failed to connect to the FTP server. Please check your FTP settings."
 msgstr "未能連接到 FTP 伺服器。請檢查您的 FTP 設置。"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:16
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:15
 msgid "Could not connect to server."
 msgstr "無法連接到伺服器。"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:16
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:15
 msgid ""
 "This appears to be the first time you're starting the launcher.\n"
 "Is this the location where you would like to install the game?\n"
@@ -64,92 +293,92 @@ msgstr ""
 "\n"
 "{0}"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:20
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:19
 msgid "Launchpad - Warning"
 msgstr "Launchpad-警告"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:20
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:19
 msgid "Anonymous useage stats are not enabled."
 msgstr "未啟用匿名用戶統計。"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:26
 msgid "Installing..."
 msgstr "正在安裝..."
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:26
 msgid "Install"
 msgstr "安裝"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:26
 msgid "Updating..."
 msgstr "正在更新..."
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:26
 msgid "Update"
 msgstr "更新"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:26
 msgid "Repairing..."
 msgstr "正在修復..."
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:26
 msgid "Repair"
 msgstr "修復"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:26
 msgid "Launching..."
 msgstr "正在啟動..."
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:28
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:26
 msgid "Launch"
 msgstr "啟動"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:32
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:35
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:39
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:30
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:31
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:33
 msgid "Launchpad - Platform not provided!"
 msgstr "Launchpad-未提供平台！"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:32
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:35
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:39
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:30
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:31
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:33
 msgid "The server does not provide the game for the selected platform."
 msgstr "伺服器未為選定平台提供這個遊戲。"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:43
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:37
 msgid "Launchpad - Failed to launch the game!"
 msgstr "Launchpad-啟動遊戲失敗 ！"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:43
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:37
 msgid "The game failed to launch. Try repairing the installation."
 msgstr "遊戲無法啟動。嘗試修復安裝程序。"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:48
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:42
 msgid "Downloading file {0}: {1} of {2} bytes."
 msgstr "下載文件 {0}： {1} {2} bytes。"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:50
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:51
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:44
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:45
 msgid "Game download failed. Are you missing the manifest?"
 msgstr "遊戲下載失敗。你是否缺少檔案清單？"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:51
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:45
 msgid "Launchpad - Error"
 msgstr "Launchpad-錯誤"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:54
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:48
 msgid "Launchpad - Info"
 msgstr "Launchpad-信息"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:54
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:48
 msgid "Game download finished. Play away!"
 msgstr "遊戲下載完成。可立刻運行遊戲！"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:57
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:51
 msgid "Launchpad - Game repair finished"
 msgstr "Launchpad-遊戲修復完成"
 
-#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:57
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:51
 msgid "Launchpad has finished repairing the game installation. Play away!"
 msgstr "Launchpad已完成遊戲安裝的修復程序。立刻運行遊戲！"
 

@@ -48,6 +48,8 @@ namespace Launchpad
 		/// Occurs when game launch failed.
 		/// </summary>
 		public event LaunchpadEventDelegates.GameLaunchFailedEventHandler GameLaunchFailed;
+
+		public event LaunchpadEventDelegates.GameExitEventHandler GameExited;
 			
 		//Progress event arguments
 		/// <summary>
@@ -86,6 +88,8 @@ namespace Launchpad
 		/// </summary>
 		private GameLaunchFailedEventArgs LaunchFailedArgs;
 
+		private GameExitEventArgs GameExitArgs;
+
 
 		/// <summary>
 		/// The config handler reference.
@@ -107,6 +111,8 @@ namespace Launchpad
 			UpdateFailedArgs = new GameUpdateFailedEventArgs ();
 			RepairFailedArgs = new GameRepairFailedEventArgs ();
 			LaunchFailedArgs = new GameLaunchFailedEventArgs ();
+
+			GameExitArgs = new GameExitEventArgs ();
 		}
 
 		/// <summary>
@@ -427,8 +433,16 @@ namespace Launchpad
 				ProcessStartInfo gameStartInfo = new ProcessStartInfo ();
 				gameStartInfo.UseShellExecute = false;
 				gameStartInfo.FileName = Config.GetGameExecutable ();
+				GameExitArgs.GameName = Config.GetGameName ();
 
-				Process.Start(gameStartInfo);
+				Process game = Process.Start (gameStartInfo);
+				game.EnableRaisingEvents = true;
+
+				game.Exited += delegate(object sender, EventArgs e) 
+				{					
+					GameExitArgs.ExitCode = game.ExitCode;
+					OnGameExited ();
+				};					
 			}
 			catch (IOException ioex)
 			{
@@ -520,6 +534,14 @@ namespace Launchpad
 			if (GameRepairFailed != null)
 			{
 				GameRepairFailed (this, RepairFailedArgs);
+			}
+		}
+
+		private void OnGameExited()
+		{
+			if (GameExited != null)
+			{
+				GameExited (this, GameExitArgs);
 			}
 		}
 	}	   

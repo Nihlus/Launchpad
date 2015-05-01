@@ -5,9 +5,9 @@
     <target-gtk-version>2.12</target-gtk-version>
   </configuration>
   <import>
+    <widget-library name="webkit-sharp" />
+    <widget-library name="notify-sharp" />
     <widget-library name="../bin/Debug/Launchpad.exe" internal="true" />
-    <widget-library name="../External Assemblies/notify-sharp-0.4/notify-sharp.dll" />
-    <widget-library name="../External Assemblies/webkit-sharp-1.1/webkit-sharp.dll" />
   </import>
   <widget class="Gtk.Window" id="Launchpad.MainWindow" design-size="760 439">
     <action-group name="Default">
@@ -26,7 +26,6 @@
         <property name="Type">Action</property>
         <property name="Label" translatable="yes">Language</property>
         <property name="ShortLabel" translatable="yes">Language</property>
-        <signal name="Activated" handler="OnLanguageActionActivated" />
       </action>
     </action-group>
     <property name="MemberName" />

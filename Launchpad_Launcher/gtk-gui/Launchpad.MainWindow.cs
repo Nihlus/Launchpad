@@ -5,22 +5,39 @@ namespace Launchpad
 	public partial class MainWindow
 	{
 		private global::Gtk.UIManager UIManager;
+		
 		private global::Gtk.Action EditAction;
+		
 		private global::Gtk.Action SettingsAction;
+		
 		private global::Gtk.Action LanguageAction;
+		
 		private global::Gtk.VBox vbox1;
+		
 		private global::Gtk.MenuBar menubar1;
+		
 		private global::Gtk.HBox hbox2;
+		
 		private global::Gtk.VBox vbox2;
+		
 		private global::Gtk.Alignment alignment2;
+		
 		private global::Gtk.ScrolledWindow scrolledwindow2;
+		
 		private global::Gtk.Alignment alignment1;
+		
 		private global::Gtk.Label MessageLabel;
+		
 		private global::Gtk.HBox hbox3;
+		
 		private global::Gtk.Alignment alignment4;
+		
 		private global::Gtk.ProgressBar progressbar2;
+		
 		private global::Gtk.HBox hbox4;
+		
 		private global::Gtk.Alignment alignment3;
+		
 		private global::Gtk.Button PrimaryButton;
 
 		protected virtual void Build ()
@@ -134,7 +151,6 @@ namespace Launchpad
 			this.PrimaryButton.CanFocus = true;
 			this.PrimaryButton.Name = "PrimaryButton";
 			this.PrimaryButton.UseUnderline = true;
-			this.PrimaryButton.Label = "";
 			this.alignment3.Add (this.PrimaryButton);
 			this.hbox4.Add (this.alignment3);
 			global::Gtk.Box.BoxChild w12 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.alignment3]));

@@ -10,7 +10,7 @@ namespace Launchpad
         /// <summary>
         /// The catalog responsible for handling all of the localizable strings
         /// </summary>
-        ResourceManager Catalog = new ResourceManager("Launchpad.Resources.Strings", typeof(MainForm).Assembly);
+        ResourceManager LocalizationCatalog = new ResourceManager("Launchpad.Resources.Strings", typeof(MainForm).Assembly);
 
         /// <summary>
         /// The checks handler reference.
@@ -43,7 +43,7 @@ namespace Launchpad
 
             Config.Initialize();
 
-            MessageLabel.Text = Catalog.GetString("idleString");
+            MessageLabel.Text = LocalizationCatalog.GetString("idleString");
             downloadProgressLabel.Text = String.Empty;
 
             //set the window text to match the game name
@@ -54,13 +54,13 @@ namespace Launchpad
             {
                 MessageBox.Show(
                     this,
-                    Catalog.GetString("ftpConnectionFailureMessage"),
-                    Catalog.GetString("ftpConnectionFailureString"),
+                    LocalizationCatalog.GetString("ftpConnectionFailureMessage"),
+                    LocalizationCatalog.GetString("ftpConnectionFailureString"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error,
                     MessageBoxDefaultButton.Button1);
 
-                MessageLabel.Text = Catalog.GetString("ftpConnectionFailureString");
+                MessageLabel.Text = LocalizationCatalog.GetString("ftpConnectionFailureString");
                 PrimaryButton.Text = ":(";
                 PrimaryButton.Enabled = false;
             }
@@ -72,8 +72,8 @@ namespace Launchpad
                     DialogResult shouldInstallHere = MessageBox.Show(
                         this,
                         String.Format(
-                        Catalog.GetString("initialStartupMessage"), ConfigHandler.GetLocalDir()),
-                        Catalog.GetString("infoTitle"),
+                        LocalizationCatalog.GetString("initialStartupMessage"), ConfigHandler.GetLocalDir()),
+                        LocalizationCatalog.GetString("infoTitle"),
                         MessageBoxButtons.YesNo,
                         MessageBoxIcon.Question,
                         MessageBoxDefaultButton.Button1);
@@ -105,8 +105,8 @@ namespace Launchpad
                         noUsageStatsNotification.Icon = new System.Drawing.Icon(iconStream);
                         noUsageStatsNotification.Visible = true;
 
-                        noUsageStatsNotification.BalloonTipTitle = Catalog.GetString("infoTitle");
-                        noUsageStatsNotification.BalloonTipText = Catalog.GetString("usageTitle");
+                        noUsageStatsNotification.BalloonTipTitle = LocalizationCatalog.GetString("infoTitle");
+                        noUsageStatsNotification.BalloonTipText = LocalizationCatalog.GetString("usageTitle");
 
                         noUsageStatsNotification.ShowBalloonTip(10000);
                     }   
@@ -185,8 +185,8 @@ namespace Launchpad
                                 platformNotProvidedNotification.Icon = new System.Drawing.Icon(iconStream);
                                 platformNotProvidedNotification.Visible = true;
 
-                                platformNotProvidedNotification.BalloonTipTitle = Catalog.GetString("noPlatformTitle");
-                                platformNotProvidedNotification.BalloonTipText = Catalog.GetString("noPlatformMessage");
+                                platformNotProvidedNotification.BalloonTipTitle = LocalizationCatalog.GetString("noPlatformTitle");
+                                platformNotProvidedNotification.BalloonTipText = LocalizationCatalog.GetString("noPlatformMessage");
 
                                 platformNotProvidedNotification.ShowBalloonTip(10000);
                             }
@@ -207,7 +207,7 @@ namespace Launchpad
                             //install the game asynchronously
                             Game.InstallGame();
 
-                            MessageLabel.Text = Catalog.GetString("installingLabel");
+                            MessageLabel.Text = LocalizationCatalog.GetString("installingLabel");
                             SetLauncherMode(ELauncherMode.Install, true); 
                         }
                         else
@@ -221,13 +221,13 @@ namespace Launchpad
                                 platformNotProvidedNotification.Icon = new System.Drawing.Icon(iconStream);
                                 platformNotProvidedNotification.Visible = true;
 
-                                platformNotProvidedNotification.BalloonTipTitle = Catalog.GetString("noPlatformTitle");
-                                platformNotProvidedNotification.BalloonTipText = Catalog.GetString("noPlatformMessage");
+                                platformNotProvidedNotification.BalloonTipTitle = LocalizationCatalog.GetString("noPlatformTitle");
+                                platformNotProvidedNotification.BalloonTipText = LocalizationCatalog.GetString("noPlatformMessage");
 
                                 platformNotProvidedNotification.ShowBalloonTip(10000);
                             }
 
-                            MessageLabel.Text = Catalog.GetString("noPlatformMessage");
+                            MessageLabel.Text = LocalizationCatalog.GetString("noPlatformMessage");
 
                             SetLauncherMode(ELauncherMode.Install, false);
                         }   
@@ -267,8 +267,8 @@ namespace Launchpad
                                     platformNotProvidedNotification.Icon = new System.Drawing.Icon(iconStream);
                                     platformNotProvidedNotification.Visible = true;
 
-                                    platformNotProvidedNotification.BalloonTipTitle = Catalog.GetString("noPlatformTitle");
-                                    platformNotProvidedNotification.BalloonTipText = Catalog.GetString("noPlatformMessage");
+                                    platformNotProvidedNotification.BalloonTipTitle = LocalizationCatalog.GetString("noPlatformTitle");
+                                    platformNotProvidedNotification.BalloonTipText = LocalizationCatalog.GetString("noPlatformMessage");
 
                                     platformNotProvidedNotification.ShowBalloonTip(10000);
                                 }
@@ -312,12 +312,12 @@ namespace Launchpad
                         if (bInProgress)
                         {
                             PrimaryButton.Enabled = false;
-                            PrimaryButton.Text = Catalog.GetString("installingLabel");
+                            PrimaryButton.Text = LocalizationCatalog.GetString("installingLabel");
                         }
                         else
                         {
                             PrimaryButton.Enabled = true;
-                            PrimaryButton.Text = Catalog.GetString("installLabel");
+                            PrimaryButton.Text = LocalizationCatalog.GetString("installLabel");
                         }
                         break;
                     }
@@ -326,12 +326,12 @@ namespace Launchpad
                         if (bInProgress)
                         {
                             PrimaryButton.Enabled = false;
-                            PrimaryButton.Text = Catalog.GetString("updatingLabel");
+                            PrimaryButton.Text = LocalizationCatalog.GetString("updatingLabel");
                         }
                         else
                         {
                             PrimaryButton.Enabled = true;
-                            PrimaryButton.Text = Catalog.GetString("updateLabel");
+                            PrimaryButton.Text = LocalizationCatalog.GetString("updateLabel");
                         }
                         break;
                     }
@@ -340,12 +340,12 @@ namespace Launchpad
                         if (bInProgress)
                         {
                             PrimaryButton.Enabled = false;
-                            PrimaryButton.Text = Catalog.GetString("repairingLabel");
+                            PrimaryButton.Text = LocalizationCatalog.GetString("repairingLabel");
                         }
                         else
                         {
                             PrimaryButton.Enabled = true;
-                            PrimaryButton.Text = Catalog.GetString("repairLabel");
+                            PrimaryButton.Text = LocalizationCatalog.GetString("repairLabel");
                         }
                         break;
                     }
@@ -354,12 +354,12 @@ namespace Launchpad
                         if (bInProgress)
                         {
                             PrimaryButton.Enabled = false;
-                            PrimaryButton.Text = Catalog.GetString("launchingLabel");
+                            PrimaryButton.Text = LocalizationCatalog.GetString("launchingLabel");
                         }
                         else
                         {
                             PrimaryButton.Enabled = true;
-                            PrimaryButton.Text = Catalog.GetString("launchLabel");
+                            PrimaryButton.Text = LocalizationCatalog.GetString("launchLabel");
                         }
                         break;
                     }
@@ -397,8 +397,8 @@ namespace Launchpad
                     launchFailedNotification.Icon = new System.Drawing.Icon(iconStream);
                     launchFailedNotification.Visible = true;
 
-                    launchFailedNotification.BalloonTipTitle = Catalog.GetString("errorTitle");
-                    launchFailedNotification.BalloonTipText = Catalog.GetString("launchFailMessage");
+                    launchFailedNotification.BalloonTipTitle = LocalizationCatalog.GetString("errorTitle");
+                    launchFailedNotification.BalloonTipText = LocalizationCatalog.GetString("launchFailMessage");
 
                     launchFailedNotification.ShowBalloonTip(10000);
                 }
@@ -462,7 +462,7 @@ namespace Launchpad
                 if (!String.IsNullOrEmpty(e.FileName))
                 {
                     string progressbarText = String.Format(
-                                                        Catalog.GetString("fileDownloadMessage"),
+                                                        LocalizationCatalog.GetString("fileDownloadMessage"),
                                                         System.IO.Path.GetFileNameWithoutExtension(e.FileName),
                                                         e.DownloadedBytes.ToString(),
                                                         e.TotalBytes.ToString());
@@ -494,7 +494,7 @@ namespace Launchpad
             {
                 if (e.Result == "1") //there was an error
                 {
-                    MessageLabel.Text = Catalog.GetString("gameDownloadFailMessage");
+                    MessageLabel.Text = LocalizationCatalog.GetString("gameDownloadFailMessage");
 
                     Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Resources.RocketIcon.ico");
                     if (iconStream != null)
@@ -503,8 +503,8 @@ namespace Launchpad
                         launchFailedNotification.Icon = new System.Drawing.Icon(iconStream);
                         launchFailedNotification.Visible = true;
 
-                        launchFailedNotification.BalloonTipTitle = Catalog.GetString("errorTitle");
-                        launchFailedNotification.BalloonTipText = Catalog.GetString("gameDownloadFailMessage"); ;
+                        launchFailedNotification.BalloonTipTitle = LocalizationCatalog.GetString("errorTitle");
+                        launchFailedNotification.BalloonTipText = LocalizationCatalog.GetString("gameDownloadFailMessage"); ;
 
                         launchFailedNotification.ShowBalloonTip(10000);
                     }
@@ -513,7 +513,7 @@ namespace Launchpad
                 }
                 else //the game has finished downloading, and we should be OK to launch
                 {
-                    MessageLabel.Text = Catalog.GetString("idleString");
+                    MessageLabel.Text = LocalizationCatalog.GetString("idleString");
                     downloadProgressLabel.Text = "";
 
                     Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Resources.RocketIcon.ico");
@@ -523,8 +523,8 @@ namespace Launchpad
                         launchFailedNotification.Icon = new System.Drawing.Icon(iconStream);
                         launchFailedNotification.Visible = true;
 
-                        launchFailedNotification.BalloonTipTitle = Catalog.GetString("infoTitle");
-                        launchFailedNotification.BalloonTipText = Catalog.GetString("gameDownloadFinishedMessage");
+                        launchFailedNotification.BalloonTipTitle = LocalizationCatalog.GetString("infoTitle");
+                        launchFailedNotification.BalloonTipText = LocalizationCatalog.GetString("gameDownloadFinishedMessage");
 
                         launchFailedNotification.ShowBalloonTip(10000);
                     }
@@ -550,8 +550,8 @@ namespace Launchpad
                     launchFailedNotification.Icon = new System.Drawing.Icon(iconStream);
                     launchFailedNotification.Visible = true;
 
-                    launchFailedNotification.BalloonTipTitle = Catalog.GetString("repairFinishTitle");
-                    launchFailedNotification.BalloonTipText = Catalog.GetString("repairFinishMessage");
+                    launchFailedNotification.BalloonTipTitle = LocalizationCatalog.GetString("repairFinishTitle");
+                    launchFailedNotification.BalloonTipText = LocalizationCatalog.GetString("repairFinishMessage");
 
                     launchFailedNotification.ShowBalloonTip(10000);
                 }

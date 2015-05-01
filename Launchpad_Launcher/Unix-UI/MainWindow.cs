@@ -5,7 +5,7 @@ using WebKit;
 
 namespace Launchpad
 {
-    public partial class MainWindow : Gtk.Window
+    public partial class MainWindow : Window
 	{        
 		/// <summary>
 		/// The checks handler reference.
@@ -38,18 +38,19 @@ namespace Launchpad
         ELauncherMode Mode = ELauncherMode.Invalid;
 
         public MainWindow () : 
-				base(Gtk.WindowType.Toplevel)
+				base(WindowType.Toplevel)
 		{		
 			//initialize localization
 			Mono.Unix.Catalog.Init ("Launchpad", "./locale");	
 
-			this.Build ();
-
 			//Initialize the config files and check values.
 			Config.Initialize ();
 
+			//Initialize the GTK UI
+			this.Build ();
+
 			//set the window title
-			this.Title = "Launchpad - " + Config.GetGameName ();
+			Title = "Launchpad - " + Config.GetGameName ();
 
 			// Configure the WebView for our changelog
 			Browser.SetSizeRequest (290, 300);		
@@ -89,7 +90,7 @@ namespace Launchpad
 						"\n\n{0}"), ConfigHandler.GetLocalDir ()
 					));
 
-					if (shouldInstallHereDialog.Run () == (int)Gtk.ResponseType.Ok)
+					if (shouldInstallHereDialog.Run () == (int)ResponseType.Ok)
 					{
 						shouldInstallHereDialog.Destroy ();
 						//yes, install here
@@ -101,14 +102,14 @@ namespace Launchpad
 						shouldInstallHereDialog.Destroy ();
 						//no, don't install here
 						Console.WriteLine ("Exiting...");
-						Gtk.Application.Quit ();
+						Application.Quit ();
 					}
 
 				} 
 
 				//this section sends some anonymous usage stats back home. 
 				//If you don't want to do this for your game, simply change this boolean to false.
-				bool bSendAnonStats = false;
+				const bool bSendAnonStats = false;
 				if (bSendAnonStats)
 				{
 					StatsHandler.SendUsageStats ();
@@ -239,7 +240,7 @@ namespace Launchpad
 				}					
 				default:
 				{
-					throw new ArgumentOutOfRangeException ("Invalid mode was passed to SetLauncherMode");
+					throw new ArgumentOutOfRangeException ("newMode", "Invalid mode was passed to SetLauncherMode");
 				}
 			}
 		}
@@ -251,7 +252,7 @@ namespace Launchpad
 		/// <param name="a">The alpha component.</param>
 		protected void OnDeleteEvent (object sender, DeleteEventArgs a)
 		{
-			Gtk.Application.Quit ();
+			Application.Quit ();
 			a.RetVal = true;
 		}
 
@@ -262,11 +263,11 @@ namespace Launchpad
 		/// <param name="e">E.</param>
 		protected void OnSettingsActionActivated (object sender, EventArgs e)
 		{
-			SettingsDialog Settings = new SettingsDialog ();
-			Settings.Run ();
+			SettingsDialog LauncherSettings = new SettingsDialog ();
+			LauncherSettings.Run ();
 
 			//set the window title, if it changed.
-			this.Title = "Launchpad - " + Config.GetGameName ();
+			Title = "Launchpad - " + Config.GetGameName ();
 		}			
 		
         /// <summary>
@@ -371,10 +372,11 @@ namespace Launchpad
 				}
 				case ELauncherMode.Launch:
 				{
-                    //TODO: Create events for game quit detection [Git-#10]
 					Game.GameLaunchFailed += OnGameLaunchFailed;
-					Game.LaunchGame ();
+					Game.GameExited += OnGameExited;
 
+					Game.LaunchGame ();
+					SetLauncherMode (ELauncherMode.Launch, true);
 					break;
 				}
 				default:
@@ -393,7 +395,7 @@ namespace Launchpad
         protected void OnChangelogDownloadFinished(object sender, GameDownloadFinishedEventArgs e)
         {
             //Take the resulting HTML string from the changelog download and send it to the changelog browser
-            Gtk.Application.Invoke(delegate
+            Application.Invoke(delegate
             {
                 Browser.LoadHtmlString(e.Result, e.ResultType);
             });
@@ -422,7 +424,7 @@ namespace Launchpad
         /// <param name="e">Contains the type of failure that occurred.</param>
 		private void OnGameDownloadFailed(object sender, GameDownloadFailedEventArgs e)
 		{
-			ELauncherMode parsedMode = ELauncherMode.Invalid;
+			ELauncherMode parsedMode;
 			if (Enum.TryParse(e.ResultType, out parsedMode))
 			{
 				switch(parsedMode)
@@ -467,7 +469,7 @@ namespace Launchpad
         /// <param name="e">Contains the progress values and current filename.</param>
         protected void OnGameDownloadProgressChanged(object sender, FileDownloadProgressChangedEventArgs e)
         {
-            Gtk.Application.Invoke(delegate
+            Application.Invoke(delegate
             {
 
 				string progressbarText = String.Format(Mono.Unix.Catalog.GetString ("Downloading file {0}: {1} of {2} bytes."),
@@ -500,7 +502,7 @@ namespace Launchpad
 
                     failedNot.Show();
 
-                    ELauncherMode parsedMode = ELauncherMode.Invalid;
+					ELauncherMode parsedMode;
                     if (Enum.TryParse(e.ResultType, out parsedMode))
                     {
                         SetLauncherMode(parsedMode, false);
@@ -544,6 +546,35 @@ namespace Launchpad
 
 			SetLauncherMode (ELauncherMode.Launch, false);
         }
+
+		private void OnGameExited(object sender, GameExitEventArgs e)
+		{
+			if (e.ExitCode != 0)
+			{
+				MessageDialog crashDialog = new MessageDialog (
+				                            this, 
+				                            DialogFlags.Modal, 
+				                            MessageType.Question, 
+				                            ButtonsType.YesNo, 
+				                            String.Format (Mono.Unix.Catalog.GetString (
+											"Whoops! The game appears to have crashed.\n" +
+											"Would you like the launcher to verify the installation?"
+				                            )));
+
+				if (crashDialog.Run() == (int)ResponseType.Yes)
+				{
+					SetLauncherMode (ELauncherMode.Repair, false);
+				}
+				else
+				{
+					SetLauncherMode (ELauncherMode.Launch, false);
+				}
+			}
+			else
+			{
+				SetLauncherMode (ELauncherMode.Launch, false);
+			}
+		}
 	}
 }
 

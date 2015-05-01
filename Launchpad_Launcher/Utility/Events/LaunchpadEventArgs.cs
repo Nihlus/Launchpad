@@ -221,5 +221,20 @@ namespace Launchpad
 			set;
 		}
 	}
+
+	public class GameExitEventArgs : EventArgs
+	{
+		public string GameName
+		{
+			get;
+			set;
+		}
+
+		public int ExitCode
+		{
+			get;
+			set;
+		}
+	}
 }
 

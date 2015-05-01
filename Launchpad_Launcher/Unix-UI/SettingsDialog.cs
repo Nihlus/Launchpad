@@ -6,7 +6,7 @@ namespace Launchpad
 	/// <summary>
 	/// Settings dialog box.
 	/// </summary>
-    public partial class SettingsDialog : Gtk.Dialog
+    public partial class SettingsDialog : Dialog
 	{
 		/// <summary>
 		/// The config handler reference.
@@ -19,7 +19,7 @@ namespace Launchpad
 		ChecksHandler Checks = new ChecksHandler ();
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Launchpad_Launcher.SettingsDialog"/> class.
+		/// Initializes a new instance of the <see cref="Launchpad.SettingsDialog"/> class.
 		/// </summary>
 		public SettingsDialog ()
 		{
@@ -47,7 +47,7 @@ namespace Launchpad
 		/// <param name="e">E.</param>
 		protected void OnButtonOkClicked (object sender, EventArgs e)
 		{
-			Gtk.Application.Invoke(delegate 
+			Application.Invoke(delegate 
 			                       {
 				progressbar3.Text = Mono.Unix.Catalog.GetString("Verifying...");			
 			});
@@ -73,7 +73,7 @@ namespace Launchpad
 			{
 				bAreAllSettingsOK = false;
 				Gdk.Color col = new Gdk.Color(255, 128, 128);
-				FTPURL_entry.ModifyBase(Gtk.StateType.Normal, col);
+				FTPURL_entry.ModifyBase(StateType.Normal, col);
 				FTPURL_entry.TooltipText = Mono.Unix.Catalog.GetString("The URL needs to begin with \"ftp://\". Please correct the URL.");
 			}
 
@@ -85,7 +85,7 @@ namespace Launchpad
 			{
 				if (Checks.CanConnectToFTP ())
 				{
-					this.Destroy ();
+					Destroy ();
 				}
 				else
 				{
@@ -110,7 +110,7 @@ namespace Launchpad
 		/// <param name="e">E.</param>
 		protected void OnButtonCancelClicked (object sender, EventArgs e)
 		{
-			this.Destroy ();
+			Destroy ();
 		}
 
 		/// <summary>
@@ -121,7 +121,7 @@ namespace Launchpad
 		protected void OnFTPURLEntryChanged (object sender, EventArgs e)
 		{
 			//Set the base colour back to normal
-			FTPURL_entry.ModifyBase (Gtk.StateType.Normal);
+			FTPURL_entry.ModifyBase (StateType.Normal);
 		}
 	}
 }

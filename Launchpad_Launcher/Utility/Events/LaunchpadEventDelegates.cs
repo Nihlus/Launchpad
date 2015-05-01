@@ -22,6 +22,9 @@ namespace Launchpad
 		public delegate void GameRepairFailedEventHandler (object sender, GameRepairFailedEventArgs e);
 		public delegate void GameLaunchFailedEventHandler (object sender, GameLaunchFailedEventArgs e);
 
+		// Game deletages
+		public delegate void GameExitEventHandler (object sender, GameExitEventArgs e);
+
 		//Launcher delegates
 		public delegate void ChangelogProgressChangedEventHandler(object sender, FileDownloadProgressChangedEventArgs e);
 		public delegate void ChangelogDownloadFinishedEventHandler (object sender, GameDownloadFinishedEventArgs e);
