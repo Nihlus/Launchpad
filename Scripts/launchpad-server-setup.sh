@@ -70,11 +70,15 @@ fi
 
     chown -R root:ftp game
     chown root:ftp launcher
+    #vsftpd will fail voluntarily if the FTP root is writable, if we're jailing users.
+    chmod ugo-w /srv/ftp
 
     chmod -R g+rwX game
     chmod -R o+r game
-    chmod g+rwX launcher
-    chmod o+r launcher
+    chmod -R g+rwX launcher
+    chmod -R o+r launcher
+    
+    echo "Folder structure created and permissions set."
 
     read -p "You will need an account in the ftp group to upload files to the server. Would you like to use an existing account, or create a new one? Note that you may need to log out and back in if you use an existing account. [Create - y/ Existing - n] " -r
     if [[ $REPLY =~ ^[Yy]$ ]]
@@ -85,15 +89,5 @@ fi
         read -p "Input account name: " -r
         usermod -a -G ftp $REPLY
     fi
-#/launcher
-#/game/Win64
-#/game/Linux
-#/game/
     
     echo "Setup successful. You can now start uploading your game and/or launcher via your selected accounts."
-
-    
-
-
-
-
