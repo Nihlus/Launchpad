@@ -69,7 +69,8 @@ fi
     mkdir launcher/bin
 
     chown -R root:ftp game
-    chown root:ftp launcher
+    chown -R root:ftp launcher
+    
     #vsftpd will fail voluntarily if the FTP root is writable, if we're jailing users.
     chmod ugo-w /srv/ftp
 
@@ -89,5 +90,6 @@ fi
         read -p "Input account name: " -r
         usermod -a -G ftp $REPLY
     fi
+        
     
     echo "Setup successful. You can now start uploading your game and/or launcher via your selected accounts."
