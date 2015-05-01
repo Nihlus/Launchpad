@@ -189,3 +189,6 @@ FakesAssemblies/
 # Mono Project Files
 *.resources
 test-results/
+
+# Visual Studio Code
+.settings/

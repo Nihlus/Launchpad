@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: launchpad\n"
-"POT-Creation-Date: 2015-05-01 17:14:32+0200\n"
+"POT-Creation-Date: 2015-05-01 17:54:20+0200\n"
 "PO-Revision-Date: 2015-05-01 17:15:32+0200\n"
 "Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
 "Language-Team: Swedish\n"
@@ -375,6 +375,12 @@ msgstr "Launchpad - Spelreparation avslutad"
 msgid "Launchpad has finished repairing the game installation. Play away!"
 msgstr "Launchpad har avslutat reparationen av installationen. Spela på!"
 
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:54
+msgid ""
+"Whoops! The game appears to have crashed.\n"
+"Would you like the launcher to verify the installation?"
+msgstr ""
+
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:6
 msgid "OK"
 msgstr "OK"
@@ -438,4 +444,3 @@ msgstr "Lösenord: "
 #: ../Launchpad_Launcher/gtk-gui/Launchpad.SettingsDialog.cs:2
 msgid "<b>Remote</b>"
 msgstr "<b>Fjärrinställningar</b>"
-

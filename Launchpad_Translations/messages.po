@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2015-05-01 17:16:09+0200\n"
-"PO-Revision-Date: 2015-05-01 17:16:09+0200\n"
+"POT-Creation-Date: 2015-05-01 17:54:20+0200\n"
+"PO-Revision-Date: 2015-05-01 17:54:20+0200\n"
 "Last-Translator: jarl\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -361,6 +361,12 @@ msgstr ""
 
 #: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:51
 msgid "Launchpad has finished repairing the game installation. Play away!"
+msgstr ""
+
+#: ../Launchpad_Launcher/Unix-UI/MainWindow.cs:54
+msgid ""
+"Whoops! The game appears to have crashed.\n"
+"Would you like the launcher to verify the installation?"
 msgstr ""
 
 #: ../Launchpad_Launcher/Unix-UI/SettingsDialog.cs:6
