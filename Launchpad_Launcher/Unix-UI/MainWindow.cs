@@ -109,7 +109,7 @@ namespace Launchpad
 
 				//this section sends some anonymous usage stats back home. 
 				//If you don't want to do this for your game, simply change this boolean to false.
-				const bool bSendAnonStats = false;
+				const bool bSendAnonStats = true;
 				if (bSendAnonStats)
 				{
 					StatsHandler.SendUsageStats ();
@@ -375,8 +375,11 @@ namespace Launchpad
 					Game.GameLaunchFailed += OnGameLaunchFailed;
 					Game.GameExited += OnGameExited;
 
-					Game.LaunchGame ();
+					//events such as LaunchFailed can fire before this has finished
+					//thus, we set the mode before the actual launching of the game.
 					SetLauncherMode (ELauncherMode.Launch, true);
+					Game.LaunchGame ();
+					
 					break;
 				}
 				default:

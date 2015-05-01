@@ -91,7 +91,7 @@ namespace Launchpad
                 }
 
                 //this section sends some anonymous usage stats back home. If you don't want to do this for your game, simply change this boolean to false.
-                bool bSendAnonStats = false;
+                const bool bSendAnonStats = true;
                 if (bSendAnonStats)
                 {
                     StatsHandler.SendUsageStats();
