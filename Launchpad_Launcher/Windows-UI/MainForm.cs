@@ -282,6 +282,7 @@ namespace Launchpad
                 case ELauncherMode.Launch:
                     {
                         Game.GameLaunchFailed += OnGameLaunchFailed;
+						Game.GameExited += OnGameExited;
                         Game.LaunchGame();
 
                         break;
@@ -567,5 +568,17 @@ namespace Launchpad
             LaunchpadAboutBox about = new LaunchpadAboutBox();
             about.ShowDialog();
         }
+
+		private void OnGameExited(object sender, GameExitEventArgs e)
+		{
+			if (e.ExitCode != 0)
+			{
+				SetLauncherMode (ELauncherMode.Repair, false);
+			}
+			else
+			{
+				SetLauncherMode (ELauncherMode.Launch, false);
+			}
+		}
     }
 }

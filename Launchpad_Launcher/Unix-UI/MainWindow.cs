@@ -552,14 +552,14 @@ namespace Launchpad
 			if (e.ExitCode != 0)
 			{
 				MessageDialog crashDialog = new MessageDialog (
-				                            this, 
-				                            DialogFlags.Modal, 
-				                            MessageType.Question, 
-				                            ButtonsType.YesNo, 
-				                            String.Format (Mono.Unix.Catalog.GetString (
-											"Whoops! The game appears to have crashed.\n" +
-											"Would you like the launcher to verify the installation?"
-				                            )));
+					this, 
+					DialogFlags.Modal, 
+					MessageType.Question, 
+					ButtonsType.YesNo, 
+					String.Format (Mono.Unix.Catalog.GetString (
+						"Whoops! The game appears to have crashed.\n" +
+						"Would you like the launcher to verify the installation?"
+					)));
 
 				if (crashDialog.Run() == (int)ResponseType.Yes)
 				{
