@@ -293,8 +293,8 @@ namespace Launchpad
 				    if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
 				    {
 					    //install the game asynchronously
-					    Game.RepairGame ();
                         SetLauncherMode(ELauncherMode.Repair, true);
+					    Game.RepairGame ();                        
 				    }	
 				    else
 				    {
@@ -320,8 +320,8 @@ namespace Launchpad
 					if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
 					{
 						//install the game asynchronously
-						Game.InstallGame ();
                         SetLauncherMode(ELauncherMode.Install, true);
+						Game.InstallGame ();                        
 					}	
 					else
 					{
@@ -339,9 +339,8 @@ namespace Launchpad
 				{
 					if (Checks.IsLauncherOutdated())
 					{				
-		                //TODO: Create events for launcher updating [Git-#9]
-						Launcher.UpdateLauncher ();
                         SetLauncherMode(ELauncherMode.Update, true);
+						Launcher.UpdateLauncher ();                        
 					}
 					else
 					{					
@@ -354,8 +353,8 @@ namespace Launchpad
 						if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
 						{
 							//install the game asynchronously
-							Game.UpdateGame ();
                             SetLauncherMode(ELauncherMode.Update, true);
+							Game.UpdateGame ();                            
 						}	
 						else
 						{
