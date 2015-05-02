@@ -142,88 +142,93 @@ namespace Launchpad
         {
             FtpWebRequest request = null;
             FtpWebResponse response = null;
-            string remoteURL = Utilities.Clean(rawRemoteURL);
+            string remoteURL = Utilities.Clean(rawRemoteURL) + "/";
             List<string> relativePaths = new List<string>();
 
-            try
-            {
-                request = CreateFtpWebRequest(
-                    remoteURL, 
-                    Config.GetFTPUsername(), 
-                    Config.GetFTPPassword(), 
-                    false);
+			if (DoesDirectoryExist (remoteURL))
+			{
+				try
+				{
+					request = CreateFtpWebRequest(
+						remoteURL, 
+						Config.GetFTPUsername(), 
+						Config.GetFTPPassword(), 
+						false);
 
-                request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
+					request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
 
-                response = (FtpWebResponse)request.GetResponse();
-                Stream responseStream = response.GetResponseStream();
-                StreamReader sr = new StreamReader(responseStream);
+					response = (FtpWebResponse)request.GetResponse();
+					Stream responseStream = response.GetResponseStream();
+					StreamReader sr = new StreamReader(responseStream);
 
-                string rawListing = sr.ReadToEnd();
-                string[] listing = rawListing.Replace("\r", String.Empty).Split('\n');
-                List<string> directories = new List<string>();
+					string rawListing = sr.ReadToEnd();
+					string[] listing = rawListing.Replace("\r", String.Empty).Split('\n');
+					List<string> directories = new List<string>();
 
-                foreach (string fileOrDir in listing)
-                {
-                    //we only need to save the directories if we're searching recursively
-                    if (bRecursively && fileOrDir.StartsWith("d"))
-                    {
-                        //it's a directory, add it to directories
-                        string[] parts = fileOrDir.Split(' ');                        
-                        string relativeDirectoryPath = parts[parts.Length - 1];
+					foreach (string fileOrDir in listing)
+					{
+						//we only need to save the directories if we're searching recursively
+						if (bRecursively && fileOrDir.StartsWith("d"))
+						{
+							//it's a directory, add it to directories
+							string[] parts = fileOrDir.Split(' ');                        
+							string relativeDirectoryPath = parts[parts.Length - 1];
 
-                        directories.Add(relativeDirectoryPath);
-                    }
-                    else
-                    {
-                        //there's a file, add it to our relative paths
-                        string[] filePath = fileOrDir.Split(' ');
-                        if (!String.IsNullOrEmpty(filePath[filePath.Length - 1]))
-                        {
-                            string relativePath = "/" + filePath[filePath.Length - 1];
-                            relativePaths.Add(relativePath);
-                        }                        
-                    }
-                }
+							directories.Add(relativeDirectoryPath);
+						}
+						else
+						{
+							//there's a file, add it to our relative paths
+							string[] filePath = fileOrDir.Split(' ');
+							if (!String.IsNullOrEmpty(filePath[filePath.Length - 1]))
+							{
+								string relativePath = "/" + filePath[filePath.Length - 1];
+								relativePaths.Add(relativePath);
+							}                        
+						}
+					}
 
-                //if we should search recursively, keep looking in subdirectories.
-                if (bRecursively)
-                {
-                    if (directories.Count != 0)
-                    {
-                        foreach (string directory in directories)
-                        {
-                            string parentDirectory = remoteURL.Replace(Config.GetLauncherBinariesURL(), String.Empty);
+					//if we should search recursively, keep looking in subdirectories.
+					if (bRecursively)
+					{
+						if (directories.Count != 0)
+						{
+							for (int i = 0; i < directories.Count; ++i)
+							{
+								string directory = directories[i];
+								string parentDirectory = remoteURL.Replace(Config.GetLauncherBinariesURL(), String.Empty);
 
-                            List<string> files = GetFilePaths(Config.GetLauncherBinariesURL() + parentDirectory + "/" + directory, true);
-                            foreach (string rawPath in files)
-                            {
-                                string relativePath = "/" + directory + rawPath;
-                                relativePaths.Add(relativePath);
-                            }
-                        }
-                    }
-                }
-                
-                return relativePaths;
-            }
-            catch (WebException wex)
-            {
-                Console.WriteLine("WebException in GetFileURLs(): " + wex.Message);
-                return null;
-            }
-            finally
-            {
-                if (request != null)
-                {
-                    request.Abort();
-                }    
-            
-                if (response != null)
-                {
-                    response.Close();
-                }
-            }
+								string recursiveURL = Config.GetLauncherBinariesURL() + parentDirectory + "/" + directory;
+								List<string> files = GetFilePaths(recursiveURL, true);
+								foreach (string rawPath in files)
+								{
+									string relativePath = "/" + directory + rawPath;
+									relativePaths.Add(relativePath);
+								}
+							}
+						}
+					}									
+				}
+				catch (WebException wex)
+				{
+					Console.WriteLine("WebException in GetFileURLs(): " + wex.Message);
+					return null;
+				}
+				finally
+				{
+					if (request != null)
+					{
+						request.Abort();
+					}    
+
+					if (response != null)
+					{
+						response.Close();
+					}
+				}
+			}	
+
+			return relativePaths;
         }
 
 		/// <summary>
@@ -600,6 +605,39 @@ namespace Launchpad
 			checksum = Utilities.Clean(checksum);
 
 			return checksum;
+		}
+
+		public bool DoesDirectoryExist(string remotePath)
+		{
+			FtpWebRequest request = CreateFtpWebRequest (remotePath, 
+														Config.GetFTPUsername (),
+														Config.GetFTPPassword (),
+														false);
+			FtpWebResponse response = null;
+
+			try
+			{
+				request.Method = WebRequestMethods.Ftp.ListDirectory;
+				response = (FtpWebResponse)request.GetResponse();
+			}
+			catch (WebException ex)
+			{
+				response = (FtpWebResponse)ex.Response;
+				if (response.StatusCode == FtpStatusCode.ActionNotTakenFileUnavailable)
+				{
+					return false;
+				}
+			}
+			finally
+			{
+				if (response != null)
+				{
+					response.Close();
+				}
+			}
+
+			return true;
+			
 		}
 
 		public bool DoesFileExist(string remotePath)

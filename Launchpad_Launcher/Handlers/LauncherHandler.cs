@@ -67,6 +67,7 @@ namespace Launchpad
 			try
 			{
 				FTPHandler FTP = new FTPHandler ();
+
                 //crawl the server for all of the files in the /launcher/bin directory.
                 List<string> remotePaths = FTP.GetFilePaths(Config.GetLauncherBinariesURL(), true);
 
