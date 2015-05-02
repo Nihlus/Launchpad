@@ -207,15 +207,19 @@ namespace Launchpad
 
 					//write commands to the script
 					//wait five seconds, then copy the new executable
-					string copyCom = String.Format ("mv -f {0} {1}", 
+					string copyCom = String.Format ("cp -rf {0} {1}", 
 					                                ConfigHandler.GetTempDir() + "launchpad/*",
 					                                ConfigHandler.GetLocalDir());
+
+					string delCom = String.Format ("rm -rf {0}", 
+													ConfigHandler.GetTempDir() + "launchpad");
 
 					string dirCom = String.Format ("cd {0}", ConfigHandler.GetLocalDir ());
 					string launchCom = String.Format (@"nohup ./{0} &", executableName);
 					tw.WriteLine (@"#!/bin/sh");
 					tw.WriteLine ("sleep 5");
 					tw.WriteLine (copyCom);
+					tw.WriteLine (delCom); 
 					tw.WriteLine (dirCom);
 					tw.WriteLine("chmod +x " + executableName);
 					tw.WriteLine (launchCom);
