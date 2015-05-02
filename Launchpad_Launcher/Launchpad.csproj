@@ -298,4 +298,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Content Include="Resources\notify-sharp.dll.config" />
+    <Content Include="Resources\webkit-sharp.dll.config" />
+  </ItemGroup>
 </Project>
