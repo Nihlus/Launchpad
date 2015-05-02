@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading;
+using System.Collections.Generic;
+using System.Net;
 
 /*
  * This class has a lot of async stuff going on. It handles updating the launcher
@@ -65,16 +67,40 @@ namespace Launchpad
 			try
 			{
 				FTPHandler FTP = new FTPHandler ();
-				string fullName = Assembly.GetEntryAssembly().Location;
-				string executableName = Path.GetFileName(fullName); // should be "Launchpad", unless the user has renamed the file
+                //crawl the server for all of the files in the /launcher/bin directory.
+                List<string> remotePaths = FTP.GetFilePaths(Config.GetLauncherBinariesURL(), true);
 
-				string local = String.Format("{0}{1}", 
-				                             ConfigHandler.GetTempDir(), 
-				                             executableName);
+                //download all of them
+                foreach (string path in remotePaths)
+                {
+                    try
+                    {
+                        if (!String.IsNullOrEmpty(path))
+                        {
+                            string Local = String.Format("{0}launchpad{1}{2}",
+                                             ConfigHandler.GetTempDir(),
+                                             Path.DirectorySeparatorChar,
+                                             path);
 
-				//download the new launcher binary to the system's temp dir
-				FTP.DownloadFTPFile(Config.GetLauncherBinaryURL(), local, false);
-				//first, create a script that will update our launcher
+                            string Remote = String.Format("{0}{1}",
+                                                Config.GetLauncherBinariesURL(),
+                                                path);
+
+                            if (!Directory.Exists(Local))
+                            {
+                                Directory.CreateDirectory(Directory.GetParent(Local).ToString());
+                            }
+
+                            FTP.DownloadFTPFile(Remote, Local, false);
+                        }                        
+                    }
+                    catch (WebException wex)
+                    {
+                        Console.WriteLine("WebException in UpdateLauncher(): " + wex.Message);
+                    }
+                }
+				
+                //TODO: Make the script copy recursively
 				ProcessStartInfo script = CreateUpdateScript ();
 
 				Process.Start(script);
@@ -181,8 +207,8 @@ namespace Launchpad
 					//write commands to the script
 					//wait five seconds, then copy the new executable
 					string copyCom = String.Format ("mv -f {0} {1}", 
-					                                ConfigHandler.GetTempDir() + executableName,
-					                                ConfigHandler.GetLocalDir() + executableName);
+					                                ConfigHandler.GetTempDir() + "launchpad/*",
+					                                ConfigHandler.GetLocalDir());
 
 					string dirCom = String.Format ("cd {0}", ConfigHandler.GetLocalDir ());
 					string launchCom = String.Format (@"nohup ./{0} &", executableName);
@@ -210,9 +236,8 @@ namespace Launchpad
 				else
 				{
 					//creating a .bat script
-					string scriptPath = String.Format (@"{0}{1}update.bat", 
-					                                   ConfigHandler.GetLocalDir (), 
-					                                   Path.DirectorySeparatorChar);
+					string scriptPath = String.Format (@"{0}launchpadupdate.bat", 
+					                                   ConfigHandler.GetTempDir ());
 
 					FileStream updateScript = File.Create(scriptPath);
 
@@ -220,10 +245,10 @@ namespace Launchpad
 
 					//write commands to the script
 					//wait three seconds, then copy the new executable
-					tw.WriteLine(String.Format(@"timeout 3 & xcopy /s /y ""{0}\{2}"" ""{1}\{2}"" && del ""{0}\{2}""", 
+					tw.WriteLine(String.Format(@"timeout 3 & xcopy /e /s /y ""{0}\launchpad"" ""{1}"" && rmdir /s /q {0}\launchpad", 
 					                           ConfigHandler.GetTempDir(), 
-					                           ConfigHandler.GetLocalDir(), 
-					                           executableName));
+					                           ConfigHandler.GetLocalDir()));
+
 					//then start the new executable
 					tw.WriteLine(String.Format(@"start {0}", executableName));
 					tw.Close();

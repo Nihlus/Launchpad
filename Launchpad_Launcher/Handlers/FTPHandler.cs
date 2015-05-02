@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Collections.Generic;
 
 namespace Launchpad
 {
@@ -129,6 +130,100 @@ namespace Launchpad
 			}
 
 
+        }
+
+        /// <summary>
+        /// Gets the relative paths for all files in the specified FTP directory.
+        /// </summary>
+        /// <param name="rawRemoteURL">The URL to search.</param>
+        /// <param name="bRecursively">Should the search should include subdirectories?</param>
+        /// <returns>A list of relative paths for the files in the specified directory.</returns>
+        public List<string> GetFilePaths(string rawRemoteURL, bool bRecursively)
+        {
+            FtpWebRequest request = null;
+            FtpWebResponse response = null;
+            string remoteURL = Utilities.Clean(rawRemoteURL);
+            List<string> relativePaths = new List<string>();
+
+            try
+            {
+                request = CreateFtpWebRequest(
+                    remoteURL, 
+                    Config.GetFTPUsername(), 
+                    Config.GetFTPPassword(), 
+                    false);
+
+                request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
+
+                response = (FtpWebResponse)request.GetResponse();
+                Stream responseStream = response.GetResponseStream();
+                StreamReader sr = new StreamReader(responseStream);
+
+                string rawListing = sr.ReadToEnd();
+                string[] listing = rawListing.Replace("\r", String.Empty).Split('\n');
+                List<string> directories = new List<string>();
+
+                foreach (string fileOrDir in listing)
+                {
+                    //we only need to save the directories if we're searching recursively
+                    if (bRecursively && fileOrDir.StartsWith("d"))
+                    {
+                        //it's a directory, add it to directories
+                        string[] parts = fileOrDir.Split(' ');                        
+                        string relativeDirectoryPath = parts[parts.Length - 1];
+
+                        directories.Add(relativeDirectoryPath);
+                    }
+                    else
+                    {
+                        //there's a file, add it to our relative paths
+                        string[] filePath = fileOrDir.Split(' ');
+                        if (!String.IsNullOrEmpty(filePath[filePath.Length - 1]))
+                        {
+                            string relativePath = "/" + filePath[filePath.Length - 1];
+                            relativePaths.Add(relativePath);
+                        }                        
+                    }
+                }
+
+                //if we should search recursively, keep looking in subdirectories.
+                if (bRecursively)
+                {
+                    if (directories.Count != 0)
+                    {
+                        foreach (string directory in directories)
+                        {
+                            string parentDirectory = remoteURL.Replace(Config.GetLauncherBinariesURL(), String.Empty);
+
+                            List<string> files = GetFilePaths(Config.GetLauncherBinariesURL() + parentDirectory + "/" + directory, true);
+                            foreach (string rawPath in files)
+                            {
+                                string relativePath = "/" + directory + rawPath;
+                                relativePaths.Add(relativePath);
+                            }
+                        }
+                    }
+                }
+                
+                return relativePaths;
+            }
+            catch (WebException wex)
+            {
+                Console.WriteLine("WebException in GetFileURLs(): " + wex.Message);
+                return null;
+            }
+            finally
+            {
+                if (request != null)
+                {
+                    request.Abort();
+                }    
+            
+                if (response != null)
+                {
+                    response.Close();
+                }
+            }
         }
 
 		/// <summary>

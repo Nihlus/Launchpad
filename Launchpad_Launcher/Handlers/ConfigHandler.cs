@@ -412,9 +412,9 @@ namespace Launchpad
 		/// Gets the custom launcher download URL.
 		/// </summary>
 		/// <returns>The custom launcher download URL.</returns>
-        public string GetLauncherBinaryURL()
+        public string GetLauncherBinariesURL()
         {
-            string launcherURL = String.Format("{0}/launcher/bin/Launchpad.exe", 
+            string launcherURL = String.Format("{0}/launcher/bin/", 
 			                                   GetFTPUrl());
             return launcherURL;
         }

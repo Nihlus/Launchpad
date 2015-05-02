@@ -2,6 +2,7 @@
 using System.IO;
 using System.Resources;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace Launchpad
 {
@@ -205,10 +206,9 @@ namespace Launchpad
                         if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
                         {
                             //install the game asynchronously
-                            Game.InstallGame();
-
                             MessageLabel.Text = LocalizationCatalog.GetString("installingLabel");
-                            SetLauncherMode(ELauncherMode.Install, true); 
+                            SetLauncherMode(ELauncherMode.Install, true);
+                            Game.InstallGame();                             
                         }
                         else
                         {
@@ -235,7 +235,7 @@ namespace Launchpad
                         break;
                     }
                 case ELauncherMode.Update:
-                    {                        
+                    {
                         //bind events for UI updating                        
                         Game.ProgressChanged += OnGameDownloadProgressChanged;
                         Game.GameDownloadFinished += OnGameDownloadFinished;
@@ -244,17 +244,16 @@ namespace Launchpad
                         if (Checks.IsLauncherOutdated())
                         {
                             //update the launcher synchronously.
-                            Launcher.UpdateLauncher();
                             SetLauncherMode(ELauncherMode.Update, true);
+                            Launcher.UpdateLauncher();                            
                         }
                         else
                         {
-                            //update the game asynchronously
                             if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
                             {
-                                //update the game asynchronously
-                                Game.UpdateGame();
-                                SetLauncherMode(ELauncherMode.Update, true);
+                                //update the game asynchronously                                
+                                SetLauncherMode(ELauncherMode.Update, true);                                
+                                Game.UpdateGame();                                
                             }
                             else
                             {
@@ -283,6 +282,8 @@ namespace Launchpad
                     {
                         Game.GameLaunchFailed += OnGameLaunchFailed;
 						Game.GameExited += OnGameExited;
+
+                        SetLauncherMode(ELauncherMode.Launch, true);
                         Game.LaunchGame();
 
                         break;
