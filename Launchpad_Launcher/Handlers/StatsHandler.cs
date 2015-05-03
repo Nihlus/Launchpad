@@ -22,10 +22,11 @@ namespace Launchpad
 			try
 			{
 				string baseURL = "http://directorate.asuscomm.com/launchpad/stats.php?";
-				string formattedURL = String.Format(baseURL + "guid={0}&launcherVersion={1}&gameName={2}&officialUpdates={3}",
+				string formattedURL = String.Format(baseURL + "guid={0}&launcherVersion={1}&gameName={2}&systemType={3}&officialUpdates={4}",
 				                                    Config.GetGUID(),
 				                                    Config.GetLocalLauncherVersion(),
 				                                    Config.GetGameName(),
+                                                    Config.GetSystemTarget().ToString(),
 				                                    Config.GetDoOfficialUpdates().ToString()
 				                                    );
 
