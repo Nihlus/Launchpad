@@ -11,7 +11,7 @@ namespace Launchpad.Launcher
         /// <summary>
         /// The catalog responsible for handling all of the localizable strings
         /// </summary>
-        ResourceManager LocalizationCatalog = new ResourceManager("Launchpad.Resources.Strings", typeof(MainForm).Assembly);
+        ResourceManager LocalizationCatalog = new ResourceManager("Launchpad.Launcher.Resources.Strings", typeof(MainForm).Assembly);
 
         /// <summary>
         /// The checks handler reference.

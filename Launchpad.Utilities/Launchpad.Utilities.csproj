@@ -36,6 +36,9 @@
   <PropertyGroup>
     <ApplicationIcon>Resources\Icons8-Android-Industry-Engineering.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Launchpad.Utilities.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />

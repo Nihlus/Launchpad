@@ -116,14 +116,14 @@ namespace Launchpad.Launcher
 				}
 				else
 				{
-					Notification noStatsNot = new Notification ();
+					Notification noUsageStatsNotification = new Notification ();
 
-					noStatsNot.IconName = Stock.DialogWarning;
-					noStatsNot.Urgency = Urgency.Normal;
-					noStatsNot.Summary = Mono.Unix.Catalog.GetString ("Launchpad - Warning");
-					noStatsNot.Body = Mono.Unix.Catalog.GetString ("Anonymous useage stats are not enabled.");
+					noUsageStatsNotification.IconName = Stock.DialogWarning;
+					noUsageStatsNotification.Urgency = Urgency.Normal;
+					noUsageStatsNotification.Summary = Mono.Unix.Catalog.GetString ("Launchpad - Warning");
+					noUsageStatsNotification.Body = Mono.Unix.Catalog.GetString ("Anonymous useage stats are not enabled.");
 
-					noStatsNot.Show ();
+					noUsageStatsNotification.Show ();
 				}
 
 
