@@ -78,7 +78,7 @@ namespace Launchpad.Launcher
 			// Widget Launchpad.SettingsDialog
 			this.Name = "Launchpad.SettingsDialog";
 			this.Title = global::Mono.Unix.Catalog.GetString ("Edit Settings");
-			this.Icon = global::Gdk.Pixbuf.LoadFromResource ("Launchpad.Resources.RocketIcon.ico");
+			this.Icon = global::Gdk.Pixbuf.LoadFromResource ("Launchpad.Launcher.Resources.RocketIcon.ico");
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
 			this.Resizable = false;
 			// Internal child Launchpad.SettingsDialog.VBox

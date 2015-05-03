@@ -186,7 +186,7 @@ namespace Launchpad.Launcher
                         {
                             //whoops, the server doesn't provide the game for the platform we requested (usually the on we're running on)
                             //alert the user and revert back to the default install mode
-                            Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Resources.RocketIcon.ico");
+                            Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Launcher.Resources.RocketIcon.ico");
                             if (iconStream != null)
                             {
                                 NotifyIcon platformNotProvidedNotification = new NotifyIcon();
@@ -221,7 +221,7 @@ namespace Launchpad.Launcher
                         {
                             //whoops, the server doesn't provide the game for the platform we requested (usually the on we're running on)
                             //alert the user and revert back to the default install mode
-                            Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Resources.RocketIcon.ico");
+                            Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Launcher.Resources.RocketIcon.ico");
                             if (iconStream != null)
                             {
                                 NotifyIcon platformNotProvidedNotification = new NotifyIcon();
@@ -266,7 +266,7 @@ namespace Launchpad.Launcher
                             {
                                 //whoops, the server doesn't provide the game for the platform we requested (usually the on we're running on)
                                 //alert the user and revert back to the default install mode
-                                Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Resources.RocketIcon.ico");
+                                Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Launcher.Resources.RocketIcon.ico");
                                 if (iconStream != null)
                                 {
                                     NotifyIcon platformNotProvidedNotification = new NotifyIcon();
@@ -399,7 +399,7 @@ namespace Launchpad.Launcher
         {
             this.Invoke((MethodInvoker)delegate
             {
-                Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Resources.RocketIcon.ico");
+                Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Launcher.Resources.RocketIcon.ico");
                 if (iconStream != null)
                 {
                     NotifyIcon launchFailedNotification = new NotifyIcon();
@@ -505,7 +505,7 @@ namespace Launchpad.Launcher
                 {
                     MessageLabel.Text = LocalizationCatalog.GetString("gameDownloadFailMessage");
 
-                    Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Resources.RocketIcon.ico");
+                    Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Launcher.Resources.RocketIcon.ico");
                     if (iconStream != null)
                     {
                         NotifyIcon launchFailedNotification = new NotifyIcon();
@@ -525,7 +525,7 @@ namespace Launchpad.Launcher
                     MessageLabel.Text = LocalizationCatalog.GetString("idleString");
                     downloadProgressLabel.Text = "";
 
-                    Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Resources.RocketIcon.ico");
+                    Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Launcher.Resources.RocketIcon.ico");
                     if (iconStream != null)
                     {
                         NotifyIcon launchFailedNotification = new NotifyIcon();
@@ -552,7 +552,7 @@ namespace Launchpad.Launcher
         {
             this.Invoke((MethodInvoker)delegate
             {
-                Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Resources.RocketIcon.ico");
+                Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Launcher.Resources.RocketIcon.ico");
                 if (iconStream != null)
                 {
                     NotifyIcon launchFailedNotification = new NotifyIcon();
