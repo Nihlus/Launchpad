@@ -959,6 +959,11 @@ namespace Launchpad
         public static ESystemTarget GetCurrentPlatform()
         {
             string platformID = Environment.OSVersion.Platform.ToString();
+            if (platformID.Contains("Win"))
+            {
+                platformID = "Windows";
+            }
+
             switch (platformID)
             {
                 case "MacOSX":
@@ -977,7 +982,7 @@ namespace Launchpad
                             return ESystemTarget.Linux;
                         }                                                               
                     }
-                case "Win32Windows":
+                case "Windows":
                     {
                         if (Environment.Is64BitOperatingSystem)
                         {

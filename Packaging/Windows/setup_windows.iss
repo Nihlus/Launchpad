@@ -45,11 +45,13 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "{#LaunchpadReleaseDir}\Launchpad.exe"; DestDir: "{app}";
 Source: "{#LaunchpadReleaseDir}\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs
-; NOTE: Don't use "Flags: ignoreversion" on any shared system files
+; Extra libraries - GTK# must be included.
+Source: "{#LaunchpadReleaseDir}\gtk-sharp-2.12.26.msi"; DestDir: "{tmp}";
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
+Filename: "msiexec.exe"; Parameters: "/i ""{tmp}\gtk-sharp-2.12.26.msi"" /qn"
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
