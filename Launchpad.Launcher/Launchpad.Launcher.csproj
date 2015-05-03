@@ -54,7 +54,10 @@
     <StartupObject>Launchpad.Launcher.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Launchpad-StrongKey.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>Launchpad-StrongKey-NoPass.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="INIFileParser">
@@ -103,6 +106,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="Launchpad-StrongKey-NoPass.snk" />
     <None Include="Launchpad-StrongKey.pfx" />
     <None Include="LICENSE" />
     <None Include="packages.config" />
