@@ -5,6 +5,7 @@ using WebKit;
 
 namespace Launchpad.Launcher
 {
+    [CLSCompliant(false)]
     public partial class MainWindow : Window
 	{        
 		/// <summary>

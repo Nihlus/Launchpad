@@ -6,6 +6,7 @@ namespace Launchpad.Launcher
 	/// <summary>
 	/// Settings dialog box.
 	/// </summary>
+    [CLSCompliant(false)]
     public partial class SettingsDialog : Dialog
 	{
 		/// <summary>

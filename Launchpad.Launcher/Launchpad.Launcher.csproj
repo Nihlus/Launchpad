@@ -302,4 +302,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup />
+  <PropertyGroup>
+    <PostBuildEvent>echo [Launchpad] : warning L0001: Remember to copy the Linux extras to the output folder if you're building on Windows. (/Extras/Linux)</PostBuildEvent>
+  </PropertyGroup>
 </Project>
