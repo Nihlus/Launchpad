@@ -38,6 +38,14 @@ namespace Launchpad.Launcher
         /// </summary>
         ELauncherMode Mode = ELauncherMode.Invalid;
 
+
+        //this section sends some anonymous usage stats back home. If you don't want to do this for your game, simply change this boolean to false.                
+        #if DEBUG
+        readonly bool bSendAnonStats = false;
+        #else
+        readonly bool bSendAnonStats = true;
+        #endif
+
         public MainForm()
         {
             InitializeComponent();
@@ -90,13 +98,7 @@ namespace Launchpad.Launcher
                         Environment.Exit(2);
                     }
                 }
-
-                //this section sends some anonymous usage stats back home. If you don't want to do this for your game, simply change this boolean to false.                
-                #if DEBUG
-                const bool bSendAnonStats = false;
-                #else
-                const bool bSendAnonStats = true;
-                #endif
+                
 
                 if (bSendAnonStats)
                 {
@@ -104,7 +106,7 @@ namespace Launchpad.Launcher
                 }
                 else
                 {
-                    Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Resources.RocketIcon.ico");
+                    Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Launcher.Resources.RocketIcon.ico");
                     if (iconStream != null)
                     {
                         NotifyIcon noUsageStatsNotification = new NotifyIcon();
