@@ -111,7 +111,7 @@ namespace Launchpad.Launcher
 						shouldInstallHereDialog.Destroy ();
 						//no, don't install here
 						Console.WriteLine ("Exiting...");
-						Application.Quit ();
+						Environment.Exit (0);
 					}
 
 				} 
