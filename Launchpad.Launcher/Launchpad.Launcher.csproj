@@ -265,10 +265,10 @@
     <Compile Include="Handlers\UnixHandler.cs" />
     <Compile Include="Utility\Utilities.cs" />
     <Compile Include="Utility\Enums\ESystemTarget.cs" />
-    <Compile Include="Utility\Events\LaunchpadEventArgs.cs" />
-    <Compile Include="Utility\Events\LaunchpadEventDelegates.cs" />
     <Compile Include="Handlers\ManifestHandler.cs" />
     <Compile Include="Utility\Enums\ELauncherMode.cs" />
+    <Compile Include="Utility\Events\Arguments.cs" />
+    <Compile Include="Utility\Events\Delegates.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

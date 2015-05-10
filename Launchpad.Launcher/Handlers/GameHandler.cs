@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using Launchpad.Launcher.Events.Arguments;
+using Launchpad.Launcher.Events.Delegates;
 
 namespace Launchpad.Launcher
 {
@@ -17,39 +19,39 @@ namespace Launchpad.Launcher
 		/// <summary>
 		/// Occurs when progress changed.
 		/// </summary>
-		public event LaunchpadEventDelegates.GameProgressChangedEventHandler ProgressChanged;
+		public event GameProgressChangedEventHandler ProgressChanged;
 		/// <summary>
 			/// Occurs when download finishes.
 			/// </summary>
-		public event LaunchpadEventDelegates.GameDownloadFinishedEventHandler GameDownloadFinished;
+		public event GameDownloadFinishedEventHandler GameDownloadFinished;
 		/// <summary>
 		/// Occurs when game update finished.
 		/// </summary>
-		public event LaunchpadEventDelegates.GameUpdateFinishedEventHandler GameUpdateFinished;
+		public event GameUpdateFinishedEventHandler GameUpdateFinished;
 		/// <summary>
 		/// Occurs when game verification finishes.
 		/// </summary>
-		public event LaunchpadEventDelegates.GameRepairFinishedEventHandler GameRepairFinished;
+		public event GameRepairFinishedEventHandler GameRepairFinished;
 
 
 		/// <summary>
 		/// Occurs when the download failed.
 		/// </summary>
-		public event LaunchpadEventDelegates.GameDownloadFailedEventHander GameDownloadFailed;
+		public event GameDownloadFailedEventHander GameDownloadFailed;
 		/// <summary>
 		/// Occurs when game update failed.
 		/// </summary>
-		public event LaunchpadEventDelegates.GameUpdateFailedEventHandler GameUpdateFailed;
+		public event GameUpdateFailedEventHandler GameUpdateFailed;
 		/// <summary>
 		/// Occurs when game repair failed.
 		/// </summary>
-		public event LaunchpadEventDelegates.GameRepairFailedEventHandler GameRepairFailed;
+		public event GameRepairFailedEventHandler GameRepairFailed;
 		/// <summary>
 		/// Occurs when game launch failed.
 		/// </summary>
-		public event LaunchpadEventDelegates.GameLaunchFailedEventHandler GameLaunchFailed;
+		public event GameLaunchFailedEventHandler GameLaunchFailed;
 
-		public event LaunchpadEventDelegates.GameExitEventHandler GameExited;
+		public event GameExitEventHandler GameExited;
 			
 		//Progress event arguments
 		/// <summary>

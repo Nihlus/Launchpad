@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
 using System.Reflection;
 using System.Threading;
-using System.Collections.Generic;
-using System.Net;
+using Launchpad.Launcher.Events.Arguments;
+using Launchpad.Launcher.Events.Delegates;
 
 /*
  * This class has a lot of async stuff going on. It handles updating the launcher
@@ -27,11 +29,11 @@ namespace Launchpad.Launcher
 		/// <summary>
 		/// Occurs when changelog download progress changes.
 		/// </summary>
-		public event LaunchpadEventDelegates.ChangelogProgressChangedEventHandler ChangelogProgressChanged;
+		public event ChangelogProgressChangedEventHandler ChangelogProgressChanged;
 		/// <summary>
 		/// Occurs when changelog download finishes.
 		/// </summary>
-		public event LaunchpadEventDelegates.ChangelogDownloadFinishedEventHandler ChangelogDownloadFinished;
+		public event ChangelogDownloadFinishedEventHandler ChangelogDownloadFinished;
 
 		/// <summary>
 		/// The progress arguments object. Is updated during file download operations.

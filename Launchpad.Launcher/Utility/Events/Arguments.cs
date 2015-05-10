@@ -1,6 +1,6 @@
 using System;
 
-namespace Launchpad.Launcher
+namespace Launchpad.Launcher.Events.Arguments
 {	
 	//FTP arguments for progress events
 	/// <summary>

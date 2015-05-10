@@ -2,6 +2,7 @@ using Gtk;
 using Notifications;
 using System;
 using WebKit;
+using Launchpad.Launcher.Events.Arguments;
 
 namespace Launchpad.Launcher
 {

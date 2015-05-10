@@ -3,6 +3,8 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Collections.Generic;
+using Launchpad.Launcher.Events.Arguments;
+using Launchpad.Launcher.Events.Delegates;
 
 namespace Launchpad.Launcher
 {
@@ -25,11 +27,11 @@ namespace Launchpad.Launcher
 		/// <summary>
 		/// Occurs when file progress changed.
 		/// </summary>
-		public event LaunchpadEventDelegates.FileProgressChangedEventHandler FileProgressChanged;
+		public event FileProgressChangedEventHandler FileProgressChanged;
 		/// <summary>
 		/// Occurs when file download finished.
 		/// </summary>
-		public event LaunchpadEventDelegates.FileDownloadFinishedEventHandler FileDownloadFinished;
+		public event FileDownloadFinishedEventHandler FileDownloadFinished;
 
 		/// <summary>
 		/// The progress arguments object. Is updated during file download operations.
