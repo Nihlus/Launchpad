@@ -38,14 +38,8 @@ namespace Launchpad.Launcher
         /// The current mode that the launcher is in. Determines what the primary button does when pressed.
         /// </summary>
         ELauncherMode Mode = ELauncherMode.Invalid;
-
-        //this section sends some anonymous usage stats back home. 
-        //If you don't want to do this for your game, simply change this boolean to false.
-        #if DEBUG
-        readonly bool bSendAnonStats = false;
-        #else
-        readonly bool bSendAnonStats = true;
-        #endif
+		//this section sends some anonymous usage stats back home. If you don't want to do this for your game, simply change this boolean to false.
+		readonly bool bSendAnonStats = true;
 
         public MainWindow () : 
 				base(WindowType.Toplevel)

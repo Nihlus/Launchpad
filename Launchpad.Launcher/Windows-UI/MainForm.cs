@@ -42,11 +42,7 @@ namespace Launchpad.Launcher
 
 
         //this section sends some anonymous usage stats back home. If you don't want to do this for your game, simply change this boolean to false.                
-        #if DEBUG
-        readonly bool bSendAnonStats = false;
-        #else
         readonly bool bSendAnonStats = true;
-        #endif
 
         public MainForm()
         {
