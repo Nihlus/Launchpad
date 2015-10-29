@@ -69,8 +69,25 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <Package>gtk-sharp-2.0</Package>
+    </Reference>
+    <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <Package>gtk-sharp-2.0</Package>
+    </Reference>
+    <Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <Package>gtk-sharp-2.0</Package>
+    </Reference>
+    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <Package>glib-sharp-2.0</Package>
+    </Reference>
+    <Reference Include="Mono.Posix" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="gtk-gui\gui.stetic">
+      <LogicalName>gui.stetic</LogicalName>
+    </EmbeddedResource>
+    <Compile Include="gtk-gui\generated.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Windows-UI\MainForm.cs">
       <SubType>Form</SubType>
@@ -107,12 +124,15 @@
     <Compile Include="Handlers\ManifestHandler.cs" />
     <Compile Include="Utility\Events\Arguments.cs" />
     <Compile Include="Utility\Events\Delegates.cs" />
+    <Compile Include="Unix-UI\MainWindow.cs" />
+    <Compile Include="gtk-gui\Launchpad.Utilities.MainWindow.cs" />
+    <Compile Include="Handlers\ChecksHandler.cs" />
+    <EmbeddedResource Include="Resources\Icons8-Android-Industry-Engineering.ico">
+      <DeployService-UseProjectRelativePath>True</DeployService-UseProjectRelativePath>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\Icons8-Android-Industry-Engineering.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
@@ -143,5 +163,6 @@
     <Folder Include="Handlers\" />
     <Folder Include="Utility\" />
     <Folder Include="Utility\Events\" />
+    <Folder Include="Unix-UI\" />
   </ItemGroup>
 </Project>
