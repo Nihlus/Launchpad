@@ -28,7 +28,6 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -104,6 +103,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Handlers\MD5Handler.cs" />
+    <Compile Include="Handlers\ManifestHandler.cs" />
+    <Compile Include="Utility\Events\Arguments.cs" />
+    <Compile Include="Utility\Events\Delegates.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -136,4 +139,9 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Folder Include="Handlers\" />
+    <Folder Include="Utility\" />
+    <Folder Include="Utility\Events\" />
+  </ItemGroup>
 </Project>
