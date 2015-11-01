@@ -5,7 +5,7 @@ using System.IO;
 namespace Launchpad.Launcher
 {
 	internal sealed class ManifestHandler
-	{	
+	{
 		private List<ManifestEntry> manifest = new List<ManifestEntry> ();
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace Launchpad.Launcher
 			}
 		}
 
-		private List<ManifestEntry> oldManifest = new List<ManifestEntry>();
+		private List<ManifestEntry> oldManifest = new List<ManifestEntry> ();
 
 		/// <summary>
 		/// Gets the old manifest. Call sparsely, as it loads the entire manifest from disk each time
@@ -38,8 +38,8 @@ namespace Launchpad.Launcher
 			}
 		}
 
-		private object ManifestLock = new object();
-		private object OldManifestLock = new object();
+		private object ManifestLock = new object ();
+		private object OldManifestLock = new object ();
 
 		public ManifestHandler ()
 		{
@@ -49,13 +49,13 @@ namespace Launchpad.Launcher
 		/// <summary>
 		/// Loads the manifest from disk.
 		/// </summary>
-		private void LoadManifest()
+		private void LoadManifest ()
 		{
 			try
 			{
 				lock (ManifestLock)
 				{
-					if (File.Exists(ConfigHandler.GetManifestPath()))
+					if (File.Exists (ConfigHandler.GetManifestPath ()))
 					{
 						string[] rawManifest = File.ReadAllLines (ConfigHandler.GetManifestPath ());
 						foreach (string rawEntry in rawManifest)
@@ -78,13 +78,13 @@ namespace Launchpad.Launcher
 		/// <summary>
 		/// Loads the old manifest from disk.
 		/// </summary>
-		private void LoadOldManifest()
+		private void LoadOldManifest ()
 		{
 			try
 			{
 				lock (OldManifestLock)
 				{
-					if (File.Exists(ConfigHandler.GetOldManifestPath()))
+					if (File.Exists (ConfigHandler.GetOldManifestPath ()))
 					{
 						string[] rawOldManifest = File.ReadAllLines (ConfigHandler.GetOldManifestPath ());
 						foreach (string rawEntry in rawOldManifest)
@@ -110,7 +110,7 @@ namespace Launchpad.Launcher
 	/// Contains the relative path of the referenced file, as well as
 	/// its MD5 hash and size in bytes.
 	/// </summary>
-	internal sealed class ManifestEntry
+	internal sealed class ManifestEntry : IEquatable<ManifestEntry>
 	{
 		public string RelativePath
 		{
@@ -130,7 +130,7 @@ namespace Launchpad.Launcher
 			set;
 		}
 
-		public ManifestEntry()
+		public ManifestEntry ()
 		{
 			RelativePath = String.Empty;
 			Hash = String.Empty;
@@ -144,12 +144,12 @@ namespace Launchpad.Launcher
 		/// <returns><c>true</c>, if the input was successfully parse, <c>false</c> otherwise.</returns>
 		/// <param name="rawInput">Raw input.</param>
 		/// <param name="entry">The resulting entry.</param>
-		public static bool TryParse(string rawInput, out ManifestEntry inEntry)
+		public static bool TryParse (string rawInput, out ManifestEntry inEntry)
 		{
 			//clear out the entry for the new data
 			inEntry = new ManifestEntry ();
 
-			if (!String.IsNullOrEmpty(rawInput))
+			if (!String.IsNullOrEmpty (rawInput))
 			{
 				//remove any and all bad characters from the input string, 
 				//such as \0, \n and \r.
@@ -162,13 +162,13 @@ namespace Launchpad.Launcher
 				if (entryElements.Length == 3)
 				{
 					//clean the manifest path, converting \ to / on unix and / to \ on Windows.
-					if (ChecksHandler.IsRunningOnUnix())
+					if (ChecksHandler.IsRunningOnUnix ())
 					{
 						inEntry.RelativePath = entryElements [0].Replace ("\\", "/");
 					}
 					else
 					{
-						inEntry.RelativePath = entryElements [0].Replace("/", "\\");
+						inEntry.RelativePath = entryElements [0].Replace ("/", "\\");
 					}
 
 					//set the hash to the second element
@@ -176,7 +176,7 @@ namespace Launchpad.Launcher
 
 					//attempt to parse the final element as a long-type byte count.
 					long parsedSize = 0;
-					if(long.TryParse(entryElements[2], out parsedSize))
+					if (long.TryParse (entryElements [2], out parsedSize))
 					{
 						inEntry.Size = parsedSize;
 						return true;
@@ -206,9 +206,16 @@ namespace Launchpad.Launcher
 		/// [path]:[hash]:[size]
 		/// </summary>
 		/// <returns>A <see cref="System.String"/> that represents the current <see cref="Launchpad.ManifestEntry"/>.</returns>
-		public override string ToString() 
+		public override string ToString ()
 		{
 			return RelativePath + ":" + Hash + ":" + Size.ToString ();
+		}
+
+		public bool Equals (ManifestEntry Other)
+		{
+			return this.RelativePath == Other.RelativePath &&
+			this.Hash == Other.Hash &&
+			this.Size == Other.Size;
 		}
 	}
 }
