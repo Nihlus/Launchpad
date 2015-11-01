@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<stetic-interface>
+  <configuration>
+    <images-root-path>..</images-root-path>
+    <target-gtk-version>2.12</target-gtk-version>
+  </configuration>
+  <import>
+    <widget-library name="../bin/Debug/LaunchpadUtilities.exe" internal="true" />
+  </import>
+  <widget class="Gtk.Window" id="Launchpad.Utilities.MainWindow" design-size="640 384">
+    <action-group name="Default" />
+    <property name="MemberName" />
+    <property name="WidthRequest">640</property>
+    <property name="HeightRequest">384</property>
+    <property name="Title" translatable="yes">Launchpad Utilities - Manifest</property>
+    <property name="Icon">resource:Launchpad.Utilities.Resources.Icons8-Android-Industry-Engineering.ico</property>
+    <property name="WindowPosition">CenterOnParent</property>
+    <signal name="DeleteEvent" handler="OnDeleteEvent" />
+    <child>
+      <widget class="Gtk.VBox" id="vbox3">
+        <property name="MemberName" />
+        <property name="Spacing">6</property>
+        <child>
+          <widget class="Gtk.MenuBar" id="menubar1">
+            <property name="MemberName" />
+            <node name="__gtksharp_161_Stetic_Editor_ActionMenuBar" type="Menubar" />
+          </widget>
+          <packing>
+            <property name="Position">0</property>
+            <property name="AutoSize">True</property>
+            <property name="Expand">False</property>
+            <property name="Fill">False</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.Alignment" id="alignment14">
+            <property name="MemberName" />
+            <property name="LeftPadding">8</property>
+            <property name="RightPadding">8</property>
+            <child>
+              <widget class="Gtk.FileChooserWidget" id="fileChooser">
+                <property name="MemberName" />
+                <property name="Action">SelectFolder</property>
+                <property name="LocalOnly">False</property>
+              </widget>
+            </child>
+          </widget>
+          <packing>
+            <property name="Position">1</property>
+            <property name="AutoSize">True</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.Alignment" id="alignment12">
+            <property name="MemberName" />
+            <child>
+              <widget class="Gtk.HSeparator" id="hseparator3">
+                <property name="MemberName" />
+              </widget>
+            </child>
+          </widget>
+          <packing>
+            <property name="Position">2</property>
+            <property name="AutoSize">True</property>
+            <property name="Expand">False</property>
+            <property name="Fill">False</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.HBox" id="hbox4">
+            <property name="MemberName" />
+            <property name="Spacing">6</property>
+            <child>
+              <widget class="Gtk.Alignment" id="alignment18">
+                <property name="MemberName" />
+                <property name="LeftPadding">8</property>
+                <child>
+                  <widget class="Gtk.Label" id="label4">
+                    <property name="MemberName" />
+                    <property name="LabelProp" translatable="yes">Progress: </property>
+                  </widget>
+                </child>
+              </widget>
+              <packing>
+                <property name="Position">0</property>
+                <property name="AutoSize">True</property>
+                <property name="Expand">False</property>
+                <property name="Fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="Gtk.Alignment" id="alignment19">
+                <property name="MemberName" />
+                <property name="RightPadding">8</property>
+                <child>
+                  <widget class="Gtk.Label" id="progressLabel">
+                    <property name="MemberName" />
+                    <property name="LabelProp" translatable="yes">/some/file/path : 1 out of 100</property>
+                  </widget>
+                </child>
+              </widget>
+              <packing>
+                <property name="Position">1</property>
+                <property name="AutoSize">True</property>
+                <property name="Expand">False</property>
+                <property name="Fill">False</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="Position">3</property>
+            <property name="AutoSize">True</property>
+            <property name="Expand">False</property>
+            <property name="Fill">False</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.Alignment" id="alignment17">
+            <property name="MemberName" />
+            <property name="LeftPadding">8</property>
+            <property name="RightPadding">8</property>
+            <child>
+              <widget class="Gtk.ProgressBar" id="progressbar">
+                <property name="MemberName" />
+              </widget>
+            </child>
+          </widget>
+          <packing>
+            <property name="Position">4</property>
+            <property name="AutoSize">True</property>
+            <property name="Expand">False</property>
+            <property name="Fill">False</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder />
+        </child>
+        <child>
+          <widget class="Gtk.HBox" id="hbox3">
+            <property name="MemberName" />
+            <property name="Spacing">6</property>
+            <child>
+              <widget class="Gtk.Alignment" id="alignment15">
+                <property name="MemberName" />
+                <property name="RightPadding">8</property>
+                <property name="BottomPadding">8</property>
+                <child>
+                  <widget class="Gtk.Button" id="generateManifestButton">
+                    <property name="MemberName" />
+                    <property name="CanFocus">True</property>
+                    <property name="Type">TextOnly</property>
+                    <property name="Label" translatable="yes">Generate Manifest</property>
+                    <property name="UseUnderline">True</property>
+                    <signal name="Clicked" handler="OnGenerateManifestButtonClicked" />
+                  </widget>
+                </child>
+              </widget>
+              <packing>
+                <property name="PackType">End</property>
+                <property name="Position">0</property>
+                <property name="AutoSize">True</property>
+                <property name="Expand">False</property>
+                <property name="Fill">False</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="Position">6</property>
+            <property name="AutoSize">True</property>
+            <property name="Expand">False</property>
+            <property name="Fill">False</property>
+          </packing>
+        </child>
+      </widget>
+    </child>
+  </widget>
+</stetic-interface>

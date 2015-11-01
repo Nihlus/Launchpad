@@ -21,8 +21,8 @@ namespace Launchpad.Launcher
 		/// </summary>
 		public event GameProgressChangedEventHandler ProgressChanged;
 		/// <summary>
-			/// Occurs when download finishes.
-			/// </summary>
+		/// Occurs when download finishes.
+		/// </summary>
 		public event GameDownloadFinishedEventHandler GameDownloadFinished;
 		/// <summary>
 		/// Occurs when game update finished.
@@ -120,12 +120,13 @@ namespace Launchpad.Launcher
 		/// <summary>
 		/// Starts an asynchronous game installation task.
 		/// </summary>
-		public void InstallGame()
+		public void InstallGame ()
 		{
 			Thread t = new Thread (InstallGameAsync);
 			t.Start ();
 		}
-		private void InstallGameAsync()
+
+		private void InstallGameAsync ()
 		{
 			//This value is filled with either a path to the last downloaded file, or with an exception message
 			//this message is used in the main UI to determine how it responds to a failed download.
@@ -133,12 +134,12 @@ namespace Launchpad.Launcher
 			try
 			{
 				FTPHandler FTP = new FTPHandler ();
-				ManifestHandler manifestHandler = new ManifestHandler();
+				ManifestHandler manifestHandler = new ManifestHandler ();
 				List<ManifestEntry> Manifest = manifestHandler.Manifest;
 
 				//create the .install file to mark that an installation has begun
 				//if it exists, do nothing.
-                ConfigHandler.CreateInstallCookie();
+				ConfigHandler.CreateInstallCookie ();
 
 
 				//raise the progress changed event by binding to the 
@@ -151,7 +152,7 @@ namespace Launchpad.Launcher
 				string installCookiePath = ConfigHandler.GetInstallCookiePath ();
 
 				//attempt to parse whatever is inside the install cookie
-				if (ManifestEntry.TryParse(File.ReadAllText (installCookiePath), out lastDownloadedFile))
+				if (ManifestEntry.TryParse (File.ReadAllText (installCookiePath), out lastDownloadedFile))
 				{
 					//loop through all the entries in the manifest until we encounter
 					//an entry which matches the one in the install cookie
@@ -161,7 +162,7 @@ namespace Launchpad.Launcher
 						if (lastDownloadedFile == Entry)
 						{
 							//remove all entries before the one we were last at.
-							Manifest.RemoveRange(0, Manifest.IndexOf(Entry));
+							Manifest.RemoveRange (0, Manifest.IndexOf (Entry));
 						}
 					}
 				}
@@ -170,58 +171,61 @@ namespace Launchpad.Launcher
 				foreach (ManifestEntry Entry in Manifest)
 				{
 					string RemotePath = String.Format ("{0}{1}", 
-					                                   Config.GetGameURL (true), 
-					                                   Entry.RelativePath);
+						                    Config.GetGameURL (true), 
+						                    Entry.RelativePath);
 
 					string LocalPath = String.Format ("{0}{1}{2}", 
-					                                  Config.GetGamePath (true),
-					                                  System.IO.Path.DirectorySeparatorChar, 
-					                                  Entry.RelativePath);
+						                   Config.GetGamePath (true),
+						                   System.IO.Path.DirectorySeparatorChar, 
+						                   Entry.RelativePath);
 
 					//make sure we have a game directory to put files in
-					Directory.CreateDirectory(Path.GetDirectoryName(LocalPath));
-
+					Directory.CreateDirectory (Path.GetDirectoryName (LocalPath));
+				
 					//write the current file progress to the install cookie
-					TextWriter textWriterProgress = new StreamWriter(ConfigHandler.GetInstallCookiePath ());
-					textWriterProgress.WriteLine (Entry.ToString());
+					// Reset the cookie
+					File.WriteAllText (ConfigHandler.GetInstallCookiePath (), String.Empty);
+
+					TextWriter textWriterProgress = new StreamWriter (ConfigHandler.GetInstallCookiePath ());
+					textWriterProgress.WriteLine (Entry.ToString ());
 					textWriterProgress.Close ();
 
-					if (File.Exists(LocalPath))
+					if (File.Exists (LocalPath))
 					{
-						FileInfo fileInfo = new FileInfo(LocalPath);
+						FileInfo fileInfo = new FileInfo (LocalPath);
 						if (fileInfo.Length != Entry.Size)
 						{
 							//Resume the download of this partial file.
-							OnProgressChanged();
-							fileReturn = FTP.DownloadFTPFile(RemotePath, LocalPath, fileInfo.Length, false);
+							OnProgressChanged ();
+							fileReturn = FTP.DownloadFTPFile (RemotePath, LocalPath, fileInfo.Length, false);
 
 							//Now verify the file
-							string localHash = MD5Handler.GetFileHash(File.OpenRead(LocalPath));
+							string localHash = MD5Handler.GetFileHash (File.OpenRead (LocalPath));
 
 							if (localHash != Entry.Hash)
 							{
 								Console.WriteLine ("InstallGameAsync: Resumed file hash was invalid, downloading fresh copy from server.");
-								OnProgressChanged();
-								fileReturn = FTP.DownloadFTPFile(RemotePath, LocalPath, false);
+								OnProgressChanged ();
+								fileReturn = FTP.DownloadFTPFile (RemotePath, LocalPath, false);
 							}
 						}									
 					}
-                    else
-                    {
-                        //no file, download it
-                        OnProgressChanged();
-                        fileReturn = FTP.DownloadFTPFile(RemotePath, LocalPath, false);
-                    }					
+					else
+					{
+						//no file, download it
+						OnProgressChanged ();
+						fileReturn = FTP.DownloadFTPFile (RemotePath, LocalPath, false);
+					}					
 
-					if (ChecksHandler.IsRunningOnUnix())
+					if (ChecksHandler.IsRunningOnUnix ())
 					{
 						//if we're dealing with a file that should be executable, 
-						string gameName = Config.GetGameName();
-						bool bFileIsGameExecutable = (Path.GetFileName(LocalPath).EndsWith(".exe")) || (Path.GetFileNameWithoutExtension(LocalPath) == gameName);
+						string gameName = Config.GetGameName ();
+						bool bFileIsGameExecutable = (Path.GetFileName (LocalPath).EndsWith (".exe")) || (Path.GetFileNameWithoutExtension (LocalPath) == gameName);
 						if (bFileIsGameExecutable)
 						{
 							//set the execute bits
-							UnixHandler.MakeExecutable(LocalPath);
+							UnixHandler.MakeExecutable (LocalPath);
 						}					
 					}
 				}
@@ -235,27 +239,28 @@ namespace Launchpad.Launcher
 				//clear out the event handler
 				FTP.FileProgressChanged -= OnDownloadProgressChanged;
 			}
-	        catch (IOException ioex)
-            {
-                Console.WriteLine("IOException in InstallGameAsync(): " + ioex.Message);
+			catch (IOException ioex)
+			{
+				Console.WriteLine ("IOException in InstallGameAsync(): " + ioex.Message);
 
-                DownloadFailedArgs.Result = "1";
-                DownloadFailedArgs.ResultType = "Install";
-                DownloadFinishedArgs.Metadata = fileReturn;
+				DownloadFailedArgs.Result = "1";
+				DownloadFailedArgs.ResultType = "Install";
+				DownloadFinishedArgs.Metadata = fileReturn;
 
-                OnGameDownloadFailed();
-            }
+				OnGameDownloadFailed ();
+			}
 		}
 
 		/// <summary>
 		/// Starts an asynchronous game update task.
 		/// </summary>
-		public void UpdateGame()
+		public void UpdateGame ()
 		{
 			Thread t = new Thread (UpdateGameAsync);
 			t.Start ();
 		}
-		private void UpdateGameAsync()
+
+		private void UpdateGameAsync ()
 		{
 			ManifestHandler manifestHandler = new ManifestHandler ();
 
@@ -268,51 +273,52 @@ namespace Launchpad.Launcher
 			try
 			{
 				//Check old manifest against new manifest, download anything that isn't exactly the same as before
-				FTPHandler FTP = new FTPHandler();
+				FTPHandler FTP = new FTPHandler ();
 				FTP.FileProgressChanged += OnDownloadProgressChanged;
 				FTP.FileDownloadFinished += OnFileDownloadFinished;
 
 				foreach (ManifestEntry Entry in Manifest)
 				{
-					if (!OldManifest.Contains(Entry))
+					if (!OldManifest.Contains (Entry))
 					{
-                        string RemotePath = String.Format("{0}{1}",
-                                                       	  Config.GetGameURL(true),
-                                                          Entry.RelativePath);
+						string RemotePath = String.Format ("{0}{1}",
+							                                      Config.GetGameURL (true),
+							                                      Entry.RelativePath);
 
 						string LocalPath = String.Format ("{0}{1}", 
-						                                  Config.GetGamePath (true),
-						                                  Entry.RelativePath);
+							                   Config.GetGamePath (true),
+							                   Entry.RelativePath);
 
-						Directory.CreateDirectory(Directory.GetParent(LocalPath).ToString());
+						Directory.CreateDirectory (Directory.GetParent (LocalPath).ToString ());
 
-						OnProgressChanged();
-						FTP.DownloadFTPFile(RemotePath, LocalPath, false);
+						OnProgressChanged ();
+						FTP.DownloadFTPFile (RemotePath, LocalPath, false);
 					}
 				}
 
-				OnGameUpdateFinished();
+				OnGameUpdateFinished ();
 
 				//clear out the event handlers
 				FTP.FileProgressChanged -= OnDownloadProgressChanged;
 				FTP.FileDownloadFinished -= OnFileDownloadFinished;
 			}
-            catch (IOException ioex)
-            {
-                Console.WriteLine("IOException in UpdateGameAsync(): " + ioex.Message);
-                OnGameUpdateFailed();
-            }
+			catch (IOException ioex)
+			{
+				Console.WriteLine ("IOException in UpdateGameAsync(): " + ioex.Message);
+				OnGameUpdateFailed ();
+			}
 		}
 
 		/// <summary>
 		/// Starts an asynchronous game repair task.
 		/// </summary>
-		public void RepairGame()
+		public void RepairGame ()
 		{
 			Thread t = new Thread (RepairGameAsync);
 			t.Start ();
 		}
-		private void RepairGameAsync()
+
+		private void RepairGameAsync ()
 		{
 			//This value is filled with either a path to the last downloaded file, or with an exception message
 			//this message is used in the main UI to determine how it responds to a failed download.
@@ -326,7 +332,7 @@ namespace Launchpad.Launcher
 				FTP.FileProgressChanged += OnDownloadProgressChanged;
 
 				//first, verify that the manifest is correct.
-				string LocalManifestHash = MD5Handler.GetFileHash(File.OpenRead(ConfigHandler.GetManifestPath ()));
+				string LocalManifestHash = MD5Handler.GetFileHash (File.OpenRead (ConfigHandler.GetManifestPath ()));
 				string RemoteManifestHash = FTP.GetRemoteManifestChecksum ();
 
 				//if it is not, download a new copy.
@@ -347,31 +353,31 @@ namespace Launchpad.Launcher
 				{				
 
 
-                    string RemotePath = String.Format("{0}{1}",
-                                                       Config.GetGameURL(true),
-                                                       Entry.RelativePath);
+					string RemotePath = String.Format ("{0}{1}",
+						                                   Config.GetGameURL (true),
+						                                   Entry.RelativePath);
 
 					string LocalPath = String.Format ("{0}{1}", 
-					                                  Config.GetGamePath (true),
-					                                  Entry.RelativePath);
+						                   Config.GetGamePath (true),
+						                   Entry.RelativePath);
 
-					ProgressArgs.FileName = Path.GetFileName(LocalPath);
+					ProgressArgs.FileName = Path.GetFileName (LocalPath);
 
 					//make sure the directory for the file exists
-					Directory.CreateDirectory(Directory.GetParent(LocalPath).ToString());
+					Directory.CreateDirectory (Directory.GetParent (LocalPath).ToString ());
 
-					if (File.Exists(LocalPath))
+					if (File.Exists (LocalPath))
 					{
 
-						FileInfo fileInfo = new FileInfo(LocalPath);
+						FileInfo fileInfo = new FileInfo (LocalPath);
 						if (fileInfo.Length != Entry.Size)
 						{
 							//Resume the download of this partial file.
-							OnProgressChanged();
-							repairMetadata = FTP.DownloadFTPFile(RemotePath, LocalPath, fileInfo.Length, false);
+							OnProgressChanged ();
+							repairMetadata = FTP.DownloadFTPFile (RemotePath, LocalPath, fileInfo.Length, false);
 
 							//Now verify the file
-							string localHash = MD5Handler.GetFileHash(File.OpenRead(LocalPath));
+							string localHash = MD5Handler.GetFileHash (File.OpenRead (LocalPath));
 
 							if (localHash != Entry.Hash)
 							{
@@ -390,15 +396,15 @@ namespace Launchpad.Launcher
 						repairMetadata = FTP.DownloadFTPFile (RemotePath, LocalPath, false);
 					}
 
-					if (ChecksHandler.IsRunningOnUnix())
+					if (ChecksHandler.IsRunningOnUnix ())
 					{
 						//if we're dealing with a file that should be executable, 
-						string gameName = Config.GetGameName();
-						bool bFileIsGameExecutable = (Path.GetFileName(LocalPath).EndsWith(".exe")) || (Path.GetFileNameWithoutExtension(LocalPath) == gameName);
+						string gameName = Config.GetGameName ();
+						bool bFileIsGameExecutable = (Path.GetFileName (LocalPath).EndsWith (".exe")) || (Path.GetFileNameWithoutExtension (LocalPath) == gameName);
 						if (bFileIsGameExecutable)
 						{
 							//set the execute bits.																
-							UnixHandler.MakeExecutable(LocalPath);
+							UnixHandler.MakeExecutable (LocalPath);
 						}
 					}
 
@@ -427,7 +433,7 @@ namespace Launchpad.Launcher
 		/// <summary>
 		/// Launches the game.
 		/// </summary>
-		public void LaunchGame()
+		public void LaunchGame ()
 		{
 			//start new process of the game executable
 			try
@@ -440,7 +446,7 @@ namespace Launchpad.Launcher
 				Process game = Process.Start (gameStartInfo);
 				game.EnableRaisingEvents = true;
 
-				game.Exited += delegate(object sender, EventArgs e) 
+				game.Exited += delegate(object sender, EventArgs e)
 				{					
 					GameExitArgs.ExitCode = game.ExitCode;
 					OnGameExited ();
@@ -458,13 +464,13 @@ namespace Launchpad.Launcher
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		private void OnDownloadProgressChanged(object sender, FileDownloadProgressChangedEventArgs e)
+		private void OnDownloadProgressChanged (object sender, FileDownloadProgressChangedEventArgs e)
 		{
 			ProgressArgs = e;
 			OnProgressChanged ();
 		}
 
-		private void OnFileDownloadFinished(object sender, FileDownloadFinishedEventArgs e)
+		private void OnFileDownloadFinished (object sender, FileDownloadFinishedEventArgs e)
 		{
 			OnProgressChanged ();
 		}
@@ -472,7 +478,7 @@ namespace Launchpad.Launcher
 		/// <summary>
 		/// Raises the progress changed event.
 		/// </summary>
-		private void OnProgressChanged()
+		private void OnProgressChanged ()
 		{
 			if (ProgressChanged != null)
 			{
@@ -483,7 +489,7 @@ namespace Launchpad.Launcher
 		/// <summary>
 		/// Raises the download finished event.
 		/// </summary>
-		private void OnGameDownloadFinished()
+		private void OnGameDownloadFinished ()
 		{
 			if (GameDownloadFinished != null)
 			{
@@ -491,7 +497,7 @@ namespace Launchpad.Launcher
 			}
 		}
 
-		private void OnGameUpdateFinished()
+		private void OnGameUpdateFinished ()
 		{
 			if (GameUpdateFinished != null)
 			{
@@ -499,7 +505,7 @@ namespace Launchpad.Launcher
 			}
 		}
 
-		private void OnGameRepairFinished()
+		private void OnGameRepairFinished ()
 		{
 			if (GameRepairFinished != null)
 			{
@@ -507,7 +513,7 @@ namespace Launchpad.Launcher
 			}
 		}
 
-		private void OnGameLaunchFailed()
+		private void OnGameLaunchFailed ()
 		{
 			if (GameLaunchFailed != null)
 			{
@@ -515,7 +521,7 @@ namespace Launchpad.Launcher
 			}
 		}
 
-		private void OnGameDownloadFailed()
+		private void OnGameDownloadFailed ()
 		{
 			if (GameDownloadFailed != null)
 			{
@@ -523,7 +529,7 @@ namespace Launchpad.Launcher
 			}
 		}
 
-		private void OnGameUpdateFailed()
+		private void OnGameUpdateFailed ()
 		{
 			if (GameUpdateFailed != null)
 			{
@@ -531,7 +537,7 @@ namespace Launchpad.Launcher
 			}
 		}
 
-		private void OnGameRepairFailed()
+		private void OnGameRepairFailed ()
 		{
 			if (GameRepairFailed != null)
 			{
@@ -539,13 +545,13 @@ namespace Launchpad.Launcher
 			}
 		}
 
-		private void OnGameExited()
+		private void OnGameExited ()
 		{
 			if (GameExited != null)
 			{
 				GameExited (this, GameExitArgs);
 			}
 		}
-	}	   
+	}
 }
 

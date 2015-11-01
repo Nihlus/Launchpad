@@ -289,7 +289,7 @@ namespace Launchpad.Launcher
 					//bind events for UI updating					
 					Game.ProgressChanged += OnGameDownloadProgressChanged;
 					Game.GameRepairFinished += OnRepairFinished;
-					Game.GameDownloadFailed += OnGameDownloadFailed;
+					Game.GameRepairFailed += OnGameRepairFailed;
 
 				    if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
 				    {
@@ -346,9 +346,9 @@ namespace Launchpad.Launcher
 					else
 					{					
 						//bind events for UI updating
-						Game.GameDownloadFinished += OnGameDownloadFinished;
+						Game.GameUpdateFinished += OnGameUpdateFinished;
 						Game.ProgressChanged += OnGameDownloadProgressChanged;
-						Game.GameDownloadFailed += OnGameDownloadFailed;
+						Game.GameUpdateFailed += OnGameUpdateFailed;
 
 						//update the game asynchronously
 						if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
@@ -531,6 +531,51 @@ namespace Launchpad.Launcher
                 }
             }           
         }
+
+		/// <summary>
+		/// Passes the repair failed event to a generic handler
+		/// </summary>
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">Contains the type of failure that occured</param>
+		private void OnGameRepairFailed(object sender, GameRepairFailedEventArgs e)
+		{
+			GameDownloadFailedEventArgs args = new GameDownloadFailedEventArgs ();
+			args.Metadata = e.Metadata;
+			args.Result = e.Result;
+			args.ResultType = "Repair";
+
+			OnGameDownloadFailed (sender, args);	
+		}
+
+		/// <summary>
+		/// Passes the update finished event to a generic handler.
+		/// </summary>
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">Contains the result of the download.</param>
+		protected void OnGameUpdateFinished(object sender, GameUpdateFinishedEventArgs e)
+		{
+			GameDownloadFinishedEventArgs args = new GameDownloadFinishedEventArgs ();
+			args.Metadata = e.Metadata;
+			args.Result = e.Result;
+			args.ResultType = e.ResultType;
+
+			OnGameDownloadFinished (sender, args);
+		}
+
+		/// <summary>
+		/// Passes the update failed event to a generic handler.
+		/// </summary>
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">Contains the type of failure that occurred.</param>
+		protected void OnGameUpdateFailed(object sender, GameUpdateFailedEventArgs e)
+		{
+			GameDownloadFailedEventArgs args = new GameDownloadFailedEventArgs ();
+			args.Metadata = e.Metadata;
+			args.Result = e.Result;
+			args.ResultType = "Update";
+
+			OnGameDownloadFailed (sender, args);
+		}
 
         /// <summary>
         /// Alerts the user that a repair action has finished.
