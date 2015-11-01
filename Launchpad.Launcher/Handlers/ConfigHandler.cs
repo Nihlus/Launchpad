@@ -86,7 +86,7 @@ namespace Launchpad.Launcher
 			string configPath = GetConfigPath();
 
 			//Minor release 0.1.1, bugfixes
-			Version defaultLauncherVersion = new Version("0.1.0");
+			Version defaultLauncherVersion = new Version("0.1.1");
 
 			//Check for pre-unix config. If it exists, fix the values and copy it.
 			UpdateOldConfig ();
