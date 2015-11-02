@@ -94,6 +94,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="gtk-gui\Launchpad.Launcher.MainWindow.cs" />
+    <Compile Include="gtk-gui\Launchpad.Launcher.SettingsDialog.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -122,7 +124,6 @@
       <LogicalName>gui.stetic</LogicalName>
     </EmbeddedResource>
     <Compile Include="gtk-gui\generated.cs" />
-    <Compile Include="gtk-gui\Launchpad.MainWindow.cs" />
     <Compile Include="Handlers\MD5Handler.cs" />
     <Compile Include="Handlers\ConfigHandler.cs" />
     <Compile Include="Handlers\ChecksHandler.cs" />
@@ -257,7 +258,6 @@
     </EmbeddedResource>
     <Compile Include="Unix-UI\MainWindow.cs" />
     <Compile Include="Unix-UI\SettingsDialog.cs" />
-    <Compile Include="gtk-gui\Launchpad.SettingsDialog.cs" />
     <EmbeddedResource Include="Resources\RocketIcon.ico" />
     <Compile Include="Handlers\GameHandler.cs" />
     <Compile Include="Handlers\LauncherHandler.cs" />
