@@ -333,13 +333,13 @@ namespace Launchpad.Launcher
 
 				//first, verify that the manifest is correct.
 				string LocalManifestHash = MD5Handler.GetFileHash (File.OpenRead (ConfigHandler.GetManifestPath ()));
-				string RemoteManifestHash = HTTP.GetRemoteManifestChecksum ();
+				string RemoteManifestHash = HTTP.GetRemoteManifestChecksum ( "Game" );
 
 				//if it is not, download a new copy.
 				if (!(LocalManifestHash == RemoteManifestHash))
 				{
 					LauncherHandler Launcher = new LauncherHandler ();
-					Launcher.DownloadManifest ();
+					Launcher.DownloadManifest ( "Game" );
 				}
 
 				//then, begin repairing the game

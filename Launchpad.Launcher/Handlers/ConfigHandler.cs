@@ -386,11 +386,12 @@ namespace Launchpad.Launcher
 		/// Gets the manifest URL.
 		/// </summary>
 		/// <returns>The manifest URL.</returns>
-        public string GetManifestURL()
+        public string GetManifestURL( string WhichManifest )
         {
-            string manifestURL = String.Format("{0}/game/{1}/LauncherManifest.txt", 
+            string manifestURL = String.Format("{0}/game/{1}/{2}Manifest.txt", 
                 GetHTTPUrl(),
-                GetSystemTarget());
+                GetSystemTarget(),
+                WhichManifest );
 
             return manifestURL;
         }
@@ -399,11 +400,12 @@ namespace Launchpad.Launcher
 		/// Gets the manifest checksum URL.
 		/// </summary>
 		/// <returns>The manifest checksum URL.</returns>
-        public string GetManifestChecksumURL()
+        public string GetManifestChecksumURL( string WhichManifest )
         {
-            string manifestChecksumURL = String.Format("{0}/game/{1}/LauncherManifest.checksum", 
+            string manifestChecksumURL = String.Format("{0}/game/{1}/{2}Manifest.checksum", 
                 GetHTTPUrl(), 
-                GetSystemTarget());
+                GetSystemTarget(),
+                WhichManifest);
 
             return manifestChecksumURL;
         }

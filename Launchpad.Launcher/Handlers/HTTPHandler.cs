@@ -471,11 +471,11 @@ namespace Launchpad.Launcher
 			}
 		}
 
-		public string GetRemoteManifestChecksum()
+		public string GetRemoteManifestChecksum( string WhichManifest )
 		{
 			string checksum = String.Empty;
 
-			checksum = ReadHTTPFile (Config.GetManifestChecksumURL ());
+			checksum = ReadHTTPFile (Config.GetManifestChecksumURL ( WhichManifest ));
 			checksum = Utilities.Clean(checksum);
 
 			return checksum;
