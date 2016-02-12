@@ -66,53 +66,7 @@ namespace Launchpad.Launcher
 		/// </summary>
 		public void UpdateLauncher()
 		{
-			try
-			{
-				FTPHandler FTP = new FTPHandler ();
-
-                //crawl the server for all of the files in the /launcher/bin directory.
-                List<string> remotePaths = FTP.GetFilePaths(Config.GetLauncherBinariesURL(), true);
-
-                //download all of them
-                foreach (string path in remotePaths)
-                {
-                    try
-                    {
-                        if (!String.IsNullOrEmpty(path))
-                        {
-                            string Local = String.Format("{0}launchpad{1}{2}",
-                                             ConfigHandler.GetTempDir(),
-                                             Path.DirectorySeparatorChar,
-                                             path);
-
-                            string Remote = String.Format("{0}{1}",
-                                                Config.GetLauncherBinariesURL(),
-                                                path);
-
-                            if (!Directory.Exists(Local))
-                            {
-                                Directory.CreateDirectory(Directory.GetParent(Local).ToString());
-                            }
-
-                            FTP.DownloadFTPFile(Remote, Local, false);
-                        }                        
-                    }
-                    catch (WebException wex)
-                    {
-                        Console.WriteLine("WebException in UpdateLauncher(): " + wex.Message);
-                    }
-                }
-				
-                //TODO: Make the script copy recursively
-				ProcessStartInfo script = CreateUpdateScript ();
-
-				Process.Start(script);
-				Environment.Exit(0);
-			}
-			catch (IOException ioex)
-			{
-				Console.WriteLine ("IOException in UpdateLauncher(): " + ioex.Message);
-			}
+            return; // Until I get this retrofitted for a manifest .... No  updating.
 		}
 
 		/// <summary>
@@ -123,9 +77,9 @@ namespace Launchpad.Launcher
 			Stream manifestStream = null;														
 			try
 			{
-				FTPHandler FTP = new FTPHandler ();
+				HTTPHandler HTTP = new HTTPHandler ();
 
-				string remoteChecksum = FTP.GetRemoteManifestChecksum ();
+				string remoteChecksum = HTTP.GetRemoteManifestChecksum ();
 				string localChecksum = "";
 
 				string RemoteURL = Config.GetManifestURL ();
@@ -141,12 +95,12 @@ namespace Launchpad.Launcher
 						//Copy the old manifest so that we can compare them when updating the game
 						File.Copy(LocalPath, LocalPath + ".old", true);
 
-						FTP.DownloadFTPFile (RemoteURL, LocalPath, false);
+						HTTP.DownloadHTTPFile (RemoteURL, LocalPath, false);
 					}
 				}
 				else
 				{
-					FTP.DownloadFTPFile (RemoteURL, LocalPath, false);
+					HTTP.DownloadHTTPFile (RemoteURL, LocalPath, false);
 				}						
 			}
 			catch (IOException ioex)
@@ -173,10 +127,10 @@ namespace Launchpad.Launcher
 		}
 		private void LoadChangelogAsync()
 		{
-			FTPHandler FTP = new FTPHandler ();
+			HTTPHandler HTTP = new HTTPHandler ();
 
 			//load the HTML from the server as a string
-			string content = FTP.ReadFTPFile (Config.GetChangelogURL ());
+			string content = HTTP.ReadHTTPFile (Config.GetChangelogURL ());
             OnChangelogProgressChanged();
 					
 			DownloadFinishedArgs.Result = content;

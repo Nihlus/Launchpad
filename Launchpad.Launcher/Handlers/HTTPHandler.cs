@@ -62,8 +62,8 @@ namespace Launchpad.Launcher
 			//clean the input URL first
 			string remoteURL = rawRemoteURL.Replace (Path.DirectorySeparatorChar, '/');
 
-			string username = Config.GetFTPUsername();
-			string password = Config.GetFTPPassword();
+			string username = Config.GetHTTPUsername();
+			string password = Config.GetHTTPPassword();
 
             int bytesRead = 0;
 
@@ -129,8 +129,8 @@ namespace Launchpad.Launcher
 			string password;
 			if (!bUseAnonymous)
 			{
-				username = Config.GetFTPUsername ();
-				password = Config.GetFTPPassword ();
+				username = Config.GetHTTPUsername ();
+				password = Config.GetHTTPPassword ();
 			}
 			else
 			{
@@ -172,7 +172,7 @@ namespace Launchpad.Launcher
 				//reset byte counter
 				HTTPbytesDownloaded = 0;
 
-                fileSize = reader.Length;
+                fileSize = request.GetResponse().ContentLength;
 
 				//set file info for progress reporting
 				ProgressArgs.FileName = Path.GetFileNameWithoutExtension(remoteURL);
@@ -267,8 +267,8 @@ namespace Launchpad.Launcher
 			string password;
 			if (!bUseAnonymous)
 			{
-				username = Config.GetFTPUsername ();
-				password = Config.GetFTPPassword ();
+				username = Config.GetHTTPUsername ();
+				password = Config.GetHTTPPassword ();
 			}
 			else
 			{
@@ -433,7 +433,7 @@ namespace Launchpad.Launcher
 		/// <returns>The remote launcher version.</returns>
 		public Version GetRemoteLauncherVersion()
 		{
-			string remoteVersionPath = String.Format ("{0}/launcher/LauncherVersion.txt", Config.GetFTPUrl());
+			string remoteVersionPath = String.Format ("{0}/launcher/LauncherVersion.txt", Config.GetHTTPUrl());
 			string remoteVersion = ReadHTTPFile (remoteVersionPath);
 
 			return Version.Parse (remoteVersion);
@@ -449,14 +449,14 @@ namespace Launchpad.Launcher
 			if (bUseSystemTarget)
 			{
 				remoteVersionPath = String.Format ("{0}/game/{1}/bin/GameVersion.txt", 
-				                                   Config.GetFTPUrl(), 
+				                                   Config.GetHTTPUrl(), 
 				                                   Config.GetSystemTarget());
 
 			}
 			else
 			{
 				remoteVersionPath = String.Format ("{0}/game/bin/GameVersion.txt", 
-				                                   Config.GetFTPUrl());
+				                                   Config.GetHTTPUrl());
 
 			}
 			string remoteVersion = ReadHTTPFile (remoteVersionPath);
@@ -484,8 +484,8 @@ namespace Launchpad.Launcher
 		public bool DoesFileExist(string remotePath)
 		{
 			HttpWebRequest request = CreateHttpWebRequest (remotePath, 
-			                                            Config.GetFTPUsername (),
-			                                            Config.GetFTPPassword (),
+			                                            Config.GetHTTPUsername (),
+			                                            Config.GetHTTPPassword (),
 			                                            false);
 			HttpWebResponse response = null;
 			try

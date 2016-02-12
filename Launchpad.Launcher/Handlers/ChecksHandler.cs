@@ -26,22 +26,22 @@ namespace Launchpad.Launcher
 
 
 		/// <summary>
-		/// Determines whether this instance can connect to the FTP server. Run as little as possible, since it blocks the main thread while checking.
+		/// Determines whether this instance can connect to the HTTP server. Run as little as possible, since it blocks the main thread while checking.
 		/// </summary>
-		/// <returns><c>true</c> if this instance can connect to the FTP server; otherwise, <c>false</c>.</returns>
-		public bool CanConnectToFTP()
+		/// <returns><c>true</c> if this instance can connect to the HTTP server; otherwise, <c>false</c>.</returns>
+		public bool CanConnectToHTTP()
 		{
-			bool bCanConnectToFTP;
+			bool bCanConnectToHTTP;
 
-			string FTPURL = Config.GetFTPUrl();
-			string FTPUserName = Config.GetFTPUsername();
-			string FTPPassword = Config.GetFTPPassword();
+			string HTTPURL = Config.GetHTTPUrl() + "/IcanHazPatch.html";
+			string HTTPUserName = Config.GetHTTPUsername();
+			string HTTPPassword = Config.GetHTTPPassword();
 
 			try
 			{
-				FtpWebRequest plainRequest = (FtpWebRequest)FtpWebRequest.Create(FTPURL);
-				plainRequest.Credentials = new NetworkCredential(FTPUserName, FTPPassword);
-				plainRequest.Method = WebRequestMethods.Ftp.ListDirectory;
+				HttpWebRequest plainRequest = (HttpWebRequest)WebRequest.Create(HTTPURL);
+				plainRequest.Credentials = new NetworkCredential(HTTPUserName, HTTPPassword);
+                plainRequest.Method = "HEAD";
 				plainRequest.Timeout = 8000;
 
 				try
@@ -51,33 +51,35 @@ namespace Launchpad.Launcher
 					plainRequest.Abort();
 					response.Close();
 
-					bCanConnectToFTP = true;
+					bCanConnectToHTTP = true;
 				}
-				catch (WebException wex)
+
+
+                catch (WebException wex)
 				{
-                    Console.WriteLine("WebException in CanConnectToFTP(): " + wex.Message);
-                    Console.WriteLine(FTPURL);
+                    Console.WriteLine("WebException in CanConnectToHTTP(): " + wex.Message);
+                    Console.WriteLine(HTTPURL);
 
 					plainRequest.Abort();
-					bCanConnectToFTP = false;
+					bCanConnectToHTTP = false;
 				}
 			}
 			catch (WebException wex)
 			{
-				//case where FTP URL in config is not valid
-				Console.WriteLine ("WebException CanConnectToFTP() (Invalid URL): " + wex.Message);
+				//case where HTTP URL in config is not valid
+				Console.WriteLine ("WebException CanConnectToHTTP() (Invalid URL): " + wex.Message);
 
-				bCanConnectToFTP = false;
-				return bCanConnectToFTP;
+				bCanConnectToHTTP = false;
+				return bCanConnectToHTTP;
 			}
 
-			if (!bCanConnectToFTP)
+			if (!bCanConnectToHTTP)
 			{
-				Console.WriteLine("Failed to connect to FTP server at: {0}", Config.GetBaseFTPUrl());
-				bCanConnectToFTP = false;
+				Console.WriteLine("Failed to connect to HTTP server at: {0}", Config.GetBaseHTTPUrl());
+				bCanConnectToHTTP = false;
 			}
 
-			return bCanConnectToFTP;
+			return bCanConnectToHTTP;
 		}
 
 		/// <summary>
@@ -140,11 +142,11 @@ namespace Launchpad.Launcher
 		/// <returns><c>true</c> if the game is outdated; otherwise, <c>false</c>.</returns>
 		public bool IsGameOutdated()
 		{
-			FTPHandler FTP = new FTPHandler ();
+			HTTPHandler HTTP = new HTTPHandler ();
 			try
 			{
 				Version local = Config.GetLocalGameVersion();
-				Version remote = FTP.GetRemoteGameVersion(true);
+				Version remote = HTTP.GetRemoteGameVersion(true);
 
 				if (local < remote)
 				{
@@ -168,11 +170,12 @@ namespace Launchpad.Launcher
 		/// <returns><c>true</c> if the launcher is outdated; otherwise, <c>false</c>.</returns>
 		public bool IsLauncherOutdated()
 		{
-			FTPHandler FTP = new FTPHandler();
+            return false;
+			HTTPHandler HTTP = new HTTPHandler();
 			try
 			{
 				Version local = Config.GetLocalLauncherVersion ();
-				Version remote = FTP.GetRemoteLauncherVersion ();	
+				Version remote = HTTP.GetRemoteLauncherVersion ();	
 
 				if (local < remote)
 				{
@@ -217,10 +220,10 @@ namespace Launchpad.Launcher
 		{
 			if (File.Exists(ConfigHandler.GetManifestPath()))
 			{
-				FTPHandler FTP = new FTPHandler ();
+				HTTPHandler HTTP = new HTTPHandler ();
 
 				string manifestURL = Config.GetManifestURL ();
-				string remoteHash = FTP.ReadFTPFile (manifestURL);
+				string remoteHash = HTTP.ReadHTTPFile (manifestURL);
                 string localHash = MD5Handler.GetFileHash(File.OpenRead(ConfigHandler.GetManifestPath()));
 
 				if (remoteHash != localHash)
@@ -240,13 +243,13 @@ namespace Launchpad.Launcher
 
 		public bool DoesServerProvidePlatform(ESystemTarget Platform)
 		{
-			FTPHandler FTP = new FTPHandler ();
+			HTTPHandler HTTP = new HTTPHandler ();
 
 			string remote = String.Format ("{0}/game/{1}/.provides",
-			                                        Config.GetFTPUrl(),
+			                                        Config.GetHTTPUrl(),
 			                                        Platform.ToString());
 
-			return FTP.DoesFileExist (remote);
+			return HTTP.DoesFileExist (remote);
 			
 		}
 	}

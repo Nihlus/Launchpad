@@ -57,7 +57,7 @@ namespace Launchpad.Launcher
             this.Text = "Launchpad - " + Config.GetGameName();
 
             //first of all, check if we can connect to the FTP server.
-            if (!Checks.CanConnectToFTP())
+            if (!Checks.CanConnectToHTTP())
             {
                 MessageBox.Show(
                     this,

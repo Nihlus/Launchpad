@@ -64,15 +64,15 @@ namespace Launchpad.Launcher
 
 			MessageLabel.Text = Mono.Unix.Catalog.GetString ("Idle");
 
-			//First of all, check if we can connect to the FTP server.
-			if (!Checks.CanConnectToFTP ())
+			//First of all, check if we can connect to the HTTP server.
+			if (!Checks.CanConnectToHTTP ())
 			{
 				MessageDialog dialog = new MessageDialog (
 					null, 
 					DialogFlags.Modal, 
 					MessageType.Warning, 
 					ButtonsType.Ok, 
-					Mono.Unix.Catalog.GetString ("Failed to connect to the FTP server. Please check your FTP settings."));
+					Mono.Unix.Catalog.GetString ("Failed to connect to the HTTP server. Please check your HTTP settings."));
 
 				dialog.Run ();
 				dialog.Destroy ();
@@ -258,7 +258,7 @@ namespace Launchpad.Launcher
 		}
 
 		/// <summary>
-		/// Opens the settings editor, which allows the user to change the FTP and game settings.
+		/// Opens the settings editor, which allows the user to change the HTTP and game settings.
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>

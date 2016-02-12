@@ -44,7 +44,7 @@ namespace Launchpad.Launcher
 		
 		private global::Gtk.Alignment alignment1;
 		
-		private global::Gtk.Entry FTPURL_entry;
+		private global::Gtk.Entry HTTPURL_entry;
 		
 		private global::Gtk.HBox hbox4;
 		
@@ -52,7 +52,7 @@ namespace Launchpad.Launcher
 		
 		private global::Gtk.Alignment alignment2;
 		
-		private global::Gtk.Entry FTPUsername_entry;
+		private global::Gtk.Entry HTTPUsername_entry;
 		
 		private global::Gtk.HBox hbox5;
 		
@@ -60,7 +60,7 @@ namespace Launchpad.Launcher
 		
 		private global::Gtk.Alignment alignment3;
 		
-		private global::Gtk.Entry FTPPassword_entry;
+		private global::Gtk.Entry HTTPPassword_entry;
 		
 		private global::Gtk.Label GtkLabel3;
 		
@@ -210,7 +210,7 @@ namespace Launchpad.Launcher
 			// Container child hbox3.Gtk.Box+BoxChild
 			this.label3 = new global::Gtk.Label ();
 			this.label3.Name = "label3";
-			this.label3.LabelProp = global::Mono.Unix.Catalog.GetString ("FTP URL: ");
+			this.label3.LabelProp = global::Mono.Unix.Catalog.GetString ("HTTP URL: ");
 			this.hbox3.Add (this.label3);
 			global::Gtk.Box.BoxChild w14 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.label3]));
 			w14.Position = 0;
@@ -221,12 +221,12 @@ namespace Launchpad.Launcher
 			this.alignment1.WidthRequest = 200;
 			this.alignment1.Name = "alignment1";
 			// Container child alignment1.Gtk.Container+ContainerChild
-			this.FTPURL_entry = new global::Gtk.Entry ();
-			this.FTPURL_entry.CanFocus = true;
-			this.FTPURL_entry.Name = "FTPURL_entry";
-			this.FTPURL_entry.IsEditable = true;
-			this.FTPURL_entry.InvisibleChar = '●';
-			this.alignment1.Add (this.FTPURL_entry);
+			this.HTTPURL_entry = new global::Gtk.Entry ();
+			this.HTTPURL_entry.CanFocus = true;
+			this.HTTPURL_entry.Name = "HTTPURL_entry";
+			this.HTTPURL_entry.IsEditable = true;
+			this.HTTPURL_entry.InvisibleChar = '●';
+			this.alignment1.Add (this.HTTPURL_entry);
 			this.hbox3.Add (this.alignment1);
 			global::Gtk.Box.BoxChild w16 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.alignment1]));
 			w16.PackType = ((global::Gtk.PackType)(1));
@@ -244,7 +244,7 @@ namespace Launchpad.Launcher
 			// Container child hbox4.Gtk.Box+BoxChild
 			this.label4 = new global::Gtk.Label ();
 			this.label4.Name = "label4";
-			this.label4.LabelProp = global::Mono.Unix.Catalog.GetString ("FTP Username: ");
+			this.label4.LabelProp = global::Mono.Unix.Catalog.GetString ("HTTP Username: ");
 			this.hbox4.Add (this.label4);
 			global::Gtk.Box.BoxChild w18 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.label4]));
 			w18.Position = 0;
@@ -255,12 +255,12 @@ namespace Launchpad.Launcher
 			this.alignment2.WidthRequest = 200;
 			this.alignment2.Name = "alignment2";
 			// Container child alignment2.Gtk.Container+ContainerChild
-			this.FTPUsername_entry = new global::Gtk.Entry ();
-			this.FTPUsername_entry.CanFocus = true;
-			this.FTPUsername_entry.Name = "FTPUsername_entry";
-			this.FTPUsername_entry.IsEditable = true;
-			this.FTPUsername_entry.InvisibleChar = '●';
-			this.alignment2.Add (this.FTPUsername_entry);
+			this.HTTPUsername_entry = new global::Gtk.Entry ();
+			this.HTTPUsername_entry.CanFocus = true;
+			this.HTTPUsername_entry.Name = "HTTPUsername_entry";
+			this.HTTPUsername_entry.IsEditable = true;
+			this.HTTPUsername_entry.InvisibleChar = '●';
+			this.alignment2.Add (this.HTTPUsername_entry);
 			this.hbox4.Add (this.alignment2);
 			global::Gtk.Box.BoxChild w20 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.alignment2]));
 			w20.PackType = ((global::Gtk.PackType)(1));
@@ -278,7 +278,7 @@ namespace Launchpad.Launcher
 			// Container child hbox5.Gtk.Box+BoxChild
 			this.label5 = new global::Gtk.Label ();
 			this.label5.Name = "label5";
-			this.label5.LabelProp = global::Mono.Unix.Catalog.GetString ("FTP Password: ");
+			this.label5.LabelProp = global::Mono.Unix.Catalog.GetString ("HTTP Password: ");
 			this.hbox5.Add (this.label5);
 			global::Gtk.Box.BoxChild w22 = ((global::Gtk.Box.BoxChild)(this.hbox5 [this.label5]));
 			w22.Position = 0;
@@ -289,12 +289,12 @@ namespace Launchpad.Launcher
 			this.alignment3.WidthRequest = 200;
 			this.alignment3.Name = "alignment3";
 			// Container child alignment3.Gtk.Container+ContainerChild
-			this.FTPPassword_entry = new global::Gtk.Entry ();
-			this.FTPPassword_entry.CanFocus = true;
-			this.FTPPassword_entry.Name = "FTPPassword_entry";
-			this.FTPPassword_entry.IsEditable = true;
-			this.FTPPassword_entry.InvisibleChar = '●';
-			this.alignment3.Add (this.FTPPassword_entry);
+			this.HTTPPassword_entry = new global::Gtk.Entry ();
+			this.HTTPPassword_entry.CanFocus = true;
+			this.HTTPPassword_entry.Name = "HTTPPassword_entry";
+			this.HTTPPassword_entry.IsEditable = true;
+			this.HTTPPassword_entry.InvisibleChar = '●';
+			this.alignment3.Add (this.HTTPPassword_entry);
 			this.hbox5.Add (this.alignment3);
 			global::Gtk.Box.BoxChild w24 = ((global::Gtk.Box.BoxChild)(this.hbox5 [this.alignment3]));
 			w24.PackType = ((global::Gtk.PackType)(1));
@@ -372,7 +372,7 @@ namespace Launchpad.Launcher
 			this.DefaultHeight = 295;
 			this.buttonOk.HasDefault = true;
 			this.Show ();
-			this.FTPURL_entry.Changed += new global::System.EventHandler (this.OnFTPURLEntryChanged);
+			this.HTTPURL_entry.Changed += new global::System.EventHandler (this.OnHTTPURLEntryChanged);
 			this.buttonCancel.Clicked += new global::System.EventHandler (this.OnButtonCancelClicked);
 			this.buttonOk.Clicked += new global::System.EventHandler (this.OnButtonOkClicked);
 		}
