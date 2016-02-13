@@ -342,7 +342,7 @@ namespace Launchpad.Launcher
 					{				
                         SetLauncherMode(ELauncherMode.Update, true);
 						Launcher.DownloadManifest ( "Game" );
-                            Launcher.UpdateLauncher();
+                        Launcher.UpdateLauncher();
 					}
 					else
 					{					

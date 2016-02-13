@@ -133,7 +133,7 @@ namespace Launchpad.Launcher
 
         private void UpdateLauncherAsync()
         {
-            ManifestHandler manifestHandler = new ManifestHandler();
+            ManifestHandler manifestHandler = new ManifestHandler( "Launcher" );
 
             //check all local files against the manifest for file size changes.
             //if the file is missing or the wrong size, download it.
@@ -153,11 +153,11 @@ namespace Launchpad.Launcher
                     if (!OldManifest.Contains(Entry))
                     {
                         string RemotePath = String.Format("{0}{1}",
-                                                                  Config.GetGameURL(true),
+                                                                  Config.GetLauncherBinariesURL(),
                                                                   Entry.RelativePath);
 
-                        string LocalPath = String.Format("{0}{1}",
-                                               Config.GetGamePath(true),
+                        string LocalPath = String.Format("{0}\\launchpad\\{1}",
+                                               ConfigHandler.GetTempDir(),
                                                Entry.RelativePath);
 
                         Directory.CreateDirectory(Directory.GetParent(LocalPath).ToString());
@@ -168,6 +168,10 @@ namespace Launchpad.Launcher
                 }
 
                 OnGameUpdateFinished();
+                ProcessStartInfo script = CreateUpdateScript();
+
+                Process.Start( script );
+                Environment.Exit( 0 );
 
                 //clear out the event handlers
                 HTTP.FileProgressChanged -= OnDownloadProgressChanged;
@@ -180,10 +184,6 @@ namespace Launchpad.Launcher
             }
         }
 
-
-
-        //TODO: Update this function to handle DLLs as well. May have to implement a full-blown
-        //manifest system here as well.
 
         /// <summary>
         /// Downloads the manifest.
@@ -199,11 +199,11 @@ namespace Launchpad.Launcher
 				string localChecksum = "";
 
 				string RemoteURL = Config.GetManifestURL ( WhichManifest );
-				string LocalPath = ConfigHandler.GetManifestPath ();
+				string LocalPath = ConfigHandler.GetManifestPath ( WhichManifest );
 
-				if (File.Exists(ConfigHandler.GetManifestPath()))
+				if (File.Exists(ConfigHandler.GetManifestPath( WhichManifest )))
 				{
-					manifestStream = File.OpenRead (ConfigHandler.GetManifestPath ());
+					manifestStream = File.OpenRead (ConfigHandler.GetManifestPath ( WhichManifest ));
                     localChecksum = MD5Handler.GetFileHash(manifestStream);
 
 					if (!(remoteChecksum == localChecksum))
@@ -289,7 +289,7 @@ namespace Launchpad.Launcher
 					string dirCom = String.Format ("cd {0}", ConfigHandler.GetLocalDir ());
 					string launchCom = String.Format (@"nohup ./{0} &", executableName);
 					tw.WriteLine (@"#!/bin/sh");
-					tw.WriteLine ("sleep 5");
+					tw.WriteLine ("sleep 15");
 					tw.WriteLine (copyCom);
 					tw.WriteLine (delCom); 
 					tw.WriteLine (dirCom);
@@ -322,7 +322,7 @@ namespace Launchpad.Launcher
 
 					//write commands to the script
 					//wait three seconds, then copy the new executable
-					tw.WriteLine(String.Format(@"timeout 3 & xcopy /e /s /y ""{0}\launchpad"" ""{1}"" && rmdir /s /q {0}\launchpad", 
+					tw.WriteLine(String.Format(@"timeout 15 & xcopy /e /s /y ""{0}\launchpad"" ""{1}"" && mdir /s /q {0}\launchpad", 
 					                           ConfigHandler.GetTempDir(), 
 					                           ConfigHandler.GetLocalDir()));
 

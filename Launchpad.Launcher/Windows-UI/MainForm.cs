@@ -250,6 +250,7 @@ namespace Launchpad.Launcher
                         {
                             //update the launcher synchronously.
                             SetLauncherMode(ELauncherMode.Update, true);
+                            Launcher.DownloadManifest("Launcher");
                             Launcher.UpdateLauncher();                            
                         }
                         else

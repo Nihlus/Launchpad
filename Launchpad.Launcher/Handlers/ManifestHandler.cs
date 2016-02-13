@@ -6,6 +6,7 @@ namespace Launchpad.Launcher
 {
 	internal sealed class ManifestHandler
 	{
+        private string WhichManifest;
 		private List<ManifestEntry> manifest = new List<ManifestEntry> ();
 
 		/// <summary>
@@ -17,7 +18,7 @@ namespace Launchpad.Launcher
 		{
 			get
 			{
-				LoadManifest ();
+				LoadManifest ( WhichManifest );
 				return manifest;
 			}
 		}
@@ -33,7 +34,7 @@ namespace Launchpad.Launcher
 		{
 			get
 			{
-				LoadOldManifest ();
+				LoadOldManifest ( WhichManifest );
 				return oldManifest;
 			}
 		}
@@ -41,23 +42,23 @@ namespace Launchpad.Launcher
 		private object ManifestLock = new object ();
 		private object OldManifestLock = new object ();
 
-		public ManifestHandler ()
+		public ManifestHandler ( string ManifestName )
 		{
-
+            WhichManifest = ManifestName;
 		}
 
 		/// <summary>
 		/// Loads the manifest from disk.
 		/// </summary>
-		private void LoadManifest ()
+		private void LoadManifest ( string WhichManifest )
 		{
 			try
 			{
 				lock (ManifestLock)
 				{
-					if (File.Exists (ConfigHandler.GetManifestPath ()))
+					if (File.Exists (ConfigHandler.GetManifestPath ( WhichManifest )))
 					{
-						string[] rawManifest = File.ReadAllLines (ConfigHandler.GetManifestPath ());
+						string[] rawManifest = File.ReadAllLines (ConfigHandler.GetManifestPath ( WhichManifest ));
 						foreach (string rawEntry in rawManifest)
 						{
 							ManifestEntry newEntry = new ManifestEntry ();
@@ -78,15 +79,15 @@ namespace Launchpad.Launcher
 		/// <summary>
 		/// Loads the old manifest from disk.
 		/// </summary>
-		private void LoadOldManifest ()
+		private void LoadOldManifest ( string WhichManifest )
 		{
 			try
 			{
 				lock (OldManifestLock)
 				{
-					if (File.Exists (ConfigHandler.GetOldManifestPath ()))
+					if (File.Exists (ConfigHandler.GetOldManifestPath ( WhichManifest )))
 					{
-						string[] rawOldManifest = File.ReadAllLines (ConfigHandler.GetOldManifestPath ());
+						string[] rawOldManifest = File.ReadAllLines (ConfigHandler.GetOldManifestPath ( WhichManifest ));
 						foreach (string rawEntry in rawOldManifest)
 						{
 							ManifestEntry newEntry = new ManifestEntry ();

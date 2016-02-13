@@ -134,7 +134,7 @@ namespace Launchpad.Launcher
 			try
 			{
 				HTTPHandler HTTP = new HTTPHandler ();
-				ManifestHandler manifestHandler = new ManifestHandler ();
+				ManifestHandler manifestHandler = new ManifestHandler ( "Game" );
 				List<ManifestEntry> Manifest = manifestHandler.Manifest;
 
 				//create the .install file to mark that an installation has begun
@@ -262,7 +262,7 @@ namespace Launchpad.Launcher
 
 		private void UpdateGameAsync ()
 		{
-			ManifestHandler manifestHandler = new ManifestHandler ();
+			ManifestHandler manifestHandler = new ManifestHandler ( "Game" );
 
 			//check all local files against the manifest for file size changes.
 			//if the file is missing or the wrong size, download it.
@@ -332,7 +332,7 @@ namespace Launchpad.Launcher
 				HTTP.FileProgressChanged += OnDownloadProgressChanged;
 
 				//first, verify that the manifest is correct.
-				string LocalManifestHash = MD5Handler.GetFileHash (File.OpenRead (ConfigHandler.GetManifestPath ()));
+				string LocalManifestHash = MD5Handler.GetFileHash (File.OpenRead (ConfigHandler.GetManifestPath ("Game")));
 				string RemoteManifestHash = HTTP.GetRemoteManifestChecksum ( "Game" );
 
 				//if it is not, download a new copy.
@@ -343,7 +343,7 @@ namespace Launchpad.Launcher
 				}
 
 				//then, begin repairing the game
-				ManifestHandler manifestHandler = new ManifestHandler ();
+				ManifestHandler manifestHandler = new ManifestHandler ( "Game" );
 				List<ManifestEntry> Manifest = manifestHandler.Manifest;			
 
 				ProgressArgs.TotalFiles = Manifest.Count;

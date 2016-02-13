@@ -217,13 +217,13 @@ namespace Launchpad.Launcher
 		/// <returns><c>true</c> if the manifest is outdated; otherwise, <c>false</c>.</returns>
 		public bool IsManifestOutdated( string WhichManifest )
 		{
-			if (File.Exists(ConfigHandler.GetManifestPath()))
+			if (File.Exists(ConfigHandler.GetManifestPath( WhichManifest )))
 			{
 				HTTPHandler HTTP = new HTTPHandler ();
 
 				string manifestURL = Config.GetManifestURL ( WhichManifest );
 				string remoteHash = HTTP.ReadHTTPFile (manifestURL);
-                string localHash = MD5Handler.GetFileHash(File.OpenRead(ConfigHandler.GetManifestPath()));
+                string localHash = MD5Handler.GetFileHash(File.OpenRead(ConfigHandler.GetManifestPath( WhichManifest )));
 
 				if (remoteHash != localHash)
 				{

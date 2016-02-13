@@ -244,10 +244,10 @@ namespace Launchpad.Launcher
 		/// Gets the manifest's path on disk.
 		/// </summary>
 		/// <returns>The manifest path.</returns>
-        public static string GetManifestPath()
+        public static string GetManifestPath( string WhichManifest )
         {
-            string manifestPath = String.Format(@"{0}LauncherManifest.txt", 
-			                                    GetLocalDir());
+            string manifestPath = String.Format(@"{0}{1}Manifest.txt", 
+			                                    GetLocalDir(), WhichManifest );
             return manifestPath;
         }
 
@@ -255,10 +255,10 @@ namespace Launchpad.Launcher
 		/// Gets the old manifest's path on disk.
 		/// </summary>
 		/// <returns>The old manifest's path.</returns>
-		public static string GetOldManifestPath()
-		{
-			string oldManifestPath = String.Format(@"{0}LauncherManifest.txt.old", 
-			                                    GetLocalDir());
+		public static string GetOldManifestPath(string WhichManifest)
+        {
+			string oldManifestPath = String.Format(@"{0}{1}Manifest.txt.old", 
+			                                    GetLocalDir(), WhichManifest );
 			return oldManifestPath;
 		}
 
@@ -388,8 +388,9 @@ namespace Launchpad.Launcher
 		/// <returns>The manifest URL.</returns>
         public string GetManifestURL( string WhichManifest )
         {
-            string manifestURL = String.Format("{0}/game/{1}/{2}Manifest.txt", 
+            string manifestURL = String.Format("{0}/{1}/{2}/{3}Manifest.txt", 
                 GetHTTPUrl(),
+                WhichManifest.ToLower(),
                 GetSystemTarget(),
                 WhichManifest );
 
@@ -402,8 +403,9 @@ namespace Launchpad.Launcher
 		/// <returns>The manifest checksum URL.</returns>
         public string GetManifestChecksumURL( string WhichManifest )
         {
-            string manifestChecksumURL = String.Format("{0}/game/{1}/{2}Manifest.checksum", 
+            string manifestChecksumURL = String.Format("{0}/{1}/{2}/{3}Manifest.checksum", 
                 GetHTTPUrl(), 
+                WhichManifest.ToLower(),
                 GetSystemTarget(),
                 WhichManifest);
 
@@ -416,8 +418,9 @@ namespace Launchpad.Launcher
 		/// <returns>The custom launcher download URL.</returns>
         public string GetLauncherBinariesURL()
         {
-            string launcherURL = String.Format("{0}/launcher/bin/", 
-			                                   GetHTTPUrl());
+            string launcherURL = String.Format("{0}/launcher/{1}/bin/", 
+			                                   GetHTTPUrl(),
+                                               GetSystemTarget());
             return launcherURL;
         }
 
