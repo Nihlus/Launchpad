@@ -31,9 +31,9 @@ namespace Launchpad.Launcher
 			combobox_SystemTarget.Active = (int)Config.GetSystemTarget();
 
 			//fill in remote settings
-			FTPURL_entry.Text = Config.GetBaseFTPUrl ();
-			FTPUsername_entry.Text = Config.GetFTPUsername ();
-			FTPPassword_entry.Text = Config.GetFTPPassword ();
+			HTTPURL_entry.Text = Config.GetBaseHTTPUrl ();
+			HTTPUsername_entry.Text = Config.GetHTTPUsername ();
+			HTTPPassword_entry.Text = Config.GetHTTPPassword ();
 
 			progressbar3.Text = Mono.Unix.Catalog.GetString("Idle");
 			buttonOk.Label = Mono.Unix.Catalog.GetString ("OK");
@@ -66,25 +66,25 @@ namespace Launchpad.Launcher
 				bAreAllSettingsOK = false;
 			}
 
-			if (FTPURL_entry.Text.StartsWith ("ftp://"))
+			if (HTTPURL_entry.Text.StartsWith ("HTTP://"))
 			{
-				Config.SetBaseFTPUrl (FTPURL_entry.Text);
+				Config.SetBaseHTTPUrl (HTTPURL_entry.Text);
 			} 
 			else
 			{
 				bAreAllSettingsOK = false;
 				Gdk.Color col = new Gdk.Color(255, 128, 128);
-				FTPURL_entry.ModifyBase(StateType.Normal, col);
-				FTPURL_entry.TooltipText = Mono.Unix.Catalog.GetString("The URL needs to begin with \"ftp://\". Please correct the URL.");
+				HTTPURL_entry.ModifyBase(StateType.Normal, col);
+				HTTPURL_entry.TooltipText = Mono.Unix.Catalog.GetString("The URL needs to begin with \"HTTP://\". Please correct the URL.");
 			}
 
-			Config.SetFTPPassword (FTPPassword_entry.Text);
-			Config.SetFTPUsername (FTPUsername_entry.Text);
+			Config.SetHTTPPassword (HTTPPassword_entry.Text);
+			Config.SetHTTPUsername (HTTPUsername_entry.Text);
 
 
 			if (bAreAllSettingsOK)
 			{
-				if (Checks.CanConnectToFTP ())
+				if (Checks.CanConnectToHTTP ())
 				{
 					Destroy ();
 				}
@@ -94,7 +94,7 @@ namespace Launchpad.Launcher
 						null, DialogFlags.Modal, 
 						MessageType.Warning, 
 						ButtonsType.Ok, 
-						Mono.Unix.Catalog.GetString("Failed to connect to the FTP server. Please check your FTP settings."));
+						Mono.Unix.Catalog.GetString("Failed to connect to the HTTP server. Please check your HTTP settings."));
 
 					dialog.Run ();
 					dialog.Destroy ();
@@ -115,14 +115,14 @@ namespace Launchpad.Launcher
 		}
 
 		/// <summary>
-		/// Raises the FTPURL entry changed event.
+		/// Raises the HTTPURL entry changed event.
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		protected void OnFTPURLEntryChanged (object sender, EventArgs e)
+		protected void OnHTTPURLEntryChanged (object sender, EventArgs e)
 		{
 			//Set the base colour back to normal
-			FTPURL_entry.ModifyBase (StateType.Normal);
+			HTTPURL_entry.ModifyBase (StateType.Normal);
 		}
 	}
 }

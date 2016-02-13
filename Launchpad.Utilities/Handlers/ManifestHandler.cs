@@ -54,35 +54,39 @@ namespace Launchpad.Utilities
 			{
 				if (file != null)
 				{
-					FileStream fileStream = File.OpenRead (file);
-					var skipDirectory = TargetPath;
+                    // Skip debugging files during test cycles.
+                    if ( !file.EndsWith(".pdb") )
+                    {
+                        FileStream fileStream = File.OpenRead(file);
+                        var skipDirectory = TargetPath;
 
-					int fileAmount = files.Length; 
-					string currentFile = file.Substring (skipDirectory.Length);
+                        int fileAmount = files.Length;
+                        string currentFile = file.Substring(skipDirectory.Length);
 
-					//get file size on disk
-					FileInfo Info = new FileInfo (file);
-					long fileSize = Info.Length;
+                        //get file size on disk
+                        FileInfo Info = new FileInfo(file);
+                        long fileSize = Info.Length;
 
-					string hash = MD5Handler.GetFileHash (fileStream);
-					string manifestLine = String.Format (@"{0}:{1}:{2}", file.Substring (skipDirectory.Length), hash, fileSize.ToString ());
+                        string hash = MD5Handler.GetFileHash(fileStream);
+                        string manifestLine = String.Format(@"{0}:{1}:{2}", file.Substring(skipDirectory.Length), hash, fileSize.ToString());
 
-					if (fileStream != null)
-					{
-						fileStream.Close ();	
-					}
+                        if (fileStream != null)
+                        {
+                            fileStream.Close();
+                        }
 
-					completedFiles++;
+                        completedFiles++;
 
 
-					tw.WriteLine (manifestLine);
-					ProgressArgs.Filepath = currentFile;
-					ProgressArgs.TotalFiles = fileAmount;
-					ProgressArgs.CompletedFiles = completedFiles;
-					ProgressArgs.MD5 = hash;
-					ProgressArgs.Filesize = fileSize;
+                        tw.WriteLine(manifestLine);
+                        ProgressArgs.Filepath = currentFile;
+                        ProgressArgs.TotalFiles = fileAmount;
+                        ProgressArgs.CompletedFiles = completedFiles;
+                        ProgressArgs.MD5 = hash;
+                        ProgressArgs.Filesize = fileSize;
 
-					OnManifestGenerationProgressChanged ();
+                        OnManifestGenerationProgressChanged();
+                    }
 				}
 			}
 			tw.Close ();

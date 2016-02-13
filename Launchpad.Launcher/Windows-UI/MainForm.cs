@@ -57,7 +57,7 @@ namespace Launchpad.Launcher
             this.Text = "Launchpad - " + Config.GetGameName();
 
             //first of all, check if we can connect to the FTP server.
-            if (!Checks.CanConnectToFTP())
+            if (!Checks.CanConnectToHTTP())
             {
                 MessageBox.Show(
                     this,
@@ -125,9 +125,9 @@ namespace Launchpad.Launcher
                 //Does the launcher need an update?
                 if (!Checks.IsLauncherOutdated())
                 {
-                    if (Checks.IsManifestOutdated())
+                    if (Checks.IsManifestOutdated( "Game" ))
                     {
-                        Launcher.DownloadManifest();
+                        Launcher.DownloadManifest( "Game" );
                     }
 
                     if(!Checks.IsGameInstalled())
@@ -250,6 +250,7 @@ namespace Launchpad.Launcher
                         {
                             //update the launcher synchronously.
                             SetLauncherMode(ELauncherMode.Update, true);
+                            Launcher.DownloadManifest("Launcher");
                             Launcher.UpdateLauncher();                            
                         }
                         else

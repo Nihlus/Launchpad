@@ -111,36 +111,37 @@ namespace Launchpad.Utilities
 
 				string[] files = Directory.GetFiles (folderBrowserDialog1.SelectedPath, "*", SearchOption.AllDirectories);                
 				int completedFiles = 0;
-                
-				IEnumerable<string> enumeratedFiles = Directory
-                                                    .EnumerateFiles (folderBrowserDialog1.SelectedPath, "*", SearchOption.AllDirectories);
 
-				foreach (string file in enumeratedFiles)
+                IEnumerable<string> enumeratedFiles = Directory
+                                                    .EnumerateFiles(folderBrowserDialog1.SelectedPath, "*", SearchOption.AllDirectories);
+
+                foreach (string file in enumeratedFiles)
 				{
 					if (file != null)
 					{
-						FileStream fileStream = File.OpenRead (file);
-						var skipDirectory = folderBrowserDialog1.SelectedPath;
+                        var skipDirectory = folderBrowserDialog1.SelectedPath;
+                        int fileAmount = files.Length;
+                        string currentFile = file.Substring(skipDirectory.Length);
+                        // Skip Debugging files. Breaks when testing if permitted.
 
-						int fileAmount = files.Length; 
-						string currentFile = file.Substring (skipDirectory.Length);
+                        if (!file.EndsWith(".pdb"))
+                        {
+                            FileStream fileStream = File.OpenRead(file);
 
-						//get file size on disk
-						FileInfo Info = new FileInfo (file);
-						string fileSize = Info.Length.ToString ();
-                        
-						string manifestLine = String.Format (@"{0}:{1}:{2}", file.Substring (skipDirectory.Length), MD5Handler.GetFileHash (fileStream), fileSize);
+                            //get file size on disk
+                            FileInfo Info = new FileInfo(file);
+                            string fileSize = Info.Length.ToString();
 
-						if (fileStream != null)
-						{
-							fileStream.Close ();	
-						}
-							
-						completedFiles++;
-                        
+                            string manifestLine = String.Format(@"{0}:{1}:{2}", file.Substring(skipDirectory.Length), MD5Handler.GetFileHash(fileStream), fileSize);
 
-						tw.WriteLine (manifestLine);
-						backgroundWorker_manifestGenerator.ReportProgress (completedFiles, new Tuple<int, int, string> (fileAmount, completedFiles, currentFile));
+                            if (fileStream != null)
+                            {
+                                fileStream.Close();
+                            }
+                            tw.WriteLine(manifestLine);
+                        }
+                        completedFiles++;
+                        backgroundWorker_manifestGenerator.ReportProgress(completedFiles, new Tuple<int, int, string>(fileAmount, completedFiles, currentFile));
 					}
 				}
 				tw.Close ();

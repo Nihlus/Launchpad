@@ -133,8 +133,8 @@ namespace Launchpad.Launcher
 			string fileReturn = "";
 			try
 			{
-				FTPHandler FTP = new FTPHandler ();
-				ManifestHandler manifestHandler = new ManifestHandler ();
+				HTTPHandler HTTP = new HTTPHandler ();
+				ManifestHandler manifestHandler = new ManifestHandler ( "Game" );
 				List<ManifestEntry> Manifest = manifestHandler.Manifest;
 
 				//create the .install file to mark that an installation has begun
@@ -143,8 +143,8 @@ namespace Launchpad.Launcher
 
 
 				//raise the progress changed event by binding to the 
-				//event in the FTP class
-				FTP.FileProgressChanged += OnDownloadProgressChanged;
+				//event in the HTTP class
+				HTTP.FileProgressChanged += OnDownloadProgressChanged;
 
 				//in order to be able to resume downloading, we check if there is an entry
 				//stored in the install cookie.
@@ -197,7 +197,7 @@ namespace Launchpad.Launcher
 						{
 							//Resume the download of this partial file.
 							OnProgressChanged ();
-							fileReturn = FTP.DownloadFTPFile (RemotePath, LocalPath, fileInfo.Length, false);
+							fileReturn = HTTP.DownloadHTTPFile (RemotePath, LocalPath, fileInfo.Length, false);
 
 							//Now verify the file
 							string localHash = MD5Handler.GetFileHash (File.OpenRead (LocalPath));
@@ -206,7 +206,7 @@ namespace Launchpad.Launcher
 							{
 								Console.WriteLine ("InstallGameAsync: Resumed file hash was invalid, downloading fresh copy from server.");
 								OnProgressChanged ();
-								fileReturn = FTP.DownloadFTPFile (RemotePath, LocalPath, false);
+								fileReturn = HTTP.DownloadHTTPFile (RemotePath, LocalPath, false);
 							}
 						}									
 					}
@@ -214,7 +214,7 @@ namespace Launchpad.Launcher
 					{
 						//no file, download it
 						OnProgressChanged ();
-						fileReturn = FTP.DownloadFTPFile (RemotePath, LocalPath, false);
+						fileReturn = HTTP.DownloadHTTPFile (RemotePath, LocalPath, false);
 					}					
 
 					if (ChecksHandler.IsRunningOnUnix ())
@@ -237,7 +237,7 @@ namespace Launchpad.Launcher
 				OnGameDownloadFinished ();	
 
 				//clear out the event handler
-				FTP.FileProgressChanged -= OnDownloadProgressChanged;
+				HTTP.FileProgressChanged -= OnDownloadProgressChanged;
 			}
 			catch (IOException ioex)
 			{
@@ -262,7 +262,7 @@ namespace Launchpad.Launcher
 
 		private void UpdateGameAsync ()
 		{
-			ManifestHandler manifestHandler = new ManifestHandler ();
+			ManifestHandler manifestHandler = new ManifestHandler ( "Game" );
 
 			//check all local files against the manifest for file size changes.
 			//if the file is missing or the wrong size, download it.
@@ -273,9 +273,9 @@ namespace Launchpad.Launcher
 			try
 			{
 				//Check old manifest against new manifest, download anything that isn't exactly the same as before
-				FTPHandler FTP = new FTPHandler ();
-				FTP.FileProgressChanged += OnDownloadProgressChanged;
-				FTP.FileDownloadFinished += OnFileDownloadFinished;
+				HTTPHandler HTTP = new HTTPHandler ();
+				HTTP.FileProgressChanged += OnDownloadProgressChanged;
+				HTTP.FileDownloadFinished += OnFileDownloadFinished;
 
 				foreach (ManifestEntry Entry in Manifest)
 				{
@@ -292,15 +292,15 @@ namespace Launchpad.Launcher
 						Directory.CreateDirectory (Directory.GetParent (LocalPath).ToString ());
 
 						OnProgressChanged ();
-						FTP.DownloadFTPFile (RemotePath, LocalPath, false);
+						HTTP.DownloadHTTPFile (RemotePath, LocalPath, false);
 					}
 				}
 
 				OnGameUpdateFinished ();
 
 				//clear out the event handlers
-				FTP.FileProgressChanged -= OnDownloadProgressChanged;
-				FTP.FileDownloadFinished -= OnFileDownloadFinished;
+				HTTP.FileProgressChanged -= OnDownloadProgressChanged;
+				HTTP.FileDownloadFinished -= OnFileDownloadFinished;
 			}
 			catch (IOException ioex)
 			{
@@ -326,24 +326,24 @@ namespace Launchpad.Launcher
 			try
 			{
 				//check all local file MD5s against latest manifest. Resume partial files, download broken files.
-				FTPHandler FTP = new FTPHandler ();
+				HTTPHandler HTTP = new HTTPHandler ();
 
 				//bind event handlers
-				FTP.FileProgressChanged += OnDownloadProgressChanged;
+				HTTP.FileProgressChanged += OnDownloadProgressChanged;
 
 				//first, verify that the manifest is correct.
-				string LocalManifestHash = MD5Handler.GetFileHash (File.OpenRead (ConfigHandler.GetManifestPath ()));
-				string RemoteManifestHash = FTP.GetRemoteManifestChecksum ();
+				string LocalManifestHash = MD5Handler.GetFileHash (File.OpenRead (ConfigHandler.GetManifestPath ("Game")));
+				string RemoteManifestHash = HTTP.GetRemoteManifestChecksum ( "Game" );
 
 				//if it is not, download a new copy.
 				if (!(LocalManifestHash == RemoteManifestHash))
 				{
 					LauncherHandler Launcher = new LauncherHandler ();
-					Launcher.DownloadManifest ();
+					Launcher.DownloadManifest ( "Game" );
 				}
 
 				//then, begin repairing the game
-				ManifestHandler manifestHandler = new ManifestHandler ();
+				ManifestHandler manifestHandler = new ManifestHandler ( "Game" );
 				List<ManifestEntry> Manifest = manifestHandler.Manifest;			
 
 				ProgressArgs.TotalFiles = Manifest.Count;
@@ -374,7 +374,7 @@ namespace Launchpad.Launcher
 						{
 							//Resume the download of this partial file.
 							OnProgressChanged ();
-							repairMetadata = FTP.DownloadFTPFile (RemotePath, LocalPath, fileInfo.Length, false);
+							repairMetadata = HTTP.DownloadHTTPFile (RemotePath, LocalPath, fileInfo.Length, false);
 
 							//Now verify the file
 							string localHash = MD5Handler.GetFileHash (File.OpenRead (LocalPath));
@@ -385,7 +385,7 @@ namespace Launchpad.Launcher
 
 								//download the file, since it was broken
 								OnProgressChanged ();
-								repairMetadata = FTP.DownloadFTPFile (RemotePath, LocalPath, false);
+								repairMetadata = HTTP.DownloadHTTPFile (RemotePath, LocalPath, false);
 							}
 						}					
 					}
@@ -393,7 +393,7 @@ namespace Launchpad.Launcher
 					{
 						//download the file, since it was missing
 						OnProgressChanged ();
-						repairMetadata = FTP.DownloadFTPFile (RemotePath, LocalPath, false);
+						repairMetadata = HTTP.DownloadHTTPFile (RemotePath, LocalPath, false);
 					}
 
 					if (ChecksHandler.IsRunningOnUnix ())
@@ -416,7 +416,7 @@ namespace Launchpad.Launcher
 				OnGameRepairFinished ();
 
 				//clear out the event handler
-				FTP.FileProgressChanged -= OnDownloadProgressChanged;
+				HTTP.FileProgressChanged -= OnDownloadProgressChanged;
 			}
 			catch (IOException ioex)
 			{
