@@ -96,6 +96,8 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="gtk-gui\Launchpad.Launcher.MainWindow.cs" />
     <Compile Include="gtk-gui\Launchpad.Launcher.SettingsDialog.cs" />
+    <Compile Include="Handlers\ProtocolHandler.cs" />
+    <Compile Include="Handlers\HTTPHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">

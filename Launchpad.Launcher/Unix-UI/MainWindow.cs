@@ -65,7 +65,7 @@ namespace Launchpad.Launcher
 			MessageLabel.Text = Mono.Unix.Catalog.GetString ("Idle");
 
 			//First of all, check if we can connect to the FTP server.
-			if (!Checks.CanConnectToFTP ())
+			if (!Checks.CanConnectToPatchServer ())
 			{
 				MessageDialog dialog = new MessageDialog (
 					null, 

@@ -57,7 +57,7 @@ namespace Launchpad.Launcher
             this.Text = "Launchpad - " + Config.GetGameName();
 
             //first of all, check if we can connect to the FTP server.
-            if (!Checks.CanConnectToFTP())
+            if (!Checks.CanConnectToPatchServer())
             {
                 MessageBox.Show(
                     this,
@@ -121,7 +121,7 @@ namespace Launchpad.Launcher
                 //load the changelog from the server
                 Launcher.ChangelogDownloadFinished += OnChangelogDownloadFinished;
                 Launcher.LoadChangelog();
-                
+
                 //Does the launcher need an update?
                 if (!Checks.IsLauncherOutdated())
                 {
