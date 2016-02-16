@@ -58,20 +58,20 @@ namespace Launchpad.Launcher
 			DownloadFinishedArgs = new GameDownloadFinishedEventArgs ();
 		}
 
-		//TODO: Update this function to handle DLLs as well. May have to implement a full-blown
-		//manifest system here as well.
+        //TODO: Update this function to handle DLLs as well. May have to implement a full-blown
+        //manifest system here as well.
 
-		/// <summary>
-		/// Updates the launcher synchronously.
-		/// </summary>
-		public void UpdateLauncher()
-		{
-			try
-			{
-				FTPHandler FTP = new FTPHandler ();
+        /// <summary>
+        /// Updates the launcher synchronously.
+        /// </summary>
+        public void UpdateLauncher()
+        {
+            try
+            {
+                ProtocolHandler Protocol = new ProtocolHandler( Config.bUseHTTP() );
 
                 //crawl the server for all of the files in the /launcher/bin directory.
-                List<string> remotePaths = FTP.GetFilePaths(Config.GetLauncherBinariesURL(), true);
+                List<string> remotePaths = Protocol.GetFilePaths(Config.GetLauncherBinariesURL(), true);
 
                 //download all of them
                 foreach (string path in remotePaths)
@@ -94,38 +94,39 @@ namespace Launchpad.Launcher
                                 Directory.CreateDirectory(Directory.GetParent(Local).ToString());
                             }
 
-                            FTP.DownloadFTPFile(Remote, Local, false);
-                        }                        
+                            Protocol.DownloadPatchFile(Remote, Local, false);
+                        }
                     }
                     catch (WebException wex)
                     {
                         Console.WriteLine("WebException in UpdateLauncher(): " + wex.Message);
                     }
                 }
-				
+
                 //TODO: Make the script copy recursively
-				ProcessStartInfo script = CreateUpdateScript ();
+                ProcessStartInfo script = CreateUpdateScript();
 
-				Process.Start(script);
-				Environment.Exit(0);
-			}
-			catch (IOException ioex)
-			{
-				Console.WriteLine ("IOException in UpdateLauncher(): " + ioex.Message);
-			}
-		}
+                Process.Start(script);
+                Environment.Exit(0);
+            }
+            catch (IOException ioex)
+            {
+                Console.WriteLine("IOException in UpdateLauncher(): " + ioex.Message);
+            }
+        }
 
-		/// <summary>
-		/// Downloads the manifest.
-		/// </summary>
-		public void DownloadManifest()
+
+        /// <summary>
+        /// Downloads the manifest.
+        /// </summary>
+        public void DownloadManifest()
 		{
 			Stream manifestStream = null;														
 			try
 			{
-				FTPHandler FTP = new FTPHandler ();
+				ProtocolHandler Protocol = new ProtocolHandler ( Config.bUseHTTP() );
 
-				string remoteChecksum = FTP.GetRemoteManifestChecksum ();
+				string remoteChecksum = Protocol.GetRemoteManifestChecksum ();
 				string localChecksum = "";
 
 				string RemoteURL = Config.GetManifestURL ();
@@ -141,12 +142,12 @@ namespace Launchpad.Launcher
 						//Copy the old manifest so that we can compare them when updating the game
 						File.Copy(LocalPath, LocalPath + ".old", true);
 
-						FTP.DownloadFTPFile (RemoteURL, LocalPath, false);
+						Protocol.DownloadPatchFile (RemoteURL, LocalPath, false);
 					}
 				}
 				else
 				{
-					FTP.DownloadFTPFile (RemoteURL, LocalPath, false);
+					Protocol.DownloadPatchFile (RemoteURL, LocalPath, false);
 				}						
 			}
 			catch (IOException ioex)
@@ -173,10 +174,10 @@ namespace Launchpad.Launcher
 		}
 		private void LoadChangelogAsync()
 		{
-			FTPHandler FTP = new FTPHandler ();
+			ProtocolHandler Protocol = new ProtocolHandler ( Config.bUseHTTP());
 
 			//load the HTML from the server as a string
-			string content = FTP.ReadFTPFile (Config.GetChangelogURL ());
+			string content = Protocol.ReadPatchFile (Config.GetChangelogURL ());
             OnChangelogProgressChanged();
 					
 			DownloadFinishedArgs.Result = content;

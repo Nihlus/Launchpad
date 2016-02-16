@@ -31,9 +31,9 @@ namespace Launchpad.Launcher
 			combobox_SystemTarget.Active = (int)Config.GetSystemTarget();
 
 			//fill in remote settings
-			FTPURL_entry.Text = Config.GetBaseFTPUrl ();
-			FTPUsername_entry.Text = Config.GetFTPUsername ();
-			FTPPassword_entry.Text = Config.GetFTPPassword ();
+			FTPURL_entry.Text = Config.GetBasePatchUrl ();
+			FTPUsername_entry.Text = Config.GetPatchUsername ();
+			FTPPassword_entry.Text = Config.GetPatchPassword ();
 
 			progressbar3.Text = Mono.Unix.Catalog.GetString("Idle");
 			buttonOk.Label = Mono.Unix.Catalog.GetString ("OK");
@@ -68,7 +68,7 @@ namespace Launchpad.Launcher
 
 			if (FTPURL_entry.Text.StartsWith ("ftp://"))
 			{
-				Config.SetBaseFTPUrl (FTPURL_entry.Text);
+				Config.SetBasePatchUrl (FTPURL_entry.Text);
 			} 
 			else
 			{
@@ -78,13 +78,13 @@ namespace Launchpad.Launcher
 				FTPURL_entry.TooltipText = Mono.Unix.Catalog.GetString("The URL needs to begin with \"ftp://\". Please correct the URL.");
 			}
 
-			Config.SetFTPPassword (FTPPassword_entry.Text);
-			Config.SetFTPUsername (FTPUsername_entry.Text);
+			Config.SetPatchPassword (FTPPassword_entry.Text);
+			Config.SetPatchUsername (FTPUsername_entry.Text);
 
 
 			if (bAreAllSettingsOK)
 			{
-				if (Checks.CanConnectToFTP ())
+				if (Checks.CanConnectToPatchServer ())
 				{
 					Destroy ();
 				}

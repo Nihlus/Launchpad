@@ -127,9 +127,9 @@ namespace Launchpad.Launcher
 						data["Local"].AddKey("SystemTarget", GetCurrentPlatform().ToString());
 						data["Local"].AddKey("GUID", GeneratedGUID);
 
-						data["Remote"].AddKey("FTPUsername", "anonymous");
-						data["Remote"].AddKey("FTPPassword", "anonymous");
-						data["Remote"].AddKey("FTPUrl", "ftp://directorate.asuscomm.com");
+						data["Remote"].AddKey("PatchUsername", "anonymous");
+						data["Remote"].AddKey("PatchPassword", "anonymous");
+						data["Remote"].AddKey("PatchUrl", "ftp://directorate.asuscomm.com");
 
 						data["Launchpad"].AddKey("bOfficialUpdates", "true");
 
@@ -389,7 +389,7 @@ namespace Launchpad.Launcher
         public string GetManifestURL()
         {
             string manifestURL = String.Format("{0}/game/{1}/LauncherManifest.txt", 
-                GetFTPUrl(),
+                GetPatchUrl(),
                 GetSystemTarget());
 
             return manifestURL;
@@ -402,7 +402,7 @@ namespace Launchpad.Launcher
         public string GetManifestChecksumURL()
         {
             string manifestChecksumURL = String.Format("{0}/game/{1}/LauncherManifest.checksum", 
-                GetFTPUrl(), 
+                GetPatchUrl(), 
                 GetSystemTarget());
 
             return manifestChecksumURL;
@@ -415,7 +415,7 @@ namespace Launchpad.Launcher
         public string GetLauncherBinariesURL()
         {
             string launcherURL = String.Format("{0}/launcher/bin/", 
-			                                   GetFTPUrl());
+			                                   GetPatchUrl());
             return launcherURL;
         }
 
@@ -426,7 +426,7 @@ namespace Launchpad.Launcher
         public string GetChangelogURL()
         {
             string changelogURL = String.Format("{0}/launcher/changelog.html", 
-			                                    GetFTPUrl());
+			                                    GetPatchUrl());
             return changelogURL;
         }
 
@@ -441,13 +441,13 @@ namespace Launchpad.Launcher
 			if (bIncludeSystemTarget)
 			{
 				gameURL = String.Format ("{0}/game/{1}/bin/", 
-                    GetFTPUrl (), 
+                    GetPatchUrl (), 
                     GetSystemTarget ());
 			}
 			else
 			{
 				gameURL = String.Format("{0}/game/", 
-                    GetFTPUrl());
+                    GetPatchUrl());
 			}
 
             return gameURL;
@@ -598,10 +598,10 @@ namespace Launchpad.Launcher
 		}
 
 		/// <summary>
-		/// Gets the FTP username.
+		/// Gets the Patch username.
 		/// </summary>
-		/// <returns>The FTP username.</returns>
-        public string GetFTPUsername()
+		/// <returns>The Patch username.</returns>
+        public string GetPatchUsername()
         {
             lock (ReadLock)
 			{
@@ -610,23 +610,23 @@ namespace Launchpad.Launcher
 					FileIniDataParser Parser = new FileIniDataParser();
 					IniData data = Parser.ReadFile(GetConfigPath());
 
-					string FTPUsername = data["Remote"]["FTPUsername"];
+					string PatchUsername = data["Remote"]["PatchUsername"];
 
-					return FTPUsername;
+					return PatchUsername;
 				}
 				catch (IOException ioex)
 				{
-					Console.WriteLine("IOException in GetFTPUsername(): " + ioex.Message);
+					Console.WriteLine("IOException in GetPatchUsername(): " + ioex.Message);
 					return String.Empty;
 				}
 			}
         }
 
 		/// <summary>
-		/// Sets the FTP username.
+		/// Sets the Patch username.
 		/// </summary>
 		/// <param name="Username">Username.</param>
-		public void SetFTPUsername(string Username)
+		public void SetPatchUsername(string Username)
 		{
 			lock (ReadLock)
 			{
@@ -635,22 +635,22 @@ namespace Launchpad.Launcher
 					FileIniDataParser Parser = new FileIniDataParser();
 					IniData data = Parser.ReadFile(GetConfigPath());
 
-					data["Remote"]["FTPUsername"] = Username;
+					data["Remote"]["PatchUsername"] = Username;
 
 					WriteConfig(Parser, data);
 				}
 				catch (IOException ioex)
 				{
-					Console.WriteLine("IOException in SetFTPUsername(): " + ioex.Message);
+					Console.WriteLine("IOException in SetPatchUsername(): " + ioex.Message);
 				}
 			}
 		}
 
 		/// <summary>
-		/// Gets the FTP password.
+		/// Gets the Patch password.
 		/// </summary>
-		/// <returns>The FTP password.</returns>
-        public string GetFTPPassword()
+		/// <returns>The Patch password.</returns>
+        public string GetPatchPassword()
         {
             lock (ReadLock)
 			{
@@ -659,23 +659,23 @@ namespace Launchpad.Launcher
 					FileIniDataParser Parser = new FileIniDataParser();
 					IniData data = Parser.ReadFile(GetConfigPath());
 
-					string FTPPassword = data["Remote"]["FTPPassword"];
+					string PatchPassword = data["Remote"]["PatchPassword"];
 
-					return FTPPassword;
+					return PatchPassword;
 				}
 				catch (IOException ioex)
 				{
-					Console.WriteLine("IOException in GetFTPPassword: " + ioex.Message);
+					Console.WriteLine("IOException in GetPatchPassword: " + ioex.Message);
 					return String.Empty;
 				}
 			}
         }
 
 		/// <summary>
-		/// Sets the FTP password.
+		/// Sets the Patch password.
 		/// </summary>
 		/// <param name="Password">Password.</param>
-		public void SetFTPPassword(string Password)
+		public void SetPatchPassword(string Password)
 		{
 			lock (ReadLock)
 			{
@@ -684,22 +684,22 @@ namespace Launchpad.Launcher
 					FileIniDataParser Parser = new FileIniDataParser();
 					IniData data = Parser.ReadFile(GetConfigPath());
 
-					data["Remote"]["FTPPassword"] = Password;
+					data["Remote"]["PatchPassword"] = Password;
 
 					WriteConfig(Parser, data);
 				}
 				catch (IOException ioex)
 				{
-					Console.WriteLine("IOException in GetFTPPassword(): " + ioex.Message);
+					Console.WriteLine("IOException in GetPatchPassword(): " + ioex.Message);
 				}
 			}
 		}
 
 		/// <summary>
-		/// Gets the base FTP URL.
+		/// Gets the base Patch URL.
 		/// </summary>
-		/// <returns>The base FTP URL.</returns>
-		public string GetBaseFTPUrl()
+		/// <returns>The base Patch URL.</returns>
+		public string GetBasePatchUrl()
 		{
 			lock (ReadLock)
 			{
@@ -710,13 +710,13 @@ namespace Launchpad.Launcher
 					string configPath = GetConfigPath();
 					IniData data = Parser.ReadFile(configPath);
 
-					string FTPURL = data["Remote"]["FTPUrl"];
+					string PatchURL = data["Remote"]["PatchUrl"];
 
-					return FTPURL;
+					return PatchURL;
 				}
 				catch (IOException ioex)
 				{
-					Console.WriteLine("IOException in GetBaseFTPURL(): " + ioex.Message);
+					Console.WriteLine("IOException in GetBasePatchURL(): " + ioex.Message);
 					return String.Empty;
 				}
 			}
@@ -724,10 +724,10 @@ namespace Launchpad.Launcher
 
 
 		/// <summary>
-		/// Sets the base FTP URL.
+		/// Sets the base Patch URL.
 		/// </summary>
 		/// <param name="Url">URL.</param>
-		public void SetBaseFTPUrl(string Url)
+		public void SetBasePatchUrl(string Url)
 		{
 			lock (ReadLock)
 			{
@@ -736,22 +736,22 @@ namespace Launchpad.Launcher
 					FileIniDataParser Parser = new FileIniDataParser();
 					IniData data = Parser.ReadFile(GetConfigPath());
 
-					data["Remote"]["FTPUrl"] = Url;
+					data["Remote"]["PatchUrl"] = Url;
 
 					WriteConfig(Parser, data);
 				}
 				catch (IOException ioex)
 				{
-					Console.WriteLine("IOException in GetFTPPassword(): " + ioex.Message);				
+					Console.WriteLine("IOException in GetPatchPassword(): " + ioex.Message);				
 				}
 			}
 		}
 
 		/// <summary>
-		/// Gets the FTP URL.
+		/// Gets the Patch URL.
 		/// </summary>
-		/// <returns>The FTP URL.</returns>
-        public string GetFTPUrl()
+		/// <returns>The Patch URL.</returns>
+        public string GetPatchUrl()
         {
             lock (ReadLock)
 			{
@@ -760,19 +760,17 @@ namespace Launchpad.Launcher
 					FileIniDataParser Parser = new FileIniDataParser();
 					IniData data = Parser.ReadFile(GetConfigPath());
 
-					string FTPUrl = data["Remote"]["FTPUrl"];
-					string FTPAuthUrl = FTPUrl.Substring(0, 6); // Gets ftp://
-					FTPAuthUrl += data["Remote"]["FTPUsername"]; // Add the username
-					FTPAuthUrl += ":";
-					FTPAuthUrl += data["Remote"]["FTPPassword"]; // Add the password
-					FTPAuthUrl += "@";
-					FTPAuthUrl += FTPUrl.Substring(6); //add the rest of the URL
+					string PatchUrl = data["Remote"]["PatchUrl"];
 
-					return FTPAuthUrl;
+                    // If we need to massage the URL, do it here.
+
+                    string PatchAuthUrl = PatchUrl;
+
+					return PatchAuthUrl;
 				}
 				catch (IOException ioex)
 				{
-					Console.WriteLine("IOException in GetFTPUrl(): " + ioex.Message);
+					Console.WriteLine("IOException in GetPatchUrl(): " + ioex.Message);
 					return String.Empty;
 				}
 			}
@@ -833,11 +831,37 @@ namespace Launchpad.Launcher
 			}
 		}
 
-		/// <summary>
-		/// Replaces and updates the old pre-unix config.
-		/// </summary>
-		/// <returns><c>true</c>, if an old config was copied over to the new format, <c>false</c> otherwise.</returns>
-		private bool UpdateOldConfig()
+        /// <summary>
+        /// Parses the Protocol URL to determine if we are using HTTP or FTP. may have to change to a form of enum if otehrs are added.
+        /// </summary>
+        /// <returns>true if HTTP</returns>
+        public bool bUseHTTP()
+        {
+            lock (ReadLock)
+            {
+                try
+                {
+                    FileIniDataParser Parser = new FileIniDataParser();
+                    IniData data = Parser.ReadFile(GetConfigPath());
+
+                    string url = data["Remote"]["PatchUrl"];
+
+                    bool returnVal = url.StartsWith("http", StringComparison.InvariantCultureIgnoreCase);
+
+                    return url.StartsWith("http", StringComparison.InvariantCultureIgnoreCase);
+                }
+                catch (IOException ioex)
+                {
+                    Console.WriteLine("IOException in bUseHTTP(): " + ioex.Message);
+                    return true;
+                }
+            }
+        }
+        /// <summary>
+        /// Replaces and updates the old pre-unix config.
+        /// </summary>
+        /// <returns><c>true</c>, if an old config was copied over to the new format, <c>false</c> otherwise.</returns>
+        private bool UpdateOldConfig()
 		{
 			string oldConfigPath = String.Format(@"{0}config{1}launcherConfig.ini", 
 			                                     GetLocalDir(), 
