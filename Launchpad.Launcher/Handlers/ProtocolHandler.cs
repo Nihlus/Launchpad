@@ -18,25 +18,6 @@ namespace Launchpad.Launcher
 
         private FTPHandler FTP = new FTPHandler();
 
-        /// <summary>
-        /// Occurs when file progress changed.
-        /// </summary>
-        public event FileProgressChangedEventHandler FileProgressChanged;
-        /// <summary>
-        /// Occurs when file download finished.
-        /// </summary>
-        public event FileDownloadFinishedEventHandler FileDownloadFinished;
-
-        /// <summary>
-        /// The progress arguments object. Is updated during file download operations.
-        /// </summary>
-        private FileDownloadProgressChangedEventArgs ProgressArgs;
-
-        /// <summary>
-        /// The download finished arguments object. Is updated once a file download finishes.
-        /// </summary>
-        private FileDownloadFinishedEventArgs DownloadFinishedArgs;
-
         public ProtocolHandler(bool bHTTP)
         {
             bUseHTTP = bHTTP;
@@ -192,5 +173,65 @@ namespace Launchpad.Launcher
                 return FTP.DoesFileExist(remotePath);
             }
         }
+
+        /// Wrappers for the two events we need for the bar graph to work.
+        /// <summary>
+        /// Occurs when file progress changed.
+        /// </summary>
+        public void FileProgressChanged(FileProgressChangedEventHandler EventArgs, bool bAdd)
+        {
+            if (bUseHTTP)
+            {
+                if (bAdd)
+                {
+                    HTTP.FileProgressChanged += EventArgs;
+                }
+                else
+                {
+                    HTTP.FileProgressChanged -= EventArgs;
+                }
+            }
+            else
+            {
+                if (bAdd)
+                {
+                    FTP.FileProgressChanged += EventArgs;
+                }
+                else
+                {
+                    FTP.FileProgressChanged += EventArgs;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Occurs when file download finished.
+        /// </summary>
+        public void FileDownloadFinished(FileDownloadFinishedEventHandler EventArgs, bool bAdd)
+        {
+            if (bUseHTTP)
+            {
+                if (bAdd)
+                {
+                    HTTP.FileDownloadFinished += EventArgs;
+                }
+                else
+                {
+                    HTTP.FileDownloadFinished -= EventArgs;
+                }
+            }
+            else
+            {
+                if (bAdd)
+                {
+                    FTP.FileDownloadFinished += EventArgs;
+                }
+                else
+                {
+                    FTP.FileDownloadFinished += EventArgs;
+                }
+            }
+        }
+
     }
 }

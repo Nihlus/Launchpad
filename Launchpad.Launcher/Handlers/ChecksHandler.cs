@@ -179,7 +179,6 @@ namespace Launchpad.Launcher
 		/// <returns><c>true</c> if the launcher is outdated; otherwise, <c>false</c>.</returns>
 		public bool IsLauncherOutdated()
 		{
-            return false;
 			ProtocolHandler Patch = new ProtocolHandler( Config.bUseHTTP() );
 			try
 			{

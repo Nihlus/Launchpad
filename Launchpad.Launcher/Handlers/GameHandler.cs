@@ -144,7 +144,7 @@ namespace Launchpad.Launcher
 
 				//raise the progress changed event by binding to the 
 				//event in the HTTP class
-				Protocol.FileProgressChanged += OnDownloadProgressChanged;
+				Protocol.FileProgressChanged( OnDownloadProgressChanged, true );
 
 				//in order to be able to resume downloading, we check if there is an entry
 				//stored in the install cookie.
@@ -237,7 +237,7 @@ namespace Launchpad.Launcher
 				OnGameDownloadFinished ();	
 
 				//clear out the event handler
-				Protocol.FileProgressChanged -= OnDownloadProgressChanged;
+				Protocol.FileProgressChanged( OnDownloadProgressChanged, false );
 			}
 			catch (IOException ioex)
 			{
@@ -274,8 +274,8 @@ namespace Launchpad.Launcher
 			{
 				//Check old manifest against new manifest, download anything that isn't exactly the same as before
 				ProtocolHandler Protocol = new ProtocolHandler ( Config.bUseHTTP() );
-				Protocol.FileProgressChanged += OnDownloadProgressChanged;
-				Protocol.FileDownloadFinished += OnFileDownloadFinished;
+				Protocol.FileProgressChanged( OnDownloadProgressChanged, true );
+				Protocol.FileDownloadFinished( OnFileDownloadFinished, true );
 
 				foreach (ManifestEntry Entry in Manifest)
 				{
@@ -299,8 +299,8 @@ namespace Launchpad.Launcher
 				OnGameUpdateFinished ();
 
 				//clear out the event handlers
-				Protocol.FileProgressChanged -= OnDownloadProgressChanged;
-				Protocol.FileDownloadFinished -= OnFileDownloadFinished;
+				Protocol.FileProgressChanged( OnDownloadProgressChanged, false );
+				Protocol.FileDownloadFinished( OnFileDownloadFinished, false );
 			}
 			catch (IOException ioex)
 			{
@@ -329,7 +329,7 @@ namespace Launchpad.Launcher
 				ProtocolHandler Protocol = new ProtocolHandler ( Config.bUseHTTP() );
 
 				//bind event handlers
-				Protocol.FileProgressChanged += OnDownloadProgressChanged;
+				Protocol.FileProgressChanged(OnDownloadProgressChanged, true );
 
 				//first, verify that the manifest is correct.
 				string LocalManifestHash = MD5Handler.GetFileHash (File.OpenRead (ConfigHandler.GetManifestPath ()));
@@ -416,7 +416,7 @@ namespace Launchpad.Launcher
 				OnGameRepairFinished ();
 
 				//clear out the event handler
-				Protocol.FileProgressChanged -= OnDownloadProgressChanged;
+				Protocol.FileProgressChanged( OnDownloadProgressChanged, false );
 			}
 			catch (IOException ioex)
 			{

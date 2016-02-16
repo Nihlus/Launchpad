@@ -8,84 +8,84 @@ using Launchpad.Launcher.Events.Delegates;
 
 namespace Launchpad.Launcher
 {
-	/// <summary>
-	/// Patch handler. Handles downloading and reading files on a remote Patch server.
-	/// There are also functions for retrieving remote version information of the game and the launcher.
-	/// </summary>
+    /// <summary>
+    /// FTP handler. Handles downloading and reading files on a remote FTP server.
+    /// There are also functions for retrieving remote version information of the game and the launcher.
+    /// </summary>
     internal sealed class FTPHandler
     {
-		/// <summary>
-		/// How many bytes of the target file that have been downloaded.
-		/// </summary>
-        public int PatchbytesDownloaded = 0;
+        /// <summary>
+        /// How many bytes of the target file that have been downloaded.
+        /// </summary>
+        public int FTPbytesDownloaded = 0;
 
-		/// <summary>
-		/// The config handler reference.
-		/// </summary>
-		ConfigHandler Config = ConfigHandler._instance;	
+        /// <summary>
+        /// The config handler reference.
+        /// </summary>
+        ConfigHandler Config = ConfigHandler._instance;
 
-		/// <summary>
-		/// Occurs when file progress changed.
-		/// </summary>
-		public event FileProgressChangedEventHandler FileProgressChanged;
-		/// <summary>
-		/// Occurs when file download finished.
-		/// </summary>
-		public event FileDownloadFinishedEventHandler FileDownloadFinished;
+        /// <summary>
+        /// Occurs when file progress changed.
+        /// </summary>
+        public event FileProgressChangedEventHandler FileProgressChanged;
+        /// <summary>
+        /// Occurs when file download finished.
+        /// </summary>
+        public event FileDownloadFinishedEventHandler FileDownloadFinished;
 
-		/// <summary>
-		/// The progress arguments object. Is updated during file download operations.
-		/// </summary>
-		private FileDownloadProgressChangedEventArgs ProgressArgs;
+        /// <summary>
+        /// The progress arguments object. Is updated during file download operations.
+        /// </summary>
+        private FileDownloadProgressChangedEventArgs ProgressArgs;
 
-		/// <summary>
-		/// The download finished arguments object. Is updated once a file download finishes.
-		/// </summary>
-		private FileDownloadFinishedEventArgs DownloadFinishedArgs;
+        /// <summary>
+        /// The download finished arguments object. Is updated once a file download finishes.
+        /// </summary>
+        private FileDownloadFinishedEventArgs DownloadFinishedArgs;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Launchpad_Launcher.PatchHandler"/> class.
-		/// </summary>
-		public FTPHandler()
-		{
-			ProgressArgs = new FileDownloadProgressChangedEventArgs ();
-			DownloadFinishedArgs = new FileDownloadFinishedEventArgs ();
-		}
-        
-		/// <summary>
-		/// Reads a text file from a remote Patch server.
-		/// </summary>
-		/// <returns>The Patch file contents.</returns>
-		/// <param name="ftpSourceFilePath">Patch file path.</param>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Launchpad_Launcher.FTPHandler"/> class.
+        /// </summary>
+        public FTPHandler()
+        {
+            ProgressArgs = new FileDownloadProgressChangedEventArgs();
+            DownloadFinishedArgs = new FileDownloadFinishedEventArgs();
+        }
+
+        /// <summary>
+        /// Reads a text file from a remote FTP server.
+        /// </summary>
+        /// <returns>The FTP file contents.</returns>
+        /// <param name="ftpSourceFilePath">FTP file path.</param>
         public string ReadPatchFile(string rawRemoteURL)
         {
-			//clean the input URL first
-			string remoteURL = rawRemoteURL.Replace (Path.DirectorySeparatorChar, '/');
+            //clean the input URL first
+            string remoteURL = rawRemoteURL.Replace(Path.DirectorySeparatorChar, '/');
 
-			string username = Config.GetPatchUsername();
-			string password = Config.GetPatchPassword();
+            string username = Config.GetPatchUsername();
+            string password = Config.GetPatchPassword();
 
             int bytesRead = 0;
 
-			//the buffer size is 256kb. More or less than this reduces download speeds.
+            //the buffer size is 256kb. More or less than this reduces download speeds.
             byte[] buffer = new byte[262144];
 
-			FtpWebRequest request = null;
-			FtpWebRequest sizerequest = null;
+            FtpWebRequest request = null;
+            FtpWebRequest sizerequest = null;
 
-			Stream reader = null;
+            Stream reader = null;
 
-			try
-			{
+            try
+            {
 
-	            request = CreateFtpWebRequest(remoteURL, username, password, false);
+                request = CreateFtpWebRequest(remoteURL, username, password, false);
                 sizerequest = CreateFtpWebRequest(remoteURL, username, password, false);
 
-	            request.Method = WebRequestMethods.Ftp.DownloadFile;
-	            sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
+                request.Method = WebRequestMethods.Ftp.DownloadFile;
+                sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
 
-	            string data = "";
-            
+                string data = "";
+
                 reader = request.GetResponse().GetResponseStream();
 
                 while (true)
@@ -97,45 +97,45 @@ namespace Launchpad.Launcher
                         break;
                     }
 
-                    PatchbytesDownloaded = PatchbytesDownloaded + bytesRead;
+                    FTPbytesDownloaded = FTPbytesDownloaded + bytesRead;
                     data = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
                 }
 
-				//clean the output from \n and \0, then return
-				return Utilities.Clean (data);
+                //clean the output from \n and \0, then return
+                return Utilities.Clean(data);
             }
             catch (WebException wex)
             {
-                Console.Write("WebException in ReadPatchFileException: ");
-				Console.WriteLine(wex.Message + " (" + remoteURL + ")");
+                Console.Write("WebException in ReadFTPFileException: ");
+                Console.WriteLine(wex.Message + " (" + remoteURL + ")");
                 return wex.Message;
             }
-			finally
-			{
-				//clean up all open requests
-				//then, the responses that are reading from the requests.
-				if (reader != null)
-				{
-					reader.Close ();
-				}
+            finally
+            {
+                //clean up all open requests
+                //then, the responses that are reading from the requests.
+                if (reader != null)
+                {
+                    reader.Close();
+                }
 
-				//and finally, the requests themselves.
-				if (request != null)
-				{
-					request.Abort();
-				}
+                //and finally, the requests themselves.
+                if (request != null)
+                {
+                    request.Abort();
+                }
 
-				if (sizerequest != null)
-				{
-					sizerequest.Abort();
-				}
-			}
+                if (sizerequest != null)
+                {
+                    sizerequest.Abort();
+                }
+            }
 
 
         }
 
         /// <summary>
-        /// Gets the relative paths for all files in the specified Patch directory.
+        /// Gets the relative paths for all files in the specified FTP directory.
         /// </summary>
         /// <param name="rawRemoteURL">The URL to search.</param>
         /// <param name="bRecursively">Should the search should include subdirectories?</param>
@@ -147,381 +147,381 @@ namespace Launchpad.Launcher
             string remoteURL = Utilities.Clean(rawRemoteURL) + "/";
             List<string> relativePaths = new List<string>();
 
-			if (DoesDirectoryExist (remoteURL))
-			{
-				try
-				{
-					request = CreateFtpWebRequest(
-						remoteURL, 
-						Config.GetPatchUsername(), 
-						Config.GetPatchPassword(), 
-						false);
+            if (DoesDirectoryExist(remoteURL))
+            {
+                try
+                {
+                    request = CreateFtpWebRequest(
+                        remoteURL,
+                        Config.GetPatchUsername(),
+                        Config.GetPatchPassword(),
+                        false);
 
-					request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
+                    request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
 
-					response = (FtpWebResponse)request.GetResponse();
-					Stream responseStream = response.GetResponseStream();
-					StreamReader sr = new StreamReader(responseStream);
+                    response = (FtpWebResponse)request.GetResponse();
+                    Stream responseStream = response.GetResponseStream();
+                    StreamReader sr = new StreamReader(responseStream);
 
-					string rawListing = sr.ReadToEnd();
-					string[] listing = rawListing.Replace("\r", String.Empty).Split('\n');
-					List<string> directories = new List<string>();
+                    string rawListing = sr.ReadToEnd();
+                    string[] listing = rawListing.Replace("\r", String.Empty).Split('\n');
+                    List<string> directories = new List<string>();
 
-					foreach (string fileOrDir in listing)
-					{
-						//we only need to save the directories if we're searching recursively
-						if (bRecursively && fileOrDir.StartsWith("d"))
-						{
-							//it's a directory, add it to directories
-							string[] parts = fileOrDir.Split(' ');                        
-							string relativeDirectoryPath = parts[parts.Length - 1];
+                    foreach (string fileOrDir in listing)
+                    {
+                        //we only need to save the directories if we're searching recursively
+                        if (bRecursively && fileOrDir.StartsWith("d"))
+                        {
+                            //it's a directory, add it to directories
+                            string[] parts = fileOrDir.Split(' ');
+                            string relativeDirectoryPath = parts[parts.Length - 1];
 
-							directories.Add(relativeDirectoryPath);
-						}
-						else
-						{
-							//there's a file, add it to our relative paths
-							string[] filePath = fileOrDir.Split(' ');
-							if (!String.IsNullOrEmpty(filePath[filePath.Length - 1]))
-							{
-								string relativePath = "/" + filePath[filePath.Length - 1];
-								relativePaths.Add(relativePath);
-							}                        
-						}
-					}
+                            directories.Add(relativeDirectoryPath);
+                        }
+                        else
+                        {
+                            //there's a file, add it to our relative paths
+                            string[] filePath = fileOrDir.Split(' ');
+                            if (!String.IsNullOrEmpty(filePath[filePath.Length - 1]))
+                            {
+                                string relativePath = "/" + filePath[filePath.Length - 1];
+                                relativePaths.Add(relativePath);
+                            }
+                        }
+                    }
 
-					//if we should search recursively, keep looking in subdirectories.
-					if (bRecursively)
-					{
-						if (directories.Count != 0)
-						{
-							for (int i = 0; i < directories.Count; ++i)
-							{
-								string directory = directories[i];
-								string parentDirectory = remoteURL.Replace(Config.GetLauncherBinariesURL(), String.Empty);
+                    //if we should search recursively, keep looking in subdirectories.
+                    if (bRecursively)
+                    {
+                        if (directories.Count != 0)
+                        {
+                            for (int i = 0; i < directories.Count; ++i)
+                            {
+                                string directory = directories[i];
+                                string parentDirectory = remoteURL.Replace(Config.GetLauncherBinariesURL(), String.Empty);
 
-								string recursiveURL = Config.GetLauncherBinariesURL() + parentDirectory + "/" + directory;
-								List<string> files = GetFilePaths(recursiveURL, true);
-								foreach (string rawPath in files)
-								{
-									string relativePath = "/" + directory + rawPath;
-									relativePaths.Add(relativePath);
-								}
-							}
-						}
-					}									
-				}
-				catch (WebException wex)
-				{
-					Console.WriteLine("WebException in GetFileURLs(): " + wex.Message);
-					return null;
-				}
-				finally
-				{
-					if (request != null)
-					{
-						request.Abort();
-					}    
+                                string recursiveURL = Config.GetLauncherBinariesURL() + parentDirectory + "/" + directory;
+                                List<string> files = GetFilePaths(recursiveURL, true);
+                                foreach (string rawPath in files)
+                                {
+                                    string relativePath = "/" + directory + rawPath;
+                                    relativePaths.Add(relativePath);
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (WebException wex)
+                {
+                    Console.WriteLine("WebException in GetFileURLs(): " + wex.Message);
+                    return null;
+                }
+                finally
+                {
+                    if (request != null)
+                    {
+                        request.Abort();
+                    }
 
-					if (response != null)
-					{
-						response.Close();
-					}
-				}
-			}	
+                    if (response != null)
+                    {
+                        response.Close();
+                    }
+                }
+            }
 
-			return relativePaths;
+            return relativePaths;
         }
 
-		/// <summary>
-		/// Downloads an Patch file.
-		/// </summary>
-		/// <returns>The Patch file's location on disk, or the exception message.</returns>
-		/// <param name="ftpSourceFilePath">Ftp source file path.</param>
-		/// <param name="localDestination">Local destination.</param>
-		/// <param name="bUseAnonymous">If set to <c>true</c> b use anonymous.</param>
+        /// <summary>
+        /// Downloads an FTP file.
+        /// </summary>
+        /// <returns>The FTP file's location on disk, or the exception message.</returns>
+        /// <param name="ftpSourceFilePath">Ftp source file path.</param>
+        /// <param name="localDestination">Local destination.</param>
+        /// <param name="bUseAnonymous">If set to <c>true</c> b use anonymous.</param>
         public string DownloadPatchFile(string rawRemoteURL, string localPath, bool bUseAnonymous)
         {
-			//clean the URL string
-			string remoteURL = rawRemoteURL.Replace (Path.DirectorySeparatorChar, '/');
+            //clean the URL string
+            string remoteURL = rawRemoteURL.Replace(Path.DirectorySeparatorChar, '/');
 
-			string username;
-			string password;
-			if (!bUseAnonymous)
-			{
-				username = Config.GetPatchUsername ();
-				password = Config.GetPatchPassword ();
-			}
-			else
-			{
-				username = "anonymous";
-				password = "anonymous";
-			}
+            string username;
+            string password;
+            if (!bUseAnonymous)
+            {
+                username = Config.GetPatchUsername();
+                password = Config.GetPatchPassword();
+            }
+            else
+            {
+                username = "anonymous";
+                password = "anonymous";
+            }
 
 
             int bytesRead = 0;
 
-			//the buffer size is 256kb. More or less than this reduces download speeds.
+            //the buffer size is 256kb. More or less than this reduces download speeds.
             byte[] buffer = new byte[262144];
 
-			FtpWebRequest request = null;
-			FtpWebRequest sizerequest = null;
+            FtpWebRequest request = null;
+            FtpWebRequest sizerequest = null;
 
-			Stream reader = null;
-			FtpWebResponse sizereader = null;
+            Stream reader = null;
+            FtpWebResponse sizereader = null;
 
-			FileStream fileStream = null;
+            FileStream fileStream = null;
 
-			//either a path to the file or an error message
-			string returnValue = "";
+            //either a path to the file or an error message
+            string returnValue = "";
 
-			try
-			{
+            try
+            {
                 request = CreateFtpWebRequest(remoteURL, username, password, false);
                 sizerequest = CreateFtpWebRequest(remoteURL, username, password, false);
 
-	            request.Method = WebRequestMethods.Ftp.DownloadFile;
-	            sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
+                request.Method = WebRequestMethods.Ftp.DownloadFile;
+                sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
 
-	            long fileSize = 0;
+                long fileSize = 0;
 
-            
-				reader = request.GetResponse().GetResponseStream();
+
+                reader = request.GetResponse().GetResponseStream();
                 sizereader = (FtpWebResponse)sizerequest.GetResponse();
-					
-				fileStream = new FileStream(localPath, FileMode.Create);
 
-				//reset byte counter
-				PatchbytesDownloaded = 0;
+                fileStream = new FileStream(localPath, FileMode.Create);
 
-				fileSize = sizereader.ContentLength;
+                //reset byte counter
+                FTPbytesDownloaded = 0;
 
-				//set file info for progress reporting
-				ProgressArgs.FileName = Path.GetFileNameWithoutExtension(remoteURL);
-				ProgressArgs.TotalBytes = (int)fileSize;
+                fileSize = sizereader.ContentLength;
 
-				while (true)
-				{
-					bytesRead = reader.Read(buffer, 0, buffer.Length);
+                //set file info for progress reporting
+                ProgressArgs.FileName = Path.GetFileNameWithoutExtension(remoteURL);
+                ProgressArgs.TotalBytes = (int)fileSize;
 
-					if (bytesRead == 0)
-					{
-						break;
-					}
+                while (true)
+                {
+                    bytesRead = reader.Read(buffer, 0, buffer.Length);
 
-					PatchbytesDownloaded = PatchbytesDownloaded + bytesRead;
-					fileStream.Write(buffer, 0, bytesRead);
+                    if (bytesRead == 0)
+                    {
+                        break;
+                    }
 
-					//set file progress info
-					ProgressArgs.DownloadedBytes = PatchbytesDownloaded;
+                    FTPbytesDownloaded = FTPbytesDownloaded + bytesRead;
+                    fileStream.Write(buffer, 0, bytesRead);
 
-					OnProgressChanged();
-				}
+                    //set file progress info
+                    ProgressArgs.DownloadedBytes = FTPbytesDownloaded;
+
+                    OnProgressChanged();
+                }
 
                 OnProgressChanged();
-				OnDownloadFinished();
+                OnDownloadFinished();
 
-				returnValue = localPath;
-				return returnValue;             				                             
+                returnValue = localPath;
+                return returnValue;
             }
             catch (WebException wex)
             {
-                Console.Write("WebException in DownloadPatchFile: ");
+                Console.Write("WebException in DownloadFTPFile: ");
                 Console.WriteLine(wex.Message + " (" + remoteURL + ")");
                 returnValue = wex.Message;
 
-				return returnValue;
+                return returnValue;
             }
             catch (IOException ioex)
             {
-                Console.Write("IOException in DownloadPatchFile: ");
-				Console.WriteLine(ioex.Message  + " (" + remoteURL + ")");
+                Console.Write("IOException in DownloadFTPFile: ");
+                Console.WriteLine(ioex.Message + " (" + remoteURL + ")");
                 returnValue = ioex.Message;
 
                 return returnValue;
             }
-			finally
-			{
-				//clean up all open requests
-				//first, close and dispose of the file stream
-				if (fileStream != null)
-				{
-					fileStream.Close();
-				}
+            finally
+            {
+                //clean up all open requests
+                //first, close and dispose of the file stream
+                if (fileStream != null)
+                {
+                    fileStream.Close();
+                }
 
-				//then, the responses that are reading from the requests.
-				if (reader != null)
-				{
-					reader.Close ();
-				}
-				if (sizereader != null)
-				{
-					sizereader.Close();
-				}
+                //then, the responses that are reading from the requests.
+                if (reader != null)
+                {
+                    reader.Close();
+                }
+                if (sizereader != null)
+                {
+                    sizereader.Close();
+                }
 
-				//and finally, the requests themselves.
-				if (request != null)
-				{
-					request.Abort();
-				}
+                //and finally, the requests themselves.
+                if (request != null)
+                {
+                    request.Abort();
+                }
 
-				if (sizerequest != null)
-				{
-					sizerequest.Abort();
-				}
-			}
+                if (sizerequest != null)
+                {
+                    sizerequest.Abort();
+                }
+            }
         }
 
-		/// <summary>
-		/// Downloads an Patch file.
-		/// </summary>
-		/// <returns>The Patch file's location on disk, or the exception message.</returns>
-		/// <param name="ftpSourceFilePath">Ftp source file path.</param>
-		/// <param name="localDestination">Local destination.</param>
-		/// <param name="bUseAnonymous">If set to <c>true</c> b use anonymous.</param>
-		/// <param name="contentOffset">The content offset where the download should resume.</param>
-		public string DownloadPatchFile(string rawRemoteURL, string localPath, long contentOffset, bool bUseAnonymous)
-		{
-			//clean the URL string first
-			string remoteURL = rawRemoteURL.Replace (Path.DirectorySeparatorChar, '/');
+        /// <summary>
+        /// Downloads an FTP file.
+        /// </summary>
+        /// <returns>The FTP file's location on disk, or the exception message.</returns>
+        /// <param name="ftpSourceFilePath">Ftp source file path.</param>
+        /// <param name="localDestination">Local destination.</param>
+        /// <param name="bUseAnonymous">If set to <c>true</c> b use anonymous.</param>
+        /// <param name="contentOffset">The content offset where the download should resume.</param>
+        public string DownloadPatchFile(string rawRemoteURL, string localPath, long contentOffset, bool bUseAnonymous)
+        {
+            //clean the URL string first
+            string remoteURL = rawRemoteURL.Replace(Path.DirectorySeparatorChar, '/');
 
-			string username;
-			string password;
-			if (!bUseAnonymous)
-			{
-				username = Config.GetPatchUsername ();
-				password = Config.GetPatchPassword ();
-			}
-			else
-			{
-				username = "anonymous";
-				password = "anonymous";
-			}
+            string username;
+            string password;
+            if (!bUseAnonymous)
+            {
+                username = Config.GetPatchUsername();
+                password = Config.GetPatchPassword();
+            }
+            else
+            {
+                username = "anonymous";
+                password = "anonymous";
+            }
 
 
-			int bytesRead = 0;
+            int bytesRead = 0;
 
-			//the buffer size is 256kb. More or less than this reduces download speeds.
+            //the buffer size is 256kb. More or less than this reduces download speeds.
             byte[] buffer = new byte[262144];
 
-			FtpWebRequest request = null;
-			FtpWebRequest sizerequest = null;
+            FtpWebRequest request = null;
+            FtpWebRequest sizerequest = null;
 
-			Stream reader = null;
-			FtpWebResponse sizereader = null;
+            Stream reader = null;
+            FtpWebResponse sizereader = null;
 
-			FileStream fileStream = null;
+            FileStream fileStream = null;
 
-			//either a path to the file or an error message
-			string returnValue = "";
+            //either a path to the file or an error message
+            string returnValue = "";
 
-			try
-			{
-				request = CreateFtpWebRequest(remoteURL, username, password, true);
-				sizerequest = CreateFtpWebRequest(remoteURL, username, password, true);
+            try
+            {
+                request = CreateFtpWebRequest(remoteURL, username, password, true);
+                sizerequest = CreateFtpWebRequest(remoteURL, username, password, true);
 
-				request.Method = WebRequestMethods.Ftp.DownloadFile;
-				sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
+                request.Method = WebRequestMethods.Ftp.DownloadFile;
+                sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
 
-				request.ContentOffset = contentOffset;
+                request.ContentOffset = contentOffset;
 
-				long fileSize = 0;
+                long fileSize = 0;
 
 
-				reader = request.GetResponse().GetResponseStream();
-				sizereader = (FtpWebResponse)sizerequest.GetResponse();
+                reader = request.GetResponse().GetResponseStream();
+                sizereader = (FtpWebResponse)sizerequest.GetResponse();
 
-				fileStream = new FileStream(localPath, FileMode.Append);
+                fileStream = new FileStream(localPath, FileMode.Append);
 
-				//reset byte counter
-				PatchbytesDownloaded = 0;
+                //reset byte counter
+                FTPbytesDownloaded = 0;
 
-				fileSize = sizereader.ContentLength;
+                fileSize = sizereader.ContentLength;
 
-				//set file info for progress reporting
-				ProgressArgs.FileName = Path.GetFileNameWithoutExtension(remoteURL);
-				ProgressArgs.TotalBytes = (int)fileSize;
+                //set file info for progress reporting
+                ProgressArgs.FileName = Path.GetFileNameWithoutExtension(remoteURL);
+                ProgressArgs.TotalBytes = (int)fileSize;
 
                 //sets the content offset for the file stream, allowing it to begin writing where it last stopped
                 fileStream.Position = contentOffset;
-				while (true)
-				{
-					bytesRead = reader.Read(buffer, 0, buffer.Length);
+                while (true)
+                {
+                    bytesRead = reader.Read(buffer, 0, buffer.Length);
 
-					if (bytesRead == 0)
-					{
-						break;
-					}
+                    if (bytesRead == 0)
+                    {
+                        break;
+                    }
 
-					PatchbytesDownloaded = PatchbytesDownloaded + bytesRead;
-					fileStream.Write(buffer, 0, bytesRead);
+                    FTPbytesDownloaded = FTPbytesDownloaded + bytesRead;
+                    fileStream.Write(buffer, 0, bytesRead);
 
-					//set file progress info
-					ProgressArgs.DownloadedBytes = (int)contentOffset + PatchbytesDownloaded;
+                    //set file progress info
+                    ProgressArgs.DownloadedBytes = (int)contentOffset + FTPbytesDownloaded;
 
-					OnProgressChanged();
-				}
+                    OnProgressChanged();
+                }
 
-				OnProgressChanged();
-				OnDownloadFinished();
+                OnProgressChanged();
+                OnDownloadFinished();
 
-				returnValue = localPath;
-				return returnValue;             				                             
-			}
-			catch (WebException wex)
-			{
-				Console.Write("WebException in DownloadPatchFile (appending): ");
-				Console.WriteLine(wex.Message  + " (" + remoteURL + ")");
-				returnValue = wex.Message;
+                returnValue = localPath;
+                return returnValue;
+            }
+            catch (WebException wex)
+            {
+                Console.Write("WebException in DownloadFTPFile (appending): ");
+                Console.WriteLine(wex.Message + " (" + remoteURL + ")");
+                returnValue = wex.Message;
 
-				return returnValue;
-			}
-			catch (IOException ioex)
-			{
-				Console.Write("IOException in DownloadPatchFile (appending): ");
-				Console.WriteLine(ioex.Message  + " (" + remoteURL + ")");
-				returnValue = ioex.Message;
+                return returnValue;
+            }
+            catch (IOException ioex)
+            {
+                Console.Write("IOException in DownloadFTPFile (appending): ");
+                Console.WriteLine(ioex.Message + " (" + remoteURL + ")");
+                returnValue = ioex.Message;
 
-				return returnValue;
-			}
-			finally
-			{
-				//clean up all open requests
-				//first, close and dispose of the file stream
-				if (fileStream != null)
-				{
-					fileStream.Close();
-				}
+                return returnValue;
+            }
+            finally
+            {
+                //clean up all open requests
+                //first, close and dispose of the file stream
+                if (fileStream != null)
+                {
+                    fileStream.Close();
+                }
 
-				//then, the responses that are reading from the requests.
-				if (reader != null)
-				{
-					reader.Close ();
-				}
-				if (sizereader != null)
-				{
-					sizereader.Close();
-				}
+                //then, the responses that are reading from the requests.
+                if (reader != null)
+                {
+                    reader.Close();
+                }
+                if (sizereader != null)
+                {
+                    sizereader.Close();
+                }
 
-				//and finally, the requests themselves.
-				if (request != null)
-				{
-					request.Abort();
-				}
+                //and finally, the requests themselves.
+                if (request != null)
+                {
+                    request.Abort();
+                }
 
-				if (sizerequest != null)
-				{
-					sizerequest.Abort();
-				}
-			}
-		}
+                if (sizerequest != null)
+                {
+                    sizerequest.Abort();
+                }
+            }
+        }
 
-		/// <summary>
-		/// Creates an ftp web request.
-		/// </summary>
-		/// <returns>The ftp web request.</returns>
-		/// <param name="ftpDirectoryPath">Ftp directory path.</param>
-		/// <param name="keepAlive">If set to <c>true</c> keep alive.</param>
+        /// <summary>
+        /// Creates an ftp web request.
+        /// </summary>
+        /// <returns>The ftp web request.</returns>
+        /// <param name="ftpDirectoryPath">Ftp directory path.</param>
+        /// <param name="keepAlive">If set to <c>true</c> keep alive.</param>
         public static FtpWebRequest CreateFtpWebRequest(string ftpDirectoryPath, string username, string password, bool keepAlive)
         {
             try
@@ -529,7 +529,7 @@ namespace Launchpad.Launcher
                 FtpWebRequest request = (FtpWebRequest)WebRequest.Create(new Uri(ftpDirectoryPath));
 
                 //Set proxy to null. Under current configuration if this option is not set then the proxy 
-				//that is used will get an html response from the web content gateway (firewall monitoring system)
+                //that is used will get an html response from the web content gateway (firewall monitoring system)
                 request.Proxy = null;
 
                 request.UsePassive = true;
@@ -542,151 +542,151 @@ namespace Launchpad.Launcher
             }
             catch (WebException wex)
             {
-                Console.WriteLine ("WebException in CreatePatchWebRequest(): " + wex.Message);
+                Console.WriteLine("WebException in CreateFTPWebRequest(): " + wex.Message);
 
                 return null;
             }
-			catch (ArgumentException aex)
-			{
-				Console.WriteLine ("ArgumentException in CreatePatchWebRequest(): " + aex.Message);
+            catch (ArgumentException aex)
+            {
+                Console.WriteLine("ArgumentException in CreateFTPWebRequest(): " + aex.Message);
 
-				return null;
-			}
-            
+                return null;
+            }
+
         }
 
-		/// <summary>
-		/// Gets the remote launcher version.
-		/// </summary>
-		/// <returns>The remote launcher version.</returns>
-		public Version GetRemoteLauncherVersion()
-		{
-			string remoteVersionPath = String.Format ("{0}/launcher/LauncherVersion.txt", Config.GetPatchUrl());
-			string remoteVersion = ReadPatchFile (remoteVersionPath);
+        /// <summary>
+        /// Gets the remote launcher version.
+        /// </summary>
+        /// <returns>The remote launcher version.</returns>
+        public Version GetRemoteLauncherVersion()
+        {
+            string remoteVersionPath = String.Format("{0}/launcher/LauncherVersion.txt", Config.GetPatchUrl());
+            string remoteVersion = ReadPatchFile(remoteVersionPath);
 
-			return Version.Parse (remoteVersion);
-		}
+            return Version.Parse(remoteVersion);
+        }
 
-		/// <summary>
-		/// Gets the remote game version.
-		/// </summary>
-		/// <returns>The remote game version.</returns>
-		public Version GetRemoteGameVersion(bool bUseSystemTarget)
-		{
-			string remoteVersionPath = "";
-			if (bUseSystemTarget)
-			{
-				remoteVersionPath = String.Format ("{0}/game/{1}/bin/GameVersion.txt", 
-				                                   Config.GetPatchUrl(), 
-				                                   Config.GetSystemTarget());
+        /// <summary>
+        /// Gets the remote game version.
+        /// </summary>
+        /// <returns>The remote game version.</returns>
+        public Version GetRemoteGameVersion(bool bUseSystemTarget)
+        {
+            string remoteVersionPath = "";
+            if (bUseSystemTarget)
+            {
+                remoteVersionPath = String.Format("{0}/game/{1}/bin/GameVersion.txt",
+                                                   Config.GetPatchUrl(),
+                                                   Config.GetSystemTarget());
 
-			}
-			else
-			{
-				remoteVersionPath = String.Format ("{0}/game/bin/GameVersion.txt", 
-				                                   Config.GetPatchUrl());
+            }
+            else
+            {
+                remoteVersionPath = String.Format("{0}/game/bin/GameVersion.txt",
+                                                   Config.GetPatchUrl());
 
-			}
-			string remoteVersion = ReadPatchFile (remoteVersionPath);
+            }
+            string remoteVersion = ReadPatchFile(remoteVersionPath);
 
-			if (!string.IsNullOrEmpty (remoteVersion))
-			{
-				return Version.Parse (remoteVersion);
-			}
-			else
-			{
-				return null;
-			}
-		}
+            if (!string.IsNullOrEmpty(remoteVersion))
+            {
+                return Version.Parse(remoteVersion);
+            }
+            else
+            {
+                return null;
+            }
+        }
 
-		public string GetRemoteManifestChecksum()
-		{
-			string checksum = String.Empty;
+        public string GetRemoteManifestChecksum()
+        {
+            string checksum = String.Empty;
 
-			checksum = ReadPatchFile (Config.GetManifestChecksumURL ());
-			checksum = Utilities.Clean(checksum);
+            checksum = ReadPatchFile(Config.GetManifestChecksumURL());
+            checksum = Utilities.Clean(checksum);
 
-			return checksum;
-		}
+            return checksum;
+        }
 
-		public bool DoesDirectoryExist(string remotePath)
-		{
-			FtpWebRequest request = CreateFtpWebRequest (remotePath, 
-														Config.GetPatchUsername (),
-														Config.GetPatchPassword (),
-														false);
-			FtpWebResponse response = null;
+        public bool DoesDirectoryExist(string remotePath)
+        {
+            FtpWebRequest request = CreateFtpWebRequest(remotePath,
+                                                        Config.GetPatchUsername(),
+                                                        Config.GetPatchPassword(),
+                                                        false);
+            FtpWebResponse response = null;
 
-			try
-			{
-				request.Method = WebRequestMethods.Ftp.ListDirectory;
-				response = (FtpWebResponse)request.GetResponse();
-			}
-			catch (WebException ex)
-			{
-				response = (FtpWebResponse)ex.Response;
-				if (response.StatusCode == FtpStatusCode.ActionNotTakenFileUnavailable)
-				{
-					return false;
-				}
-			}
-			finally
-			{
-				if (response != null)
-				{
-					response.Close();
-				}
-			}
+            try
+            {
+                request.Method = WebRequestMethods.Ftp.ListDirectory;
+                response = (FtpWebResponse)request.GetResponse();
+            }
+            catch (WebException ex)
+            {
+                response = (FtpWebResponse)ex.Response;
+                if (response.StatusCode == FtpStatusCode.ActionNotTakenFileUnavailable)
+                {
+                    return false;
+                }
+            }
+            finally
+            {
+                if (response != null)
+                {
+                    response.Close();
+                }
+            }
 
-			return true;
-			
-		}
+            return true;
 
-		public bool DoesFileExist(string remotePath)
-		{
-			FtpWebRequest request = CreateFtpWebRequest (remotePath, 
-			                                            Config.GetPatchUsername (),
-			                                            Config.GetPatchPassword (),
-			                                            false);
-			FtpWebResponse response = null;
-			try
-			{
-				response = (FtpWebResponse)request.GetResponse();
-			}
-			catch (WebException ex)
-			{
-				response = (FtpWebResponse)ex.Response;
-				if (response.StatusCode == FtpStatusCode.ActionNotTakenFileUnavailable)
-				{
-					return false;
-				}
-			}
-			finally
-			{
-				if (response != null)
-				{
-					response.Close();
-				}
-			}
+        }
 
-			return true;
-		}
+        public bool DoesFileExist(string remotePath)
+        {
+            FtpWebRequest request = CreateFtpWebRequest(remotePath,
+                                                        Config.GetPatchUsername(),
+                                                        Config.GetPatchPassword(),
+                                                        false);
+            FtpWebResponse response = null;
+            try
+            {
+                response = (FtpWebResponse)request.GetResponse();
+            }
+            catch (WebException ex)
+            {
+                response = (FtpWebResponse)ex.Response;
+                if (response.StatusCode == FtpStatusCode.ActionNotTakenFileUnavailable)
+                {
+                    return false;
+                }
+            }
+            finally
+            {
+                if (response != null)
+                {
+                    response.Close();
+                }
+            }
 
-		private void OnProgressChanged()
-		{
-			if (FileProgressChanged != null)
-			{
-				FileProgressChanged (this, ProgressArgs);
-			}
-		}
+            return true;
+        }
 
-		private void OnDownloadFinished()
-		{
-			if (FileDownloadFinished != null)
-			{
-				FileDownloadFinished (this, DownloadFinishedArgs);
-			}
-		}
+        private void OnProgressChanged()
+        {
+            if (FileProgressChanged != null)
+            {
+                FileProgressChanged(this, ProgressArgs);
+            }
+        }
+
+        private void OnDownloadFinished()
+        {
+            if (FileDownloadFinished != null)
+            {
+                FileDownloadFinished(this, DownloadFinishedArgs);
+            }
+        }
 
 
     }
