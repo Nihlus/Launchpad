@@ -134,7 +134,7 @@ namespace Launchpad.Launcher
 			try
 			{
 				FTPHandler FTP = new FTPHandler ();
-				ManifestHandler manifestHandler = new ManifestHandler ();
+				ManifestHandler manifestHandler = new ManifestHandler ( "Game" );
 				List<ManifestEntry> Manifest = manifestHandler.Manifest;
 
 				//create the .install file to mark that an installation has begun
@@ -262,7 +262,7 @@ namespace Launchpad.Launcher
 
 		private void UpdateGameAsync ()
 		{
-			ManifestHandler manifestHandler = new ManifestHandler ();
+			ManifestHandler manifestHandler = new ManifestHandler ( "Game" );
 
 			//check all local files against the manifest for file size changes.
 			//if the file is missing or the wrong size, download it.
@@ -332,18 +332,18 @@ namespace Launchpad.Launcher
 				FTP.FileProgressChanged += OnDownloadProgressChanged;
 
 				//first, verify that the manifest is correct.
-				string LocalManifestHash = MD5Handler.GetFileHash (File.OpenRead (ConfigHandler.GetManifestPath ()));
-				string RemoteManifestHash = FTP.GetRemoteManifestChecksum ();
+				string LocalManifestHash = MD5Handler.GetFileHash (File.OpenRead (ConfigHandler.GetManifestPath ( "Game" )));
+				string RemoteManifestHash = FTP.GetRemoteManifestChecksum ( "Game" );
 
 				//if it is not, download a new copy.
 				if (!(LocalManifestHash == RemoteManifestHash))
 				{
 					LauncherHandler Launcher = new LauncherHandler ();
-					Launcher.DownloadManifest ();
+					Launcher.DownloadManifest ("Game");
 				}
 
 				//then, begin repairing the game
-				ManifestHandler manifestHandler = new ManifestHandler ();
+				ManifestHandler manifestHandler = new ManifestHandler ( "Game" );
 				List<ManifestEntry> Manifest = manifestHandler.Manifest;			
 
 				ProgressArgs.TotalFiles = Manifest.Count;

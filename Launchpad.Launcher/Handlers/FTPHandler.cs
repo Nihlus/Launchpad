@@ -599,11 +599,11 @@ namespace Launchpad.Launcher
 			}
 		}
 
-		public string GetRemoteManifestChecksum()
+		public string GetRemoteManifestChecksum( string WhichManifest )
 		{
 			string checksum = String.Empty;
 
-			checksum = ReadFTPFile (Config.GetManifestChecksumURL ());
+			checksum = ReadFTPFile (Config.GetManifestChecksumURL ( WhichManifest ));
 			checksum = Utilities.Clean(checksum);
 
 			return checksum;

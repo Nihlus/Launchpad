@@ -118,22 +118,22 @@ namespace Launchpad.Launcher
 		/// <summary>
 		/// Downloads the manifest.
 		/// </summary>
-		public void DownloadManifest()
+		public void DownloadManifest( string WhichManifest )
 		{
 			Stream manifestStream = null;														
 			try
 			{
 				FTPHandler FTP = new FTPHandler ();
 
-				string remoteChecksum = FTP.GetRemoteManifestChecksum ();
+				string remoteChecksum = FTP.GetRemoteManifestChecksum ( WhichManifest );
 				string localChecksum = "";
 
-				string RemoteURL = Config.GetManifestURL ();
-				string LocalPath = ConfigHandler.GetManifestPath ();
+				string RemoteURL = Config.GetManifestURL ( WhichManifest );
+				string LocalPath = ConfigHandler.GetManifestPath ( WhichManifest );
 
-				if (File.Exists(ConfigHandler.GetManifestPath()))
+				if (File.Exists(ConfigHandler.GetManifestPath( WhichManifest )))
 				{
-					manifestStream = File.OpenRead (ConfigHandler.GetManifestPath ());
+					manifestStream = File.OpenRead (ConfigHandler.GetManifestPath ( WhichManifest ));
                     localChecksum = MD5Handler.GetFileHash(manifestStream);
 
 					if (!(remoteChecksum == localChecksum))
