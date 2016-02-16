@@ -26,28 +26,47 @@ namespace Launchpad.Launcher
 	/// </summary>
 	internal sealed class LauncherHandler
 	{
-		/// <summary>
-		/// Occurs when changelog download progress changes.
-		/// </summary>
-		public event ChangelogProgressChangedEventHandler ChangelogProgressChanged;
-		/// <summary>
-		/// Occurs when changelog download finishes.
-		/// </summary>
-		public event ChangelogDownloadFinishedEventHandler ChangelogDownloadFinished;
+        /// <summary>
+        /// Occurs when progress changed.
+        /// </summary>
+        public event GameProgressChangedEventHandler ProgressChanged;
+        /// <summary>
+        /// Occurs when game update finished.
+        /// </summary>
+        public event GameUpdateFinishedEventHandler GameUpdateFinished;
+        /// <summary>
+        /// Occurs when game update failed.
+        /// </summary>
+        public event GameUpdateFailedEventHandler GameUpdateFailed;
+        /// <summary>
+        /// The update failed arguments.
+        /// </summary>
+        private GameUpdateFailedEventArgs UpdateFailedArgs;
+        /// <summary>
+        /// Occurs when changelog download progress changes.
+        /// </summary>
+        public event ChangelogProgressChangedEventHandler ChangelogProgressChanged;
+        /// <summary>
+        /// Occurs when changelog download finishes.
+        /// </summary>
+        public event ChangelogDownloadFinishedEventHandler ChangelogDownloadFinished;
+        /// <summary>
+        /// The update finished arguments.
+        /// </summary>
+        private GameUpdateFinishedEventArgs UpdateFinishedArgs;
+        /// <summary>
+        /// The progress arguments object. Is updated during file download operations.
+        /// </summary>
+        private FileDownloadProgressChangedEventArgs ProgressArgs;
+        /// <summary>
+        /// The download finished arguments object. Is updated once a file download finishes.
+        /// </summary>
+        private GameDownloadFinishedEventArgs DownloadFinishedArgs;
 
-		/// <summary>
-		/// The progress arguments object. Is updated during file download operations.
-		/// </summary>
-		private FileDownloadProgressChangedEventArgs ProgressArgs;
-		/// <summary>
-		/// The download finished arguments object. Is updated once a file download finishes.
-		/// </summary>
-		private GameDownloadFinishedEventArgs DownloadFinishedArgs;
-
-		/// <summary>
-		/// The config handler reference.
-		/// </summary>
-		ConfigHandler Config = ConfigHandler._instance;
+        /// <summary>
+        /// The config handler reference.
+        /// </summary>
+        ConfigHandler Config = ConfigHandler._instance;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Launchpad_Launcher.LauncherHandler"/> class.
@@ -58,82 +77,136 @@ namespace Launchpad.Launcher
 			DownloadFinishedArgs = new GameDownloadFinishedEventArgs ();
 		}
 
-		//TODO: Update this function to handle DLLs as well. May have to implement a full-blown
-		//manifest system here as well.
+        //TODO: Update this function to handle DLLs as well. May have to implement a full-blown
+        //manifest system here as well.
 
-		/// <summary>
-		/// Updates the launcher synchronously.
-		/// </summary>
-		public void UpdateLauncher()
-		{
-			try
-			{
-				FTPHandler FTP = new FTPHandler ();
+        /// <summary>
+        /// Starts an asynchronous game update task.
+        /// </summary>
+        public void UpdateLauncher()
+        {
+            Thread t = new Thread(UpdateLauncherAsync);
+            t.Start();
+        }
 
-                //crawl the server for all of the files in the /launcher/bin directory.
-                List<string> remotePaths = FTP.GetFilePaths(Config.GetLauncherBinariesURL(), true);
 
-                //download all of them
-                foreach (string path in remotePaths)
+        private void OnGameUpdateFinished()
+        {
+            if (GameUpdateFinished != null)
+            {
+                GameUpdateFinished(this, UpdateFinishedArgs);
+            }
+        }
+
+        private void OnGameUpdateFailed()
+        {
+            if (GameUpdateFailed != null)
+            {
+                GameUpdateFailed(this, UpdateFailedArgs);
+            }
+        }
+
+        /// <summary>
+        /// Raises the download progress changed event.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">E.</param>
+        private void OnDownloadProgressChanged(object sender, FileDownloadProgressChangedEventArgs e)
+        {
+            ProgressArgs = e;
+            OnProgressChanged();
+        }
+
+        private void OnFileDownloadFinished(object sender, FileDownloadFinishedEventArgs e)
+        {
+            OnProgressChanged();
+        }
+
+        /// <summary>
+        /// Raises the progress changed event.
+        /// </summary>
+        private void OnProgressChanged()
+        {
+            if (ProgressChanged != null)
+            {
+                ProgressChanged(this, ProgressArgs);
+            }
+        }
+
+
+        private void UpdateLauncherAsync()
+        {
+            ManifestHandler manifestHandler = new ManifestHandler("Launcher");
+
+            //check all local files against the manifest for file size changes.
+            //if the file is missing or the wrong size, download it.
+            //better system - compare old & new manifests for changes and download those?
+            List<ManifestEntry> Manifest = manifestHandler.Manifest;
+            List<ManifestEntry> OldManifest = manifestHandler.OldManifest;
+
+            try
+            {
+                //Check old manifest against new manifest, download anything that isn't exactly the same as before
+                FTPHandler FTP = new FTPHandler();
+                FTP.FileProgressChanged += OnDownloadProgressChanged;
+                FTP.FileDownloadFinished += OnFileDownloadFinished;
+
+                foreach (ManifestEntry Entry in Manifest)
                 {
-                    try
+                    if (!OldManifest.Contains(Entry))
                     {
-                        if (!String.IsNullOrEmpty(path))
-                        {
-                            string Local = String.Format("{0}launchpad{1}{2}",
-                                             ConfigHandler.GetTempDir(),
-                                             Path.DirectorySeparatorChar,
-                                             path);
+                        string RemotePath = String.Format("{0}{1}",
+                                                                  Config.GetLauncherBinariesURL(),
+                                                                  Entry.RelativePath);
 
-                            string Remote = String.Format("{0}{1}",
-                                                Config.GetLauncherBinariesURL(),
-                                                path);
+                        string LocalPath = String.Format("{0}\\launchpad\\{1}",
+                                               ConfigHandler.GetTempDir(),
+                                               Entry.RelativePath);
 
-                            if (!Directory.Exists(Local))
-                            {
-                                Directory.CreateDirectory(Directory.GetParent(Local).ToString());
-                            }
+                        Directory.CreateDirectory(Directory.GetParent(LocalPath).ToString());
 
-                            FTP.DownloadFTPFile(Remote, Local, false);
-                        }                        
-                    }
-                    catch (WebException wex)
-                    {
-                        Console.WriteLine("WebException in UpdateLauncher(): " + wex.Message);
+                        OnProgressChanged();
+                        FTP.DownloadFTPFile(RemotePath, LocalPath, false);
                     }
                 }
-				
-                //TODO: Make the script copy recursively
-				ProcessStartInfo script = CreateUpdateScript ();
 
-				Process.Start(script);
-				Environment.Exit(0);
-			}
-			catch (IOException ioex)
-			{
-				Console.WriteLine ("IOException in UpdateLauncher(): " + ioex.Message);
-			}
-		}
+                OnGameUpdateFinished();
+                ProcessStartInfo script = CreateUpdateScript();
 
-		/// <summary>
-		/// Downloads the manifest.
-		/// </summary>
-		public void DownloadManifest()
+                Process.Start(script);
+                Environment.Exit(0);
+
+                //clear out the event handlers
+                FTP.FileProgressChanged -= OnDownloadProgressChanged;
+                FTP.FileDownloadFinished -= OnFileDownloadFinished;
+            }
+            catch (IOException ioex)
+            {
+                Console.WriteLine("IOException in UpdateGameAsync(): " + ioex.Message);
+                OnGameUpdateFailed();
+            }
+        }
+
+
+        /// <summary>
+        /// Downloads the manifest.
+        /// </summary>
+        public void DownloadManifest( string WhichManifest )
 		{
 			Stream manifestStream = null;														
 			try
 			{
 				FTPHandler FTP = new FTPHandler ();
 
-				string remoteChecksum = FTP.GetRemoteManifestChecksum ();
+				string remoteChecksum = FTP.GetRemoteManifestChecksum ( WhichManifest );
 				string localChecksum = "";
 
-				string RemoteURL = Config.GetManifestURL ();
-				string LocalPath = ConfigHandler.GetManifestPath ();
+				string RemoteURL = Config.GetManifestURL ( WhichManifest );
+				string LocalPath = ConfigHandler.GetManifestPath ( WhichManifest );
 
-				if (File.Exists(ConfigHandler.GetManifestPath()))
+				if (File.Exists(ConfigHandler.GetManifestPath( WhichManifest )))
 				{
-					manifestStream = File.OpenRead (ConfigHandler.GetManifestPath ());
+					manifestStream = File.OpenRead (ConfigHandler.GetManifestPath ( WhichManifest ));
                     localChecksum = MD5Handler.GetFileHash(manifestStream);
 
 					if (!(remoteChecksum == localChecksum))

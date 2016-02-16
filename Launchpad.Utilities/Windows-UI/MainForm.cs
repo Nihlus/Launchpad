@@ -125,21 +125,23 @@ namespace Launchpad.Utilities
 						int fileAmount = files.Length; 
 						string currentFile = file.Substring (skipDirectory.Length);
 
-						//get file size on disk
-						FileInfo Info = new FileInfo (file);
-						string fileSize = Info.Length.ToString ();
-                        
-						string manifestLine = String.Format (@"{0}:{1}:{2}", file.Substring (skipDirectory.Length), MD5Handler.GetFileHash (fileStream), fileSize);
+                        // Skip Debugging files. Breaks when testing if permitted.
 
-						if (fileStream != null)
-						{
-							fileStream.Close ();	
-						}
-							
-						completedFiles++;
-                        
+                        if (!file.EndsWith(".pdb"))
+                        {
+                            //get file size on disk
+                            FileInfo Info = new FileInfo(file);
+                            string fileSize = Info.Length.ToString();
 
-						tw.WriteLine (manifestLine);
+                            string manifestLine = String.Format(@"{0}:{1}:{2}", file.Substring(skipDirectory.Length), MD5Handler.GetFileHash(fileStream), fileSize);
+
+                            if (fileStream != null)
+                            {
+                                fileStream.Close();
+                            }
+                            tw.WriteLine(manifestLine);
+                        }
+                        completedFiles++;
 						backgroundWorker_manifestGenerator.ReportProgress (completedFiles, new Tuple<int, int, string> (fileAmount, completedFiles, currentFile));
 					}
 				}
