@@ -125,9 +125,9 @@ namespace Launchpad.Launcher
                 //Does the launcher need an update?
                 if (!Checks.IsLauncherOutdated())
                 {
-                    if (Checks.IsManifestOutdated())
+                    if (Checks.IsManifestOutdated( "Game" ))
                     {
-                        Launcher.DownloadManifest();
+                        Launcher.DownloadManifest("Game" );
                     }
 
                     if(!Checks.IsGameInstalled())

@@ -213,15 +213,15 @@ namespace Launchpad.Launcher
 		/// Determines whether the  manifest is outdated.
 		/// </summary>
 		/// <returns><c>true</c> if the manifest is outdated; otherwise, <c>false</c>.</returns>
-		public bool IsManifestOutdated()
+		public bool IsManifestOutdated( string WhichManifest)
 		{
-			if (File.Exists(ConfigHandler.GetManifestPath()))
+			if (File.Exists(ConfigHandler.GetManifestPath( WhichManifest )))
 			{
 				FTPHandler FTP = new FTPHandler ();
 
-				string manifestURL = Config.GetManifestURL ();
+				string manifestURL = Config.GetManifestURL ( WhichManifest );
 				string remoteHash = FTP.ReadFTPFile (manifestURL);
-                string localHash = MD5Handler.GetFileHash(File.OpenRead(ConfigHandler.GetManifestPath()));
+                string localHash = MD5Handler.GetFileHash(File.OpenRead(ConfigHandler.GetManifestPath( WhichManifest )));
 
 				if (remoteHash != localHash)
 				{
