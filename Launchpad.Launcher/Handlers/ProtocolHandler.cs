@@ -41,6 +41,27 @@ namespace Launchpad.Launcher
         {
             bUseHTTP = bHTTP;
         }
+
+
+        /// <summary>
+        /// Gets the relative paths for all files in the specified Patch directory.
+        /// </summary>
+        /// <param name="rawRemoteURL">The URL to search.</param>
+        /// <param name="bRecursively">Should the search should include subdirectories?</param>
+        /// <returns>A list of relative paths for the files in the specified directory.</returns>
+        public List<string> GetFilePaths(string rawRemoteURL, bool bRecursively)
+        {
+            if (bUseHTTP)
+            {
+                return null;
+            }
+            else
+            {
+                return FTP.GetFilePaths( rawRemoteURL, bRecursively);
+            }
+        }
+
+
         /// <summary>
         /// Reads a text file from a remote Patch server.
         /// </summary>

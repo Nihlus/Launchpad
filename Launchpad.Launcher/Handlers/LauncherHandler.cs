@@ -58,21 +58,68 @@ namespace Launchpad.Launcher
 			DownloadFinishedArgs = new GameDownloadFinishedEventArgs ();
 		}
 
-		//TODO: Update this function to handle DLLs as well. May have to implement a full-blown
-		//manifest system here as well.
+        //TODO: Update this function to handle DLLs as well. May have to implement a full-blown
+        //manifest system here as well.
 
-		/// <summary>
-		/// Updates the launcher synchronously.
-		/// </summary>
-		public void UpdateLauncher()
-		{
-            return; // Until I get this retrofitted for a manifest .... No  updating.
-		}
+        /// <summary>
+        /// Updates the launcher synchronously.
+        /// </summary>
+        public void UpdateLauncher()
+        {
+            try
+            {
+                ProtocolHandler Protocol = new ProtocolHandler( Config.bUseHTTP() );
 
-		/// <summary>
-		/// Downloads the manifest.
-		/// </summary>
-		public void DownloadManifest()
+                //crawl the server for all of the files in the /launcher/bin directory.
+                List<string> remotePaths = Protocol.GetFilePaths(Config.GetLauncherBinariesURL(), true);
+
+                //download all of them
+                foreach (string path in remotePaths)
+                {
+                    try
+                    {
+                        if (!String.IsNullOrEmpty(path))
+                        {
+                            string Local = String.Format("{0}launchpad{1}{2}",
+                                             ConfigHandler.GetTempDir(),
+                                             Path.DirectorySeparatorChar,
+                                             path);
+
+                            string Remote = String.Format("{0}{1}",
+                                                Config.GetLauncherBinariesURL(),
+                                                path);
+
+                            if (!Directory.Exists(Local))
+                            {
+                                Directory.CreateDirectory(Directory.GetParent(Local).ToString());
+                            }
+
+                            Protocol.DownloadPatchFile(Remote, Local, false);
+                        }
+                    }
+                    catch (WebException wex)
+                    {
+                        Console.WriteLine("WebException in UpdateLauncher(): " + wex.Message);
+                    }
+                }
+
+                //TODO: Make the script copy recursively
+                ProcessStartInfo script = CreateUpdateScript();
+
+                Process.Start(script);
+                Environment.Exit(0);
+            }
+            catch (IOException ioex)
+            {
+                Console.WriteLine("IOException in UpdateLauncher(): " + ioex.Message);
+            }
+        }
+
+
+        /// <summary>
+        /// Downloads the manifest.
+        /// </summary>
+        public void DownloadManifest()
 		{
 			Stream manifestStream = null;														
 			try
