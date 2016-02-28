@@ -52,6 +52,9 @@ Source: "{#LaunchpadReleaseDir}\gtk-sharp-2.12.26.msi"; DestDir: "{tmp}";
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
+[Dirs]
+Name: "{app}\"; Permissions: everyone-modify
+
 [Run]
 Filename: "msiexec.exe"; Parameters: "/i ""{tmp}\gtk-sharp-2.12.26.msi"" /qn"
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
