@@ -58,9 +58,6 @@ namespace Launchpad.Launcher
 			DownloadFinishedArgs = new GameDownloadFinishedEventArgs ();
 		}
 
-		//TODO: Update this function to handle DLLs as well. May have to implement a full-blown
-		//manifest system here as well.
-
 		/// <summary>
 		/// Updates the launcher synchronously.
 		/// </summary>

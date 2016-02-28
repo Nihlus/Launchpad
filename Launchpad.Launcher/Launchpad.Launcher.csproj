@@ -269,8 +269,6 @@
     <Compile Include="Utility\Events\Arguments.cs" />
     <Compile Include="Utility\Events\Delegates.cs" />
     <None Include="packages.config" />
-    <Compile Include="gtk-gui\Launchpad.Launcher.MainWindow.cs" />
-    <Compile Include="gtk-gui\Launchpad.Launcher.SettingsDialog.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

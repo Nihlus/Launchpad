@@ -269,8 +269,22 @@ namespace Launchpad.Launcher
 
 			//set the window title, if it changed.
 			Title = "Launchpad - " + Config.GetGameName ();
-		}			
-		
+		}		
+
+		/// <summary>
+		/// Runs a game repair, no matter what the state the installation is in.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
+		protected void OnRepairGameActionActivated(object sender, EventArgs e)
+		{			
+			SetLauncherMode (ELauncherMode.Repair, false);
+
+			// Simulate a button press from the user.
+			OnPrimaryButtonClicked (this, EventArgs.Empty);
+
+		}
+
         /// <summary>
         /// Handles switching between different functionalities depending on what is visible on the button to the user, such as
         /// * Installing
@@ -293,7 +307,7 @@ namespace Launchpad.Launcher
 
 				    if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
 				    {
-					    //install the game asynchronously
+					    //Repair the game asynchronously
                         SetLauncherMode(ELauncherMode.Repair, true);
 					    Game.RepairGame ();                        
 				    }	

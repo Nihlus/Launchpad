@@ -10,13 +10,9 @@ namespace Launchpad.Launcher
 		
 		private global::Gtk.Action SettingsAction;
 		
-		private global::Gtk.Action LanguageAction;
-		
-		private global::Gtk.Action ThingsAction;
-		
 		private global::Gtk.Action ActionsAction;
 		
-		private global::Gtk.Action convertAction;
+		private global::Gtk.Action refreshAction;
 		
 		private global::Gtk.VBox vbox1;
 		
@@ -58,18 +54,12 @@ namespace Launchpad.Launcher
 			this.SettingsAction = new global::Gtk.Action ("SettingsAction", global::Mono.Unix.Catalog.GetString ("Settings"), null, null);
 			this.SettingsAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("Settings");
 			w1.Add (this.SettingsAction, null);
-			this.LanguageAction = new global::Gtk.Action ("LanguageAction", global::Mono.Unix.Catalog.GetString ("Language"), null, null);
-			this.LanguageAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("Language");
-			w1.Add (this.LanguageAction, null);
-			this.ThingsAction = new global::Gtk.Action ("ThingsAction", global::Mono.Unix.Catalog.GetString ("Things"), null, null);
-			this.ThingsAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("Things");
-			w1.Add (this.ThingsAction, null);
 			this.ActionsAction = new global::Gtk.Action ("ActionsAction", global::Mono.Unix.Catalog.GetString ("Actions"), null, null);
 			this.ActionsAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("Actions");
 			w1.Add (this.ActionsAction, null);
-			this.convertAction = new global::Gtk.Action ("convertAction", global::Mono.Unix.Catalog.GetString ("Repair"), null, "gtk-convert");
-			this.convertAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("Repair");
-			w1.Add (this.convertAction, null);
+			this.refreshAction = new global::Gtk.Action ("refreshAction", global::Mono.Unix.Catalog.GetString ("Repair Game"), null, "gtk-refresh");
+			this.refreshAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("Repair");
+			w1.Add (this.refreshAction, null);
 			this.UIManager.InsertActionGroup (w1, 0);
 			this.AddAccelGroup (this.UIManager.AccelGroup);
 			this.Name = "Launchpad.Launcher.MainWindow";
@@ -83,7 +73,7 @@ namespace Launchpad.Launcher
 			this.vbox1.Name = "vbox1";
 			this.vbox1.Spacing = 6;
 			// Container child vbox1.Gtk.Box+BoxChild
-			this.UIManager.AddUiFromString ("<ui><menubar name='menubar1'><menu name='EditAction' action='EditAction'><menuitem name='SettingsAction' action='SettingsAction'/></menu><menu name='ActionsAction' action='ActionsAction'><menuitem name='convertAction' action='convertAction'/></menu></menubar></ui>");
+			this.UIManager.AddUiFromString ("<ui><menubar name='menubar1'><menu name='EditAction' action='EditAction'><menuitem/><menuitem name='SettingsAction' action='SettingsAction'/></menu></menubar></ui>");
 			this.menubar1 = ((global::Gtk.MenuBar)(this.UIManager.GetWidget ("/menubar1")));
 			this.menubar1.Name = "menubar1";
 			this.vbox1.Add (this.menubar1);
@@ -188,6 +178,7 @@ namespace Launchpad.Launcher
 			this.Show ();
 			this.DeleteEvent += new global::Gtk.DeleteEventHandler (this.OnDeleteEvent);
 			this.SettingsAction.Activated += new global::System.EventHandler (this.OnSettingsActionActivated);
+			this.refreshAction.Activated += new global::System.EventHandler (this.OnRepairGameActionActivated);
 			this.PrimaryButton.Clicked += new global::System.EventHandler (this.OnPrimaryButtonClicked);
 		}
 	}

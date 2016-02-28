@@ -42,7 +42,7 @@ namespace Launchpad.Launcher
 			{
 				sendStatsRequest.Abort();   
 			}
-		}
+		}			
 	}
 }
 

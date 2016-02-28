@@ -22,26 +22,17 @@
         <property name="ShortLabel" translatable="yes">Settings</property>
         <signal name="Activated" handler="OnSettingsActionActivated" />
       </action>
-      <action id="LanguageAction">
-        <property name="Type">Action</property>
-        <property name="Label" translatable="yes">Language</property>
-        <property name="ShortLabel" translatable="yes">Language</property>
-      </action>
-      <action id="ThingsAction">
-        <property name="Type">Action</property>
-        <property name="Label" translatable="yes">Things</property>
-        <property name="ShortLabel" translatable="yes">Things</property>
-      </action>
       <action id="ActionsAction">
         <property name="Type">Action</property>
         <property name="Label" translatable="yes">Actions</property>
         <property name="ShortLabel" translatable="yes">Actions</property>
       </action>
-      <action id="convertAction">
+      <action id="refreshAction">
         <property name="Type">Action</property>
-        <property name="Label" translatable="yes">Repair</property>
+        <property name="Label" translatable="yes">Repair Game</property>
         <property name="ShortLabel" translatable="yes">Repair</property>
-        <property name="StockId">gtk-convert</property>
+        <property name="StockId">gtk-refresh</property>
+        <signal name="Activated" handler="OnRepairGameActionActivated" />
       </action>
     </action-group>
     <property name="MemberName" />
@@ -60,10 +51,8 @@
             <property name="MemberName" />
             <node name="menubar1" type="Menubar">
               <node type="Menu" action="EditAction">
+                <node type="Menuitem" />
                 <node type="Menuitem" action="SettingsAction" />
-              </node>
-              <node type="Menu" action="ActionsAction">
-                <node type="Menuitem" action="convertAction" />
               </node>
             </node>
           </widget>
