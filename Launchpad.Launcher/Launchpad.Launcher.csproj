@@ -266,7 +266,6 @@
     <Compile Include="Utility\Events\Delegates.cs" />
     <None Include="packages.config" />
     <Compile Include="Handlers\Protocols\FTPHandler.cs" />
-    <Compile Include="Handlers\Protocols\PatchProtocolHandler.cs" />
     <Compile Include="gtk-gui\Launchpad.Launcher.UI.MainWindow.cs" />
     <Compile Include="gtk-gui\Launchpad.Launcher.UI.SettingsDialog.cs" />
   </ItemGroup>
