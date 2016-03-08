@@ -84,7 +84,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <param name="ftpSourceFilePath">FTP file path.</param>
 		public string ReadFTPFile(string rawRemoteURL, bool useAnonymousLogin = false)
 		{
-			//clean the input URL
+			// Clean the input URL first
 			string remoteURL = rawRemoteURL.Replace(Path.DirectorySeparatorChar, '/');
 
 			string username;
