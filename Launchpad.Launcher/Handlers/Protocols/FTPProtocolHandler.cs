@@ -52,6 +52,26 @@ namespace Launchpad.Launcher.Handlers.Protocols
 						
 		}
 
+		public override bool GameHasNewPatch()
+		{
+			return false;
+		}
+
+		public override bool LauncherHasNewPatch()
+		{
+			return false;
+		}
+
+		public override void DownloadGame()
+		{
+
+		}
+
+		public override void DownloadLauncher()
+		{
+
+		}
+
 		/// <summary>
 		/// Reads a text file from a remote FTP server.
 		/// </summary>
@@ -141,7 +161,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					sizerequest.Abort();
 				}
 			}
-
 
 		}
 

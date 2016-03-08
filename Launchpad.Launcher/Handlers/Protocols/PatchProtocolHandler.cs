@@ -79,14 +79,14 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		public abstract bool LauncherHasNewPatch();
 
 		/// <summary>
-		/// Patches the game to the latest version.
+		/// Downloads the latest version of the game.
 		/// </summary>
-		public abstract void PatchGame();
+		public abstract void DownloadGame();
 
 		/// <summary>
-		/// Patches the launcher to the latest version.
+		/// Downloads the latest version of the launcher.
 		/// </summary>
-		public abstract void PatchLauncher();
+		public abstract void DownloadLauncher();
 
 		/// <summary>
 		/// Raises the progress changed event.
