@@ -1,6 +1,7 @@
 using System;
+using Launchpad.Launcher.Utility.Enums;
 
-namespace Launchpad.Launcher
+namespace Launchpad.Launcher.Utility
 {
 	internal static class Utilities
 	{
@@ -12,7 +13,7 @@ namespace Launchpad.Launcher
 		{
 			string output = "";
 
-			output = input.Replace ("\n", String.Empty).Replace ("\0", String.Empty).Replace("\r", String.Empty);
+			output = input.Replace("\n", String.Empty).Replace("\0", String.Empty).Replace("\r", String.Empty);
 
 			return output;
 		}
@@ -22,20 +23,20 @@ namespace Launchpad.Launcher
 			ESystemTarget Target = ESystemTarget.Invalid;
 			try
 			{
-				Target = (ESystemTarget)Enum.Parse (typeof(ESystemTarget), input);
+				Target = (ESystemTarget)Enum.Parse(typeof(ESystemTarget), input);
 			}
 			catch (ArgumentNullException anex)
 			{ 
-				Console.WriteLine ("ArgumentNullException in ParseSystemTarget(): " + anex.Message);
+				Console.WriteLine("ArgumentNullException in ParseSystemTarget(): " + anex.Message);
 			}
-            catch (ArgumentException aex)
-            {
-                Console.WriteLine("ArgumentException in ParseSystemTarget(): " + aex.Message);
-            }
-            catch (OverflowException oex)
-            {
-                Console.WriteLine("OverflowException in ParseSystemTarget(): " + oex.Message);
-            }
+			catch (ArgumentException aex)
+			{
+				Console.WriteLine("ArgumentException in ParseSystemTarget(): " + aex.Message);
+			}
+			catch (OverflowException oex)
+			{
+				Console.WriteLine("OverflowException in ParseSystemTarget(): " + oex.Message);
+			}
 
 			return Target;
 		}

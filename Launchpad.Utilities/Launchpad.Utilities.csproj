@@ -125,11 +125,11 @@
     <Compile Include="Utility\Events\Arguments.cs" />
     <Compile Include="Utility\Events\Delegates.cs" />
     <Compile Include="Unix-UI\MainWindow.cs" />
-    <Compile Include="gtk-gui\Launchpad.Utilities.MainWindow.cs" />
     <Compile Include="Handlers\ChecksHandler.cs" />
     <EmbeddedResource Include="Resources\Icons8-Android-Industry-Engineering.ico">
       <DeployService-UseProjectRelativePath>True</DeployService-UseProjectRelativePath>
     </EmbeddedResource>
+    <Compile Include="gtk-gui\Launchpad.Utilities.UI.MainWindow.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

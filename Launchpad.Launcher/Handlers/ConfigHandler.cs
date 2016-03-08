@@ -2,38 +2,40 @@
 using IniParser.Model;
 using System;
 using System.IO;
+using Launchpad.Launcher.Utility.Enums;
+using Launchpad.Launcher.Utility;
 
 
-namespace Launchpad.Launcher
+namespace Launchpad.Launcher.Handlers
 {
 	/// <summary>
 	/// Config handler. This class handles reading and writing to the launcher's configuration.
 	/// Read and write operations are synchronized by locks, so it should be threadsafe.
 	/// This is a singleton class, and it should always be accessed through _Instance.
 	/// </summary>
-    internal sealed class ConfigHandler
-    {
+	internal sealed class ConfigHandler
+	{
 		/// <summary>
 		/// The config lock object.
 		/// </summary>
-		private object ReadLock = new Object ();
+		private object ReadLock = new Object();
 		/// <summary>
 		/// The write lock object.
 		/// </summary>
-		private object WriteLock = new Object ();
+		private object WriteLock = new Object();
 
 		/// <summary>
 		/// The singleton Instance. Will always point to one shared object.
 		/// </summary>
-		public static readonly ConfigHandler _instance = new ConfigHandler ();
+		public static readonly ConfigHandler _instance = new ConfigHandler();
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Launchpad_Launcher.ConfigHandler"/> class.
-        /// </summary>
-        private ConfigHandler()
-        {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Launchpad_Launcher.ConfigHandler"/> class.
+		/// </summary>
+		private ConfigHandler()
+		{
             
-        }	
+		}
 
 		/// <summary>
 		/// Writes the config data to disk. This method is thread-blocking, and all write operations 
@@ -45,7 +47,7 @@ namespace Launchpad.Launcher
 		{
 			lock (WriteLock)
 			{
-				Parser.WriteFile (GetConfigPath (), Data);
+				Parser.WriteFile(GetConfigPath(), Data);
 			}
 		}
 
@@ -53,25 +55,25 @@ namespace Launchpad.Launcher
 		/// Gets the path to the config file on disk.
 		/// </summary>
 		/// <returns>The config path.</returns>
-        private static string GetConfigPath()
-        {
+		private static string GetConfigPath()
+		{
 			string configPath = String.Format(@"{0}LauncherConfig.ini", 
-			                                  GetConfigDir());
+				                    GetConfigDir());
             
-            return configPath;
-        }
+			return configPath;
+		}
 
 		/// <summary>
 		/// Gets the path to the config directory.
 		/// </summary>
 		/// <returns>The config dir, terminated with a directory separator.</returns>
-        private static string GetConfigDir()
-        {
+		private static string GetConfigDir()
+		{
 			string configDir = String.Format(@"{0}Config{1}", 
-			                                 GetLocalDir(),
-			                                 Path.DirectorySeparatorChar);
-            return configDir;
-        }
+				                   GetLocalDir(),
+				                   Path.DirectorySeparatorChar);
+			return configDir;
+		}
 
 		/// <summary>
 		/// Initializes the config by checking for bad values or files. 
@@ -89,10 +91,10 @@ namespace Launchpad.Launcher
 			Version defaultLauncherVersion = new Version("0.1.1");
 
 			//Check for pre-unix config. If it exists, fix the values and copy it.
-			UpdateOldConfig ();
+			UpdateOldConfig();
 
 			//Check for old cookie file. If it exists, rename it.
-			ReplaceOldUpdateCookie ();
+			ReplaceOldUpdateCookie();
 
 			//should be safe to lock the config now for initializing it
 			lock (ReadLock)
@@ -113,7 +115,7 @@ namespace Launchpad.Launcher
 						IniData data = Parser.ReadFile(GetConfigPath());
 
 						//generate a new GUID for this install instance of the launcher
-						string GeneratedGUID = Guid.NewGuid ().ToString ();
+						string GeneratedGUID = Guid.NewGuid().ToString();
 
 						data.Sections.AddSection("Local");
 						data.Sections.AddSection("Remote");
@@ -122,8 +124,8 @@ namespace Launchpad.Launcher
 						data["Local"].AddKey("LauncherVersion", defaultLauncherVersion.ToString());
 						data["Local"].AddKey("GameName", "LaunchpadExample");
 
-                        //set the default system target to what the launcher is running on. Developers will need 
-                        //to alter this in the config, based on where they're deploying to.
+						//set the default system target to what the launcher is running on. Developers will need 
+						//to alter this in the config, based on where they're deploying to.
 						data["Local"].AddKey("SystemTarget", GetCurrentPlatform().ToString());
 						data["Local"].AddKey("GUID", GeneratedGUID);
 
@@ -137,7 +139,7 @@ namespace Launchpad.Launcher
 					}
 					catch (IOException ioex)
 					{
-						Console.WriteLine ("IOException in ConfigHandler.Initialize(): " + ioex.Message);
+						Console.WriteLine("IOException in ConfigHandler.Initialize(): " + ioex.Message);
 					}
 
 				}
@@ -146,13 +148,13 @@ namespace Launchpad.Launcher
 					IniData data = Parser.ReadFile(GetConfigPath());
 
 					data["Local"]["LauncherVersion"] = defaultLauncherVersion.ToString();
-					if (!data ["Local"].ContainsKey ("GUID"))
+					if (!data["Local"].ContainsKey("GUID"))
 					{
-						string GeneratedGUID = Guid.NewGuid ().ToString ();
-						data ["Local"].AddKey ("GUID", GeneratedGUID);
+						string GeneratedGUID = Guid.NewGuid().ToString();
+						data["Local"].AddKey("GUID", GeneratedGUID);
 					}
 
-					WriteConfig (Parser, data);
+					WriteConfig(Parser, data);
 				}
 			}
 		}
@@ -161,12 +163,12 @@ namespace Launchpad.Launcher
 		/// Gets the path to the update cookie on disk.
 		/// </summary>
 		/// <returns>The update cookie.</returns>
-        public static string GetUpdateCookiePath()
-        {
+		public static string GetUpdateCookiePath()
+		{
 			string updateCookie = String.Format(@"{0}.update", 
-			                                    GetLocalDir());
-            return updateCookie;
-        }
+				                      GetLocalDir());
+			return updateCookie;
+		}
 
 		/// <summary>
 		/// Creates the update cookie.
@@ -174,16 +176,16 @@ namespace Launchpad.Launcher
 		/// <returns>The update cookie's path.</returns>
 		public static string CreateUpdateCookie()
 		{
-			bool bCookieExists = File.Exists (GetUpdateCookiePath());
+			bool bCookieExists = File.Exists(GetUpdateCookiePath());
 			if (!bCookieExists)
 			{
-				File.Create (GetUpdateCookiePath());
+				File.Create(GetUpdateCookiePath());
 
-				return GetUpdateCookiePath ();
+				return GetUpdateCookiePath();
 			}
 			else
 			{
-				return GetUpdateCookiePath ();
+				return GetUpdateCookiePath();
 			}
 		}
 
@@ -194,7 +196,7 @@ namespace Launchpad.Launcher
 		public static string GetInstallCookiePath()
 		{
 			string installCookie = String.Format(@"{0}.install", 
-			                                    GetLocalDir());
+				                       GetLocalDir());
 			return installCookie;
 		}
 
@@ -204,17 +206,17 @@ namespace Launchpad.Launcher
 		/// <returns>The install cookie's path.</returns>
 		public static string CreateInstallCookie()
 		{
-			bool bCookieExists = File.Exists (GetInstallCookiePath());
+			bool bCookieExists = File.Exists(GetInstallCookiePath());
 
 			if (!bCookieExists)
 			{
-				File.Create (GetInstallCookiePath()).Close();
+				File.Create(GetInstallCookiePath()).Close();
 
-				return GetInstallCookiePath ();
+				return GetInstallCookiePath();
 			}
 			else
 			{
-				return GetInstallCookiePath ();
+				return GetInstallCookiePath();
 			}
 		}
 
@@ -222,34 +224,34 @@ namespace Launchpad.Launcher
 		/// Gets the local dir.
 		/// </summary>
 		/// <returns>The local dir, terminated by a directory separator.</returns>
-        public static string GetLocalDir()
-        {
+		public static string GetLocalDir()
+		{
 			string localDir = String.Format(@"{0}{1}", 
-			                                Directory.GetCurrentDirectory(), 
-			                                Path.DirectorySeparatorChar);
-            return localDir;
-        }
+				                  Directory.GetCurrentDirectory(), 
+				                  Path.DirectorySeparatorChar);
+			return localDir;
+		}
 
 		/// <summary>
 		/// Gets the temporary files directory.
 		/// </summary>
 		/// <returns>The temporary files directory, terminated by a directory separator.</returns>
-        public static string GetTempDir()
-        {
-			string tempDir = Path.GetTempPath ();
-            return tempDir;
-        }
+		public static string GetTempDir()
+		{
+			string tempDir = Path.GetTempPath();
+			return tempDir;
+		}
 
 		/// <summary>
 		/// Gets the manifest's path on disk.
 		/// </summary>
 		/// <returns>The manifest path.</returns>
-        public static string GetManifestPath()
-        {
-            string manifestPath = String.Format(@"{0}LauncherManifest.txt", 
-			                                    GetLocalDir());
-            return manifestPath;
-        }
+		public static string GetManifestPath()
+		{
+			string manifestPath = String.Format(@"{0}LauncherManifest.txt", 
+				                      GetLocalDir());
+			return manifestPath;
+		}
 
 		/// <summary>
 		/// Gets the old manifest's path on disk.
@@ -258,7 +260,7 @@ namespace Launchpad.Launcher
 		public static string GetOldManifestPath()
 		{
 			string oldManifestPath = String.Format(@"{0}LauncherManifest.txt.old", 
-			                                    GetLocalDir());
+				                         GetLocalDir());
 			return oldManifestPath;
 		}
 
@@ -266,32 +268,32 @@ namespace Launchpad.Launcher
 		/// Gets the game path.
 		/// </summary>
 		/// <returns>The game path, terminated by a directory separator.</returns>
-        public string GetGamePath(bool bIncludeSystemTarget)
-        {
+		public string GetGamePath(bool bIncludeSystemTarget)
+		{
 			string gamePath = "";
 			if (bIncludeSystemTarget)
 			{
 				gamePath = String.Format(@"{0}Game{2}{1}{2}", 
-				                                GetLocalDir(),
-				                                GetSystemTarget().ToString(),
-				                                Path.DirectorySeparatorChar);
+					GetLocalDir(),
+					GetSystemTarget().ToString(),
+					Path.DirectorySeparatorChar);
 			}
 			else
 			{
 				gamePath = String.Format(@"{0}Game{1}", 
-				                                GetLocalDir(),
-				                                Path.DirectorySeparatorChar);
+					GetLocalDir(),
+					Path.DirectorySeparatorChar);
 			}
 
-            return gamePath;
-        }
+			return gamePath;
+		}
 
 		/// <summary>
 		/// Gets the path to the game executable.
 		/// </summary>
 		/// <returns>The game executable.</returns>
-        public string GetGameExecutable()
-        {
+		public string GetGameExecutable()
+		{
 			string executablePathRootLevel = String.Empty;
 			string executablePathTargetLevel = String.Empty;
 
@@ -300,29 +302,29 @@ namespace Launchpad.Launcher
 			{
 				//should return something along the lines of "./Game/<ExecutableName>"
 				executablePathRootLevel = String.Format(@"{0}{1}", 
-				                               GetGamePath(true), 
-				                               GetGameName());
+					GetGamePath(true), 
+					GetGameName());
 
 				//should return something along the lines of "./Game/<GameName>/Binaries/<SystemTarget>/<ExecutableName>"
 				executablePathTargetLevel = String.Format(@"{0}{1}{3}Binaries{3}{2}{3}{1}", 
-				                                          GetGamePath(true), 
-				                                          GetGameName(), 
-				                                          GetSystemTarget(),
-				                                          Path.DirectorySeparatorChar);
+					GetGamePath(true), 
+					GetGameName(), 
+					GetSystemTarget(),
+					Path.DirectorySeparatorChar);
 			}
 			else
 			{
 				//should return something along the lines of "./Game/<ExecutableName>.exe"
 				executablePathRootLevel = String.Format(@"{0}{1}.exe", 
-				                                        GetGamePath(true), 
-				                               			GetGameName());
+					GetGamePath(true), 
+					GetGameName());
 
 				//should return something along the lines of "./Game/<GameName>/Binaries/<SystemTarget>/<ExecutableName>.exe"
 				executablePathTargetLevel = String.Format(@"{0}{1}{3}Binaries{3}{2}{3}{1}.exe", 
-				                                          GetGamePath(true), 
-				                                          GetGameName(), 
-				                                          GetSystemTarget(),
-				                                          Path.DirectorySeparatorChar);
+					GetGamePath(true), 
+					GetGameName(), 
+					GetSystemTarget(),
+					Path.DirectorySeparatorChar);
 			}
 
 
@@ -333,14 +335,14 @@ namespace Launchpad.Launcher
 			else if (File.Exists(executablePathTargetLevel))
 			{
 				return executablePathTargetLevel;
-			}       
+			}
 			else
 			{
-				Console.WriteLine ("Searched at: " + executablePathRootLevel);
-				Console.WriteLine ("Searched at: " + executablePathTargetLevel);
-				throw new FileNotFoundException ("The game executable could not be found.");
+				Console.WriteLine("Searched at: " + executablePathRootLevel);
+				Console.WriteLine("Searched at: " + executablePathTargetLevel);
+				throw new FileNotFoundException("The game executable could not be found.");
 			}
-        }
+		}
 
 		/// <summary>
 		/// Gets the local game version.
@@ -356,7 +358,7 @@ namespace Launchpad.Launcher
 			}
 			catch (IOException ioex)
 			{
-				Console.WriteLine ("IOException in GetLocalGameVersion(): " + ioex.Message);
+				Console.WriteLine("IOException in GetLocalGameVersion(): " + ioex.Message);
 			}
 
 			try
@@ -365,7 +367,7 @@ namespace Launchpad.Launcher
 			}
 			catch (ArgumentException aex)
 			{
-				Console.WriteLine ("ArgumentException in GetLocalGameVersion(): " + aex.Message);
+				Console.WriteLine("ArgumentException in GetLocalGameVersion(): " + aex.Message);
 			}
 
 			return gameVersion;
@@ -378,87 +380,88 @@ namespace Launchpad.Launcher
 		public string GetGameVersionPath()
 		{
 			string localVersionPath = String.Format(@"{0}GameVersion.txt",
-			                                GetGamePath(true));
+				                          GetGamePath(true));
 
 			return localVersionPath;
 		}
+
 		/// <summary>
 		/// Gets the manifest URL.
 		/// </summary>
 		/// <returns>The manifest URL.</returns>
-        public string GetManifestURL()
-        {
-            string manifestURL = String.Format("{0}/game/{1}/LauncherManifest.txt", 
-                GetFTPUrl(),
-                GetSystemTarget());
+		public string GetManifestURL()
+		{
+			string manifestURL = String.Format("{0}/game/{1}/LauncherManifest.txt", 
+				                     GetFTPUrl(),
+				                     GetSystemTarget());
 
-            return manifestURL;
-        }
+			return manifestURL;
+		}
 
 		/// <summary>
 		/// Gets the manifest checksum URL.
 		/// </summary>
 		/// <returns>The manifest checksum URL.</returns>
-        public string GetManifestChecksumURL()
-        {
-            string manifestChecksumURL = String.Format("{0}/game/{1}/LauncherManifest.checksum", 
-                GetFTPUrl(), 
-                GetSystemTarget());
+		public string GetManifestChecksumURL()
+		{
+			string manifestChecksumURL = String.Format("{0}/game/{1}/LauncherManifest.checksum", 
+				                             GetFTPUrl(), 
+				                             GetSystemTarget());
 
-            return manifestChecksumURL;
-        }
+			return manifestChecksumURL;
+		}
 
 		/// <summary>
 		/// Gets the custom launcher download URL.
 		/// </summary>
 		/// <returns>The custom launcher download URL.</returns>
-        public string GetLauncherBinariesURL()
-        {
-            string launcherURL = String.Format("{0}/launcher/bin/", 
-			                                   GetFTPUrl());
-            return launcherURL;
-        }
+		public string GetLauncherBinariesURL()
+		{
+			string launcherURL = String.Format("{0}/launcher/bin/", 
+				                     GetFTPUrl());
+			return launcherURL;
+		}
 
 		/// <summary>
 		/// Gets the changelog URL.
 		/// </summary>
 		/// <returns>The changelog URL.</returns>
-        public string GetChangelogURL()
-        {
-            string changelogURL = String.Format("{0}/launcher/changelog.html", 
-			                                    GetFTPUrl());
-            return changelogURL;
-        }
+		public string GetChangelogURL()
+		{
+			string changelogURL = String.Format("{0}/launcher/changelog.html", 
+				                      GetFTPUrl());
+			return changelogURL;
+		}
 
 		/// <summary>
 		/// Gets the game URL.
 		/// </summary>
 		/// <returns>The game URL.</returns>
 		/// <param name="bGetSystemGame">If set to <c>true</c> b gets a platform-specific game.</param>
-        public string GetGameURL(bool bIncludeSystemTarget)
-        {
+		public string GetGameURL(bool bIncludeSystemTarget)
+		{
 			string gameURL = String.Empty;
 			if (bIncludeSystemTarget)
 			{
-				gameURL = String.Format ("{0}/game/{1}/bin/", 
-                    GetFTPUrl (), 
-                    GetSystemTarget ());
+				gameURL = String.Format("{0}/game/{1}/bin/", 
+					GetFTPUrl(), 
+					GetSystemTarget());
 			}
 			else
 			{
 				gameURL = String.Format("{0}/game/", 
-                    GetFTPUrl());
+					GetFTPUrl());
 			}
 
-            return gameURL;
-        }
+			return gameURL;
+		}
 
 		/// <summary>
 		/// Gets the launcher version. Locks the config file - DO NOT USE INSIDE OTHER LOCKING FUNCTIONS
 		/// </summary>
 		/// <returns>The launcher version.</returns>
-        public Version GetLocalLauncherVersion()
-        {
+		public Version GetLocalLauncherVersion()
+		{
 			lock (ReadLock)
 			{
 				try
@@ -478,24 +481,25 @@ namespace Launchpad.Launcher
 				}
 				catch (ArgumentException aex)
 				{
-					Console.WriteLine ("ArgumentException in GetLauncherVersion(): " + aex.Message);
+					Console.WriteLine("ArgumentException in GetLauncherVersion(): " + aex.Message);
 					return null;
 				}
 			}            
-        }
+		}
 
 		/// <summary>
 		/// Gets the name of the game. Locks the config file - DO NOT USE INSIDE OTHER LOCKING FUNCTIONS
 		/// </summary>
 		/// <returns>The game name.</returns>
-        public string GetGameName()
-        {
+		public string GetGameName()
+		{
 			lock (ReadLock)
 			{
 				try
 				{
 					FileIniDataParser Parser = new FileIniDataParser();
-					IniData data = Parser.ReadFile(GetConfigPath());;
+					IniData data = Parser.ReadFile(GetConfigPath());
+					;
 
 					string gameName = data["Local"]["GameName"];
 
@@ -507,7 +511,7 @@ namespace Launchpad.Launcher
 					return String.Empty;
 				}
 			}            
-        }
+		}
 
 		/// <summary>
 		/// Sets the name of the game.
@@ -537,8 +541,8 @@ namespace Launchpad.Launcher
 		/// Gets the system target.
 		/// </summary>
 		/// <returns>The system target.</returns>
-        public ESystemTarget GetSystemTarget()
-        {
+		public ESystemTarget GetSystemTarget()
+		{
 			//possible values are:
 			//Win64
 			//Win32
@@ -566,7 +570,7 @@ namespace Launchpad.Launcher
 					return ESystemTarget.Invalid;
 				}
 			}            
-        }
+		}
 
 		/// <summary>
 		/// Sets the system target.
@@ -601,9 +605,9 @@ namespace Launchpad.Launcher
 		/// Gets the FTP username.
 		/// </summary>
 		/// <returns>The FTP username.</returns>
-        public string GetFTPUsername()
-        {
-            lock (ReadLock)
+		public string GetFTPUsername()
+		{
+			lock (ReadLock)
 			{
 				try
 				{
@@ -620,7 +624,7 @@ namespace Launchpad.Launcher
 					return String.Empty;
 				}
 			}
-        }
+		}
 
 		/// <summary>
 		/// Sets the FTP username.
@@ -650,9 +654,9 @@ namespace Launchpad.Launcher
 		/// Gets the FTP password.
 		/// </summary>
 		/// <returns>The FTP password.</returns>
-        public string GetFTPPassword()
-        {
-            lock (ReadLock)
+		public string GetFTPPassword()
+		{
+			lock (ReadLock)
 			{
 				try
 				{
@@ -669,7 +673,7 @@ namespace Launchpad.Launcher
 					return String.Empty;
 				}
 			}
-        }
+		}
 
 		/// <summary>
 		/// Sets the FTP password.
@@ -751,9 +755,9 @@ namespace Launchpad.Launcher
 		/// Gets the FTP URL.
 		/// </summary>
 		/// <returns>The FTP URL.</returns>
-        public string GetFTPUrl()
-        {
-            lock (ReadLock)
+		public string GetFTPUrl()
+		{
+			lock (ReadLock)
 			{
 				try
 				{
@@ -776,15 +780,15 @@ namespace Launchpad.Launcher
 					return String.Empty;
 				}
 			}
-        }
+		}
 
 		/// <summary>
 		/// Gets if the launcher should receive official updates.
 		/// </summary>
 		/// <returns><c>true</c>, if the launcher should receive official updates, <c>false</c> otherwise.</returns>
-        public bool GetDoOfficialUpdates()
-        {
-            lock (ReadLock)
+		public bool GetDoOfficialUpdates()
+		{
+			lock (ReadLock)
 			{
 				try
 				{
@@ -797,16 +801,16 @@ namespace Launchpad.Launcher
 				}
 				catch (IOException ioex)
 				{
-					Console.WriteLine ("IOException in GetDoOfficialUpdates(): " + ioex.Message);
+					Console.WriteLine("IOException in GetDoOfficialUpdates(): " + ioex.Message);
 					return true;
 				}
 				catch (ArgumentException aex)
 				{
-					Console.WriteLine ("ArgumentException in GetDoOfficialUpdates(): " + aex.Message);
+					Console.WriteLine("ArgumentException in GetDoOfficialUpdates(): " + aex.Message);
 					return true;
 				}
 			}
-        }
+		}
 
 		/// <summary>
 		/// Gets the launcher's unique GUID.
@@ -827,7 +831,7 @@ namespace Launchpad.Launcher
 				}
 				catch (IOException ioex)
 				{
-					Console.WriteLine ("IOException in GetGUID(): " + ioex.Message);
+					Console.WriteLine("IOException in GetGUID(): " + ioex.Message);
 					return String.Empty;
 				}
 			}
@@ -840,18 +844,18 @@ namespace Launchpad.Launcher
 		private bool UpdateOldConfig()
 		{
 			string oldConfigPath = String.Format(@"{0}config{1}launcherConfig.ini", 
-			                                     GetLocalDir(), 
-			                                     Path.DirectorySeparatorChar);
+				                       GetLocalDir(), 
+				                       Path.DirectorySeparatorChar);
 
 			string oldConfigDir = String.Format(@"{0}config", GetLocalDir());
 
-            if (ChecksHandler.IsRunningOnUnix())
-            {
-                //Case sensitive
-                //Is there an old config file?
-                if (File.Exists(oldConfigPath))
-                {
-                    lock (ReadLock)
+			if (ChecksHandler.IsRunningOnUnix())
+			{
+				//Case sensitive
+				//Is there an old config file?
+				if (File.Exists(oldConfigPath))
+				{
+					lock (ReadLock)
 					{
 						//Have we not already created the new config dir?
 						if (!Directory.Exists(GetConfigDir()))
@@ -879,7 +883,7 @@ namespace Launchpad.Launcher
 							data["Local"].AddKey("GameName", gameName);
 							data["Local"].AddKey("SystemTarget", systemTarget);
 
-							WriteConfig (Parser, data);
+							WriteConfig(Parser, data);
 							//We were successful, so return true.
 
 							File.Delete(oldConfigPath);
@@ -895,109 +899,109 @@ namespace Launchpad.Launcher
 							return false;
 						}
 					}
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else
+			{
 				lock (ReadLock)
 				{
 					//Windows is not case sensitive, so we'll use direct access without copying.
-                    if (File.Exists(oldConfigPath))
-                    {
-                        FileIniDataParser Parser = new FileIniDataParser();
-					    IniData data = Parser.ReadFile(GetConfigPath());
+					if (File.Exists(oldConfigPath))
+					{
+						FileIniDataParser Parser = new FileIniDataParser();
+						IniData data = Parser.ReadFile(GetConfigPath());
 
-					    //replace the old invalid keys with new, updated keys.
-					    string launcherVersion = data["Local"]["launcherVersion"];
-					    string gameName = data["Local"]["gameName"];
-					    string systemTarget = data["Local"]["systemTarget"];
+						//replace the old invalid keys with new, updated keys.
+						string launcherVersion = data["Local"]["launcherVersion"];
+						string gameName = data["Local"]["gameName"];
+						string systemTarget = data["Local"]["systemTarget"];
 
-					    data["Local"].RemoveKey("launcherVersion");
-					    data["Local"].RemoveKey("gameName");
-					    data["Local"].RemoveKey("systemTarget");
+						data["Local"].RemoveKey("launcherVersion");
+						data["Local"].RemoveKey("gameName");
+						data["Local"].RemoveKey("systemTarget");
 
-					    data["Local"].AddKey("LauncherVersion", launcherVersion);
-					    data["Local"].AddKey("GameName", gameName);
-					    data["Local"].AddKey("SystemTarget", systemTarget);
+						data["Local"].AddKey("LauncherVersion", launcherVersion);
+						data["Local"].AddKey("GameName", gameName);
+						data["Local"].AddKey("SystemTarget", systemTarget);
 
-					    WriteConfig (Parser, data);
+						WriteConfig(Parser, data);
 
-					    //We were successful, so return true.
-					    return true;
-                    }	
-				    else
-                    {
-                        return false;
-                    }
+						//We were successful, so return true.
+						return true;
+					}
+					else
+					{
+						return false;
+					}
 
 				}               
-            }
+			}
 
-		}		      
+		}
 
 		/// <summary>
 		/// Replaces the old update cookie.
 		/// </summary>
-		private static void ReplaceOldUpdateCookie ()
+		private static void ReplaceOldUpdateCookie()
 		{
-			string oldUpdateCookiePath = String.Format (@"{0}.updatecookie",
-			                                        GetLocalDir());
+			string oldUpdateCookiePath = String.Format(@"{0}.updatecookie",
+				                             GetLocalDir());
 
-			if (File.Exists (oldUpdateCookiePath))
+			if (File.Exists(oldUpdateCookiePath))
 			{
-				string updateCookiePath = String.Format (@"{0}.update", 
-				                                     GetLocalDir());
+				string updateCookiePath = String.Format(@"{0}.update", 
+					                          GetLocalDir());
 
-				File.Move (oldUpdateCookiePath, updateCookiePath);
+				File.Move(oldUpdateCookiePath, updateCookiePath);
 			}
 		}
 
-        public static ESystemTarget GetCurrentPlatform()
-        {
-            string platformID = Environment.OSVersion.Platform.ToString();
-            if (platformID.Contains("Win"))
-            {
-                platformID = "Windows";
-            }
+		public static ESystemTarget GetCurrentPlatform()
+		{
+			string platformID = Environment.OSVersion.Platform.ToString();
+			if (platformID.Contains("Win"))
+			{
+				platformID = "Windows";
+			}
 
-            switch (platformID)
-            {
-                case "MacOSX":
-                    {
-                        return ESystemTarget.Mac;
-                    }
-                case "Unix":
-                    {
-                        //Mac may sometimes be detected as Unix, so do an additional check for some Mac-only directories
-                        if (Directory.Exists("/Applications") && Directory.Exists("/System") && Directory.Exists("/Users") && Directory.Exists("/Volumes"))
-                        {
-                            return ESystemTarget.Mac;
-                        }
-                        else
-                        {
-                            return ESystemTarget.Linux;
-                        }                                                               
-                    }
-                case "Windows":
-                    {
-                        if (Environment.Is64BitOperatingSystem)
-                        {
-                            return ESystemTarget.Win64;
-                        }
-                        else
-                        {
-                            return ESystemTarget.Win32;
-                        }
-                    }
-                default:
-                    {
-                        return ESystemTarget.Invalid;
-                    }
-            }
-        }
-    }
+			switch (platformID)
+			{
+				case "MacOSX":
+					{
+						return ESystemTarget.Mac;
+					}
+				case "Unix":
+					{
+						//Mac may sometimes be detected as Unix, so do an additional check for some Mac-only directories
+						if (Directory.Exists("/Applications") && Directory.Exists("/System") && Directory.Exists("/Users") && Directory.Exists("/Volumes"))
+						{
+							return ESystemTarget.Mac;
+						}
+						else
+						{
+							return ESystemTarget.Linux;
+						}                                                               
+					}
+				case "Windows":
+					{
+						if (Environment.Is64BitOperatingSystem)
+						{
+							return ESystemTarget.Win64;
+						}
+						else
+						{
+							return ESystemTarget.Win32;
+						}
+					}
+				default:
+					{
+						return ESystemTarget.Invalid;
+					}
+			}
+		}
+	}
 }

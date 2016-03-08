@@ -2,20 +2,20 @@
 using System.IO;
 using System.Security.Cryptography;
 
-namespace Launchpad.Launcher
+namespace Launchpad.Launcher.Handlers
 {
 	/// <summary>
 	/// MD5 hashing handler. Used to ensure file integrity.
 	/// </summary>
-    internal static class MD5Handler
-    {
-        /// <summary>
-        /// Gets the file hash from a file stream.
-        /// </summary>
-        /// <returns>The file hash.</returns>
-        /// <param name="fileStream">File stream.</param>
-        public static string GetFileHash(Stream fileStream)
-        {
+	internal static class MD5Handler
+	{
+		/// <summary>
+		/// Gets the file hash from a file stream.
+		/// </summary>
+		/// <returns>The file hash.</returns>
+		/// <param name="fileStream">File stream.</param>
+		public static string GetFileHash(Stream fileStream)
+		{
 			if (fileStream != null)
 			{
 				try
@@ -30,7 +30,7 @@ namespace Launchpad.Launcher
 				}
 				catch (IOException ioex)
 				{
-					Console.WriteLine ("IOException in GetFileHash(): " + ioex.Message);
+					Console.WriteLine("IOException in GetFileHash(): " + ioex.Message);
 
 					return String.Empty;
 				}
@@ -39,11 +39,11 @@ namespace Launchpad.Launcher
 					//release the file (if we had one)
 					fileStream.Close();
 				}
-			}     
+			}
 			else
 			{ 
 				return String.Empty;
 			}
-        }
-    }
+		}
+	}
 }

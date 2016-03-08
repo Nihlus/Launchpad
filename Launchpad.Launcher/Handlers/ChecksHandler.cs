@@ -1,8 +1,10 @@
 using System;
 using System.IO;
 using System.Net;
+using Launchpad.Launcher.Utility.Enums;
+using Launchpad.Launcher.Handlers.Protocols;
 
-namespace Launchpad.Launcher
+namespace Launchpad.Launcher.Handlers
 {
 	/// <summary>
 	/// This class handles all the launcher's checks, returning bools for each function.
@@ -19,7 +21,7 @@ namespace Launchpad.Launcher
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Launchpad_Launcher.ChecksHandler"/> class.
 		/// </summary>
-		public ChecksHandler ()
+		public ChecksHandler()
 		{
 
 		}
@@ -55,8 +57,8 @@ namespace Launchpad.Launcher
 				}
 				catch (WebException wex)
 				{
-                    Console.WriteLine("WebException in CanConnectToFTP(): " + wex.Message);
-                    Console.WriteLine(FTPURL);
+					Console.WriteLine("WebException in CanConnectToFTP(): " + wex.Message);
+					Console.WriteLine(FTPURL);
 
 					plainRequest.Abort();
 					bCanConnectToFTP = false;
@@ -65,7 +67,7 @@ namespace Launchpad.Launcher
 			catch (WebException wex)
 			{
 				//case where FTP URL in config is not valid
-				Console.WriteLine ("WebException CanConnectToFTP() (Invalid URL): " + wex.Message);
+				Console.WriteLine("WebException CanConnectToFTP() (Invalid URL): " + wex.Message);
 
 				bCanConnectToFTP = false;
 				return bCanConnectToFTP;
@@ -89,7 +91,7 @@ namespace Launchpad.Launcher
 			//we use an empty file to determine if this is the first launch or not
 			if (!File.Exists(ConfigHandler.GetUpdateCookiePath()))
 			{
-				Console.WriteLine ("First time starting launcher.");
+				Console.WriteLine("First time starting launcher.");
 				return true;
 			}
 			else
@@ -128,7 +130,7 @@ namespace Launchpad.Launcher
 			//Is there an .install file in the directory?
 			bool bHasInstallationCookie = File.Exists(ConfigHandler.GetInstallCookiePath());
 			//is there a version file?
-			bool bHasGameVersion = File.Exists (Config.GetGameVersionPath ());
+			bool bHasGameVersion = File.Exists(Config.GetGameVersionPath());
 
 			//If any of these criteria are false, the game is not considered fully installed.
 			return bHasDirectory && bHasInstallationCookie && IsInstallCookieEmpty() && bHasGameVersion;
@@ -140,7 +142,7 @@ namespace Launchpad.Launcher
 		/// <returns><c>true</c> if the game is outdated; otherwise, <c>false</c>.</returns>
 		public bool IsGameOutdated()
 		{
-			FTPHandler FTP = new FTPHandler ();
+			FTPHandler FTP = new FTPHandler();
 			try
 			{
 				Version local = Config.GetLocalGameVersion();
@@ -157,7 +159,7 @@ namespace Launchpad.Launcher
 			}
 			catch (WebException wex)
 			{
-				Console.WriteLine ("WebException in IsGameOutdated(): " + wex.Message);
+				Console.WriteLine("WebException in IsGameOutdated(): " + wex.Message);
 				return true;
 			}
 		}
@@ -171,21 +173,21 @@ namespace Launchpad.Launcher
 			FTPHandler FTP = new FTPHandler();
 			try
 			{
-				Version local = Config.GetLocalLauncherVersion ();
-				Version remote = FTP.GetRemoteLauncherVersion ();	
+				Version local = Config.GetLocalLauncherVersion();
+				Version remote = FTP.GetRemoteLauncherVersion();	
 
 				if (local < remote)
 				{
 					return true;
-				} 
+				}
 				else
 				{
 					return false;
 				}
-			} 
+			}
 			catch (WebException wex)
 			{
-				Console.WriteLine ("WebException in IsLauncherOutdated(): " + wex.Message);
+				Console.WriteLine("WebException in IsLauncherOutdated(): " + wex.Message);
 				return false;	
 			}
 		}
@@ -217,11 +219,11 @@ namespace Launchpad.Launcher
 		{
 			if (File.Exists(ConfigHandler.GetManifestPath()))
 			{
-				FTPHandler FTP = new FTPHandler ();
+				FTPHandler FTP = new FTPHandler();
 
-				string manifestURL = Config.GetManifestURL ();
-				string remoteHash = FTP.ReadFTPFile (manifestURL);
-                string localHash = MD5Handler.GetFileHash(File.OpenRead(ConfigHandler.GetManifestPath()));
+				string manifestURL = Config.GetManifestURL();
+				string remoteHash = FTP.ReadFTPFile(manifestURL);
+				string localHash = MD5Handler.GetFileHash(File.OpenRead(ConfigHandler.GetManifestPath()));
 
 				if (remoteHash != localHash)
 				{
@@ -240,13 +242,13 @@ namespace Launchpad.Launcher
 
 		public bool DoesServerProvidePlatform(ESystemTarget Platform)
 		{
-			FTPHandler FTP = new FTPHandler ();
+			FTPHandler FTP = new FTPHandler();
 
-			string remote = String.Format ("{0}/game/{1}/.provides",
-			                                        Config.GetFTPUrl(),
-			                                        Platform.ToString());
+			string remote = String.Format("{0}/game/{1}/.provides",
+				                Config.GetFTPUrl(),
+				                Platform.ToString());
 
-			return FTP.DoesFileExist (remote);
+			return FTP.DoesFileExist(remote);
 			
 		}
 	}

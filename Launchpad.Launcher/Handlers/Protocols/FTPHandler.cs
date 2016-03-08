@@ -3,26 +3,26 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Collections.Generic;
-using Launchpad.Launcher.Events.Arguments;
-using Launchpad.Launcher.Events.Delegates;
+using Launchpad.Launcher.Utility.Events;
+using Launchpad.Launcher.Utility;
 
-namespace Launchpad.Launcher
+namespace Launchpad.Launcher.Handlers.Protocols
 {
 	/// <summary>
 	/// FTP handler. Handles downloading and reading files on a remote FTP server.
 	/// There are also functions for retrieving remote version information of the game and the launcher.
 	/// </summary>
-    internal sealed class FTPHandler
-    {
+	internal sealed class FTPHandler : PatchProtocolHandler
+	{
 		/// <summary>
 		/// How many bytes of the target file that have been downloaded.
 		/// </summary>
-        public int FTPbytesDownloaded = 0;
+		public int FTPbytesDownloaded = 0;
 
 		/// <summary>
 		/// The config handler reference.
 		/// </summary>
-		ConfigHandler Config = ConfigHandler._instance;	
+		ConfigHandler Config = ConfigHandler._instance;
 
 		/// <summary>
 		/// Occurs when file progress changed.
@@ -48,27 +48,27 @@ namespace Launchpad.Launcher
 		/// </summary>
 		public FTPHandler()
 		{
-			ProgressArgs = new FileDownloadProgressChangedEventArgs ();
-			DownloadFinishedArgs = new FileDownloadFinishedEventArgs ();
+			ProgressArgs = new FileDownloadProgressChangedEventArgs();
+			DownloadFinishedArgs = new FileDownloadFinishedEventArgs();
 		}
-        
+
 		/// <summary>
 		/// Reads a text file from a remote FTP server.
 		/// </summary>
 		/// <returns>The FTP file contents.</returns>
 		/// <param name="ftpSourceFilePath">FTP file path.</param>
-        public string ReadFTPFile(string rawRemoteURL)
-        {
+		public string ReadFTPFile(string rawRemoteURL)
+		{
 			//clean the input URL first
-			string remoteURL = rawRemoteURL.Replace (Path.DirectorySeparatorChar, '/');
+			string remoteURL = rawRemoteURL.Replace(Path.DirectorySeparatorChar, '/');
 
 			string username = Config.GetFTPUsername();
 			string password = Config.GetFTPPassword();
 
-            int bytesRead = 0;
+			int bytesRead = 0;
 
 			//the buffer size is 256kb. More or less than this reduces download speeds.
-            byte[] buffer = new byte[262144];
+			byte[] buffer = new byte[262144];
 
 			FtpWebRequest request = null;
 			FtpWebRequest sizerequest = null;
@@ -78,45 +78,45 @@ namespace Launchpad.Launcher
 			try
 			{
 
-	            request = CreateFtpWebRequest(remoteURL, username, password, false);
-                sizerequest = CreateFtpWebRequest(remoteURL, username, password, false);
+				request = CreateFtpWebRequest(remoteURL, username, password, false);
+				sizerequest = CreateFtpWebRequest(remoteURL, username, password, false);
 
-	            request.Method = WebRequestMethods.Ftp.DownloadFile;
-	            sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
+				request.Method = WebRequestMethods.Ftp.DownloadFile;
+				sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
 
-	            string data = "";
+				string data = "";
             
-                reader = request.GetResponse().GetResponseStream();
+				reader = request.GetResponse().GetResponseStream();
 
-                while (true)
-                {
-                    bytesRead = reader.Read(buffer, 0, buffer.Length);
+				while (true)
+				{
+					bytesRead = reader.Read(buffer, 0, buffer.Length);
 
-                    if (bytesRead == 0)
-                    {
-                        break;
-                    }
+					if (bytesRead == 0)
+					{
+						break;
+					}
 
-                    FTPbytesDownloaded = FTPbytesDownloaded + bytesRead;
-                    data = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
-                }
+					FTPbytesDownloaded = FTPbytesDownloaded + bytesRead;
+					data = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+				}
 
 				//clean the output from \n and \0, then return
-				return Utilities.Clean (data);
-            }
-            catch (WebException wex)
-            {
-                Console.Write("WebException in ReadFTPFileException: ");
+				return Utilities.Clean(data);
+			}
+			catch (WebException wex)
+			{
+				Console.Write("WebException in ReadFTPFileException: ");
 				Console.WriteLine(wex.Message + " (" + remoteURL + ")");
-                return wex.Message;
-            }
+				return wex.Message;
+			}
 			finally
 			{
 				//clean up all open requests
 				//then, the responses that are reading from the requests.
 				if (reader != null)
 				{
-					reader.Close ();
+					reader.Close();
 				}
 
 				//and finally, the requests themselves.
@@ -132,22 +132,22 @@ namespace Launchpad.Launcher
 			}
 
 
-        }
+		}
 
-        /// <summary>
-        /// Gets the relative paths for all files in the specified FTP directory.
-        /// </summary>
-        /// <param name="rawRemoteURL">The URL to search.</param>
-        /// <param name="bRecursively">Should the search should include subdirectories?</param>
-        /// <returns>A list of relative paths for the files in the specified directory.</returns>
-        public List<string> GetFilePaths(string rawRemoteURL, bool bRecursively)
-        {
-            FtpWebRequest request = null;
-            FtpWebResponse response = null;
-            string remoteURL = Utilities.Clean(rawRemoteURL) + "/";
-            List<string> relativePaths = new List<string>();
+		/// <summary>
+		/// Gets the relative paths for all files in the specified FTP directory.
+		/// </summary>
+		/// <param name="rawRemoteURL">The URL to search.</param>
+		/// <param name="bRecursively">Should the search should include subdirectories?</param>
+		/// <returns>A list of relative paths for the files in the specified directory.</returns>
+		public List<string> GetFilePaths(string rawRemoteURL, bool bRecursively)
+		{
+			FtpWebRequest request = null;
+			FtpWebResponse response = null;
+			string remoteURL = Utilities.Clean(rawRemoteURL) + "/";
+			List<string> relativePaths = new List<string>();
 
-			if (DoesDirectoryExist (remoteURL))
+			if (DoesDirectoryExist(remoteURL))
 			{
 				try
 				{
@@ -231,7 +231,7 @@ namespace Launchpad.Launcher
 			}	
 
 			return relativePaths;
-        }
+		}
 
 		/// <summary>
 		/// Downloads an FTP file.
@@ -240,17 +240,17 @@ namespace Launchpad.Launcher
 		/// <param name="ftpSourceFilePath">Ftp source file path.</param>
 		/// <param name="localDestination">Local destination.</param>
 		/// <param name="bUseAnonymous">If set to <c>true</c> b use anonymous.</param>
-        public string DownloadFTPFile(string rawRemoteURL, string localPath, bool bUseAnonymous)
-        {
+		public string DownloadFTPFile(string rawRemoteURL, string localPath, bool bUseAnonymous)
+		{
 			//clean the URL string
-			string remoteURL = rawRemoteURL.Replace (Path.DirectorySeparatorChar, '/');
+			string remoteURL = rawRemoteURL.Replace(Path.DirectorySeparatorChar, '/');
 
 			string username;
 			string password;
 			if (!bUseAnonymous)
 			{
-				username = Config.GetFTPUsername ();
-				password = Config.GetFTPPassword ();
+				username = Config.GetFTPUsername();
+				password = Config.GetFTPPassword();
 			}
 			else
 			{
@@ -259,10 +259,10 @@ namespace Launchpad.Launcher
 			}
 
 
-            int bytesRead = 0;
+			int bytesRead = 0;
 
 			//the buffer size is 256kb. More or less than this reduces download speeds.
-            byte[] buffer = new byte[262144];
+			byte[] buffer = new byte[262144];
 
 			FtpWebRequest request = null;
 			FtpWebRequest sizerequest = null;
@@ -277,17 +277,17 @@ namespace Launchpad.Launcher
 
 			try
 			{
-                request = CreateFtpWebRequest(remoteURL, username, password, false);
-                sizerequest = CreateFtpWebRequest(remoteURL, username, password, false);
+				request = CreateFtpWebRequest(remoteURL, username, password, false);
+				sizerequest = CreateFtpWebRequest(remoteURL, username, password, false);
 
-	            request.Method = WebRequestMethods.Ftp.DownloadFile;
-	            sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
+				request.Method = WebRequestMethods.Ftp.DownloadFile;
+				sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
 
-	            long fileSize = 0;
+				long fileSize = 0;
 
             
 				reader = request.GetResponse().GetResponseStream();
-                sizereader = (FtpWebResponse)sizerequest.GetResponse();
+				sizereader = (FtpWebResponse)sizerequest.GetResponse();
 					
 				fileStream = new FileStream(localPath, FileMode.Create);
 
@@ -318,28 +318,28 @@ namespace Launchpad.Launcher
 					OnProgressChanged();
 				}
 
-                OnProgressChanged();
+				OnProgressChanged();
 				OnDownloadFinished();
 
 				returnValue = localPath;
 				return returnValue;             				                             
-            }
-            catch (WebException wex)
-            {
-                Console.Write("WebException in DownloadFTPFile: ");
-                Console.WriteLine(wex.Message + " (" + remoteURL + ")");
-                returnValue = wex.Message;
+			}
+			catch (WebException wex)
+			{
+				Console.Write("WebException in DownloadFTPFile: ");
+				Console.WriteLine(wex.Message + " (" + remoteURL + ")");
+				returnValue = wex.Message;
 
 				return returnValue;
-            }
-            catch (IOException ioex)
-            {
-                Console.Write("IOException in DownloadFTPFile: ");
-				Console.WriteLine(ioex.Message  + " (" + remoteURL + ")");
-                returnValue = ioex.Message;
+			}
+			catch (IOException ioex)
+			{
+				Console.Write("IOException in DownloadFTPFile: ");
+				Console.WriteLine(ioex.Message + " (" + remoteURL + ")");
+				returnValue = ioex.Message;
 
-                return returnValue;
-            }
+				return returnValue;
+			}
 			finally
 			{
 				//clean up all open requests
@@ -352,7 +352,7 @@ namespace Launchpad.Launcher
 				//then, the responses that are reading from the requests.
 				if (reader != null)
 				{
-					reader.Close ();
+					reader.Close();
 				}
 				if (sizereader != null)
 				{
@@ -370,7 +370,7 @@ namespace Launchpad.Launcher
 					sizerequest.Abort();
 				}
 			}
-        }
+		}
 
 		/// <summary>
 		/// Downloads an FTP file.
@@ -383,14 +383,14 @@ namespace Launchpad.Launcher
 		public string DownloadFTPFile(string rawRemoteURL, string localPath, long contentOffset, bool bUseAnonymous)
 		{
 			//clean the URL string first
-			string remoteURL = rawRemoteURL.Replace (Path.DirectorySeparatorChar, '/');
+			string remoteURL = rawRemoteURL.Replace(Path.DirectorySeparatorChar, '/');
 
 			string username;
 			string password;
 			if (!bUseAnonymous)
 			{
-				username = Config.GetFTPUsername ();
-				password = Config.GetFTPPassword ();
+				username = Config.GetFTPUsername();
+				password = Config.GetFTPPassword();
 			}
 			else
 			{
@@ -402,7 +402,7 @@ namespace Launchpad.Launcher
 			int bytesRead = 0;
 
 			//the buffer size is 256kb. More or less than this reduces download speeds.
-            byte[] buffer = new byte[262144];
+			byte[] buffer = new byte[262144];
 
 			FtpWebRequest request = null;
 			FtpWebRequest sizerequest = null;
@@ -442,8 +442,8 @@ namespace Launchpad.Launcher
 				ProgressArgs.FileName = Path.GetFileNameWithoutExtension(remoteURL);
 				ProgressArgs.TotalBytes = (int)fileSize;
 
-                //sets the content offset for the file stream, allowing it to begin writing where it last stopped
-                fileStream.Position = contentOffset;
+				//sets the content offset for the file stream, allowing it to begin writing where it last stopped
+				fileStream.Position = contentOffset;
 				while (true)
 				{
 					bytesRead = reader.Read(buffer, 0, buffer.Length);
@@ -471,7 +471,7 @@ namespace Launchpad.Launcher
 			catch (WebException wex)
 			{
 				Console.Write("WebException in DownloadFTPFile (appending): ");
-				Console.WriteLine(wex.Message  + " (" + remoteURL + ")");
+				Console.WriteLine(wex.Message + " (" + remoteURL + ")");
 				returnValue = wex.Message;
 
 				return returnValue;
@@ -479,7 +479,7 @@ namespace Launchpad.Launcher
 			catch (IOException ioex)
 			{
 				Console.Write("IOException in DownloadFTPFile (appending): ");
-				Console.WriteLine(ioex.Message  + " (" + remoteURL + ")");
+				Console.WriteLine(ioex.Message + " (" + remoteURL + ")");
 				returnValue = ioex.Message;
 
 				return returnValue;
@@ -496,7 +496,7 @@ namespace Launchpad.Launcher
 				//then, the responses that are reading from the requests.
 				if (reader != null)
 				{
-					reader.Close ();
+					reader.Close();
 				}
 				if (sizereader != null)
 				{
@@ -522,38 +522,38 @@ namespace Launchpad.Launcher
 		/// <returns>The ftp web request.</returns>
 		/// <param name="ftpDirectoryPath">Ftp directory path.</param>
 		/// <param name="keepAlive">If set to <c>true</c> keep alive.</param>
-        public static FtpWebRequest CreateFtpWebRequest(string ftpDirectoryPath, string username, string password, bool keepAlive)
-        {
-            try
-            {
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(new Uri(ftpDirectoryPath));
+		public static FtpWebRequest CreateFtpWebRequest(string ftpDirectoryPath, string username, string password, bool keepAlive)
+		{
+			try
+			{
+				FtpWebRequest request = (FtpWebRequest)WebRequest.Create(new Uri(ftpDirectoryPath));
 
-                //Set proxy to null. Under current configuration if this option is not set then the proxy 
+				//Set proxy to null. Under current configuration if this option is not set then the proxy 
 				//that is used will get an html response from the web content gateway (firewall monitoring system)
-                request.Proxy = null;
+				request.Proxy = null;
 
-                request.UsePassive = true;
-                request.UseBinary = true;
-                request.KeepAlive = keepAlive;
+				request.UsePassive = true;
+				request.UseBinary = true;
+				request.KeepAlive = keepAlive;
 
-                request.Credentials = new NetworkCredential(username, password);
+				request.Credentials = new NetworkCredential(username, password);
 
-                return request;
-            }
-            catch (WebException wex)
-            {
-                Console.WriteLine ("WebException in CreateFTPWebRequest(): " + wex.Message);
+				return request;
+			}
+			catch (WebException wex)
+			{
+				Console.WriteLine("WebException in CreateFTPWebRequest(): " + wex.Message);
 
-                return null;
-            }
+				return null;
+			}
 			catch (ArgumentException aex)
 			{
-				Console.WriteLine ("ArgumentException in CreateFTPWebRequest(): " + aex.Message);
+				Console.WriteLine("ArgumentException in CreateFTPWebRequest(): " + aex.Message);
 
 				return null;
 			}
             
-        }
+		}
 
 		/// <summary>
 		/// Gets the remote launcher version.
@@ -561,10 +561,10 @@ namespace Launchpad.Launcher
 		/// <returns>The remote launcher version.</returns>
 		public Version GetRemoteLauncherVersion()
 		{
-			string remoteVersionPath = String.Format ("{0}/launcher/LauncherVersion.txt", Config.GetFTPUrl());
-			string remoteVersion = ReadFTPFile (remoteVersionPath);
+			string remoteVersionPath = String.Format("{0}/launcher/LauncherVersion.txt", Config.GetFTPUrl());
+			string remoteVersion = ReadFTPFile(remoteVersionPath);
 
-			return Version.Parse (remoteVersion);
+			return Version.Parse(remoteVersion);
 		}
 
 		/// <summary>
@@ -576,22 +576,22 @@ namespace Launchpad.Launcher
 			string remoteVersionPath = "";
 			if (bUseSystemTarget)
 			{
-				remoteVersionPath = String.Format ("{0}/game/{1}/bin/GameVersion.txt", 
-				                                   Config.GetFTPUrl(), 
-				                                   Config.GetSystemTarget());
+				remoteVersionPath = String.Format("{0}/game/{1}/bin/GameVersion.txt", 
+					Config.GetFTPUrl(), 
+					Config.GetSystemTarget());
 
 			}
 			else
 			{
-				remoteVersionPath = String.Format ("{0}/game/bin/GameVersion.txt", 
-				                                   Config.GetFTPUrl());
+				remoteVersionPath = String.Format("{0}/game/bin/GameVersion.txt", 
+					Config.GetFTPUrl());
 
 			}
-			string remoteVersion = ReadFTPFile (remoteVersionPath);
+			string remoteVersion = ReadFTPFile(remoteVersionPath);
 
-			if (!string.IsNullOrEmpty (remoteVersion))
+			if (!string.IsNullOrEmpty(remoteVersion))
 			{
-				return Version.Parse (remoteVersion);
+				return Version.Parse(remoteVersion);
 			}
 			else
 			{
@@ -603,7 +603,7 @@ namespace Launchpad.Launcher
 		{
 			string checksum = String.Empty;
 
-			checksum = ReadFTPFile (Config.GetManifestChecksumURL ());
+			checksum = ReadFTPFile(Config.GetManifestChecksumURL());
 			checksum = Utilities.Clean(checksum);
 
 			return checksum;
@@ -611,10 +611,10 @@ namespace Launchpad.Launcher
 
 		public bool DoesDirectoryExist(string remotePath)
 		{
-			FtpWebRequest request = CreateFtpWebRequest (remotePath, 
-														Config.GetFTPUsername (),
-														Config.GetFTPPassword (),
-														false);
+			FtpWebRequest request = CreateFtpWebRequest(remotePath, 
+				                        Config.GetFTPUsername(),
+				                        Config.GetFTPPassword(),
+				                        false);
 			FtpWebResponse response = null;
 
 			try
@@ -644,10 +644,10 @@ namespace Launchpad.Launcher
 
 		public bool DoesFileExist(string remotePath)
 		{
-			FtpWebRequest request = CreateFtpWebRequest (remotePath, 
-			                                            Config.GetFTPUsername (),
-			                                            Config.GetFTPPassword (),
-			                                            false);
+			FtpWebRequest request = CreateFtpWebRequest(remotePath, 
+				                        Config.GetFTPUsername(),
+				                        Config.GetFTPPassword(),
+				                        false);
 			FtpWebResponse response = null;
 			try
 			{
@@ -676,7 +676,7 @@ namespace Launchpad.Launcher
 		{
 			if (FileProgressChanged != null)
 			{
-				FileProgressChanged (this, ProgressArgs);
+				FileProgressChanged(this, ProgressArgs);
 			}
 		}
 
@@ -684,10 +684,10 @@ namespace Launchpad.Launcher
 		{
 			if (FileDownloadFinished != null)
 			{
-				FileDownloadFinished (this, DownloadFinishedArgs);
+				FileDownloadFinished(this, DownloadFinishedArgs);
 			}
 		}
 
 
-    }
+	}
 }

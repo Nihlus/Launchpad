@@ -1,9 +1,8 @@
 ﻿using System;
-using Launchpad.Utilities.Events.Arguments;
 
-namespace Launchpad.Utilities.Events.Delegates
+namespace Launchpad.Utilities.Utility.Events
 {
-	public delegate void ManifestGenerationProgressChangedEventHandler (object sender, ManifestGenerationProgressChangedEventArgs e);
-	public delegate void ManifestGenerationFinishedEventHandler (object sender, EventArgs e);
+	public delegate void ManifestGenerationProgressChangedEventHandler(object sender,ManifestGenerationProgressChangedEventArgs e);
+	public delegate void ManifestGenerationFinishedEventHandler(object sender,EventArgs e);
 }
 

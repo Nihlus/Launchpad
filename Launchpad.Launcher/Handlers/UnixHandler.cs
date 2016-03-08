@@ -2,7 +2,7 @@ using Mono.Unix.Native;
 using System;
 using System.Runtime.Serialization;
 
-namespace Launchpad.Launcher
+namespace Launchpad.Launcher.Handlers
 {
 	/// <summary>
 	/// Unix-specific functionality handler.
@@ -19,13 +19,13 @@ namespace Launchpad.Launcher
 		{
 			try
 			{
-				Syscall.chmod (fileName, FilePermissions.S_IRWXU | FilePermissions.S_IRWXG | FilePermissions.S_IROTH);
+				Syscall.chmod(fileName, FilePermissions.S_IRWXU | FilePermissions.S_IRWXG | FilePermissions.S_IROTH);
 				return true;
 			}
 			catch (ApplicationException aex)
 			{
-				Console.WriteLine ("ApplicationException in MakeExecutable(): " + aex.Message);
-				throw new BitOperationException ("Failed to set the execute bit on " + fileName, aex);
+				Console.WriteLine("ApplicationException in MakeExecutable(): " + aex.Message);
+				throw new BitOperationException("Failed to set the execute bit on " + fileName, aex);
 			}
 		}
 	}

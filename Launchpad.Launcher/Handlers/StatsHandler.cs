@@ -1,7 +1,7 @@
 using System;
 using System.Net;
 
-namespace Launchpad.Launcher
+namespace Launchpad.Launcher.Handlers
 {
 	/// <summary>
 	/// Anonymous stat sending handler.
@@ -23,12 +23,12 @@ namespace Launchpad.Launcher
 			{
 				string baseURL = "http://directorate.asuscomm.com/launchpad/stats.php?";
 				string formattedURL = String.Format(baseURL + "guid={0}&launcherVersion={1}&gameName={2}&systemType={3}&officialUpdates={4}",
-				                                    Config.GetGUID(),
-				                                    Config.GetLocalLauncherVersion(),
-				                                    Config.GetGameName(),
-                                                    Config.GetSystemTarget().ToString(),
-				                                    Config.GetDoOfficialUpdates().ToString()
-				                                    );
+					                      Config.GetGUID(),
+					                      Config.GetLocalLauncherVersion(),
+					                      Config.GetGameName(),
+					                      Config.GetSystemTarget().ToString(),
+					                      Config.GetDoOfficialUpdates().ToString()
+				                      );
 
 
 				sendStatsRequest = WebRequest.Create(formattedURL);
@@ -36,13 +36,13 @@ namespace Launchpad.Launcher
 			}
 			catch (WebException wex)
 			{
-				Console.WriteLine ("WebException in SendUsageStats(): " + wex.Message);
+				Console.WriteLine("WebException in SendUsageStats(): " + wex.Message);
 			}
 			finally
 			{
 				sendStatsRequest.Abort();   
 			}
-		}			
+		}
 	}
 }
 

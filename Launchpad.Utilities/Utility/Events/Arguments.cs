@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Launchpad.Utilities.Events.Arguments
+namespace Launchpad.Utilities.Utility.Events
 {
 	public class ManifestGenerationProgressChangedEventArgs : EventArgs
 	{
@@ -35,7 +35,7 @@ namespace Launchpad.Utilities.Events.Arguments
 			set;
 		}
 
-		new public void Empty ()
+		new public void Empty()
 		{
 			Filepath = null;
 			TotalFiles = 0;

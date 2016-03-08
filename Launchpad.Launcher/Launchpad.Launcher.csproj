@@ -89,13 +89,11 @@
       <HintPath>External Assemblies\notify-sharp-0.4\notify-sharp.dll</HintPath>
     </Reference>
     <Reference Include="INIFileParser">
-      <HintPath>..\packages\ini-parser.2.2.2\lib\net20\INIFileParser.dll</HintPath>
+      <HintPath>..\packages\ini-parser.2.2.4\lib\net20\INIFileParser.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="gtk-gui\Launchpad.Launcher.MainWindow.cs" />
-    <Compile Include="gtk-gui\Launchpad.Launcher.SettingsDialog.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -109,7 +107,6 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Launchpad-StrongKey-NoPass.snk" />
-    <None Include="Launchpad-StrongKey.pfx" />
     <None Include="LICENSE" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -128,7 +125,6 @@
     <Compile Include="Handlers\ConfigHandler.cs" />
     <Compile Include="Handlers\ChecksHandler.cs" />
     <Compile Include="Handlers\StatsHandler.cs" />
-    <Compile Include="Handlers\FTPHandler.cs" />
     <Compile Include="Resources\Strings.da.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -269,6 +265,10 @@
     <Compile Include="Utility\Events\Arguments.cs" />
     <Compile Include="Utility\Events\Delegates.cs" />
     <None Include="packages.config" />
+    <Compile Include="Handlers\Protocols\FTPHandler.cs" />
+    <Compile Include="Handlers\Protocols\PatchProtocolHandler.cs" />
+    <Compile Include="gtk-gui\Launchpad.Launcher.UI.MainWindow.cs" />
+    <Compile Include="gtk-gui\Launchpad.Launcher.UI.SettingsDialog.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -305,4 +305,7 @@
   <PropertyGroup>
     <PostBuildEvent>echo [Launchpad/Extras/Linux] : warning L0001: Remember to copy the Linux extras to the output folder if you are building on Windows.</PostBuildEvent>
   </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Handlers\Protocols\" />
+  </ItemGroup>
 </Project>

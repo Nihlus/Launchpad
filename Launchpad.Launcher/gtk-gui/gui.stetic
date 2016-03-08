@@ -9,7 +9,7 @@
     <widget-library name="notify-sharp" />
     <widget-library name="../bin/Debug/Launchpad.exe" internal="true" />
   </import>
-  <widget class="Gtk.Window" id="Launchpad.Launcher.MainWindow" design-size="760 439">
+  <widget class="Gtk.Window" id="Launchpad.Launcher.UI.MainWindow" design-size="760 439">
     <action-group name="Default">
       <action id="EditAction">
         <property name="Type">Action</property>
@@ -199,7 +199,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Dialog" id="Launchpad.Launcher.SettingsDialog" design-size="344 295">
+  <widget class="Gtk.Dialog" id="Launchpad.Launcher.UI.SettingsDialog" design-size="344 295">
     <property name="MemberName" />
     <property name="Title" translatable="yes">Edit Settings</property>
     <property name="Icon">resource:Launchpad.Launcher.Resources.RocketIcon.ico</property>

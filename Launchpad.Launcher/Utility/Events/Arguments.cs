@@ -1,38 +1,38 @@
 using System;
 
-namespace Launchpad.Launcher.Events.Arguments
-{	
+namespace Launchpad.Launcher.Utility.Events
+{
 	//FTP arguments for progress events
 	/// <summary>
 	/// Progress event arguments.
 	/// </summary>
-    public class FileDownloadProgressChangedEventArgs : EventArgs
+	public class FileDownloadProgressChangedEventArgs : EventArgs
 	{
-		public long DownloadedBytes 
+		public long DownloadedBytes
 		{
 			get;
 			set;
 		}
 
-        public long TotalBytes 
+		public long TotalBytes
 		{
 			get;
 			set;
 		}
 
-		public int DownloadedFiles 
+		public int DownloadedFiles
 		{
 			get;
 			set;
 		}
 
-		public int TotalFiles 
+		public int TotalFiles
 		{
 			get;
 			set;
 		}
 
-		public string FileName 
+		public string FileName
 		{
 			get;
 			set;
@@ -48,7 +48,7 @@ namespace Launchpad.Launcher.Events.Arguments
 		}
 	}
 
-    public class FileDownloadFinishedEventArgs : EventArgs
+	public class FileDownloadFinishedEventArgs : EventArgs
 	{
 		public int Result
 		{
@@ -56,7 +56,7 @@ namespace Launchpad.Launcher.Events.Arguments
 			set;
 		}
 
-		public string FileName 
+		public string FileName
 		{
 			get;
 			set;
@@ -71,20 +71,22 @@ namespace Launchpad.Launcher.Events.Arguments
 	/// <summary>
 	/// Download finished event arguments.
 	/// </summary>
-    public class GameDownloadFinishedEventArgs : EventArgs
+	public class GameDownloadFinishedEventArgs : EventArgs
 	{
-		public string Result {
+		public string Result
+		{
 			get;
 			set;
 		}
 
-		public string ResultType 
-        {
+		public string ResultType
+		{
 			get;
 			set;
 		}
 
-		public string Metadata {
+		public string Metadata
+		{
 			get;
 			set;
 		}
@@ -96,19 +98,22 @@ namespace Launchpad.Launcher.Events.Arguments
 		}
 	}
 
-    public class GameUpdateFinishedEventArgs : EventArgs
+	public class GameUpdateFinishedEventArgs : EventArgs
 	{
-		public string Result {
+		public string Result
+		{
 			get;
 			set;
 		}
 
-		public string ResultType {
+		public string ResultType
+		{
 			get;
 			set;
 		}
 
-		public string Metadata {
+		public string Metadata
+		{
 			get;
 			set;
 		}
@@ -120,19 +125,22 @@ namespace Launchpad.Launcher.Events.Arguments
 		}
 	}
 
-    public class GameRepairFinishedEventArgs : EventArgs
+	public class GameRepairFinishedEventArgs : EventArgs
 	{
-		public string Result {
+		public string Result
+		{
 			get;
 			set;
 		}
 
-		public string ResultType {
+		public string ResultType
+		{
 			get;
 			set;
 		}
 
-		public string Metadata {
+		public string Metadata
+		{
 			get;
 			set;
 		}
@@ -153,19 +161,22 @@ namespace Launchpad.Launcher.Events.Arguments
 	/// <summary>
 	/// Download failed event arguments.
 	/// </summary>
-    public class GameDownloadFailedEventArgs : EventArgs
+	public class GameDownloadFailedEventArgs : EventArgs
 	{
-		public string Result {
+		public string Result
+		{
 			get;
 			set;
 		}
 
-		public string ResultType {
+		public string ResultType
+		{
 			get;
 			set;
 		}
 
-		public string Metadata {
+		public string Metadata
+		{
 			get;
 			set;
 		}
@@ -177,7 +188,7 @@ namespace Launchpad.Launcher.Events.Arguments
 		}
 	}
 
-    public class GameUpdateFailedEventArgs : EventArgs
+	public class GameUpdateFailedEventArgs : EventArgs
 	{
 		public string Result
 		{
@@ -192,7 +203,7 @@ namespace Launchpad.Launcher.Events.Arguments
 		}
 	}
 
-    public class GameRepairFailedEventArgs : EventArgs
+	public class GameRepairFailedEventArgs : EventArgs
 	{
 		public string Result
 		{
@@ -207,7 +218,7 @@ namespace Launchpad.Launcher.Events.Arguments
 		}
 	}
 
-    public class GameLaunchFailedEventArgs : EventArgs
+	public class GameLaunchFailedEventArgs : EventArgs
 	{
 		public string Result
 		{

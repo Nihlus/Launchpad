@@ -1,33 +1,35 @@
 ﻿using System;
+using Launchpad.Launcher.UI;
+using Launchpad.Launcher.Handlers;
 
 [assembly: CLSCompliant(true)]
 namespace Launchpad.Launcher
 {
-    class Program
-    {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        static void Main()
-        {
-			if (ChecksHandler.IsRunningOnUnix ()) 
+	class Program
+	{
+		/// <summary>
+		/// The main entry point for the application.
+		/// </summary>
+		[STAThread]
+		static void Main()
+		{
+			if (ChecksHandler.IsRunningOnUnix())
 			{
-                // run a GTK UI instead of WinForms
-				Gtk.Application.Init ();
+				// run a GTK UI instead of WinForms
+				Gtk.Application.Init();
 
-				MainWindow win = new MainWindow ();
-				win.Show ();
-				Gtk.Application.Run ();
+				MainWindow win = new MainWindow();
+				win.Show();
+				Gtk.Application.Run();
 			}
-			else 
+			else
 			{
-                // run a WinForms UI instead of GTK
+				// run a WinForms UI instead of GTK
 				System.Windows.Forms.Application.EnableVisualStyles();
 				System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
 				System.Windows.Forms.Application.Run(new MainForm());
 			}
             
-        }
-    }
+		}
+	}
 }

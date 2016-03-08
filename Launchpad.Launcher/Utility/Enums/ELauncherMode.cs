@@ -1,5 +1,5 @@
 
-namespace Launchpad.Launcher
+namespace Launchpad.Launcher.Utility.Enums
 {
 	internal enum ELauncherMode
 	{

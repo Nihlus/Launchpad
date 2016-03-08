@@ -1,10 +1,10 @@
 
-namespace Launchpad.Launcher
+namespace Launchpad.Launcher.Utility.Enums
 {
-    internal enum ESystemTarget
+	internal enum ESystemTarget
 	{
 		Linux,
-		Mac, 
+		Mac,
 		Win64,
 		Win32,
 		Invalid

@@ -1,13 +1,16 @@
 using Gtk;
 using System;
+using Launchpad.Launcher.Handlers;
+using Launchpad.Launcher.Utility.Enums;
+using Launchpad.Launcher.Utility;
 
-namespace Launchpad.Launcher
+namespace Launchpad.Launcher.UI
 {
 	/// <summary>
 	/// Settings dialog box.
 	/// </summary>
-    [CLSCompliant(false)]
-    public partial class SettingsDialog : Dialog
+	[CLSCompliant(false)]
+	public partial class SettingsDialog : Dialog
 	{
 		/// <summary>
 		/// The config handler reference.
@@ -17,27 +20,27 @@ namespace Launchpad.Launcher
 		/// <summary>
 		/// The checks handler reference.
 		/// </summary>
-		ChecksHandler Checks = new ChecksHandler ();
+		ChecksHandler Checks = new ChecksHandler();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Launchpad.SettingsDialog"/> class.
 		/// </summary>
-		public SettingsDialog ()
+		public SettingsDialog()
 		{
-			this.Build ();
+			this.Build();
 			//fill in Local settings
-			GameName_entry.Text = Config.GetGameName ();
+			GameName_entry.Text = Config.GetGameName();
 
 			combobox_SystemTarget.Active = (int)Config.GetSystemTarget();
 
 			//fill in remote settings
-			FTPURL_entry.Text = Config.GetBaseFTPUrl ();
-			FTPUsername_entry.Text = Config.GetFTPUsername ();
-			FTPPassword_entry.Text = Config.GetFTPPassword ();
+			FTPURL_entry.Text = Config.GetBaseFTPUrl();
+			FTPUsername_entry.Text = Config.GetFTPUsername();
+			FTPPassword_entry.Text = Config.GetFTPPassword();
 
 			progressbar3.Text = Mono.Unix.Catalog.GetString("Idle");
-			buttonOk.Label = Mono.Unix.Catalog.GetString ("OK");
-			buttonCancel.Label = Mono.Unix.Catalog.GetString ("Cancel");
+			buttonOk.Label = Mono.Unix.Catalog.GetString("OK");
+			buttonCancel.Label = Mono.Unix.Catalog.GetString("Cancel");
 
 		}
 
@@ -46,30 +49,30 @@ namespace Launchpad.Launcher
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		protected void OnButtonOkClicked (object sender, EventArgs e)
+		protected void OnButtonOkClicked(object sender, EventArgs e)
 		{
-			Application.Invoke(delegate 
-			                       {
-				progressbar3.Text = Mono.Unix.Catalog.GetString("Verifying...");			
-			});
+			Application.Invoke(delegate
+				{
+					progressbar3.Text = Mono.Unix.Catalog.GetString("Verifying...");			
+				});
 
 			bool bAreAllSettingsOK = true;
-			Config.SetGameName (GameName_entry.Text);
+			Config.SetGameName(GameName_entry.Text);
 
-			ESystemTarget SystemTarget = Utilities.ParseSystemTarget (combobox_SystemTarget.ActiveText);
+			ESystemTarget SystemTarget = Utilities.ParseSystemTarget(combobox_SystemTarget.ActiveText);
 			if (SystemTarget != ESystemTarget.Invalid)
 			{
-				Config.SetSystemTarget (SystemTarget);
+				Config.SetSystemTarget(SystemTarget);
 			}
 			else
 			{
 				bAreAllSettingsOK = false;
 			}
 
-			if (FTPURL_entry.Text.StartsWith ("ftp://"))
+			if (FTPURL_entry.Text.StartsWith("ftp://"))
 			{
-				Config.SetBaseFTPUrl (FTPURL_entry.Text);
-			} 
+				Config.SetBaseFTPUrl(FTPURL_entry.Text);
+			}
 			else
 			{
 				bAreAllSettingsOK = false;
@@ -78,26 +81,26 @@ namespace Launchpad.Launcher
 				FTPURL_entry.TooltipText = Mono.Unix.Catalog.GetString("The URL needs to begin with \"ftp://\". Please correct the URL.");
 			}
 
-			Config.SetFTPPassword (FTPPassword_entry.Text);
-			Config.SetFTPUsername (FTPUsername_entry.Text);
+			Config.SetFTPPassword(FTPPassword_entry.Text);
+			Config.SetFTPUsername(FTPUsername_entry.Text);
 
 
 			if (bAreAllSettingsOK)
 			{
-				if (Checks.CanConnectToFTP ())
+				if (Checks.CanConnectToFTP())
 				{
-					Destroy ();
+					Destroy();
 				}
 				else
 				{
-					MessageDialog dialog = new MessageDialog (
-						null, DialogFlags.Modal, 
-						MessageType.Warning, 
-						ButtonsType.Ok, 
-						Mono.Unix.Catalog.GetString("Failed to connect to the FTP server. Please check your FTP settings."));
+					MessageDialog dialog = new MessageDialog(
+						                       null, DialogFlags.Modal, 
+						                       MessageType.Warning, 
+						                       ButtonsType.Ok, 
+						                       Mono.Unix.Catalog.GetString("Failed to connect to the FTP server. Please check your FTP settings."));
 
-					dialog.Run ();
-					dialog.Destroy ();
+					dialog.Run();
+					dialog.Destroy();
 				}
 			}
 
@@ -109,9 +112,9 @@ namespace Launchpad.Launcher
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		protected void OnButtonCancelClicked (object sender, EventArgs e)
+		protected void OnButtonCancelClicked(object sender, EventArgs e)
 		{
-			Destroy ();
+			Destroy();
 		}
 
 		/// <summary>
@@ -119,10 +122,10 @@ namespace Launchpad.Launcher
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		protected void OnFTPURLEntryChanged (object sender, EventArgs e)
+		protected void OnFTPURLEntryChanged(object sender, EventArgs e)
 		{
 			//Set the base colour back to normal
-			FTPURL_entry.ModifyBase (StateType.Normal);
+			FTPURL_entry.ModifyBase(StateType.Normal);
 		}
 	}
 }
