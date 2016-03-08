@@ -265,10 +265,10 @@
     <Compile Include="Utility\Events\Arguments.cs" />
     <Compile Include="Utility\Events\Delegates.cs" />
     <None Include="packages.config" />
-    <Compile Include="Handlers\Protocols\FTPHandler.cs" />
     <Compile Include="gtk-gui\Launchpad.Launcher.UI.MainWindow.cs" />
     <Compile Include="gtk-gui\Launchpad.Launcher.UI.SettingsDialog.cs" />
     <Compile Include="Handlers\Protocols\PatchProtocolHandler.cs" />
+    <Compile Include="Handlers\Protocols\FTPProtocolHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

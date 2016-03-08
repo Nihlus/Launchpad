@@ -154,7 +154,7 @@ namespace Launchpad.Launcher.Handlers
 			string fileReturn = "";
 			try
 			{
-				FTPHandler FTP = new FTPHandler();
+				FTPProtocolHandler FTP = new FTPProtocolHandler();
 				ManifestHandler manifestHandler = new ManifestHandler();
 				List<ManifestEntry> Manifest = manifestHandler.Manifest;
 
@@ -294,7 +294,7 @@ namespace Launchpad.Launcher.Handlers
 			try
 			{
 				//Check old manifest against new manifest, download anything that isn't exactly the same as before
-				FTPHandler FTP = new FTPHandler();
+				FTPProtocolHandler FTP = new FTPProtocolHandler();
 				FTP.FileProgressChanged += OnDownloadProgressChanged;
 				FTP.FileDownloadFinished += OnFileDownloadFinished;
 
@@ -347,7 +347,7 @@ namespace Launchpad.Launcher.Handlers
 			try
 			{
 				//check all local file MD5s against latest manifest. Resume partial files, download broken files.
-				FTPHandler FTP = new FTPHandler();
+				FTPProtocolHandler FTP = new FTPProtocolHandler();
 
 				//bind event handlers
 				FTP.FileProgressChanged += OnDownloadProgressChanged;

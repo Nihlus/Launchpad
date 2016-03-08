@@ -33,7 +33,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 	/// FTP handler. Handles downloading and reading files on a remote FTP server.
 	/// There are also functions for retrieving remote version information of the game and the launcher.
 	/// </summary>
-	internal sealed class FTPHandler
+	internal sealed class FTPProtocolHandler : PatchProtocolHandler
 	{
 		/// <summary>
 		/// How many bytes of the target file that have been downloaded.
@@ -67,7 +67,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Launchpad_Launcher.FTPHandler"/> class.
 		/// </summary>
-		public FTPHandler()
+		public FTPProtocolHandler()
 		{
 			ProgressArgs = new FileDownloadProgressChangedEventArgs();
 			DownloadFinishedArgs = new FileDownloadFinishedEventArgs();

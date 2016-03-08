@@ -86,7 +86,7 @@ namespace Launchpad.Launcher.Handlers
 		{
 			try
 			{
-				FTPHandler FTP = new FTPHandler();
+				FTPProtocolHandler FTP = new FTPProtocolHandler();
 
 				//crawl the server for all of the files in the /launcher/bin directory.
 				List<string> remotePaths = FTP.GetFilePaths(Config.GetLauncherBinariesURL(), true);
@@ -142,7 +142,7 @@ namespace Launchpad.Launcher.Handlers
 			Stream manifestStream = null;														
 			try
 			{
-				FTPHandler FTP = new FTPHandler();
+				FTPProtocolHandler FTP = new FTPProtocolHandler();
 
 				string remoteChecksum = FTP.GetRemoteManifestChecksum();
 				string localChecksum = "";
@@ -193,7 +193,7 @@ namespace Launchpad.Launcher.Handlers
 
 		private void LoadChangelogAsync()
 		{
-			FTPHandler FTP = new FTPHandler();
+			FTPProtocolHandler FTP = new FTPProtocolHandler();
 
 			//load the HTML from the server as a string
 			string content = FTP.ReadFTPFile(Config.GetChangelogURL());

@@ -166,7 +166,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns><c>true</c> if the game is outdated; otherwise, <c>false</c>.</returns>
 		public bool IsGameOutdated()
 		{
-			FTPHandler FTP = new FTPHandler();
+			FTPProtocolHandler FTP = new FTPProtocolHandler();
 			try
 			{
 				Version local = Config.GetLocalGameVersion();
@@ -194,7 +194,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns><c>true</c> if the launcher is outdated; otherwise, <c>false</c>.</returns>
 		public bool IsLauncherOutdated()
 		{
-			FTPHandler FTP = new FTPHandler();
+			FTPProtocolHandler FTP = new FTPProtocolHandler();
 			try
 			{
 				Version local = Config.GetLocalLauncherVersion();
@@ -243,7 +243,7 @@ namespace Launchpad.Launcher.Handlers
 		{
 			if (File.Exists(ConfigHandler.GetManifestPath()))
 			{
-				FTPHandler FTP = new FTPHandler();
+				FTPProtocolHandler FTP = new FTPProtocolHandler();
 
 				string manifestURL = Config.GetManifestChecksumURL();
 				string remoteHash = FTP.ReadFTPFile(manifestURL);
@@ -266,7 +266,7 @@ namespace Launchpad.Launcher.Handlers
 
 		public bool DoesServerProvidePlatform(ESystemTarget Platform)
 		{
-			FTPHandler FTP = new FTPHandler();
+			FTPProtocolHandler FTP = new FTPProtocolHandler();
 
 			string remote = String.Format("{0}/game/{1}/.provides",
 				                Config.GetBaseFTPUrl(),
