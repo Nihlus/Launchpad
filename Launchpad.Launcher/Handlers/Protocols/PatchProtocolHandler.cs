@@ -18,14 +18,96 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 using System;
+using Launchpad.Launcher.Utility.Events;
 
 namespace Launchpad.Launcher.Handlers.Protocols
 {
-	internal class PatchProtocolHandler
+	/// <summary>
+	/// Patch protocol handler.
+	/// This class is the base class for all file transfer protocols, providing
+	/// a common framework for protocols to adhere to. It abstracts away the actual
+	/// functionality, and reduces the communication with other parts of the launcher
+	/// down to requests in, files out.
+	///
+	/// By default, the patch protocol handler does not know anything specific about
+	/// the actual workings of the protocol.
+	/// </summary>
+	internal abstract class PatchProtocolHandler
 	{
 		public PatchProtocolHandler()
 		{
+			ProgressArgs = new FileDownloadProgressChangedEventArgs();
+			DownloadFinishedArgs = new FileDownloadFinishedEventArgs();
+		}
+
+		/// <summary>
+		/// The config handler reference.
+		/// </summary>
+		protected ConfigHandler Config = ConfigHandler._instance;
+
+		/// <summary>
+		/// Occurs when file progress changed.
+		/// </summary>
+		public event FileProgressChangedEventHandler FileProgressChanged;
+		/// <summary>
+		/// Occurs when file download finished.
+		/// </summary>
+		public event FileDownloadFinishedEventHandler FileDownloadFinished;
+
+		/// <summary>
+		/// The progress arguments object. Is updated during file download operations.
+		/// </summary>
+		protected FileDownloadProgressChangedEventArgs ProgressArgs;
+
+		/// <summary>
+		/// The download finished arguments object. Is updated once a file download finishes.
+		/// </summary>
+		protected FileDownloadFinishedEventArgs DownloadFinishedArgs;
+
+		/// <summary>
+		/// Checks whether or not the game has a new patch available.
+		/// </summary>
+		/// <returns><c>true</c>, if there's a patch available, <c>false</c> otherwise.</returns>
+		public abstract bool GameHasNewPatch();
+
+		/// <summary>
+		/// Checks whether or not the launcher has a new patch available.
+		/// </summary>
+		/// <returns><c>true</c>, if there's a patch available, <c>false</c> otherwise.</returns>
+		public abstract bool LauncherHasNewPatch();
+
+		/// <summary>
+		/// Patches the game to the latest version.
+		/// </summary>
+		public abstract void PatchGame();
+
+		/// <summary>
+		/// Patches the launcher to the latest version.
+		/// </summary>
+		public abstract void PatchLauncher();
+
+		/// <summary>
+		/// Raises the progress changed event.
+		/// </summary>
+		protected void OnFileProgressChanged()
+		{
+			if (FileProgressChanged != null)
+			{
+				FileProgressChanged(this, ProgressArgs);
+			}
+		}
+
+		/// <summary>
+		/// Raises the download finished event.
+		/// </summary>
+		protected void OnFileDownloadFinished()
+		{
+			if (FileDownloadFinished != null)
+			{
+				FileDownloadFinished(this, DownloadFinishedArgs);
+			}
 		}
 	}
 }

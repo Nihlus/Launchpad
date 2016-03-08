@@ -269,6 +269,8 @@
     <Compile Include="gtk-gui\Launchpad.Launcher.UI.SettingsDialog.cs" />
     <Compile Include="Handlers\Protocols\PatchProtocolHandler.cs" />
     <Compile Include="Handlers\Protocols\FTPProtocolHandler.cs" />
+    <Compile Include="Handlers\Protocols\HTTPProtocolHandler.cs" />
+    <Compile Include="Handlers\Protocols\BitTorrentProtocolHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
