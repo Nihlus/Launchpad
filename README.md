@@ -18,6 +18,9 @@ If you are not on a Debian-based system, you have to install these packages:
 * libnotify-cil-dev
 * libwebkitgtk-dev
 
+If you are on Windows, you'll also need the GTK# runtime.
+http://www.mono-project.com/docs/gui/gtksharp/installer-for-net-framework/
+
 # Code contributors
 * Jarl Gullberg
 * Mentos
