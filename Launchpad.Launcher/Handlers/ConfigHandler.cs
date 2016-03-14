@@ -23,6 +23,7 @@ using IniParser;
 using IniParser.Model;
 using System;
 using System.IO;
+using System.Web;
 using Launchpad.Launcher.Utility.Enums;
 using Launchpad.Launcher.Utility;
 
@@ -413,7 +414,7 @@ namespace Launchpad.Launcher.Handlers
 		public string GetManifestURL()
 		{
 			string manifestURL = String.Format("{0}/game/{1}/LauncherManifest.txt", 
-				                     GetFTPUrl(),
+				                     GetBaseFTPUrl(),
 				                     GetSystemTarget());
 
 			return manifestURL;
@@ -426,7 +427,7 @@ namespace Launchpad.Launcher.Handlers
 		public string GetManifestChecksumURL()
 		{
 			string manifestChecksumURL = String.Format("{0}/game/{1}/LauncherManifest.checksum", 
-				                             GetFTPUrl(), 
+				                             GetBaseFTPUrl(), 
 				                             GetSystemTarget());
 
 			return manifestChecksumURL;
@@ -439,7 +440,7 @@ namespace Launchpad.Launcher.Handlers
 		public string GetLauncherBinariesURL()
 		{
 			string launcherURL = String.Format("{0}/launcher/bin/", 
-				                     GetFTPUrl());
+				                     GetBaseFTPUrl());
 			return launcherURL;
 		}
 
@@ -450,7 +451,7 @@ namespace Launchpad.Launcher.Handlers
 		public string GetChangelogURL()
 		{
 			string changelogURL = String.Format("{0}/launcher/changelog.html", 
-				                      GetFTPUrl());
+				                      GetBaseFTPUrl());
 			return changelogURL;
 		}
 
@@ -465,13 +466,13 @@ namespace Launchpad.Launcher.Handlers
 			if (bIncludeSystemTarget)
 			{
 				gameURL = String.Format("{0}/game/{1}/bin/", 
-					GetFTPUrl(), 
+					GetBaseFTPUrl(), 
 					GetSystemTarget());
 			}
 			else
 			{
 				gameURL = String.Format("{0}/game/", 
-					GetFTPUrl());
+					GetBaseFTPUrl());
 			}
 
 			return gameURL;
@@ -768,37 +769,6 @@ namespace Launchpad.Launcher.Handlers
 				catch (IOException ioex)
 				{
 					Console.WriteLine("IOException in GetFTPPassword(): " + ioex.Message);				
-				}
-			}
-		}
-
-		/// <summary>
-		/// Gets the FTP URL.
-		/// </summary>
-		/// <returns>The FTP URL.</returns>
-		public string GetFTPUrl()
-		{
-			lock (ReadLock)
-			{
-				try
-				{
-					FileIniDataParser Parser = new FileIniDataParser();
-					IniData data = Parser.ReadFile(GetConfigPath());
-
-					string FTPUrl = data["Remote"]["FTPUrl"];
-					string FTPAuthUrl = FTPUrl.Substring(0, 6); // Gets ftp://
-					FTPAuthUrl += data["Remote"]["FTPUsername"]; // Add the username
-					FTPAuthUrl += ":";
-					FTPAuthUrl += data["Remote"]["FTPPassword"]; // Add the password
-					FTPAuthUrl += "@";
-					FTPAuthUrl += FTPUrl.Substring(6); //add the rest of the URL
-
-					return FTPAuthUrl;
-				}
-				catch (IOException ioex)
-				{
-					Console.WriteLine("IOException in GetFTPUrl(): " + ioex.Message);
-					return String.Empty;
 				}
 			}
 		}

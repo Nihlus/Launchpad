@@ -56,13 +56,16 @@ namespace Launchpad.Launcher.Handlers
 		{
 			bool bCanConnectToFTP;
 
-			string FTPURL = Config.GetFTPUrl();
+			//string FTPURL = Config.GetFTPUrl();
+			string FTPURL = Config.GetBaseFTPUrl();
 			string FTPUserName = Config.GetFTPUsername();
 			string FTPPassword = Config.GetFTPPassword();
 
 			try
 			{
-				FtpWebRequest plainRequest = (FtpWebRequest)FtpWebRequest.Create(FTPURL);
+				//FtpWebRequest plainRequest = (FtpWebRequest)FtpWebRequest.Create(FTPURL);
+				FtpWebRequest plainRequest = FTPHandler.CreateFtpWebRequest(FTPURL, FTPUserName, FTPPassword, false);
+
 				plainRequest.Credentials = new NetworkCredential(FTPUserName, FTPPassword);
 				plainRequest.Method = WebRequestMethods.Ftp.ListDirectory;
 				plainRequest.Timeout = 8000;
@@ -266,7 +269,7 @@ namespace Launchpad.Launcher.Handlers
 			FTPHandler FTP = new FTPHandler();
 
 			string remote = String.Format("{0}/game/{1}/.provides",
-				                Config.GetFTPUrl(),
+				                Config.GetBaseFTPUrl(),
 				                Platform.ToString());
 
 			return FTP.DoesFileExist(remote);

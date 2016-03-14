@@ -582,7 +582,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <returns>The remote launcher version.</returns>
 		public Version GetRemoteLauncherVersion()
 		{
-			string remoteVersionPath = String.Format("{0}/launcher/LauncherVersion.txt", Config.GetFTPUrl());
+			string remoteVersionPath = String.Format("{0}/launcher/LauncherVersion.txt", Config.GetBaseFTPUrl());
 			string remoteVersion = ReadFTPFile(remoteVersionPath);
 
 			return Version.Parse(remoteVersion);
@@ -598,14 +598,14 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			if (bUseSystemTarget)
 			{
 				remoteVersionPath = String.Format("{0}/game/{1}/bin/GameVersion.txt", 
-					Config.GetFTPUrl(), 
+					Config.GetBaseFTPUrl(), 
 					Config.GetSystemTarget());
 
 			}
 			else
 			{
 				remoteVersionPath = String.Format("{0}/game/bin/GameVersion.txt", 
-					Config.GetFTPUrl());
+					Config.GetBaseFTPUrl());
 
 			}
 			string remoteVersion = ReadFTPFile(remoteVersionPath);
