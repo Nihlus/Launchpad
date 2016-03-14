@@ -529,44 +529,47 @@ namespace Launchpad.Launcher.UI
 		/// <param name="e">Contains the result of the download.</param>
 		protected void OnGameDownloadFinished(object sender, GameDownloadFinishedEventArgs e)
 		{
-			if (e != null)
-			{				
-				if (e.Result == "1") //there was an error
+			Application.Invoke(delegate
 				{
-					MessageLabel.Text = Mono.Unix.Catalog.GetString("Game download failed. Are you missing the manifest?");
+					if (e != null)
+					{				
+						if (e.Result == "1") //there was an error
+						{
+							MessageLabel.Text = Mono.Unix.Catalog.GetString("Game download failed. Are you missing the manifest?");
 
-					Notification failedNot = new Notification();
-					failedNot.IconName = Stock.DialogError;
-					failedNot.Summary = Mono.Unix.Catalog.GetString("Launchpad - Error");
-					failedNot.Body = Mono.Unix.Catalog.GetString("Game download failed. Are you missing the manifest?");
+							Notification failedNot = new Notification();
+							failedNot.IconName = Stock.DialogError;
+							failedNot.Summary = Mono.Unix.Catalog.GetString("Launchpad - Error");
+							failedNot.Body = Mono.Unix.Catalog.GetString("Game download failed. Are you missing the manifest?");
 
-					failedNot.Show();
+							failedNot.Show();
 
-					ELauncherMode parsedMode;
-					if (Enum.TryParse(e.ResultType, out parsedMode))
-					{
-						SetLauncherMode(parsedMode, false);
+							ELauncherMode parsedMode;
+							if (Enum.TryParse(e.ResultType, out parsedMode))
+							{
+								SetLauncherMode(parsedMode, false);
+							}
+							else
+							{
+								SetLauncherMode(ELauncherMode.Repair, false);
+							}                                        
+						}
+						else //the game has finished downloading, and we should be OK to launch
+						{
+							MessageLabel.Text = Mono.Unix.Catalog.GetString("Idle");
+							progressbar2.Text = "";
+
+							Notification completedNot = new Notification();
+							completedNot.IconName = Stock.Info;
+							completedNot.Summary = Mono.Unix.Catalog.GetString("Launchpad - Info");
+							completedNot.Body = Mono.Unix.Catalog.GetString("Game download finished. Play away!");
+
+							completedNot.Show();
+
+							SetLauncherMode(ELauncherMode.Launch, false);
+						}
 					}
-					else
-					{
-						SetLauncherMode(ELauncherMode.Repair, false);
-					}                                        
-				}
-				else //the game has finished downloading, and we should be OK to launch
-				{
-					MessageLabel.Text = Mono.Unix.Catalog.GetString("Idle");
-					progressbar2.Text = "";
-
-					Notification completedNot = new Notification();
-					completedNot.IconName = Stock.Info;
-					completedNot.Summary = Mono.Unix.Catalog.GetString("Launchpad - Info");
-					completedNot.Body = Mono.Unix.Catalog.GetString("Game download finished. Play away!");
-
-					completedNot.Show();
-
-					SetLauncherMode(ELauncherMode.Launch, false);
-				}
-			}           
+				});			          
 		}
 
 		/// <summary>

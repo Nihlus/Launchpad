@@ -245,7 +245,7 @@ namespace Launchpad.Launcher.Handlers
 			{
 				FTPHandler FTP = new FTPHandler();
 
-				string manifestURL = Config.GetManifestURL();
+				string manifestURL = Config.GetManifestChecksumURL();
 				string remoteHash = FTP.ReadFTPFile(manifestURL);
 				string localHash = MD5Handler.GetFileHash(File.OpenRead(ConfigHandler.GetManifestPath()));
 

@@ -322,8 +322,14 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				reader = request.GetResponse().GetResponseStream();
 				sizereader = (FtpWebResponse)sizerequest.GetResponse();
 
-				// Append can be used even if we're creating a new file.
-				fileStream = new FileStream(localPath, FileMode.Append);
+				if (contentOffset > 0)
+				{
+					fileStream = new FileStream(localPath, FileMode.Append);
+				}
+				else
+				{
+					fileStream = new FileStream(localPath, FileMode.Create);
+				}
 
 				// Sets the content offset for the file stream, allowing it to begin writing where it last stopped.
 				fileStream.Position = contentOffset;
