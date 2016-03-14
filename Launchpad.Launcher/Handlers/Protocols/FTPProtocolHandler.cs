@@ -366,13 +366,13 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					FTPbytesDownloaded = FTPbytesDownloaded + bytesRead;
 					fileStream.Write(buffer, 0, bytesRead);
 
-					//set file progress info				
-					FileDownloadProgressArgs.DownloadedBytes = (int)contentOffset + FTPbytesDownloaded;
+					//set file progress info
+					FileDownloadProgressArgs.DownloadedBytes = contentOffset + FTPbytesDownloaded;
 
-					OnFileProgressChanged();
+					OnFileDownloadProgressChanged();
 				}
 
-				OnFileProgressChanged();
+				OnFileDownloadProgressChanged();
 				OnFileDownloadFinished();
 
 				returnValue = localPath;

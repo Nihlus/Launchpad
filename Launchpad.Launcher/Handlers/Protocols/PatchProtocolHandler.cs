@@ -101,7 +101,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <summary>
 		/// Raises the progress changed event.
 		/// </summary>
-		protected void OnFileProgressChanged()
+		protected void OnFileDownloadProgressChanged()
 		{
 			if (FileProgressChanged != null)
 			{
