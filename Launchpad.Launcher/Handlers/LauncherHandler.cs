@@ -113,7 +113,7 @@ namespace Launchpad.Launcher.Handlers
 							}
 
 							// Config.GetDoOfficialUpdates is used here since the official update server always allows anonymous logins.
-							FTP.DownloadFTPFile(Remote, Local, Config.GetDoOfficialUpdates());
+							FTP.DownloadFTPFile(Remote, Local, 0, Config.GetDoOfficialUpdates());
 						}                        
 					}
 					catch (WebException wex)

@@ -38,7 +38,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <summary>
 		/// How many bytes of the target file that have been downloaded.
 		/// </summary>
-		public int FTPbytesDownloaded = 0;
+		public long FTPbytesDownloaded = 0;
 
 		/// <summary>
 		/// The config handler reference.
@@ -273,7 +273,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <param name="ftpSourceFilePath">Ftp source file path.</param>
 		/// <param name="localDestination">Local destination.</param>
 		/// <param name="bUseAnonymous">If set to <c>true</c> b use anonymous.</param>
-		public string DownloadFTPFile(string rawRemoteURL, string localPath, bool useAnonymousLogin = false)
+		public string DownloadFTPFile(string rawRemoteURL, string localPath, long contentOffset = 0, bool useAnonymousLogin = false)
 		{
 			//clean the URL string
 			string remoteURL = rawRemoteURL.Replace(Path.DirectorySeparatorChar, '/');
@@ -315,17 +315,19 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 				request.Method = WebRequestMethods.Ftp.DownloadFile;
 				sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
+				request.ContentOffset = contentOffset;
 
 				long fileSize = 0;
-
-            
+				            
 				reader = request.GetResponse().GetResponseStream();
 				sizereader = (FtpWebResponse)sizerequest.GetResponse();
-					
-				fileStream = new FileStream(localPath, FileMode.Create);
 
-				//reset byte counter
-				FTPbytesDownloaded = 0;
+				// Append can be used even if we're creating a new file.
+				fileStream = new FileStream(localPath, FileMode.Append);
+
+				// Sets the content offset for the file stream, allowing it to begin writing where it last stopped.
+				fileStream.Position = contentOffset;
+				FTPbytesDownloaded = contentOffset;
 
 				fileSize = sizereader.ContentLength;
 
@@ -346,7 +348,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					fileStream.Write(buffer, 0, bytesRead);
 
 					//set file progress info
-					ProgressArgs.DownloadedBytes = FTPbytesDownloaded;
+					ProgressArgs.DownloadedBytes = contentOffset + FTPbytesDownloaded;
 
 					OnProgressChanged();
 				}
@@ -368,149 +370,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			catch (IOException ioex)
 			{
 				Console.Write("IOException in DownloadFTPFile: ");
-				Console.WriteLine(ioex.Message + " (" + remoteURL + ")");
-				returnValue = ioex.Message;
-
-				return returnValue;
-			}
-			finally
-			{
-				//clean up all open requests
-				//first, close and dispose of the file stream
-				if (fileStream != null)
-				{
-					fileStream.Close();
-				}
-
-				//then, the responses that are reading from the requests.
-				if (reader != null)
-				{
-					reader.Close();
-				}
-				if (sizereader != null)
-				{
-					sizereader.Close();
-				}
-
-				//and finally, the requests themselves.
-				if (request != null)
-				{
-					request.Abort();
-				}
-
-				if (sizerequest != null)
-				{
-					sizerequest.Abort();
-				}
-			}
-		}
-
-		/// <summary>
-		/// Downloads an FTP file.
-		/// </summary>
-		/// <returns>The FTP file's location on disk, or the exception message.</returns>
-		/// <param name="ftpSourceFilePath">Ftp source file path.</param>
-		/// <param name="localDestination">Local destination.</param>
-		/// <param name="bUseAnonymous">If set to <c>true</c> b use anonymous.</param>
-		/// <param name="contentOffset">The content offset where the download should resume.</param>
-		public string DownloadFTPFile(string rawRemoteURL, string localPath, long contentOffset, bool useAnonymousLogin = false)
-		{
-			//clean the URL string first
-			string remoteURL = rawRemoteURL.Replace(Path.DirectorySeparatorChar, '/');
-
-			string username;
-			string password;
-			if (useAnonymousLogin)
-			{
-				username = "anonymous";
-				password = "anonymous";
-			}
-			else
-			{
-				username = Config.GetFTPUsername();
-				password = Config.GetFTPPassword();
-			}
-
-
-			int bytesRead = 0;
-
-			//the buffer size is 256kb. More or less than this reduces download speeds.
-			byte[] buffer = new byte[262144];
-
-			FtpWebRequest request = null;
-			FtpWebRequest sizerequest = null;
-
-			Stream reader = null;
-			FtpWebResponse sizereader = null;
-
-			FileStream fileStream = null;
-
-			//either a path to the file or an error message
-			string returnValue = "";
-
-			try
-			{
-				request = CreateFtpWebRequest(remoteURL, username, password, false);
-				sizerequest = CreateFtpWebRequest(remoteURL, username, password, false);
-
-				request.Method = WebRequestMethods.Ftp.DownloadFile;
-				sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
-
-				request.ContentOffset = contentOffset;
-
-				long fileSize = 0;
-
-				reader = request.GetResponse().GetResponseStream();
-				sizereader = (FtpWebResponse)sizerequest.GetResponse();
-
-				fileStream = new FileStream(localPath, FileMode.Append);
-
-				//reset byte counter
-				FTPbytesDownloaded = 0;
-
-				fileSize = sizereader.ContentLength;
-
-				//set file info for progress reporting
-				ProgressArgs.FileName = Path.GetFileNameWithoutExtension(remoteURL);
-				ProgressArgs.TotalBytes = (int)fileSize;
-
-				//sets the content offset for the file stream, allowing it to begin writing where it last stopped
-				fileStream.Position = contentOffset;
-				while (true)
-				{
-					bytesRead = reader.Read(buffer, 0, buffer.Length);
-
-					if (bytesRead == 0)
-					{
-						break;
-					}
-
-					FTPbytesDownloaded = FTPbytesDownloaded + bytesRead;
-					fileStream.Write(buffer, 0, bytesRead);
-
-					//set file progress info
-					ProgressArgs.DownloadedBytes = (int)contentOffset + FTPbytesDownloaded;
-
-					OnProgressChanged();
-				}
-
-				OnProgressChanged();
-				OnDownloadFinished();
-
-				returnValue = localPath;
-				return returnValue;             				                             
-			}
-			catch (WebException wex)
-			{
-				Console.Write("WebException in DownloadFTPFile (appending): ");
-				Console.WriteLine(wex.Message + " (" + remoteURL + ")");
-				returnValue = wex.Message;
-
-				return returnValue;
-			}
-			catch (IOException ioex)
-			{
-				Console.Write("IOException in DownloadFTPFile (appending): ");
 				Console.WriteLine(ioex.Message + " (" + remoteURL + ")");
 				returnValue = ioex.Message;
 

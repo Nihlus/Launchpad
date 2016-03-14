@@ -313,7 +313,7 @@ namespace Launchpad.Launcher.Handlers
 						Directory.CreateDirectory(Directory.GetParent(LocalPath).ToString());
 
 						OnProgressChanged();
-						FTP.DownloadFTPFile(RemotePath, LocalPath, false);
+						FTP.DownloadFTPFile(RemotePath, LocalPath);
 					}
 				}
 
