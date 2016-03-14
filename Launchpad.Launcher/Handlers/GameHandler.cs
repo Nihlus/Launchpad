@@ -56,7 +56,7 @@ namespace Launchpad.Launcher.Handlers
 
 
 		/// <summary>
-		/// Occurs when the download failed.
+		/// Occurs when the game download failed.
 		/// </summary>
 		public event GameDownloadFailedEventHander GameDownloadFailed;
 		/// <summary>
@@ -89,10 +89,6 @@ namespace Launchpad.Launcher.Handlers
 		/// The update finished arguments.
 		/// </summary>
 		private GameUpdateFinishedEventArgs UpdateFinishedArgs;
-		/// <summary>
-		/// The repair finished arguments.
-		/// </summary>
-		private GameRepairFinishedEventArgs RepairFinishedArgs;
 
 		//Failure event arguments
 		/// <summary>
@@ -127,7 +123,6 @@ namespace Launchpad.Launcher.Handlers
 			ProgressArgs = new FileDownloadProgressChangedEventArgs();
 			DownloadFinishedArgs = new GameDownloadFinishedEventArgs();
 			UpdateFinishedArgs = new GameUpdateFinishedEventArgs();
-			RepairFinishedArgs = new GameRepairFinishedEventArgs();
 
 
 			DownloadFailedArgs = new GameDownloadFailedEventArgs();
@@ -491,7 +486,7 @@ namespace Launchpad.Launcher.Handlers
 			OnProgressChanged();
 		}
 
-		private void OnFileDownloadFinished(object sender, FileDownloadFinishedEventArgs e)
+		private void OnFileDownloadFinished(object sender, EventArgs e)
 		{
 			OnProgressChanged();
 		}
@@ -530,7 +525,7 @@ namespace Launchpad.Launcher.Handlers
 		{
 			if (GameRepairFinished != null)
 			{
-				GameRepairFinished(this, RepairFinishedArgs);
+				GameRepairFinished(this, EventArgs.Empty);
 			}
 		}
 

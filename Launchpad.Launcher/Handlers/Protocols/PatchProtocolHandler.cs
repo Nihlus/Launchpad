@@ -38,8 +38,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 	{
 		public PatchProtocolHandler()
 		{
-			ProgressArgs = new FileDownloadProgressChangedEventArgs();
-			DownloadFinishedArgs = new FileDownloadFinishedEventArgs();
+			FileDownloadProgressArgs = new FileDownloadProgressChangedEventArgs();
 		}
 
 		/// <summary>
@@ -56,15 +55,21 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// </summary>
 		public event FileDownloadFinishedEventHandler FileDownloadFinished;
 
+		public event LauncherDownloadFinishedEventHandler LauncherDownloadFinished;
+		public event LauncherDownloadFailedEventHandler LauncherDownloadFailed;
+
+		public event GameDownloadFinishedEventHandler GameDownloadFinished;
+		public event GameDownloadFailedEventHander GameDownloadFailed;
+
 		/// <summary>
 		/// The progress arguments object. Is updated during file download operations.
 		/// </summary>
-		protected FileDownloadProgressChangedEventArgs ProgressArgs;
+		protected FileDownloadProgressChangedEventArgs FileDownloadProgressArgs;
 
-		/// <summary>
-		/// The download finished arguments object. Is updated once a file download finishes.
-		/// </summary>
-		protected FileDownloadFinishedEventArgs DownloadFinishedArgs;
+		protected FileDownloadFailedEventArgs FileDownloadFailedArgs;
+		protected GameDownloadFailedEventArgs GameDownloadFailedArgs;
+		protected GameDownloadFinishedEventArgs GameDownloadFinishedArgs;
+		protected LauncherDownloadFailedEventArgs LauncherDownloadFailedArgs;
 
 		/// <summary>
 		/// Checks whether or not the game has a new patch available.
@@ -79,14 +84,19 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		public abstract bool LauncherHasNewPatch();
 
 		/// <summary>
-		/// Downloads the latest version of the game.
+		/// Downloads a specific file.
 		/// </summary>
-		public abstract void DownloadGame();
+		public abstract void DownloadFile(string FilePath);
 
 		/// <summary>
 		/// Downloads the latest version of the launcher.
 		/// </summary>
 		public abstract void DownloadLauncher();
+
+		/// <summary>
+		/// Downloads the latest version of the game.
+		/// </summary>
+		public abstract void DownloadGame();
 
 		/// <summary>
 		/// Raises the progress changed event.
@@ -95,7 +105,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		{
 			if (FileProgressChanged != null)
 			{
-				FileProgressChanged(this, ProgressArgs);
+				FileProgressChanged(this, FileDownloadProgressArgs);
 			}
 		}
 
@@ -106,7 +116,39 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		{
 			if (FileDownloadFinished != null)
 			{
-				FileDownloadFinished(this, DownloadFinishedArgs);
+				FileDownloadFinished(this, EventArgs.Empty);
+			}
+		}
+
+		protected void OnLauncherDownloadFailed()
+		{
+			if (LauncherDownloadFailed != null)
+			{
+				LauncherDownloadFailed(this, LauncherDownloadFailedArgs);
+			}
+		}
+
+		protected void OnLauncherDownloadFinished()
+		{
+			if (LauncherDownloadFinished != null)
+			{
+				LauncherDownloadFinished(this, EventArgs.Empty);
+			}
+		}
+
+		protected void OnGameDownloadFailed()
+		{
+			if (GameDownloadFailed != null)
+			{
+				GameDownloadFailed(this, GameDownloadFailedArgs);
+			}
+		}
+
+		protected void OnGameDownloadFinished()
+		{
+			if (GameDownloadFinished != null)
+			{
+				GameDownloadFinished(this, GameDownloadFinishedArgs);
 			}
 		}
 	}

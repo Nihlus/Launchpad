@@ -52,22 +52,27 @@ namespace Launchpad.Launcher.Handlers.Protocols
 						
 		}
 
-		public override bool GameHasNewPatch()
-		{
-			return false;
-		}
-
 		public override bool LauncherHasNewPatch()
 		{
 			return false;
 		}
 
-		public override void DownloadGame()
+		public override bool GameHasNewPatch()
+		{
+			return false;
+		}
+
+		public override void DownloadFile(string FilePath)
 		{
 
 		}
 
 		public override void DownloadLauncher()
+		{
+
+		}
+
+		public override void DownloadGame()
 		{
 
 		}
@@ -318,6 +323,17 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				            
 				reader = request.GetResponse().GetResponseStream();
 				sizereader = (FtpWebResponse)sizerequest.GetResponse();
+		
+				fileStream = new FileStream(localPath, FileMode.Create);
+
+				//reset byte counter
+				FTPbytesDownloaded = 0;
+
+				fileSize = sizereader.ContentLength;
+
+				//set file info for progress reporting
+				FileDownloadProgressArgs.FileName = Path.GetFileNameWithoutExtension(remoteURL);
+				FileDownloadProgressArgs.TotalBytes = (int)fileSize;
 
 				if (contentOffset > 0)
 				{
@@ -335,8 +351,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				fileSize = sizereader.ContentLength;
 
 				//set file info for progress reporting
-				ProgressArgs.FileName = Path.GetFileNameWithoutExtension(remoteURL);
-				ProgressArgs.TotalBytes = (int)fileSize;
+				FileDownloadProgressArgs.FileName = Path.GetFileNameWithoutExtension(remoteURL);
+				FileDownloadProgressArgs.TotalBytes = (int)fileSize;
 
 				while (true)
 				{
@@ -350,8 +366,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					FTPbytesDownloaded = FTPbytesDownloaded + bytesRead;
 					fileStream.Write(buffer, 0, bytesRead);
 
-					//set file progress info
-					ProgressArgs.DownloadedBytes = contentOffset + FTPbytesDownloaded;
+					//set file progress info				
+					FileDownloadProgressArgs.DownloadedBytes = (int)contentOffset + FTPbytesDownloaded;
 
 					OnFileProgressChanged();
 				}

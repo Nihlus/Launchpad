@@ -59,7 +59,7 @@ namespace Launchpad.Launcher.Utility.Events
 			set;
 		}
 
-		new public void Empty()
+		public void Clear()
 		{
 			DownloadedBytes = 0;
 			TotalBytes = 0;
@@ -112,7 +112,7 @@ namespace Launchpad.Launcher.Utility.Events
 			set;
 		}
 
-		new public void Empty()
+		public void Clear()
 		{
 			Result = "";
 			Metadata = "";
@@ -139,37 +139,19 @@ namespace Launchpad.Launcher.Utility.Events
 			set;
 		}
 
-		new public void Empty()
+		public void Clear()
 		{
 			Result = "";
 			Metadata = "";
 		}
 	}
 
-	public class GameRepairFinishedEventArgs : EventArgs
+	public class LauncherDownloadFailedEventArgs : EventArgs
 	{
 		public string Result
-		{
-			get;
-			set;
-		}
-
-		public string ResultType
-		{
-			get;
-			set;
-		}
-
-		public string Metadata
-		{
-			get;
-			set;
-		}
-
-		new public void Empty()
-		{
-			Result = "";
-			Metadata = "";
+		{ 
+			get; 
+			set; 
 		}
 	}
 
@@ -202,7 +184,34 @@ namespace Launchpad.Launcher.Utility.Events
 			set;
 		}
 
-		new public void Empty()
+		public void Clear()
+		{
+			Result = "";
+			Metadata = "";
+		}
+	}
+
+	public class FileDownloadFailedEventArgs : EventArgs
+	{
+		public string Result
+		{
+			get;
+			set;
+		}
+
+		public string ResultType
+		{
+			get;
+			set;
+		}
+
+		public string Metadata
+		{
+			get;
+			set;
+		}
+
+		public void Clear()
 		{
 			Result = "";
 			Metadata = "";

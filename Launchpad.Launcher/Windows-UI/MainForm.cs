@@ -516,11 +516,11 @@ namespace Launchpad.Launcher.UI
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">Contains the result of the download.</param>
-		protected void OnGameDownloadFinished(object sender, GameDownloadFinishedEventArgs e)
+		protected void OnGameDownloadFinished(object sender, EventArgs e)
 		{
 			this.Invoke((MethodInvoker)delegate
 				{
-					if (e.Result == "1") //there was an error
+					if (e == null) //there was an error
 					{
 						MessageLabel.Text = LocalizationCatalog.GetString("gameDownloadFailMessage");
 

@@ -18,23 +18,27 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+using System;
 
 namespace Launchpad.Launcher.Utility.Events
 {
 	//FTP delegates
 	public delegate void FileProgressChangedEventHandler(object sender,FileDownloadProgressChangedEventArgs e);
-	public delegate void FileDownloadFinishedEventHandler(object sender,FileDownloadFinishedEventArgs e);
+	public delegate void FileDownloadFinishedEventHandler(object sender,EventArgs e);
+	public delegate void FileDownloadFailedEventHandler(object sender,FileDownloadFailedEventArgs e);
 
 	//Game delegates
 	//Generic
 	public delegate void GameProgressChangedEventHandler(object sender,FileDownloadProgressChangedEventArgs e);
 
 	// Success
+	public delegate void LauncherDownloadFinishedEventHandler(object sender,EventArgs e);
 	public delegate void GameDownloadFinishedEventHandler(object sender,GameDownloadFinishedEventArgs e);
 	public delegate void GameUpdateFinishedEventHandler(object sender,GameUpdateFinishedEventArgs e);
-	public delegate void GameRepairFinishedEventHandler(object sender,GameRepairFinishedEventArgs e);
+	public delegate void GameRepairFinishedEventHandler(object sender,EventArgs e);
 
 	// Failure
+	public delegate void LauncherDownloadFailedEventHandler(object sender,LauncherDownloadFailedEventArgs e);
 	public delegate void GameDownloadFailedEventHander(object sender,GameDownloadFailedEventArgs e);
 	public delegate void GameUpdateFailedEventHandler(object sender,GameUpdateFailedEventArgs e);
 	public delegate void GameRepairFailedEventHandler(object sender,GameRepairFailedEventArgs e);
