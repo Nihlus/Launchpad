@@ -5,9 +5,9 @@
     <target-gtk-version>2.12</target-gtk-version>
   </configuration>
   <import>
-    <widget-library name="webkit-sharp" />
     <widget-library name="notify-sharp" />
-    <widget-library name="../bin/Release/Launchpad.exe" internal="true" />
+    <widget-library name="webkit-sharp, Version=1.1.15.0, Culture=neutral, PublicKeyToken=eaa1d335d2e19745" />
+    <widget-library name="../bin/Debug/Launchpad.exe" internal="true" />
   </import>
   <widget class="Gtk.Window" id="Launchpad.Launcher.UI.MainWindow" design-size="760 439">
     <action-group name="Default">
