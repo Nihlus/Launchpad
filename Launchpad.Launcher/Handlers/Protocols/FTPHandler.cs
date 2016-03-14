@@ -78,13 +78,25 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// </summary>
 		/// <returns>The FTP file contents.</returns>
 		/// <param name="ftpSourceFilePath">FTP file path.</param>
-		public string ReadFTPFile(string rawRemoteURL)
+		public string ReadFTPFile(string rawRemoteURL, bool useAnonymousLogin = false)
 		{
-			//clean the input URL first
+			//clean the input URL
 			string remoteURL = rawRemoteURL.Replace(Path.DirectorySeparatorChar, '/');
 
-			string username = Config.GetFTPUsername();
-			string password = Config.GetFTPPassword();
+			string username;
+			string password;
+			if (useAnonymousLogin)
+			{
+				username = "anonymous";
+				password = "anonymous";
+
+			}
+			else
+			{
+				username = Config.GetFTPUsername();
+				password = Config.GetFTPPassword();
+			}
+
 
 			int bytesRead = 0;
 
@@ -261,22 +273,22 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <param name="ftpSourceFilePath">Ftp source file path.</param>
 		/// <param name="localDestination">Local destination.</param>
 		/// <param name="bUseAnonymous">If set to <c>true</c> b use anonymous.</param>
-		public string DownloadFTPFile(string rawRemoteURL, string localPath, bool bUseAnonymous)
+		public string DownloadFTPFile(string rawRemoteURL, string localPath, bool useAnonymousLogin = false)
 		{
 			//clean the URL string
 			string remoteURL = rawRemoteURL.Replace(Path.DirectorySeparatorChar, '/');
 
 			string username;
 			string password;
-			if (!bUseAnonymous)
-			{
-				username = Config.GetFTPUsername();
-				password = Config.GetFTPPassword();
-			}
-			else
+			if (useAnonymousLogin)
 			{
 				username = "anonymous";
 				password = "anonymous";
+			}
+			else
+			{
+				username = Config.GetFTPUsername();
+				password = Config.GetFTPPassword();
 			}
 
 
@@ -401,22 +413,22 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <param name="localDestination">Local destination.</param>
 		/// <param name="bUseAnonymous">If set to <c>true</c> b use anonymous.</param>
 		/// <param name="contentOffset">The content offset where the download should resume.</param>
-		public string DownloadFTPFile(string rawRemoteURL, string localPath, long contentOffset, bool bUseAnonymous)
+		public string DownloadFTPFile(string rawRemoteURL, string localPath, long contentOffset, bool useAnonymousLogin = false)
 		{
 			//clean the URL string first
 			string remoteURL = rawRemoteURL.Replace(Path.DirectorySeparatorChar, '/');
 
 			string username;
 			string password;
-			if (!bUseAnonymous)
-			{
-				username = Config.GetFTPUsername();
-				password = Config.GetFTPPassword();
-			}
-			else
+			if (useAnonymousLogin)
 			{
 				username = "anonymous";
 				password = "anonymous";
+			}
+			else
+			{
+				username = Config.GetFTPUsername();
+				password = Config.GetFTPPassword();
 			}
 
 
@@ -438,8 +450,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 			try
 			{
-				request = CreateFtpWebRequest(remoteURL, username, password, true);
-				sizerequest = CreateFtpWebRequest(remoteURL, username, password, true);
+				request = CreateFtpWebRequest(remoteURL, username, password, false);
+				sizerequest = CreateFtpWebRequest(remoteURL, username, password, false);
 
 				request.Method = WebRequestMethods.Ftp.DownloadFile;
 				sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
@@ -447,7 +459,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				request.ContentOffset = contentOffset;
 
 				long fileSize = 0;
-
 
 				reader = request.GetResponse().GetResponseStream();
 				sizereader = (FtpWebResponse)sizerequest.GetResponse();
@@ -579,13 +590,24 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <summary>
 		/// Gets the remote launcher version.
 		/// </summary>
-		/// <returns>The remote launcher version.</returns>
+		/// <returns>The remote launcher version. 
+		/// If the version could not be retrieved from the server, a version of 0.0.0 is returned.</returns>
 		public Version GetRemoteLauncherVersion()
-		{
-			string remoteVersionPath = String.Format("{0}/launcher/LauncherVersion.txt", Config.GetBaseFTPUrl());
-			string remoteVersion = ReadFTPFile(remoteVersionPath);
+		{			
+			string remoteVersionPath = Config.GetLauncherVersionURL();
 
-			return Version.Parse(remoteVersion);
+			// Config.GetDoOfficialUpdates is used here since the official update server always allows anonymous logins.
+			string remoteVersion = ReadFTPFile(remoteVersionPath, Config.GetDoOfficialUpdates());
+
+			Version version;
+			if (Version.TryParse(remoteVersion, out version))
+			{
+				return version;
+			}
+			else
+			{
+				return new Version("0.0.0");
+			}
 		}
 
 		/// <summary>

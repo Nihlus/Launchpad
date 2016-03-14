@@ -112,7 +112,8 @@ namespace Launchpad.Launcher.Handlers
 								Directory.CreateDirectory(Directory.GetParent(Local).ToString());
 							}
 
-							FTP.DownloadFTPFile(Remote, Local, false);
+							// Config.GetDoOfficialUpdates is used here since the official update server always allows anonymous logins.
+							FTP.DownloadFTPFile(Remote, Local, Config.GetDoOfficialUpdates());
 						}                        
 					}
 					catch (WebException wex)
@@ -159,12 +160,12 @@ namespace Launchpad.Launcher.Handlers
 						//Copy the old manifest so that we can compare them when updating the game
 						File.Copy(LocalPath, LocalPath + ".old", true);
 
-						FTP.DownloadFTPFile(RemoteURL, LocalPath, false);
+						FTP.DownloadFTPFile(RemoteURL, LocalPath);
 					}
 				}
 				else
 				{
-					FTP.DownloadFTPFile(RemoteURL, LocalPath, false);
+					FTP.DownloadFTPFile(RemoteURL, LocalPath);
 				}						
 			}
 			catch (IOException ioex)
@@ -213,8 +214,8 @@ namespace Launchpad.Launcher.Handlers
 			try
 			{
 				//maintain the executable name if it was renamed to something other than 'Launchpad' 
-				string fullName = Assembly.GetEntryAssembly().Location;
-				string executableName = Path.GetFileName(fullName); // should be "Launchpad", unless the user has renamed it
+				string assemblyPath = Assembly.GetEntryAssembly().Location;
+				string executableName = Path.GetFileName(assemblyPath); // should be "Launchpad", unless the user has renamed it
 
 				if (ChecksHandler.IsRunningOnUnix())
 				{

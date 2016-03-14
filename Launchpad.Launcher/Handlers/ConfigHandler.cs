@@ -439,9 +439,41 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The custom launcher download URL.</returns>
 		public string GetLauncherBinariesURL()
 		{
-			string launcherURL = String.Format("{0}/launcher/bin/", 
-				                     GetBaseFTPUrl());
+			string launcherURL;
+			if (GetDoOfficialUpdates())
+			{
+				launcherURL = String.Format("{0}/launcher/bin/", 
+					"ftp://directorate.asuscomm.com");
+			}
+			else
+			{
+				launcherURL = String.Format("{0}/launcher/bin/", 
+					GetBaseFTPUrl());
+			}
+
 			return launcherURL;
+		}
+
+		/// <summary>
+		/// Gets the launcher version URL.
+		/// </summary>
+		/// <returns>The launcher version URL to either the official launchpad 
+		/// binaries or a custom launcher, depending on the settings.</returns>
+		public string GetLauncherVersionURL()
+		{
+			string versionURL;
+			if (GetDoOfficialUpdates())
+			{
+				versionURL = String.Format("{0}/launcher/LauncherVersion.txt", 
+					"ftp://directorate.asuscomm.com");
+			}
+			else
+			{
+				versionURL = String.Format("{0}/launcher/LauncherVersion.txt", 
+					GetBaseFTPUrl());
+			}
+
+			return versionURL;
 		}
 
 		/// <summary>
