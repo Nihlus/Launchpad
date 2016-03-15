@@ -160,6 +160,8 @@ Global
 		$24.NamingStyle = PascalCase
 		$24.IncludeInstanceMembers = True
 		$24.IncludeStaticEntities = True
+		$0.VersionControlPolicy = $26
+		$26.inheritsSet = Mono
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
