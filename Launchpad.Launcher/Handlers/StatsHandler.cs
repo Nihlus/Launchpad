@@ -43,12 +43,13 @@ namespace Launchpad.Launcher.Handlers
 			try
 			{
 				string baseURL = "http://directorate.asuscomm.com/launchpad/stats.php?";
-				string formattedURL = String.Format(baseURL + "guid={0}&launcherVersion={1}&gameName={2}&systemType={3}&officialUpdates={4}",
-					                      Config.GetGUID(),
+				string formattedURL = String.Format(baseURL + "guid={0}&launcherVersion={1}&gameName={2}&systemType={3}&officialUpdates={4}&installguid={5}",
+					                      Config.GetGameGUID(),
 					                      Config.GetLocalLauncherVersion(),
 					                      Config.GetGameName(),
 					                      Config.GetSystemTarget().ToString(),
-					                      Config.GetDoOfficialUpdates().ToString()
+					                      Config.GetDoOfficialUpdates().ToString(),
+					                      Config.GetInstallGUID()
 				                      );
 
 

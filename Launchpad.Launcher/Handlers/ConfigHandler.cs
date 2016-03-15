@@ -179,6 +179,29 @@ namespace Launchpad.Launcher.Handlers
 					WriteConfig(Parser, data);
 				}
 			}
+
+			// Initialize the unique installation GUID, if needed.
+			if (!File.Exists(GetInstallGUIDPath()))
+			{
+				// Make sure all the folders needed exist.
+				string GUIDDirectoryPath = Path.GetDirectoryName(GetInstallGUIDPath());
+				Directory.CreateDirectory(GUIDDirectoryPath);
+
+				// Generate and store a GUID.
+				string GeneratedGUID = Guid.NewGuid().ToString();
+				File.WriteAllText(GetInstallGUIDPath(), GeneratedGUID);
+			}
+			else
+			{
+				// Make sure the GUID file has been populated
+				FileInfo guidInfo = new FileInfo(GetInstallGUIDPath());
+				if (!(guidInfo.Length > 0))
+				{
+					// Generate and store a GUID.
+					string GeneratedGUID = Guid.NewGuid().ToString();
+					File.WriteAllText(GetInstallGUIDPath(), GeneratedGUID);
+				}
+			}
 		}
 
 		/// <summary>
@@ -836,10 +859,10 @@ namespace Launchpad.Launcher.Handlers
 		}
 
 		/// <summary>
-		/// Gets the launcher's unique GUID.
+		/// Gets the launcher's unique GUID. This GUID maps to a game and not a user.
 		/// </summary>
 		/// <returns>The GUID.</returns>
-		public string GetGUID()
+		public string GetGameGUID()
 		{
 			lock (ReadLock)
 			{
@@ -857,6 +880,33 @@ namespace Launchpad.Launcher.Handlers
 					Console.WriteLine("IOException in GetGUID(): " + ioex.Message);
 					return String.Empty;
 				}
+			}
+		}
+
+
+		/// <summary>
+		/// Gets the path to the install-unique GUID.
+		/// </summary>
+		/// <returns>The install GUID path.</returns>
+		public string GetInstallGUIDPath()
+		{
+			return String.Format("{0}/Launchpad/.installguid", 
+				Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
+		}
+
+		/// <summary>
+		/// Gets the install-unique GUID. This is separate from the launcher GUID, which maps to a game.
+		/// </summary>
+		/// <returns>The install GUI.</returns>
+		public string GetInstallGUID()
+		{			
+			if (File.Exists(GetInstallGUIDPath()))
+			{
+				return File.ReadAllText(GetInstallGUIDPath());
+			}
+			else
+			{
+				return "";
 			}
 		}
 
