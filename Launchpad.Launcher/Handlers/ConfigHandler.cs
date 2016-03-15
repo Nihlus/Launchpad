@@ -109,8 +109,8 @@ namespace Launchpad.Launcher.Handlers
 			string configDir = GetConfigDir();
 			string configPath = GetConfigPath();
 
-			//Minor release 0.1.2, more bugfixes
-			Version defaultLauncherVersion = new Version("0.1.2");
+			// Get the launcher version from the assembly instead.
+			Version defaultLauncherVersion = typeof(ConfigHandler).Assembly.GetName().Version;
 
 			//Check for pre-unix config. If it exists, fix the values and copy it.
 			UpdateOldConfig();
