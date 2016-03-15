@@ -1,0 +1,7 @@
+language: csharp
+solution: Launchpad.sln
+script:
+    - xbuild /p:Configuration=Release Launchpad.Launcher/Launchpad.Launcher.csproj
+install:
+  - sudo apt-get install -y gtk-sharp2 libnotify-cil-dev libwebkit-cil-dev libwekbkit1.1-cil libwebkitgtk-dev
+  - nuget restore Launchpad.sln
