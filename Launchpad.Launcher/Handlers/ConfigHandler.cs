@@ -1034,6 +1034,10 @@ namespace Launchpad.Launcher.Handlers
 			}
 		}
 
+		/// <summary>
+		/// Gets the current platform the launcher is running on.
+		/// </summary>
+		/// <returns>The current platform.</returns>
 		public static ESystemTarget GetCurrentPlatform()
 		{
 			string platformID = Environment.OSVersion.Platform.ToString();

@@ -49,7 +49,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		public FTPProtocolHandler()
 			: base()
 		{
-						
+
 		}
 
 		public override bool LauncherHasNewPatch()
@@ -520,6 +520,10 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 		}
 
+		/// <summary>
+		/// Gets the remote manifest checksum.
+		/// </summary>
+		/// <returns>The remote manifest checksum.</returns>
 		public string GetRemoteManifestChecksum()
 		{
 			string checksum = String.Empty;
@@ -530,6 +534,11 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			return checksum;
 		}
 
+		/// <summary>
+		/// Checks if a given directory exists on the remote FTP server.
+		/// </summary>
+		/// <returns><c>true</c>, if the directory exists, <c>false</c> otherwise.</returns>
+		/// <param name="remotePath">Remote path.</param>
 		public bool DoesDirectoryExist(string remotePath)
 		{
 			FtpWebRequest request = CreateFtpWebRequest(remotePath, 
@@ -563,6 +572,11 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			
 		}
 
+		/// <summary>
+		/// Checks if a given file exists on the remote FTP server.
+		/// </summary>
+		/// <returns><c>true</c>, if the file exists, <c>false</c> otherwise.</returns>
+		/// <param name="remotePath">Remote path.</param>
 		public bool DoesFileExist(string remotePath)
 		{
 			FtpWebRequest request = CreateFtpWebRequest(remotePath, 
@@ -570,6 +584,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				                        Config.GetFTPPassword(),
 				                        false);
 			FtpWebResponse response = null;
+
 			try
 			{
 				response = (FtpWebResponse)request.GetResponse();
