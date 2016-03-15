@@ -1,0 +1,29 @@
+package: launchpad
+version: 0.1.2
+architecture: all
+depends: libnotify-cil-dev, libwebkitgtk-dev, libwebkit-cil-dev, libwebkit1.1-cil, mono-complete
+maintainer: Jarl Gullberg <jarl.gullberg@gmail.com>
+homepage: https://github.com/Nihlus/Launchpad
+section: game
+priority: optional
+installed-size: 2
+description: Launchpad - Open-source generic game launcher
+             A free, open-source game launcher for generic games.   
+              .          
+             Launchpad is produced, maintained and distributed
+             by Jarl Gullberg. Anyone is free to fork Launchpad
+             for use with their game, or to use it as-is.       
+              .      
+             It is designed to be feature-complete for what a 
+             basic game launcher should be, and currently handles:    
+              .         
+             * Installing
+             * Updating
+             * Verifying
+             * Displaying a changelog        
+              .     
+             of your game. The default installation comes with 
+             a copy of the Unreal Engine 4 First Person Template
+             (Epic Games 2015).
+
+

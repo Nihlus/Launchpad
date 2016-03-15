@@ -109,7 +109,7 @@ namespace Launchpad.Launcher.Handlers
 			string configDir = GetConfigDir();
 			string configPath = GetConfigPath();
 
-			// Get the launcher version from the assembly instead.
+			// Get the launcher version from the assembly.
 			Version defaultLauncherVersion = typeof(ConfigHandler).Assembly.GetName().Version;
 
 			//Check for pre-unix config. If it exists, fix the values and copy it.
@@ -169,6 +169,7 @@ namespace Launchpad.Launcher.Handlers
 				{
 					IniData data = Parser.ReadFile(GetConfigPath());
 
+					// Update the user-visible version of the launcher
 					data["Local"]["LauncherVersion"] = defaultLauncherVersion.ToString();
 					if (!data["Local"].ContainsKey("GUID"))
 					{
