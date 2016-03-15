@@ -3,6 +3,8 @@ Launchpad
 
 An UE4-compatible game launcher
 
+[![Build Status](https://travis-ci.org/Nihlus/Launchpad.svg?branch=master)](https://travis-ci.org/Nihlus/Launchpad)
+
 Features:
 
 * Self-updating
