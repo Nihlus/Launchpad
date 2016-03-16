@@ -8,11 +8,11 @@ namespace Launchpad.Launcher.UI
 		
 		private global::Gtk.Action EditAction;
 		
-		private global::Gtk.Action SettingsAction;
-		
 		private global::Gtk.Action ActionsAction;
 		
 		private global::Gtk.Action refreshAction;
+		
+		private global::Gtk.Action preferencesAction;
 		
 		private global::Gtk.VBox vbox1;
 		
@@ -51,15 +51,16 @@ namespace Launchpad.Launcher.UI
 			this.EditAction = new global::Gtk.Action ("EditAction", global::Mono.Unix.Catalog.GetString ("Edit"), null, null);
 			this.EditAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("Options");
 			w1.Add (this.EditAction, null);
-			this.SettingsAction = new global::Gtk.Action ("SettingsAction", global::Mono.Unix.Catalog.GetString ("Settings"), null, null);
-			this.SettingsAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("Settings");
-			w1.Add (this.SettingsAction, null);
 			this.ActionsAction = new global::Gtk.Action ("ActionsAction", global::Mono.Unix.Catalog.GetString ("Actions"), null, null);
 			this.ActionsAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("Actions");
 			w1.Add (this.ActionsAction, null);
 			this.refreshAction = new global::Gtk.Action ("refreshAction", global::Mono.Unix.Catalog.GetString ("Repair Game"), null, "gtk-refresh");
 			this.refreshAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("Repair");
 			w1.Add (this.refreshAction, null);
+			this.preferencesAction = new global::Gtk.Action ("preferencesAction", global::Mono.Unix.Catalog.GetString ("Settings"), null, "gtk-preferences");
+			this.preferencesAction.HideIfEmpty = false;
+			this.preferencesAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("Settings");
+			w1.Add (this.preferencesAction, null);
 			this.UIManager.InsertActionGroup (w1, 0);
 			this.AddAccelGroup (this.UIManager.AccelGroup);
 			this.Name = "Launchpad.Launcher.UI.MainWindow";
@@ -73,7 +74,7 @@ namespace Launchpad.Launcher.UI
 			this.vbox1.Name = "vbox1";
 			this.vbox1.Spacing = 6;
 			// Container child vbox1.Gtk.Box+BoxChild
-			this.UIManager.AddUiFromString ("<ui><menubar name='menubar1'><menu name='EditAction' action='EditAction'><menuitem/><menuitem name='SettingsAction' action='SettingsAction'/></menu></menubar></ui>");
+			this.UIManager.AddUiFromString ("<ui><menubar name='menubar1'><menu name='EditAction' action='EditAction'><menuitem/><menuitem name='preferencesAction' action='preferencesAction'/></menu></menubar></ui>");
 			this.menubar1 = ((global::Gtk.MenuBar)(this.UIManager.GetWidget ("/menubar1")));
 			this.menubar1.Name = "menubar1";
 			this.vbox1.Add (this.menubar1);
@@ -177,8 +178,8 @@ namespace Launchpad.Launcher.UI
 			this.PrimaryButton.HasDefault = true;
 			this.Show ();
 			this.DeleteEvent += new global::Gtk.DeleteEventHandler (this.OnDeleteEvent);
-			this.SettingsAction.Activated += new global::System.EventHandler (this.OnSettingsActionActivated);
 			this.refreshAction.Activated += new global::System.EventHandler (this.OnRepairGameActionActivated);
+			this.preferencesAction.Activated += new global::System.EventHandler (this.OnSettingsActionActivated);
 			this.PrimaryButton.Clicked += new global::System.EventHandler (this.OnPrimaryButtonClicked);
 		}
 	}

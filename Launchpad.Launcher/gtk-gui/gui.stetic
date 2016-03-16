@@ -16,12 +16,6 @@
         <property name="Label" translatable="yes">Edit</property>
         <property name="ShortLabel" translatable="yes">Options</property>
       </action>
-      <action id="SettingsAction">
-        <property name="Type">Action</property>
-        <property name="Label" translatable="yes">Settings</property>
-        <property name="ShortLabel" translatable="yes">Settings</property>
-        <signal name="Activated" handler="OnSettingsActionActivated" />
-      </action>
       <action id="ActionsAction">
         <property name="Type">Action</property>
         <property name="Label" translatable="yes">Actions</property>
@@ -33,6 +27,14 @@
         <property name="ShortLabel" translatable="yes">Repair</property>
         <property name="StockId">gtk-refresh</property>
         <signal name="Activated" handler="OnRepairGameActionActivated" />
+      </action>
+      <action id="preferencesAction">
+        <property name="Type">Action</property>
+        <property name="HideIfEmpty">False</property>
+        <property name="Label" translatable="yes">Settings</property>
+        <property name="ShortLabel" translatable="yes">Settings</property>
+        <property name="StockId">gtk-preferences</property>
+        <signal name="Activated" handler="OnSettingsActionActivated" />
       </action>
     </action-group>
     <property name="MemberName" />
@@ -52,7 +54,7 @@
             <node name="menubar1" type="Menubar">
               <node type="Menu" action="EditAction">
                 <node type="Menuitem" />
-                <node type="Menuitem" action="SettingsAction" />
+                <node type="Menuitem" action="preferencesAction" />
               </node>
             </node>
           </widget>

@@ -151,6 +151,7 @@ namespace Launchpad.Launcher.Handlers
 						data["Local"].AddKey("SystemTarget", GetCurrentPlatform().ToString());
 						data["Local"].AddKey("GUID", GeneratedGUID);
 
+						data["Remote"].AddKey("Protocol", "FTP");
 						data["Remote"].AddKey("FTPUsername", "anonymous");
 						data["Remote"].AddKey("FTPPassword", "anonymous");
 						data["Remote"].AddKey("FTPUrl", "ftp://directorate.asuscomm.com");
@@ -592,10 +593,10 @@ namespace Launchpad.Launcher.Handlers
 		}
 
 		/// <summary>
-		/// Sets the name of the game.
+		/// Gets the desired patch protocol. Currently, FTP, HTTP and BitTorrent are supported.
 		/// </summary>
-		/// <param name="GameName">Game name.</param>
-		public void SetGameName(string GameName)
+		/// <returns>The patch protocol.</returns>
+		public string GetPatchProtocol()
 		{
 			lock (ReadLock)
 			{
@@ -603,14 +604,43 @@ namespace Launchpad.Launcher.Handlers
 				{
 					FileIniDataParser Parser = new FileIniDataParser();
 					IniData data = Parser.ReadFile(GetConfigPath());
+					;
 
-					data["Local"]["GameName"] = GameName;
+					string patchProtocol = data["Remote"]["Protocol"];
 
-					WriteConfig(Parser, data);
+					return patchProtocol;
 				}
 				catch (IOException ioex)
 				{
-					Console.WriteLine("IOException in SetGameName(): " + ioex.Message);
+					Console.WriteLine("IOException in GetPatchProtocol(): " + ioex.Message);
+					return String.Empty;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Sets the name of the game.
+		/// </summary>
+		/// <param name="GameName">Game name.</param>
+		public void SetGameName(string GameName)
+		{
+			lock (ReadLock)
+			{
+				lock (WriteLock)
+				{
+					try
+					{
+						FileIniDataParser Parser = new FileIniDataParser();
+						IniData data = Parser.ReadFile(GetConfigPath());
+
+						data["Local"]["GameName"] = GameName;
+
+						WriteConfig(Parser, data);
+					}
+					catch (IOException ioex)
+					{
+						Console.WriteLine("IOException in SetGameName(): " + ioex.Message);
+					}
 				}
 			}
 		}
@@ -663,18 +693,21 @@ namespace Launchpad.Launcher.Handlers
 			//Mac
 			lock (ReadLock)
 			{
-				try
+				lock (WriteLock)
 				{
-					FileIniDataParser Parser = new FileIniDataParser();
-					IniData data = Parser.ReadFile(GetConfigPath());                    
+					try
+					{
+						FileIniDataParser Parser = new FileIniDataParser();
+						IniData data = Parser.ReadFile(GetConfigPath());                    
 
-					data["Local"]["SystemTarget"] = SystemTarget.ToString();
+						data["Local"]["SystemTarget"] = SystemTarget.ToString();
 
-					WriteConfig(Parser, data);
-				}
-				catch (IOException ioex)
-				{
-					Console.WriteLine("IOException in SetSystemTarget(): " + ioex.Message);                  
+						WriteConfig(Parser, data);
+					}
+					catch (IOException ioex)
+					{
+						Console.WriteLine("IOException in SetSystemTarget(): " + ioex.Message);                  
+					}
 				}
 			}
 		}
@@ -712,18 +745,21 @@ namespace Launchpad.Launcher.Handlers
 		{
 			lock (ReadLock)
 			{
-				try
+				lock (WriteLock)
 				{
-					FileIniDataParser Parser = new FileIniDataParser();
-					IniData data = Parser.ReadFile(GetConfigPath());
+					try
+					{
+						FileIniDataParser Parser = new FileIniDataParser();
+						IniData data = Parser.ReadFile(GetConfigPath());
 
-					data["Remote"]["FTPUsername"] = Username;
+						data["Remote"]["FTPUsername"] = Username;
 
-					WriteConfig(Parser, data);
-				}
-				catch (IOException ioex)
-				{
-					Console.WriteLine("IOException in SetFTPUsername(): " + ioex.Message);
+						WriteConfig(Parser, data);
+					}
+					catch (IOException ioex)
+					{
+						Console.WriteLine("IOException in SetFTPUsername(): " + ioex.Message);
+					}
 				}
 			}
 		}
@@ -761,18 +797,21 @@ namespace Launchpad.Launcher.Handlers
 		{
 			lock (ReadLock)
 			{
-				try
+				lock (WriteLock)
 				{
-					FileIniDataParser Parser = new FileIniDataParser();
-					IniData data = Parser.ReadFile(GetConfigPath());
+					try
+					{
+						FileIniDataParser Parser = new FileIniDataParser();
+						IniData data = Parser.ReadFile(GetConfigPath());
 
-					data["Remote"]["FTPPassword"] = Password;
+						data["Remote"]["FTPPassword"] = Password;
 
-					WriteConfig(Parser, data);
-				}
-				catch (IOException ioex)
-				{
-					Console.WriteLine("IOException in GetFTPPassword(): " + ioex.Message);
+						WriteConfig(Parser, data);
+					}
+					catch (IOException ioex)
+					{
+						Console.WriteLine("IOException in GetFTPPassword(): " + ioex.Message);
+					}
 				}
 			}
 		}
@@ -813,18 +852,21 @@ namespace Launchpad.Launcher.Handlers
 		{
 			lock (ReadLock)
 			{
-				try
+				lock (WriteLock)
 				{
-					FileIniDataParser Parser = new FileIniDataParser();
-					IniData data = Parser.ReadFile(GetConfigPath());
+					try
+					{
+						FileIniDataParser Parser = new FileIniDataParser();
+						IniData data = Parser.ReadFile(GetConfigPath());
 
-					data["Remote"]["FTPUrl"] = Url;
+						data["Remote"]["FTPUrl"] = Url;
 
-					WriteConfig(Parser, data);
-				}
-				catch (IOException ioex)
-				{
-					Console.WriteLine("IOException in GetFTPPassword(): " + ioex.Message);				
+						WriteConfig(Parser, data);
+					}
+					catch (IOException ioex)
+					{
+						Console.WriteLine("IOException in GetFTPPassword(): " + ioex.Message);				
+					}
 				}
 			}
 		}
