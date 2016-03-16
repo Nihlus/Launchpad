@@ -39,6 +39,10 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		public PatchProtocolHandler()
 		{
 			FileDownloadProgressArgs = new FileDownloadProgressChangedEventArgs();
+			FileDownloadFailedArgs = new FileDownloadFailedEventArgs();
+			GameDownloadFailedArgs = new GameDownloadFailedEventArgs();
+			GameDownloadFinishedArgs = new GameDownloadFinishedEventArgs();
+			LauncherDownloadFailedArgs = new LauncherDownloadFailedEventArgs();
 		}
 
 		/// <summary>
@@ -61,11 +65,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		public event GameDownloadFinishedEventHandler GameDownloadFinished;
 		public event GameDownloadFailedEventHander GameDownloadFailed;
 
-		/// <summary>
-		/// The progress arguments object. Is updated during file download operations.
-		/// </summary>
 		protected FileDownloadProgressChangedEventArgs FileDownloadProgressArgs;
-
 		protected FileDownloadFailedEventArgs FileDownloadFailedArgs;
 		protected GameDownloadFailedEventArgs GameDownloadFailedArgs;
 		protected GameDownloadFinishedEventArgs GameDownloadFinishedArgs;
