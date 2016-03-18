@@ -431,6 +431,7 @@ namespace Launchpad.Launcher.Handlers
 			catch (IOException ioex)
 			{
 				Console.WriteLine("IOException in LaunchGame(): " + ioex.Message);
+				OnGameLaunchFailed();
 			}
 		}
 
@@ -472,6 +473,14 @@ namespace Launchpad.Launcher.Handlers
 			if (GameDownloadFailed != null)
 			{
 				GameDownloadFailed(this, DownloadFailedArgs);
+			}
+		}
+
+		private void OnGameLaunchFailed()
+		{
+			if (GameLaunchFailed != null)
+			{
+				GameLaunchFailed(this, EventArgs.Empty);
 			}
 		}
 
