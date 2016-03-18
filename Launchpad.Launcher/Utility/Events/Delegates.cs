@@ -22,33 +22,20 @@ using System;
 
 namespace Launchpad.Launcher.Utility.Events
 {
-	//FTP delegates
-	public delegate void FileProgressChangedEventHandler(object sender,FileDownloadProgressChangedEventArgs e);
-	public delegate void FileDownloadFinishedEventHandler(object sender,EventArgs e);
-	public delegate void FileDownloadFailedEventHandler(object sender,FileDownloadFailedEventArgs e);
+	//TODO: Move these to the FTP protocol module. Can most likely be merged as well.
+	public delegate void FileDownloadProgressChangedEventHandler(object sender,FileDownloadProgressChangedEventArgs e);
+	public delegate void GameDownloadProgressChangedEventHandler(object sender,FileDownloadProgressChangedEventArgs e);
 
-	//Game delegates
-	//Generic
-	public delegate void GameProgressChangedEventHandler(object sender,FileDownloadProgressChangedEventArgs e);
+	public delegate void LauncherInstallFinishedEventHandler(object sender,EventArgs e);
+	public delegate void GameInstallFinishedEventHandler(object sender,EventArgs e);
 
-	// Success
-	public delegate void LauncherDownloadFinishedEventHandler(object sender,EventArgs e);
-	public delegate void GameDownloadFinishedEventHandler(object sender,GameDownloadFinishedEventArgs e);
-	public delegate void GameUpdateFinishedEventHandler(object sender,GameUpdateFinishedEventArgs e);
-	public delegate void GameRepairFinishedEventHandler(object sender,EventArgs e);
-
-	// Failure
-	public delegate void LauncherDownloadFailedEventHandler(object sender,LauncherDownloadFailedEventArgs e);
+	public delegate void LauncherDownloadFailedEventHandler(object sender,EventArgs e);
 	public delegate void GameDownloadFailedEventHander(object sender,GameDownloadFailedEventArgs e);
-	public delegate void GameUpdateFailedEventHandler(object sender,GameUpdateFailedEventArgs e);
-	public delegate void GameRepairFailedEventHandler(object sender,GameRepairFailedEventArgs e);
-	public delegate void GameLaunchFailedEventHandler(object sender,GameLaunchFailedEventArgs e);
 
-	// Game deletages
+	public delegate void GameLaunchFailedEventHandler(object sender,EventArgs e);
+
 	public delegate void GameExitEventHandler(object sender,GameExitEventArgs e);
 
-	//Launcher delegates
-	public delegate void ChangelogProgressChangedEventHandler(object sender,FileDownloadProgressChangedEventArgs e);
 	public delegate void ChangelogDownloadFinishedEventHandler(object sender,GameDownloadFinishedEventArgs e);
 }
 

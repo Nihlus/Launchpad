@@ -40,33 +40,15 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// Occurs when progress changed.
 		/// </summary>
-		public event GameProgressChangedEventHandler ProgressChanged;
+		public event GameDownloadProgressChangedEventHandler ProgressChanged;
 		/// <summary>
 		/// Occurs when download finishes.
 		/// </summary>
-		public event GameDownloadFinishedEventHandler GameDownloadFinished;
-		/// <summary>
-		/// Occurs when game update finished.
-		/// </summary>
-		public event GameUpdateFinishedEventHandler GameUpdateFinished;
-		/// <summary>
-		/// Occurs when game verification finishes.
-		/// </summary>
-		public event GameRepairFinishedEventHandler GameRepairFinished;
-
-
+		public event GameInstallFinishedEventHandler GameDownloadFinished;
 		/// <summary>
 		/// Occurs when the game download failed.
 		/// </summary>
 		public event GameDownloadFailedEventHander GameDownloadFailed;
-		/// <summary>
-		/// Occurs when game update failed.
-		/// </summary>
-		public event GameUpdateFailedEventHandler GameUpdateFailed;
-		/// <summary>
-		/// Occurs when game repair failed.
-		/// </summary>
-		public event GameRepairFailedEventHandler GameRepairFailed;
 		/// <summary>
 		/// Occurs when game launch failed.
 		/// </summary>
@@ -85,27 +67,11 @@ namespace Launchpad.Launcher.Handlers
 		/// The download finished arguments object. Is updated once a file download finishes.
 		/// </summary>
 		private GameDownloadFinishedEventArgs DownloadFinishedArgs;
-		/// <summary>
-		/// The update finished arguments.
-		/// </summary>
-		private GameUpdateFinishedEventArgs UpdateFinishedArgs;
 
 		//Failure event arguments
 		/// <summary>
 		/// The download failed arguments.                
 		private GameDownloadFailedEventArgs DownloadFailedArgs;
-		/// <summary>
-		/// The update failed arguments.
-		/// </summary>
-		private GameUpdateFailedEventArgs UpdateFailedArgs;
-		/// <summary>
-		/// The repaired failed arguments.
-		/// </summary>
-		private GameRepairFailedEventArgs RepairFailedArgs;
-		/// <summary>
-		/// The launch failed arguments.
-		/// </summary>
-		private GameLaunchFailedEventArgs LaunchFailedArgs;
 
 		private GameExitEventArgs GameExitArgs;
 
@@ -122,13 +88,8 @@ namespace Launchpad.Launcher.Handlers
 		{
 			ProgressArgs = new FileDownloadProgressChangedEventArgs();
 			DownloadFinishedArgs = new GameDownloadFinishedEventArgs();
-			UpdateFinishedArgs = new GameUpdateFinishedEventArgs();
-
 
 			DownloadFailedArgs = new GameDownloadFailedEventArgs();
-			UpdateFailedArgs = new GameUpdateFailedEventArgs();
-			RepairFailedArgs = new GameRepairFailedEventArgs();
-			LaunchFailedArgs = new GameLaunchFailedEventArgs();
 
 			GameExitArgs = new GameExitEventArgs();
 		}
@@ -291,7 +252,6 @@ namespace Launchpad.Launcher.Handlers
 				//Check old manifest against new manifest, download anything that isn't exactly the same as before
 				FTPProtocolHandler FTP = new FTPProtocolHandler();
 				FTP.FileProgressChanged += OnDownloadProgressChanged;
-				FTP.FileDownloadFinished += OnFileDownloadFinished;
 
 				foreach (ManifestEntry Entry in Manifest)
 				{
@@ -312,16 +272,15 @@ namespace Launchpad.Launcher.Handlers
 					}
 				}
 
-				OnGameUpdateFinished();
+				OnGameDownloadFinished();
 
 				//clear out the event handlers
 				FTP.FileProgressChanged -= OnDownloadProgressChanged;
-				FTP.FileDownloadFinished -= OnFileDownloadFinished;
 			}
 			catch (IOException ioex)
 			{
 				Console.WriteLine("IOException in UpdateGameAsync(): " + ioex.Message);
-				OnGameUpdateFailed();
+				OnGameDownloadFailed();
 			}
 		}
 
@@ -429,7 +388,7 @@ namespace Launchpad.Launcher.Handlers
 					OnProgressChanged();
 				}
 
-				OnGameRepairFinished();
+				OnGameDownloadFinished();
 
 				//clear out the event handler
 				FTP.FileProgressChanged -= OnDownloadProgressChanged;
@@ -442,10 +401,11 @@ namespace Launchpad.Launcher.Handlers
 				DownloadFailedArgs.ResultType = "Repair";
 				DownloadFailedArgs.Metadata = repairMetadata;
 
-				OnGameRepairFailed();
+				OnGameDownloadFailed();
 			}
 		}
 
+		//TODO: Implement better crash or failure to launch recognition
 		/// <summary>
 		/// Launches the game.
 		/// </summary>
@@ -471,7 +431,6 @@ namespace Launchpad.Launcher.Handlers
 			catch (IOException ioex)
 			{
 				Console.WriteLine("IOException in LaunchGame(): " + ioex.Message);
-				OnGameLaunchFailed();
 			}
 		}
 
@@ -483,11 +442,6 @@ namespace Launchpad.Launcher.Handlers
 		private void OnDownloadProgressChanged(object sender, FileDownloadProgressChangedEventArgs e)
 		{
 			ProgressArgs = e;
-			OnProgressChanged();
-		}
-
-		private void OnFileDownloadFinished(object sender, EventArgs e)
-		{
 			OnProgressChanged();
 		}
 
@@ -513,51 +467,11 @@ namespace Launchpad.Launcher.Handlers
 			}
 		}
 
-		private void OnGameUpdateFinished()
-		{
-			if (GameUpdateFinished != null)
-			{
-				GameUpdateFinished(this, UpdateFinishedArgs);
-			}
-		}
-
-		private void OnGameRepairFinished()
-		{
-			if (GameRepairFinished != null)
-			{
-				GameRepairFinished(this, EventArgs.Empty);
-			}
-		}
-
-		private void OnGameLaunchFailed()
-		{
-			if (GameLaunchFailed != null)
-			{
-				GameLaunchFailed(this, LaunchFailedArgs);
-			}
-		}
-
 		private void OnGameDownloadFailed()
 		{
 			if (GameDownloadFailed != null)
 			{
 				GameDownloadFailed(this, DownloadFailedArgs);
-			}
-		}
-
-		private void OnGameUpdateFailed()
-		{
-			if (GameUpdateFailed != null)
-			{
-				GameUpdateFailed(this, UpdateFailedArgs);
-			}
-		}
-
-		private void OnGameRepairFailed()
-		{
-			if (GameRepairFailed != null)
-			{
-				GameRepairFailed(this, RepairFailedArgs);
 			}
 		}
 

@@ -48,10 +48,6 @@ namespace Launchpad.Launcher.Handlers
 	internal sealed class LauncherHandler
 	{
 		/// <summary>
-		/// Occurs when changelog download progress changes.
-		/// </summary>
-		public event ChangelogProgressChangedEventHandler ChangelogProgressChanged;
-		/// <summary>
 		/// Occurs when changelog download finishes.
 		/// </summary>
 		public event ChangelogDownloadFinishedEventHandler ChangelogDownloadFinished;
@@ -197,7 +193,6 @@ namespace Launchpad.Launcher.Handlers
 
 			//load the HTML from the server as a string
 			string content = FTP.ReadFTPFile(Config.GetChangelogURL());
-			OnChangelogProgressChanged();
 					
 			DownloadFinishedArgs.Result = content;
 			DownloadFinishedArgs.Metadata = Config.GetChangelogURL();
@@ -295,19 +290,6 @@ namespace Launchpad.Launcher.Handlers
 				Console.WriteLine("IOException in CreateUpdateScript(): " + ioex.Message);
 
 				return null;
-			}
-		}
-
-		/// <summary>
-		/// Raises the changelog progress changed event.
-		/// Fires once after the changelog has been downloaded, but the values have not been assigned yet.
-		/// </summary>
-		private void OnChangelogProgressChanged()
-		{
-			if (ChangelogProgressChanged != null)
-			{
-				//raise the event
-				ChangelogProgressChanged(this, ProgressArgs);
 			}
 		}
 

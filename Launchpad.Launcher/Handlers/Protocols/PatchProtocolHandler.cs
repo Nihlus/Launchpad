@@ -39,10 +39,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		public PatchProtocolHandler()
 		{
 			FileDownloadProgressArgs = new FileDownloadProgressChangedEventArgs();
-			FileDownloadFailedArgs = new FileDownloadFailedEventArgs();
 			GameDownloadFailedArgs = new GameDownloadFailedEventArgs();
-			GameDownloadFinishedArgs = new GameDownloadFinishedEventArgs();
-			LauncherDownloadFailedArgs = new LauncherDownloadFailedEventArgs();
 		}
 
 		/// <summary>
@@ -53,23 +50,16 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <summary>
 		/// Occurs when file progress changed.
 		/// </summary>
-		public event FileProgressChangedEventHandler FileProgressChanged;
-		/// <summary>
-		/// Occurs when file download finished.
-		/// </summary>
-		public event FileDownloadFinishedEventHandler FileDownloadFinished;
+		public event FileDownloadProgressChangedEventHandler FileProgressChanged;
 
-		public event LauncherDownloadFinishedEventHandler LauncherDownloadFinished;
+		public event LauncherInstallFinishedEventHandler LauncherDownloadFinished;
 		public event LauncherDownloadFailedEventHandler LauncherDownloadFailed;
 
-		public event GameDownloadFinishedEventHandler GameDownloadFinished;
+		public event GameInstallFinishedEventHandler GameDownloadFinished;
 		public event GameDownloadFailedEventHander GameDownloadFailed;
 
 		protected FileDownloadProgressChangedEventArgs FileDownloadProgressArgs;
-		protected FileDownloadFailedEventArgs FileDownloadFailedArgs;
 		protected GameDownloadFailedEventArgs GameDownloadFailedArgs;
-		protected GameDownloadFinishedEventArgs GameDownloadFinishedArgs;
-		protected LauncherDownloadFailedEventArgs LauncherDownloadFailedArgs;
 
 		/// <summary>
 		/// Determines whether this instance can provide patches. Checks for an active connection to the
@@ -149,22 +139,11 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 		}
 
-		/// <summary>
-		/// Raises the download finished event.
-		/// </summary>
-		protected void OnFileDownloadFinished()
-		{
-			if (FileDownloadFinished != null)
-			{
-				FileDownloadFinished(this, EventArgs.Empty);
-			}
-		}
-
 		protected void OnLauncherDownloadFailed()
 		{
 			if (LauncherDownloadFailed != null)
 			{
-				LauncherDownloadFailed(this, LauncherDownloadFailedArgs);
+				LauncherDownloadFailed(this, EventArgs.Empty);
 			}
 		}
 
@@ -188,7 +167,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		{
 			if (GameDownloadFinished != null)
 			{
-				GameDownloadFinished(this, GameDownloadFinishedArgs);
+				GameDownloadFinished(this, EventArgs.Empty);
 			}
 		}
 	}

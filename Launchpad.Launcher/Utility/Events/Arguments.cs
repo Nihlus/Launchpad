@@ -23,7 +23,6 @@ using System;
 
 namespace Launchpad.Launcher.Utility.Events
 {
-	//FTP arguments for progress events
 	/// <summary>
 	/// Progress event arguments.
 	/// </summary>
@@ -58,36 +57,7 @@ namespace Launchpad.Launcher.Utility.Events
 			get;
 			set;
 		}
-
-		public void Clear()
-		{
-			DownloadedBytes = 0;
-			TotalBytes = 0;
-			DownloadedFiles = 0;
-			TotalFiles = 0;
-			FileName = "";
-		}
 	}
-
-	public class FileDownloadFinishedEventArgs : EventArgs
-	{
-		public int Result
-		{
-			get;
-			set;
-		}
-
-		public string FileName
-		{
-			get;
-			set;
-		}
-	}
-
-	//Game arguments for success events
-	// * Download
-	// * Update
-	// * Repair
 
 	/// <summary>
 	/// Download finished event arguments.
@@ -100,66 +70,12 @@ namespace Launchpad.Launcher.Utility.Events
 			set;
 		}
 
-		public string ResultType
-		{
-			get;
-			set;
-		}
-
 		public string Metadata
 		{
 			get;
 			set;
 		}
-
-		public void Clear()
-		{
-			Result = "";
-			Metadata = "";
-		}
 	}
-
-	public class GameUpdateFinishedEventArgs : EventArgs
-	{
-		public string Result
-		{
-			get;
-			set;
-		}
-
-		public string ResultType
-		{
-			get;
-			set;
-		}
-
-		public string Metadata
-		{
-			get;
-			set;
-		}
-
-		public void Clear()
-		{
-			Result = "";
-			Metadata = "";
-		}
-	}
-
-	public class LauncherDownloadFailedEventArgs : EventArgs
-	{
-		public string Result
-		{ 
-			get; 
-			set; 
-		}
-	}
-
-	//Game arguments for failure events
-	// * Download
-	// * Update
-	// * Repair
-	// * Launch
 
 	/// <summary>
 	/// Download failed event arguments.
@@ -173,84 +89,6 @@ namespace Launchpad.Launcher.Utility.Events
 		}
 
 		public string ResultType
-		{
-			get;
-			set;
-		}
-
-		public string Metadata
-		{
-			get;
-			set;
-		}
-
-		public void Clear()
-		{
-			Result = "";
-			Metadata = "";
-		}
-	}
-
-	public class FileDownloadFailedEventArgs : EventArgs
-	{
-		public string Result
-		{
-			get;
-			set;
-		}
-
-		public string ResultType
-		{
-			get;
-			set;
-		}
-
-		public string Metadata
-		{
-			get;
-			set;
-		}
-
-		public void Clear()
-		{
-			Result = "";
-			Metadata = "";
-		}
-	}
-
-	public class GameUpdateFailedEventArgs : EventArgs
-	{
-		public string Result
-		{
-			get;
-			set;
-		}
-
-		public string Metadata
-		{
-			get;
-			set;
-		}
-	}
-
-	public class GameRepairFailedEventArgs : EventArgs
-	{
-		public string Result
-		{
-			get;
-			set;
-		}
-
-		public string Metadata
-		{
-			get;
-			set;
-		}
-	}
-
-	public class GameLaunchFailedEventArgs : EventArgs
-	{
-		public string Result
 		{
 			get;
 			set;

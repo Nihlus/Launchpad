@@ -393,7 +393,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				}
 
 				OnFileDownloadProgressChanged();
-				OnFileDownloadFinished();
 
 				returnValue = localPath;
 				return returnValue;             				                             

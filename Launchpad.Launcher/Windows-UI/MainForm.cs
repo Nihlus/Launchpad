@@ -192,8 +192,8 @@ namespace Launchpad.Launcher.UI
 					{
 						//bind events for UI updating					
 						Game.ProgressChanged += OnGameDownloadProgressChanged;
-						Game.GameRepairFinished += OnRepairFinished;
-						Game.GameRepairFailed += OnGameRepairFailed;
+						Game.GameDownloadFinished += OnGameDownloadFinished;
+						Game.GameDownloadFailed += OnGameDownloadFailed;
 
 						if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
 						{
@@ -264,8 +264,8 @@ namespace Launchpad.Launcher.UI
 					{
 						//bind events for UI updating                        
 						Game.ProgressChanged += OnGameDownloadProgressChanged;
-						Game.GameUpdateFinished += OnGameUpdateFinished;
-						Game.GameUpdateFailed += OnGameUpdateFailed;
+						Game.GameDownloadFinished += OnGameDownloadFinished;
+						Game.GameDownloadFailed += OnGameDownloadFailed;
 
 						if (Checks.IsLauncherOutdated())
 						{
@@ -444,36 +444,28 @@ namespace Launchpad.Launcher.UI
 		{
 			this.Invoke((MethodInvoker)delegate
 				{
-					ELauncherMode parsedMode;
-					if (Enum.TryParse(e.Metadata, out parsedMode))
+					switch (Mode)
 					{
-						switch (parsedMode)
-						{
-							case ELauncherMode.Install:
-								{
-									SetLauncherMode(parsedMode, false);
-									break;
-								}
-							case ELauncherMode.Update:
-								{
-									SetLauncherMode(parsedMode, false);
-									break;
-								}
-							case ELauncherMode.Repair:
-								{
-									SetLauncherMode(parsedMode, false);
-									break;
-								}
-							default:
-								{
-									SetLauncherMode(ELauncherMode.Repair, false);
-									break;
-								}
-						}
-					}
-					else
-					{
-						SetLauncherMode(ELauncherMode.Repair, false);
+						case ELauncherMode.Install:
+							{
+								SetLauncherMode(Mode, false);
+								break;
+							}
+						case ELauncherMode.Update:
+							{
+								SetLauncherMode(Mode, false);
+								break;
+							}
+						case ELauncherMode.Repair:
+							{
+								SetLauncherMode(Mode, false);
+								break;
+							}
+						default:
+							{
+								SetLauncherMode(ELauncherMode.Repair, false);
+								break;
+							}
 					}
 				});                                   
 		}
@@ -592,49 +584,13 @@ namespace Launchpad.Launcher.UI
 		}
 
 		/// <summary>
-		/// Passes the repair failed event to a generic handler
-		/// </summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">Contains the type of failure that occured</param>
-		private void OnGameRepairFailed(object sender, GameRepairFailedEventArgs e)
-		{
-			GameDownloadFailedEventArgs args = new GameDownloadFailedEventArgs();
-			args.Metadata = e.Metadata;
-			args.Result = e.Result;
-			args.ResultType = "Repair";
-
-			OnGameDownloadFailed(sender, args);	
-		}
-
-
-		/// <summary>
 		/// Passes the update finished event to a generic handler.
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">Contains the result of the download.</param>
-		private void OnGameUpdateFinished(object sender, GameUpdateFinishedEventArgs e)
+		private void OnGameUpdateFinished(object sender, EventArgs e)
 		{
-			GameDownloadFinishedEventArgs args = new GameDownloadFinishedEventArgs();
-			args.Metadata = e.Metadata;
-			args.Result = e.Result;
-			args.ResultType = e.ResultType;
-
-			OnGameDownloadFinished(sender, args);
-		}
-
-		/// <summary>
-		/// Passes the update failed event to a generic handler.
-		/// </summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">Contains the type of failure that occurred.</param>
-		private void OnGameUpdateFailed(object sender, GameUpdateFailedEventArgs e)
-		{
-			GameDownloadFailedEventArgs args = new GameDownloadFailedEventArgs();
-			args.Metadata = e.Metadata;
-			args.Result = e.Result;
-			args.ResultType = "Update";
-
-			OnGameDownloadFailed(sender, args);
+			OnGameDownloadFinished(sender, e);
 		}
 
 		private void aboutLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

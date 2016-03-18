@@ -326,8 +326,8 @@ namespace Launchpad.Launcher.UI
 					{
 						//bind events for UI updating					
 						Game.ProgressChanged += OnGameDownloadProgressChanged;
-						Game.GameRepairFinished += OnRepairFinished;
-						Game.GameRepairFailed += OnGameRepairFailed;
+						Game.GameDownloadFinished += OnGameDownloadFinished;
+						Game.GameDownloadFailed += OnGameDownloadFailed;
 
 						if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
 						{
@@ -384,9 +384,9 @@ namespace Launchpad.Launcher.UI
 						else
 						{					
 							//bind events for UI updating
-							Game.GameUpdateFinished += OnGameUpdateFinished;
 							Game.ProgressChanged += OnGameDownloadProgressChanged;
-							Game.GameUpdateFailed += OnGameUpdateFailed;
+							Game.GameDownloadFinished += OnGameDownloadFinished;
+							Game.GameDownloadFailed += OnGameDownloadFailed;
 
 							//update the game asynchronously
 							if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
@@ -438,7 +438,7 @@ namespace Launchpad.Launcher.UI
 			//Take the resulting HTML string from the changelog download and send it to the changelog browser
 			Application.Invoke(delegate
 				{
-					Browser.LoadHtmlString(e.Result, e.ResultType);
+					Browser.LoadHtmlString(e.Result, e.Metadata);
 				});
 		}
 
@@ -528,94 +528,22 @@ namespace Launchpad.Launcher.UI
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">Contains the result of the download.</param>
-		protected void OnGameDownloadFinished(object sender, GameDownloadFinishedEventArgs e)
+		protected void OnGameDownloadFinished(object sender, EventArgs e)
 		{
 			Application.Invoke(delegate
 				{
-					if (e != null)
-					{				
-						if (e.Result == "1") //there was an error
-						{
-							MessageLabel.Text = Mono.Unix.Catalog.GetString("Game download failed. Are you missing the manifest?");
+					MessageLabel.Text = Mono.Unix.Catalog.GetString("Idle");
+					progressbar2.Text = "";
 
-							Notification failedNot = new Notification();
-							failedNot.IconName = Stock.DialogError;
-							failedNot.Summary = Mono.Unix.Catalog.GetString("Launchpad - Error");
-							failedNot.Body = Mono.Unix.Catalog.GetString("Game download failed. Are you missing the manifest?");
+					Notification completedNot = new Notification();
+					completedNot.IconName = Stock.Info;
+					completedNot.Summary = Mono.Unix.Catalog.GetString("Launchpad - Info");
+					completedNot.Body = Mono.Unix.Catalog.GetString("Game download finished. Play away!");
 
-							failedNot.Show();
+					completedNot.Show();
 
-							ELauncherMode parsedMode;
-							if (Enum.TryParse(e.ResultType, out parsedMode))
-							{
-								SetLauncherMode(parsedMode, false);
-							}
-							else
-							{
-								SetLauncherMode(ELauncherMode.Repair, false);
-							}                                        
-						}
-						else //the game has finished downloading, and we should be OK to launch
-						{
-							MessageLabel.Text = Mono.Unix.Catalog.GetString("Idle");
-							progressbar2.Text = "";
-
-							Notification completedNot = new Notification();
-							completedNot.IconName = Stock.Info;
-							completedNot.Summary = Mono.Unix.Catalog.GetString("Launchpad - Info");
-							completedNot.Body = Mono.Unix.Catalog.GetString("Game download finished. Play away!");
-
-							completedNot.Show();
-
-							SetLauncherMode(ELauncherMode.Launch, false);
-						}
-					}
+					SetLauncherMode(ELauncherMode.Launch, false);
 				});			          
-		}
-
-		/// <summary>
-		/// Passes the repair failed event to a generic handler
-		/// </summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">Contains the type of failure that occured</param>
-		private void OnGameRepairFailed(object sender, GameRepairFailedEventArgs e)
-		{
-			GameDownloadFailedEventArgs args = new GameDownloadFailedEventArgs();
-			args.Metadata = e.Metadata;
-			args.Result = e.Result;
-			args.ResultType = "Repair";
-
-			OnGameDownloadFailed(sender, args);	
-		}
-
-		/// <summary>
-		/// Passes the update finished event to a generic handler.
-		/// </summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">Contains the result of the download.</param>
-		protected void OnGameUpdateFinished(object sender, GameUpdateFinishedEventArgs e)
-		{
-			GameDownloadFinishedEventArgs args = new GameDownloadFinishedEventArgs();
-			args.Metadata = e.Metadata;
-			args.Result = e.Result;
-			args.ResultType = e.ResultType;
-
-			OnGameDownloadFinished(sender, args);
-		}
-
-		/// <summary>
-		/// Passes the update failed event to a generic handler.
-		/// </summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">Contains the type of failure that occurred.</param>
-		protected void OnGameUpdateFailed(object sender, GameUpdateFailedEventArgs e)
-		{
-			GameDownloadFailedEventArgs args = new GameDownloadFailedEventArgs();
-			args.Metadata = e.Metadata;
-			args.Result = e.Result;
-			args.ResultType = "Update";
-
-			OnGameDownloadFailed(sender, args);
 		}
 
 		/// <summary>
