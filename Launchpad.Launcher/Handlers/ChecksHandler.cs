@@ -47,7 +47,7 @@ namespace Launchpad.Launcher.Handlers
 
 		}
 
-
+		//TODO: Move to FTPProtocolHandler
 		/// <summary>
 		/// Determines whether this instance can connect to the FTP server. Run as little as possible, since it blocks the main thread while checking.
 		/// </summary>
@@ -160,6 +160,7 @@ namespace Launchpad.Launcher.Handlers
 			return bHasDirectory && bHasInstallationCookie && IsInstallCookieEmpty() && bHasGameVersion;
 		}
 
+		//TODO: Move to PatchProtocolHandler. This functionality is common across all protocols, but may have different implementations.
 		/// <summary>
 		/// Determines whether the game is outdated.
 		/// </summary>
@@ -188,6 +189,7 @@ namespace Launchpad.Launcher.Handlers
 			}
 		}
 
+		//TODO: Move to PatchProtocolHandler. This functionality is common across all protocols, but may have different implementations.
 		/// <summary>
 		/// Determines whether the launcher is outdated.
 		/// </summary>
@@ -235,6 +237,7 @@ namespace Launchpad.Launcher.Handlers
 			return bIsInstallCookieEmpty;
 		}
 
+		//TODO: Move this to FTPProtocolHandler. It's functionality that should not exist outside that module.
 		/// <summary>
 		/// Determines whether the  manifest is outdated.
 		/// </summary>
@@ -264,6 +267,11 @@ namespace Launchpad.Launcher.Handlers
 			}
 		}
 
+		/// <summary>
+		/// Checks whether or not the server provides binaries and patches for the specified platform.
+		/// </summary>
+		/// <returns><c>true</c>, if the server does provide files for the platform, <c>false</c> otherwise.</returns>
+		/// <param name="Platform">Platform.</param>
 		public bool DoesServerProvidePlatform(ESystemTarget Platform)
 		{
 			FTPProtocolHandler FTP = new FTPProtocolHandler();

@@ -52,6 +52,11 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 		}
 
+		public override bool CanPatch()
+		{
+			return false;
+		}
+
 		public override bool IsLauncherOutdated()
 		{
 			return false;

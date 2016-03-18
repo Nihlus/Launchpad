@@ -72,6 +72,13 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		protected LauncherDownloadFailedEventArgs LauncherDownloadFailedArgs;
 
 		/// <summary>
+		/// Determines whether this instance can provide patches. Checks for an active connection to the
+		/// patch provider (file server, distributed hash tables, hyperspace compression waves etc.)
+		/// </summary>
+		/// <returns><c>true</c> if this instance can provide patches; otherwise, <c>false</c>.</returns>
+		public abstract bool CanPatch();
+
+		/// <summary>
 		/// Checks whether or not the game has a new patch available.
 		/// </summary>
 		/// <returns><c>true</c>, if there's a patch available, <c>false</c> otherwise.</returns>
