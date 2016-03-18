@@ -96,18 +96,18 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <summary>
 		/// Downloads the latest version of the launcher.
 		/// </summary>
-		public abstract void DownloadLauncher();
+		protected abstract void DownloadLauncher();
 
 		/// <summary>
 		/// Downloads the latest version of the game.
 		/// </summary>
-		public abstract void DownloadGame();
+		protected abstract void DownloadGame();
 
 		/// <summary>
 		/// Copies the launcher to the installation directory.
 		/// Normal copying procedures are provided by PatchProtocolHandler, but can be overridden as neccesary.
 		/// </summary>
-		public virtual void CopyLauncher()
+		protected virtual void CopyLauncher()
 		{
 
 		}
@@ -116,7 +116,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// Copies the game to the installation directory.
 		/// Normal copying procedures are provided by PatchProtocolHandler, but can be overridden as neccesary.
 		/// </summary>
-		public virtual void CopyGame()
+		protected virtual void CopyGame()
 		{
 
 		}
@@ -124,12 +124,12 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <summary>
 		/// Verifies the launcher files.
 		/// </summary>
-		public abstract void VerifyLauncher();
+		protected abstract void VerifyLauncher();
 
 		/// <summary>
 		/// Verifies the game files.
 		/// </summary>
-		public abstract void VerifyGame();
+		protected abstract void VerifyGame();
 
 		/// <summary>
 		/// Raises the progress changed event.
