@@ -72,22 +72,22 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 		}
 
-		public override void DownloadLauncher()
+		protected override void DownloadLauncher()
 		{
 
 		}
 
-		public override void DownloadGame()
+		protected override void DownloadGame()
 		{
 
 		}
 
-		public override void VerifyLauncher()
+		protected override void VerifyLauncher()
 		{
 
 		}
 
-		public override void VerifyGame()
+		protected override void VerifyGame()
 		{
 
 		}
