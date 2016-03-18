@@ -344,8 +344,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				reader = request.GetResponse().GetResponseStream();
 				sizereader = (FtpWebResponse)sizerequest.GetResponse();
 		
-				fileStream = new FileStream(localPath, FileMode.Create);
-
 				//reset byte counter
 				FTPbytesDownloaded = 0;
 
