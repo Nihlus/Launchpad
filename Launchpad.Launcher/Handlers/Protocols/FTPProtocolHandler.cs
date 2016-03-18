@@ -52,17 +52,22 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 		}
 
-		public override bool LauncherHasNewPatch()
+		public override bool IsLauncherOutdated()
 		{
 			return false;
 		}
 
-		public override bool GameHasNewPatch()
+		public override bool IsGameOutdated()
 		{
 			return false;
 		}
 
-		public override void DownloadFile(string FilePath)
+		public override void InstallLauncher()
+		{
+
+		}
+
+		public override void InstallGame()
 		{
 
 		}
@@ -73,6 +78,16 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		}
 
 		public override void DownloadGame()
+		{
+
+		}
+
+		public override void VerifyLauncher()
+		{
+
+		}
+
+		public override void VerifyGame()
 		{
 
 		}

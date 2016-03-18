@@ -75,18 +75,23 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// Checks whether or not the game has a new patch available.
 		/// </summary>
 		/// <returns><c>true</c>, if there's a patch available, <c>false</c> otherwise.</returns>
-		public abstract bool GameHasNewPatch();
+		public abstract bool IsGameOutdated();
 
 		/// <summary>
 		/// Checks whether or not the launcher has a new patch available.
 		/// </summary>
 		/// <returns><c>true</c>, if there's a patch available, <c>false</c> otherwise.</returns>
-		public abstract bool LauncherHasNewPatch();
+		public abstract bool IsLauncherOutdated();
 
 		/// <summary>
-		/// Downloads a specific file.
+		/// Installs or updates the launcher as neccesary.
 		/// </summary>
-		public abstract void DownloadFile(string FilePath);
+		public abstract void InstallLauncher();
+
+		/// <summary>
+		/// Installs or updates the the game as neccesary.
+		/// </summary>
+		public abstract void InstallGame();
 
 		/// <summary>
 		/// Downloads the latest version of the launcher.
@@ -97,6 +102,34 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// Downloads the latest version of the game.
 		/// </summary>
 		public abstract void DownloadGame();
+
+		/// <summary>
+		/// Copies the launcher to the installation directory.
+		/// Normal copying procedures are provided by PatchProtocolHandler, but can be overridden as neccesary.
+		/// </summary>
+		public virtual void CopyLauncher()
+		{
+
+		}
+
+		/// <summary>
+		/// Copies the game to the installation directory.
+		/// Normal copying procedures are provided by PatchProtocolHandler, but can be overridden as neccesary.
+		/// </summary>
+		public virtual void CopyGame()
+		{
+
+		}
+
+		/// <summary>
+		/// Verifies the launcher files.
+		/// </summary>
+		public abstract void VerifyLauncher();
+
+		/// <summary>
+		/// Verifies the game files.
+		/// </summary>
+		public abstract void VerifyGame();
 
 		/// <summary>
 		/// Raises the progress changed event.
