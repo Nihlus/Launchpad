@@ -109,7 +109,7 @@ namespace Launchpad.Launcher.UI
 
 			if (bAreAllSettingsOK)
 			{
-				if (Checks.CanConnectToFTP())
+				if (Checks.CanPatch())
 				{
 					Destroy();
 				}
