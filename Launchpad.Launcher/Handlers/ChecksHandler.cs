@@ -171,7 +171,7 @@ namespace Launchpad.Launcher.Handlers
 			try
 			{
 				Version local = Config.GetLocalGameVersion();
-				Version remote = FTP.GetRemoteGameVersion(true);
+				Version remote = FTP.GetRemoteGameVersion();
 
 				if (local < remote)
 				{
