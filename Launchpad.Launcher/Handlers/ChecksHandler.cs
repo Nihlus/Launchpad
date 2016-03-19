@@ -39,63 +39,14 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		readonly ConfigHandler Config = ConfigHandler._instance;
 
-		//TODO: Move to FTPProtocolHandler
 		/// <summary>
-		/// Determines whether this instance can connect to the FTP server. Run as little as possible, since it blocks the main thread while checking.
+		/// Determines whether this instance can connect to a patching service.
 		/// </summary>
-		/// <returns><c>true</c> if this instance can connect to the FTP server; otherwise, <c>false</c>.</returns>
-		public bool CanConnectToFTP()
+		/// <returns><c>true</c> if this instance can connect to a patching service; otherwise, <c>false</c>.</returns>
+		public bool CanPatch()
 		{
-			bool bCanConnectToFTP;
-
-			//string FTPURL = Config.GetFTPUrl();
-			string FTPURL = Config.GetBaseFTPUrl();
-			string FTPUserName = Config.GetFTPUsername();
-			string FTPPassword = Config.GetFTPPassword();
-
-			try
-			{
-				//FtpWebRequest plainRequest = (FtpWebRequest)FtpWebRequest.Create(FTPURL);
-				FtpWebRequest plainRequest = FTPProtocolHandler.CreateFtpWebRequest(FTPURL, FTPUserName, FTPPassword);
-
-				plainRequest.Credentials = new NetworkCredential(FTPUserName, FTPPassword);
-				plainRequest.Method = WebRequestMethods.Ftp.ListDirectory;
-				plainRequest.Timeout = 8000;
-
-				try
-				{
-					WebResponse response = plainRequest.GetResponse();
-
-					plainRequest.Abort();
-					response.Close();
-
-					bCanConnectToFTP = true;
-				}
-				catch (WebException wex)
-				{
-					Console.WriteLine("WebException in CanConnectToFTP(): " + wex.Message);
-					Console.WriteLine(FTPURL);
-
-					plainRequest.Abort();
-					bCanConnectToFTP = false;
-				}
-			}
-			catch (WebException wex)
-			{
-				//case where FTP URL in config is not valid
-				Console.WriteLine("WebException CanConnectToFTP() (Invalid URL): " + wex.Message);
-
-				bCanConnectToFTP = false;
-				return bCanConnectToFTP;
-			}
-
-			if (!bCanConnectToFTP)
-			{
-				Console.WriteLine("Failed to connect to FTP server at: {0}", Config.GetBaseFTPUrl());
-				bCanConnectToFTP = false;
-			}
-
-			return bCanConnectToFTP;
+			PatchProtocolHandler Patch = Config.GetPatchProtocol();
+			return Patch.CanPatch();
 		}
 
 		/// <summary>
@@ -152,48 +103,24 @@ namespace Launchpad.Launcher.Handlers
 			return bHasDirectory && bHasInstallationCookie && IsInstallCookieEmpty() && bHasGameVersion;
 		}
 
-		//TODO: Move to PatchProtocolHandler. This functionality is common across all protocols, but may have different implementations.
 		/// <summary>
 		/// Determines whether the game is outdated.
 		/// </summary>
 		/// <returns><c>true</c> if the game is outdated; otherwise, <c>false</c>.</returns>
 		public bool IsGameOutdated()
 		{
-			FTPProtocolHandler FTP = new FTPProtocolHandler();
-			try
-			{
-				Version local = Config.GetLocalGameVersion();
-				Version remote = FTP.GetRemoteGameVersion();
-
-				return local < remote;
-			}
-			catch (WebException wex)
-			{
-				Console.WriteLine("WebException in IsGameOutdated(): " + wex.Message);
-				return true;
-			}
+			PatchProtocolHandler Patch = Config.GetPatchProtocol();
+			return Patch.IsGameOutdated();
 		}
 
-		//TODO: Move to PatchProtocolHandler. This functionality is common across all protocols, but may have different implementations.
 		/// <summary>
 		/// Determines whether the launcher is outdated.
 		/// </summary>
 		/// <returns><c>true</c> if the launcher is outdated; otherwise, <c>false</c>.</returns>
 		public bool IsLauncherOutdated()
 		{
-			FTPProtocolHandler FTP = new FTPProtocolHandler();
-			try
-			{
-				Version local = Config.GetLocalLauncherVersion();
-				Version remote = FTP.GetRemoteLauncherVersion();	
-
-				return local < remote;
-			}
-			catch (WebException wex)
-			{
-				Console.WriteLine("WebException in IsLauncherOutdated(): " + wex.Message);
-				return false;	
-			}
+			PatchProtocolHandler Patch = Config.GetPatchProtocol();
+			return Patch.IsLauncherOutdated();
 		}
 
 		/// <summary>
