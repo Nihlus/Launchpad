@@ -29,7 +29,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 	/// </summary>
 	internal sealed class HTTPProtocolHandler : PatchProtocolHandler
 	{
-		public HTTPProtocolHandler(bool bShouldUseHTTPS)
+		public HTTPProtocolHandler(bool bShouldUseHTTPS = false)
 			: base()
 		{
 		}
