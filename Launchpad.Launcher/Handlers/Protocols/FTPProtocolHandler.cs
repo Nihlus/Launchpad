@@ -516,13 +516,14 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			string remoteVersion = ReadFTPFile(remoteVersionPath);
 
-			if (!string.IsNullOrEmpty(remoteVersion))
+			Version version;
+			if (Version.TryParse(remoteVersion, out version))
 			{
-				return Version.Parse(remoteVersion);
+				return version;
 			}
 			else
 			{
-				return null;
+				return new Version("0.0.0");
 			}
 		}
 
