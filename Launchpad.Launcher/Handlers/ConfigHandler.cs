@@ -280,13 +280,25 @@ namespace Launchpad.Launcher.Handlers
 		}
 
 		/// <summary>
-		/// Gets the temporary files directory.
+		/// Gets the temporary launcher download directory.
 		/// </summary>
-		/// <returns>The temporary files directory, terminated by a directory separator.</returns>
-		public static string GetTempDir()
+		/// <returns>A full path to the directory.</returns>
+		public static string GetTempLauncherDownloadDir()
 		{
-			string tempDir = Path.GetTempPath();
-			return tempDir;
+			return String.Format(@"{0}{1}launchpad{1}launcher", 
+				Path.GetTempPath(), 
+				Path.DirectorySeparatorChar);
+		}
+
+		/// <summary>
+		/// Gets the temporary game download directory.
+		/// </summary>
+		/// <returns>A full path to the directory.</returns>
+		public static string GetTempGameDownloadDir()
+		{
+			return String.Format(@"{0}{1}launchpad{1}game", 
+				Path.GetTempPath(),
+				Path.DirectorySeparatorChar);
 		}
 
 		/// <summary>

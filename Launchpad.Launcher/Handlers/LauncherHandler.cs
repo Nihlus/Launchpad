@@ -82,6 +82,7 @@ namespace Launchpad.Launcher.Handlers
 		{
 			try
 			{
+				//TODO: Move functionality to FTPProtocolHandler
 				FTPProtocolHandler FTP = new FTPProtocolHandler();
 
 				//crawl the server for all of the files in the /launcher/bin directory.
@@ -95,7 +96,7 @@ namespace Launchpad.Launcher.Handlers
 						if (!String.IsNullOrEmpty(path))
 						{
 							string Local = String.Format("{0}launchpad{1}{2}",
-								               ConfigHandler.GetTempDir(),
+								               Path.GetTempPath(),
 								               Path.DirectorySeparatorChar,
 								               path);
 
@@ -216,7 +217,7 @@ namespace Launchpad.Launcher.Handlers
 				{
 					//creating a .sh script
 					string scriptPath = String.Format(@"{0}launchpadupdate.sh", 
-						                    ConfigHandler.GetTempDir());
+						                    Path.GetTempPath());
 
 
 					FileStream updateScript = File.Create(scriptPath);
@@ -225,11 +226,11 @@ namespace Launchpad.Launcher.Handlers
 					//write commands to the script
 					//wait five seconds, then copy the new executable
 					string copyCom = String.Format("cp -rf {0} {1}", 
-						                 ConfigHandler.GetTempDir() + "launchpad/*",
+						                 Path.GetTempPath() + "launchpad/*",
 						                 ConfigHandler.GetLocalDir());
 
 					string delCom = String.Format("rm -rf {0}", 
-						                ConfigHandler.GetTempDir() + "launchpad");
+						                Path.GetTempPath() + "launchpad");
 
 					string dirCom = String.Format("cd {0}", ConfigHandler.GetLocalDir());
 					string launchCom = String.Format(@"nohup ./{0} &", executableName);
@@ -259,7 +260,7 @@ namespace Launchpad.Launcher.Handlers
 				{
 					//creating a .bat script
 					string scriptPath = String.Format(@"{0}launchpadupdate.bat", 
-						                    ConfigHandler.GetTempDir());
+						                    Path.GetTempPath());
 
 					FileStream updateScript = File.Create(scriptPath);
 
@@ -268,7 +269,7 @@ namespace Launchpad.Launcher.Handlers
 					//write commands to the script
 					//wait three seconds, then copy the new executable
 					tw.WriteLine(String.Format(@"timeout 3 & xcopy /e /s /y ""{0}\launchpad"" ""{1}"" && rmdir /s /q {0}\launchpad", 
-							ConfigHandler.GetTempDir(), 
+							Path.GetTempPath(), 
 							ConfigHandler.GetLocalDir()));
 
 					//then start the new executable
