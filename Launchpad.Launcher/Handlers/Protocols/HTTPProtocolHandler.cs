@@ -29,11 +29,56 @@ namespace Launchpad.Launcher.Handlers.Protocols
 	/// 
 	/// This protocol uses a manifest.
 	/// </summary>
-	public class HTTPProtocolHandler
+	internal sealed class HTTPProtocolHandler : PatchProtocolHandler
 	{
 		public HTTPProtocolHandler(bool bShouldUseHTTPS)
 			: base()
 		{
+		}
+
+		public override bool CanPatch()
+		{
+			return false;
+		}
+
+		public override bool IsLauncherOutdated()
+		{
+			return false;
+		}
+
+		public override bool IsGameOutdated()
+		{
+			return false;
+		}
+
+		public override void InstallLauncher()
+		{
+
+		}
+
+		public override void InstallGame()
+		{
+
+		}
+
+		protected override void DownloadLauncher()
+		{
+
+		}
+
+		protected override void DownloadGame()
+		{
+
+		}
+
+		protected override void VerifyLauncher()
+		{
+
+		}
+
+		protected override void VerifyGame()
+		{
+
 		}
 	}
 }

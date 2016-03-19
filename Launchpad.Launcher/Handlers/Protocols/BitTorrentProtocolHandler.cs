@@ -31,11 +31,56 @@ namespace Launchpad.Launcher.Handlers.Protocols
 	/// 
 	/// This protocol does not use a manifest.
 	/// </summary>
-	public class BitTorrentProtocolHandler
+	internal sealed class BitTorrentProtocolHandler : PatchProtocolHandler
 	{
 		public BitTorrentProtocolHandler()
 			: base()
 		{
+		}
+
+		public override bool CanPatch()
+		{
+			return false;
+		}
+
+		public override bool IsLauncherOutdated()
+		{
+			return false;
+		}
+
+		public override bool IsGameOutdated()
+		{
+			return false;
+		}
+
+		public override void InstallLauncher()
+		{
+
+		}
+
+		public override void InstallGame()
+		{
+
+		}
+
+		protected override void DownloadLauncher()
+		{
+
+		}
+
+		protected override void DownloadGame()
+		{
+
+		}
+
+		protected override void VerifyLauncher()
+		{
+
+		}
+
+		protected override void VerifyGame()
+		{
+
 		}
 	}
 }
