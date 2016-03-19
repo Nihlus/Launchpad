@@ -37,11 +37,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 	internal sealed class FTPProtocolHandler : PatchProtocolHandler
 	{
 		/// <summary>
-		/// How many bytes of the target file that have been downloaded.
-		/// </summary>
-		public long FTPbytesDownloaded;
-
-		/// <summary>
 		/// Initializes a new instance of the <see cref="Launchpad.Launcher.Handlers.Protocols.FTPProtocolHandler"/> class. 
 		/// This also calls the base PatchProtocolHandler constructor, setting up the common functionality.
 		/// </summary>
@@ -192,8 +187,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				FtpWebRequest sizerequest = CreateFtpWebRequest(remoteURL, username, password);
 
 				request.Method = WebRequestMethods.Ftp.DownloadFile;
-				//TODO: Maybe use the manifest filesize instead? We should be able to trust it.
-				// Or maybe just bail out if the two differ
 				sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
 
 				string data = "";
@@ -210,7 +203,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 							break;
 						}
 
-						FTPbytesDownloaded = FTPbytesDownloaded + bytesRead;
 						data = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
 					}
 				}
@@ -346,10 +338,9 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				FtpWebRequest sizerequest = CreateFtpWebRequest(remoteURL, username, password);
 
 				request.Method = WebRequestMethods.Ftp.DownloadFile;
-				//TODO: Maybe use the manifest filesize instead? We should be able to trust it.
-				// Or maybe just bail out if the two differ
-				sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
 				request.ContentOffset = contentOffset;
+
+				sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
 								            
 				using (Stream reader = request.GetResponse().GetResponseStream())
 				{				
@@ -370,9 +361,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					{
 						// Sets the content offset for the file stream, allowing it to begin writing where it last stopped.
 						fileStream.Position = contentOffset;
-						FTPbytesDownloaded = contentOffset;
+						long FTPbytesDownloaded = contentOffset;
 
-						//TODO: Fold this into a for loop?
 						int bytesRead = 0;
 						while (true)
 						{

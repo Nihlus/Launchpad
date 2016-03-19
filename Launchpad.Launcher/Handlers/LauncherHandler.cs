@@ -62,14 +62,14 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		ConfigHandler Config = ConfigHandler._instance;
 
+		//TODO: Move functionality to FTPProtocolHandler
 		/// <summary>
 		/// Updates the launcher synchronously.
 		/// </summary>
 		public void UpdateLauncher()
 		{
 			try
-			{
-				//TODO: Move functionality to FTPProtocolHandler
+			{				
 				FTPProtocolHandler FTP = new FTPProtocolHandler();
 
 				//crawl the server for all of the files in the /launcher/bin directory.
