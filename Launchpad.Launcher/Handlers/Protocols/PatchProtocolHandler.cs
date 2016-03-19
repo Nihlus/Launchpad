@@ -21,6 +21,9 @@
 
 using System;
 using Launchpad.Launcher.Utility.Events;
+using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Launchpad.Launcher.Handlers.Protocols
 {
@@ -38,8 +41,14 @@ namespace Launchpad.Launcher.Handlers.Protocols
 	{
 		public PatchProtocolHandler()
 		{
+			// ...
 			FileDownloadProgressArgs = new FileDownloadProgressChangedEventArgs();
 			GameDownloadFailedArgs = new GameDownloadFailedEventArgs();
+			// ...
+
+			ModuleProgressArgs = new ModuleProgressChangedArgs();
+			ModuleInstallFinishedArgs = new ModuleInstallationFinishedArgs();
+			ModuleInstallFailedArgs = new ModuleInstallationFailedArgs();
 		}
 
 		/// <summary>
@@ -47,9 +56,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// </summary>
 		protected ConfigHandler Config = ConfigHandler._instance;
 
-		/// <summary>
-		/// Occurs when file progress changed.
-		/// </summary>
+
+		// ...
 		public event FileDownloadProgressChangedEventHandler FileProgressChanged;
 
 		public event LauncherInstallFinishedEventHandler LauncherDownloadFinished;
@@ -60,6 +68,18 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 		protected FileDownloadProgressChangedEventArgs FileDownloadProgressArgs;
 		protected GameDownloadFailedEventArgs GameDownloadFailedArgs;
+		// ...
+
+		public event ModuleDownloadProgressChangedEventHandler ModuleDownloadProgressChanged;
+		public event ModuleCopyProgressChangedEventHandler ModuleCopyProgressChanged;
+		public event ModuleVerifyProgressChangedEventHandler ModuleVerifyProgressChanged;
+
+		public event ModuleInstallationFinishedEventHandler ModuleInstallationFinished;
+		public event ModuleInstallationFailedEventHandler ModuleInstallationFailed;
+
+		protected ModuleProgressChangedArgs ModuleProgressArgs;
+		protected ModuleInstallationFinishedArgs ModuleInstallFinishedArgs;
+		protected ModuleInstallationFailedArgs ModuleInstallFailedArgs;
 
 		/// <summary>
 		/// Determines whether this instance can provide patches. Checks for an active connection to the
@@ -69,16 +89,16 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		public abstract bool CanPatch();
 
 		/// <summary>
-		/// Checks whether or not the game has a new patch available.
-		/// </summary>
-		/// <returns><c>true</c>, if there's a patch available, <c>false</c> otherwise.</returns>
-		public abstract bool IsGameOutdated();
-
-		/// <summary>
 		/// Checks whether or not the launcher has a new patch available.
 		/// </summary>
 		/// <returns><c>true</c>, if there's a patch available, <c>false</c> otherwise.</returns>
 		public abstract bool IsLauncherOutdated();
+
+		/// <summary>
+		/// Checks whether or not the game has a new patch available.
+		/// </summary>
+		/// <returns><c>true</c>, if there's a patch available, <c>false</c> otherwise.</returns>
+		public abstract bool IsGameOutdated();
 
 		/// <summary>
 		/// Installs or updates the launcher as neccesary.
@@ -101,21 +121,28 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		protected abstract void DownloadGame();
 
 		/// <summary>
-		/// Copies the launcher to the installation directory.
-		/// Normal copying procedures are provided by PatchProtocolHandler, but can be overridden as neccesary.
-		/// </summary>
-		protected virtual void CopyLauncher()
-		{
-
-		}
-
-		/// <summary>
 		/// Copies the game to the installation directory.
 		/// Normal copying procedures are provided by PatchProtocolHandler, but can be overridden as neccesary.
 		/// </summary>
 		protected virtual void CopyGame()
 		{
+			if (Directory.Exists(ConfigHandler.GetTempGameDownloadDir()))
+			{
+				ModuleProgressArgs.Module = EModule.Game;
+				ModuleProgressArgs.MessageLabelMessage = "Copying game to installation directory...";
 
+				List<string> gameFiles = Directory.EnumerateFiles(ConfigHandler.GetTempGameDownloadDir(), "*", SearchOption.AllDirectories).ToList();
+				foreach (string gameFile in gameFiles)
+				{
+					ModuleProgressArgs.ProgressBarMessage = String.Format("Copying {0} to installation directory...", Path.GetFileName(gameFile));
+					OnModuleCopyProgressChanged();
+
+					// Copy the file
+					string basePath = gameFile.Replace(ConfigHandler.GetTempGameDownloadDir(), "");
+					string destinationPath = Config.GetGamePath(true) + basePath;
+					File.Copy(gameFile, destinationPath, true);
+				}
+			}
 		}
 
 		/// <summary>
@@ -128,9 +155,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// </summary>
 		protected abstract void VerifyGame();
 
-		/// <summary>
-		/// Raises the progress changed event.
-		/// </summary>
+		// ...
 		protected void OnFileDownloadProgressChanged()
 		{
 			if (FileProgressChanged != null)
@@ -169,6 +194,108 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			{
 				GameDownloadFinished(this, EventArgs.Empty);
 			}
+		}
+		// ...
+
+		protected void OnModuleDownloadProgressChanged()
+		{
+			if (ModuleDownloadProgressChanged != null)
+			{
+				ModuleDownloadProgressChanged(this, ModuleProgressArgs);
+			}
+		}
+
+		protected void OnModuleCopyProgressChanged()
+		{
+			if (ModuleCopyProgressChanged != null)
+			{
+				ModuleCopyProgressChanged(this, ModuleProgressArgs);
+			}
+		}
+
+		protected void OnModuleVerifyProgressChanged()
+		{
+			if (ModuleVerifyProgressChanged != null)
+			{
+				ModuleVerifyProgressChanged(this, ModuleProgressArgs);
+			}
+		}
+
+		protected void OnModuleInstallationFinished()
+		{
+			if (ModuleInstallationFinished != null)
+			{
+				ModuleInstallationFinished(this, ModuleInstallFinishedArgs);
+			}
+		}
+
+		protected void OnModuleInstallationFailed()
+		{
+			if (ModuleInstallationFailed != null)
+			{
+				ModuleInstallationFailed(this, ModuleInstallFailedArgs);
+			}
+		}
+	}
+
+	/// <summary>
+	/// A list of modules that can be downloaded and reported on.
+	/// </summary>
+	public enum EModule : byte
+	{
+		Launcher,
+		Game
+	}
+
+	/*
+		Common events for all patching protocols
+	*/
+	public delegate void ModuleDownloadProgressChangedEventHandler(object sender,ModuleProgressChangedArgs e);
+	public delegate void ModuleCopyProgressChangedEventHandler(object sender,ModuleProgressChangedArgs e);
+	public delegate void ModuleVerifyProgressChangedEventHandler(object sender,ModuleProgressChangedArgs e);
+
+	public delegate void ModuleInstallationFinishedEventHandler(object sender,ModuleInstallationFinishedArgs e);
+	public delegate void ModuleInstallationFailedEventHandler(object sender,ModuleInstallationFailedArgs e);
+
+	/*
+		Common arguments for all patching protocols
+	*/
+	public sealed class ModuleProgressChangedArgs : EventArgs
+	{
+		public EModule Module
+		{
+			get;
+			set;
+		}
+
+		public string ProgressBarMessage
+		{
+			get;
+			set;
+		}
+
+		public string MessageLabelMessage
+		{
+			get;
+			set;
+		}
+	}
+
+	public sealed class ModuleInstallationFinishedArgs : EventArgs
+	{
+		public EModule Module
+		{
+			get;
+			set;
+		}
+	}
+
+	public sealed class ModuleInstallationFailedArgs : EventArgs
+	{
+		public EModule Module
+		{
+			get;
+			set;
 		}
 	}
 }

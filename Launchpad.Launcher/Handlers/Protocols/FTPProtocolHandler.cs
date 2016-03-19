@@ -138,6 +138,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				sizerequest = CreateFtpWebRequest(remoteURL, username, password, false);
 
 				request.Method = WebRequestMethods.Ftp.DownloadFile;
+				//TODO: Maybe use the manifest filesize instead? We should be able to trust it.
+				// Or maybe just bail out if the two differ
 				sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
 
 				string data = "";
@@ -336,6 +338,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				sizerequest = CreateFtpWebRequest(remoteURL, username, password, false);
 
 				request.Method = WebRequestMethods.Ftp.DownloadFile;
+				//TODO: Maybe use the manifest filesize instead? We should be able to trust it.
+				// Or maybe just bail out if the two differ
 				sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
 				request.ContentOffset = contentOffset;
 
