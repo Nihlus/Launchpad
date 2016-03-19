@@ -174,7 +174,7 @@ namespace Launchpad.Launcher.Handlers
 						{
 							//Resume the download of this partial file.
 							OnProgressChanged();
-							fileReturn = FTP.DownloadFTPFile(RemotePath, LocalPath, fileInfo.Length);
+							FTP.DownloadFTPFile(RemotePath, LocalPath, fileInfo.Length);
 
 							//Now verify the file
 							string localHash = MD5Handler.GetFileHash(File.OpenRead(LocalPath));
@@ -183,7 +183,7 @@ namespace Launchpad.Launcher.Handlers
 							{
 								Console.WriteLine("InstallGameAsync: Resumed file hash was invalid, downloading fresh copy from server.");
 								OnProgressChanged();
-								fileReturn = FTP.DownloadFTPFile(RemotePath, LocalPath);
+								FTP.DownloadFTPFile(RemotePath, LocalPath);
 							}
 						}									
 					}
@@ -191,7 +191,7 @@ namespace Launchpad.Launcher.Handlers
 					{
 						//no file, download it
 						OnProgressChanged();
-						fileReturn = FTP.DownloadFTPFile(RemotePath, LocalPath);
+						FTP.DownloadFTPFile(RemotePath, LocalPath);
 					}					
 
 					if (ChecksHandler.IsRunningOnUnix())
@@ -222,7 +222,6 @@ namespace Launchpad.Launcher.Handlers
 
 				DownloadFailedArgs.Result = "1";
 				DownloadFailedArgs.ResultType = "Install";
-				DownloadFinishedArgs.Metadata = fileReturn;
 
 				OnGameDownloadFailed();
 			}
@@ -349,7 +348,7 @@ namespace Launchpad.Launcher.Handlers
 						{
 							//Resume the download of this partial file.
 							OnProgressChanged();
-							repairMetadata = FTP.DownloadFTPFile(RemotePath, LocalPath, fileInfo.Length, false);
+							FTP.DownloadFTPFile(RemotePath, LocalPath, fileInfo.Length, false);
 
 							//Now verify the file
 							string localHash = MD5Handler.GetFileHash(File.OpenRead(LocalPath));
@@ -360,7 +359,7 @@ namespace Launchpad.Launcher.Handlers
 
 								//download the file, since it was broken
 								OnProgressChanged();
-								repairMetadata = FTP.DownloadFTPFile(RemotePath, LocalPath);
+								FTP.DownloadFTPFile(RemotePath, LocalPath);
 							}
 						}					
 					}
@@ -368,7 +367,7 @@ namespace Launchpad.Launcher.Handlers
 					{
 						//download the file, since it was missing
 						OnProgressChanged();
-						repairMetadata = FTP.DownloadFTPFile(RemotePath, LocalPath);
+						FTP.DownloadFTPFile(RemotePath, LocalPath);
 					}
 
 					if (ChecksHandler.IsRunningOnUnix())
@@ -397,9 +396,9 @@ namespace Launchpad.Launcher.Handlers
 			{
 				Console.WriteLine("IOException in RepairGameAsync(): " + ioex.Message);
 
+				//HACK: Magic numbers
 				DownloadFailedArgs.Result = "1";
 				DownloadFailedArgs.ResultType = "Repair";
-				DownloadFailedArgs.Metadata = repairMetadata;
 
 				OnGameDownloadFailed();
 			}

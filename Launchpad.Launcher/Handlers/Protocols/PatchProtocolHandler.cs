@@ -146,14 +146,14 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		}
 
 		/// <summary>
-		/// Verifies the launcher files.
+		/// Verifies and repairs the launcher files.
 		/// </summary>
-		protected abstract void VerifyLauncher();
+		public abstract void VerifyLauncher();
 
 		/// <summary>
-		/// Verifies the game files.
+		/// Verifies and repairs the game files.
 		/// </summary>
-		protected abstract void VerifyGame();
+		public abstract void VerifyGame();
 
 		// ...
 		protected void OnFileDownloadProgressChanged()

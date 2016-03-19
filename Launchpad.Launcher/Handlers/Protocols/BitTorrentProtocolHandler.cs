@@ -73,12 +73,12 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 		}
 
-		protected override void VerifyLauncher()
+		public override void VerifyLauncher()
 		{
 
 		}
 
-		protected override void VerifyGame()
+		public override void VerifyGame()
 		{
 
 		}

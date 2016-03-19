@@ -87,12 +87,12 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 		}
 
-		protected override void VerifyLauncher()
+		public override void VerifyLauncher()
 		{
 
 		}
 
-		protected override void VerifyGame()
+		public override void VerifyGame()
 		{
 
 		}
@@ -204,7 +204,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			string remoteURL = Utilities.Clean(rawRemoteURL) + "/";
 			List<string> relativePaths = new List<string>();
 
-			if (DoesDirectoryExist(remoteURL))
+			if (DoesRemoteDirectoryExist(remoteURL))
 			{
 				try
 				{
@@ -297,7 +297,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <param name="ftpSourceFilePath">Ftp source file path.</param>
 		/// <param name="localDestination">Local destination.</param>
 		/// <param name="bUseAnonymous">If set to <c>true</c> b use anonymous.</param>
-		public string DownloadFTPFile(string rawRemoteURL, string localPath, long contentOffset = 0, bool useAnonymousLogin = false)
+		public void DownloadFTPFile(string rawRemoteURL, string localPath, long contentOffset = 0, bool useAnonymousLogin = false)
 		{
 			//clean the URL string
 			string remoteURL = rawRemoteURL.Replace(Path.DirectorySeparatorChar, '/');
@@ -314,10 +314,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				username = Config.GetFTPUsername();
 				password = Config.GetFTPPassword();
 			}
-
-
-			int bytesRead = 0;
-
+					
 			//the buffer size is 256kb. More or less than this reduces download speeds.
 			byte[] buffer = new byte[262144];
 
@@ -327,10 +324,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			Stream reader = null;
 			FtpWebResponse sizereader = null;
 
-			FileStream fileStream = null;
-
-			//either a path to the file or an error message
-			string returnValue = "";
+			FileStream fileStream = null;		
 
 			try
 			{
@@ -376,6 +370,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				FileDownloadProgressArgs.FileName = Path.GetFileNameWithoutExtension(remoteURL);
 				FileDownloadProgressArgs.TotalBytes = (int)fileSize;
 
+				//TODO: Fold this into a for loop?
+				int bytesRead = 0;
 				while (true)
 				{
 					bytesRead = reader.Read(buffer, 0, buffer.Length);
@@ -389,31 +385,20 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					fileStream.Write(buffer, 0, bytesRead);
 
 					//set file progress info
-					FileDownloadProgressArgs.DownloadedBytes = contentOffset + FTPbytesDownloaded;
+					FileDownloadProgressArgs.DownloadedBytes = FTPbytesDownloaded;
 
 					OnFileDownloadProgressChanged();
 				}
-
-				OnFileDownloadProgressChanged();
-
-				returnValue = localPath;
-				return returnValue;             				                             
 			}
 			catch (WebException wex)
 			{
 				Console.Write("WebException in DownloadFTPFile: ");
 				Console.WriteLine(wex.Message + " (" + remoteURL + ")");
-				returnValue = wex.Message;
-
-				return returnValue;
 			}
 			catch (IOException ioex)
 			{
 				Console.Write("IOException in DownloadFTPFile: ");
 				Console.WriteLine(ioex.Message + " (" + remoteURL + ")");
-				returnValue = ioex.Message;
-
-				return returnValue;
 			}
 			finally
 			{
@@ -560,7 +545,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// </summary>
 		/// <returns><c>true</c>, if the directory exists, <c>false</c> otherwise.</returns>
 		/// <param name="remotePath">Remote path.</param>
-		public bool DoesDirectoryExist(string remotePath)
+		public bool DoesRemoteDirectoryExist(string remotePath)
 		{
 			FtpWebRequest request = CreateFtpWebRequest(remotePath, 
 				                        Config.GetFTPUsername(),
@@ -598,7 +583,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// </summary>
 		/// <returns><c>true</c>, if the file exists, <c>false</c> otherwise.</returns>
 		/// <param name="remotePath">Remote path.</param>
-		public bool DoesFileExist(string remotePath)
+		public bool DoesRemoteFileExist(string remotePath)
 		{
 			FtpWebRequest request = CreateFtpWebRequest(remotePath, 
 				                        Config.GetFTPUsername(),

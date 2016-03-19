@@ -438,7 +438,7 @@ namespace Launchpad.Launcher.UI
 			//Take the resulting HTML string from the changelog download and send it to the changelog browser
 			Application.Invoke(delegate
 				{
-					Browser.LoadHtmlString(e.Result, e.Metadata);
+					Browser.LoadHtmlString(e.Result, "");
 				});
 		}
 

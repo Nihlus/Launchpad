@@ -280,7 +280,7 @@ namespace Launchpad.Launcher.Handlers
 				                Config.GetBaseFTPUrl(),
 				                Platform.ToString());
 
-			return FTP.DoesFileExist(remote);
+			return FTP.DoesRemoteFileExist(remote);
 			
 		}
 	}
