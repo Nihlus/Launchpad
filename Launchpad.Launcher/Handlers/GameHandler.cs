@@ -124,10 +124,10 @@ namespace Launchpad.Launcher.Handlers
 
 				//in order to be able to resume downloading, we check if there is an entry
 				//stored in the install cookie.
-				ManifestEntry lastDownloadedFile = null;
 				string installCookiePath = ConfigHandler.GetInstallCookiePath();
 
 				//attempt to parse whatever is inside the install cookie
+				ManifestEntry lastDownloadedFile;
 				if (ManifestEntry.TryParse(File.ReadAllText(installCookiePath), out lastDownloadedFile))
 				{
 					//loop through all the entries in the manifest until we encounter
@@ -158,27 +158,29 @@ namespace Launchpad.Launcher.Handlers
 					//make sure we have a game directory to put files in
 					Directory.CreateDirectory(Path.GetDirectoryName(LocalPath));
 				
-					//write the current file progress to the install cookie
 					// Reset the cookie
 					File.WriteAllText(ConfigHandler.GetInstallCookiePath(), String.Empty);
 
-					TextWriter textWriterProgress = new StreamWriter(ConfigHandler.GetInstallCookiePath());
-					//TODO: Investigate whether or not this supports direct conversion without Entry.ToString()
-					textWriterProgress.WriteLine(Entry);
-					textWriterProgress.Close();
+					// Write the current file progress to the install cookie
+					using (TextWriter textWriterProgress = new StreamWriter(ConfigHandler.GetInstallCookiePath()))
+					{
+						textWriterProgress.WriteLine(Entry);
+						textWriterProgress.Close();
+					}
 
 					if (File.Exists(LocalPath))
 					{
 						FileInfo fileInfo = new FileInfo(LocalPath);
 						if (fileInfo.Length != Entry.Size)
 						{
-							//Resume the download of this partial file.
+							// Resume the download of this partial file.
 							OnProgressChanged();
 							FTP.DownloadFTPFile(RemotePath, LocalPath, fileInfo.Length);
 
-							//Now verify the file
+							// Now verify the file
 							string localHash = MD5Handler.GetFileHash(File.OpenRead(LocalPath));
 
+							// TODO: Retry a number of times, now we just assume the new file is correct
 							if (localHash != Entry.Hash)
 							{
 								Console.WriteLine("InstallGameAsync: Resumed file hash was invalid, downloading fresh copy from server.");
@@ -268,6 +270,8 @@ namespace Launchpad.Launcher.Handlers
 
 						OnProgressChanged();
 						FTP.DownloadFTPFile(RemotePath, LocalPath);
+
+						// TODO: Implement verification of the downloaded file
 					}
 				}
 
