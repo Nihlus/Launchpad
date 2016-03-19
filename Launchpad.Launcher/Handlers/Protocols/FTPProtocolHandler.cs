@@ -53,17 +53,79 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 		public override bool CanPatch()
 		{
-			return false;
+			bool bCanConnectToFTP;
+
+			string FTPURL = Config.GetBaseFTPUrl();
+			string FTPUserName = Config.GetFTPUsername();
+			string FTPPassword = Config.GetFTPPassword();
+
+			try
+			{
+				FtpWebRequest plainRequest = FTPProtocolHandler.CreateFtpWebRequest(FTPURL, FTPUserName, FTPPassword);
+
+				plainRequest.Credentials = new NetworkCredential(FTPUserName, FTPPassword);
+				plainRequest.Method = WebRequestMethods.Ftp.ListDirectory;
+				plainRequest.Timeout = 4000;
+
+				try
+				{
+					using (WebResponse response = plainRequest.GetResponse())
+					{
+						bCanConnectToFTP = true;
+					}					
+				}
+				catch (WebException wex)
+				{
+					Console.WriteLine("WebException in CanConnectToFTP(): " + wex.Message);
+					bCanConnectToFTP = false;
+				}
+			}
+			catch (WebException wex)
+			{
+				// Case where FTP URL in config is not valid
+				Console.WriteLine("WebException CanConnectToFTP() (Invalid URL): " + wex.Message);
+
+				bCanConnectToFTP = false;
+			}
+
+			if (!bCanConnectToFTP)
+			{
+				Console.WriteLine("Failed to connect to FTP server at: {0}", Config.GetBaseFTPUrl());
+			}
+
+			return bCanConnectToFTP;
 		}
 
 		public override bool IsLauncherOutdated()
 		{
-			return false;
+			try
+			{
+				Version local = Config.GetLocalLauncherVersion();
+				Version remote = GetRemoteLauncherVersion();	
+
+				return local < remote;
+			}
+			catch (WebException wex)
+			{
+				Console.WriteLine("WebException in IsLauncherOutdated(): " + wex.Message);
+				return false;	
+			}
 		}
 
 		public override bool IsGameOutdated()
 		{
-			return false;
+			try
+			{
+				Version local = Config.GetLocalGameVersion();
+				Version remote = GetRemoteGameVersion();
+
+				return local < remote;
+			}
+			catch (WebException wex)
+			{
+				Console.WriteLine("WebException in IsGameOutdated(): " + wex.Message);
+				return true;
+			}
 		}
 
 		public override void InstallLauncher()
@@ -124,15 +186,10 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			// The buffer size is 256kb. More or less than this reduces download speeds.
 			byte[] buffer = new byte[262144];
 
-			FtpWebRequest request = null;
-			FtpWebRequest sizerequest = null;
-
-			Stream reader = null;
-
 			try
 			{
-				request = CreateFtpWebRequest(remoteURL, username, password);
-				sizerequest = CreateFtpWebRequest(remoteURL, username, password);
+				FtpWebRequest request = CreateFtpWebRequest(remoteURL, username, password);
+				FtpWebRequest sizerequest = CreateFtpWebRequest(remoteURL, username, password);
 
 				request.Method = WebRequestMethods.Ftp.DownloadFile;
 				//TODO: Maybe use the manifest filesize instead? We should be able to trust it.
@@ -141,20 +198,21 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 				string data = "";
             
-				reader = request.GetResponse().GetResponseStream();
-
-				int bytesRead;
-				while (true)
+				using (Stream reader = request.GetResponse().GetResponseStream())
 				{
-					bytesRead = reader.Read(buffer, 0, buffer.Length);
-
-					if (bytesRead == 0)
+					int bytesRead;
+					while (true)
 					{
-						break;
-					}
+						bytesRead = reader.Read(buffer, 0, buffer.Length);
 
-					FTPbytesDownloaded = FTPbytesDownloaded + bytesRead;
-					data = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+						if (bytesRead == 0)
+						{
+							break;
+						}
+
+						FTPbytesDownloaded = FTPbytesDownloaded + bytesRead;
+						data = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+					}
 				}
 
 				//clean the output from \n and \0, then return
@@ -166,27 +224,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				Console.WriteLine(wex.Message + " (" + remoteURL + ")");
 				return wex.Message;
 			}
-			finally
-			{
-				//clean up all open requests
-				//then, the responses that are reading from the requests.
-				if (reader != null)
-				{
-					reader.Close();
-				}
-
-				//and finally, the requests themselves.
-				if (request != null)
-				{
-					request.Abort();
-				}
-
-				if (sizerequest != null)
-				{
-					sizerequest.Abort();
-				}
-			}
-
 		}
 
 		/// <summary>
@@ -196,9 +233,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <param name="bRecursively">Should the search should include subdirectories?</param>
 		/// <returns>A list of relative paths for the files in the specified directory.</returns>
 		public List<string> GetFilePaths(string rawRemoteURL, bool bRecursively)
-		{
-			FtpWebRequest request = null;
-			FtpWebResponse response = null;
+		{			
 			string remoteURL = Utilities.Clean(rawRemoteURL) + "/";
 			List<string> relativePaths = new List<string>();
 
@@ -206,80 +241,70 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			{
 				try
 				{
-					request = CreateFtpWebRequest(
-						remoteURL, 
-						Config.GetFTPUsername(), 
-						Config.GetFTPPassword());
+					FtpWebRequest request = CreateFtpWebRequest(
+						                        remoteURL, 
+						                        Config.GetFTPUsername(), 
+						                        Config.GetFTPPassword());
 
 					request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
 
-					response = (FtpWebResponse)request.GetResponse();
-					Stream responseStream = response.GetResponseStream();
-					StreamReader sr = new StreamReader(responseStream);
-
-					string rawListing = sr.ReadToEnd();
-					string[] listing = rawListing.Replace("\r", String.Empty).Split('\n');
-					List<string> directories = new List<string>();
-
-					foreach (string fileOrDir in listing)
+					using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
 					{
-						//we only need to save the directories if we're searching recursively
-						if (bRecursively && fileOrDir.StartsWith("d"))
+						using (StreamReader sr = new StreamReader(response.GetResponseStream()))
 						{
-							//it's a directory, add it to directories
-							string[] parts = fileOrDir.Split(' ');                        
-							string relativeDirectoryPath = parts[parts.Length - 1];
+							string rawListing = sr.ReadToEnd();
+							string[] listing = rawListing.Replace("\r", String.Empty).Split('\n');
 
-							directories.Add(relativeDirectoryPath);
-						}
-						else
-						{
-							//there's a file, add it to our relative paths
-							string[] filePath = fileOrDir.Split(' ');
-							if (!String.IsNullOrEmpty(filePath[filePath.Length - 1]))
+							List<string> directories = new List<string>();
+							foreach (string fileOrDir in listing)
 							{
-								string relativePath = "/" + filePath[filePath.Length - 1];
-								relativePaths.Add(relativePath);
-							}                        
-						}
-					}
-
-					//if we should search recursively, keep looking in subdirectories.
-					if (bRecursively)
-					{
-						if (directories.Count != 0)
-						{
-							foreach (string directory in directories)
-							{
-								string parentDirectory = remoteURL.Replace(Config.GetLauncherBinariesURL(), String.Empty);
-
-								string recursiveURL = Config.GetLauncherBinariesURL() + parentDirectory + "/" + directory;
-								List<string> files = GetFilePaths(recursiveURL, true);
-								foreach (string rawPath in files)
+								// We only need to save the directories if we're searching recursively
+								if (bRecursively && fileOrDir.StartsWith("d"))
 								{
-									string relativePath = "/" + directory + rawPath;
-									relativePaths.Add(relativePath);
+									// It's a directory, add it to directories
+									string[] parts = fileOrDir.Split(' ');                        
+									string relativeDirectoryPath = parts[parts.Length - 1];
+
+									directories.Add(relativeDirectoryPath);
+								}
+								else
+								{
+									// There's a file, add it to our relative paths
+									string[] filePath = fileOrDir.Split(' ');
+									if (!String.IsNullOrEmpty(filePath[filePath.Length - 1]))
+									{
+										string relativePath = "/" + filePath[filePath.Length - 1];
+										relativePaths.Add(relativePath);
+									}                        
+								}
+							}
+
+							// If we should search recursively, keep looking in subdirectories.
+							if (bRecursively)
+							{
+								if (directories.Count != 0)
+								{
+									foreach (string directory in directories)
+									{
+										string parentDirectory = remoteURL.Replace(Config.GetLauncherBinariesURL(), String.Empty);
+
+										string recursiveURL = Config.GetLauncherBinariesURL() + parentDirectory + "/" + directory;
+										List<string> files = GetFilePaths(recursiveURL, true);
+										foreach (string rawPath in files)
+										{
+											string relativePath = "/" + directory + rawPath;
+											relativePaths.Add(relativePath);
+										}
+									}
 								}
 							}
 						}
-					}									
+					}
 				}
 				catch (WebException wex)
 				{
 					Console.WriteLine("WebException in GetFileURLs(): " + wex.Message);
 					return null;
-				}
-				finally
-				{
-					if (request != null)
-					{
-						request.Abort();
-					}    
-
-					if (response != null)
-					{
-						response.Close();
-					}
 				}
 			}	
 
@@ -315,18 +340,10 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			//the buffer size is 256kb. More or less than this reduces download speeds.
 			byte[] buffer = new byte[262144];
 
-			FtpWebRequest request = null;
-			FtpWebRequest sizerequest = null;
-
-			Stream reader = null;
-			FtpWebResponse sizereader = null;
-
-			FileStream fileStream = null;		
-
 			try
 			{
-				request = CreateFtpWebRequest(remoteURL, username, password);
-				sizerequest = CreateFtpWebRequest(remoteURL, username, password);
+				FtpWebRequest request = CreateFtpWebRequest(remoteURL, username, password);
+				FtpWebRequest sizerequest = CreateFtpWebRequest(remoteURL, username, password);
 
 				request.Method = WebRequestMethods.Ftp.DownloadFile;
 				//TODO: Maybe use the manifest filesize instead? We should be able to trust it.
@@ -334,55 +351,47 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
 				request.ContentOffset = contentOffset;
 								            
-				reader = request.GetResponse().GetResponseStream();
-				sizereader = (FtpWebResponse)sizerequest.GetResponse();
-		
-				//reset byte counter
-				FTPbytesDownloaded = 0;
-
-				long fileSize = sizereader.ContentLength;
-
-				//set file info for progress reporting
-				FileDownloadProgressArgs.FileName = Path.GetFileNameWithoutExtension(remoteURL);
-				FileDownloadProgressArgs.TotalBytes = fileSize;
-
-				if (contentOffset > 0)
-				{
-					fileStream = new FileStream(localPath, FileMode.Append);
-				}
-				else
-				{
-					fileStream = new FileStream(localPath, FileMode.Create);
-				}
-
-				// Sets the content offset for the file stream, allowing it to begin writing where it last stopped.
-				fileStream.Position = contentOffset;
-				FTPbytesDownloaded = contentOffset;
-
-				fileSize = sizereader.ContentLength;
-
-				//set file info for progress reporting
-				FileDownloadProgressArgs.FileName = Path.GetFileNameWithoutExtension(remoteURL);
-				FileDownloadProgressArgs.TotalBytes = fileSize;
-
-				//TODO: Fold this into a for loop?
-				int bytesRead = 0;
-				while (true)
-				{
-					bytesRead = reader.Read(buffer, 0, buffer.Length);
-
-					if (bytesRead == 0)
+				using (Stream reader = request.GetResponse().GetResponseStream())
+				{				
+					long fileSize;
+					using (FtpWebResponse sizereader = (FtpWebResponse)sizerequest.GetResponse())
 					{
-						break;
+						fileSize = sizereader.ContentLength;
 					}
 
-					FTPbytesDownloaded = FTPbytesDownloaded + bytesRead;
-					fileStream.Write(buffer, 0, bytesRead);
+					// Set initial progress argument data
+					FileDownloadProgressArgs.FileName = Path.GetFileNameWithoutExtension(remoteURL);
+					FileDownloadProgressArgs.TotalBytes = fileSize;
 
-					//set file progress info
-					FileDownloadProgressArgs.DownloadedBytes = FTPbytesDownloaded;
+					// Select an appending or creating filestream object based on whether or not we're attempting
+					// to complete an existing file
+					using (FileStream fileStream = contentOffset > 0 ? new FileStream(localPath, FileMode.Append) :
+																		new FileStream(localPath, FileMode.Create))
+					{
+						// Sets the content offset for the file stream, allowing it to begin writing where it last stopped.
+						fileStream.Position = contentOffset;
+						FTPbytesDownloaded = contentOffset;
 
-					OnFileDownloadProgressChanged();
+						//TODO: Fold this into a for loop?
+						int bytesRead = 0;
+						while (true)
+						{
+							bytesRead = reader.Read(buffer, 0, buffer.Length);
+
+							if (bytesRead == 0)
+							{
+								break;
+							}
+
+							FTPbytesDownloaded = FTPbytesDownloaded + bytesRead;
+							fileStream.Write(buffer, 0, bytesRead);
+
+							// Set file progress info
+							FileDownloadProgressArgs.DownloadedBytes = FTPbytesDownloaded;
+
+							OnFileDownloadProgressChanged();
+						}
+					}				
 				}
 			}
 			catch (WebException wex)
@@ -394,36 +403,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			{
 				Console.Write("IOException in DownloadFTPFile: ");
 				Console.WriteLine(ioex.Message + " (" + remoteURL + ")");
-			}
-			finally
-			{
-				//clean up all open requests
-				//first, close and dispose of the file stream
-				if (fileStream != null)
-				{
-					fileStream.Close();
-				}
-
-				//then, the responses that are reading from the requests.
-				if (reader != null)
-				{
-					reader.Close();
-				}
-				if (sizereader != null)
-				{
-					sizereader.Close();
-				}
-
-				//and finally, the requests themselves.
-				if (request != null)
-				{
-					request.Abort();
-				}
-
-				if (sizerequest != null)
-				{
-					sizerequest.Abort();
-				}
 			}
 		}
 
@@ -589,7 +568,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			{
 				if (response != null)
 				{
-					response.Close();
+					response.Dispose();
 				}
 			}
 
