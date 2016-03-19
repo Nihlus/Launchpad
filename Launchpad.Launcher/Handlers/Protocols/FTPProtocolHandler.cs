@@ -131,8 +131,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 			try
 			{
-				request = CreateFtpWebRequest(remoteURL, username, password, false);
-				sizerequest = CreateFtpWebRequest(remoteURL, username, password, false);
+				request = CreateFtpWebRequest(remoteURL, username, password);
+				sizerequest = CreateFtpWebRequest(remoteURL, username, password);
 
 				request.Method = WebRequestMethods.Ftp.DownloadFile;
 				//TODO: Maybe use the manifest filesize instead? We should be able to trust it.
@@ -209,8 +209,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					request = CreateFtpWebRequest(
 						remoteURL, 
 						Config.GetFTPUsername(), 
-						Config.GetFTPPassword(), 
-						false);
+						Config.GetFTPPassword());
 
 					request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
 
@@ -326,8 +325,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 			try
 			{
-				request = CreateFtpWebRequest(remoteURL, username, password, false);
-				sizerequest = CreateFtpWebRequest(remoteURL, username, password, false);
+				request = CreateFtpWebRequest(remoteURL, username, password);
+				sizerequest = CreateFtpWebRequest(remoteURL, username, password);
 
 				request.Method = WebRequestMethods.Ftp.DownloadFile;
 				//TODO: Maybe use the manifest filesize instead? We should be able to trust it.
@@ -435,8 +434,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <param name="ftpDirectoryPath">Ftp directory path.</param>
 		/// <param name="username">Remote FTP username.</param>
 		/// <param name="password">Remote FTP password</param>
-		/// <param name="keepAlive">If set to <c>true</c> keep alive.</param>
-		public static FtpWebRequest CreateFtpWebRequest(string ftpDirectoryPath, string username, string password, bool keepAlive)
+		public static FtpWebRequest CreateFtpWebRequest(string ftpDirectoryPath, string username, string password)
 		{
 			try
 			{
@@ -448,7 +446,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 				request.UsePassive = true;
 				request.UseBinary = true;
-				request.KeepAlive = keepAlive;
 
 				request.Credentials = new NetworkCredential(username, password);
 
@@ -536,8 +533,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		{
 			FtpWebRequest request = CreateFtpWebRequest(remotePath, 
 				                        Config.GetFTPUsername(),
-				                        Config.GetFTPPassword(),
-				                        false);
+				                        Config.GetFTPPassword());
 			FtpWebResponse response = null;
 
 			try
@@ -574,8 +570,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		{
 			FtpWebRequest request = CreateFtpWebRequest(remotePath, 
 				                        Config.GetFTPUsername(),
-				                        Config.GetFTPPassword(),
-				                        false);
+				                        Config.GetFTPPassword());
 			FtpWebResponse response = null;
 
 			try

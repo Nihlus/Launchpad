@@ -56,7 +56,7 @@ namespace Launchpad.Launcher.Handlers
 			try
 			{
 				//FtpWebRequest plainRequest = (FtpWebRequest)FtpWebRequest.Create(FTPURL);
-				FtpWebRequest plainRequest = FTPProtocolHandler.CreateFtpWebRequest(FTPURL, FTPUserName, FTPPassword, false);
+				FtpWebRequest plainRequest = FTPProtocolHandler.CreateFtpWebRequest(FTPURL, FTPUserName, FTPPassword);
 
 				plainRequest.Credentials = new NetworkCredential(FTPUserName, FTPPassword);
 				plainRequest.Method = WebRequestMethods.Ftp.ListDirectory;
