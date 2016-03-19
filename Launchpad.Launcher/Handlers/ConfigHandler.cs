@@ -25,6 +25,7 @@ using System;
 using System.IO;
 using Launchpad.Launcher.Utility.Enums;
 using Launchpad.Launcher.Utility;
+using Launchpad.Launcher.Handlers.Protocols;
 
 
 namespace Launchpad.Launcher.Handlers
@@ -163,10 +164,18 @@ namespace Launchpad.Launcher.Handlers
 
 					// Update the user-visible version of the launcher
 					data["Local"]["LauncherVersion"] = defaultLauncherVersion.ToString();
+
+					// Update config files without GUID keys
 					if (!data["Local"].ContainsKey("GUID"))
 					{
 						string GeneratedGUID = Guid.NewGuid().ToString();
 						data["Local"].AddKey("GUID", GeneratedGUID);
+					}
+
+					// Update config files without protocol keys
+					if (!data["Remote"].ContainsKey("Protocol"))
+					{
+						data["Remote"].AddKey("Protocol", "FTP");
 					}
 
 					WriteConfig(Parser, data);
@@ -598,7 +607,7 @@ namespace Launchpad.Launcher.Handlers
 		/// Gets the desired patch protocol. Currently, FTP, HTTP and BitTorrent are supported.
 		/// </summary>
 		/// <returns>The patch protocol.</returns>
-		public string GetPatchProtocol()
+		public PatchProtocolHandler GetPatchProtocol()
 		{
 			lock (ReadLock)
 			{
@@ -609,12 +618,30 @@ namespace Launchpad.Launcher.Handlers
 
 					string patchProtocol = data["Remote"]["Protocol"];
 
-					return patchProtocol;
+					switch (patchProtocol)
+					{
+						case "FTP":
+							{
+								return new FTPProtocolHandler();
+							}
+						case "HTTP":
+							{
+								return new HTTPProtocolHandler();
+							}
+						case "BitTorrent":
+							{
+								return new BitTorrentProtocolHandler();
+							}
+						default:
+							{
+								return new FTPProtocolHandler();
+							}
+					}
 				}
 				catch (IOException ioex)
 				{
 					Console.WriteLine("IOException in GetPatchProtocol(): " + ioex.Message);
-					return String.Empty;
+					return null;
 				}
 			}
 		}
