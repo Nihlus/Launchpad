@@ -53,11 +53,6 @@ namespace Launchpad.Launcher.Handlers
 		public event ChangelogDownloadFinishedEventHandler ChangelogDownloadFinished;
 
 		/// <summary>
-		/// The progress arguments object. Is updated during file download operations.
-		/// </summary>
-		private readonly FileDownloadProgressChangedEventArgs ProgressArgs = new FileDownloadProgressChangedEventArgs();
-
-		/// <summary>
 		/// The download finished arguments object. Is updated once a file download finishes.
 		/// </summary>
 		private readonly GameDownloadFinishedEventArgs DownloadFinishedArgs = new GameDownloadFinishedEventArgs();
