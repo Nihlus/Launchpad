@@ -24,7 +24,6 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Collections.Generic;
-using Launchpad.Launcher.Utility.Events;
 using Launchpad.Launcher.Utility;
 
 namespace Launchpad.Launcher.Handlers.Protocols
@@ -40,10 +39,10 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <summary>
 		/// How many bytes of the target file that have been downloaded.
 		/// </summary>
-		public long FTPbytesDownloaded = 0;
+		public long FTPbytesDownloaded;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Launchpad_Launcher.FTPHandler"/> class. 
+		/// Initializes a new instance of the <see cref="Launchpad.Launcher.Handlers.Protocols.FTPProtocolHandler"/> class. 
 		/// This also calls the base PatchProtocolHandler constructor, setting up the common functionality.
 		/// </summary>
 		public FTPProtocolHandler()
@@ -101,7 +100,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// Reads a text file from a remote FTP server.
 		/// </summary>
 		/// <returns>The FTP file contents.</returns>
-		/// <param name="ftpSourceFilePath">FTP file path.</param>
+		/// <param name="rawRemoteURL">FTP file path.</param>
+		/// <param name="useAnonymousLogin">Force anonymous credentials for the connection.</param>
 		public string ReadFTPFile(string rawRemoteURL, bool useAnonymousLogin = false)
 		{
 			// Clean the input URL first
@@ -120,9 +120,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				username = Config.GetFTPUsername();
 				password = Config.GetFTPPassword();
 			}
-
-
-			int bytesRead = 0;
 
 			// The buffer size is 256kb. More or less than this reduces download speeds.
 			byte[] buffer = new byte[262144];
@@ -146,6 +143,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
             
 				reader = request.GetResponse().GetResponseStream();
 
+				int bytesRead;
 				while (true)
 				{
 					bytesRead = reader.Read(buffer, 0, buffer.Length);
@@ -252,9 +250,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					{
 						if (directories.Count != 0)
 						{
-							for (int i = 0; i < directories.Count; ++i)
+							foreach (string directory in directories)
 							{
-								string directory = directories[i];
 								string parentDirectory = remoteURL.Replace(Config.GetLauncherBinariesURL(), String.Empty);
 
 								string recursiveURL = Config.GetLauncherBinariesURL() + parentDirectory + "/" + directory;
@@ -294,9 +291,10 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// Downloads an FTP file.
 		/// </summary>
 		/// <returns>The FTP file's location on disk, or the exception message.</returns>
-		/// <param name="ftpSourceFilePath">Ftp source file path.</param>
-		/// <param name="localDestination">Local destination.</param>
-		/// <param name="bUseAnonymous">If set to <c>true</c> b use anonymous.</param>
+		/// <param name="rawRemoteURL">Ftp source file path.</param>
+		/// <param name="localPath">Local destination.</param>
+		/// <param name="contentOffset">Offset into the remote file where downloading should start</param>
+		/// <param name="useAnonymousLogin">If set to <c>true</c> b use anonymous.</param>
 		public void DownloadFTPFile(string rawRemoteURL, string localPath, long contentOffset = 0, bool useAnonymousLogin = false)
 		{
 			//clean the URL string
@@ -336,20 +334,18 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				// Or maybe just bail out if the two differ
 				sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
 				request.ContentOffset = contentOffset;
-
-				long fileSize = 0;
-				            
+								            
 				reader = request.GetResponse().GetResponseStream();
 				sizereader = (FtpWebResponse)sizerequest.GetResponse();
 		
 				//reset byte counter
 				FTPbytesDownloaded = 0;
 
-				fileSize = sizereader.ContentLength;
+				long fileSize = sizereader.ContentLength;
 
 				//set file info for progress reporting
 				FileDownloadProgressArgs.FileName = Path.GetFileNameWithoutExtension(remoteURL);
-				FileDownloadProgressArgs.TotalBytes = (int)fileSize;
+				FileDownloadProgressArgs.TotalBytes = fileSize;
 
 				if (contentOffset > 0)
 				{
@@ -368,7 +364,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 				//set file info for progress reporting
 				FileDownloadProgressArgs.FileName = Path.GetFileNameWithoutExtension(remoteURL);
-				FileDownloadProgressArgs.TotalBytes = (int)fileSize;
+				FileDownloadProgressArgs.TotalBytes = fileSize;
 
 				//TODO: Fold this into a for loop?
 				int bytesRead = 0;
@@ -437,6 +433,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// </summary>
 		/// <returns>The ftp web request.</returns>
 		/// <param name="ftpDirectoryPath">Ftp directory path.</param>
+		/// <param name="username">Remote FTP username.</param>
+		/// <param name="password">Remote FTP password</param>
 		/// <param name="keepAlive">If set to <c>true</c> keep alive.</param>
 		public static FtpWebRequest CreateFtpWebRequest(string ftpDirectoryPath, string username, string password, bool keepAlive)
 		{
@@ -523,9 +521,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <returns>The remote manifest checksum.</returns>
 		public string GetRemoteManifestChecksum()
 		{
-			string checksum = String.Empty;
-
-			checksum = ReadFTPFile(Config.GetManifestChecksumURL());
+			string checksum = ReadFTPFile(Config.GetManifestChecksumURL());
 			checksum = Utilities.Clean(checksum);
 
 			return checksum;

@@ -23,7 +23,6 @@ using IniParser;
 using IniParser.Model;
 using System;
 using System.IO;
-using System.Web;
 using Launchpad.Launcher.Utility.Enums;
 using Launchpad.Launcher.Utility;
 
@@ -50,14 +49,6 @@ namespace Launchpad.Launcher.Handlers
 		/// The singleton Instance. Will always point to one shared object.
 		/// </summary>
 		public static readonly ConfigHandler _instance = new ConfigHandler();
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Launchpad_Launcher.ConfigHandler"/> class.
-		/// </summary>
-		private ConfigHandler()
-		{
-            
-		}
 
 		/// <summary>
 		/// Writes the config data to disk. This method is thread-blocking, and all write operations 
@@ -197,7 +188,7 @@ namespace Launchpad.Launcher.Handlers
 			{
 				// Make sure the GUID file has been populated
 				FileInfo guidInfo = new FileInfo(GetInstallGUIDPath());
-				if (!(guidInfo.Length > 0))
+				if (guidInfo.Length <= 0)
 				{
 					// Generate and store a GUID.
 					string GeneratedGUID = Guid.NewGuid().ToString();
@@ -329,12 +320,12 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The game path, terminated by a directory separator.</returns>
 		public string GetGamePath(bool bIncludeSystemTarget)
 		{
-			string gamePath = "";
+			string gamePath;
 			if (bIncludeSystemTarget)
 			{
 				gamePath = String.Format(@"{0}Game{2}{1}{2}", 
 					GetLocalDir(),
-					GetSystemTarget().ToString(),
+					GetSystemTarget(),
 					Path.DirectorySeparatorChar);
 			}
 			else
@@ -353,8 +344,8 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The game executable.</returns>
 		public string GetGameExecutable()
 		{
-			string executablePathRootLevel = String.Empty;
-			string executablePathTargetLevel = String.Empty;
+			string executablePathRootLevel;
+			string executablePathTargetLevel;
 
 			//unix doesn't need (or have!) the .exe extension.
 			if (ChecksHandler.IsRunningOnUnix())
@@ -528,10 +519,10 @@ namespace Launchpad.Launcher.Handlers
 		/// Gets the game URL.
 		/// </summary>
 		/// <returns>The game URL.</returns>
-		/// <param name="bGetSystemGame">If set to <c>true</c> b gets a platform-specific game.</param>
+		/// <param name="bIncludeSystemTarget">If set to <c>true</c> b gets a platform-specific game.</param>
 		public string GetGameURL(bool bIncludeSystemTarget)
 		{
-			string gameURL = String.Empty;
+			string gameURL;
 			if (bIncludeSystemTarget)
 			{
 				gameURL = String.Format("{0}/game/{1}/bin/", 
@@ -590,7 +581,6 @@ namespace Launchpad.Launcher.Handlers
 				{
 					FileIniDataParser Parser = new FileIniDataParser();
 					IniData data = Parser.ReadFile(GetConfigPath());
-					;
 
 					string gameName = data["Local"]["GameName"];
 
@@ -616,7 +606,6 @@ namespace Launchpad.Launcher.Handlers
 				{
 					FileIniDataParser Parser = new FileIniDataParser();
 					IniData data = Parser.ReadFile(GetConfigPath());
-					;
 
 					string patchProtocol = data["Remote"]["Protocol"];
 

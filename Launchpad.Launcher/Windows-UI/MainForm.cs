@@ -23,7 +23,6 @@ using System;
 using System.IO;
 using System.Resources;
 using System.Windows.Forms;
-using System.Collections.Generic;
 using Launchpad.Launcher.Utility.Events;
 using Launchpad.Launcher.Handlers;
 using Launchpad.Launcher.Utility.Enums;
@@ -393,7 +392,7 @@ namespace Launchpad.Launcher.UI
 					}
 				default:
 					{
-						throw new ArgumentOutOfRangeException("Invalid mode was passed to SetLauncherMode");
+						throw new ArgumentOutOfRangeException("newMode", "Invalid mode was passed to SetLauncherMode");
 					}
 			}
 		}
@@ -483,9 +482,9 @@ namespace Launchpad.Launcher.UI
 					{
 						string progressbarText = String.Format(
 							                         LocalizationCatalog.GetString("fileDownloadMessage"),
-							                         System.IO.Path.GetFileNameWithoutExtension(e.FileName),
-							                         e.DownloadedBytes.ToString(),
-							                         e.TotalBytes.ToString());
+							                         Path.GetFileNameWithoutExtension(e.FileName),
+							                         e.DownloadedBytes,
+							                         e.TotalBytes);
 
 						downloadProgressLabel.Text = progressbarText;
 
@@ -525,7 +524,6 @@ namespace Launchpad.Launcher.UI
 
 							launchFailedNotification.BalloonTipTitle = LocalizationCatalog.GetString("errorTitle");
 							launchFailedNotification.BalloonTipText = LocalizationCatalog.GetString("gameDownloadFailMessage");
-							;
 
 							launchFailedNotification.ShowBalloonTip(10000);
 						}

@@ -515,8 +515,8 @@ namespace Launchpad.Launcher.UI
 
 					string progressbarText = String.Format(Mono.Unix.Catalog.GetString("Downloading file {0}: {1} of {2} bytes."),
 						                         System.IO.Path.GetFileNameWithoutExtension(e.FileName),
-						                         e.DownloadedBytes.ToString(),
-						                         e.TotalBytes.ToString());
+						                         e.DownloadedBytes,
+						                         e.TotalBytes);
 					progressbar2.Text = progressbarText;
 					progressbar2.Fraction = (double)e.DownloadedBytes / (double)e.TotalBytes;
 

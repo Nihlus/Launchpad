@@ -27,16 +27,12 @@ namespace Launchpad.Launcher.Utility
 	internal static class Utilities
 	{
 		/// <summary>
-		/// Clean the specified input.
+		/// Clean the specified input from newlines and nulls (\r, \n and \0)
 		/// </summary>
-		/// <param name="input">Input.</param>
+		/// <param name="input">Input string.</param>
 		public static string Clean(string input)
 		{
-			string output = "";
-
-			output = input.Replace("\n", String.Empty).Replace("\0", String.Empty).Replace("\r", String.Empty);
-
-			return output;
+			return input.Replace("\n", String.Empty).Replace("\0", String.Empty).Replace("\r", String.Empty);
 		}
 
 		public static ESystemTarget ParseSystemTarget(string input)

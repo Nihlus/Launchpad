@@ -37,15 +37,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// The config handler reference.
 		/// </summary>
-		private ConfigHandler Config = ConfigHandler._instance;
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Launchpad_Launcher.ChecksHandler"/> class.
-		/// </summary>
-		public ChecksHandler()
-		{
-
-		}
+		readonly ConfigHandler Config = ConfigHandler._instance;
 
 		//TODO: Move to FTPProtocolHandler
 		/// <summary>
@@ -173,14 +165,7 @@ namespace Launchpad.Launcher.Handlers
 				Version local = Config.GetLocalGameVersion();
 				Version remote = FTP.GetRemoteGameVersion();
 
-				if (local < remote)
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
+				return local < remote;
 			}
 			catch (WebException wex)
 			{
@@ -202,14 +187,7 @@ namespace Launchpad.Launcher.Handlers
 				Version local = Config.GetLocalLauncherVersion();
 				Version remote = FTP.GetRemoteLauncherVersion();	
 
-				if (local < remote)
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
+				return local < remote;
 			}
 			catch (WebException wex)
 			{
@@ -252,14 +230,7 @@ namespace Launchpad.Launcher.Handlers
 				string remoteHash = FTP.ReadFTPFile(manifestURL);
 				string localHash = MD5Handler.GetFileHash(File.OpenRead(ConfigHandler.GetManifestPath()));
 
-				if (remoteHash != localHash)
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
+				return remoteHash != localHash;
 			}
 			else
 			{
@@ -278,7 +249,7 @@ namespace Launchpad.Launcher.Handlers
 
 			string remote = String.Format("{0}/game/{1}/.provides",
 				                Config.GetBaseFTPUrl(),
-				                Platform.ToString());
+				                Platform);
 
 			return FTP.DoesRemoteFileExist(remote);
 			

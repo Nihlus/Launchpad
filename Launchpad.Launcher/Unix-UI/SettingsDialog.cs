@@ -44,11 +44,12 @@ namespace Launchpad.Launcher.UI
 		ChecksHandler Checks = new ChecksHandler();
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Launchpad.SettingsDialog"/> class.
+		/// Initializes a new instance of the <see cref="Launchpad.Launcher.UI.SettingsDialog"/> class.
 		/// </summary>
 		public SettingsDialog()
 		{
 			this.Build();
+
 			//fill in Local settings
 			GameName_entry.Text = Config.GetGameName();
 

@@ -55,25 +55,17 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// The progress arguments object. Is updated during file download operations.
 		/// </summary>
-		private FileDownloadProgressChangedEventArgs ProgressArgs;
+		private readonly FileDownloadProgressChangedEventArgs ProgressArgs = new FileDownloadProgressChangedEventArgs();
+
 		/// <summary>
 		/// The download finished arguments object. Is updated once a file download finishes.
 		/// </summary>
-		private GameDownloadFinishedEventArgs DownloadFinishedArgs;
+		private readonly GameDownloadFinishedEventArgs DownloadFinishedArgs = new GameDownloadFinishedEventArgs();
 
 		/// <summary>
 		/// The config handler reference.
 		/// </summary>
 		ConfigHandler Config = ConfigHandler._instance;
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Launchpad_Launcher.LauncherHandler"/> class.
-		/// </summary>
-		public LauncherHandler()
-		{
-			ProgressArgs = new FileDownloadProgressChangedEventArgs();
-			DownloadFinishedArgs = new GameDownloadFinishedEventArgs();
-		}
 
 		/// <summary>
 		/// Updates the launcher synchronously.
@@ -119,7 +111,6 @@ namespace Launchpad.Launcher.Handlers
 					}
 				}
 				
-				//TODO: Make the script copy recursively
 				ProcessStartInfo script = CreateUpdateScript();
 
 				Process.Start(script);
@@ -152,7 +143,7 @@ namespace Launchpad.Launcher.Handlers
 					manifestStream = File.OpenRead(ConfigHandler.GetManifestPath());
 					localChecksum = MD5Handler.GetFileHash(manifestStream);
 
-					if (!(remoteChecksum == localChecksum))
+					if (remoteChecksum != localChecksum)
 					{
 						//Copy the old manifest so that we can compare them when updating the game
 						File.Copy(LocalPath, LocalPath + ".old", true);

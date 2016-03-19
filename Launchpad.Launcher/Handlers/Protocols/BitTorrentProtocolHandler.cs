@@ -20,9 +20,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // TODO: Look into MonoTorrent
-
-using System;
-
 namespace Launchpad.Launcher.Handlers.Protocols
 {
 	/// <summary>

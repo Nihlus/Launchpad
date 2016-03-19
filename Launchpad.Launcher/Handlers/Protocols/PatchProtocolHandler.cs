@@ -39,7 +39,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 	/// </summary>
 	internal abstract class PatchProtocolHandler
 	{
-		public PatchProtocolHandler()
+		protected PatchProtocolHandler()
 		{
 			// ...
 			FileDownloadProgressArgs = new FileDownloadProgressChangedEventArgs();

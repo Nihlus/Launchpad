@@ -70,7 +70,8 @@ namespace Launchpad.Launcher.Handlers
 
 		//Failure event arguments
 		/// <summary>
-		/// The download failed arguments.                
+		/// The download failed arguments.    
+		/// </summary>            
 		private GameDownloadFailedEventArgs DownloadFailedArgs;
 
 		private GameExitEventArgs GameExitArgs;
@@ -82,7 +83,7 @@ namespace Launchpad.Launcher.Handlers
 		private ConfigHandler Config = ConfigHandler._instance;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Launchpad_Launcher.GameHandler"/> class.
+		/// Initializes a new instance of the <see cref="Launchpad.Launcher.Handlers.GameHandler"/> class.
 		/// </summary>
 		public GameHandler()
 		{
@@ -90,7 +91,6 @@ namespace Launchpad.Launcher.Handlers
 			DownloadFinishedArgs = new GameDownloadFinishedEventArgs();
 
 			DownloadFailedArgs = new GameDownloadFailedEventArgs();
-
 			GameExitArgs = new GameExitEventArgs();
 		}
 
@@ -107,7 +107,6 @@ namespace Launchpad.Launcher.Handlers
 		{
 			//This value is filled with either a path to the last downloaded file, or with an exception message
 			//this message is used in the main UI to determine how it responds to a failed download.
-			string fileReturn = "";
 			try
 			{
 				FTPProtocolHandler FTP = new FTPProtocolHandler();
@@ -153,7 +152,7 @@ namespace Launchpad.Launcher.Handlers
 
 					string LocalPath = String.Format("{0}{1}{2}", 
 						                   Config.GetGamePath(true),
-						                   System.IO.Path.DirectorySeparatorChar, 
+						                   Path.DirectorySeparatorChar, 
 						                   Entry.RelativePath);
 
 					//make sure we have a game directory to put files in
@@ -164,7 +163,8 @@ namespace Launchpad.Launcher.Handlers
 					File.WriteAllText(ConfigHandler.GetInstallCookiePath(), String.Empty);
 
 					TextWriter textWriterProgress = new StreamWriter(ConfigHandler.GetInstallCookiePath());
-					textWriterProgress.WriteLine(Entry.ToString());
+					//TODO: Investigate whether or not this supports direct conversion without Entry.ToString()
+					textWriterProgress.WriteLine(Entry);
 					textWriterProgress.Close();
 
 					if (File.Exists(LocalPath))
@@ -296,7 +296,6 @@ namespace Launchpad.Launcher.Handlers
 		{
 			//This value is filled with either a path to the last downloaded file, or with an exception message
 			//this message is used in the main UI to determine how it responds to a failed download.
-			string repairMetadata = "";
 			try
 			{
 				//check all local file MD5s against latest manifest. Resume partial files, download broken files.
@@ -310,7 +309,7 @@ namespace Launchpad.Launcher.Handlers
 				string RemoteManifestHash = FTP.GetRemoteManifestChecksum();
 
 				//if it is not, download a new copy.
-				if (!(LocalManifestHash == RemoteManifestHash))
+				if (LocalManifestHash != RemoteManifestHash)
 				{
 					LauncherHandler Launcher = new LauncherHandler();
 					Launcher.DownloadManifest();
@@ -348,7 +347,7 @@ namespace Launchpad.Launcher.Handlers
 						{
 							//Resume the download of this partial file.
 							OnProgressChanged();
-							FTP.DownloadFTPFile(RemotePath, LocalPath, fileInfo.Length, false);
+							FTP.DownloadFTPFile(RemotePath, LocalPath, fileInfo.Length);
 
 							//Now verify the file
 							string localHash = MD5Handler.GetFileHash(File.OpenRead(LocalPath));
@@ -421,7 +420,7 @@ namespace Launchpad.Launcher.Handlers
 				Process game = Process.Start(gameStartInfo);
 				game.EnableRaisingEvents = true;
 
-				game.Exited += delegate(object sender, EventArgs e)
+				game.Exited += delegate
 				{					
 					GameExitArgs.ExitCode = game.ExitCode;
 					OnGameExited();
@@ -430,6 +429,8 @@ namespace Launchpad.Launcher.Handlers
 			catch (IOException ioex)
 			{
 				Console.WriteLine("IOException in LaunchGame(): " + ioex.Message);
+				GameExitArgs.ExitCode = 1;
+
 				OnGameLaunchFailed();
 			}
 		}
