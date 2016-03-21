@@ -171,7 +171,7 @@
                         <property name="HasDefault">True</property>
                         <property name="CanFocus">True</property>
                         <property name="Type">TextOnly</property>
-                        <property name="Label" translatable="yes" />
+                        <property name="Label" translatable="yes">Inactive</property>
                         <property name="UseUnderline">True</property>
                         <signal name="Clicked" handler="OnPrimaryButtonClicked" />
                       </widget>

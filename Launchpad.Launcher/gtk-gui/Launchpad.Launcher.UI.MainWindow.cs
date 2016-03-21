@@ -157,6 +157,7 @@ namespace Launchpad.Launcher.UI
 			this.PrimaryButton.CanFocus = true;
 			this.PrimaryButton.Name = "PrimaryButton";
 			this.PrimaryButton.UseUnderline = true;
+			this.PrimaryButton.Label = global::Mono.Unix.Catalog.GetString ("Inactive");
 			this.alignment3.Add (this.PrimaryButton);
 			this.hbox4.Add (this.alignment3);
 			global::Gtk.Box.BoxChild w12 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.alignment3]));

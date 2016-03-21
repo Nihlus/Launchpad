@@ -60,7 +60,7 @@ namespace Launchpad.Launcher.UI
 		/// <summary>
 		/// The current mode that the launcher is in. Determines what the primary button does when pressed.
 		/// </summary>
-		ELauncherMode Mode = ELauncherMode.Idle;
+		ELauncherMode Mode = ELauncherMode.Inactive;
 
 		public MainWindow()
 			: base(WindowType.Toplevel)
@@ -73,6 +73,9 @@ namespace Launchpad.Launcher.UI
 
 			//Initialize the GTK UI
 			this.Build();
+
+			// Set the initial launcher mode
+			SetLauncherMode(ELauncherMode.Inactive, false);
 
 			//set the window title
 			Title = "Launchpad - " + Config.GetGameName();
@@ -246,6 +249,12 @@ namespace Launchpad.Launcher.UI
 							PrimaryButton.Sensitive = true;
 							PrimaryButton.Label = Mono.Unix.Catalog.GetString("Launch");
 						}	
+						break;
+					}
+				case ELauncherMode.Inactive:
+					{
+						PrimaryButton.Sensitive = false;
+						PrimaryButton.Label = Mono.Unix.Catalog.GetString("Inactive");
 						break;
 					}					
 				default:

@@ -59,7 +59,7 @@ namespace Launchpad.Launcher.UI
 		/// <summary>
 		/// The current mode that the launcher is in. Determines what the primary button does when pressed.
 		/// </summary>
-		ELauncherMode Mode = ELauncherMode.Idle;
+		ELauncherMode Mode = ELauncherMode.Inactive;
 
 		public MainForm()
 		{
@@ -67,6 +67,8 @@ namespace Launchpad.Launcher.UI
 
 			Config.Initialize();
 
+
+			SetLauncherMode(ELauncherMode.Inactive, false);
 			MessageLabel.Text = LocalizationCatalog.GetString("idleString");
 			downloadProgressLabel.Text = String.Empty;
 
@@ -373,6 +375,12 @@ namespace Launchpad.Launcher.UI
 							PrimaryButton.Enabled = true;
 							PrimaryButton.Text = LocalizationCatalog.GetString("launchLabel");
 						}
+						break;
+					}
+				case ELauncherMode.Inactive:
+					{
+						PrimaryButton.Enabled = false;
+						PrimaryButton.Text = LocalizationCatalog.GetString("inactiveLabel");
 						break;
 					}
 				default:
