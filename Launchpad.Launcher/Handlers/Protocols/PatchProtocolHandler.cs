@@ -50,7 +50,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		protected ConfigHandler Config = ConfigHandler._instance;
 
 		public event ModuleDownloadProgressChangedEventHandler ModuleDownloadProgressChanged;
-		public event ModuleCopyProgressChangedEventHandler ModuleCopyProgressChanged;
 		public event ModuleVerifyProgressChangedEventHandler ModuleVerifyProgressChanged;
 		public event ModuleUpdateProgressChangedEventHandler ModuleUpdateProgressChanged;
 
@@ -105,31 +104,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		protected abstract void DownloadGame();
 
 		/// <summary>
-		/// Copies the game to the installation directory.
-		/// Normal copying procedures are provided by PatchProtocolHandler, but can be overridden as neccesary.
-		/// </summary>
-		protected virtual void CopyGame()
-		{
-			if (Directory.Exists(ConfigHandler.GetTempGameDownloadDir()))
-			{
-				ModuleCopyProgressArgs.Module = EModule.Game;
-				ModuleCopyProgressArgs.IndicatorLabelMessage = "Copying game to installation directory...";
-
-				List<string> gameFiles = Directory.EnumerateFiles(ConfigHandler.GetTempGameDownloadDir(), "*", SearchOption.AllDirectories).ToList();
-				foreach (string gameFile in gameFiles)
-				{
-					ModuleCopyProgressArgs.ProgressBarMessage = String.Format("Copying {0} to installation directory...", Path.GetFileName(gameFile));
-					OnModuleCopyProgressChanged();
-
-					// Copy the file
-					string basePath = gameFile.Replace(ConfigHandler.GetTempGameDownloadDir(), "");
-					string destinationPath = Config.GetGamePath(true) + basePath;
-					File.Copy(gameFile, destinationPath, true);
-				}
-			}
-		}
-
-		/// <summary>
 		/// Verifies and repairs the launcher files.
 		/// </summary>
 		public abstract void VerifyLauncher();
@@ -148,14 +122,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			if (ModuleDownloadProgressChanged != null)
 			{
 				ModuleDownloadProgressChanged(this, ModuleDownloadProgressArgs);
-			}
-		}
-
-		protected void OnModuleCopyProgressChanged()
-		{
-			if (ModuleCopyProgressChanged != null)
-			{
-				ModuleCopyProgressChanged(this, ModuleCopyProgressArgs);
 			}
 		}
 
@@ -206,7 +172,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 	*/
 	public delegate void ModuleInstallationProgressChangedEventHandler(object sender,ModuleProgressChangedArgs e);
 	public delegate void ModuleDownloadProgressChangedEventHandler(object sender,ModuleProgressChangedArgs e);
-	public delegate void ModuleCopyProgressChangedEventHandler(object sender,ModuleProgressChangedArgs e);
 	public delegate void ModuleVerifyProgressChangedEventHandler(object sender,ModuleProgressChangedArgs e);
 	public delegate void ModuleUpdateProgressChangedEventHandler(object sender,ModuleProgressChangedArgs e);
 

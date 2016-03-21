@@ -54,7 +54,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// The download finished arguments object. Is updated once a file download finishes.
 		/// </summary>
-		private readonly ChangelogDownloadFinishedEventArgs DownloadFinishedArgs = new ChangelogDownloadFinishedEventArgs();
+		private readonly ChangelogDownloadFinishedEventArgs ChangelogDownloadFinishedArgs = new ChangelogDownloadFinishedEventArgs();
 
 		/// <summary>
 		/// The config handler reference.
@@ -116,12 +116,12 @@ namespace Launchpad.Launcher.Handlers
 			}
 		}
 
+		// TODO: Move to FTPProtocolHandler
 		/// <summary>
 		/// Downloads the manifest.
 		/// </summary>
 		public void DownloadManifest()
 		{
-			Stream manifestStream = null;														
 			try
 			{
 				FTPProtocolHandler FTP = new FTPProtocolHandler();
@@ -134,8 +134,10 @@ namespace Launchpad.Launcher.Handlers
 
 				if (File.Exists(ConfigHandler.GetManifestPath()))
 				{
-					manifestStream = File.OpenRead(ConfigHandler.GetManifestPath());
-					localChecksum = MD5Handler.GetFileHash(manifestStream);
+					using (Stream manifestStream = File.OpenRead(ConfigHandler.GetManifestPath()))
+					{
+						localChecksum = MD5Handler.GetFileHash(manifestStream);
+					}
 
 					if (remoteChecksum != localChecksum)
 					{
@@ -153,13 +155,6 @@ namespace Launchpad.Launcher.Handlers
 			catch (IOException ioex)
 			{
 				Console.WriteLine("IOException in DownloadManifest(): " + ioex.Message);
-			}
-			finally
-			{
-				if (manifestStream != null)
-				{
-					manifestStream.Close();
-				}
 			}
 		}
 
@@ -180,8 +175,8 @@ namespace Launchpad.Launcher.Handlers
 			//load the HTML from the server as a string
 			string content = FTP.ReadFTPFile(Config.GetChangelogURL());
 					
-			DownloadFinishedArgs.HTML = content;
-			DownloadFinishedArgs.URL = Config.GetChangelogURL();
+			ChangelogDownloadFinishedArgs.HTML = content;
+			ChangelogDownloadFinishedArgs.URL = Config.GetChangelogURL();
 
 			OnChangelogDownloadFinished();
 		}
@@ -205,28 +200,28 @@ namespace Launchpad.Launcher.Handlers
 						                    Path.GetTempPath());
 
 
-					FileStream updateScript = File.Create(scriptPath);
-					TextWriter tw = new StreamWriter(updateScript);
+					using (FileStream updateScript = File.Create(scriptPath))
+					{
+						using (TextWriter tw = new StreamWriter(updateScript))
+						{							
+							string copyCom = String.Format("cp -rf {0} {1}", 
+								                 Path.GetTempPath() + "launchpad/*",
+								                 ConfigHandler.GetLocalDir());
 
-					//write commands to the script
-					//wait five seconds, then copy the new executable
-					string copyCom = String.Format("cp -rf {0} {1}", 
-						                 Path.GetTempPath() + "launchpad/*",
-						                 ConfigHandler.GetLocalDir());
+							string delCom = String.Format("rm -rf {0}", 
+								                Path.GetTempPath() + "launchpad");
 
-					string delCom = String.Format("rm -rf {0}", 
-						                Path.GetTempPath() + "launchpad");
-
-					string dirCom = String.Format("cd {0}", ConfigHandler.GetLocalDir());
-					string launchCom = String.Format(@"nohup ./{0} &", executableName);
-					tw.WriteLine(@"#!/bin/sh");
-					tw.WriteLine("sleep 5");
-					tw.WriteLine(copyCom);
-					tw.WriteLine(delCom); 
-					tw.WriteLine(dirCom);
-					tw.WriteLine("chmod +x " + executableName);
-					tw.WriteLine(launchCom);
-					tw.Close();
+							string dirCom = String.Format("cd {0}", ConfigHandler.GetLocalDir());
+							string launchCom = String.Format(@"nohup ./{0} &", executableName);
+							tw.WriteLine(@"#!/bin/sh");
+							tw.WriteLine("sleep 5");
+							tw.WriteLine(copyCom);
+							tw.WriteLine(delCom); 
+							tw.WriteLine(dirCom);
+							tw.WriteLine("chmod +x " + executableName);
+							tw.WriteLine(launchCom);
+						}
+					}
 
 					UnixHandler.MakeExecutable(scriptPath);
 
@@ -247,19 +242,21 @@ namespace Launchpad.Launcher.Handlers
 					string scriptPath = String.Format(@"{0}launchpadupdate.bat", 
 						                    Path.GetTempPath());
 
-					FileStream updateScript = File.Create(scriptPath);
+					using (FileStream updateScript = File.Create(scriptPath))
+					{
+						using (TextWriter tw = new StreamWriter(updateScript))
+						{
+							//write commands to the script
+							//wait three seconds, then copy the new executable
+							tw.WriteLine(String.Format(@"timeout 3 & xcopy /e /s /y ""{0}\launchpad"" ""{1}"" && rmdir /s /q {0}\launchpad", 
+									Path.GetTempPath(), 
+									ConfigHandler.GetLocalDir()));
 
-					TextWriter tw = new StreamWriter(updateScript);
-
-					//write commands to the script
-					//wait three seconds, then copy the new executable
-					tw.WriteLine(String.Format(@"timeout 3 & xcopy /e /s /y ""{0}\launchpad"" ""{1}"" && rmdir /s /q {0}\launchpad", 
-							Path.GetTempPath(), 
-							ConfigHandler.GetLocalDir()));
-
-					//then start the new executable
-					tw.WriteLine(String.Format(@"start {0}", executableName));
-					tw.Close();
+							//then start the new executable
+							tw.WriteLine(String.Format(@"start {0}", executableName));
+							tw.Close();
+						}
+					}
 
 					ProcessStartInfo updateBatchProcess = new ProcessStartInfo();
 
@@ -288,7 +285,7 @@ namespace Launchpad.Launcher.Handlers
 			if (ChangelogDownloadFinished != null)
 			{
 				//raise the event
-				ChangelogDownloadFinished(this, DownloadFinishedArgs);
+				ChangelogDownloadFinished(this, ChangelogDownloadFinishedArgs);
 			}
 		}
 	}
@@ -297,7 +294,6 @@ namespace Launchpad.Launcher.Handlers
 		Launcher-specific events
 	*/
 	public delegate void ChangelogDownloadFinishedEventHandler(object sender,ChangelogDownloadFinishedEventArgs e);
-
 
 	/*
 		Launcher-specific event arguments

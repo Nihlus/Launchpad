@@ -65,7 +65,6 @@ namespace Launchpad.Launcher.Handlers
 		{
 			Patch = Config.GetPatchProtocol();
 			Patch.ModuleDownloadProgressChanged += OnModuleInstallProgressChanged;
-			Patch.ModuleCopyProgressChanged += OnModuleInstallProgressChanged;
 			Patch.ModuleVerifyProgressChanged += OnModuleInstallProgressChanged;
 			Patch.ModuleInstallationFinished += OnModuleInstallationFinished;
 			Patch.ModuleInstallationFailed += OnModuleInstallationFailed;		

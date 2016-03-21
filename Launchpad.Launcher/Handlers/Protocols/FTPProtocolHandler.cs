@@ -133,117 +133,28 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 		public override void InstallGame()
 		{
+			ModuleInstallFinishedArgs.Module = EModule.Game;
+			ModuleInstallFailedArgs.Module = EModule.Game;
+
 			try
 			{
-				List<ManifestEntry> Manifest = manifestHandler.Manifest;
-
 				//create the .install file to mark that an installation has begun
 				//if it exists, do nothing.
 				ConfigHandler.CreateInstallCookie();
+							
+				// Download Game
+				DownloadGame();
 
-				//in order to be able to resume downloading, we check if there is an entry
-				//stored in the install cookie.
-				//attempt to parse whatever is inside the install cookie
-				ManifestEntry lastDownloadedFile;
-				if (ManifestEntry.TryParse(File.ReadAllText(ConfigHandler.GetInstallCookiePath()), out lastDownloadedFile))
-				{
-					//loop through all the entries in the manifest until we encounter
-					//an entry which matches the one in the install cookie
-
-					foreach (ManifestEntry Entry in Manifest)
-					{
-						if (lastDownloadedFile == Entry)
-						{
-							//remove all entries before the one we were last at.
-							Manifest.RemoveRange(0, Manifest.IndexOf(Entry));
-						}
-					}
-				}
-
-				//then, start downloading the entries that remain in the manifest.
-				int downloadedFiles = 0;
-				foreach (ManifestEntry Entry in Manifest)
-				{
-					string RemotePath = String.Format("{0}{1}", 
-						                    Config.GetGameURL(true), 
-						                    Entry.RelativePath);
-
-					string LocalPath = String.Format("{0}{1}{2}", 
-						                   Config.GetGamePath(true),
-						                   Path.DirectorySeparatorChar, 
-						                   Entry.RelativePath);
-
-					// Prepare the progress event contents
-					ModuleDownloadProgressArgs.IndicatorLabelMessage = GetDownloadIndicatorLabelMessage(downloadedFiles, Path.GetFileName(LocalPath), Manifest.Count);
-
-					//make sure we have a game directory to put files in
-					Directory.CreateDirectory(Path.GetDirectoryName(LocalPath));
-				
-					// Reset the cookie
-					File.WriteAllText(ConfigHandler.GetInstallCookiePath(), String.Empty);
-
-					// Write the current file progress to the install cookie
-					using (TextWriter textWriterProgress = new StreamWriter(ConfigHandler.GetInstallCookiePath()))
-					{
-						textWriterProgress.WriteLine(Entry);
-					}
-
-					if (File.Exists(LocalPath))
-					{
-						FileInfo fileInfo = new FileInfo(LocalPath);
-						if (fileInfo.Length != Entry.Size)
-						{
-							// Resume the download of this partial file.
-							OnModuleDownloadProgressChanged();
-							DownloadFTPFile(RemotePath, LocalPath, fileInfo.Length);
-
-							// Now verify the file
-							string localHash = MD5Handler.GetFileHash(File.OpenRead(LocalPath));
-
-							// TODO: Retry a number of times, now we just assume the new file is correct
-							if (localHash != Entry.Hash)
-							{
-								Console.WriteLine("InstallGameAsync: Resumed file hash was invalid, downloading fresh copy from server.");
-								OnModuleDownloadProgressChanged();
-								DownloadFTPFile(RemotePath, LocalPath);
-							}
-						}									
-					}
-					else
-					{
-						//no file, download it
-						OnModuleDownloadProgressChanged();
-						DownloadFTPFile(RemotePath, LocalPath);
-					}					
-
-					if (ChecksHandler.IsRunningOnUnix())
-					{
-						//if we're dealing with a file that should be executable, 
-						string gameName = Config.GetGameName();
-						bool bFileIsGameExecutable = (Path.GetFileName(LocalPath).EndsWith(".exe")) || (Path.GetFileName(LocalPath) == gameName);
-						if (bFileIsGameExecutable)
-						{
-							//set the execute bits
-							UnixHandler.MakeExecutable(LocalPath);
-						}					
-					}
-
-					downloadedFiles++;
-				}
-
-				//we've finished the download, so empty the cookie
-				File.WriteAllText(ConfigHandler.GetInstallCookiePath(), String.Empty);
-
-				//raise the finished event
-				OnModuleInstallationFinished();	
+				// Verify Game
+				VerifyGame();
 			}
 			catch (IOException ioex)
 			{
-				Console.WriteLine("IOException in InstallGameAsync(): " + ioex.Message);
-
-				//HACK: Magic numbers
+				Console.WriteLine("IOException in InstallGame(): " + ioex.Message);
 				OnModuleInstallationFailed();
 			}
+
+			OnModuleInstallationFinished();
 		}
 
 		protected override void DownloadLauncher()
@@ -253,7 +164,99 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 		protected override void DownloadGame()
 		{
+			List<ManifestEntry> Manifest = manifestHandler.Manifest;
 
+			//in order to be able to resume downloading, we check if there is an entry
+			//stored in the install cookie.
+			//attempt to parse whatever is inside the install cookie
+			ManifestEntry lastDownloadedFile;
+			if (ManifestEntry.TryParse(File.ReadAllText(ConfigHandler.GetInstallCookiePath()), out lastDownloadedFile))
+			{
+				//loop through all the entries in the manifest until we encounter
+				//an entry which matches the one in the install cookie
+
+				foreach (ManifestEntry Entry in Manifest)
+				{
+					if (lastDownloadedFile == Entry)
+					{
+						//remove all entries before the one we were last at.
+						Manifest.RemoveRange(0, Manifest.IndexOf(Entry));
+					}
+				}
+			}
+			//then, start downloading the entries that remain in the manifest.
+			int downloadedFiles = 0;
+			foreach (ManifestEntry Entry in Manifest)
+			{
+				string RemotePath = String.Format("{0}{1}", 
+					                    Config.GetGameURL(true), 
+					                    Entry.RelativePath);
+
+				string LocalPath = String.Format("{0}{1}{2}", 
+					                   Config.GetGamePath(true),
+					                   Path.DirectorySeparatorChar, 
+					                   Entry.RelativePath);
+
+				// Prepare the progress event contents
+				ModuleDownloadProgressArgs.IndicatorLabelMessage = GetDownloadIndicatorLabelMessage(downloadedFiles, Path.GetFileName(LocalPath), Manifest.Count);
+
+				//make sure we have a game directory to put files in
+				Directory.CreateDirectory(Path.GetDirectoryName(LocalPath));
+				
+				// Reset the cookie
+				File.WriteAllText(ConfigHandler.GetInstallCookiePath(), String.Empty);
+
+				// Write the current file progress to the install cookie
+				using (TextWriter textWriterProgress = new StreamWriter(ConfigHandler.GetInstallCookiePath()))
+				{
+					textWriterProgress.WriteLine(Entry);
+				}
+
+				if (File.Exists(LocalPath))
+				{
+					FileInfo fileInfo = new FileInfo(LocalPath);
+					if (fileInfo.Length != Entry.Size)
+					{
+						// Resume the download of this partial file.
+						OnModuleDownloadProgressChanged();
+						DownloadFTPFile(RemotePath, LocalPath, fileInfo.Length);
+
+						// Now verify the file
+						string localHash = MD5Handler.GetFileHash(File.OpenRead(LocalPath));
+
+						// TODO: Retry a number of times, now we just assume the new file is correct
+						if (localHash != Entry.Hash)
+						{
+							Console.WriteLine("InstallGame(): Resumed file hash was invalid, downloading fresh copy from server.");
+							OnModuleDownloadProgressChanged();
+							DownloadFTPFile(RemotePath, LocalPath);
+						}
+					}									
+				}
+				else
+				{
+					//no file, download it
+					OnModuleDownloadProgressChanged();
+					DownloadFTPFile(RemotePath, LocalPath);
+				}					
+
+				if (ChecksHandler.IsRunningOnUnix())
+				{
+					//if we're dealing with a file that should be executable, 
+					string gameName = Config.GetGameName();
+					bool bFileIsGameExecutable = (Path.GetFileName(LocalPath).EndsWith(".exe")) || (Path.GetFileName(LocalPath) == gameName);
+					if (bFileIsGameExecutable)
+					{
+						//set the execute bits
+						UnixHandler.MakeExecutable(LocalPath);
+					}					
+				}
+
+				downloadedFiles++;
+			}
+
+			//we've finished the download, so empty the cookie
+			File.WriteAllText(ConfigHandler.GetInstallCookiePath(), String.Empty);
 		}
 
 		public override void VerifyLauncher()
@@ -261,7 +264,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 		}
 
-		// TODO: This function should be asynchronous
 		public override void VerifyGame()
 		{
 			try
@@ -278,7 +280,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				}
 
 				// Then, begin repairing the game
-				ManifestHandler manifestHandler = new ManifestHandler();
 				List<ManifestEntry> Manifest = manifestHandler.Manifest;			
 							
 				int verfiedFiles = 0;
@@ -293,7 +294,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 						                   Entry.RelativePath);
 
 					// Prepare the progress event contents
-					ModuleVerifyProgressArgs.IndicatorLabelMessage = GetRepairIndicatorLabelMessage(verfiedFiles, Path.GetFileName(LocalPath), Manifest.Count);
+					ModuleVerifyProgressArgs.IndicatorLabelMessage = GetVerifyIndicatorLabelMessage(verfiedFiles, Path.GetFileName(LocalPath), Manifest.Count);
 					OnModuleVerifyProgressChanged();
 
 					if (File.Exists(LocalPath))
@@ -339,17 +340,10 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 					++verfiedFiles;
 				}
-
-				OnModuleInstallationFinished();
 			}
 			catch (IOException ioex)
 			{
 				Console.WriteLine("IOException in RepairGameAsync(): " + ioex.Message);
-
-				//HACK: Magic numbers
-
-				ModuleInstallFailedArgs.Module = EModule.Game;
-				OnModuleInstallationFailed();
 			}
 		}
 
@@ -389,26 +383,11 @@ namespace Launchpad.Launcher.Handlers.Protocols
 						// TODO: Implement verification of the downloaded file
 					}
 				}
-
-				OnModuleInstallationFinished();
 			}
 			catch (IOException ioex)
 			{
 				Console.WriteLine("IOException in UpdateGameAsync(): " + ioex.Message);
-				OnModuleInstallationFailed();
 			}
-		}
-
-		/// <summary>
-		/// Gets the indicator label message to display to the user while repairing.
-		/// </summary>
-		/// <returns>The indicator label message.</returns>
-		/// <param name="nFilesToVerify">N files downloaded.</param>
-		/// <param name="currentFilename">Current filename.</param>
-		/// <param name="totalFilesVerified">Total files to download.</param>
-		private string GetRepairIndicatorLabelMessage(int nFilesToVerify, string currentFilename, int totalFilesVerified)
-		{
-			return String.Format("Verifying file {0} ({1} of {2})", currentFilename, nFilesToVerify, totalFilesVerified);
 		}
 
 		/// <summary>
@@ -421,6 +400,18 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		private string GetDownloadIndicatorLabelMessage(int nFilesDownloaded, string currentFilename, int totalFilesToDownload)
 		{
 			return String.Format("Downloading file {0} ({1} of {2})", currentFilename, nFilesDownloaded, totalFilesToDownload);
+		}
+
+		/// <summary>
+		/// Gets the indicator label message to display to the user while repairing.
+		/// </summary>
+		/// <returns>The indicator label message.</returns>
+		/// <param name="nFilesToVerify">N files downloaded.</param>
+		/// <param name="currentFilename">Current filename.</param>
+		/// <param name="totalFilesVerified">Total files to download.</param>
+		private string GetVerifyIndicatorLabelMessage(int nFilesToVerify, string currentFilename, int totalFilesVerified)
+		{
+			return String.Format("Verifying file {0} ({1} of {2})", currentFilename, nFilesToVerify, totalFilesVerified);
 		}
 
 		/// <summary>
