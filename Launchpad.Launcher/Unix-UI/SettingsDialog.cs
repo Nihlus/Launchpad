@@ -57,8 +57,8 @@ namespace Launchpad.Launcher.UI
 
 			//fill in remote settings
 			FTPURL_entry.Text = Config.GetBaseFTPUrl();
-			FTPUsername_entry.Text = Config.GetFTPUsername();
-			FTPPassword_entry.Text = Config.GetFTPPassword();
+			FTPUsername_entry.Text = Config.GetRemoteUsername();
+			FTPPassword_entry.Text = Config.GetRemotePassword();
 
 			progressbar3.Text = Mono.Unix.Catalog.GetString("Idle");
 			buttonOk.Label = Mono.Unix.Catalog.GetString("OK");
@@ -103,8 +103,8 @@ namespace Launchpad.Launcher.UI
 				FTPURL_entry.TooltipText = Mono.Unix.Catalog.GetString("The URL needs to begin with \"ftp://\". Please correct the URL.");
 			}
 
-			Config.SetFTPPassword(FTPPassword_entry.Text);
-			Config.SetFTPUsername(FTPUsername_entry.Text);
+			Config.SetRemotePassword(FTPPassword_entry.Text);
+			Config.SetRemoteUsername(FTPUsername_entry.Text);
 
 
 			if (bAreAllSettingsOK)

@@ -55,8 +55,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			bool bCanConnectToFTP;
 
 			string FTPURL = Config.GetBaseFTPUrl();
-			string FTPUserName = Config.GetFTPUsername();
-			string FTPPassword = Config.GetFTPPassword();
+			string FTPUserName = Config.GetRemoteUsername();
+			string FTPPassword = Config.GetRemotePassword();
 
 			try
 			{
@@ -477,8 +477,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			else
 			{
-				username = Config.GetFTPUsername();
-				password = Config.GetFTPPassword();
+				username = Config.GetRemoteUsername();
+				password = Config.GetRemotePassword();
 			}
 
 			// The buffer size is 256kb. More or less than this reduces download speeds.
@@ -538,8 +538,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				{
 					FtpWebRequest request = CreateFtpWebRequest(
 						                        remoteURL, 
-						                        Config.GetFTPUsername(), 
-						                        Config.GetFTPPassword());
+						                        Config.GetRemoteUsername(), 
+						                        Config.GetRemotePassword());
 
 					request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
 
@@ -628,8 +628,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			else
 			{
-				username = Config.GetFTPUsername();
-				password = Config.GetFTPPassword();
+				username = Config.GetRemoteUsername();
+				password = Config.GetRemotePassword();
 			}
 					
 			//the buffer size is 256kb. More or less than this reduces download speeds.
@@ -772,7 +772,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		{
 			if (File.Exists(ConfigHandler.GetManifestPath()))
 			{
-				string manifestURL = Config.GetManifestChecksumURL();
+				string manifestURL = GetManifestChecksumURL();
 				string remoteHash = ReadFTPFile(manifestURL);
 				string localHash = MD5Handler.GetFileHash(File.OpenRead(ConfigHandler.GetManifestPath()));
 
@@ -791,7 +791,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		{
 			try
 			{
-				string RemoteURL = Config.GetManifestURL();
+				string RemoteURL = GetManifestURL();
 				string LocalPath = ConfigHandler.GetManifestPath();
 
 				if (File.Exists(ConfigHandler.GetManifestPath()))
@@ -865,7 +865,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <returns>The remote manifest checksum.</returns>
 		public string GetRemoteManifestChecksum()
 		{
-			string checksum = ReadFTPFile(Config.GetManifestChecksumURL());
+			string checksum = ReadFTPFile(GetManifestChecksumURL());
 			checksum = Utilities.Clean(checksum);
 
 			return checksum;
@@ -879,8 +879,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		public bool DoesRemoteDirectoryExist(string remotePath)
 		{
 			FtpWebRequest request = CreateFtpWebRequest(remotePath, 
-				                        Config.GetFTPUsername(),
-				                        Config.GetFTPPassword());
+				                        Config.GetRemoteUsername(),
+				                        Config.GetRemotePassword());
 			FtpWebResponse response = null;
 
 			try
@@ -916,8 +916,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		public bool DoesRemoteFileExist(string remotePath)
 		{
 			FtpWebRequest request = CreateFtpWebRequest(remotePath, 
-				                        Config.GetFTPUsername(),
-				                        Config.GetFTPPassword());
+				                        Config.GetRemoteUsername(),
+				                        Config.GetRemotePassword());
 			FtpWebResponse response = null;
 
 			try
@@ -941,6 +941,34 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 
 			return true;
+		}
+
+		// TODO: Move to FTPProtocolHandler
+		/// <summary>
+		/// Gets the manifest URL.
+		/// </summary>
+		/// <returns>The manifest URL.</returns>
+		public string GetManifestURL()
+		{
+			string manifestURL = String.Format("{0}/game/{1}/LauncherManifest.txt", 
+				                     Config.GetBaseFTPUrl(),
+				                     Config.GetSystemTarget());
+
+			return manifestURL;
+		}
+
+		// TODO: Move to FTPProtocolHandler
+		/// <summary>
+		/// Gets the manifest checksum URL.
+		/// </summary>
+		/// <returns>The manifest checksum URL.</returns>
+		public string GetManifestChecksumURL()
+		{
+			string manifestChecksumURL = String.Format("{0}/game/{1}/LauncherManifest.checksum", 
+				                             Config.GetBaseFTPUrl(), 
+				                             Config.GetSystemTarget());
+
+			return manifestChecksumURL;
 		}
 	}
 }
