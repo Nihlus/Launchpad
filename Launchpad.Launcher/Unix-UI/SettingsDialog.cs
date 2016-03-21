@@ -82,7 +82,7 @@ namespace Launchpad.Launcher.UI
 			Config.SetGameName(GameName_entry.Text);
 
 			ESystemTarget SystemTarget = Utilities.ParseSystemTarget(combobox_SystemTarget.ActiveText);
-			if (SystemTarget != ESystemTarget.Invalid)
+			if (SystemTarget != ESystemTarget.Unknown)
 			{
 				Config.SetSystemTarget(SystemTarget);
 			}

@@ -37,7 +37,7 @@ namespace Launchpad.Launcher.Utility
 
 		public static ESystemTarget ParseSystemTarget(string input)
 		{
-			ESystemTarget Target = ESystemTarget.Invalid;
+			ESystemTarget Target = ESystemTarget.Unknown;
 			try
 			{
 				Target = (ESystemTarget)Enum.Parse(typeof(ESystemTarget), input);

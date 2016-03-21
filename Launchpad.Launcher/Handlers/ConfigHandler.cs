@@ -783,12 +783,12 @@ namespace Launchpad.Launcher.Handlers
 				catch (IOException ioex)
 				{
 					Console.WriteLine("IOException in GetSystemTarget(): " + ioex.Message);
-					return ESystemTarget.Invalid;
+					return ESystemTarget.Unknown;
 				}
 				catch (ArgumentException aex)
 				{
 					Console.WriteLine("ArgumentException in GetSystemTarget(): " + aex.Message);
-					return ESystemTarget.Invalid;
+					return ESystemTarget.Unknown;
 				}
 			}            
 		}
@@ -1428,7 +1428,7 @@ namespace Launchpad.Launcher.Handlers
 					}
 				default:
 					{
-						return ESystemTarget.Invalid;
+						return ESystemTarget.Unknown;
 					}
 			}
 		}

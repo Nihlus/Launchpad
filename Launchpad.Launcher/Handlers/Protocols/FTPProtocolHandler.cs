@@ -975,7 +975,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			return true;
 		}
 
-		// TODO: Move to FTPProtocolHandler
 		/// <summary>
 		/// Gets the manifest URL.
 		/// </summary>
@@ -989,7 +988,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			return manifestURL;
 		}
 
-		// TODO: Move to FTPProtocolHandler
 		/// <summary>
 		/// Gets the manifest checksum URL.
 		/// </summary>
