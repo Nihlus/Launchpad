@@ -26,7 +26,6 @@ using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Threading;
-using Launchpad.Launcher.Utility.Events;
 
 /*
  * This class has a lot of async stuff going on. It handles updating the launcher
@@ -55,7 +54,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// The download finished arguments object. Is updated once a file download finishes.
 		/// </summary>
-		private readonly GameDownloadFinishedEventArgs DownloadFinishedArgs = new GameDownloadFinishedEventArgs();
+		private readonly ChangelogDownloadFinishedEventArgs DownloadFinishedArgs = new ChangelogDownloadFinishedEventArgs();
 
 		/// <summary>
 		/// The config handler reference.
@@ -181,8 +180,8 @@ namespace Launchpad.Launcher.Handlers
 			//load the HTML from the server as a string
 			string content = FTP.ReadFTPFile(Config.GetChangelogURL());
 					
-			DownloadFinishedArgs.Result = content;
-			DownloadFinishedArgs.Metadata = Config.GetChangelogURL();
+			DownloadFinishedArgs.HTML = content;
+			DownloadFinishedArgs.URL = Config.GetChangelogURL();
 
 			OnChangelogDownloadFinished();
 		}
@@ -291,6 +290,30 @@ namespace Launchpad.Launcher.Handlers
 				//raise the event
 				ChangelogDownloadFinished(this, DownloadFinishedArgs);
 			}
+		}
+	}
+
+	/*
+		Launcher-specific events
+	*/
+	public delegate void ChangelogDownloadFinishedEventHandler(object sender,ChangelogDownloadFinishedEventArgs e);
+
+
+	/*
+		Launcher-specific event arguments
+	*/
+	public class ChangelogDownloadFinishedEventArgs : EventArgs
+	{
+		public string HTML
+		{ 
+			get;
+			set;
+		}
+
+		public string URL
+		{
+			get;
+			set;
 		}
 	}
 }

@@ -23,9 +23,9 @@ using System;
 using System.IO;
 using System.Resources;
 using System.Windows.Forms;
-using Launchpad.Launcher.Utility.Events;
 using Launchpad.Launcher.Handlers;
 using Launchpad.Launcher.Utility.Enums;
+using Launchpad.Launcher.Handlers.Protocols;
 
 namespace Launchpad.Launcher.UI
 {
@@ -190,14 +190,14 @@ namespace Launchpad.Launcher.UI
 				case ELauncherMode.Repair:
 					{
 						//bind events for UI updating					
-						Game.ProgressChanged += OnGameDownloadProgressChanged;
+						Game.ProgressChanged += OnModuleInstallationProgressChanged;
 						Game.GameDownloadFinished += OnGameDownloadFinished;
 						Game.GameDownloadFailed += OnGameDownloadFailed;
 
 						if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
 						{
 							//repair the game asynchronously
-							Game.RepairGame();
+							Game.VerifyGame();
 							SetLauncherMode(ELauncherMode.Repair, true);
 						}
 						else
@@ -224,7 +224,7 @@ namespace Launchpad.Launcher.UI
 				case ELauncherMode.Install:
 					{
 						//bind events for UI updating                        
-						Game.ProgressChanged += OnGameDownloadProgressChanged;
+						Game.ProgressChanged += OnModuleInstallationProgressChanged;
 						Game.GameDownloadFinished += OnGameDownloadFinished;
 						Game.GameDownloadFailed += OnGameDownloadFailed;
                                                                        
@@ -262,7 +262,7 @@ namespace Launchpad.Launcher.UI
 				case ELauncherMode.Update:
 					{
 						//bind events for UI updating                        
-						Game.ProgressChanged += OnGameDownloadProgressChanged;
+						Game.ProgressChanged += OnModuleInstallationProgressChanged;
 						Game.GameDownloadFinished += OnGameDownloadFinished;
 						Game.GameDownloadFailed += OnGameDownloadFailed;
 
@@ -402,9 +402,10 @@ namespace Launchpad.Launcher.UI
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The arguments containing the HTML from the server.</param>
-		private void OnChangelogDownloadFinished(object sender, GameDownloadFinishedEventArgs e)
+		private void OnChangelogDownloadFinished(object sender, ChangelogDownloadFinishedEventArgs e)
 		{
-			changelogBrowser.DocumentText = e.Result;
+			changelogBrowser.DocumentText = e.HTML;
+			changelogBrowser.Url = new Uri(e.URL);
 			changelogBrowser.Refresh();         
 		}
 
@@ -439,7 +440,7 @@ namespace Launchpad.Launcher.UI
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">Contains the type of failure that occurred.</param>
-		private void OnGameDownloadFailed(object sender, GameDownloadFailedEventArgs e)
+		private void OnGameDownloadFailed(object sender, EventArgs e)
 		{
 			this.Invoke((MethodInvoker)delegate
 				{
@@ -474,31 +475,20 @@ namespace Launchpad.Launcher.UI
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">Contains the progress values and current filename.</param>
-		private void OnGameDownloadProgressChanged(object sender, FileDownloadProgressChangedEventArgs e)
+		private void OnModuleInstallationProgressChanged(object sender, ModuleProgressChangedArgs e)
 		{
 			this.Invoke((MethodInvoker)delegate
 				{
-					if (!String.IsNullOrEmpty(e.FileName))
-					{
-						string progressbarText = String.Format(
-							                         LocalizationCatalog.GetString("fileDownloadMessage"),
-							                         Path.GetFileNameWithoutExtension(e.FileName),
-							                         e.DownloadedBytes,
-							                         e.TotalBytes);
+					MessageLabel.Text = e.IndicatorLabelMessage;
+					downloadProgressLabel.Text = e.ProgressBarMessage;
 
-						downloadProgressLabel.Text = progressbarText;
+					mainProgressBar.Minimum = 0;
+					mainProgressBar.Maximum = 10000;
 
-						mainProgressBar.Minimum = 0;
-						mainProgressBar.Maximum = 10000;
-                    
-						if (e.DownloadedBytes > 0 && e.TotalBytes > 0)
-						{
-							double fraction = ((double)e.DownloadedBytes / (double)e.TotalBytes) * 10000;
-
-							mainProgressBar.Value = (int)fraction;
-							mainProgressBar.Update();
-						}                    
-					}                
+					double fraction = e.ProgressFraction * 10000;
+					mainProgressBar.Value = (int)fraction;
+					mainProgressBar.Update();  
+               
 				});                      
 		}
 

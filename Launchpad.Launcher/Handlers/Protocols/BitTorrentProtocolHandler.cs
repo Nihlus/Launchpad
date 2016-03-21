@@ -79,6 +79,16 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		{
 
 		}
+
+		public override void UpdateLauncher()
+		{
+
+		}
+
+		public override void UpdateGame()
+		{
+
+		}
 	}
 }
 

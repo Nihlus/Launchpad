@@ -262,8 +262,6 @@
     <Compile Include="Utility\Enums\ESystemTarget.cs" />
     <Compile Include="Handlers\ManifestHandler.cs" />
     <Compile Include="Utility\Enums\ELauncherMode.cs" />
-    <Compile Include="Utility\Events\Arguments.cs" />
-    <Compile Include="Utility\Events\Delegates.cs" />
     <None Include="packages.config" />
     <Compile Include="gtk-gui\Launchpad.Launcher.UI.MainWindow.cs" />
     <Compile Include="gtk-gui\Launchpad.Launcher.UI.SettingsDialog.cs" />

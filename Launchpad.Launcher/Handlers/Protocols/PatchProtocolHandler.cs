@@ -20,7 +20,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using Launchpad.Launcher.Utility.Events;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,12 +40,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 	{
 		protected PatchProtocolHandler()
 		{
-			// ...
-			FileDownloadProgressArgs = new FileDownloadProgressChangedEventArgs();
-			GameDownloadFailedArgs = new GameDownloadFailedEventArgs();
-			// ...
-
-			ModuleProgressArgs = new ModuleProgressChangedArgs();
 			ModuleInstallFinishedArgs = new ModuleInstallationFinishedArgs();
 			ModuleInstallFailedArgs = new ModuleInstallationFailedArgs();
 		}
@@ -56,28 +49,19 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// </summary>
 		protected ConfigHandler Config = ConfigHandler._instance;
 
-
-		// ...
-		public event FileDownloadProgressChangedEventHandler FileProgressChanged;
-
-		public event LauncherInstallFinishedEventHandler LauncherDownloadFinished;
-		public event LauncherDownloadFailedEventHandler LauncherDownloadFailed;
-
-		public event GameInstallFinishedEventHandler GameDownloadFinished;
-		public event GameDownloadFailedEventHander GameDownloadFailed;
-
-		protected FileDownloadProgressChangedEventArgs FileDownloadProgressArgs;
-		protected GameDownloadFailedEventArgs GameDownloadFailedArgs;
-		// ...
-
 		public event ModuleDownloadProgressChangedEventHandler ModuleDownloadProgressChanged;
 		public event ModuleCopyProgressChangedEventHandler ModuleCopyProgressChanged;
 		public event ModuleVerifyProgressChangedEventHandler ModuleVerifyProgressChanged;
+		public event ModuleUpdateProgressChangedEventHandler ModuleUpdateProgressChanged;
 
 		public event ModuleInstallationFinishedEventHandler ModuleInstallationFinished;
 		public event ModuleInstallationFailedEventHandler ModuleInstallationFailed;
 
-		protected ModuleProgressChangedArgs ModuleProgressArgs;
+		protected readonly ModuleProgressChangedArgs ModuleDownloadProgressArgs = new ModuleProgressChangedArgs();
+		protected readonly ModuleProgressChangedArgs ModuleCopyProgressArgs = new ModuleProgressChangedArgs();
+		protected readonly ModuleProgressChangedArgs ModuleVerifyProgressArgs = new ModuleProgressChangedArgs();
+		protected readonly ModuleProgressChangedArgs ModuleUpdateProgressArgs = new ModuleProgressChangedArgs();
+
 		protected ModuleInstallationFinishedArgs ModuleInstallFinishedArgs;
 		protected ModuleInstallationFailedArgs ModuleInstallFailedArgs;
 
@@ -128,13 +112,13 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		{
 			if (Directory.Exists(ConfigHandler.GetTempGameDownloadDir()))
 			{
-				ModuleProgressArgs.Module = EModule.Game;
-				ModuleProgressArgs.MessageLabelMessage = "Copying game to installation directory...";
+				ModuleCopyProgressArgs.Module = EModule.Game;
+				ModuleCopyProgressArgs.IndicatorLabelMessage = "Copying game to installation directory...";
 
 				List<string> gameFiles = Directory.EnumerateFiles(ConfigHandler.GetTempGameDownloadDir(), "*", SearchOption.AllDirectories).ToList();
 				foreach (string gameFile in gameFiles)
 				{
-					ModuleProgressArgs.ProgressBarMessage = String.Format("Copying {0} to installation directory...", Path.GetFileName(gameFile));
+					ModuleCopyProgressArgs.ProgressBarMessage = String.Format("Copying {0} to installation directory...", Path.GetFileName(gameFile));
 					OnModuleCopyProgressChanged();
 
 					// Copy the file
@@ -155,53 +139,15 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// </summary>
 		public abstract void VerifyGame();
 
-		// ...
-		protected void OnFileDownloadProgressChanged()
-		{
-			if (FileProgressChanged != null)
-			{
-				FileProgressChanged(this, FileDownloadProgressArgs);
-			}
-		}
+		public abstract void UpdateLauncher();
 
-		protected void OnLauncherDownloadFailed()
-		{
-			if (LauncherDownloadFailed != null)
-			{
-				LauncherDownloadFailed(this, EventArgs.Empty);
-			}
-		}
-
-		protected void OnLauncherDownloadFinished()
-		{
-			if (LauncherDownloadFinished != null)
-			{
-				LauncherDownloadFinished(this, EventArgs.Empty);
-			}
-		}
-
-		protected void OnGameDownloadFailed()
-		{
-			if (GameDownloadFailed != null)
-			{
-				GameDownloadFailed(this, GameDownloadFailedArgs);
-			}
-		}
-
-		protected void OnGameDownloadFinished()
-		{
-			if (GameDownloadFinished != null)
-			{
-				GameDownloadFinished(this, EventArgs.Empty);
-			}
-		}
-		// ...
+		public abstract void UpdateGame();
 
 		protected void OnModuleDownloadProgressChanged()
 		{
 			if (ModuleDownloadProgressChanged != null)
 			{
-				ModuleDownloadProgressChanged(this, ModuleProgressArgs);
+				ModuleDownloadProgressChanged(this, ModuleDownloadProgressArgs);
 			}
 		}
 
@@ -209,7 +155,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		{
 			if (ModuleCopyProgressChanged != null)
 			{
-				ModuleCopyProgressChanged(this, ModuleProgressArgs);
+				ModuleCopyProgressChanged(this, ModuleCopyProgressArgs);
 			}
 		}
 
@@ -217,7 +163,15 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		{
 			if (ModuleVerifyProgressChanged != null)
 			{
-				ModuleVerifyProgressChanged(this, ModuleProgressArgs);
+				ModuleVerifyProgressChanged(this, ModuleVerifyProgressArgs);
+			}
+		}
+
+		protected void OnModuleUpdateProgressChanged()
+		{
+			if (ModuleUpdateProgressChanged != null)
+			{
+				ModuleUpdateProgressChanged(this, ModuleUpdateProgressArgs);
 			}
 		}
 
@@ -250,9 +204,11 @@ namespace Launchpad.Launcher.Handlers.Protocols
 	/*
 		Common events for all patching protocols
 	*/
+	public delegate void ModuleInstallationProgressChangedEventHandler(object sender,ModuleProgressChangedArgs e);
 	public delegate void ModuleDownloadProgressChangedEventHandler(object sender,ModuleProgressChangedArgs e);
 	public delegate void ModuleCopyProgressChangedEventHandler(object sender,ModuleProgressChangedArgs e);
 	public delegate void ModuleVerifyProgressChangedEventHandler(object sender,ModuleProgressChangedArgs e);
+	public delegate void ModuleUpdateProgressChangedEventHandler(object sender,ModuleProgressChangedArgs e);
 
 	public delegate void ModuleInstallationFinishedEventHandler(object sender,ModuleInstallationFinishedArgs e);
 	public delegate void ModuleInstallationFailedEventHandler(object sender,ModuleInstallationFailedArgs e);
@@ -274,7 +230,13 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			set;
 		}
 
-		public string MessageLabelMessage
+		public string IndicatorLabelMessage
+		{
+			get;
+			set;
+		}
+
+		public double ProgressFraction
 		{
 			get;
 			set;

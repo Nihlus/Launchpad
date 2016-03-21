@@ -24,8 +24,8 @@ using Notifications;
 using System;
 using WebKit;
 using Launchpad.Launcher.Handlers;
-using Launchpad.Launcher.Utility.Events;
 using Launchpad.Launcher.Utility.Enums;
+using Launchpad.Launcher.Handlers.Protocols;
 
 namespace Launchpad.Launcher.UI
 {
@@ -325,7 +325,7 @@ namespace Launchpad.Launcher.UI
 				case ELauncherMode.Repair:
 					{
 						//bind events for UI updating					
-						Game.ProgressChanged += OnGameDownloadProgressChanged;
+						Game.ProgressChanged += OnModuleInstallationProgressChanged;
 						Game.GameDownloadFinished += OnGameDownloadFinished;
 						Game.GameDownloadFailed += OnGameDownloadFailed;
 
@@ -333,7 +333,7 @@ namespace Launchpad.Launcher.UI
 						{
 							//Repair the game asynchronously
 							SetLauncherMode(ELauncherMode.Repair, true);
-							Game.RepairGame();                        
+							Game.VerifyGame();                        
 						}
 						else
 						{
@@ -350,7 +350,7 @@ namespace Launchpad.Launcher.UI
 				case ELauncherMode.Install:
 					{
 						//bind events for UI updating					
-						Game.ProgressChanged += OnGameDownloadProgressChanged;
+						Game.ProgressChanged += OnModuleInstallationProgressChanged;
 						Game.GameDownloadFinished += OnGameDownloadFinished;
 						Game.GameDownloadFailed += OnGameDownloadFailed;
 						
@@ -384,7 +384,7 @@ namespace Launchpad.Launcher.UI
 						else
 						{					
 							//bind events for UI updating
-							Game.ProgressChanged += OnGameDownloadProgressChanged;
+							Game.ProgressChanged += OnModuleInstallationProgressChanged;
 							Game.GameDownloadFinished += OnGameDownloadFinished;
 							Game.GameDownloadFailed += OnGameDownloadFailed;
 
@@ -433,12 +433,12 @@ namespace Launchpad.Launcher.UI
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The arguments containing the HTML from the server.</param>
-		protected void OnChangelogDownloadFinished(object sender, GameDownloadFinishedEventArgs e)
+		protected void OnChangelogDownloadFinished(object sender, ChangelogDownloadFinishedEventArgs e)
 		{
 			//Take the resulting HTML string from the changelog download and send it to the changelog browser
 			Application.Invoke(delegate
 				{
-					Browser.LoadHtmlString(e.Result, "");
+					Browser.LoadHtmlString(e.HTML, e.URL);
 				});
 		}
 
@@ -458,49 +458,36 @@ namespace Launchpad.Launcher.UI
 			SetLauncherMode(ELauncherMode.Repair, false);
 		}
 
+		//TODO: Rework
 		/// <summary>
 		/// Provides alternatives when the game fails to download, either through an update or through an installation.
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">Contains the type of failure that occurred.</param>
-		private void OnGameDownloadFailed(object sender, GameDownloadFailedEventArgs e)
+		private void OnGameDownloadFailed(object sender, EventArgs e)
 		{
-			ELauncherMode parsedMode;
-			if (Enum.TryParse(e.ResultType, out parsedMode))
+			switch (Mode)
 			{
-				switch (parsedMode)
-				{
-					case ELauncherMode.Install:
-						{
-							Console.WriteLine(e.Metadata);
-							MessageLabel.Text = e.Metadata;
-							break;
-						}
-					case ELauncherMode.Update:
-						{
-							Console.WriteLine(e.Metadata);
-							MessageLabel.Text = e.Metadata;
-							break;
-						}
-					case ELauncherMode.Repair:
-						{
-							Console.WriteLine(e.Metadata);
-							MessageLabel.Text = e.Metadata;
-							break;
-						}
-					default:
-						{
-							break;
-						}
-				}
+				case ELauncherMode.Install:
+					{
+						break;
+					}
+				case ELauncherMode.Update:
+					{
+						break;
+					}
+				case ELauncherMode.Repair:
+					{
+						break;
+					}
+				default:
+					{
+						SetLauncherMode(ELauncherMode.Repair, false);
+						break;
+					}
+			}
 
-				SetLauncherMode(parsedMode, false);
-			}
-			else
-			{
-				//if we can't parse the result for some reason, offer to repair the installation.
-				SetLauncherMode(ELauncherMode.Repair, false);
-			}
+			SetLauncherMode(Mode, false);		
 		}
 
 		/// <summary>
@@ -508,18 +495,13 @@ namespace Launchpad.Launcher.UI
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">Contains the progress values and current filename.</param>
-		protected void OnGameDownloadProgressChanged(object sender, FileDownloadProgressChangedEventArgs e)
+		protected void OnModuleInstallationProgressChanged(object sender, ModuleProgressChangedArgs e)
 		{
 			Application.Invoke(delegate
-				{
-
-					string progressbarText = String.Format(Mono.Unix.Catalog.GetString("Downloading file {0}: {1} of {2} bytes."),
-						                         System.IO.Path.GetFileNameWithoutExtension(e.FileName),
-						                         e.DownloadedBytes,
-						                         e.TotalBytes);
-					progressbar2.Text = progressbarText;
-					progressbar2.Fraction = (double)e.DownloadedBytes / (double)e.TotalBytes;
-
+				{			
+					progressbar2.Text = e.ProgressBarMessage;
+					MessageLabel.Text = e.IndicatorLabelMessage;
+					progressbar2.Fraction = e.ProgressFraction;
 				});
 		}
 
