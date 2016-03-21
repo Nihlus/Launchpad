@@ -140,14 +140,12 @@ namespace Launchpad.Launcher.Handlers
 
 						data["Local"].AddKey("LauncherVersion", defaultLauncherVersion.ToString());
 						data["Local"].AddKey("GameName", "LaunchpadExample");
-
-						//set the default system target to what the launcher is running on. Developers will need 
-						//to alter this in the config, based on where they're deploying to.
 						data["Local"].AddKey("SystemTarget", GetCurrentPlatform().ToString());
-						data["Local"].AddKey("GUID", GeneratedGUID);
+						data["Local"].AddKey("GUID", GeneratedGUID);					
 
 						data["Remote"].AddKey("ChangelogURL", "http://directorate.asuscomm.com/launchpad/changelog/changelog.html");
 						data["Remote"].AddKey("Protocol", "FTP");
+						data["Remote"].AddKey("FileRetries", "2");
 						data["Remote"].AddKey("Username", "anonymous");
 						data["Remote"].AddKey("Password", "anonymous");
 
@@ -207,6 +205,7 @@ namespace Launchpad.Launcher.Handlers
 					// March 21 - 2016: Moves FTP url to its own section
 					// March 21 - 2016: Renames FTP credential keys
 					// March 21 - 2016: Adds sections for FTP, HTTP and BitTorrent.
+					// March 21 - 2016: Adds configuration option for number of times to retry broken files
 					if (data["Remote"].ContainsKey("FTPUsername"))
 					{
 						string username = data["Remote"].GetKeyData("FTPUsername").Value;
@@ -259,6 +258,11 @@ namespace Launchpad.Launcher.Handlers
 					if (!data["Launchpad"].ContainsKey("bAllowAnonymousStats"))
 					{
 						data["Launchpad"].AddKey("bAllowAnonymousStats", "true");
+					}
+
+					if (!data["Remote"].ContainsKey("FileRetries"))
+					{
+						data["Remote"].AddKey("FileRetries", "2");
 					}
 					// End March 21 - 2016
 
@@ -921,6 +925,39 @@ namespace Launchpad.Launcher.Handlers
 					{
 						Console.WriteLine("IOException in SetRemotePassword(): " + ioex.Message);
 					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the number of times the patching protocol should retry to download files.
+		/// </summary>
+		/// <returns>The number of file retries..</returns>
+		public int GetFileRetries()
+		{
+			lock (ReadLock)
+			{
+				try
+				{
+					FileIniDataParser Parser = new FileIniDataParser();
+					IniData data = Parser.ReadFile(GetConfigPath());
+
+					string fileRetries = data["Remote"]["FileRetries"];
+
+					int retries;
+					if (int.TryParse(fileRetries, out retries))
+					{
+						return retries;
+					}
+					else
+					{
+						return 0;
+					}
+				}
+				catch (IOException ioex)
+				{
+					Console.WriteLine("IOException in GetRemotePassword(): " + ioex.Message);
+					return 0;
 				}
 			}
 		}

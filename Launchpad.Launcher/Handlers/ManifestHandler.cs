@@ -74,6 +74,8 @@ namespace Launchpad.Launcher.Handlers
 				{
 					if (File.Exists(ConfigHandler.GetManifestPath()))
 					{
+						manifest.Clear();
+
 						string[] rawManifest = File.ReadAllLines(ConfigHandler.GetManifestPath());
 						foreach (string rawEntry in rawManifest)
 						{
@@ -103,6 +105,8 @@ namespace Launchpad.Launcher.Handlers
 				{
 					if (File.Exists(ConfigHandler.GetOldManifestPath()))
 					{
+						oldManifest.Clear();
+
 						string[] rawOldManifest = File.ReadAllLines(ConfigHandler.GetOldManifestPath());
 						foreach (string rawEntry in rawOldManifest)
 						{

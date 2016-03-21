@@ -511,33 +511,49 @@ namespace Launchpad.Launcher.UI
 					MessageLabel.Text = Mono.Unix.Catalog.GetString("Idle");
 					progressbar2.Text = "";
 
-					Notification completedNot = new Notification();
-					completedNot.IconName = Stock.Info;
-					completedNot.Summary = Mono.Unix.Catalog.GetString("Launchpad - Info");
-					completedNot.Body = Mono.Unix.Catalog.GetString("Game download finished. Play away!");
+					switch (Mode)
+					{
+						case ELauncherMode.Install:
+							{
+								Notification installComplete = new Notification();
+								installComplete.IconName = Stock.Info;
+								installComplete.Summary = Mono.Unix.Catalog.GetString("Launchpad - Info");
+								installComplete.Body = Mono.Unix.Catalog.GetString("Game download finished. Play away!");
 
-					completedNot.Show();
+								installComplete.Show();
 
-					SetLauncherMode(ELauncherMode.Launch, false);
+								SetLauncherMode(ELauncherMode.Launch, false);
+								break;
+							}
+						case ELauncherMode.Repair:
+							{
+								Notification repairComplete = new Notification();
+								repairComplete.IconName = Stock.Info;
+								repairComplete.Summary = Mono.Unix.Catalog.GetString("Launchpad - Game repair finished");
+								repairComplete.Body = Mono.Unix.Catalog.GetString("Launchpad has finished repairing the game installation. Play away!");
+								repairComplete.Show();
+
+								SetLauncherMode(ELauncherMode.Launch, false);
+								break;
+							}
+						case ELauncherMode.Update:
+							{								
+								Notification updateComplete = new Notification();
+								updateComplete.IconName = Stock.Info;
+								updateComplete.Summary = Mono.Unix.Catalog.GetString("Launchpad - Info");
+								updateComplete.Body = Mono.Unix.Catalog.GetString("Game update finished. Play away!");
+								updateComplete.Show();
+
+								SetLauncherMode(ELauncherMode.Launch, false);
+								break;
+							}
+						default:
+							{
+								SetLauncherMode(ELauncherMode.Launch, false);
+								break;
+							}
+					}
 				});			          
-		}
-
-		/// <summary>
-		/// Alerts the user that a repair action has finished.
-		/// </summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">Empty arguments.</param>
-		private void OnRepairFinished(object sender, EventArgs e)
-		{
-			Notification repairComplete = new Notification();
-			repairComplete.IconName = Stock.Info;
-			repairComplete.Summary = Mono.Unix.Catalog.GetString("Launchpad - Game repair finished");
-			repairComplete.Body = Mono.Unix.Catalog.GetString("Launchpad has finished repairing the game installation. Play away!");
-			repairComplete.Show();
-
-			progressbar2.Text = "";
-
-			SetLauncherMode(ELauncherMode.Launch, false);
 		}
 
 		private void OnGameExited(object sender, GameExitEventArgs e)
