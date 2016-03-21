@@ -79,6 +79,18 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		public abstract bool IsPlatformAvailable(ESystemTarget Platform);
 
 		/// <summary>
+		/// Determines whether this protocol can provide access to a changelog.
+		/// </summary>
+		/// <returns><c>true</c> if this protocol can provide a changelog; otherwise, <c>false</c>.</returns>
+		public abstract bool CanProvideChangelog();
+
+		/// <summary>
+		/// Gets the changelog.
+		/// </summary>
+		/// <returns>The changelog.</returns>
+		public abstract string GetChangelog();
+
+		/// <summary>
 		/// Checks whether or not the launcher has a new patch available.
 		/// </summary>
 		/// <returns><c>true</c>, if there's a patch available, <c>false</c> otherwise.</returns>

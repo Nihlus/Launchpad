@@ -138,6 +138,7 @@ namespace Launchpad.Launcher.UI
 				}
 				else
 				{
+					#if DEBUG
 					Notification noUsageStatsNotification = new Notification();
 
 					noUsageStatsNotification.IconName = Stock.DialogWarning;
@@ -146,15 +147,22 @@ namespace Launchpad.Launcher.UI
 					noUsageStatsNotification.Body = Mono.Unix.Catalog.GetString("Anonymous useage stats are not enabled.");
 
 					noUsageStatsNotification.Show();
+					#endif
 				}
 
-				// TODO: Ditch this for native Browser.Open functionality
-				//Start loading the changelog asynchronously
-				Launcher.ChangelogDownloadFinished += OnChangelogDownloadFinished;
-				Launcher.LoadChangelog();
-				//Browser.Open(Config.GetChangelogURL());
+				// Load the changelog. Try a direct URL first, and a protocol-specific 
+				// implementation after.
+				if (Launcher.CanAccessStandardChangelog())
+				{
+					Browser.Open(Config.GetChangelogURL());
+				}
+				else
+				{
+					Launcher.ChangelogDownloadFinished += OnChangelogDownloadFinished;
+					Launcher.LoadFallbackChangelog();
+				}
 
-				//if the launcher does not need an update at this point, we can continue checks for the game
+				// If the launcher does not need an update at this point, we can continue checks for the game
 				if (!Checks.IsLauncherOutdated())
 				{
 					if (!Checks.IsGameInstalled())

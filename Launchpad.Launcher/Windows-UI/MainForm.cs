@@ -124,23 +124,37 @@ namespace Launchpad.Launcher.UI
 				}
 				else
 				{
-					Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Launcher.Resources.RocketIcon.ico");
-					if (iconStream != null)
+					#if DEBUG
+
+					using (Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Launcher.Resources.RocketIcon.ico"))
 					{
-						NotifyIcon noUsageStatsNotification = new NotifyIcon();
-						noUsageStatsNotification.Icon = new System.Drawing.Icon(iconStream);
-						noUsageStatsNotification.Visible = true;
+						if (iconStream != null)
+						{
+							NotifyIcon noUsageStatsNotification = new NotifyIcon();
+							noUsageStatsNotification.Icon = new System.Drawing.Icon(iconStream);
+							noUsageStatsNotification.Visible = true;
 
-						noUsageStatsNotification.BalloonTipTitle = LocalizationCatalog.GetString("infoTitle");
-						noUsageStatsNotification.BalloonTipText = LocalizationCatalog.GetString("usageTitle");
+							noUsageStatsNotification.BalloonTipTitle = LocalizationCatalog.GetString("infoTitle");
+							noUsageStatsNotification.BalloonTipText = LocalizationCatalog.GetString("usageTitle");
 
-						noUsageStatsNotification.ShowBalloonTip(10000);
-					}   
+							noUsageStatsNotification.ShowBalloonTip(10000);
+						}  
+					}
+					 
+					#endif
 				}
 
-				//load the changelog from the server
-				Launcher.ChangelogDownloadFinished += OnChangelogDownloadFinished;
-				Launcher.LoadChangelog();
+				// Load the changelog. Try a direct URL first, and a protocol-specific 
+				// implementation after.
+				if (Launcher.CanAccessStandardChangelog())
+				{
+					changelogBrowser.Navigate(Config.GetChangelogURL());
+				}
+				else
+				{
+					Launcher.ChangelogDownloadFinished += OnChangelogDownloadFinished;
+					Launcher.LoadFallbackChangelog();
+				}
                 
 				//Does the launcher need an update?
 				if (!Checks.IsLauncherOutdated())

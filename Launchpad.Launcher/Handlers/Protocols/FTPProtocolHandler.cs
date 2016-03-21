@@ -104,6 +104,21 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			return DoesRemoteFileExist(remote);
 		}
 
+		public override bool CanProvideChangelog()
+		{
+			return true;
+		}
+
+		public override string GetChangelog()
+		{
+			string changelogURL = String.Format("{0}/launcher/changelog.html", 
+				                      Config.GetBaseFTPUrl());
+
+			// Return simple raw HTML
+			return ReadFTPFile(changelogURL);
+		}
+
+
 		public override bool IsLauncherOutdated()
 		{
 			try

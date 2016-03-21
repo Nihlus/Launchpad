@@ -33,6 +33,7 @@ using System.Threading;
  * 
  */
 using Launchpad.Launcher.Handlers.Protocols;
+using System.Net;
 
 namespace Launchpad.Launcher.Handlers
 {
@@ -76,23 +77,46 @@ namespace Launchpad.Launcher.Handlers
 		}
 
 		/// <summary>
+		/// Checks if the launcher can access the standard HTTP changelog.
+		/// </summary>
+		/// <returns><c>true</c> if the changelog can be accessed; otherwise, <c>false</c>.</returns>
+		public bool CanAccessStandardChangelog()
+		{
+			HttpWebRequest headRequest = (HttpWebRequest)WebRequest.Create(Config.GetChangelogURL());
+			headRequest.Method = "HEAD";
+
+			try
+			{
+				using (HttpWebResponse headResponse = (HttpWebResponse)headRequest.GetResponse())
+				{
+					return (headResponse.StatusCode == HttpStatusCode.OK);
+				}
+			}
+			catch (WebException wex)
+			{
+				Console.WriteLine("WebException in CanAcessStandardChangelog(): " + wex.Message);
+				return false;
+			}
+		}
+
+		/// <summary>
 		/// Gets the changelog from the server asynchronously.
 		/// </summary>
-		public void LoadChangelog()
+		public void LoadFallbackChangelog()
 		{
-			Thread t = new Thread(LoadChangelogAsync);
+			Thread t = new Thread(LoadFallbackChangelog_Implementation);
 			t.Start();
 		}
 
-		private void LoadChangelogAsync()
+		private void LoadFallbackChangelog_Implementation()
 		{
-			FTPProtocolHandler FTP = new FTPProtocolHandler();
+			PatchProtocolHandler Patch = Config.GetPatchProtocol();
 
-			//load the HTML from the server as a string
-			string content = FTP.ReadFTPFile(Config.GetChangelogURL());
-					
-			ChangelogDownloadFinishedArgs.HTML = content;
-			ChangelogDownloadFinishedArgs.URL = Config.GetChangelogURL();
+			if (Patch.CanProvideChangelog())
+			{
+				ChangelogDownloadFinishedArgs.HTML = Patch.GetChangelog();
+				ChangelogDownloadFinishedArgs.URL = Config.GetChangelogURL();
+			}
 
 			OnChangelogDownloadFinished();
 		}

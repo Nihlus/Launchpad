@@ -6,8 +6,8 @@
   </configuration>
   <import>
     <widget-library name="notify-sharp" />
-    <widget-library name="../bin/Debug/Launchpad.exe" internal="true" />
     <widget-library name="webkit-sharp" />
+    <widget-library name="../bin/Debug/Launchpad.exe" internal="true" />
   </import>
   <widget class="Gtk.Window" id="Launchpad.Launcher.UI.MainWindow" design-size="760 439">
     <action-group name="Default">

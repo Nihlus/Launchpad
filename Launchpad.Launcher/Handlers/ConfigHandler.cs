@@ -143,6 +143,7 @@ namespace Launchpad.Launcher.Handlers
 						data["Local"].AddKey("SystemTarget", GetCurrentPlatform().ToString());
 						data["Local"].AddKey("GUID", GeneratedGUID);
 
+						data["Remote"].AddKey("ChangelogURL", "http://directorate.asuscomm.com/launchpad/changelog/changelog.html");
 						data["Remote"].AddKey("Protocol", "FTP");
 						data["Remote"].AddKey("FTPUsername", "anonymous");
 						data["Remote"].AddKey("FTPPassword", "anonymous");
@@ -176,6 +177,12 @@ namespace Launchpad.Launcher.Handlers
 					if (!data["Remote"].ContainsKey("Protocol"))
 					{
 						data["Remote"].AddKey("Protocol", "FTP");
+					}
+
+					// Update config files without changelog keys
+					if (!data["Remote"].ContainsKey("ChangelogURL"))
+					{
+						data["Remote"].AddKey("ChangelogURL", "http://directorate.asuscomm.com/launchpad/changelog/changelog.html");
 					}
 
 					WriteConfig(Parser, data);
@@ -502,26 +509,45 @@ namespace Launchpad.Launcher.Handlers
 		}
 
 		/// <summary>
-		/// Gets the changelog URL.
-		/// </summary>
-		/// <returns>The changelog URL.</returns>
-		public string GetChangelogURL()
-		{
-			string changelogURL = String.Format("{0}/launcher/changelog.html", 
-				                      GetBaseFTPUrl());
-			return changelogURL;
-		}
-
-		/// <summary>
 		/// Gets the game URL.
 		/// </summary>
 		/// <returns>The game URL.</returns>
-		/// <param name="bIncludeSystemTarget">If set to <c>true</c> b gets a platform-specific game.</param>
 		public string GetGameURL()
 		{
 			return String.Format("{0}/game/{1}/bin/", 
 				GetBaseFTPUrl(), 
 				GetSystemTarget());
+		}
+
+		/// <summary>
+		/// Gets the changelog URL.
+		/// </summary>
+		/// <returns>The changelog URL.</returns>
+		public string GetChangelogURL()
+		{
+			lock (ReadLock)
+			{
+				try
+				{
+					FileIniDataParser Parser = new FileIniDataParser();
+					IniData data = Parser.ReadFile(GetConfigPath());
+
+					string changelogURL = data["Remote"]["ChangelogURL"];
+
+					return changelogURL;
+
+				}
+				catch (IOException ioex)
+				{
+					Console.WriteLine("IOException in GetChangelogURL(): " + ioex.Message);
+					return null;
+				}
+				catch (ArgumentException aex)
+				{
+					Console.WriteLine("ArgumentException in GetChangelogURL(): " + aex.Message);
+					return null;
+				}
+			} 
 		}
 
 		/// <summary>

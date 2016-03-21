@@ -19,6 +19,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 using Launchpad.Launcher.Utility.Enums;
+using System;
 
 namespace Launchpad.Launcher.Handlers.Protocols
 {
@@ -43,6 +44,16 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		public override bool IsPlatformAvailable(ESystemTarget Platform)
 		{
 			return false;
+		}
+
+		public override bool CanProvideChangelog()
+		{
+			return false;
+		}
+
+		public override string GetChangelog()
+		{
+			return String.Empty;
 		}
 
 		public override bool IsLauncherOutdated()
