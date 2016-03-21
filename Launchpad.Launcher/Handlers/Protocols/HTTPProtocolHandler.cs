@@ -18,6 +18,7 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+using Launchpad.Launcher.Utility.Enums;
 
 namespace Launchpad.Launcher.Handlers.Protocols
 {
@@ -39,6 +40,11 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			return false;
 		}
 
+		public override bool IsPlatformAvailable(ESystemTarget Platform)
+		{
+			return false;
+		}
+
 		public override bool IsLauncherOutdated()
 		{
 			return false;
@@ -49,17 +55,12 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			return false;
 		}
 
-		public override void InstallLauncher()
-		{
-
-		}
-
 		public override void InstallGame()
 		{
 
 		}
 
-		protected override void DownloadLauncher()
+		public override void DownloadLauncher()
 		{
 
 		}
@@ -75,11 +76,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		}
 
 		public override void VerifyGame()
-		{
-
-		}
-
-		public override void UpdateLauncher()
 		{
 
 		}

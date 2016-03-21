@@ -25,6 +25,7 @@ using System.Net;
 using System.Text;
 using System.Collections.Generic;
 using Launchpad.Launcher.Utility;
+using Launchpad.Launcher.Utility.Enums;
 
 namespace Launchpad.Launcher.Handlers.Protocols
 {
@@ -59,7 +60,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 			try
 			{
-				FtpWebRequest plainRequest = FTPProtocolHandler.CreateFtpWebRequest(FTPURL, FTPUserName, FTPPassword);
+				FtpWebRequest plainRequest = CreateFtpWebRequest(FTPURL, FTPUserName, FTPPassword);
 
 				plainRequest.Credentials = new NetworkCredential(FTPUserName, FTPPassword);
 				plainRequest.Method = WebRequestMethods.Ftp.ListDirectory;
@@ -94,6 +95,15 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			return bCanConnectToFTP;
 		}
 
+		public override bool IsPlatformAvailable(ESystemTarget Platform)
+		{
+			string remote = String.Format("{0}/game/{1}/.provides",
+				                Config.GetBaseFTPUrl(),
+				                Platform);
+
+			return DoesRemoteFileExist(remote);
+		}
+
 		public override bool IsLauncherOutdated()
 		{
 			try
@@ -126,11 +136,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 		}
 
-		public override void InstallLauncher()
-		{
-
-		}
-
 		public override void InstallGame()
 		{
 			ModuleInstallFinishedArgs.Module = EModule.Game;
@@ -141,7 +146,10 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				//create the .install file to mark that an installation has begun
 				//if it exists, do nothing.
 				ConfigHandler.CreateInstallCookie();
-							
+
+				// Make sure the manifest is up to date
+				RefreshManifest();
+
 				// Download Game
 				DownloadGame();
 
@@ -155,11 +163,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 
 			OnModuleInstallationFinished();
-		}
-
-		protected override void DownloadLauncher()
-		{
-
 		}
 
 		protected override void DownloadGame()
@@ -267,18 +270,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		public override void VerifyGame()
 		{
 			try
-			{		
-				// First, verify that the manifest is fresh.
-				string LocalManifestHash = MD5Handler.GetFileHash(File.OpenRead(ConfigHandler.GetManifestPath()));
-				string RemoteManifestHash = GetRemoteManifestChecksum();
-
-				// If it is not, download a new copy.
-				if (LocalManifestHash != RemoteManifestHash)
-				{
-					LauncherHandler Launcher = new LauncherHandler();
-					Launcher.DownloadManifest();
-				}
-
+			{						
 				// Then, begin repairing the game
 				List<ManifestEntry> Manifest = manifestHandler.Manifest;			
 							
@@ -347,13 +339,48 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 		}
 
-		public override void UpdateLauncher()
+		public override void DownloadLauncher()
 		{
+			//crawl the server for all of the files in the /launcher/bin directory.
+			List<string> remotePaths = GetFilePaths(Config.GetLauncherBinariesURL(), true);
 
+			//download all of them
+			foreach (string path in remotePaths)
+			{
+				try
+				{
+					if (!String.IsNullOrEmpty(path))
+					{
+						string Local = String.Format("{0}launchpad{1}{2}",
+							               Path.GetTempPath(),
+							               Path.DirectorySeparatorChar,
+							               path);
+
+						string Remote = String.Format("{0}{1}",
+							                Config.GetLauncherBinariesURL(),
+							                path);
+
+						if (!Directory.Exists(Local))
+						{
+							Directory.CreateDirectory(Directory.GetParent(Local).ToString());
+						}
+
+						// Config.GetDoOfficialUpdates is used here since the official update server always allows anonymous logins.
+						DownloadFTPFile(Remote, Local, 0, Config.GetDoOfficialUpdates());
+					}                        
+				}
+				catch (WebException wex)
+				{
+					Console.WriteLine("WebException in UpdateLauncher(): " + wex.Message);
+				}
+			}
 		}
 
 		public override void UpdateGame()
 		{
+			// Make sure the local copy of the manifest is up to date
+			RefreshManifest();
+
 			//check all local files against the manifest for file size changes.
 			//if the file is missing or the wrong size, download it.
 			//better system - compare old & new manifests for changes and download those?
@@ -702,6 +729,73 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				return null;
 			}
             
+		}
+
+		/// <summary>
+		/// Refreshs the local copy of the manifest.
+		/// </summary>
+		private void RefreshManifest()
+		{
+			if (File.Exists(ConfigHandler.GetManifestPath()))
+			{
+				if (IsManifestOutdated())
+				{
+					DownloadManifest();
+				}
+			}
+			else
+			{
+				DownloadManifest();
+			}
+		}
+
+		/// <summary>
+		/// Determines whether the  manifest is outdated.
+		/// </summary>
+		/// <returns><c>true</c> if the manifest is outdated; otherwise, <c>false</c>.</returns>
+		private bool IsManifestOutdated()
+		{
+			if (File.Exists(ConfigHandler.GetManifestPath()))
+			{
+				string manifestURL = Config.GetManifestChecksumURL();
+				string remoteHash = ReadFTPFile(manifestURL);
+				string localHash = MD5Handler.GetFileHash(File.OpenRead(ConfigHandler.GetManifestPath()));
+
+				return remoteHash != localHash;
+			}
+			else
+			{
+				return true;
+			}
+		}
+
+		/// <summary>
+		/// Downloads the manifest.
+		/// </summary>
+		private void DownloadManifest()
+		{
+			try
+			{
+				string RemoteURL = Config.GetManifestURL();
+				string LocalPath = ConfigHandler.GetManifestPath();
+
+				if (File.Exists(ConfigHandler.GetManifestPath()))
+				{
+					// Create a backup of the old manifest so that we can compare them when updating the game
+					if (File.Exists(ConfigHandler.GetOldManifestPath()))
+					{
+						File.Delete(ConfigHandler.GetOldManifestPath());
+					}
+
+					File.Move(LocalPath, LocalPath + ".old");			
+				}						
+
+				DownloadFTPFile(RemoteURL, LocalPath);
+			}
+			catch (IOException ioex)
+			{
+				Console.WriteLine("IOException in DownloadManifest(): " + ioex.Message);
+			}
 		}
 
 		/// <summary>

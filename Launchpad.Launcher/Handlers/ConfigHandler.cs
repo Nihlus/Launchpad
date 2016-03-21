@@ -580,6 +580,7 @@ namespace Launchpad.Launcher.Handlers
 			}            
 		}
 
+		// TODO: More dynamic loading of protocols? Maybe even a plugin system?
 		/// <summary>
 		/// Gets the desired patch protocol. Currently, FTP, HTTP and BitTorrent are supported.
 		/// </summary>

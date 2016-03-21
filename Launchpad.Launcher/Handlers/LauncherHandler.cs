@@ -20,10 +20,8 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Reflection;
 using System.Threading;
 
@@ -46,14 +44,8 @@ namespace Launchpad.Launcher.Handlers
 	/// </summary>
 	internal sealed class LauncherHandler
 	{
-		/// <summary>
-		/// Occurs when changelog download finishes.
-		/// </summary>
 		public event ChangelogDownloadFinishedEventHandler ChangelogDownloadFinished;
 
-		/// <summary>
-		/// The download finished arguments object. Is updated once a file download finishes.
-		/// </summary>
 		private readonly ChangelogDownloadFinishedEventArgs ChangelogDownloadFinishedArgs = new ChangelogDownloadFinishedEventArgs();
 
 		/// <summary>
@@ -61,7 +53,7 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		ConfigHandler Config = ConfigHandler._instance;
 
-		//TODO: Move functionality to FTPProtocolHandler
+		//TODO: Run asynchronously
 		/// <summary>
 		/// Updates the launcher synchronously.
 		/// </summary>
@@ -69,41 +61,8 @@ namespace Launchpad.Launcher.Handlers
 		{
 			try
 			{				
-				FTPProtocolHandler FTP = new FTPProtocolHandler();
-
-				//crawl the server for all of the files in the /launcher/bin directory.
-				List<string> remotePaths = FTP.GetFilePaths(Config.GetLauncherBinariesURL(), true);
-
-				//download all of them
-				foreach (string path in remotePaths)
-				{
-					try
-					{
-						if (!String.IsNullOrEmpty(path))
-						{
-							string Local = String.Format("{0}launchpad{1}{2}",
-								               Path.GetTempPath(),
-								               Path.DirectorySeparatorChar,
-								               path);
-
-							string Remote = String.Format("{0}{1}",
-								                Config.GetLauncherBinariesURL(),
-								                path);
-
-							if (!Directory.Exists(Local))
-							{
-								Directory.CreateDirectory(Directory.GetParent(Local).ToString());
-							}
-
-							// Config.GetDoOfficialUpdates is used here since the official update server always allows anonymous logins.
-							FTP.DownloadFTPFile(Remote, Local, 0, Config.GetDoOfficialUpdates());
-						}                        
-					}
-					catch (WebException wex)
-					{
-						Console.WriteLine("WebException in UpdateLauncher(): " + wex.Message);
-					}
-				}
+				PatchProtocolHandler Patch = Config.GetPatchProtocol();
+				Patch.DownloadLauncher();
 				
 				ProcessStartInfo script = CreateUpdateScript();
 
@@ -116,48 +75,6 @@ namespace Launchpad.Launcher.Handlers
 			}
 		}
 
-		// TODO: Move to FTPProtocolHandler
-		/// <summary>
-		/// Downloads the manifest.
-		/// </summary>
-		public void DownloadManifest()
-		{
-			try
-			{
-				FTPProtocolHandler FTP = new FTPProtocolHandler();
-
-				string remoteChecksum = FTP.GetRemoteManifestChecksum();
-				string localChecksum = "";
-
-				string RemoteURL = Config.GetManifestURL();
-				string LocalPath = ConfigHandler.GetManifestPath();
-
-				if (File.Exists(ConfigHandler.GetManifestPath()))
-				{
-					using (Stream manifestStream = File.OpenRead(ConfigHandler.GetManifestPath()))
-					{
-						localChecksum = MD5Handler.GetFileHash(manifestStream);
-					}
-
-					if (remoteChecksum != localChecksum)
-					{
-						//Copy the old manifest so that we can compare them when updating the game
-						File.Copy(LocalPath, LocalPath + ".old", true);
-
-						FTP.DownloadFTPFile(RemoteURL, LocalPath);
-					}
-				}
-				else
-				{
-					FTP.DownloadFTPFile(RemoteURL, LocalPath);
-				}						
-			}
-			catch (IOException ioex)
-			{
-				Console.WriteLine("IOException in DownloadManifest(): " + ioex.Message);
-			}
-		}
-
 		/// <summary>
 		/// Gets the changelog from the server asynchronously.
 		/// </summary>
@@ -165,7 +82,6 @@ namespace Launchpad.Launcher.Handlers
 		{
 			Thread t = new Thread(LoadChangelogAsync);
 			t.Start();
-
 		}
 
 		private void LoadChangelogAsync()
@@ -191,7 +107,7 @@ namespace Launchpad.Launcher.Handlers
 			{
 				//maintain the executable name if it was renamed to something other than 'Launchpad' 
 				string assemblyPath = Assembly.GetEntryAssembly().Location;
-				string executableName = Path.GetFileName(assemblyPath); // should be "Launchpad", unless the user has renamed it
+				string executableName = Path.GetFileName(assemblyPath);
 
 				if (ChecksHandler.IsRunningOnUnix())
 				{

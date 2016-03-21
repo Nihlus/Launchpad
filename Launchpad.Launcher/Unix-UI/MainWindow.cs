@@ -60,7 +60,7 @@ namespace Launchpad.Launcher.UI
 		/// <summary>
 		/// The current mode that the launcher is in. Determines what the primary button does when pressed.
 		/// </summary>
-		ELauncherMode Mode = ELauncherMode.Invalid;
+		ELauncherMode Mode = ELauncherMode.Idle;
 
 		//this section sends some anonymous usage stats back home. If you don't want to do this for your game, simply change this boolean to false.
 		readonly bool bSendAnonStats = true;
@@ -79,9 +79,6 @@ namespace Launchpad.Launcher.UI
 
 			//set the window title
 			Title = "Launchpad - " + Config.GetGameName();
-
-			// Configure the WebView for our changelog
-			Browser.SetSizeRequest(290, 300);		
 
 			scrolledwindow2.Add(Browser);
 			scrolledwindow2.ShowAll();
@@ -151,19 +148,15 @@ namespace Launchpad.Launcher.UI
 					noUsageStatsNotification.Show();
 				}
 
-
+				// TODO: Ditch this for native Browser.Open functionality
 				//Start loading the changelog asynchronously
 				Launcher.ChangelogDownloadFinished += OnChangelogDownloadFinished;
 				Launcher.LoadChangelog();
+				//Browser.Open(Config.GetChangelogURL());
 
 				//if the launcher does not need an update at this point, we can continue checks for the game
 				if (!Checks.IsLauncherOutdated())
 				{
-					if (Checks.IsManifestOutdated())
-					{					
-						Launcher.DownloadManifest();
-					}
-
 					if (!Checks.IsGameInstalled())
 					{
 						//if the game is not installed, offer to install it
@@ -329,7 +322,7 @@ namespace Launchpad.Launcher.UI
 						Game.GameDownloadFinished += OnGameDownloadFinished;
 						Game.GameDownloadFailed += OnGameDownloadFailed;
 
-						if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
+						if (Checks.IsPlatformAvailable(Config.GetSystemTarget()))
 						{
 							//Repair the game asynchronously
 							SetLauncherMode(ELauncherMode.Repair, true);
@@ -356,7 +349,7 @@ namespace Launchpad.Launcher.UI
 						
 						//check for a .provides file in the platform directory on the server
 						//if there is none, the server does not provide a game for that platform
-						if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
+						if (Checks.IsPlatformAvailable(Config.GetSystemTarget()))
 						{
 							//install the game asynchronously
 							SetLauncherMode(ELauncherMode.Install, true);
@@ -389,7 +382,7 @@ namespace Launchpad.Launcher.UI
 							Game.GameDownloadFailed += OnGameDownloadFailed;
 
 							//update the game asynchronously
-							if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
+							if (Checks.IsPlatformAvailable(Config.GetSystemTarget()))
 							{
 								//install the game asynchronously
 								SetLauncherMode(ELauncherMode.Update, true);

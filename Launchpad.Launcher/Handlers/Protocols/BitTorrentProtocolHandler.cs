@@ -20,6 +20,9 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // TODO: Look into MonoTorrent
+using Launchpad.Launcher.Utility.Enums;
+
+
 namespace Launchpad.Launcher.Handlers.Protocols
 {
 	/// <summary>
@@ -40,6 +43,11 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			return false;
 		}
 
+		public override bool IsPlatformAvailable(ESystemTarget Platform)
+		{
+			return false;
+		}
+
 		public override bool IsLauncherOutdated()
 		{
 			return false;
@@ -50,17 +58,12 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			return false;
 		}
 
-		public override void InstallLauncher()
-		{
-
-		}
-
 		public override void InstallGame()
 		{
 
 		}
 
-		protected override void DownloadLauncher()
+		public override void DownloadLauncher()
 		{
 
 		}
@@ -76,11 +79,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		}
 
 		public override void VerifyGame()
-		{
-
-		}
-
-		public override void UpdateLauncher()
 		{
 
 		}

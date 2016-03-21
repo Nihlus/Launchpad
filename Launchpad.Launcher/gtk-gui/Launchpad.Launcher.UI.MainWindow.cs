@@ -93,6 +93,7 @@ namespace Launchpad.Launcher.UI
 			this.vbox2.Spacing = 6;
 			// Container child vbox2.Gtk.Box+BoxChild
 			this.alignment2 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
+			this.alignment2.WidthRequest = 300;
 			this.alignment2.Name = "alignment2";
 			// Container child alignment2.Gtk.Container+ContainerChild
 			this.scrolledwindow2 = new global::Gtk.ScrolledWindow ();
@@ -105,29 +106,28 @@ namespace Launchpad.Launcher.UI
 			this.vbox2.Add (this.alignment2);
 			global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.alignment2]));
 			w4.Position = 0;
-			// Container child vbox2.Gtk.Box+BoxChild
+			this.hbox2.Add (this.vbox2);
+			global::Gtk.Box.BoxChild w5 = ((global::Gtk.Box.BoxChild)(this.hbox2 [this.vbox2]));
+			w5.Position = 0;
+			w5.Expand = false;
+			this.vbox1.Add (this.hbox2);
+			global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.hbox2]));
+			w6.Position = 1;
+			// Container child vbox1.Gtk.Box+BoxChild
 			this.alignment1 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
 			this.alignment1.Name = "alignment1";
+			this.alignment1.LeftPadding = ((uint)(6));
 			// Container child alignment1.Gtk.Container+ContainerChild
 			this.MessageLabel = new global::Gtk.Label ();
 			this.MessageLabel.Name = "MessageLabel";
 			this.MessageLabel.Xalign = 0F;
 			this.MessageLabel.LabelProp = global::Mono.Unix.Catalog.GetString ("Idle");
 			this.alignment1.Add (this.MessageLabel);
-			this.vbox2.Add (this.alignment1);
-			global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.alignment1]));
-			w6.PackType = ((global::Gtk.PackType)(1));
-			w6.Position = 1;
-			w6.Expand = false;
-			w6.Fill = false;
-			this.hbox2.Add (this.vbox2);
-			global::Gtk.Box.BoxChild w7 = ((global::Gtk.Box.BoxChild)(this.hbox2 [this.vbox2]));
-			w7.Position = 0;
-			w7.Expand = false;
-			w7.Fill = false;
-			this.vbox1.Add (this.hbox2);
-			global::Gtk.Box.BoxChild w8 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.hbox2]));
-			w8.Position = 1;
+			this.vbox1.Add (this.alignment1);
+			global::Gtk.Box.BoxChild w8 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.alignment1]));
+			w8.Position = 2;
+			w8.Expand = false;
+			w8.Fill = false;
 			// Container child vbox1.Gtk.Box+BoxChild
 			this.hbox3 = new global::Gtk.HBox ();
 			this.hbox3.Name = "hbox3";
@@ -168,7 +168,7 @@ namespace Launchpad.Launcher.UI
 			w13.Fill = false;
 			this.vbox1.Add (this.hbox3);
 			global::Gtk.Box.BoxChild w14 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.hbox3]));
-			w14.Position = 2;
+			w14.Position = 3;
 			w14.Expand = false;
 			w14.Fill = false;
 			this.Add (this.vbox1);

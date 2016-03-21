@@ -59,7 +59,7 @@ namespace Launchpad.Launcher.UI
 		/// <summary>
 		/// The current mode that the launcher is in. Determines what the primary button does when pressed.
 		/// </summary>
-		ELauncherMode Mode = ELauncherMode.Invalid;
+		ELauncherMode Mode = ELauncherMode.Idle;
 
 		//this section sends some anonymous usage stats back home. If you don't want to do this for your game, simply change this boolean to false.
 		readonly bool bSendAnonStats = true;
@@ -144,12 +144,7 @@ namespace Launchpad.Launcher.UI
                 
 				//Does the launcher need an update?
 				if (!Checks.IsLauncherOutdated())
-				{
-					if (Checks.IsManifestOutdated())
-					{
-						Launcher.DownloadManifest();
-					}
-
+				{					
 					if (!Checks.IsGameInstalled())
 					{
 						SetLauncherMode(ELauncherMode.Install, false);
@@ -194,7 +189,7 @@ namespace Launchpad.Launcher.UI
 						Game.GameDownloadFinished += OnGameDownloadFinished;
 						Game.GameDownloadFailed += OnGameDownloadFailed;
 
-						if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
+						if (Checks.IsPlatformAvailable(Config.GetSystemTarget()))
 						{
 							//repair the game asynchronously
 							Game.VerifyGame();
@@ -228,7 +223,7 @@ namespace Launchpad.Launcher.UI
 						Game.GameDownloadFinished += OnGameDownloadFinished;
 						Game.GameDownloadFailed += OnGameDownloadFailed;
                                                                        
-						if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
+						if (Checks.IsPlatformAvailable(Config.GetSystemTarget()))
 						{
 							//install the game asynchronously
 							MessageLabel.Text = LocalizationCatalog.GetString("installingLabel");
@@ -274,7 +269,7 @@ namespace Launchpad.Launcher.UI
 						}
 						else
 						{
-							if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
+							if (Checks.IsPlatformAvailable(Config.GetSystemTarget()))
 							{
 								//update the game asynchronously                                
 								SetLauncherMode(ELauncherMode.Update, true);                                

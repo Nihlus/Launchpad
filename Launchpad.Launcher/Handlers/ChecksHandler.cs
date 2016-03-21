@@ -142,44 +142,15 @@ namespace Launchpad.Launcher.Handlers
 			return bIsInstallCookieEmpty;
 		}
 
-		//TODO: Move this to FTPProtocolHandler. It's functionality that should not exist outside that module.
-		/// <summary>
-		/// Determines whether the  manifest is outdated.
-		/// </summary>
-		/// <returns><c>true</c> if the manifest is outdated; otherwise, <c>false</c>.</returns>
-		public bool IsManifestOutdated()
-		{
-			if (File.Exists(ConfigHandler.GetManifestPath()))
-			{
-				FTPProtocolHandler FTP = new FTPProtocolHandler();
-
-				string manifestURL = Config.GetManifestChecksumURL();
-				string remoteHash = FTP.ReadFTPFile(manifestURL);
-				string localHash = MD5Handler.GetFileHash(File.OpenRead(ConfigHandler.GetManifestPath()));
-
-				return remoteHash != localHash;
-			}
-			else
-			{
-				return true;
-			}
-		}
-
 		/// <summary>
 		/// Checks whether or not the server provides binaries and patches for the specified platform.
 		/// </summary>
 		/// <returns><c>true</c>, if the server does provide files for the platform, <c>false</c> otherwise.</returns>
 		/// <param name="Platform">Platform.</param>
-		public bool DoesServerProvidePlatform(ESystemTarget Platform)
+		public bool IsPlatformAvailable(ESystemTarget Platform)
 		{
-			FTPProtocolHandler FTP = new FTPProtocolHandler();
-
-			string remote = String.Format("{0}/game/{1}/.provides",
-				                Config.GetBaseFTPUrl(),
-				                Platform);
-
-			return FTP.DoesRemoteFileExist(remote);
-			
+			PatchProtocolHandler Patch = Config.GetPatchProtocol();
+			return Patch.IsPlatformAvailable(Platform);
 		}
 	}
 }

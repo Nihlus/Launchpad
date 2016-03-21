@@ -23,6 +23,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using Launchpad.Launcher.Utility.Enums;
 
 namespace Launchpad.Launcher.Handlers.Protocols
 {
@@ -72,6 +73,12 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		public abstract bool CanPatch();
 
 		/// <summary>
+		/// Determines whether the protocol can provide patches and updates for the provided platform.
+		/// </summary>
+		/// <returns><c>true</c> if the platform is available; otherwise, <c>false</c>.</returns>
+		public abstract bool IsPlatformAvailable(ESystemTarget Platform);
+
+		/// <summary>
 		/// Checks whether or not the launcher has a new patch available.
 		/// </summary>
 		/// <returns><c>true</c>, if there's a patch available, <c>false</c> otherwise.</returns>
@@ -84,19 +91,9 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		public abstract bool IsGameOutdated();
 
 		/// <summary>
-		/// Installs or updates the launcher as neccesary.
-		/// </summary>
-		public abstract void InstallLauncher();
-
-		/// <summary>
-		/// Installs or updates the the game as neccesary.
+		/// Installs the game.
 		/// </summary>
 		public abstract void InstallGame();
-
-		/// <summary>
-		/// Downloads the latest version of the launcher.
-		/// </summary>
-		protected abstract void DownloadLauncher();
 
 		/// <summary>
 		/// Downloads the latest version of the game.
@@ -104,18 +101,25 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		protected abstract void DownloadGame();
 
 		/// <summary>
-		/// Verifies and repairs the launcher files.
-		/// </summary>
-		public abstract void VerifyLauncher();
-
-		/// <summary>
 		/// Verifies and repairs the game files.
 		/// </summary>
 		public abstract void VerifyGame();
 
-		public abstract void UpdateLauncher();
-
+		/// <summary>
+		/// Updates the game to the latest version.
+		/// </summary>
 		public abstract void UpdateGame();
+
+		/// <summary>
+		/// Downloads the latest version of the launcher.
+		/// </summary>
+		public abstract void DownloadLauncher();
+
+		/// <summary>
+		/// Verifies and repairs the launcher files.
+		/// </summary>
+		public abstract void VerifyLauncher();
+
 
 		protected void OnModuleDownloadProgressChanged()
 		{
