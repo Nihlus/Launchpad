@@ -119,27 +119,6 @@ namespace Launchpad.Launcher.UI
 				{
 					StatsHandler.SendUsageStats();
 				}
-				else
-				{
-					#if DEBUG
-
-					using (Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Launcher.Resources.RocketIcon.ico"))
-					{
-						if (iconStream != null)
-						{
-							NotifyIcon noUsageStatsNotification = new NotifyIcon();
-							noUsageStatsNotification.Icon = new System.Drawing.Icon(iconStream);
-							noUsageStatsNotification.Visible = true;
-
-							noUsageStatsNotification.BalloonTipTitle = LocalizationCatalog.GetString("infoTitle");
-							noUsageStatsNotification.BalloonTipText = LocalizationCatalog.GetString("usageTitle");
-
-							noUsageStatsNotification.ShowBalloonTip(10000);
-						}  
-					}
-					 
-					#endif
-				}
 
 				// Load the changelog. Try a direct URL first, and a protocol-specific 
 				// implementation after.

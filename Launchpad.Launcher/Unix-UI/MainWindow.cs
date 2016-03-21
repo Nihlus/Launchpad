@@ -133,19 +133,6 @@ namespace Launchpad.Launcher.UI
 				{
 					StatsHandler.SendUsageStats();
 				}
-				else
-				{
-					#if DEBUG
-					Notification noUsageStatsNotification = new Notification();
-
-					noUsageStatsNotification.IconName = Stock.DialogWarning;
-					noUsageStatsNotification.Urgency = Urgency.Normal;
-					noUsageStatsNotification.Summary = Mono.Unix.Catalog.GetString("Launchpad - Warning");
-					noUsageStatsNotification.Body = Mono.Unix.Catalog.GetString("Anonymous useage stats are not enabled.");
-
-					noUsageStatsNotification.Show();
-					#endif
-				}
 
 				// Load the changelog. Try a direct URL first, and a protocol-specific 
 				// implementation after.
