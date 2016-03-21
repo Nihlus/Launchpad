@@ -158,6 +158,7 @@ namespace Launchpad.Launcher.Handlers
 						data["BitTorrent"].AddKey("Magnet", "");
 
 						data["Launchpad"].AddKey("bOfficialUpdates", "true");
+						data["Launchpad"].AddKey("bAllowAnonymousStats", "true");
 
 						WriteConfig(Parser, data);
 					}
@@ -254,7 +255,13 @@ namespace Launchpad.Launcher.Handlers
 					{
 						data["BitTorrent"].AddKey("Magnet", "");
 					}
+
+					if (!data["Launchpad"].ContainsKey("bAllowAnonymousStats"))
+					{
+						data["Launchpad"].AddKey("bAllowAnonymousStats", "true");
+					}
 					// End March 21 - 2016
+
 
 
 					// ...
@@ -945,7 +952,7 @@ namespace Launchpad.Launcher.Handlers
 		/// Gets the base FTP URL.
 		/// </summary>
 		/// <returns>The base FTP URL.</returns>
-		private string GetBaseFTPUrl()
+		public string GetBaseFTPUrl()
 		{
 			lock (ReadLock)
 			{
@@ -1131,6 +1138,36 @@ namespace Launchpad.Launcher.Handlers
 				catch (ArgumentException aex)
 				{
 					Console.WriteLine("ArgumentException in GetDoOfficialUpdates(): " + aex.Message);
+					return true;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets if the launcher is allowed to send usage stats.
+		/// </summary>
+		/// <returns><c>true</c>, if the launcher is allowed to send usage stats, <c>false</c> otherwise.</returns>
+		public bool GetAllowAnonymousStats()
+		{
+			lock (ReadLock)
+			{
+				try
+				{
+					FileIniDataParser Parser = new FileIniDataParser();
+					IniData data = Parser.ReadFile(GetConfigPath());
+
+					string rawAllowAnonymousStats = data["Launchpad"]["bAllowAnonymousStats"];
+
+					return bool.Parse(rawAllowAnonymousStats);
+				}
+				catch (IOException ioex)
+				{
+					Console.WriteLine("IOException in GetAllowAnonymousStats(): " + ioex.Message);
+					return true;
+				}
+				catch (ArgumentException aex)
+				{
+					Console.WriteLine("ArgumentException in GetAllowAnonymousStats(): " + aex.Message);
 					return true;
 				}
 			}

@@ -61,9 +61,6 @@ namespace Launchpad.Launcher.UI
 		/// </summary>
 		ELauncherMode Mode = ELauncherMode.Idle;
 
-		//this section sends some anonymous usage stats back home. If you don't want to do this for your game, simply change this boolean to false.
-		readonly bool bSendAnonStats = true;
-
 		public MainForm()
 		{
 			InitializeComponent();
@@ -118,7 +115,7 @@ namespace Launchpad.Launcher.UI
 				}
                 
 
-				if (bSendAnonStats)
+				if (Config.GetAllowAnonymousStats())
 				{
 					StatsHandler.SendUsageStats();
 				}
