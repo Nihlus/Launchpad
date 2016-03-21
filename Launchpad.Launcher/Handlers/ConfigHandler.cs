@@ -327,24 +327,12 @@ namespace Launchpad.Launcher.Handlers
 		/// Gets the game path.
 		/// </summary>
 		/// <returns>The game path, terminated by a directory separator.</returns>
-		public string GetGamePath(bool bIncludeSystemTarget)
+		public string GetGamePath()
 		{
-			string gamePath;
-			if (bIncludeSystemTarget)
-			{
-				gamePath = String.Format(@"{0}Game{2}{1}{2}", 
-					GetLocalDir(),
-					GetSystemTarget(),
-					Path.DirectorySeparatorChar);
-			}
-			else
-			{
-				gamePath = String.Format(@"{0}Game{1}", 
-					GetLocalDir(),
-					Path.DirectorySeparatorChar);
-			}
-
-			return gamePath;
+			return String.Format(@"{0}Game{2}{1}{2}", 
+				GetLocalDir(),
+				GetSystemTarget(),
+				Path.DirectorySeparatorChar);
 		}
 
 		/// <summary>
@@ -361,12 +349,12 @@ namespace Launchpad.Launcher.Handlers
 			{
 				//should return something along the lines of "./Game/<ExecutableName>"
 				executablePathRootLevel = String.Format(@"{0}{1}", 
-					GetGamePath(true), 
+					GetGamePath(), 
 					GetGameName());
 
 				//should return something along the lines of "./Game/<GameName>/Binaries/<SystemTarget>/<ExecutableName>"
 				executablePathTargetLevel = String.Format(@"{0}{1}{3}Binaries{3}{2}{3}{1}", 
-					GetGamePath(true), 
+					GetGamePath(), 
 					GetGameName(), 
 					GetSystemTarget(),
 					Path.DirectorySeparatorChar);
@@ -375,12 +363,12 @@ namespace Launchpad.Launcher.Handlers
 			{
 				//should return something along the lines of "./Game/<ExecutableName>.exe"
 				executablePathRootLevel = String.Format(@"{0}{1}.exe", 
-					GetGamePath(true), 
+					GetGamePath(), 
 					GetGameName());
 
 				//should return something along the lines of "./Game/<GameName>/Binaries/<SystemTarget>/<ExecutableName>.exe"
 				executablePathTargetLevel = String.Format(@"{0}{1}{3}Binaries{3}{2}{3}{1}.exe", 
-					GetGamePath(true), 
+					GetGamePath(), 
 					GetGameName(), 
 					GetSystemTarget(),
 					Path.DirectorySeparatorChar);
@@ -439,7 +427,7 @@ namespace Launchpad.Launcher.Handlers
 		public string GetGameVersionPath()
 		{
 			string localVersionPath = String.Format(@"{0}GameVersion.txt",
-				                          GetGamePath(true));
+				                          GetGamePath());
 
 			return localVersionPath;
 		}
@@ -529,22 +517,11 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		/// <returns>The game URL.</returns>
 		/// <param name="bIncludeSystemTarget">If set to <c>true</c> b gets a platform-specific game.</param>
-		public string GetGameURL(bool bIncludeSystemTarget)
+		public string GetGameURL()
 		{
-			string gameURL;
-			if (bIncludeSystemTarget)
-			{
-				gameURL = String.Format("{0}/game/{1}/bin/", 
-					GetBaseFTPUrl(), 
-					GetSystemTarget());
-			}
-			else
-			{
-				gameURL = String.Format("{0}/game/", 
-					GetBaseFTPUrl());
-			}
-
-			return gameURL;
+			return String.Format("{0}/game/{1}/bin/", 
+				GetBaseFTPUrl(), 
+				GetSystemTarget());
 		}
 
 		/// <summary>

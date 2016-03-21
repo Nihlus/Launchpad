@@ -189,11 +189,11 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			foreach (ManifestEntry Entry in Manifest)
 			{
 				string RemotePath = String.Format("{0}{1}", 
-					                    Config.GetGameURL(true), 
+					                    Config.GetGameURL(), 
 					                    Entry.RelativePath);
 
 				string LocalPath = String.Format("{0}{1}{2}", 
-					                   Config.GetGamePath(true),
+					                   Config.GetGamePath(),
 					                   Path.DirectorySeparatorChar, 
 					                   Entry.RelativePath);
 
@@ -286,11 +286,11 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				foreach (ManifestEntry Entry in Manifest)
 				{
 					string RemotePath = String.Format("{0}{1}",
-						                    Config.GetGameURL(true),
+						                    Config.GetGameURL(),
 						                    Entry.RelativePath);
 
 					string LocalPath = String.Format("{0}{1}", 
-						                   Config.GetGamePath(true),
+						                   Config.GetGamePath(),
 						                   Entry.RelativePath);
 
 					// Prepare the progress event contents
@@ -368,11 +368,11 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					if (!OldManifest.Contains(Entry))
 					{
 						string RemotePath = String.Format("{0}{1}",
-							                    Config.GetGameURL(true),
+							                    Config.GetGameURL(),
 							                    Entry.RelativePath);
 
 						string LocalPath = String.Format("{0}{1}", 
-							                   Config.GetGamePath(true),
+							                   Config.GetGamePath(),
 							                   Entry.RelativePath);
 
 						Directory.CreateDirectory(Directory.GetParent(LocalPath).ToString());
