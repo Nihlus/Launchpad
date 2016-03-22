@@ -1,0 +1,182 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: launchpad\n"
+"POT-Creation-Date: 2016-03-22 20:19:58+0100\n"
+"PO-Revision-Date: 2016-03-22 15:21-0400\n"
+"Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
+"Language-Team: Finnish\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: crowdin.com\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: launchpad\n"
+"X-Crowdin-Language: fi\n"
+"X-Crowdin-File: messages.po\n"
+"Language: fi_FI\n"
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:12
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:47
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:15
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:41
+#: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UI.MainWindow.cs:2
+msgid "Idle"
+msgstr "Ei toimintoa"
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:15
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:16
+msgid "Failed to connect to the patch server. Please check your settings."
+msgstr ""
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:15
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:16
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:17
+msgid "Could not connect to server."
+msgstr "Palvelimeen yhdistäminen epäonnistui."
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:16
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:17
+msgid "This appears to be the first time you're starting the launcher.\n"
+"Is this the location where you would like to install the game?\n\n"
+"{0}"
+msgstr "Vaikuttaa siltä, että tämä on ensimmäinen kerta kun käynnistät launcherin.\n"
+"Onko tämä paikka, johon haluat sentaa pelin?\n\n"
+"{0}"
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:16
+msgid "Initial startup"
+msgstr ""
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:23
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:26
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:31
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:29
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:30
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:32
+msgid "Launchpad - Platform not provided!"
+msgstr "Launchpad - Alustaa ei annettu!"
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:23
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:26
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:31
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:29
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:30
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:32
+msgid "The server does not provide the game for the selected platform."
+msgstr "Palvelin ei tarjoa peliä valitulle alustalle."
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:25
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:28
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:33
+msgid "The server does not provide files for the selected platform."
+msgstr ""
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:23
+msgid "Installing..."
+msgstr "Asennetaan..."
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:23
+msgid "Install"
+msgstr "Asenna"
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:23
+msgid "Updating..."
+msgstr "Päivitetään..."
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:23
+msgid "Update"
+msgstr "Päivitä"
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:23
+msgid "Repairing..."
+msgstr "Korjataan..."
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:23
+msgid "Repair"
+msgstr "Korjaus"
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:23
+msgid "Launching..."
+msgstr "Käynnistetään..."
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:23
+msgid "Launch"
+msgstr "Käynnistä"
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:23
+#: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UI.MainWindow.cs:2
+msgid "Inactive"
+msgstr ""
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:40
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:36
+msgid "Launchpad - Failed to launch the game."
+msgstr ""
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:40
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:36
+msgid "The game failed to launch. Try repairing the installation."
+msgstr "Pelin käynnistys epäonnistui. Kokeile korjata asennus."
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:50
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:43
+msgid "Launchpad - Info"
+msgstr "Launchpad - Info"
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:50
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:43
+msgid "Game download finished. Play away!"
+msgstr "Pelin lataus valmistui. Pelaamaan vaan!"
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:50
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:43
+msgid "Launchpad has finished repairing the game installation. Play away!"
+msgstr "Launchpad on korjannut pelin asennuksen. Pelaamaan vaan!"
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:50
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:43
+msgid "Game update finished. Play away!"
+msgstr ""
+
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:45
+msgid "Whoops! The game appears to have crashed.\n"
+"Would you like the launcher to verify the installation?"
+msgstr ""
+
+#: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UI.MainWindow.cs:2
+msgid "Actions"
+msgstr ""
+
+#: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UI.MainWindow.cs:2
+msgid "Repair Game"
+msgstr ""
+
+#: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UI.MainWindow.cs:2
+msgid "Launchpad - <GameName>"
+msgstr "Launchpad - <GameName>"
+
+#: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UI.MainWindow.cs:2
+msgid "Launchpad Utilities - Manifest"
+msgstr ""
+
+#: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UI.MainWindow.cs:2
+msgid "Progress: "
+msgstr ""
+
+#: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UI.MainWindow.cs:2
+msgid "/some/file/path : 1 out of 100"
+msgstr ""
+
+#: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UI.MainWindow.cs:2
+msgid "Generate Manifest"
+msgstr ""
+
