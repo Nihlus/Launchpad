@@ -26,6 +26,8 @@ using System.IO;
 using Launchpad.Launcher.Utility.Enums;
 using Launchpad.Launcher.Utility;
 using Launchpad.Launcher.Handlers.Protocols;
+using System.Security.Cryptography;
+using System.Text;
 
 
 namespace Launchpad.Launcher.Handlers
@@ -128,9 +130,6 @@ namespace Launchpad.Launcher.Handlers
 					{
 						IniData data = Parser.ReadFile(GetConfigPath());
 
-						//generate a new GUID for this install instance of the launcher
-						string GeneratedGUID = Guid.NewGuid().ToString();
-
 						data.Sections.AddSection("Local");
 						data.Sections.AddSection("Remote");
 						data.Sections.AddSection("FTP");
@@ -141,7 +140,7 @@ namespace Launchpad.Launcher.Handlers
 						data["Local"].AddKey("LauncherVersion", defaultLauncherVersion.ToString());
 						data["Local"].AddKey("GameName", "LaunchpadExample");
 						data["Local"].AddKey("SystemTarget", GetCurrentPlatform().ToString());
-						data["Local"].AddKey("GUID", GeneratedGUID);					
+						data["Local"].AddKey("GUID", GenerateSeededGUID("LaunchpadExample"));					
 
 						data["Remote"].AddKey("ChangelogURL", "http://directorate.asuscomm.com/launchpad/changelog/changelog.html");
 						data["Remote"].AddKey("Protocol", "FTP");
@@ -183,12 +182,19 @@ namespace Launchpad.Launcher.Handlers
 
 					// ...
 
+					// March 22 - 2016: Changed GUID generation to create a unique GUID for each game name
 					// Update config files without GUID keys
+					string seededGUID = GenerateSeededGUID(data["Local"].GetKeyData("GameName").Value);
 					if (!data["Local"].ContainsKey("GUID"))
 					{
-						string GeneratedGUID = Guid.NewGuid().ToString();
-						data["Local"].AddKey("GUID", GeneratedGUID);
+						data["Local"].AddKey("GUID", seededGUID);
 					}
+					else
+					{
+						// Update the game GUID
+						data["Local"]["GUID"] = seededGUID;
+					}
+					// End March 22 - 2016
 
 					// Update config files without protocol keys
 					if (!data["Remote"].ContainsKey("Protocol"))
@@ -266,8 +272,6 @@ namespace Launchpad.Launcher.Handlers
 					}
 					// End March 21 - 2016
 
-
-
 					// ...
 					WriteConfig(Parser, data);
 				}
@@ -294,6 +298,24 @@ namespace Launchpad.Launcher.Handlers
 					string GeneratedGUID = Guid.NewGuid().ToString();
 					File.WriteAllText(GetInstallGUIDPath(), GeneratedGUID);
 				}
+			}
+		}
+
+		/// <summary>
+		/// Generates a type-3 deterministic GUID for a specified seed string.
+		/// The GUID is not designed to be cryptographically secure, nor is it
+		/// designed for any use beyond simple generation of a GUID unique to a
+		/// single game. If you use it for anything else, your code is bad and 
+		/// you should feel bad.
+		/// </summary>
+		/// <returns>The seeded GUI.</returns>
+		/// <param name="seed">Seed.</param>
+		public static string GenerateSeededGUID(string seed)
+		{
+			using (MD5 md5 = MD5.Create())
+			{
+				byte[] hash = md5.ComputeHash(Encoding.Default.GetBytes(seed));
+				return new Guid(hash).ToString();
 			}
 		}
 
