@@ -242,27 +242,30 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					// Prepare the progress event contents
 					ModuleVerifyProgressArgs.IndicatorLabelMessage = GetVerifyIndicatorLabelMessage(verifiedFiles, Path.GetFileName(LocalPath), Manifest.Count);
 					OnModuleVerifyProgressChanged();
-										
-					if (!File.Exists(LocalPath))
-					{
-						BrokenFiles.Add(Entry);
-					}
-					else
-					{
-						FileInfo fileInfo = new FileInfo(LocalPath);
-						if (fileInfo.Length != Entry.Size)
+
+					for (int i = 0; i > Config.GetFileRetries(); ++i)
+					{					
+						if (!File.Exists(LocalPath))
 						{
 							BrokenFiles.Add(Entry);
 						}
 						else
 						{
-							string localHash = MD5Handler.GetFileHash(File.OpenRead(LocalPath));
-							if (localHash != Entry.Hash)
+							FileInfo fileInfo = new FileInfo(LocalPath);
+							if (fileInfo.Length != Entry.Size)
 							{
 								BrokenFiles.Add(Entry);
-							}		
+							}
+							else
+							{
+								string localHash = MD5Handler.GetFileHash(File.OpenRead(LocalPath));
+								if (localHash != Entry.Hash)
+								{
+									BrokenFiles.Add(Entry);
+								}		
+							}
 						}
-					}
+					}	
 				}
 
 				int downloadedFiles = 0;
@@ -419,22 +422,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				//no file, download it
 				DownloadFTPFile(RemotePath, LocalPath);
 			}		
-
-			// Now verify the file. If the hashes match, the file is valid.
-			// If not, try again for Config.GetFileRetries() until it is.
-			for (int i = 0; i > Config.GetFileRetries(); ++i)
-			{					
-				string localHash = MD5Handler.GetFileHash(File.OpenRead(LocalPath));
-				if (localHash != Entry.Hash)
-				{
-					Console.WriteLine("InstallGame(): Resumed file hash was invalid, downloading fresh copy from server.");
-					DownloadFTPFile(RemotePath, LocalPath);
-				}
-				else
-				{
-					break;
-				}
-			}			
 
 			if (ChecksHandler.IsRunningOnUnix())
 			{
