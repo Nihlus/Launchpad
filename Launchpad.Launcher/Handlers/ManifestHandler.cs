@@ -72,11 +72,11 @@ namespace Launchpad.Launcher.Handlers
 			{
 				lock (ManifestLock)
 				{
-					if (File.Exists(ConfigHandler.GetManifestPath()))
+					if (File.Exists(GetManifestPath()))
 					{
 						manifest.Clear();
 
-						string[] rawManifest = File.ReadAllLines(ConfigHandler.GetManifestPath());
+						string[] rawManifest = File.ReadAllLines(GetManifestPath());
 						foreach (string rawEntry in rawManifest)
 						{
 							ManifestEntry newEntry = new ManifestEntry();
@@ -103,11 +103,11 @@ namespace Launchpad.Launcher.Handlers
 			{
 				lock (OldManifestLock)
 				{
-					if (File.Exists(ConfigHandler.GetOldManifestPath()))
+					if (File.Exists(GetOldManifestPath()))
 					{
 						oldManifest.Clear();
 
-						string[] rawOldManifest = File.ReadAllLines(ConfigHandler.GetOldManifestPath());
+						string[] rawOldManifest = File.ReadAllLines(GetOldManifestPath());
 						foreach (string rawEntry in rawOldManifest)
 						{
 							ManifestEntry newEntry = new ManifestEntry();
@@ -123,6 +123,28 @@ namespace Launchpad.Launcher.Handlers
 			{
 				Console.WriteLine("IOException in LoadOldManifest(): " + ioex.Message);
 			}
+		}
+
+		/// <summary>
+		/// Gets the manifests' path on disk.
+		/// </summary>
+		/// <returns>The manifest path.</returns>
+		public static string GetManifestPath()
+		{
+			string manifestPath = String.Format(@"{0}LauncherManifest.txt", 
+				                      ConfigHandler.GetLocalDir());
+			return manifestPath;
+		}
+
+		/// <summary>
+		/// Gets the old manifests' path on disk.
+		/// </summary>
+		/// <returns>The old manifest's path.</returns>
+		public static string GetOldManifestPath()
+		{
+			string oldManifestPath = String.Format(@"{0}LauncherManifest.txt.old", 
+				                         ConfigHandler.GetLocalDir());
+			return oldManifestPath;
 		}
 	}
 

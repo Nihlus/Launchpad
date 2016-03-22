@@ -403,31 +403,6 @@ namespace Launchpad.Launcher.Handlers
 				Path.DirectorySeparatorChar);
 		}
 
-		// TODO: Move to ManifestHandler or FTPProtocolHandler
-		/// <summary>
-		/// Gets the manifests' path on disk.
-		/// </summary>
-		/// <returns>The manifest path.</returns>
-		public static string GetManifestPath()
-		{
-			string manifestPath = String.Format(@"{0}LauncherManifest.txt", 
-				                      GetLocalDir());
-			return manifestPath;
-		}
-
-		// TODO: Move to ManifestHandler or FTPProtocolHandler
-
-		/// <summary>
-		/// Gets the old manifests' path on disk.
-		/// </summary>
-		/// <returns>The old manifest's path.</returns>
-		public static string GetOldManifestPath()
-		{
-			string oldManifestPath = String.Format(@"{0}LauncherManifest.txt.old", 
-				                         GetLocalDir());
-			return oldManifestPath;
-		}
-
 		/// <summary>
 		/// Gets the game path.
 		/// </summary>

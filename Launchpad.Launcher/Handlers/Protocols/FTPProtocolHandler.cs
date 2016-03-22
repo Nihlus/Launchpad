@@ -770,7 +770,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// </summary>
 		private void RefreshManifest()
 		{
-			if (File.Exists(ConfigHandler.GetManifestPath()))
+			if (File.Exists(ManifestHandler.GetManifestPath()))
 			{
 				if (IsManifestOutdated())
 				{
@@ -789,11 +789,11 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <returns><c>true</c> if the manifest is outdated; otherwise, <c>false</c>.</returns>
 		private bool IsManifestOutdated()
 		{
-			if (File.Exists(ConfigHandler.GetManifestPath()))
+			if (File.Exists(ManifestHandler.GetManifestPath()))
 			{
 				string manifestURL = GetManifestChecksumURL();
 				string remoteHash = ReadFTPFile(manifestURL);
-				string localHash = MD5Handler.GetFileHash(File.OpenRead(ConfigHandler.GetManifestPath()));
+				string localHash = MD5Handler.GetFileHash(File.OpenRead(ManifestHandler.GetManifestPath()));
 
 				return remoteHash != localHash;
 			}
@@ -811,14 +811,14 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			try
 			{
 				string RemoteURL = GetManifestURL();
-				string LocalPath = ConfigHandler.GetManifestPath();
+				string LocalPath = ManifestHandler.GetManifestPath();
 
-				if (File.Exists(ConfigHandler.GetManifestPath()))
+				if (File.Exists(ManifestHandler.GetManifestPath()))
 				{
 					// Create a backup of the old manifest so that we can compare them when updating the game
-					if (File.Exists(ConfigHandler.GetOldManifestPath()))
+					if (File.Exists(ManifestHandler.GetOldManifestPath()))
 					{
-						File.Delete(ConfigHandler.GetOldManifestPath());
+						File.Delete(ManifestHandler.GetOldManifestPath());
 					}
 
 					File.Move(LocalPath, LocalPath + ".old");			
