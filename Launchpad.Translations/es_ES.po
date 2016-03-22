@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: launchpad\n"
 "POT-Creation-Date: 2016-03-22 20:19:58+0100\n"
-"PO-Revision-Date: 2016-03-22 15:21-0400\n"
+"PO-Revision-Date: 2016-03-22 16:30-0400\n"
 "Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -26,7 +26,7 @@ msgstr "En espera"
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:15
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:16
 msgid "Failed to connect to the patch server. Please check your settings."
-msgstr ""
+msgstr "Error al conectar con el servidor. Por favor, compruebe su configuración."
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:15
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:16
@@ -70,7 +70,7 @@ msgstr "El servidor no provee el juego para la plataforma seleccionada."
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:28
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:33
 msgid "The server does not provide files for the selected platform."
-msgstr ""
+msgstr "El servidor no provee el juego para la plataforma seleccionada."
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:23
@@ -116,12 +116,12 @@ msgstr "Iniciar"
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:23
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UI.MainWindow.cs:2
 msgid "Inactive"
-msgstr ""
+msgstr "Inactivo"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:40
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:36
 msgid "Launchpad - Failed to launch the game."
-msgstr ""
+msgstr "Launchpad - Error al iniciar el juego."
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:40
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:36
@@ -155,11 +155,11 @@ msgstr ""
 
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UI.MainWindow.cs:2
 msgid "Actions"
-msgstr ""
+msgstr "Acciones"
 
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UI.MainWindow.cs:2
 msgid "Repair Game"
-msgstr ""
+msgstr "Reparar el Juego"
 
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UI.MainWindow.cs:2
 msgid "Launchpad - <GameName>"
@@ -171,7 +171,7 @@ msgstr ""
 
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UI.MainWindow.cs:2
 msgid "Progress: "
-msgstr ""
+msgstr "Progreso: "
 
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UI.MainWindow.cs:2
 msgid "/some/file/path : 1 out of 100"

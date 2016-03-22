@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: launchpad\n"
 "POT-Creation-Date: 2016-03-22 20:19:58+0100\n"
-"PO-Revision-Date: 2016-03-22 15:21-0400\n"
+"PO-Revision-Date: 2016-03-22 16:40-0400\n"
 "Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
 "Language-Team: Dutch\n"
 "MIME-Version: 1.0\n"
@@ -26,7 +26,7 @@ msgstr "Inactief"
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:15
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:16
 msgid "Failed to connect to the patch server. Please check your settings."
-msgstr ""
+msgstr "Kan geen verbinding maken met de patch server. Controleer uw instellingen."
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:15
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:16
@@ -45,7 +45,7 @@ msgstr "Dit lijkt de eerste keer dat je dit programma start.\n"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:16
 msgid "Initial startup"
-msgstr ""
+msgstr "Eerste keer opstarten"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:23
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:26
@@ -69,7 +69,7 @@ msgstr "De server beschikt niet over het spel voor het geselecteerde platform."
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:28
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:33
 msgid "The server does not provide files for the selected platform."
-msgstr ""
+msgstr "De server biedt geen bestanden voor het geselecteerde platform."
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:23
@@ -115,12 +115,12 @@ msgstr "Starten"
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:23
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UI.MainWindow.cs:2
 msgid "Inactive"
-msgstr ""
+msgstr "Inactief"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:40
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:36
 msgid "Launchpad - Failed to launch the game."
-msgstr ""
+msgstr "Launchpad - Kan het spel niet starten."
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:40
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:36
@@ -145,20 +145,21 @@ msgstr "Launchpad is klaar met het repareren van de spel installatie. Ga spelen!
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:50
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:43
 msgid "Game update finished. Play away!"
-msgstr ""
+msgstr "Spel update voltooid. Ga je gang!"
 
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:45
 msgid "Whoops! The game appears to have crashed.\n"
 "Would you like the launcher to verify the installation?"
-msgstr ""
+msgstr "Oeps! Het lijkt er op dat het spel niet meer werkt.\n"
+"Wil je dat Launchpad de bestanden controleert?"
 
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UI.MainWindow.cs:2
 msgid "Actions"
-msgstr ""
+msgstr "Acties"
 
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UI.MainWindow.cs:2
 msgid "Repair Game"
-msgstr ""
+msgstr "Spel herstellen"
 
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UI.MainWindow.cs:2
 msgid "Launchpad - <GameName>"
@@ -166,17 +167,17 @@ msgstr "Launchpad - <GameName>"
 
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UI.MainWindow.cs:2
 msgid "Launchpad Utilities - Manifest"
-msgstr ""
+msgstr "Launchpad Utilities - Manifest"
 
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UI.MainWindow.cs:2
 msgid "Progress: "
-msgstr ""
+msgstr "Voortgang: "
 
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UI.MainWindow.cs:2
 msgid "/some/file/path : 1 out of 100"
-msgstr ""
+msgstr "/some/file/path : 1 van de 100"
 
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UI.MainWindow.cs:2
 msgid "Generate Manifest"
-msgstr ""
+msgstr "Genereer Manifest"
 
