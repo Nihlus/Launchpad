@@ -276,20 +276,6 @@ namespace Launchpad.Launcher.UI
 		}
 
 		/// <summary>
-		/// Opens the settings editor, which allows the user to change the FTP and game settings.
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="e">E.</param>
-		protected void OnSettingsActionActivated(object sender, EventArgs e)
-		{
-			SettingsDialog LauncherSettings = new SettingsDialog();
-			LauncherSettings.Run();
-
-			//set the window title, if it changed.
-			Title = "Launchpad - " + Config.GetGameName();
-		}
-
-		/// <summary>
 		/// Runs a game repair, no matter what the state the installation is in.
 		/// </summary>
 		/// <param name="sender">Sender.</param>
