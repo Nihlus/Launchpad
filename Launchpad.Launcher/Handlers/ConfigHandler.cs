@@ -657,6 +657,17 @@ namespace Launchpad.Launcher.Handlers
 		}
 
 		// TODO: More dynamic loading of protocols? Maybe even a plugin system?
+		// Could use a static registry list in PatchProtocolHandler where plugin
+		// protocols register their keys and types
+		//
+		// private static readonly List<ProtocolDescriptor> AvailableProtocols = new List<ProtocolDescriptor>();
+		// ProtocolDescriptor protocol = new ProtocolDescriptor();
+		// protocol.Key = "HyperspaceRTL";
+		// protocol.Type = typeof(this);
+		//
+		// PatchProtocolHandler.RegisterProtocol(protocol);
+		// PatchProtocolHandler.UnregisterProtocol(protocol);
+		//
 		/// <summary>
 		/// Gets an instance of the desired patch protocol. Currently, FTP, HTTP and BitTorrent are supported.
 		/// </summary>
