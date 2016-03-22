@@ -23,10 +23,9 @@ using System;
 using System.IO;
 using System.Resources;
 using System.Windows.Forms;
-using System.Collections.Generic;
-using Launchpad.Launcher.Utility.Events;
 using Launchpad.Launcher.Handlers;
 using Launchpad.Launcher.Utility.Enums;
+using Launchpad.Launcher.Handlers.Protocols;
 
 namespace Launchpad.Launcher.UI
 {
@@ -38,32 +37,29 @@ namespace Launchpad.Launcher.UI
 		ResourceManager LocalizationCatalog = new ResourceManager("Launchpad.Launcher.Resources.Strings", typeof(MainForm).Assembly);
 
 		/// <summary>
-		/// The checks handler reference.
-		/// </summary>
-		ChecksHandler Checks = new ChecksHandler();
-
-		/// <summary>
 		/// The config handler reference.
 		/// </summary>
-		ConfigHandler Config = ConfigHandler._instance;
+		private readonly ConfigHandler Config = ConfigHandler._instance;
+
+		/// <summary>
+		/// The checks handler reference.
+		/// </summary>
+		private readonly ChecksHandler Checks;
 
 		/// <summary>
 		/// The launcher handler. Allows updating the launcher and loading the changelog
 		/// </summary>
-		LauncherHandler Launcher = new LauncherHandler();
+		private readonly LauncherHandler Launcher;
 
 		/// <summary>
 		/// The game handler. Allows updating, installing and repairing the game.
 		/// </summary>
-		GameHandler Game = new GameHandler();
+		private readonly GameHandler Game;
 
 		/// <summary>
 		/// The current mode that the launcher is in. Determines what the primary button does when pressed.
 		/// </summary>
-		ELauncherMode Mode = ELauncherMode.Invalid;
-
-		//this section sends some anonymous usage stats back home. If you don't want to do this for your game, simply change this boolean to false.
-		readonly bool bSendAnonStats = true;
+		ELauncherMode Mode = ELauncherMode.Inactive;
 
 		public MainForm()
 		{
@@ -71,6 +67,12 @@ namespace Launchpad.Launcher.UI
 
 			Config.Initialize();
 
+			// The config must be initialized before the handlers can be instantiated
+			Checks = new ChecksHandler();
+			Launcher = new LauncherHandler();
+			Game = new GameHandler();
+
+			SetLauncherMode(ELauncherMode.Inactive, false);
 			MessageLabel.Text = LocalizationCatalog.GetString("idleString");
 			downloadProgressLabel.Text = String.Empty;
 
@@ -78,7 +80,7 @@ namespace Launchpad.Launcher.UI
 			this.Text = "Launchpad - " + Config.GetGameName();
 
 			//first of all, check if we can connect to the FTP server.
-			if (!Checks.CanConnectToFTP())
+			if (!Checks.CanPatch())
 			{
 				MessageBox.Show(
 					this,
@@ -119,38 +121,26 @@ namespace Launchpad.Launcher.UI
 				}
                 
 
-				if (bSendAnonStats)
+				if (Config.ShouldAllowAnonymousStats())
 				{
 					StatsHandler.SendUsageStats();
 				}
+
+				// Load the changelog. Try a direct URL first, and a protocol-specific 
+				// implementation after.
+				if (Launcher.CanAccessStandardChangelog())
+				{
+					changelogBrowser.Navigate(Config.GetChangelogURL());
+				}
 				else
 				{
-					Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Launcher.Resources.RocketIcon.ico");
-					if (iconStream != null)
-					{
-						NotifyIcon noUsageStatsNotification = new NotifyIcon();
-						noUsageStatsNotification.Icon = new System.Drawing.Icon(iconStream);
-						noUsageStatsNotification.Visible = true;
-
-						noUsageStatsNotification.BalloonTipTitle = LocalizationCatalog.GetString("infoTitle");
-						noUsageStatsNotification.BalloonTipText = LocalizationCatalog.GetString("usageTitle");
-
-						noUsageStatsNotification.ShowBalloonTip(10000);
-					}   
+					Launcher.ChangelogDownloadFinished += OnChangelogDownloadFinished;
+					Launcher.LoadFallbackChangelog();
 				}
-
-				//load the changelog from the server
-				Launcher.ChangelogDownloadFinished += OnChangelogDownloadFinished;
-				Launcher.LoadChangelog();
                 
 				//Does the launcher need an update?
 				if (!Checks.IsLauncherOutdated())
-				{
-					if (Checks.IsManifestOutdated())
-					{
-						Launcher.DownloadManifest();
-					}
-
+				{					
 					if (!Checks.IsGameInstalled())
 					{
 						SetLauncherMode(ELauncherMode.Install, false);
@@ -191,14 +181,14 @@ namespace Launchpad.Launcher.UI
 				case ELauncherMode.Repair:
 					{
 						//bind events for UI updating					
-						Game.ProgressChanged += OnGameDownloadProgressChanged;
-						Game.GameRepairFinished += OnRepairFinished;
-						Game.GameRepairFailed += OnGameRepairFailed;
+						Game.ProgressChanged += OnModuleInstallationProgressChanged;
+						Game.GameDownloadFinished += OnGameDownloadFinished;
+						Game.GameDownloadFailed += OnGameDownloadFailed;
 
-						if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
+						if (Checks.IsPlatformAvailable(Config.GetSystemTarget()))
 						{
 							//repair the game asynchronously
-							Game.RepairGame();
+							Game.VerifyGame();
 							SetLauncherMode(ELauncherMode.Repair, true);
 						}
 						else
@@ -225,11 +215,11 @@ namespace Launchpad.Launcher.UI
 				case ELauncherMode.Install:
 					{
 						//bind events for UI updating                        
-						Game.ProgressChanged += OnGameDownloadProgressChanged;
+						Game.ProgressChanged += OnModuleInstallationProgressChanged;
 						Game.GameDownloadFinished += OnGameDownloadFinished;
 						Game.GameDownloadFailed += OnGameDownloadFailed;
                                                                        
-						if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
+						if (Checks.IsPlatformAvailable(Config.GetSystemTarget()))
 						{
 							//install the game asynchronously
 							MessageLabel.Text = LocalizationCatalog.GetString("installingLabel");
@@ -263,9 +253,9 @@ namespace Launchpad.Launcher.UI
 				case ELauncherMode.Update:
 					{
 						//bind events for UI updating                        
-						Game.ProgressChanged += OnGameDownloadProgressChanged;
-						Game.GameUpdateFinished += OnGameUpdateFinished;
-						Game.GameUpdateFailed += OnGameUpdateFailed;
+						Game.ProgressChanged += OnModuleInstallationProgressChanged;
+						Game.GameDownloadFinished += OnGameDownloadFinished;
+						Game.GameDownloadFailed += OnGameDownloadFailed;
 
 						if (Checks.IsLauncherOutdated())
 						{
@@ -275,7 +265,7 @@ namespace Launchpad.Launcher.UI
 						}
 						else
 						{
-							if (Checks.DoesServerProvidePlatform(Config.GetSystemTarget()))
+							if (Checks.IsPlatformAvailable(Config.GetSystemTarget()))
 							{
 								//update the game asynchronously                                
 								SetLauncherMode(ELauncherMode.Update, true);                                
@@ -391,9 +381,15 @@ namespace Launchpad.Launcher.UI
 						}
 						break;
 					}
+				case ELauncherMode.Inactive:
+					{
+						PrimaryButton.Enabled = false;
+						PrimaryButton.Text = LocalizationCatalog.GetString("inactiveLabel");
+						break;
+					}
 				default:
 					{
-						throw new ArgumentOutOfRangeException("Invalid mode was passed to SetLauncherMode");
+						throw new ArgumentOutOfRangeException("newMode", "Invalid mode was passed to SetLauncherMode");
 					}
 			}
 		}
@@ -403,9 +399,10 @@ namespace Launchpad.Launcher.UI
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The arguments containing the HTML from the server.</param>
-		private void OnChangelogDownloadFinished(object sender, GameDownloadFinishedEventArgs e)
+		private void OnChangelogDownloadFinished(object sender, ChangelogDownloadFinishedEventArgs e)
 		{
-			changelogBrowser.DocumentText = e.Result;
+			changelogBrowser.DocumentText = e.HTML;
+			changelogBrowser.Url = new Uri(e.URL);
 			changelogBrowser.Refresh();         
 		}
 
@@ -440,40 +437,32 @@ namespace Launchpad.Launcher.UI
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">Contains the type of failure that occurred.</param>
-		private void OnGameDownloadFailed(object sender, GameDownloadFailedEventArgs e)
+		private void OnGameDownloadFailed(object sender, EventArgs e)
 		{
 			this.Invoke((MethodInvoker)delegate
 				{
-					ELauncherMode parsedMode;
-					if (Enum.TryParse(e.Metadata, out parsedMode))
+					switch (Mode)
 					{
-						switch (parsedMode)
-						{
-							case ELauncherMode.Install:
-								{
-									SetLauncherMode(parsedMode, false);
-									break;
-								}
-							case ELauncherMode.Update:
-								{
-									SetLauncherMode(parsedMode, false);
-									break;
-								}
-							case ELauncherMode.Repair:
-								{
-									SetLauncherMode(parsedMode, false);
-									break;
-								}
-							default:
-								{
-									SetLauncherMode(ELauncherMode.Repair, false);
-									break;
-								}
-						}
-					}
-					else
-					{
-						SetLauncherMode(ELauncherMode.Repair, false);
+						case ELauncherMode.Install:
+							{
+								SetLauncherMode(Mode, false);
+								break;
+							}
+						case ELauncherMode.Update:
+							{
+								SetLauncherMode(Mode, false);
+								break;
+							}
+						case ELauncherMode.Repair:
+							{
+								SetLauncherMode(Mode, false);
+								break;
+							}
+						default:
+							{
+								SetLauncherMode(ELauncherMode.Repair, false);
+								break;
+							}
 					}
 				});                                   
 		}
@@ -483,31 +472,20 @@ namespace Launchpad.Launcher.UI
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">Contains the progress values and current filename.</param>
-		private void OnGameDownloadProgressChanged(object sender, FileDownloadProgressChangedEventArgs e)
+		private void OnModuleInstallationProgressChanged(object sender, ModuleProgressChangedArgs e)
 		{
 			this.Invoke((MethodInvoker)delegate
 				{
-					if (!String.IsNullOrEmpty(e.FileName))
-					{
-						string progressbarText = String.Format(
-							                         LocalizationCatalog.GetString("fileDownloadMessage"),
-							                         System.IO.Path.GetFileNameWithoutExtension(e.FileName),
-							                         e.DownloadedBytes.ToString(),
-							                         e.TotalBytes.ToString());
+					MessageLabel.Text = e.IndicatorLabelMessage;
+					downloadProgressLabel.Text = e.ProgressBarMessage;
 
-						downloadProgressLabel.Text = progressbarText;
+					mainProgressBar.Minimum = 0;
+					mainProgressBar.Maximum = 10000;
 
-						mainProgressBar.Minimum = 0;
-						mainProgressBar.Maximum = 10000;
-                    
-						if (e.DownloadedBytes > 0 && e.TotalBytes > 0)
-						{
-							double fraction = ((double)e.DownloadedBytes / (double)e.TotalBytes) * 10000;
-
-							mainProgressBar.Value = (int)fraction;
-							mainProgressBar.Update();
-						}                    
-					}                
+					double fraction = e.ProgressFraction * 10000;
+					mainProgressBar.Value = (int)fraction;
+					mainProgressBar.Update();  
+               
 				});                      
 		}
 
@@ -516,11 +494,11 @@ namespace Launchpad.Launcher.UI
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">Contains the result of the download.</param>
-		protected void OnGameDownloadFinished(object sender, GameDownloadFinishedEventArgs e)
+		protected void OnGameDownloadFinished(object sender, EventArgs e)
 		{
 			this.Invoke((MethodInvoker)delegate
 				{
-					if (e.Result == "1") //there was an error
+					if (e == null) //there was an error
 					{
 						MessageLabel.Text = LocalizationCatalog.GetString("gameDownloadFailMessage");
 
@@ -533,7 +511,6 @@ namespace Launchpad.Launcher.UI
 
 							launchFailedNotification.BalloonTipTitle = LocalizationCatalog.GetString("errorTitle");
 							launchFailedNotification.BalloonTipText = LocalizationCatalog.GetString("gameDownloadFailMessage");
-							;
 
 							launchFailedNotification.ShowBalloonTip(10000);
 						}
@@ -592,49 +569,13 @@ namespace Launchpad.Launcher.UI
 		}
 
 		/// <summary>
-		/// Passes the repair failed event to a generic handler
-		/// </summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">Contains the type of failure that occured</param>
-		private void OnGameRepairFailed(object sender, GameRepairFailedEventArgs e)
-		{
-			GameDownloadFailedEventArgs args = new GameDownloadFailedEventArgs();
-			args.Metadata = e.Metadata;
-			args.Result = e.Result;
-			args.ResultType = "Repair";
-
-			OnGameDownloadFailed(sender, args);	
-		}
-
-
-		/// <summary>
 		/// Passes the update finished event to a generic handler.
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">Contains the result of the download.</param>
-		private void OnGameUpdateFinished(object sender, GameUpdateFinishedEventArgs e)
+		private void OnGameUpdateFinished(object sender, EventArgs e)
 		{
-			GameDownloadFinishedEventArgs args = new GameDownloadFinishedEventArgs();
-			args.Metadata = e.Metadata;
-			args.Result = e.Result;
-			args.ResultType = e.ResultType;
-
-			OnGameDownloadFinished(sender, args);
-		}
-
-		/// <summary>
-		/// Passes the update failed event to a generic handler.
-		/// </summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">Contains the type of failure that occurred.</param>
-		private void OnGameUpdateFailed(object sender, GameUpdateFailedEventArgs e)
-		{
-			GameDownloadFailedEventArgs args = new GameDownloadFailedEventArgs();
-			args.Metadata = e.Metadata;
-			args.Result = e.Result;
-			args.ResultType = "Update";
-
-			OnGameDownloadFailed(sender, args);
+			OnGameDownloadFinished(sender, e);
 		}
 
 		private void aboutLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

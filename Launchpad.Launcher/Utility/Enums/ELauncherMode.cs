@@ -28,7 +28,7 @@ namespace Launchpad.Launcher.Utility.Enums
 		Update,
 		Repair,
 		Launch,
-		Invalid
+		Inactive
 	}
 }
 

@@ -28,6 +28,9 @@ namespace Launchpad.Launcher.Handlers
 {
 	internal sealed class ManifestHandler
 	{
+		private readonly object ManifestLock = new object();
+		private readonly object OldManifestLock = new object();
+
 		private List<ManifestEntry> manifest = new List<ManifestEntry>();
 
 		/// <summary>
@@ -44,7 +47,7 @@ namespace Launchpad.Launcher.Handlers
 			}
 		}
 
-		private List<ManifestEntry> oldManifest = new List<ManifestEntry>();
+		private readonly List<ManifestEntry> oldManifest = new List<ManifestEntry>();
 
 		/// <summary>
 		/// Gets the old manifest. Call sparsely, as it loads the entire manifest from disk each time
@@ -60,14 +63,6 @@ namespace Launchpad.Launcher.Handlers
 			}
 		}
 
-		private object ManifestLock = new object();
-		private object OldManifestLock = new object();
-
-		public ManifestHandler()
-		{
-
-		}
-
 		/// <summary>
 		/// Loads the manifest from disk.
 		/// </summary>
@@ -77,9 +72,11 @@ namespace Launchpad.Launcher.Handlers
 			{
 				lock (ManifestLock)
 				{
-					if (File.Exists(ConfigHandler.GetManifestPath()))
+					if (File.Exists(GetManifestPath()))
 					{
-						string[] rawManifest = File.ReadAllLines(ConfigHandler.GetManifestPath());
+						manifest.Clear();
+
+						string[] rawManifest = File.ReadAllLines(GetManifestPath());
 						foreach (string rawEntry in rawManifest)
 						{
 							ManifestEntry newEntry = new ManifestEntry();
@@ -106,9 +103,11 @@ namespace Launchpad.Launcher.Handlers
 			{
 				lock (OldManifestLock)
 				{
-					if (File.Exists(ConfigHandler.GetOldManifestPath()))
+					if (File.Exists(GetOldManifestPath()))
 					{
-						string[] rawOldManifest = File.ReadAllLines(ConfigHandler.GetOldManifestPath());
+						oldManifest.Clear();
+
+						string[] rawOldManifest = File.ReadAllLines(GetOldManifestPath());
 						foreach (string rawEntry in rawOldManifest)
 						{
 							ManifestEntry newEntry = new ManifestEntry();
@@ -124,6 +123,28 @@ namespace Launchpad.Launcher.Handlers
 			{
 				Console.WriteLine("IOException in LoadOldManifest(): " + ioex.Message);
 			}
+		}
+
+		/// <summary>
+		/// Gets the manifests' path on disk.
+		/// </summary>
+		/// <returns>The manifest path.</returns>
+		public static string GetManifestPath()
+		{
+			string manifestPath = String.Format(@"{0}LauncherManifest.txt", 
+				                      ConfigHandler.GetLocalDir());
+			return manifestPath;
+		}
+
+		/// <summary>
+		/// Gets the old manifests' path on disk.
+		/// </summary>
+		/// <returns>The old manifest's path.</returns>
+		public static string GetOldManifestPath()
+		{
+			string oldManifestPath = String.Format(@"{0}LauncherManifest.txt.old", 
+				                         ConfigHandler.GetLocalDir());
+			return oldManifestPath;
 		}
 	}
 
@@ -165,7 +186,7 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		/// <returns><c>true</c>, if the input was successfully parse, <c>false</c> otherwise.</returns>
 		/// <param name="rawInput">Raw input.</param>
-		/// <param name="entry">The resulting entry.</param>
+		/// <param name="inEntry">The resulting entry.</param>
 		public static bool TryParse(string rawInput, out ManifestEntry inEntry)
 		{
 			//clear out the entry for the new data
@@ -197,7 +218,7 @@ namespace Launchpad.Launcher.Handlers
 					inEntry.Hash = entryElements[1];
 
 					//attempt to parse the final element as a long-type byte count.
-					long parsedSize = 0;
+					long parsedSize;
 					if (long.TryParse(entryElements[2], out parsedSize))
 					{
 						inEntry.Size = parsedSize;
@@ -223,14 +244,14 @@ namespace Launchpad.Launcher.Handlers
 		}
 
 		/// <summary>
-		/// Returns a <see cref="System.String"/> that represents the current <see cref="Launchpad.ManifestEntry"/>.
+		/// Returns a <see cref="System.String"/> that represents the current <see cref="Launchpad.Launcher.Handlers.ManifestEntry"/>.
 		/// The returned value matches a raw in-manifest representation of the entry, in the form of
 		/// [path]:[hash]:[size]
 		/// </summary>
-		/// <returns>A <see cref="System.String"/> that represents the current <see cref="Launchpad.ManifestEntry"/>.</returns>
+		/// <returns>A <see cref="System.String"/> that represents the current <see cref="Launchpad.Launcher.Handlers.ManifestEntry"/>.</returns>
 		public override string ToString()
 		{
-			return RelativePath + ":" + Hash + ":" + Size.ToString();
+			return RelativePath + ":" + Hash + ":" + Size;
 		}
 
 		public bool Equals(ManifestEntry Other)

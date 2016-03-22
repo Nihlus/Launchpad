@@ -37,73 +37,23 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// The config handler reference.
 		/// </summary>
-		private ConfigHandler Config = ConfigHandler._instance;
+		readonly ConfigHandler Config = ConfigHandler._instance;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Launchpad_Launcher.ChecksHandler"/> class.
+		/// Determines whether this instance can connect to a patching service.
 		/// </summary>
-		public ChecksHandler()
+		/// <returns><c>true</c> if this instance can connect to a patching service; otherwise, <c>false</c>.</returns>
+		public bool CanPatch()
 		{
-
-		}
-
-
-		/// <summary>
-		/// Determines whether this instance can connect to the FTP server. Run as little as possible, since it blocks the main thread while checking.
-		/// </summary>
-		/// <returns><c>true</c> if this instance can connect to the FTP server; otherwise, <c>false</c>.</returns>
-		public bool CanConnectToFTP()
-		{
-			bool bCanConnectToFTP;
-
-			//string FTPURL = Config.GetFTPUrl();
-			string FTPURL = Config.GetBaseFTPUrl();
-			string FTPUserName = Config.GetFTPUsername();
-			string FTPPassword = Config.GetFTPPassword();
-
-			try
+			PatchProtocolHandler Patch = Config.GetPatchProtocol();
+			if (Patch != null)
 			{
-				//FtpWebRequest plainRequest = (FtpWebRequest)FtpWebRequest.Create(FTPURL);
-				FtpWebRequest plainRequest = FTPHandler.CreateFtpWebRequest(FTPURL, FTPUserName, FTPPassword, false);
-
-				plainRequest.Credentials = new NetworkCredential(FTPUserName, FTPPassword);
-				plainRequest.Method = WebRequestMethods.Ftp.ListDirectory;
-				plainRequest.Timeout = 8000;
-
-				try
-				{
-					WebResponse response = plainRequest.GetResponse();
-
-					plainRequest.Abort();
-					response.Close();
-
-					bCanConnectToFTP = true;
-				}
-				catch (WebException wex)
-				{
-					Console.WriteLine("WebException in CanConnectToFTP(): " + wex.Message);
-					Console.WriteLine(FTPURL);
-
-					plainRequest.Abort();
-					bCanConnectToFTP = false;
-				}
+				return Patch.CanPatch();
 			}
-			catch (WebException wex)
+			else
 			{
-				//case where FTP URL in config is not valid
-				Console.WriteLine("WebException CanConnectToFTP() (Invalid URL): " + wex.Message);
-
-				bCanConnectToFTP = false;
-				return bCanConnectToFTP;
+				return false;
 			}
-
-			if (!bCanConnectToFTP)
-			{
-				Console.WriteLine("Failed to connect to FTP server at: {0}", Config.GetBaseFTPUrl());
-				bCanConnectToFTP = false;
-			}
-
-			return bCanConnectToFTP;
 		}
 
 		/// <summary>
@@ -150,7 +100,7 @@ namespace Launchpad.Launcher.Handlers
 		{
 			//Criteria for considering the game 'installed'
 			//Does the game directory exist?
-			bool bHasDirectory = Directory.Exists(Config.GetGamePath(true));
+			bool bHasDirectory = Directory.Exists(Config.GetGamePath());
 			//Is there an .install file in the directory?
 			bool bHasInstallationCookie = File.Exists(ConfigHandler.GetInstallCookiePath());
 			//is there a version file?
@@ -166,26 +116,8 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns><c>true</c> if the game is outdated; otherwise, <c>false</c>.</returns>
 		public bool IsGameOutdated()
 		{
-			FTPHandler FTP = new FTPHandler();
-			try
-			{
-				Version local = Config.GetLocalGameVersion();
-				Version remote = FTP.GetRemoteGameVersion(true);
-
-				if (local < remote)
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			catch (WebException wex)
-			{
-				Console.WriteLine("WebException in IsGameOutdated(): " + wex.Message);
-				return true;
-			}
+			PatchProtocolHandler Patch = Config.GetPatchProtocol();
+			return Patch.IsGameOutdated();
 		}
 
 		/// <summary>
@@ -194,26 +126,8 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns><c>true</c> if the launcher is outdated; otherwise, <c>false</c>.</returns>
 		public bool IsLauncherOutdated()
 		{
-			FTPHandler FTP = new FTPHandler();
-			try
-			{
-				Version local = Config.GetLocalLauncherVersion();
-				Version remote = FTP.GetRemoteLauncherVersion();	
-
-				if (local < remote)
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			catch (WebException wex)
-			{
-				Console.WriteLine("WebException in IsLauncherOutdated(): " + wex.Message);
-				return false;	
-			}
+			PatchProtocolHandler Patch = Config.GetPatchProtocol();
+			return Patch.IsLauncherOutdated();
 		}
 
 		/// <summary>
@@ -236,44 +150,14 @@ namespace Launchpad.Launcher.Handlers
 		}
 
 		/// <summary>
-		/// Determines whether the  manifest is outdated.
+		/// Checks whether or not the server provides binaries and patches for the specified platform.
 		/// </summary>
-		/// <returns><c>true</c> if the manifest is outdated; otherwise, <c>false</c>.</returns>
-		public bool IsManifestOutdated()
+		/// <returns><c>true</c>, if the server does provide files for the platform, <c>false</c> otherwise.</returns>
+		/// <param name="Platform">Platform.</param>
+		public bool IsPlatformAvailable(ESystemTarget Platform)
 		{
-			if (File.Exists(ConfigHandler.GetManifestPath()))
-			{
-				FTPHandler FTP = new FTPHandler();
-
-				string manifestURL = Config.GetManifestChecksumURL();
-				string remoteHash = FTP.ReadFTPFile(manifestURL);
-				string localHash = MD5Handler.GetFileHash(File.OpenRead(ConfigHandler.GetManifestPath()));
-
-				if (remoteHash != localHash)
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			else
-			{
-				return true;
-			}
-		}
-
-		public bool DoesServerProvidePlatform(ESystemTarget Platform)
-		{
-			FTPHandler FTP = new FTPHandler();
-
-			string remote = String.Format("{0}/game/{1}/.provides",
-				                Config.GetBaseFTPUrl(),
-				                Platform.ToString());
-
-			return FTP.DoesFileExist(remote);
-			
+			PatchProtocolHandler Patch = Config.GetPatchProtocol();
+			return Patch.IsPlatformAvailable(Platform);
 		}
 	}
 }

@@ -28,7 +28,7 @@ namespace Launchpad.Launcher.Utility.Enums
 		Mac,
 		Win64,
 		Win32,
-		Invalid
+		Unknown
 	}
 }
 

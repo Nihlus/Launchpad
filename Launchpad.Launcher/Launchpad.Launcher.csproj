@@ -253,7 +253,6 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <Compile Include="Unix-UI\MainWindow.cs" />
-    <Compile Include="Unix-UI\SettingsDialog.cs" />
     <EmbeddedResource Include="Resources\RocketIcon.ico" />
     <Compile Include="Handlers\GameHandler.cs" />
     <Compile Include="Handlers\LauncherHandler.cs" />
@@ -262,12 +261,12 @@
     <Compile Include="Utility\Enums\ESystemTarget.cs" />
     <Compile Include="Handlers\ManifestHandler.cs" />
     <Compile Include="Utility\Enums\ELauncherMode.cs" />
-    <Compile Include="Utility\Events\Arguments.cs" />
-    <Compile Include="Utility\Events\Delegates.cs" />
     <None Include="packages.config" />
-    <Compile Include="Handlers\Protocols\FTPHandler.cs" />
     <Compile Include="gtk-gui\Launchpad.Launcher.UI.MainWindow.cs" />
-    <Compile Include="gtk-gui\Launchpad.Launcher.UI.SettingsDialog.cs" />
+    <Compile Include="Handlers\Protocols\PatchProtocolHandler.cs" />
+    <Compile Include="Handlers\Protocols\FTPProtocolHandler.cs" />
+    <Compile Include="Handlers\Protocols\HTTPProtocolHandler.cs" />
+    <Compile Include="Handlers\Protocols\BitTorrentProtocolHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
