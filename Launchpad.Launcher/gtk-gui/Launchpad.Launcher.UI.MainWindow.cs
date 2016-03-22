@@ -6,18 +6,6 @@ namespace Launchpad.Launcher.UI
 	{
 		private global::Gtk.UIManager UIManager;
 		
-		private global::Gtk.Action EditAction;
-		
-		private global::Gtk.Action ActionsAction;
-		
-		private global::Gtk.Action refreshAction;
-		
-		private global::Gtk.Action preferencesAction;
-		
-		private global::Gtk.Action EditAction1;
-		
-		private global::Gtk.Action preferencesAction1;
-		
 		private global::Gtk.Action ActionsAction1;
 		
 		private global::Gtk.Action refreshAction1;
@@ -56,25 +44,6 @@ namespace Launchpad.Launcher.UI
 			// Widget Launchpad.Launcher.UI.MainWindow
 			this.UIManager = new global::Gtk.UIManager();
 			global::Gtk.ActionGroup w1 = new global::Gtk.ActionGroup("Default");
-			this.EditAction = new global::Gtk.Action("EditAction", global::Mono.Unix.Catalog.GetString("Edit"), null, null);
-			this.EditAction.ShortLabel = global::Mono.Unix.Catalog.GetString("Options");
-			w1.Add(this.EditAction, null);
-			this.ActionsAction = new global::Gtk.Action("ActionsAction", global::Mono.Unix.Catalog.GetString("Actions"), null, null);
-			this.ActionsAction.ShortLabel = global::Mono.Unix.Catalog.GetString("Actions");
-			w1.Add(this.ActionsAction, null);
-			this.refreshAction = new global::Gtk.Action("refreshAction", global::Mono.Unix.Catalog.GetString("Repair Game"), null, "gtk-refresh");
-			this.refreshAction.ShortLabel = global::Mono.Unix.Catalog.GetString("Repair");
-			w1.Add(this.refreshAction, null);
-			this.preferencesAction = new global::Gtk.Action("preferencesAction", global::Mono.Unix.Catalog.GetString("Settings"), null, "gtk-preferences");
-			this.preferencesAction.HideIfEmpty = false;
-			this.preferencesAction.ShortLabel = global::Mono.Unix.Catalog.GetString("Settings");
-			w1.Add(this.preferencesAction, null);
-			this.EditAction1 = new global::Gtk.Action("EditAction1", global::Mono.Unix.Catalog.GetString("Edit"), null, null);
-			this.EditAction1.ShortLabel = global::Mono.Unix.Catalog.GetString("Edit");
-			w1.Add(this.EditAction1, null);
-			this.preferencesAction1 = new global::Gtk.Action("preferencesAction1", global::Mono.Unix.Catalog.GetString("Settings"), null, "gtk-preferences");
-			this.preferencesAction1.ShortLabel = global::Mono.Unix.Catalog.GetString("Settings");
-			w1.Add(this.preferencesAction1, null);
 			this.ActionsAction1 = new global::Gtk.Action("ActionsAction1", global::Mono.Unix.Catalog.GetString("Actions"), null, null);
 			this.ActionsAction1.ShortLabel = global::Mono.Unix.Catalog.GetString("Actions");
 			w1.Add(this.ActionsAction1, null);
@@ -173,6 +142,7 @@ namespace Launchpad.Launcher.UI
 			this.alignment3.Name = "alignment3";
 			// Container child alignment3.Gtk.Container+ContainerChild
 			this.PrimaryButton = new global::Gtk.Button();
+			this.PrimaryButton.Sensitive = false;
 			this.PrimaryButton.CanDefault = true;
 			this.PrimaryButton.CanFocus = true;
 			this.PrimaryButton.Name = "PrimaryButton";
@@ -200,7 +170,6 @@ namespace Launchpad.Launcher.UI
 			this.PrimaryButton.HasDefault = true;
 			this.Show();
 			this.DeleteEvent += new global::Gtk.DeleteEventHandler(this.OnDeleteEvent);
-			this.refreshAction.Activated += new global::System.EventHandler(this.OnRepairGameActionActivated);
 			this.refreshAction1.Activated += new global::System.EventHandler(this.OnRepairGameActionActivated);
 			this.PrimaryButton.Clicked += new global::System.EventHandler(this.OnPrimaryButtonClicked);
 		}
