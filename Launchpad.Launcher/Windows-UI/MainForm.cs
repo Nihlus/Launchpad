@@ -37,24 +37,24 @@ namespace Launchpad.Launcher.UI
 		ResourceManager LocalizationCatalog = new ResourceManager("Launchpad.Launcher.Resources.Strings", typeof(MainForm).Assembly);
 
 		/// <summary>
-		/// The checks handler reference.
-		/// </summary>
-		ChecksHandler Checks = new ChecksHandler();
-
-		/// <summary>
 		/// The config handler reference.
 		/// </summary>
-		ConfigHandler Config = ConfigHandler._instance;
+		private readonly ConfigHandler Config = ConfigHandler._instance;
+
+		/// <summary>
+		/// The checks handler reference.
+		/// </summary>
+		private readonly ChecksHandler Checks;
 
 		/// <summary>
 		/// The launcher handler. Allows updating the launcher and loading the changelog
 		/// </summary>
-		LauncherHandler Launcher = new LauncherHandler();
+		private readonly LauncherHandler Launcher;
 
 		/// <summary>
 		/// The game handler. Allows updating, installing and repairing the game.
 		/// </summary>
-		GameHandler Game = new GameHandler();
+		private readonly GameHandler Game;
 
 		/// <summary>
 		/// The current mode that the launcher is in. Determines what the primary button does when pressed.
@@ -67,6 +67,10 @@ namespace Launchpad.Launcher.UI
 
 			Config.Initialize();
 
+			// The config must be initialized before the handlers can be instantiated
+			Checks = new ChecksHandler();
+			Launcher = new LauncherHandler();
+			Game = new GameHandler();
 
 			SetLauncherMode(ELauncherMode.Inactive, false);
 			MessageLabel.Text = LocalizationCatalog.GetString("idleString");

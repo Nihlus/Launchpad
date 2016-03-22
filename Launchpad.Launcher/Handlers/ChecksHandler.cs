@@ -46,7 +46,14 @@ namespace Launchpad.Launcher.Handlers
 		public bool CanPatch()
 		{
 			PatchProtocolHandler Patch = Config.GetPatchProtocol();
-			return Patch.CanPatch();
+			if (Patch != null)
+			{
+				return Patch.CanPatch();
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		/// <summary>

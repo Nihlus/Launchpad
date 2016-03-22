@@ -33,24 +33,24 @@ namespace Launchpad.Launcher.UI
 	public partial class MainWindow : Window
 	{
 		/// <summary>
-		/// The checks handler reference.
-		/// </summary>
-		ChecksHandler Checks = new ChecksHandler();
-
-		/// <summary>
 		/// The config handler reference.
 		/// </summary>
 		ConfigHandler Config = ConfigHandler._instance;
 
 		/// <summary>
+		/// The checks handler reference.
+		/// </summary>
+		private readonly ChecksHandler Checks;
+
+		/// <summary>
 		/// The launcher handler. Allows updating the launcher and loading the changelog
 		/// </summary>
-		LauncherHandler Launcher = new LauncherHandler();
+		private readonly LauncherHandler Launcher;
 
 		/// <summary>
 		/// The game handler. Allows updating, installing and repairing the game.
 		/// </summary>
-		GameHandler Game = new GameHandler();
+		private readonly GameHandler Game;
 
 		/// <summary>
 		/// The changelog browser.
@@ -70,6 +70,11 @@ namespace Launchpad.Launcher.UI
 
 			//Initialize the config files and check values.
 			Config.Initialize();
+
+			// The config must be initialized before the handlers can be instantiated
+			Checks = new ChecksHandler();
+			Launcher = new LauncherHandler();
+			Game = new GameHandler();
 
 			//Initialize the GTK UI
 			this.Build();
@@ -93,7 +98,7 @@ namespace Launchpad.Launcher.UI
 					                       DialogFlags.Modal, 
 					                       MessageType.Warning, 
 					                       ButtonsType.Ok, 
-					                       Mono.Unix.Catalog.GetString("Failed to connect to the FTP server. Please check your FTP settings."));
+					                       Mono.Unix.Catalog.GetString("Failed to connect to the patch server. Please check your settings."));
 
 				dialog.Run();
 				dialog.Destroy();

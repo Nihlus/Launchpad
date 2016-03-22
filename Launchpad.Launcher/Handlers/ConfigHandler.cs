@@ -688,13 +688,18 @@ namespace Launchpad.Launcher.Handlers
 							}
 						default:
 							{
-								return new FTPProtocolHandler();
+								throw new NotImplementedException(String.Format("Protocol \"{0}\" was not recognized or implemented.", patchProtocol));
 							}
 					}
 				}
 				catch (IOException ioex)
 				{
 					Console.WriteLine("IOException in GetPatchProtocol(): " + ioex.Message);
+					return null;
+				}
+				catch (NotImplementedException nex)
+				{
+					Console.WriteLine("NotImplementedException in GetPatchProtocol(): " + nex.Message);
 					return null;
 				}
 			}
