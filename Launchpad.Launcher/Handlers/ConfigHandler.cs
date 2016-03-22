@@ -1214,7 +1214,7 @@ namespace Launchpad.Launcher.Handlers
 		/// Gets if the launcher is allowed to send usage stats.
 		/// </summary>
 		/// <returns><c>true</c>, if the launcher is allowed to send usage stats, <c>false</c> otherwise.</returns>
-		public bool GetAllowAnonymousStats()
+		public bool ShouldAllowAnonymousStats()
 		{
 			lock (ReadLock)
 			{

@@ -137,7 +137,7 @@ namespace Launchpad.Launcher.UI
 
 				} 
 				
-				if (Config.GetAllowAnonymousStats())
+				if (Config.ShouldAllowAnonymousStats())
 				{
 					StatsHandler.SendUsageStats();
 				}
