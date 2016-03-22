@@ -36,6 +36,30 @@
         <property name="StockId">gtk-preferences</property>
         <signal name="Activated" handler="OnSettingsActionActivated" />
       </action>
+      <action id="EditAction1">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">Edit</property>
+        <property name="ShortLabel" translatable="yes">Edit</property>
+      </action>
+      <action id="preferencesAction1">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">Settings</property>
+        <property name="ShortLabel" translatable="yes">Settings</property>
+        <property name="StockId">gtk-preferences</property>
+        <signal name="Activated" handler="OnSettingsActionActivated" />
+      </action>
+      <action id="ActionsAction1">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">Actions</property>
+        <property name="ShortLabel" translatable="yes">Actions</property>
+      </action>
+      <action id="refreshAction1">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">Repair Game</property>
+        <property name="ShortLabel" translatable="yes">Repair Game</property>
+        <property name="StockId">gtk-refresh</property>
+        <signal name="Activated" handler="OnRepairGameActionActivated" />
+      </action>
     </action-group>
     <property name="MemberName" />
     <property name="Title" translatable="yes">Launchpad - &lt;GameName&gt;</property>
@@ -52,9 +76,11 @@
           <widget class="Gtk.MenuBar" id="menubar1">
             <property name="MemberName" />
             <node name="menubar1" type="Menubar">
-              <node type="Menu" action="EditAction">
-                <node type="Menuitem" />
-                <node type="Menuitem" action="preferencesAction" />
+              <node type="Menu" action="EditAction1">
+                <node type="Menuitem" action="preferencesAction1" />
+              </node>
+              <node type="Menu" action="ActionsAction1">
+                <node type="Menuitem" action="refreshAction1" />
               </node>
             </node>
           </widget>
