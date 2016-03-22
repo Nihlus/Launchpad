@@ -80,10 +80,10 @@ namespace Launchpad.Launcher.UI
 			//set the window title
 			Title = "Launchpad - " + Config.GetGameName();
 
-			scrolledwindow2.Add(Browser);
-			scrolledwindow2.ShowAll();
+			ScrolledBrowserWindow.Add(Browser);
+			ScrolledBrowserWindow.ShowAll();
 
-			MessageLabel.Text = Mono.Unix.Catalog.GetString("Idle");
+			IndicatorLabel.Text = Mono.Unix.Catalog.GetString("Idle");
 
 			//First of all, check if we can connect to the FTP server.
 			if (!Checks.CanPatch())
@@ -97,7 +97,7 @@ namespace Launchpad.Launcher.UI
 
 				dialog.Run();
 				dialog.Destroy();
-				MessageLabel.Text = Mono.Unix.Catalog.GetString("Could not connect to server.");
+				IndicatorLabel.Text = Mono.Unix.Catalog.GetString("Could not connect to server.");
 			}
 			else
 			{
@@ -479,9 +479,9 @@ namespace Launchpad.Launcher.UI
 		{
 			Application.Invoke(delegate
 				{			
-					progressbar2.Text = e.ProgressBarMessage;
-					MessageLabel.Text = e.IndicatorLabelMessage;
-					progressbar2.Fraction = e.ProgressFraction;
+					MainProgressBar.Text = e.ProgressBarMessage;
+					IndicatorLabel.Text = e.IndicatorLabelMessage;
+					MainProgressBar.Fraction = e.ProgressFraction;
 				});
 		}
 
@@ -494,8 +494,8 @@ namespace Launchpad.Launcher.UI
 		{
 			Application.Invoke(delegate
 				{
-					MessageLabel.Text = Mono.Unix.Catalog.GetString("Idle");
-					progressbar2.Text = "";
+					IndicatorLabel.Text = Mono.Unix.Catalog.GetString("Idle");
+					MainProgressBar.Text = "";
 
 					switch (Mode)
 					{

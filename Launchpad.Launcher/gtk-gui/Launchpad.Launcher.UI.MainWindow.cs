@@ -28,21 +28,21 @@ namespace Launchpad.Launcher.UI
 		
 		private global::Gtk.HBox hbox2;
 		
-		private global::Gtk.VBox vbox2;
+		private global::Gtk.VBox BrowserContainer;
 		
 		private global::Gtk.Alignment alignment2;
 		
-		private global::Gtk.ScrolledWindow scrolledwindow2;
+		private global::Gtk.ScrolledWindow ScrolledBrowserWindow;
 		
 		private global::Gtk.Alignment alignment1;
 		
-		private global::Gtk.Label MessageLabel;
+		private global::Gtk.Label IndicatorLabel;
 		
 		private global::Gtk.HBox hbox3;
 		
 		private global::Gtk.Alignment alignment4;
 		
-		private global::Gtk.ProgressBar progressbar2;
+		private global::Gtk.ProgressBar MainProgressBar;
 		
 		private global::Gtk.HBox hbox4;
 		
@@ -108,26 +108,26 @@ namespace Launchpad.Launcher.UI
 			this.hbox2.Spacing = 6;
 			this.hbox2.BorderWidth = ((uint)(4));
 			// Container child hbox2.Gtk.Box+BoxChild
-			this.vbox2 = new global::Gtk.VBox();
-			this.vbox2.Name = "vbox2";
-			this.vbox2.Spacing = 6;
-			// Container child vbox2.Gtk.Box+BoxChild
+			this.BrowserContainer = new global::Gtk.VBox();
+			this.BrowserContainer.Name = "BrowserContainer";
+			this.BrowserContainer.Spacing = 6;
+			// Container child BrowserContainer.Gtk.Box+BoxChild
 			this.alignment2 = new global::Gtk.Alignment(0.5F, 0.5F, 1F, 1F);
 			this.alignment2.WidthRequest = 300;
 			this.alignment2.Name = "alignment2";
 			// Container child alignment2.Gtk.Container+ContainerChild
-			this.scrolledwindow2 = new global::Gtk.ScrolledWindow();
-			this.scrolledwindow2.WidthRequest = 290;
-			this.scrolledwindow2.HeightRequest = 300;
-			this.scrolledwindow2.CanFocus = true;
-			this.scrolledwindow2.Name = "scrolledwindow2";
-			this.scrolledwindow2.ShadowType = ((global::Gtk.ShadowType)(1));
-			this.alignment2.Add(this.scrolledwindow2);
-			this.vbox2.Add(this.alignment2);
-			global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(this.vbox2[this.alignment2]));
+			this.ScrolledBrowserWindow = new global::Gtk.ScrolledWindow();
+			this.ScrolledBrowserWindow.WidthRequest = 290;
+			this.ScrolledBrowserWindow.HeightRequest = 300;
+			this.ScrolledBrowserWindow.CanFocus = true;
+			this.ScrolledBrowserWindow.Name = "ScrolledBrowserWindow";
+			this.ScrolledBrowserWindow.ShadowType = ((global::Gtk.ShadowType)(1));
+			this.alignment2.Add(this.ScrolledBrowserWindow);
+			this.BrowserContainer.Add(this.alignment2);
+			global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(this.BrowserContainer[this.alignment2]));
 			w4.Position = 0;
-			this.hbox2.Add(this.vbox2);
-			global::Gtk.Box.BoxChild w5 = ((global::Gtk.Box.BoxChild)(this.hbox2[this.vbox2]));
+			this.hbox2.Add(this.BrowserContainer);
+			global::Gtk.Box.BoxChild w5 = ((global::Gtk.Box.BoxChild)(this.hbox2[this.BrowserContainer]));
 			w5.Position = 0;
 			w5.Expand = false;
 			this.vbox1.Add(this.hbox2);
@@ -138,11 +138,11 @@ namespace Launchpad.Launcher.UI
 			this.alignment1.Name = "alignment1";
 			this.alignment1.LeftPadding = ((uint)(6));
 			// Container child alignment1.Gtk.Container+ContainerChild
-			this.MessageLabel = new global::Gtk.Label();
-			this.MessageLabel.Name = "MessageLabel";
-			this.MessageLabel.Xalign = 0F;
-			this.MessageLabel.LabelProp = global::Mono.Unix.Catalog.GetString("Idle");
-			this.alignment1.Add(this.MessageLabel);
+			this.IndicatorLabel = new global::Gtk.Label();
+			this.IndicatorLabel.Name = "IndicatorLabel";
+			this.IndicatorLabel.Xalign = 0F;
+			this.IndicatorLabel.LabelProp = global::Mono.Unix.Catalog.GetString("Idle");
+			this.alignment1.Add(this.IndicatorLabel);
 			this.vbox1.Add(this.alignment1);
 			global::Gtk.Box.BoxChild w8 = ((global::Gtk.Box.BoxChild)(this.vbox1[this.alignment1]));
 			w8.Position = 2;
@@ -157,9 +157,9 @@ namespace Launchpad.Launcher.UI
 			this.alignment4 = new global::Gtk.Alignment(0.5F, 0.5F, 1F, 1F);
 			this.alignment4.Name = "alignment4";
 			// Container child alignment4.Gtk.Container+ContainerChild
-			this.progressbar2 = new global::Gtk.ProgressBar();
-			this.progressbar2.Name = "progressbar2";
-			this.alignment4.Add(this.progressbar2);
+			this.MainProgressBar = new global::Gtk.ProgressBar();
+			this.MainProgressBar.Name = "MainProgressBar";
+			this.alignment4.Add(this.MainProgressBar);
 			this.hbox3.Add(this.alignment4);
 			global::Gtk.Box.BoxChild w10 = ((global::Gtk.Box.BoxChild)(this.hbox3[this.alignment4]));
 			w10.Position = 0;

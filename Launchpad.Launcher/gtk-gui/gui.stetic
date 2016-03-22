@@ -94,7 +94,7 @@
             <property name="Spacing">6</property>
             <property name="BorderWidth">4</property>
             <child>
-              <widget class="Gtk.VBox" id="vbox2">
+              <widget class="Gtk.VBox" id="BrowserContainer">
                 <property name="MemberName" />
                 <property name="Spacing">6</property>
                 <child>
@@ -102,7 +102,7 @@
                     <property name="MemberName" />
                     <property name="WidthRequest">300</property>
                     <child>
-                      <widget class="Gtk.ScrolledWindow" id="scrolledwindow2">
+                      <widget class="Gtk.ScrolledWindow" id="ScrolledBrowserWindow">
                         <property name="MemberName" />
                         <property name="WidthRequest">290</property>
                         <property name="HeightRequest">300</property>
@@ -146,7 +146,7 @@
             <property name="MemberName" />
             <property name="LeftPadding">6</property>
             <child>
-              <widget class="Gtk.Label" id="MessageLabel">
+              <widget class="Gtk.Label" id="IndicatorLabel">
                 <property name="MemberName" />
                 <property name="Xalign">0</property>
                 <property name="LabelProp" translatable="yes">Idle</property>
@@ -169,7 +169,7 @@
               <widget class="Gtk.Alignment" id="alignment4">
                 <property name="MemberName" />
                 <child>
-                  <widget class="Gtk.ProgressBar" id="progressbar2">
+                  <widget class="Gtk.ProgressBar" id="MainProgressBar">
                     <property name="MemberName" />
                   </widget>
                 </child>
