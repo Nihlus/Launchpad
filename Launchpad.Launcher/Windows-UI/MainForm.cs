@@ -21,21 +21,16 @@
 
 using System;
 using System.IO;
-using System.Resources;
 using System.Windows.Forms;
 using Launchpad.Launcher.Handlers;
 using Launchpad.Launcher.Utility.Enums;
 using Launchpad.Launcher.Handlers.Protocols;
+using NGettext;
 
 namespace Launchpad.Launcher.UI
 {
 	internal partial class MainForm : Form
 	{
-		/// <summary>
-		/// The catalog responsible for handling all of the localizable strings
-		/// </summary>
-		ResourceManager LocalizationCatalog = new ResourceManager("Launchpad.Launcher.Resources.Strings", typeof(MainForm).Assembly);
-
 		/// <summary>
 		/// The config handler reference.
 		/// </summary>
@@ -61,6 +56,10 @@ namespace Launchpad.Launcher.UI
 		/// </summary>
 		ELauncherMode Mode = ELauncherMode.Inactive;
 
+		// Initialize localization
+		private readonly ICatalog LocalizationCatalog = new Catalog("Launchpad", "./locale");
+
+
 		public MainForm()
 		{
 			InitializeComponent();
@@ -73,7 +72,8 @@ namespace Launchpad.Launcher.UI
 			Game = new GameHandler();
 
 			SetLauncherMode(ELauncherMode.Inactive, false);
-			MessageLabel.Text = LocalizationCatalog.GetString("idleString");
+			MessageLabel.Text = LocalizationCatalog.GetString("Idle");
+
 			downloadProgressLabel.Text = String.Empty;
 
 			//set the window text to match the game name
@@ -84,13 +84,13 @@ namespace Launchpad.Launcher.UI
 			{
 				MessageBox.Show(
 					this,
-					LocalizationCatalog.GetString("ftpConnectionFailureMessage"),
-					LocalizationCatalog.GetString("ftpConnectionFailureString"),
+					LocalizationCatalog.GetString("Failed to connect to the patch server. Please check your settings."),
+					LocalizationCatalog.GetString("Could not connect to server."),
 					MessageBoxButtons.OK,
 					MessageBoxIcon.Error,
 					MessageBoxDefaultButton.Button1);
 
-				MessageLabel.Text = LocalizationCatalog.GetString("ftpConnectionFailureString");
+				MessageLabel.Text = LocalizationCatalog.GetString("Could not connect to server.");
 				PrimaryButton.Text = ":(";
 				PrimaryButton.Enabled = false;
 			}
@@ -102,8 +102,10 @@ namespace Launchpad.Launcher.UI
 					DialogResult shouldInstallHere = MessageBox.Show(
 						                                 this,
 						                                 String.Format(
-							                                 LocalizationCatalog.GetString("initialStartupMessage"), ConfigHandler.GetLocalDir()),
-						                                 LocalizationCatalog.GetString("infoTitle"),
+							                                 LocalizationCatalog.GetString("This appears to be the first time you're starting the launcher.\n" +
+								                                 "Is this the location where you would like to install the game?" +
+								                                 "\n\n{0}"), ConfigHandler.GetLocalDir()),
+						                                 LocalizationCatalog.GetString("Initial startup"),
 						                                 MessageBoxButtons.YesNo,
 						                                 MessageBoxIcon.Question,
 						                                 MessageBoxDefaultButton.Button1);
@@ -202,12 +204,13 @@ namespace Launchpad.Launcher.UI
 								platformNotProvidedNotification.Icon = new System.Drawing.Icon(iconStream);
 								platformNotProvidedNotification.Visible = true;
 
-								platformNotProvidedNotification.BalloonTipTitle = LocalizationCatalog.GetString("noPlatformTitle");
-								platformNotProvidedNotification.BalloonTipText = LocalizationCatalog.GetString("noPlatformMessage");
+								platformNotProvidedNotification.BalloonTipTitle = LocalizationCatalog.GetString("Launchpad - Platform not provided!");
+								platformNotProvidedNotification.BalloonTipText = LocalizationCatalog.GetString("The server does not provide the game for the selected platform.");
 
 								platformNotProvidedNotification.ShowBalloonTip(10000);
 							}
 
+							MessageLabel.Text = LocalizationCatalog.GetString("The server does not provide files for the selected platform.");
 							SetLauncherMode(ELauncherMode.Install, false);
 						}
 						break;
@@ -222,7 +225,6 @@ namespace Launchpad.Launcher.UI
 						if (Checks.IsPlatformAvailable(Config.GetSystemTarget()))
 						{
 							//install the game asynchronously
-							MessageLabel.Text = LocalizationCatalog.GetString("installingLabel");
 							SetLauncherMode(ELauncherMode.Install, true);
 							Game.InstallGame();                             
 						}
@@ -237,14 +239,13 @@ namespace Launchpad.Launcher.UI
 								platformNotProvidedNotification.Icon = new System.Drawing.Icon(iconStream);
 								platformNotProvidedNotification.Visible = true;
 
-								platformNotProvidedNotification.BalloonTipTitle = LocalizationCatalog.GetString("noPlatformTitle");
-								platformNotProvidedNotification.BalloonTipText = LocalizationCatalog.GetString("noPlatformMessage");
+								platformNotProvidedNotification.BalloonTipTitle = LocalizationCatalog.GetString("Launchpad - Platform not provided!");
+								platformNotProvidedNotification.BalloonTipText = LocalizationCatalog.GetString("The server does not provide the game for the selected platform.");
 
 								platformNotProvidedNotification.ShowBalloonTip(10000);
 							}
 
-							MessageLabel.Text = LocalizationCatalog.GetString("noPlatformMessage");
-
+							MessageLabel.Text = LocalizationCatalog.GetString("The server does not provide files for the selected platform.");
 							SetLauncherMode(ELauncherMode.Install, false);
 						}   
 
@@ -282,12 +283,13 @@ namespace Launchpad.Launcher.UI
 									platformNotProvidedNotification.Icon = new System.Drawing.Icon(iconStream);
 									platformNotProvidedNotification.Visible = true;
 
-									platformNotProvidedNotification.BalloonTipTitle = LocalizationCatalog.GetString("noPlatformTitle");
-									platformNotProvidedNotification.BalloonTipText = LocalizationCatalog.GetString("noPlatformMessage");
+									platformNotProvidedNotification.BalloonTipTitle = LocalizationCatalog.GetString("Launchpad - Platform not provided!");
+									platformNotProvidedNotification.BalloonTipText = LocalizationCatalog.GetString("The server does not provide the game for the selected platform.");
 
 									platformNotProvidedNotification.ShowBalloonTip(10000);
 								}
 
+								MessageLabel.Text = LocalizationCatalog.GetString("The server does not provide files for the selected platform.");
 								SetLauncherMode(ELauncherMode.Install, false);
 							}
 						}
@@ -330,12 +332,12 @@ namespace Launchpad.Launcher.UI
 						if (bInProgress)
 						{
 							PrimaryButton.Enabled = false;
-							PrimaryButton.Text = LocalizationCatalog.GetString("installingLabel");
+							PrimaryButton.Text = LocalizationCatalog.GetString("Installing...");
 						}
 						else
 						{
 							PrimaryButton.Enabled = true;
-							PrimaryButton.Text = LocalizationCatalog.GetString("installLabel");
+							PrimaryButton.Text = LocalizationCatalog.GetString("Install");
 						}
 						break;
 					}
@@ -344,12 +346,12 @@ namespace Launchpad.Launcher.UI
 						if (bInProgress)
 						{
 							PrimaryButton.Enabled = false;
-							PrimaryButton.Text = LocalizationCatalog.GetString("updatingLabel");
+							PrimaryButton.Text = LocalizationCatalog.GetString("Updating...");
 						}
 						else
 						{
 							PrimaryButton.Enabled = true;
-							PrimaryButton.Text = LocalizationCatalog.GetString("updateLabel");
+							PrimaryButton.Text = LocalizationCatalog.GetString("Update");
 						}
 						break;
 					}
@@ -358,12 +360,12 @@ namespace Launchpad.Launcher.UI
 						if (bInProgress)
 						{
 							PrimaryButton.Enabled = false;
-							PrimaryButton.Text = LocalizationCatalog.GetString("repairingLabel");
+							PrimaryButton.Text = LocalizationCatalog.GetString("Repairing...");
 						}
 						else
 						{
 							PrimaryButton.Enabled = true;
-							PrimaryButton.Text = LocalizationCatalog.GetString("repairLabel");
+							PrimaryButton.Text = LocalizationCatalog.GetString("Repair");
 						}
 						break;
 					}
@@ -372,19 +374,19 @@ namespace Launchpad.Launcher.UI
 						if (bInProgress)
 						{
 							PrimaryButton.Enabled = false;
-							PrimaryButton.Text = LocalizationCatalog.GetString("launchingLabel");
+							PrimaryButton.Text = LocalizationCatalog.GetString("Launching...");
 						}
 						else
 						{
 							PrimaryButton.Enabled = true;
-							PrimaryButton.Text = LocalizationCatalog.GetString("launchLabel");
+							PrimaryButton.Text = LocalizationCatalog.GetString("Launch");
 						}
 						break;
 					}
 				case ELauncherMode.Inactive:
 					{
 						PrimaryButton.Enabled = false;
-						PrimaryButton.Text = LocalizationCatalog.GetString("inactiveLabel");
+						PrimaryButton.Text = LocalizationCatalog.GetString("Inactive");
 						break;
 					}
 				default:
@@ -422,8 +424,8 @@ namespace Launchpad.Launcher.UI
 						launchFailedNotification.Icon = new System.Drawing.Icon(iconStream);
 						launchFailedNotification.Visible = true;
 
-						launchFailedNotification.BalloonTipTitle = LocalizationCatalog.GetString("errorTitle");
-						launchFailedNotification.BalloonTipText = LocalizationCatalog.GetString("launchFailMessage");
+						launchFailedNotification.BalloonTipTitle = LocalizationCatalog.GetString("Launchpad - Failed to launch the game.");
+						launchFailedNotification.BalloonTipText = LocalizationCatalog.GetString("The game failed to launch. Try repairing the installation.");
 
 						launchFailedNotification.ShowBalloonTip(10000);
 					}
@@ -498,74 +500,49 @@ namespace Launchpad.Launcher.UI
 		{
 			this.Invoke((MethodInvoker)delegate
 				{
-					if (e == null) //there was an error
-					{
-						MessageLabel.Text = LocalizationCatalog.GetString("gameDownloadFailMessage");
-
-						Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Launcher.Resources.RocketIcon.ico");
-						if (iconStream != null)
-						{
-							NotifyIcon launchFailedNotification = new NotifyIcon();
-							launchFailedNotification.Icon = new System.Drawing.Icon(iconStream);
-							launchFailedNotification.Visible = true;
-
-							launchFailedNotification.BalloonTipTitle = LocalizationCatalog.GetString("errorTitle");
-							launchFailedNotification.BalloonTipText = LocalizationCatalog.GetString("gameDownloadFailMessage");
-
-							launchFailedNotification.ShowBalloonTip(10000);
-						}
-
-						SetLauncherMode(ELauncherMode.Repair, false);
-					}
-					else //the game has finished downloading, and we should be OK to launch
-					{
-						MessageLabel.Text = LocalizationCatalog.GetString("idleString");
-						downloadProgressLabel.Text = "";
-
-						Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Launcher.Resources.RocketIcon.ico");
-						if (iconStream != null)
-						{
-							NotifyIcon launchFailedNotification = new NotifyIcon();
-							launchFailedNotification.Icon = new System.Drawing.Icon(iconStream);
-							launchFailedNotification.Visible = true;
-
-							launchFailedNotification.BalloonTipTitle = LocalizationCatalog.GetString("infoTitle");
-							launchFailedNotification.BalloonTipText = LocalizationCatalog.GetString("gameDownloadFinishedMessage");
-
-							launchFailedNotification.ShowBalloonTip(10000);
-						}
-
-						SetLauncherMode(ELauncherMode.Launch, false);
-					}             
-				});            
-		}
-
-		/// <summary>
-		/// Alerts the user that a repair action has finished.
-		/// </summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">Empty arguments.</param>
-		private void OnRepairFinished(object sender, EventArgs e)
-		{
-			this.Invoke((MethodInvoker)delegate
-				{
-					Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Launcher.Resources.RocketIcon.ico");
-					if (iconStream != null)
-					{
-						NotifyIcon launchFailedNotification = new NotifyIcon();
-						launchFailedNotification.Icon = new System.Drawing.Icon(iconStream);
-						launchFailedNotification.Visible = true;
-
-						launchFailedNotification.BalloonTipTitle = LocalizationCatalog.GetString("repairFinishTitle");
-						launchFailedNotification.BalloonTipText = LocalizationCatalog.GetString("repairFinishMessage");
-
-						launchFailedNotification.ShowBalloonTip(10000);
-					}
-
+					MessageLabel.Text = LocalizationCatalog.GetString("Idle");
 					downloadProgressLabel.Text = "";
 
-					SetLauncherMode(ELauncherMode.Launch, false);
-				});                       
+					NotifyIcon downloadCompleteNotification = new NotifyIcon();
+					downloadCompleteNotification.Visible = true;
+
+					using (Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Launcher.Resources.RocketIcon.ico"))
+					{
+						if (iconStream != null)
+						{						
+							downloadCompleteNotification.Icon = new System.Drawing.Icon(iconStream);
+						}
+					}
+
+					switch (Mode)
+					{
+						case ELauncherMode.Install:
+							{
+								downloadCompleteNotification.BalloonTipTitle = LocalizationCatalog.GetString("Launchpad - Info");
+								downloadCompleteNotification.BalloonTipText = LocalizationCatalog.GetString("Game download finished. Play away!");
+								break;
+							}
+						case ELauncherMode.Repair:
+							{
+								downloadCompleteNotification.BalloonTipTitle = LocalizationCatalog.GetString("Launchpad - Info");
+								downloadCompleteNotification.BalloonTipText = LocalizationCatalog.GetString("Launchpad has finished repairing the game installation. Play away!");
+								break;
+							}
+						case ELauncherMode.Update:
+							{
+								downloadCompleteNotification.BalloonTipTitle = LocalizationCatalog.GetString("Launchpad - Info");
+								downloadCompleteNotification.BalloonTipText = LocalizationCatalog.GetString("Game update finished. Play away!");
+								break;
+							}
+						default:
+							{
+								break;
+							}
+					}
+
+					downloadCompleteNotification.ShowBalloonTip(10000);
+					SetLauncherMode(ELauncherMode.Launch, false);					           
+				});            
 		}
 
 		/// <summary>

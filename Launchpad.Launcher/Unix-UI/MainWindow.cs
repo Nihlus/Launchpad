@@ -23,6 +23,7 @@ using Gtk;
 using Notifications;
 using System;
 using WebKit;
+using NGettext;
 using Launchpad.Launcher.Handlers;
 using Launchpad.Launcher.Utility.Enums;
 using Launchpad.Launcher.Handlers.Protocols;
@@ -62,12 +63,12 @@ namespace Launchpad.Launcher.UI
 		/// </summary>
 		ELauncherMode Mode = ELauncherMode.Inactive;
 
+		//initialize localization
+		private readonly ICatalog LocalizationCatalog = new Catalog("Launchpad", "./locale");
+
 		public MainWindow()
 			: base(WindowType.Toplevel)
-		{		
-			//initialize localization
-			Mono.Unix.Catalog.Init("Launchpad", "./locale");	
-
+		{					
 			//Initialize the config files and check values.
 			Config.Initialize();
 
@@ -88,7 +89,7 @@ namespace Launchpad.Launcher.UI
 			ScrolledBrowserWindow.Add(Browser);
 			ScrolledBrowserWindow.ShowAll();
 
-			IndicatorLabel.Text = Mono.Unix.Catalog.GetString("Idle");
+			IndicatorLabel.Text = LocalizationCatalog.GetString("Idle");
 
 			//First of all, check if we can connect to the FTP server.
 			if (!Checks.CanPatch())
@@ -98,11 +99,11 @@ namespace Launchpad.Launcher.UI
 					                       DialogFlags.Modal, 
 					                       MessageType.Warning, 
 					                       ButtonsType.Ok, 
-					                       Mono.Unix.Catalog.GetString("Failed to connect to the patch server. Please check your settings."));
+					                       LocalizationCatalog.GetString("Failed to connect to the patch server. Please check your settings."));
 
 				dialog.Run();
 				dialog.Destroy();
-				IndicatorLabel.Text = Mono.Unix.Catalog.GetString("Could not connect to server.");
+				IndicatorLabel.Text = LocalizationCatalog.GetString("Could not connect to server.");
 			}
 			else
 			{
@@ -114,7 +115,7 @@ namespace Launchpad.Launcher.UI
 						                                        DialogFlags.Modal, 
 						                                        MessageType.Question, 
 						                                        ButtonsType.OkCancel, 
-						                                        String.Format(Mono.Unix.Catalog.GetString(
+						                                        String.Format(LocalizationCatalog.GetString(
 								                                        "This appears to be the first time you're starting the launcher.\n" +
 								                                        "Is this the location where you would like to install the game?" +
 								                                        "\n\n{0}"), ConfigHandler.GetLocalDir()
@@ -205,12 +206,12 @@ namespace Launchpad.Launcher.UI
 						if (bInProgress)
 						{
 							PrimaryButton.Sensitive = false;
-							PrimaryButton.Label = Mono.Unix.Catalog.GetString("Installing...");
+							PrimaryButton.Label = LocalizationCatalog.GetString("Installing...");
 						}
 						else
 						{
 							PrimaryButton.Sensitive = true;
-							PrimaryButton.Label = Mono.Unix.Catalog.GetString("Install");
+							PrimaryButton.Label = LocalizationCatalog.GetString("Install");
 						}	
 						break;
 					}
@@ -219,12 +220,12 @@ namespace Launchpad.Launcher.UI
 						if (bInProgress)
 						{
 							PrimaryButton.Sensitive = false;
-							PrimaryButton.Label = Mono.Unix.Catalog.GetString("Updating...");
+							PrimaryButton.Label = LocalizationCatalog.GetString("Updating...");
 						}
 						else
 						{
 							PrimaryButton.Sensitive = true;
-							PrimaryButton.Label = Mono.Unix.Catalog.GetString("Update");
+							PrimaryButton.Label = LocalizationCatalog.GetString("Update");
 						}					
 						break;
 					}					
@@ -233,12 +234,12 @@ namespace Launchpad.Launcher.UI
 						if (bInProgress)
 						{
 							PrimaryButton.Sensitive = false;
-							PrimaryButton.Label = Mono.Unix.Catalog.GetString("Repairing...");
+							PrimaryButton.Label = LocalizationCatalog.GetString("Repairing...");
 						}
 						else
 						{
 							PrimaryButton.Sensitive = true;
-							PrimaryButton.Label = Mono.Unix.Catalog.GetString("Repair");
+							PrimaryButton.Label = LocalizationCatalog.GetString("Repair");
 						}	
 						break;
 					}					
@@ -247,19 +248,19 @@ namespace Launchpad.Launcher.UI
 						if (bInProgress)
 						{
 							PrimaryButton.Sensitive = false;
-							PrimaryButton.Label = Mono.Unix.Catalog.GetString("Launching...");
+							PrimaryButton.Label = LocalizationCatalog.GetString("Launching...");
 						}
 						else
 						{
 							PrimaryButton.Sensitive = true;
-							PrimaryButton.Label = Mono.Unix.Catalog.GetString("Launch");
+							PrimaryButton.Label = LocalizationCatalog.GetString("Launch");
 						}	
 						break;
 					}
 				case ELauncherMode.Inactive:
 					{
 						PrimaryButton.Sensitive = false;
-						PrimaryButton.Label = Mono.Unix.Catalog.GetString("Inactive");
+						PrimaryButton.Label = LocalizationCatalog.GetString("Inactive");
 						break;
 					}					
 				default:
@@ -324,8 +325,8 @@ namespace Launchpad.Launcher.UI
 						{
 							Notification noProvide = new Notification();
 							noProvide.IconName = Stock.DialogError;
-							noProvide.Summary = Mono.Unix.Catalog.GetString("Launchpad - Platform not provided!");
-							noProvide.Body = Mono.Unix.Catalog.GetString("The server does not provide the game for the selected platform.");
+							noProvide.Summary = LocalizationCatalog.GetString("Launchpad - Platform not provided!");
+							noProvide.Body = LocalizationCatalog.GetString("The server does not provide the game for the selected platform.");
 							noProvide.Show();
 
 							SetLauncherMode(ELauncherMode.Install, false);
@@ -351,8 +352,8 @@ namespace Launchpad.Launcher.UI
 						{
 							Notification noProvide = new Notification();
 							noProvide.IconName = Stock.DialogError;
-							noProvide.Summary = Mono.Unix.Catalog.GetString("Launchpad - Platform not provided!");
-							noProvide.Body = Mono.Unix.Catalog.GetString("The server does not provide the game for the selected platform.");
+							noProvide.Summary = LocalizationCatalog.GetString("Launchpad - Platform not provided!");
+							noProvide.Body = LocalizationCatalog.GetString("The server does not provide the game for the selected platform.");
 							noProvide.Show();
 
 							SetLauncherMode(ELauncherMode.Install, false);
@@ -384,8 +385,8 @@ namespace Launchpad.Launcher.UI
 							{
 								Notification noProvide = new Notification();
 								noProvide.IconName = Stock.DialogError;
-								noProvide.Summary = Mono.Unix.Catalog.GetString("Launchpad - Platform not provided!");
-								noProvide.Body = Mono.Unix.Catalog.GetString("The server does not provide the game for the selected platform.");
+								noProvide.Summary = LocalizationCatalog.GetString("Launchpad - Platform not provided!");
+								noProvide.Body = LocalizationCatalog.GetString("The server does not provide the game for the selected platform.");
 								noProvide.Show();
 
 								SetLauncherMode(ELauncherMode.Install, false);
@@ -436,8 +437,8 @@ namespace Launchpad.Launcher.UI
 		{
 			Notification launchFailed = new Notification();
 			launchFailed.IconName = Stock.DialogError;
-			launchFailed.Summary = Mono.Unix.Catalog.GetString("Launchpad - Failed to launch the game!");
-			launchFailed.Body = Mono.Unix.Catalog.GetString("The game failed to launch. Try repairing the installation.");
+			launchFailed.Summary = LocalizationCatalog.GetString("Launchpad - Failed to launch the game.");
+			launchFailed.Body = LocalizationCatalog.GetString("The game failed to launch. Try repairing the installation.");
 			launchFailed.Show();
 
 			SetLauncherMode(ELauncherMode.Repair, false);
@@ -499,51 +500,40 @@ namespace Launchpad.Launcher.UI
 		{
 			Application.Invoke(delegate
 				{
-					IndicatorLabel.Text = Mono.Unix.Catalog.GetString("Idle");
+					IndicatorLabel.Text = LocalizationCatalog.GetString("Idle");
 					MainProgressBar.Text = "";
+
+					Notification downloadCompleteNotification = new Notification();
+					downloadCompleteNotification.IconName = Stock.Info;
 
 					switch (Mode)
 					{
 						case ELauncherMode.Install:
 							{
-								Notification installComplete = new Notification();
-								installComplete.IconName = Stock.Info;
-								installComplete.Summary = Mono.Unix.Catalog.GetString("Launchpad - Info");
-								installComplete.Body = Mono.Unix.Catalog.GetString("Game download finished. Play away!");
-
-								installComplete.Show();
-
-								SetLauncherMode(ELauncherMode.Launch, false);
+								downloadCompleteNotification.Summary = LocalizationCatalog.GetString("Launchpad - Info");
+								downloadCompleteNotification.Body = LocalizationCatalog.GetString("Game download finished. Play away!");
 								break;
 							}
 						case ELauncherMode.Repair:
 							{
-								Notification repairComplete = new Notification();
-								repairComplete.IconName = Stock.Info;
-								repairComplete.Summary = Mono.Unix.Catalog.GetString("Launchpad - Game repair finished");
-								repairComplete.Body = Mono.Unix.Catalog.GetString("Launchpad has finished repairing the game installation. Play away!");
-								repairComplete.Show();
-
-								SetLauncherMode(ELauncherMode.Launch, false);
+								downloadCompleteNotification.Summary = LocalizationCatalog.GetString("Launchpad - Info");
+								downloadCompleteNotification.Body = LocalizationCatalog.GetString("Launchpad has finished repairing the game installation. Play away!");
 								break;
 							}
 						case ELauncherMode.Update:
 							{								
-								Notification updateComplete = new Notification();
-								updateComplete.IconName = Stock.Info;
-								updateComplete.Summary = Mono.Unix.Catalog.GetString("Launchpad - Info");
-								updateComplete.Body = Mono.Unix.Catalog.GetString("Game update finished. Play away!");
-								updateComplete.Show();
-
-								SetLauncherMode(ELauncherMode.Launch, false);
+								downloadCompleteNotification.Summary = LocalizationCatalog.GetString("Launchpad - Info");
+								downloadCompleteNotification.Body = LocalizationCatalog.GetString("Game update finished. Play away!");
 								break;
 							}
 						default:
-							{
-								SetLauncherMode(ELauncherMode.Launch, false);
+							{								
 								break;
 							}
 					}
+
+					downloadCompleteNotification.Show();
+					SetLauncherMode(ELauncherMode.Launch, false);
 				});			          
 		}
 
@@ -556,7 +546,7 @@ namespace Launchpad.Launcher.UI
 					                            DialogFlags.Modal, 
 					                            MessageType.Question, 
 					                            ButtonsType.YesNo, 
-					                            String.Format(Mono.Unix.Catalog.GetString(
+					                            String.Format(LocalizationCatalog.GetString(
 							                            "Whoops! The game appears to have crashed.\n" +
 							                            "Would you like the launcher to verify the installation?"
 						                            )));

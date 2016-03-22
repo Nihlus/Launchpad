@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2016-03-22 12:00:49+0100\n"
-"PO-Revision-Date: 2016-03-22 12:00:49+0100\n"
+"POT-Creation-Date: 2016-03-22 20:24:41+0100\n"
+"PO-Revision-Date: 2016-03-22 20:24:41+0100\n"
 "Last-Translator: Jarl Gullberg <jarl.gullberg@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -10,242 +10,27 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: MonoDevelop Gettext addin\n"
 
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-msgid "cancelString"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-msgid "editSettingsTitle"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-msgid "editString"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:39
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:48
-msgid "errorTitle"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-msgid "fileDownloadMessage"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:13
-msgid "ftpConnectionFailureMessage"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:13
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:14
-msgid "ftpConnectionFailureString"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-msgid "ftpPasswordString"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-msgid "ftpURLString"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-msgid "ftpUsernameString"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:46
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:48
-msgid "gameDownloadFailMessage"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:52
-msgid "gameDownloadFinishedMessage"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-msgid "gameNameString"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:11
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:50
-msgid "idleString"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:14
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:52
-msgid "infoTitle"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:14
-msgid "initialStartupMessage"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:23
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:36
-msgid "installingLabel"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:36
-msgid "installLabel"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-msgid "languageString"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:39
-msgid "launchFailMessage"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-msgid "launchFailTitle"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:36
-msgid "launchingLabel"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:36
-msgid "launchLabel"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-msgid "linuxTarget"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-msgid "localSettingsTitle"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-msgid "macTarget"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-msgid "malformedFTPURLMessage"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:21
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:24
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:26
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:30
-msgid "noPlatformMessage"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:21
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:24
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:30
-msgid "noPlatformTitle"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-msgid "okString"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-msgid "optionsString"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-msgid "remoteSettingsTitle"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:56
-msgid "repairFinishMessage"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:56
-msgid "repairFinishTitle"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:36
-msgid "repairingLabel"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:36
-msgid "repairLabel"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-msgid "settingsString"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-msgid "systemTargetString"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:36
-msgid "updateLabel"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:36
-msgid "updatingLabel"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-msgid "usageTitle"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-msgid "verifyingMessage"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-msgid "warningTitle"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-msgid "win32Target"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-msgid "win64Target"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-msgid "windowTitle"
-msgstr ""
-
-#: ../Launchpad.Launcher/Resources/Strings.Designer.cs:1
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:36
-msgid "inactiveLabel"
-msgstr ""
-
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:14
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:40
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:12
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:47
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:15
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:41
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UI.MainWindow.cs:2
 msgid "Idle"
 msgstr ""
 
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:15
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:15
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:16
 msgid "Failed to connect to the patch server. Please check your settings."
 msgstr ""
 
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:16
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:15
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:16
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:17
 msgid "Could not connect to server."
 msgstr ""
 
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:16
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:16
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:17
 msgid ""
 "This appears to be the first time you're starting the launcher.\n"
 "Is this the location where you would like to install the game?\n"
@@ -253,85 +38,111 @@ msgid ""
 "{0}"
 msgstr ""
 
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:16
+msgid "Initial startup"
+msgstr ""
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:23
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:26
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:31
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:29
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:30
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:32
+msgid "Launchpad - Platform not provided!"
+msgstr ""
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:23
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:26
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:31
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:29
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:30
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:32
+msgid "The server does not provide the game for the selected platform."
+msgstr ""
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:25
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:28
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:33
+msgid "The server does not provide files for the selected platform."
+msgstr ""
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:23
 msgid "Installing..."
 msgstr ""
 
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:23
 msgid "Install"
 msgstr ""
 
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:23
 msgid "Updating..."
 msgstr ""
 
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:23
 msgid "Update"
 msgstr ""
 
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:23
 msgid "Repairing..."
 msgstr ""
 
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:23
 msgid "Repair"
 msgstr ""
 
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:23
 msgid "Launching..."
 msgstr ""
 
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:23
 msgid "Launch"
 msgstr ""
 
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:23
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UI.MainWindow.cs:2
 msgid "Inactive"
 msgstr ""
 
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:28
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:29
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:31
-msgid "Launchpad - Platform not provided!"
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:40
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:36
+msgid "Launchpad - Failed to launch the game."
 msgstr ""
 
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:28
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:29
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:31
-msgid "The server does not provide the game for the selected platform."
-msgstr ""
-
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:35
-msgid "Launchpad - Failed to launch the game!"
-msgstr ""
-
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:35
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:40
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:36
 msgid "The game failed to launch. Try repairing the installation."
 msgstr ""
 
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:41
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:44
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:50
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:43
 msgid "Launchpad - Info"
 msgstr ""
 
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:41
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:50
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:43
 msgid "Game download finished. Play away!"
 msgstr ""
 
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:43
-msgid "Launchpad - Game repair finished"
-msgstr ""
-
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:50
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:43
 msgid "Launchpad has finished repairing the game installation. Play away!"
 msgstr ""
 
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:44
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:50
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:43
 msgid "Game update finished. Play away!"
 msgstr ""
 
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:46
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:45
 msgid ""
 "Whoops! The game appears to have crashed.\n"
 "Would you like the launcher to verify the installation?"
