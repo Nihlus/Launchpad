@@ -42,7 +42,12 @@ cp -r "$LAUNCHPAD_ROOT/Extras/Linux/." "$OUTPUT_ROOT/launchpad-$LAUNCHPAD_ASSEMB
 echo ""
 echo -e "$LOG_PREFIX Compressing binary packages... $LOG_SUFFIX"
 echo -e "$LOG_PREFIX Compressing ZIP package... $LOG_SUFFIX"
-zip -r9 "$OUTPUT_ROOT/launchpad-$LAUNCHPAD_ASSEMBLY_VERSION.zip" "$OUTPUT_ROOT/launchpad-$LAUNCHPAD_ASSEMBLY_VERSION/"
+
+# Move to the release directory for compatibility purposes
+cd $LAUNCHPAD_ROOT
+zip -r9 "release/launchpad-$LAUNCHPAD_ASSEMBLY_VERSION.zip" "release/launchpad-$LAUNCHPAD_ASSEMBLY_VERSION/"
+# Move back to the previous working directory
+cd -
 
 echo ""
 echo -e "$LOG_PREFIX Compressing tarball... $LOG_SUFFIX"

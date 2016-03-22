@@ -381,19 +381,9 @@ namespace Launchpad.Launcher.Handlers
 				Path.DirectorySeparatorChar);
 		}
 
+		// TODO: Move to ManifestHandler or FTPProtocolHandler
 		/// <summary>
-		/// Gets the temporary game download directory.
-		/// </summary>
-		/// <returns>A full path to the directory.</returns>
-		public static string GetTempGameDownloadDir()
-		{
-			return String.Format(@"{0}{1}launchpad{1}game", 
-				Path.GetTempPath(),
-				Path.DirectorySeparatorChar);
-		}
-
-		/// <summary>
-		/// Gets the manifest's path on disk.
+		/// Gets the manifests' path on disk.
 		/// </summary>
 		/// <returns>The manifest path.</returns>
 		public static string GetManifestPath()
@@ -403,8 +393,10 @@ namespace Launchpad.Launcher.Handlers
 			return manifestPath;
 		}
 
+		// TODO: Move to ManifestHandler or FTPProtocolHandler
+
 		/// <summary>
-		/// Gets the old manifest's path on disk.
+		/// Gets the old manifests' path on disk.
 		/// </summary>
 		/// <returns>The old manifest's path.</returns>
 		public static string GetOldManifestPath()
@@ -980,7 +972,7 @@ namespace Launchpad.Launcher.Handlers
 					}
 				default:
 					{
-						return String.Empty;
+						return GetBaseFTPUrl();
 					}
 			}
 		}
