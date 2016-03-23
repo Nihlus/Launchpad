@@ -24,7 +24,6 @@ using Launchpad.Utilities.Utility.Events;
 using System.Threading;
 using System.IO;
 using System.Collections.Generic;
-using Launchpad.Utilities.Handlers;
 
 namespace Launchpad.Utilities.Handlers
 {
@@ -33,89 +32,87 @@ namespace Launchpad.Utilities.Handlers
 		public event ManifestGenerationProgressChangedEventHandler ManifestGenerationProgressChanged;
 		public event ManifestGenerationFinishedEventHandler ManifestGenerationFinished;
 
-		ManifestGenerationProgressChangedEventArgs ProgressArgs;
+		ManifestGenerationProgressChangedEventArgs ProgressArgs = new ManifestGenerationProgressChangedEventArgs();
 
-		private readonly string TargetPath;
+		private string TargetPath;
 
-		public ManifestHandler(string InTargetPath)
-		{
-			ProgressArgs = new ManifestGenerationProgressChangedEventArgs();
-			TargetPath = InTargetPath;
-		}
-
-		public void GenerateManifest()
+		/// <summary>
+		/// Generates a manifest containing the relative path, MD5 hash and file size from
+		/// all files in the provided root path.
+		/// </summary>
+		/// <param name="rootPath">The root path of the directory the manifest should represent.</param>
+		public void GenerateManifest(string rootPath)
 		{			
-			Thread t = new Thread(GenerateManifestAsync);
+			TargetPath = rootPath;
+
+			Thread t = new Thread(GenerateManifest_Implementation);
 			t.Start();
 		}
 
-		private void GenerateManifestAsync()
+		/// <summary>
+		/// The asynchronous implementation of the GenerateManifest function.
+		/// </summary>
+		private void GenerateManifest_Implementation()
 		{
 			string parentDirectory = Directory.GetParent(TargetPath).ToString();
 			string manifestPath = String.Format(@"{0}{1}LauncherManifest.txt", parentDirectory, Path.DirectorySeparatorChar);
 			string manifestChecksumPath = String.Format(@"{0}{1}LauncherManifest.checksum", parentDirectory, Path.DirectorySeparatorChar);
 
+			List<string> Files = new List<string>(Directory
+				.EnumerateFiles(TargetPath, "*", SearchOption.AllDirectories));
 
-			if (File.Exists(manifestPath))
+			using (TextWriter tw = new StreamWriter(File.Create(manifestPath)))
 			{
-				//create a new empty file and close it (effectively deleting the old manifest)
-				File.Create(manifestPath).Close();
-			}
+				int completedFiles = 0;
+				foreach (string file in Files)
+				{			
+					// Calculate the MD5 hash of the file
+					string hash;
+					using (FileStream fileStream = File.OpenRead(file))
+					{
+						hash = MD5Handler.GetStreamHash(fileStream);
+					}
 
-			TextWriter tw = new StreamWriter(manifestPath);
-
-			string[] files = Directory.GetFiles(TargetPath, "*", SearchOption.AllDirectories);                
-			int completedFiles = 0;
-
-			IEnumerable<string> enumeratedFiles = Directory
-				.EnumerateFiles(TargetPath, "*", SearchOption.AllDirectories);
-
-			foreach (string file in enumeratedFiles)
-			{
-				if (file != null)
-				{
-					FileStream fileStream = File.OpenRead(file);
-					var skipDirectory = TargetPath;
-
-					int fileAmount = files.Length; 
-					string currentFile = file.Substring(skipDirectory.Length);
-
-					//get file size on disk
+					// Get the file size on disk
 					FileInfo Info = new FileInfo(file);
 					long fileSize = Info.Length;
 
-					string hash = MD5Handler.GetStreamHash(fileStream);
-					string manifestLine = String.Format(@"{0}:{1}:{2}", file.Substring(skipDirectory.Length), hash, fileSize);
+					// Get the relative path of the file
+					string relativeFilePath = file.Substring(TargetPath.Length);
 
-					if (fileStream != null)
-					{
-						fileStream.Close();	
-					}
+					// Write the entry to the manifest
+					ManifestEntry Entry = new ManifestEntry();
+					Entry.RelativePath = relativeFilePath;
+					Entry.Hash = hash;
+					Entry.Size = fileSize;
+
+					tw.WriteLine(Entry);
 
 					completedFiles++;
 
-
-					tw.WriteLine(manifestLine);
-					ProgressArgs.Filepath = currentFile;
-					ProgressArgs.TotalFiles = fileAmount;
+					ProgressArgs.Filepath = relativeFilePath;
+					ProgressArgs.TotalFiles = Files.Count;
 					ProgressArgs.CompletedFiles = completedFiles;
 					ProgressArgs.MD5 = hash;
 					ProgressArgs.Filesize = fileSize;
-
-					OnManifestGenerationProgressChanged();
+					OnManifestGenerationProgressChanged();					
 				}
 			}
-			tw.Close();
 
+			// Create a checksum file for the manifest.
+			using (Stream manifestStream = File.OpenRead(manifestPath))
+			{
+				string manifestHash = MD5Handler.GetStreamHash(manifestStream);
 
-			//create a manifest checksum file.
-			string manifestHash = MD5Handler.GetStreamHash(File.OpenRead(manifestPath));
-
-			FileStream checksumStream = File.Create(manifestChecksumPath);
-
-			TextWriter tw2 = new StreamWriter(checksumStream);
-			tw2.WriteLine(manifestHash);
-			tw2.Close();
+				using (FileStream checksumStream = File.Create(manifestChecksumPath))
+				{
+					using (TextWriter tw = new StreamWriter(checksumStream))
+					{
+						tw.WriteLine(manifestHash);
+						tw.Close();
+					}
+				}
+			}
 
 			OnManifestGenerationFinished();
 		}
@@ -134,6 +131,129 @@ namespace Launchpad.Utilities.Handlers
 			{
 				ManifestGenerationFinished(this, EventArgs.Empty);
 			}
+		}
+	}
+
+	/// <summary>
+	/// A manifest entry derived from the raw unformatted string.
+	/// Contains the relative path of the referenced file, as well as
+	/// its MD5 hash and size in bytes.
+	/// </summary>
+	internal sealed class ManifestEntry : IEquatable<ManifestEntry>
+	{
+		public string RelativePath
+		{
+			get;
+			set;
+		}
+
+		public string Hash
+		{
+			get;
+			set;
+		}
+
+		public long Size
+		{
+			get;
+			set;
+		}
+
+		public ManifestEntry()
+		{
+			RelativePath = String.Empty;
+			Hash = String.Empty;
+			Size = 0;
+		}
+
+		/// <summary>
+		/// Attempts to parse an entry from a raw input.
+		/// The input is expected to be in [path]:[hash]:[size] format.
+		/// </summary>
+		/// <returns><c>true</c>, if the input was successfully parse, <c>false</c> otherwise.</returns>
+		/// <param name="rawInput">Raw input.</param>
+		/// <param name="inEntry">The resulting entry.</param>
+		public static bool TryParse(string rawInput, out ManifestEntry inEntry)
+		{
+			//clear out the entry for the new data
+			inEntry = new ManifestEntry();
+
+			if (!String.IsNullOrEmpty(rawInput))
+			{
+				//remove any and all bad characters from the input string, 
+				//such as \0, \n and \r.
+				string cleanInput = CleanInput(rawInput);
+
+				//split the string into its three components - file, hash and size
+				string[] entryElements = cleanInput.Split(':');
+
+				//if we have three elements (which we should always have), set them in the provided entry
+				if (entryElements.Length == 3)
+				{
+					//clean the manifest path, converting \ to / on unix and / to \ on Windows.
+					if (ChecksHandler.IsRunningOnUnix())
+					{
+						inEntry.RelativePath = entryElements[0].Replace("\\", "/");
+					}
+					else
+					{
+						inEntry.RelativePath = entryElements[0].Replace("/", "\\");
+					}
+
+					//set the hash to the second element
+					inEntry.Hash = entryElements[1];
+
+					//attempt to parse the final element as a long-type byte count.
+					long parsedSize;
+					if (long.TryParse(entryElements[2], out parsedSize))
+					{
+						inEntry.Size = parsedSize;
+						return true;
+					}
+					else
+					{
+						//could not parse the size, parsing has failed.
+						return false;
+					}
+				}
+				else
+				{
+					//wrong number of raw entry elements, parsing has failed.
+					return false;
+				}
+			}
+			else
+			{
+				//no input, parsing has failed
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Clean the specified input from newlines and nulls (\r, \n and \0)
+		/// </summary>
+		/// <param name="input">Input string.</param>
+		private static string CleanInput(string input)
+		{
+			return input.Replace("\n", String.Empty).Replace("\0", String.Empty).Replace("\r", String.Empty);
+		}
+
+		/// <summary>
+		/// Returns a <see cref="System.String"/> that represents the current <see cref="Launchpad.Utilities.Handlers.ManifestEntry"/>.
+		/// The returned value matches a raw in-manifest representation of the entry, in the form of
+		/// [path]:[hash]:[size]
+		/// </summary>
+		/// <returns>A <see cref="System.String"/> that represents the current <see cref="Launchpad.Utilities.Handlers.ManifestEntry"/>.</returns>
+		public override string ToString()
+		{
+			return RelativePath + ":" + Hash + ":" + Size;
+		}
+
+		public bool Equals(ManifestEntry Other)
+		{
+			return this.RelativePath == Other.RelativePath &&
+			this.Hash == Other.Hash &&
+			this.Size == Other.Size;
 		}
 	}
 }

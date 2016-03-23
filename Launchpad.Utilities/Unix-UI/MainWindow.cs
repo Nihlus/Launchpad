@@ -40,7 +40,10 @@ namespace Launchpad.Utilities.UnixUI
 			: base(Gtk.WindowType.Toplevel)
 		{
 			this.Build();
+
 			fileChooser.SetCurrentFolder(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory));
+			fileChooser.SelectMultiple = false;
+
 			progressLabel.Text = LocalizationCatalog.GetString("Idle");
 		}
 
@@ -59,14 +62,14 @@ namespace Launchpad.Utilities.UnixUI
 		{
 			generateManifestButton.Sensitive = false;
 
-			string TargetDirectory = fileChooser.CurrentFolder;
+			string TargetDirectory = fileChooser.Filename;
 
-			ManifestHandler Manifest = new ManifestHandler(TargetDirectory);
+			ManifestHandler Manifest = new ManifestHandler();
 
 			Manifest.ManifestGenerationProgressChanged += OnGenerateManifestProgressChanged;
 			Manifest.ManifestGenerationFinished += OnGenerateManifestFinished;
 
-			Manifest.GenerateManifest();
+			Manifest.GenerateManifest(TargetDirectory);
 		}
 
 		/// <summary>

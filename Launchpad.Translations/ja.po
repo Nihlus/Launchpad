@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: launchpad\n"
-"POT-Creation-Date: 2016-03-23 14:47:32+0100\n"
-"PO-Revision-Date: 2016-03-23 09:50-0400\n"
+"POT-Creation-Date: 2016-03-23 15:31:47+0100\n"
+"PO-Revision-Date: 2016-03-23 10:32-0400\n"
 "Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -49,7 +49,7 @@ msgstr ""
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:15
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:40
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs:2
-#: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:4
+#: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:6
 msgid "Idle"
 msgstr ""
 
@@ -198,31 +198,11 @@ msgstr ""
 msgid "Repair Game"
 msgstr ""
 
-#: ../Launchpad.Utilities/Windows-UI/MainForm.Designer.cs:3
-msgid "Generate Launcher Manifest"
-msgstr ""
-
-#: ../Launchpad.Utilities/Windows-UI/MainForm.Designer.cs:3
-msgid "Completed files: "
-msgstr ""
-
-#: ../Launchpad.Utilities/Windows-UI/MainForm.Designer.cs:3
-msgid "Current file: "
-msgstr ""
-
-#: ../Launchpad.Utilities/Windows-UI/MainForm.Designer.cs:3
-msgid "Generate Single MD5 Hash"
-msgstr ""
-
-#: ../Launchpad.Utilities/Windows-UI/MainForm.Designer.cs:3
-msgid "Launchpad - Utilites"
-msgstr ""
-
-#: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:11
+#: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:13
 msgid "{0} : {1} out of {2}"
 msgstr ""
 
-#: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:13
+#: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:15
 msgid "Finished"
 msgstr ""
 

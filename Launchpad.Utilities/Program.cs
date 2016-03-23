@@ -26,7 +26,6 @@ using System.IO;
 using Launchpad.Utilities.Handlers;
 using Launchpad.Utilities.Utility.Events;
 using Launchpad.Utilities.UnixUI;
-using Launchpad.Utilities.WindowsUI;
 
 [assembly: CLSCompliant(true)]
 namespace Launchpad.Utilities
@@ -61,12 +60,12 @@ namespace Launchpad.Utilities
 							{
 								Console.WriteLine("[Info]: Generating manifest...");
 
-								ManifestHandler Manifest = new ManifestHandler(TargetDirectory);
+								ManifestHandler Manifest = new ManifestHandler();
 
 								Manifest.ManifestGenerationProgressChanged += OnProgressChanged;
 								Manifest.ManifestGenerationFinished += OnGenerationFinished;
 
-								Manifest.GenerateManifest();
+								Manifest.GenerateManifest(TargetDirectory);
 							}
 							else
 							{
@@ -83,12 +82,12 @@ namespace Launchpad.Utilities
 						Console.WriteLine("[Warning]: No directory provided for batch mode, using working directory.");
 						Console.WriteLine("[Info]: Generating manifest...");
 
-						ManifestHandler Manifest = new ManifestHandler(Directory.GetCurrentDirectory());
+						ManifestHandler Manifest = new ManifestHandler();
 
 						Manifest.ManifestGenerationProgressChanged += OnProgressChanged;
 						Manifest.ManifestGenerationFinished += OnGenerationFinished;
 
-						Manifest.GenerateManifest();
+						Manifest.GenerateManifest(Directory.GetCurrentDirectory());
 					}
 				}
 				else
@@ -98,22 +97,12 @@ namespace Launchpad.Utilities
 			}
 			else
 			{
-				if (ChecksHandler.IsRunningOnUnix())
-				{
-					// run a GTK UI instead of WinForms
-					Gtk.Application.Init();
+				// run a GTK UI instead of WinForms
+				Gtk.Application.Init();
 
-					MainWindow win = new MainWindow();
-					win.Show();
-					Gtk.Application.Run();
-				}
-				else
-				{
-					// run a WinForms UI instead of GTK
-					System.Windows.Forms.Application.EnableVisualStyles();
-					System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
-					System.Windows.Forms.Application.Run(new MainForm());
-				}
+				MainWindow win = new MainWindow();
+				win.Show();
+				Gtk.Application.Run();
 			}
 		}
 
