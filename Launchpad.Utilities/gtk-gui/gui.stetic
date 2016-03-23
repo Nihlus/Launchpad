@@ -7,7 +7,7 @@
   <import>
     <widget-library name="../bin/Debug/LaunchpadUtilities.exe" internal="true" />
   </import>
-  <widget class="Gtk.Window" id="Launchpad.Utilities.UI.MainWindow" design-size="640 384">
+  <widget class="Gtk.Window" id="Launchpad.Utilities.UnixUI.MainWindow" design-size="640 384">
     <action-group name="Default" />
     <property name="MemberName" />
     <property name="WidthRequest">640</property>

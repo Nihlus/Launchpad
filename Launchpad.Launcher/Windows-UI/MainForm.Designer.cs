@@ -62,7 +62,7 @@
 			this.MessageLabel.Name = "MessageLabel";
 			this.MessageLabel.Size = new System.Drawing.Size(24, 13);
 			this.MessageLabel.TabIndex = 5;
-			this.MessageLabel.Text = "Idle";
+			this.MessageLabel.Text = LocalizationCatalog.GetString("Idle");
 			// 
 			// downloadProgressLabel
 			// 
@@ -82,7 +82,7 @@
 			this.aboutLink.Size = new System.Drawing.Size(35, 13);
 			this.aboutLink.TabIndex = 10;
 			this.aboutLink.TabStop = true;
-			this.aboutLink.Text = "About";
+			this.aboutLink.Text = LocalizationCatalog.GetString("About");
 			this.aboutLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.aboutLink_LinkClicked);
 			// 
 			// PrimaryButton
@@ -91,7 +91,7 @@
 			this.PrimaryButton.Name = "PrimaryButton";
 			this.PrimaryButton.Size = new System.Drawing.Size(104, 39);
 			this.PrimaryButton.TabIndex = 11;
-			this.PrimaryButton.Text = "PrimaryButton";
+			this.PrimaryButton.Text = LocalizationCatalog.GetString("Inactive");
 			this.PrimaryButton.UseVisualStyleBackColor = true;
 			this.PrimaryButton.Click += new System.EventHandler(this.mainButton_Click);
 			// 
@@ -110,7 +110,7 @@
 			this.Controls.Add(this.changelogBrowser);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "MainForm";
-			this.Text = "Launchpad - <GameName>";
+			this.Text = LocalizationCatalog.GetString("Launchpad - <GameName>");
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

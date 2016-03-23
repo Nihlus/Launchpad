@@ -63,7 +63,9 @@ namespace Launchpad.Launcher.UnixUI
 		/// </summary>
 		ELauncherMode Mode = ELauncherMode.Inactive;
 
-		//initialize localization
+		/// <summary>
+		/// The localization catalog.
+		/// </summary>
 		private readonly ICatalog LocalizationCatalog = new Catalog("Launchpad", "./locale");
 
 		public MainWindow()

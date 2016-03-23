@@ -26,7 +26,8 @@ using System.IO;
 
 using Launchpad.Utilities.Handlers;
 using Launchpad.Utilities.Utility.Events;
-using Launchpad.Utilities.UI;
+using Launchpad.Utilities.UnixUI;
+using Launchpad.Utilities.WindowsUI;
 
 [assembly: CLSCompliant(true)]
 namespace Launchpad.Utilities

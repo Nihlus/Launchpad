@@ -23,18 +23,24 @@ using System;
 using Gtk;
 
 using Launchpad.Utilities.Utility.Events;
+using NGettext;
 
-namespace Launchpad.Utilities.UI
+namespace Launchpad.Utilities.UnixUI
 {
 	[CLSCompliant(false)]
 	public partial class MainWindow : Gtk.Window
 	{
+		/// <summary>
+		/// The localization catalog.
+		/// </summary>
+		private readonly ICatalog LocalizationCatalog = new Catalog("Launchpad", "./locale");
+
 		public MainWindow()
 			: base(Gtk.WindowType.Toplevel)
 		{
 			this.Build();
 			fileChooser.SetCurrentFolder(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory));
-			progressLabel.Text = "Idle";
+			progressLabel.Text = LocalizationCatalog.GetString("Idle");
 		}
 
 		/// <summary>
@@ -71,7 +77,8 @@ namespace Launchpad.Utilities.UI
 		{
 			Application.Invoke(delegate
 				{
-					progressLabel.Text = String.Format("{0} : {1} out of {2}", e.Filepath, e.CompletedFiles, e.TotalFiles);
+					string progressString = LocalizationCatalog.GetString("{0} : {1} out of {2}");
+					progressLabel.Text = String.Format(progressString, e.Filepath, e.CompletedFiles, e.TotalFiles);
 
 					progressbar.Fraction = (double)e.CompletedFiles / (double)e.TotalFiles;
 				});
@@ -86,7 +93,7 @@ namespace Launchpad.Utilities.UI
 		{
 			Application.Invoke(delegate
 				{
-					progressLabel.Text = "Finished";
+					progressLabel.Text = LocalizationCatalog.GetString("Finished");
 					generateManifestButton.Sensitive = true;
 				});
 		}

@@ -82,6 +82,10 @@
       <Package>glib-sharp-2.0</Package>
     </Reference>
     <Reference Include="Mono.Posix" />
+    <Reference Include="NGettext">
+      <HintPath>..\packages\NGettext.0.5.0\lib\net45\NGettext.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="gtk-gui\gui.stetic">
@@ -129,7 +133,8 @@
     <EmbeddedResource Include="Resources\Icons8-Android-Industry-Engineering.ico">
       <DeployService-UseProjectRelativePath>True</DeployService-UseProjectRelativePath>
     </EmbeddedResource>
-    <Compile Include="gtk-gui\Launchpad.Utilities.UI.MainWindow.cs" />
+    <None Include="packages.config" />
+    <Compile Include="gtk-gui\Launchpad.Utilities.UnixUI.MainWindow.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

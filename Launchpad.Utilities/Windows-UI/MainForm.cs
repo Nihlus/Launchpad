@@ -23,16 +23,21 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Security.Cryptography;
 using System.Windows.Forms;
 
 using Launchpad.Utilities.Handlers;
 using Launchpad.Utilities.Utility.Events;
+using NGettext;
 
-namespace Launchpad.Utilities.UI
+namespace Launchpad.Utilities.WindowsUI
 {
 	public partial class MainForm : Form
 	{
+		/// <summary>
+		/// The localization catalog.
+		/// </summary>
+		private readonly ICatalog LocalizationCatalog = new Catalog("Launchpad", "./locale");
+
 		bool bIsGeneratingManifest = false;
 
 		public MainForm()
@@ -42,7 +47,7 @@ namespace Launchpad.Utilities.UI
 
 		private void generateManifest_button_Click(object sender, EventArgs e)
 		{
-			if (bIsGeneratingManifest == false)
+			if (!bIsGeneratingManifest)
 			{
 				DialogResult folderSelectionResult = folderBrowserDialog1.ShowDialog();
 				backgroundWorker_manifestGenerator.RunWorkerAsync(folderSelectionResult);

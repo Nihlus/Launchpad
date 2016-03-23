@@ -22,17 +22,23 @@
 using System;
 using System.Reflection;
 using System.Windows.Forms;
+using NGettext;
 
 namespace Launchpad.Launcher.WindowsUI
 {
 	internal partial class LaunchpadAboutBox : Form
 	{
+		/// <summary>
+		/// The localization catalog.
+		/// </summary>
+		private readonly ICatalog LocalizationCatalog = new Catalog("Launchpad", "./locale");
+
 		public LaunchpadAboutBox()
 		{
 			InitializeComponent();
-			this.Text = String.Format("About {0}", AssemblyTitle);
+			this.Text = String.Format(LocalizationCatalog.GetString("About {0}"), AssemblyTitle);
 			this.labelProductName.Text = AssemblyProduct;
-			this.labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
+			this.labelVersion.Text = String.Format(LocalizationCatalog.GetString("Version {0}"), AssemblyVersion);
 			this.labelCopyright.Text = AssemblyCopyright;
 			this.labelCompanyName.Text = AssemblyCompany;
 			this.textBoxDescription.Text = AssemblyDescription;

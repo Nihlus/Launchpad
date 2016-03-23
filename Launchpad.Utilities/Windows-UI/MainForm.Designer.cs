@@ -1,4 +1,4 @@
-﻿namespace Launchpad.Utilities.UI
+﻿namespace Launchpad.Utilities.WindowsUI
 {
 	partial class MainForm
 	{
@@ -49,7 +49,7 @@
 			this.generateManifest_button.Name = "generateManifest_button";
 			this.generateManifest_button.Size = new System.Drawing.Size(249, 35);
 			this.generateManifest_button.TabIndex = 0;
-			this.generateManifest_button.Text = "Generate Launcher Manifest";
+			this.generateManifest_button.Text = LocalizationCatalog.GetString("Generate Launcher Manifest");
 			this.generateManifest_button.UseVisualStyleBackColor = true;
 			this.generateManifest_button.Click += new System.EventHandler(this.generateManifest_button_Click);
 			// 
@@ -67,7 +67,7 @@
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(84, 13);
 			this.label1.TabIndex = 2;
-			this.label1.Text = "Completed files: ";
+			this.label1.Text = LocalizationCatalog.GetString("Completed files: ");
 			// 
 			// fileProgress_label
 			// 
@@ -85,7 +85,7 @@
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(60, 13);
 			this.label2.TabIndex = 5;
-			this.label2.Text = "Current file:";
+			this.label2.Text = LocalizationCatalog.GetString("Current file: ");
 			// 
 			// currentFile_label
 			// 
@@ -101,7 +101,7 @@
 			this.generateSingle_button.Name = "generateSingle_button";
 			this.generateSingle_button.Size = new System.Drawing.Size(250, 35);
 			this.generateSingle_button.TabIndex = 7;
-			this.generateSingle_button.Text = "Generate Single MD5 Hash";
+			this.generateSingle_button.Text = LocalizationCatalog.GetString("Generate Single MD5 Hash");
 			this.generateSingle_button.UseVisualStyleBackColor = true;
 			this.generateSingle_button.Click += new System.EventHandler(this.generateSingle_button_Click);
 			// 
@@ -150,7 +150,7 @@
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "MainForm";
-			this.Text = "Launchpad - Utilites";
+			this.Text = LocalizationCatalog.GetString("Launchpad - Utilites");
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
