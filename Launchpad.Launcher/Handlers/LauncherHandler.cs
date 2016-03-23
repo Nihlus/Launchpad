@@ -52,7 +52,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// The config handler reference.
 		/// </summary>
-		ConfigHandler Config = ConfigHandler._instance;
+		ConfigHandler Config = ConfigHandler.Instance;
 
 		//TODO: Run asynchronously
 		/// <summary>

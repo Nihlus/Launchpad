@@ -32,7 +32,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// The config handler reference.
 		/// </summary>
-		private static readonly ConfigHandler Config = ConfigHandler._instance;
+		private static readonly ConfigHandler Config = ConfigHandler.Instance;
 
 		/// <summary>
 		/// Sends the usage stats to the official launchpad server.

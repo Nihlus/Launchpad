@@ -50,7 +50,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// The singleton Instance. Will always point to one shared object.
 		/// </summary>
-		public static readonly ConfigHandler _instance = new ConfigHandler();
+		public static readonly ConfigHandler Instance = new ConfigHandler();
 
 		/// <summary>
 		/// Writes the config data to disk. This method is thread-blocking, and all write operations 

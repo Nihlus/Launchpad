@@ -34,7 +34,7 @@ namespace Launchpad.Launcher.WindowsUI
 		/// <summary>
 		/// The config handler reference.
 		/// </summary>
-		private readonly ConfigHandler Config = ConfigHandler._instance;
+		private readonly ConfigHandler Config = ConfigHandler.Instance;
 
 		/// <summary>
 		/// The checks handler reference.

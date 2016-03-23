@@ -57,7 +57,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// The config handler reference.
 		/// </summary>
-		private ConfigHandler Config = ConfigHandler._instance;
+		private ConfigHandler Config = ConfigHandler.Instance;
 
 		private PatchProtocolHandler Patch;
 

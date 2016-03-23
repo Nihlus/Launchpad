@@ -36,7 +36,7 @@ namespace Launchpad.Launcher.UnixUI
 		/// <summary>
 		/// The config handler reference.
 		/// </summary>
-		ConfigHandler Config = ConfigHandler._instance;
+		ConfigHandler Config = ConfigHandler.Instance;
 
 		/// <summary>
 		/// The checks handler reference.

@@ -36,7 +36,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// The config handler reference.
 		/// </summary>
-		readonly ConfigHandler Config = ConfigHandler._instance;
+		readonly ConfigHandler Config = ConfigHandler.Instance;
 
 		/// <summary>
 		/// Determines whether this instance can connect to a patching service.
