@@ -1,5 +1,11 @@
 #!/bin/bash
 
+LAUNCHPAD_TRANSLATIONS_ROOT="../Launchpad.Translations/"
+cd $LAUNCHPAD_TRANSLATIONS_ROOT
+
+mkdir "translations_update"
+cd "translations_update"
+
 wget https://crowdin.com/download/project/launchpad.zip launchpad.zip
 unzip launchpad.zip
 
@@ -20,4 +26,9 @@ rm index.html
 for D in `find . -type d`
 do
 	rm -r $D
+	echo $D
 done
+
+cd ..
+
+rm -r "translations_update"

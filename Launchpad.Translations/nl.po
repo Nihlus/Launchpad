@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: launchpad\n"
 "POT-Creation-Date: 2016-03-22 20:19:58+0100\n"
-"PO-Revision-Date: 2016-03-22 16:40-0400\n"
+"PO-Revision-Date: 2016-03-23 07:58-0400\n"
 "Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
 "Language-Team: Dutch\n"
 "MIME-Version: 1.0\n"
@@ -99,7 +99,7 @@ msgstr "Repareren..."
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:23
 msgid "Repair"
-msgstr "Repareren"
+msgstr "Repareer"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:23

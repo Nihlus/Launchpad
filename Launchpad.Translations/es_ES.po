@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: launchpad\n"
 "POT-Creation-Date: 2016-03-22 20:19:58+0100\n"
-"PO-Revision-Date: 2016-03-22 16:30-0400\n"
+"PO-Revision-Date: 2016-03-23 07:58-0400\n"
 "Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -26,7 +26,7 @@ msgstr "En espera"
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:15
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:16
 msgid "Failed to connect to the patch server. Please check your settings."
-msgstr "Error al conectar con el servidor. Por favor, compruebe su configuración."
+msgstr "Error al conectar con el servidor. Por favor, verifique su configuración."
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:15
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:16
@@ -46,7 +46,7 @@ msgstr "Parece que esta es la primera vez que comienzas el launcher.\n"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:16
 msgid "Initial startup"
-msgstr ""
+msgstr "Arranque inicial"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:23
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:26
@@ -146,12 +146,13 @@ msgstr "Launchpad ha terminado de reparar la instalación del juego. Comienza a 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:50
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:43
 msgid "Game update finished. Play away!"
-msgstr ""
+msgstr "Actualización Completada. Comienza a Jugar!"
 
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:45
 msgid "Whoops! The game appears to have crashed.\n"
 "Would you like the launcher to verify the installation?"
-msgstr ""
+msgstr "Oops! El juego parece tener un error.\n"
+"Te gustaría verificar la instalación?"
 
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UI.MainWindow.cs:2
 msgid "Actions"
@@ -167,7 +168,7 @@ msgstr "Launchpad - <GameName>"
 
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UI.MainWindow.cs:2
 msgid "Launchpad Utilities - Manifest"
-msgstr ""
+msgstr "Utilidades de Launchpad - Manifiesto"
 
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UI.MainWindow.cs:2
 msgid "Progress: "
@@ -175,9 +176,9 @@ msgstr "Progreso: "
 
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UI.MainWindow.cs:2
 msgid "/some/file/path : 1 out of 100"
-msgstr ""
+msgstr "/some/file/path : 1 de 100"
 
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UI.MainWindow.cs:2
 msgid "Generate Manifest"
-msgstr ""
+msgstr "Generar Manifiesto"
 

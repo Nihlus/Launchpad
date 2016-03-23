@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: launchpad\n"
 "POT-Creation-Date: 2016-03-22 20:19:58+0100\n"
-"PO-Revision-Date: 2016-03-22 15:21-0400\n"
+"PO-Revision-Date: 2016-03-23 07:58-0400\n"
 "Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -115,7 +115,7 @@ msgstr "Starten"
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:23
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UI.MainWindow.cs:2
 msgid "Inactive"
-msgstr ""
+msgstr "Inaktiv"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:40
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:36
@@ -154,11 +154,11 @@ msgstr ""
 
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UI.MainWindow.cs:2
 msgid "Actions"
-msgstr ""
+msgstr "Aktionen"
 
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UI.MainWindow.cs:2
 msgid "Repair Game"
-msgstr ""
+msgstr "Reparatur Spiel"
 
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UI.MainWindow.cs:2
 msgid "Launchpad - <GameName>"
@@ -174,9 +174,9 @@ msgstr ""
 
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UI.MainWindow.cs:2
 msgid "/some/file/path : 1 out of 100"
-msgstr ""
+msgstr "/some/file/path : 1 von 100"
 
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UI.MainWindow.cs:2
 msgid "Generate Manifest"
-msgstr ""
+msgstr "Generieren Manifest"
 
