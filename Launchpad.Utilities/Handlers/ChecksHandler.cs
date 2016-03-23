@@ -20,8 +20,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.IO;
-using System.Net;
 
 namespace Launchpad.Utilities.Handlers
 {
@@ -30,16 +28,8 @@ namespace Launchpad.Utilities.Handlers
 	/// Since this class is meant to be used in both the Forms UI and the GTK UI, 
 	/// there must be no useage of UI code in this class. Keep it clean!
 	/// </summary>
-	internal sealed class ChecksHandler
+	internal static class ChecksHandler
 	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Launchpad_Launcher.ChecksHandler"/> class.
-		/// </summary>
-		public ChecksHandler()
-		{
-
-		}
-
 		/// <summary>
 		/// Determines whether this instance is running on Unix.
 		/// </summary>

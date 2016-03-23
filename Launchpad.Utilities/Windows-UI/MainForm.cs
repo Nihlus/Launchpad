@@ -38,7 +38,7 @@ namespace Launchpad.Utilities.WindowsUI
 		/// </summary>
 		private readonly ICatalog LocalizationCatalog = new Catalog("Launchpad", "./locale");
 
-		bool bIsGeneratingManifest = false;
+		bool bIsGeneratingManifest;
 
 		public MainForm()
 		{

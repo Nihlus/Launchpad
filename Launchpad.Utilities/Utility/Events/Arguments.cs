@@ -20,7 +20,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.IO;
 
 namespace Launchpad.Utilities.Utility.Events
 {
@@ -54,15 +53,6 @@ namespace Launchpad.Utilities.Utility.Events
 		{
 			get;
 			set;
-		}
-
-		new public void Empty()
-		{
-			Filepath = null;
-			TotalFiles = 0;
-			CompletedFiles = 0;
-			MD5 = "";
-			Filesize = 0;
 		}
 	}
 }

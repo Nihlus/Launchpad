@@ -26,7 +26,7 @@ using System.IO;
 using System.Collections.Generic;
 using Launchpad.Utilities.Handlers;
 
-namespace Launchpad.Utilities
+namespace Launchpad.Utilities.Handlers
 {
 	public class ManifestHandler
 	{
@@ -85,7 +85,7 @@ namespace Launchpad.Utilities
 					long fileSize = Info.Length;
 
 					string hash = MD5Handler.GetStreamHash(fileStream);
-					string manifestLine = String.Format(@"{0}:{1}:{2}", file.Substring(skipDirectory.Length), hash, fileSize.ToString());
+					string manifestLine = String.Format(@"{0}:{1}:{2}", file.Substring(skipDirectory.Length), hash, fileSize);
 
 					if (fileStream != null)
 					{

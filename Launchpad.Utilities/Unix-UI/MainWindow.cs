@@ -24,6 +24,7 @@ using Gtk;
 
 using Launchpad.Utilities.Utility.Events;
 using NGettext;
+using Launchpad.Utilities.Handlers;
 
 namespace Launchpad.Utilities.UnixUI
 {

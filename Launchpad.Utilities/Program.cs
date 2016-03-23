@@ -20,7 +20,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Windows.Forms;
 using System.Collections.Generic;
 using System.IO;
 
@@ -120,7 +119,7 @@ namespace Launchpad.Utilities
 
 		private static void OnProgressChanged(object sender, ManifestGenerationProgressChangedEventArgs e)
 		{
-			Console.WriteLine(String.Format("[Info]: Processed file {0} : {1} : {2}", e.Filepath, e.MD5, e.Filesize.ToString()));
+			Console.WriteLine(String.Format("[Info]: Processed file {0} : {1} : {2}", e.Filepath, e.MD5, e.Filesize));
 		}
 
 		private static void OnGenerationFinished(object sender, EventArgs e)
