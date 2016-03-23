@@ -135,7 +135,6 @@ namespace Launchpad.Launcher.UnixUI
 						Console.WriteLine("Exiting...");
 						Environment.Exit(0);
 					}
-
 				} 
 				
 				if (Config.ShouldAllowAnonymousStats())
