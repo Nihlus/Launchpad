@@ -2,10 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: launchpad\n"
 "POT-Creation-Date: 2016-03-23 14:47:32+0100\n"
-"PO-Revision-Date: 2016-03-22 16:30-0400\n"
+"PO-Revision-Date: 2016-03-23 09:50-0400\n"
 "Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
 "Language-Team: Danish\n"
-"Language: da_DK\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,6 +13,7 @@ msgstr ""
 "X-Crowdin-Project: launchpad\n"
 "X-Crowdin-Language: da\n"
 "X-Crowdin-File: messages.po\n"
+"Language: da_DK\n"
 
 #: ../Launchpad.Launcher/Windows-UI/AboutBox.cs:3
 msgid "About {0}"
@@ -56,8 +56,7 @@ msgstr "Slumre"
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:15
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:16
 msgid "Failed to connect to the patch server. Please check your settings."
-msgstr ""
-"Kunne ikke forbinde til patchserveren. Venligst tjek dine indstillinger."
+msgstr "Kunne ikke forbinde til patchserveren. Venligst tjek dine indstillinger."
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:15
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:16
@@ -67,15 +66,11 @@ msgstr "Kunne ikke forbinde til serveren."
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:16
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:17
-msgid ""
-"This appears to be the first time you're starting the launcher.\n"
-"Is this the location where you would like to install the game?\n"
-"\n"
+msgid "This appears to be the first time you're starting the launcher.\n"
+"Is this the location where you would like to install the game?\n\n"
 "{0}"
-msgstr ""
-"Det virker til at være den første gang du starter launcheren. \n"
-"ls det stedet du har lyst til at installere spillet?\n"
-"\n"
+msgstr "Det virker til at være den første gang du starter launcheren. \n"
+"ls det stedet du har lyst til at installere spillet?\n\n"
 "{0}"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:16
@@ -176,8 +171,7 @@ msgstr "Download af spil er færdig. Spil endelig!"
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:50
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:42
 msgid "Launchpad has finished repairing the game installation. Play away!"
-msgstr ""
-"Launchpad har færdiggjort reparation af spil installationen. Spil endelig!"
+msgstr "Launchpad har færdiggjort reparation af spil installationen. Spil endelig!"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:50
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:42
@@ -194,8 +188,7 @@ msgid "Launchpad - <GameName>"
 msgstr "Launchpad - <GameName>"
 
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:44
-msgid ""
-"Whoops! The game appears to have crashed.\n"
+msgid "Whoops! The game appears to have crashed.\n"
 "Would you like the launcher to verify the installation?"
 msgstr ""
 
@@ -208,9 +201,8 @@ msgid "Repair Game"
 msgstr "Reparer spil"
 
 #: ../Launchpad.Utilities/Windows-UI/MainForm.Designer.cs:3
-#, fuzzy
 msgid "Generate Launcher Manifest"
-msgstr "Generere Manifest"
+msgstr ""
 
 #: ../Launchpad.Utilities/Windows-UI/MainForm.Designer.cs:3
 msgid "Completed files: "
@@ -225,9 +217,8 @@ msgid "Generate Single MD5 Hash"
 msgstr ""
 
 #: ../Launchpad.Utilities/Windows-UI/MainForm.Designer.cs:3
-#, fuzzy
 msgid "Launchpad - Utilites"
-msgstr "Launchpad Utilities - Manifest"
+msgstr ""
 
 #: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:11
 msgid "{0} : {1} out of {2}"
@@ -247,8 +238,9 @@ msgstr "Status: "
 
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UnixUI.MainWindow.cs:2
 msgid "/some/file/path : 1 out of 100"
-msgstr "/någen/file/ 1 ud af 100"
+msgstr "/någen/file/: 1 ud af 100"
 
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UnixUI.MainWindow.cs:2
 msgid "Generate Manifest"
 msgstr "Generere Manifest"
+

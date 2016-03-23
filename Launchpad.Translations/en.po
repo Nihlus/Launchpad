@@ -2,10 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: launchpad\n"
 "POT-Creation-Date: 2016-03-23 14:47:32+0100\n"
-"PO-Revision-Date: 2016-03-22 15:21-0400\n"
+"PO-Revision-Date: 2016-03-23 09:50-0400\n"
 "Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
 "Language-Team: English\n"
-"Language: en_US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,34 +13,35 @@ msgstr ""
 "X-Crowdin-Project: launchpad\n"
 "X-Crowdin-Language: en\n"
 "X-Crowdin-File: messages.po\n"
+"Language: en_US\n"
 
 #: ../Launchpad.Launcher/Windows-UI/AboutBox.cs:3
 msgid "About {0}"
-msgstr ""
+msgstr "About {0}"
 
 #: ../Launchpad.Launcher/Windows-UI/AboutBox.cs:3
 msgid "Version {0}"
-msgstr ""
+msgstr "Version {0}"
 
 #: ../Launchpad.Launcher/Windows-UI/AboutBox.Designer.cs:3
 msgid "Product Name"
-msgstr ""
+msgstr "Product Name"
 
 #: ../Launchpad.Launcher/Windows-UI/AboutBox.Designer.cs:3
 msgid "Version"
-msgstr ""
+msgstr "Version"
 
 #: ../Launchpad.Launcher/Windows-UI/AboutBox.Designer.cs:3
 msgid "Copyright"
-msgstr ""
+msgstr "Copyright"
 
 #: ../Launchpad.Launcher/Windows-UI/AboutBox.Designer.cs:3
 msgid "Company Name"
-msgstr ""
+msgstr "Company Name"
 
 #: ../Launchpad.Launcher/Windows-UI/AboutBox.Designer.cs:3
 msgid "Description"
-msgstr ""
+msgstr "Description"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:12
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:47
@@ -56,7 +56,7 @@ msgstr "Idle"
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:15
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:16
 msgid "Failed to connect to the patch server. Please check your settings."
-msgstr ""
+msgstr "Failed to connect to the patch server. Please check your settings."
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:15
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:16
@@ -66,20 +66,16 @@ msgstr "Could not connect to server."
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:16
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:17
-msgid ""
-"This appears to be the first time you're starting the launcher.\n"
-"Is this the location where you would like to install the game?\n"
-"\n"
+msgid "This appears to be the first time you're starting the launcher.\n"
+"Is this the location where you would like to install the game?\n\n"
 "{0}"
-msgstr ""
-"This appears to be the first time you're starting the launcher.\n"
-"Is this the location where you would like to install the game?\n"
-"\n"
+msgstr "This appears to be the first time you're starting the launcher.\n"
+"Is this the location where you would like to install the game?\n\n"
 "{0}"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:16
 msgid "Initial startup"
-msgstr ""
+msgstr "Initial startup"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:23
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:26
@@ -103,7 +99,7 @@ msgstr "The server does not provide the game for the selected platform."
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:28
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:33
 msgid "The server does not provide files for the selected platform."
-msgstr ""
+msgstr "The server does not provide files for the selected platform."
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
@@ -150,12 +146,12 @@ msgstr "Launch"
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs:2
 msgid "Inactive"
-msgstr ""
+msgstr "Inactive"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:40
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:35
 msgid "Launchpad - Failed to launch the game."
-msgstr ""
+msgstr "Launchpad - Failed to launch the game."
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:40
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:35
@@ -180,11 +176,11 @@ msgstr "Launchpad has finished repairing the game installation. Play away!"
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:50
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:42
 msgid "Game update finished. Play away!"
-msgstr ""
+msgstr "Game update finished. Play away!"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.Designer.cs:3
 msgid "About"
-msgstr ""
+msgstr "About"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.Designer.cs:3
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs:2
@@ -192,60 +188,60 @@ msgid "Launchpad - <GameName>"
 msgstr "Launchpad - <GameName>"
 
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:44
-msgid ""
-"Whoops! The game appears to have crashed.\n"
+msgid "Whoops! The game appears to have crashed.\n"
 "Would you like the launcher to verify the installation?"
-msgstr ""
+msgstr "Whoops! The game appears to have crashed.\n"
+"Would you like the launcher to verify the installation?"
 
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs:2
 msgid "Actions"
-msgstr ""
+msgstr "Actions"
 
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs:2
 msgid "Repair Game"
-msgstr ""
+msgstr "Repair Game"
 
 #: ../Launchpad.Utilities/Windows-UI/MainForm.Designer.cs:3
 msgid "Generate Launcher Manifest"
-msgstr ""
+msgstr "Generate Launcher Manifest"
 
 #: ../Launchpad.Utilities/Windows-UI/MainForm.Designer.cs:3
 msgid "Completed files: "
-msgstr ""
+msgstr "Completed files: "
 
 #: ../Launchpad.Utilities/Windows-UI/MainForm.Designer.cs:3
 msgid "Current file: "
-msgstr ""
+msgstr "Current file: "
 
 #: ../Launchpad.Utilities/Windows-UI/MainForm.Designer.cs:3
 msgid "Generate Single MD5 Hash"
-msgstr ""
+msgstr "Generate Single MD5 Hash"
 
 #: ../Launchpad.Utilities/Windows-UI/MainForm.Designer.cs:3
-#, fuzzy
 msgid "Launchpad - Utilites"
-msgstr "Launchpad - Info"
+msgstr "Launchpad - Utilites"
 
 #: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:11
 msgid "{0} : {1} out of {2}"
-msgstr ""
+msgstr "{0} : {1} out of {2}"
 
 #: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:13
 msgid "Finished"
-msgstr ""
+msgstr "Finished"
 
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UnixUI.MainWindow.cs:2
 msgid "Launchpad Utilities - Manifest"
-msgstr ""
+msgstr "Launchpad Utilities - Manifest"
 
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UnixUI.MainWindow.cs:2
 msgid "Progress: "
-msgstr ""
+msgstr "Progress: "
 
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UnixUI.MainWindow.cs:2
 msgid "/some/file/path : 1 out of 100"
-msgstr ""
+msgstr "/some/file/path : 1 out of 100"
 
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UnixUI.MainWindow.cs:2
 msgid "Generate Manifest"
-msgstr ""
+msgstr "Generate Manifest"
+

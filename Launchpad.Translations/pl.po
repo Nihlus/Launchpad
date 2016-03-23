@@ -2,19 +2,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: launchpad\n"
 "POT-Creation-Date: 2016-03-23 14:47:32+0100\n"
-"PO-Revision-Date: 2016-03-22 15:21-0400\n"
+"PO-Revision-Date: 2016-03-23 09:50-0400\n"
 "Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
 "Language-Team: Polish\n"
-"Language: pl_PL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: crowdin.com\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Crowdin-Project: launchpad\n"
 "X-Crowdin-Language: pl\n"
 "X-Crowdin-File: messages.po\n"
+"Language: pl_PL\n"
 
 #: ../Launchpad.Launcher/Windows-UI/AboutBox.cs:3
 msgid "About {0}"
@@ -52,12 +51,12 @@ msgstr ""
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs:2
 #: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:4
 msgid "Idle"
-msgstr "Nieaktywny"
+msgstr "Bezczynny"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:15
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:16
 msgid "Failed to connect to the patch server. Please check your settings."
-msgstr ""
+msgstr "Nie udało się połączyć z serwerem aktualizacji. Proszę sprawdzić ustawienia."
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:15
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:16
@@ -67,20 +66,16 @@ msgstr "Nie można połączyć się z serwerem."
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:16
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:17
-msgid ""
-"This appears to be the first time you're starting the launcher.\n"
-"Is this the location where you would like to install the game?\n"
-"\n"
+msgid "This appears to be the first time you're starting the launcher.\n"
+"Is this the location where you would like to install the game?\n\n"
 "{0}"
-msgstr ""
-"Wydaje się, że po raz pierwszy używasz launchera. \n"
-"Czy to jest miejsca, w którym chcesz zainstalować grę? \n"
-"\n"
+msgstr "Wydaje się, że po raz pierwszy używasz launchera.\n"
+"Czy jest to lokalizacja, w której chcesz zainstalować grę?\n\n"
 "{0}"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:16
 msgid "Initial startup"
-msgstr ""
+msgstr "Pierwsze uruchomienie"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:23
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:26
@@ -89,7 +84,7 @@ msgstr ""
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:29
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:31
 msgid "Launchpad - Platform not provided!"
-msgstr ""
+msgstr "Launchpad - Platforma nie podana!"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:23
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:26
@@ -104,22 +99,22 @@ msgstr "Serwer nie udostępnia gry dla wybranej platformy."
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:28
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:33
 msgid "The server does not provide files for the selected platform."
-msgstr ""
+msgstr "Serwer nie udostępnia plików dla wybranej platformy."
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
 msgid "Installing..."
-msgstr "Instalacja w toku..."
+msgstr "Instalowanie..."
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
 msgid "Install"
-msgstr "Instaluj"
+msgstr "Zainstaluj"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
 msgid "Updating..."
-msgstr "Aktualizacja w toku..."
+msgstr "Aktualizowanie..."
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
@@ -129,7 +124,7 @@ msgstr "Aktualizuj"
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
 msgid "Repairing..."
-msgstr "Naprawa w toku..."
+msgstr "Naprawianie..."
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
@@ -139,7 +134,7 @@ msgstr "Napraw"
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
 msgid "Launching..."
-msgstr "Uruchamianie w toku..."
+msgstr "Uruchamianie..."
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
@@ -151,37 +146,37 @@ msgstr "Uruchom"
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs:2
 msgid "Inactive"
-msgstr ""
+msgstr "Nieaktywne"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:40
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:35
 msgid "Launchpad - Failed to launch the game."
-msgstr ""
+msgstr "Launchpad - Nie udało się uruchomić gry."
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:40
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:35
 msgid "The game failed to launch. Try repairing the installation."
-msgstr "Gry nie udało się uruchomić. Spróbuj naprawić instalację."
+msgstr "Nie udało się uruchomić gry. Spróbuj naprawić instalację."
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:50
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:42
 msgid "Launchpad - Info"
-msgstr "Launchpad - Informacja"
+msgstr "Launchpad - Informacje"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:50
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:42
 msgid "Game download finished. Play away!"
-msgstr "Pobieranie zakończone. Miłego grania!"
+msgstr "Pobieranie zakończone. Miłej gry!"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:50
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:42
 msgid "Launchpad has finished repairing the game installation. Play away!"
-msgstr "Launchpad zakończył naprawianie gry. Miłego grania!"
+msgstr "Launchpad zakończył naprawianie gry. Miłej gry!"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:50
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:42
 msgid "Game update finished. Play away!"
-msgstr ""
+msgstr "Aktualizacja gry gotowa. Miłej gry!"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.Designer.cs:3
 msgid "About"
@@ -193,18 +188,18 @@ msgid "Launchpad - <GameName>"
 msgstr "Launchpad - <GameName>"
 
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:44
-msgid ""
-"Whoops! The game appears to have crashed.\n"
+msgid "Whoops! The game appears to have crashed.\n"
 "Would you like the launcher to verify the installation?"
-msgstr ""
+msgstr "Ups! Wygląda na to, że gra została nieoczekiwanie zamknięta.\n"
+"Czy chcesz zweryfikować instalację gry?"
 
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs:2
 msgid "Actions"
-msgstr ""
+msgstr "Działania"
 
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs:2
 msgid "Repair Game"
-msgstr ""
+msgstr "Napraw Grę"
 
 #: ../Launchpad.Utilities/Windows-UI/MainForm.Designer.cs:3
 msgid "Generate Launcher Manifest"
@@ -223,9 +218,8 @@ msgid "Generate Single MD5 Hash"
 msgstr ""
 
 #: ../Launchpad.Utilities/Windows-UI/MainForm.Designer.cs:3
-#, fuzzy
 msgid "Launchpad - Utilites"
-msgstr "Launchpad - Informacja"
+msgstr ""
 
 #: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:11
 msgid "{0} : {1} out of {2}"
@@ -237,16 +231,17 @@ msgstr ""
 
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UnixUI.MainWindow.cs:2
 msgid "Launchpad Utilities - Manifest"
-msgstr ""
+msgstr "Narzędzia Launchpad - Manifest"
 
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UnixUI.MainWindow.cs:2
 msgid "Progress: "
-msgstr ""
+msgstr "Postęp: "
 
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UnixUI.MainWindow.cs:2
 msgid "/some/file/path : 1 out of 100"
-msgstr ""
+msgstr "/some/file/path : 1 z 100"
 
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UnixUI.MainWindow.cs:2
 msgid "Generate Manifest"
-msgstr ""
+msgstr "Wygeneruj Manifest"
+

@@ -2,10 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: launchpad\n"
 "POT-Creation-Date: 2016-03-23 14:47:32+0100\n"
-"PO-Revision-Date: 2016-03-23 07:58-0400\n"
+"PO-Revision-Date: 2016-03-23 09:50-0400\n"
 "Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
 "Language-Team: Spanish\n"
-"Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,6 +13,7 @@ msgstr ""
 "X-Crowdin-Project: launchpad\n"
 "X-Crowdin-Language: es-ES\n"
 "X-Crowdin-File: messages.po\n"
+"Language: es_ES\n"
 
 #: ../Launchpad.Launcher/Windows-UI/AboutBox.cs:3
 msgid "About {0}"
@@ -56,8 +56,7 @@ msgstr "En espera"
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:15
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:16
 msgid "Failed to connect to the patch server. Please check your settings."
-msgstr ""
-"Error al conectar con el servidor. Por favor, verifique su configuración."
+msgstr "Error al conectar con el servidor. Por favor, verifique su configuración."
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:15
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:16
@@ -67,16 +66,12 @@ msgstr "No se pudo conectar al servidor."
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:16
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:17
-msgid ""
-"This appears to be the first time you're starting the launcher.\n"
-"Is this the location where you would like to install the game?\n"
-"\n"
+msgid "This appears to be the first time you're starting the launcher.\n"
+"Is this the location where you would like to install the game?\n\n"
 "{0}"
-msgstr ""
-"Parece que esta es la primera vez que comienzas el launcher.\n"
+msgstr "Parece que esta es la primera vez que comienzas el launcher.\n"
 "\n"
-" Es este el lugar donde quieres instalar el juego?\n"
-"\n"
+" Es este el lugar donde quieres instalar el juego?\n\n"
 "{0}"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:16
@@ -177,8 +172,7 @@ msgstr "Descarga del Juego ha terminado. Comienza a Jugar!"
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:50
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:42
 msgid "Launchpad has finished repairing the game installation. Play away!"
-msgstr ""
-"Launchpad ha terminado de reparar la instalación del juego. Comienza a Jugar!"
+msgstr "Launchpad ha terminado de reparar la instalación del juego. Comienza a Jugar!"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:50
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:42
@@ -195,11 +189,9 @@ msgid "Launchpad - <GameName>"
 msgstr "Launchpad - <GameName>"
 
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:44
-msgid ""
-"Whoops! The game appears to have crashed.\n"
+msgid "Whoops! The game appears to have crashed.\n"
 "Would you like the launcher to verify the installation?"
-msgstr ""
-"Oops! El juego parece tener un error.\n"
+msgstr "Oops! El juego parece tener un error.\n"
 "Te gustaría verificar la instalación?"
 
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs:2
@@ -211,9 +203,8 @@ msgid "Repair Game"
 msgstr "Reparar el Juego"
 
 #: ../Launchpad.Utilities/Windows-UI/MainForm.Designer.cs:3
-#, fuzzy
 msgid "Generate Launcher Manifest"
-msgstr "Generar Manifiesto"
+msgstr ""
 
 #: ../Launchpad.Utilities/Windows-UI/MainForm.Designer.cs:3
 msgid "Completed files: "
@@ -228,9 +219,8 @@ msgid "Generate Single MD5 Hash"
 msgstr ""
 
 #: ../Launchpad.Utilities/Windows-UI/MainForm.Designer.cs:3
-#, fuzzy
 msgid "Launchpad - Utilites"
-msgstr "Utilidades de Launchpad - Manifiesto"
+msgstr ""
 
 #: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:11
 msgid "{0} : {1} out of {2}"
@@ -255,3 +245,4 @@ msgstr "/some/file/path : 1 de 100"
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UnixUI.MainWindow.cs:2
 msgid "Generate Manifest"
 msgstr "Generar Manifiesto"
+

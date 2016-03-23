@@ -14,7 +14,7 @@ do
 	LOCALE_NAME=${D/./}
 	LOCALE_NAME=${LOCALE_NAME///}
 	LOCALE_NAME=${LOCALE_NAME/-/_}
-	echo $LOCALE_NAME
+
 	if [ ! -z "$LOCALE_NAME" ];
 	then
 		cp "$D/messages.po" "../$LOCALE_NAME.po"
@@ -23,10 +23,10 @@ done
 
 rm launchpad.zip
 rm index.html
+
 for D in `find . -type d`
 do
 	rm -r $D
-	echo $D
 done
 
 cd ..
