@@ -21,7 +21,6 @@
 
 using System;
 using System.IO;
-using System.Net;
 using Launchpad.Launcher.Utility.Enums;
 using Launchpad.Launcher.Handlers.Protocols;
 

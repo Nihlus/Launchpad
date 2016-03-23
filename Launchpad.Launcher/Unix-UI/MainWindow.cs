@@ -28,7 +28,7 @@ using Launchpad.Launcher.Handlers;
 using Launchpad.Launcher.Utility.Enums;
 using Launchpad.Launcher.Handlers.Protocols;
 
-namespace Launchpad.Launcher.UI
+namespace Launchpad.Launcher.UnixUI
 {
 	[CLSCompliant(false)]
 	public partial class MainWindow : Window

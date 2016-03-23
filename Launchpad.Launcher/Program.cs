@@ -20,7 +20,8 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using Launchpad.Launcher.UI;
+using Launchpad.Launcher.UnixUI;
+using Launchpad.Launcher.WindowsUI;
 using Launchpad.Launcher.Handlers;
 
 [assembly: CLSCompliant(true)]

@@ -27,7 +27,7 @@ using Launchpad.Launcher.Utility.Enums;
 using Launchpad.Launcher.Handlers.Protocols;
 using NGettext;
 
-namespace Launchpad.Launcher.UI
+namespace Launchpad.Launcher.WindowsUI
 {
 	internal partial class MainForm : Form
 	{

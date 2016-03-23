@@ -1,4 +1,4 @@
-﻿namespace Launchpad.Launcher.UI
+﻿namespace Launchpad.Launcher.WindowsUI
 {
 	partial class MainForm
 	{

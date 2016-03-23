@@ -23,7 +23,7 @@ using System;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace Launchpad.Launcher.UI
+namespace Launchpad.Launcher.WindowsUI
 {
 	internal partial class LaunchpadAboutBox : Form
 	{

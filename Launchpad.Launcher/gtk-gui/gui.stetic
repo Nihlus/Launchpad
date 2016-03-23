@@ -9,7 +9,7 @@
     <widget-library name="webkit-sharp" />
     <widget-library name="../bin/Debug/Launchpad.exe" internal="true" />
   </import>
-  <widget class="Gtk.Window" id="Launchpad.Launcher.UI.MainWindow" design-size="760 439">
+  <widget class="Gtk.Window" id="Launchpad.Launcher.UnixUI.MainWindow" design-size="760 439">
     <action-group name="Default">
       <action id="ActionsAction1">
         <property name="Type">Action</property>

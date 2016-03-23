@@ -157,11 +157,11 @@
     <Compile Include="Handlers\ManifestHandler.cs" />
     <Compile Include="Utility\Enums\ELauncherMode.cs" />
     <None Include="packages.config" />
-    <Compile Include="gtk-gui\Launchpad.Launcher.UI.MainWindow.cs" />
     <Compile Include="Handlers\Protocols\PatchProtocolHandler.cs" />
     <Compile Include="Handlers\Protocols\FTPProtocolHandler.cs" />
     <Compile Include="Handlers\Protocols\HTTPProtocolHandler.cs" />
     <Compile Include="Handlers\Protocols\BitTorrentProtocolHandler.cs" />
+    <Compile Include="gtk-gui\Launchpad.Launcher.UnixUI.MainWindow.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

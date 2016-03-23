@@ -29,7 +29,6 @@ using Launchpad.Launcher.Handlers.Protocols;
 using System.Security.Cryptography;
 using System.Text;
 
-
 namespace Launchpad.Launcher.Handlers
 {
 	/// <summary>
