@@ -34,7 +34,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 	/// By default, the patch protocol handler does not know anything specific about
 	/// the actual workings of the protocol.
 	/// </summary>
-	internal abstract class PatchProtocolHandler
+	public abstract class PatchProtocolHandler
 	{
 		protected PatchProtocolHandler()
 		{

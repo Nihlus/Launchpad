@@ -22,7 +22,7 @@
 
 namespace Launchpad.Launcher.Utility.Enums
 {
-	internal enum ESystemTarget
+	public enum ESystemTarget
 	{
 		Linux,
 		Mac,

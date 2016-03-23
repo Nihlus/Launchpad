@@ -258,11 +258,14 @@ namespace Launchpad.Launcher.Handlers.Protocols
 							}
 							else
 							{
-								string localHash = MD5Handler.GetFileHash(File.OpenRead(LocalPath));
-								if (localHash != Entry.Hash)
+								using (Stream file = File.OpenRead(LocalPath))
 								{
-									BrokenFiles.Add(Entry);
-								}		
+									string localHash = MD5Handler.GetStreamHash(file);
+									if (localHash != Entry.Hash)
+									{
+										BrokenFiles.Add(Entry);
+									}
+								}
 							}
 						}
 					}	
@@ -793,9 +796,13 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			{
 				string manifestURL = GetManifestChecksumURL();
 				string remoteHash = ReadFTPFile(manifestURL);
-				string localHash = MD5Handler.GetFileHash(File.OpenRead(ManifestHandler.GetManifestPath()));
 
-				return remoteHash != localHash;
+				using (Stream file = File.OpenRead(ManifestHandler.GetManifestPath()))
+				{
+					string localHash = MD5Handler.GetStreamHash(file);
+
+					return remoteHash != localHash;
+				}
 			}
 			else
 			{
@@ -919,7 +926,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			{
 				if (response != null)
 				{
-					response.Close();
+					response.Dispose();
 				}
 			}
 

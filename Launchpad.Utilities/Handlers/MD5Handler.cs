@@ -31,40 +31,32 @@ namespace Launchpad.Utilities.Handlers
 	internal static class MD5Handler
 	{
 		/// <summary>
-		/// Gets the file hash from a file stream.
+		/// Gets the file hash from a data stream.
 		/// </summary>
-		/// <returns>The file hash.</returns>
-		/// <param name="fileStream">File stream.</param>
-		public static string GetFileHash(Stream fileStream)
+		/// <returns>The hash.</returns>
+		/// <param name="dataStream">File stream.</param>
+		public static string GetStreamHash(Stream dataStream)
 		{
-			if (fileStream != null)
+			try
 			{
-				try
+				using (MD5 md5 = MD5.Create())
 				{
-					using (MD5 md5 = MD5.Create())
-					{
-						//calculate the hash of the stream.
-						string resultString = BitConverter.ToString(md5.ComputeHash(fileStream)).Replace("-", "");
+					//calculate the hash of the stream.
+					string resultString = BitConverter.ToString(md5.ComputeHash(dataStream)).Replace("-", "");
 
-						return resultString;
-					}
-				}
-				catch (IOException ioex)
-				{
-					Console.WriteLine("IOException in GetFileHash(): " + ioex.Message);
-
-					return String.Empty;
-				}
-				finally
-				{
-					//release the file (if we had one)
-					fileStream.Close();
+					return resultString;
 				}
 			}
-			else
-			{ 
-				return String.Empty;
+			catch (IOException ioex)
+			{
+				Console.WriteLine("IOException in GetFileHash(): " + ioex.Message);
 			}
+			catch (NullReferenceException nex)
+			{
+				Console.WriteLine("NullReferenceException in GetFileHash(): " + nex.Message);
+			}
+
+			return String.Empty;
 		}
 	}
 }

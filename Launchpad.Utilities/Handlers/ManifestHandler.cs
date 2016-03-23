@@ -84,7 +84,7 @@ namespace Launchpad.Utilities
 					FileInfo Info = new FileInfo(file);
 					long fileSize = Info.Length;
 
-					string hash = MD5Handler.GetFileHash(fileStream);
+					string hash = MD5Handler.GetStreamHash(fileStream);
 					string manifestLine = String.Format(@"{0}:{1}:{2}", file.Substring(skipDirectory.Length), hash, fileSize.ToString());
 
 					if (fileStream != null)
@@ -109,7 +109,7 @@ namespace Launchpad.Utilities
 
 
 			//create a manifest checksum file.
-			string manifestHash = MD5Handler.GetFileHash(File.OpenRead(manifestPath));
+			string manifestHash = MD5Handler.GetStreamHash(File.OpenRead(manifestPath));
 
 			FileStream checksumStream = File.Create(manifestChecksumPath);
 

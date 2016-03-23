@@ -63,36 +63,28 @@ namespace Launchpad.Utilities.UI
 		{
 			if (File.Exists(filePath))
 			{
-				Stream selectedFile = null;
-				try
+				using (Stream file = File.OpenRead(filePath))
 				{
-					selectedFile = File.OpenRead(filePath);
-
-					string hash = MD5Handler.GetFileHash(selectedFile);
-
-					return hash;
-				}
-				catch (IOException iex)
-				{
-					Console.WriteLine("IOException in GenerateSingle(): " + iex.Message);
-					return null;
-				}
-				catch (UnauthorizedAccessException uex)
-				{
-					Console.WriteLine("UnauthorizedAccessException in GenerateSingle(): " + uex.Message);
-					return null;
-				}
-				finally
-				{
-					if (selectedFile != null)
+					try
 					{
-						selectedFile.Close();
+						return MD5Handler.GetStreamHash(file);
+
+					}
+					catch (IOException iex)
+					{
+						Console.WriteLine("IOException in GenerateSingle(): " + iex.Message);
+						return String.Empty;
+					}
+					catch (UnauthorizedAccessException uex)
+					{
+						Console.WriteLine("UnauthorizedAccessException in GenerateSingle(): " + uex.Message);
+						return String.Empty;
 					}
 				}
 			}
 			else
 			{
-				return null;
+				return String.Empty;
 			}
 		}
 
@@ -150,7 +142,7 @@ namespace Launchpad.Utilities.UI
 						FileInfo Info = new FileInfo(file);
 						string fileSize = Info.Length.ToString();
                         
-						string manifestLine = String.Format(@"{0}:{1}:{2}", file.Substring(skipDirectory.Length), MD5Handler.GetFileHash(fileStream), fileSize);
+						string manifestLine = String.Format(@"{0}:{1}:{2}", file.Substring(skipDirectory.Length), MD5Handler.GetStreamHash(fileStream), fileSize);
 
 						if (fileStream != null)
 						{
@@ -168,7 +160,7 @@ namespace Launchpad.Utilities.UI
 
 
 				//create a manifest checksum file.
-				string manifestHash = MD5Handler.GetFileHash(File.OpenRead(manifestPath));
+				string manifestHash = MD5Handler.GetStreamHash(File.OpenRead(manifestPath));
                 
 				FileStream checksumStream = File.Create(manifestChecksumPath);
 

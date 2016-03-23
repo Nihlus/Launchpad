@@ -37,7 +37,7 @@ namespace Launchpad.Launcher.Handlers
 	/// Read and write operations are synchronized by locks, so it should be threadsafe.
 	/// This is a singleton class, and it should always be accessed through _Instance.
 	/// </summary>
-	internal sealed class ConfigHandler
+	public sealed class ConfigHandler
 	{
 		/// <summary>
 		/// The config lock object.

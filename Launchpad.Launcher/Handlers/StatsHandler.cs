@@ -38,8 +38,7 @@ namespace Launchpad.Launcher.Handlers
 		/// Sends the usage stats to the official launchpad server.
 		/// </summary>
 		static public void SendUsageStats()
-		{
-			WebRequest sendStatsRequest = null;
+		{			
 			try
 			{
 				const string baseURL = "http://directorate.asuscomm.com/launchpad/stats.php?";
@@ -53,16 +52,12 @@ namespace Launchpad.Launcher.Handlers
 				                      );
 
 
-				sendStatsRequest = WebRequest.Create(formattedURL);
+				WebRequest sendStatsRequest = WebRequest.Create(formattedURL);
 				sendStatsRequest.GetResponse();                            
 			}
 			catch (WebException wex)
 			{
 				Console.WriteLine("WebException in SendUsageStats(): " + wex.Message);
-			}
-			finally
-			{
-				sendStatsRequest.Abort();   
 			}
 		}
 	}
