@@ -28,61 +28,66 @@ namespace Launchpad.Launcher.Handlers
 {
 	internal sealed class ManifestHandler
 	{
-		private readonly object ManifestLock = new object();
-		private readonly object OldManifestLock = new object();
+		private readonly object GameManifestLock = new object();
+		private readonly object OldGameManifestLock = new object();
 
-		private List<ManifestEntry> manifest = new List<ManifestEntry>();
+		/// <summary>
+		/// The config handler reference.
+		/// </summary>
+		ConfigHandler Config = ConfigHandler.Instance;
+
+		private List<ManifestEntry> gameManifest = new List<ManifestEntry>();
 
 		/// <summary>
 		/// Gets the manifest. Call sparsely, as it loads the entire manifest from disk each time 
 		/// this property is accessed.
 		/// </summary>
 		/// <value>The manifest.</value>
-		public List<ManifestEntry> Manifest
+		public List<ManifestEntry> GameManifest
 		{
 			get
 			{
-				LoadManifest();
-				return manifest;
+				LoadGameManifest();
+				return gameManifest;
 			}
 		}
 
-		private readonly List<ManifestEntry> oldManifest = new List<ManifestEntry>();
+		private readonly List<ManifestEntry> oldGameManifest = new List<ManifestEntry>();
 
 		/// <summary>
 		/// Gets the old manifest. Call sparsely, as it loads the entire manifest from disk each time
 		/// this property is accessed.
 		/// </summary>
 		/// <value>The old manifest.</value>
-		public List<ManifestEntry> OldManifest
+		public List<ManifestEntry> OldGameManifest
 		{
 			get
 			{
-				LoadOldManifest();
-				return oldManifest;
+				LoadOldGameManifest();
+				return oldGameManifest;
 			}
 		}
 
 		/// <summary>
 		/// Loads the manifest from disk.
 		/// </summary>
-		private void LoadManifest()
+		private void LoadGameManifest()
 		{
 			try
 			{
-				lock (ManifestLock)
+				lock (GameManifestLock)
 				{
-					if (File.Exists(GetManifestPath()))
+					if (File.Exists(GetGameManifestPath()))
 					{
-						manifest.Clear();
+						gameManifest.Clear();
 
-						string[] rawManifest = File.ReadAllLines(GetManifestPath());
+						string[] rawManifest = File.ReadAllLines(GetGameManifestPath());
 						foreach (string rawEntry in rawManifest)
 						{
 							ManifestEntry newEntry = new ManifestEntry();
 							if (ManifestEntry.TryParse(rawEntry, out newEntry))
 							{
-								manifest.Add(newEntry);
+								gameManifest.Add(newEntry);
 							}
 						}
 					}
@@ -97,23 +102,23 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// Loads the old manifest from disk.
 		/// </summary>
-		private void LoadOldManifest()
+		private void LoadOldGameManifest()
 		{
 			try
 			{
-				lock (OldManifestLock)
+				lock (OldGameManifestLock)
 				{
-					if (File.Exists(GetOldManifestPath()))
+					if (File.Exists(GetOldGameManifestPath()))
 					{
-						oldManifest.Clear();
+						oldGameManifest.Clear();
 
-						string[] rawOldManifest = File.ReadAllLines(GetOldManifestPath());
-						foreach (string rawEntry in rawOldManifest)
+						string[] rawOldGameManifest = File.ReadAllLines(GetOldGameManifestPath());
+						foreach (string rawEntry in rawOldGameManifest)
 						{
 							ManifestEntry newEntry = new ManifestEntry();
 							if (ManifestEntry.TryParse(rawEntry, out newEntry))
 							{
-								oldManifest.Add(newEntry);
+								oldGameManifest.Add(newEntry);
 							}
 						}
 					}
@@ -129,7 +134,7 @@ namespace Launchpad.Launcher.Handlers
 		/// Gets the manifests' path on disk.
 		/// </summary>
 		/// <returns>The manifest path.</returns>
-		public static string GetManifestPath()
+		public static string GetGameManifestPath()
 		{
 			string manifestPath = String.Format(@"{0}LauncherManifest.txt", 
 				                      ConfigHandler.GetLocalDir());
@@ -140,11 +145,37 @@ namespace Launchpad.Launcher.Handlers
 		/// Gets the old manifests' path on disk.
 		/// </summary>
 		/// <returns>The old manifest's path.</returns>
-		public static string GetOldManifestPath()
+		public static string GetOldGameManifestPath()
 		{
 			string oldManifestPath = String.Format(@"{0}LauncherManifest.txt.old", 
 				                         ConfigHandler.GetLocalDir());
 			return oldManifestPath;
+		}
+
+		/// <summary>
+		/// Gets the manifest URL.
+		/// </summary>
+		/// <returns>The manifest URL.</returns>
+		public string GetGameManifestURL()
+		{
+			string manifestURL = String.Format("{0}/game/{1}/LauncherManifest.txt", 
+				                     Config.GetBaseProtocolURL(),
+				                     Config.GetSystemTarget());
+
+			return manifestURL;
+		}
+
+		/// <summary>
+		/// Gets the manifest checksum URL.
+		/// </summary>
+		/// <returns>The manifest checksum URL.</returns>
+		public string GetGameManifestChecksumURL()
+		{
+			string manifestChecksumURL = String.Format("{0}/game/{1}/LauncherManifest.checksum", 
+				                             Config.GetBaseProtocolURL(), 
+				                             Config.GetSystemTarget());
+
+			return manifestChecksumURL;
 		}
 	}
 

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: launchpad\n"
 "POT-Creation-Date: 2016-03-23 15:31:47+0100\n"
-"PO-Revision-Date: 2016-03-23 10:32-0400\n"
+"PO-Revision-Date: 2016-03-23 11:55-0400\n"
 "Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -17,31 +17,31 @@ msgstr ""
 
 #: ../Launchpad.Launcher/Windows-UI/AboutBox.cs:3
 msgid "About {0}"
-msgstr ""
+msgstr "{0} hakkında"
 
 #: ../Launchpad.Launcher/Windows-UI/AboutBox.cs:3
 msgid "Version {0}"
-msgstr ""
+msgstr "Sürüm {0}"
 
 #: ../Launchpad.Launcher/Windows-UI/AboutBox.Designer.cs:3
 msgid "Product Name"
-msgstr ""
+msgstr "Ürün Adı"
 
 #: ../Launchpad.Launcher/Windows-UI/AboutBox.Designer.cs:3
 msgid "Version"
-msgstr ""
+msgstr "Sürüm"
 
 #: ../Launchpad.Launcher/Windows-UI/AboutBox.Designer.cs:3
 msgid "Copyright"
-msgstr ""
+msgstr "Telif Hakkı"
 
 #: ../Launchpad.Launcher/Windows-UI/AboutBox.Designer.cs:3
 msgid "Company Name"
-msgstr ""
+msgstr "Firma Adı"
 
 #: ../Launchpad.Launcher/Windows-UI/AboutBox.Designer.cs:3
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:12
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:47
@@ -56,7 +56,7 @@ msgstr "Boşta"
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:15
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:16
 msgid "Failed to connect to the patch server. Please check your settings."
-msgstr ""
+msgstr "Yama sunucusuna bağlanılamadı. Lütfen ayarlarınızı kontrol edin."
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:15
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:16
@@ -75,7 +75,7 @@ msgstr "Başlatıcıyı ilk kez açıyorsunuz gibi duruyor.\n"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:16
 msgid "Initial startup"
-msgstr ""
+msgstr "İlk açılış"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:23
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:26
@@ -99,7 +99,7 @@ msgstr "Sunucu oyunu seçili platform için temin etmiyor."
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:28
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:33
 msgid "The server does not provide files for the selected platform."
-msgstr ""
+msgstr "Sunucu, seçilen platform için dosya temin etmiyor."
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
@@ -146,12 +146,12 @@ msgstr "Başlat"
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs:2
 msgid "Inactive"
-msgstr ""
+msgstr "Devre dışı"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:40
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:35
 msgid "Launchpad - Failed to launch the game."
-msgstr ""
+msgstr "Launchpad - Oyun başlatılamadı."
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:40
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:35
@@ -176,11 +176,11 @@ msgstr "Launchpad oyun yüklemesini tamir etmeyi bitirdi. Hemen oyna!"
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:50
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:42
 msgid "Game update finished. Play away!"
-msgstr ""
+msgstr "Oyun güncellemesi bitti. Oynamaya devam!"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.Designer.cs:3
 msgid "About"
-msgstr ""
+msgstr "Hakkında"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.Designer.cs:3
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs:2
@@ -190,37 +190,38 @@ msgstr "Launchpad - <GameName>"
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:44
 msgid "Whoops! The game appears to have crashed.\n"
 "Would you like the launcher to verify the installation?"
-msgstr ""
+msgstr "Haydaa! Oyun çökmüşe benziyor.\n"
+"Başlatıcının yüklemeyi teyit etmesini ister misiniz?"
 
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs:2
 msgid "Actions"
-msgstr ""
+msgstr "Eylemler"
 
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs:2
 msgid "Repair Game"
-msgstr ""
+msgstr "Oyunu Tamir Et"
 
 #: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:13
 msgid "{0} : {1} out of {2}"
-msgstr ""
+msgstr "{0} : {2}'de {1}"
 
 #: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:15
 msgid "Finished"
-msgstr ""
+msgstr "Bitti"
 
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UnixUI.MainWindow.cs:2
 msgid "Launchpad Utilities - Manifest"
-msgstr ""
+msgstr "Launchpad Hizmetleri - Manifesto"
 
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UnixUI.MainWindow.cs:2
 msgid "Progress: "
-msgstr ""
+msgstr "İlerleme: "
 
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UnixUI.MainWindow.cs:2
 msgid "/some/file/path : 1 out of 100"
-msgstr ""
+msgstr "/bir/dosya/dizini : 100'de 1"
 
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UnixUI.MainWindow.cs:2
 msgid "Generate Manifest"
-msgstr ""
+msgstr "Manifesto Oluştur"
 

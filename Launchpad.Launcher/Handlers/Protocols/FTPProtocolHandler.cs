@@ -37,7 +37,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 	/// </summary>
 	internal sealed class FTPProtocolHandler : PatchProtocolHandler
 	{
-
 		private readonly ManifestHandler manifestHandler = new ManifestHandler();
 
 		/// <summary>
@@ -74,14 +73,14 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				}
 				catch (WebException wex)
 				{
-					Console.WriteLine("WebException in CanConnectToFTP(): " + wex.Message);
+					Console.WriteLine("WebException in FTPProtocolHandler.CanPatch(): " + wex.Message);
 					bCanConnectToFTP = false;
 				}
 			}
 			catch (WebException wex)
 			{
 				// Case where FTP URL in config is not valid
-				Console.WriteLine("WebException CanConnectToFTP() (Invalid URL): " + wex.Message);
+				Console.WriteLine("WebException FTPProtocolHandler.CanPatch() (Invalid URL): " + wex.Message);
 
 				bCanConnectToFTP = false;
 			}
@@ -184,7 +183,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 		protected override void DownloadGame()
 		{
-			List<ManifestEntry> Manifest = manifestHandler.Manifest;
+			List<ManifestEntry> Manifest = manifestHandler.GameManifest;
 
 			//in order to be able to resume downloading, we check if there is an entry
 			//stored in the install cookie.
@@ -227,7 +226,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		{
 			try
 			{
-				List<ManifestEntry> Manifest = manifestHandler.Manifest;			
+				List<ManifestEntry> Manifest = manifestHandler.GameManifest;			
 				List<ManifestEntry> BrokenFiles = new List<ManifestEntry>();
 							
 				int verifiedFiles = 0;
@@ -336,8 +335,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			//check all local files against the manifest for file size changes.
 			//if the file is missing or the wrong size, download it.
 			//better system - compare old & new manifests for changes and download those?
-			List<ManifestEntry> Manifest = manifestHandler.Manifest;
-			List<ManifestEntry> OldManifest = manifestHandler.OldManifest;
+			List<ManifestEntry> Manifest = manifestHandler.GameManifest;
+			List<ManifestEntry> OldManifest = manifestHandler.OldGameManifest;
 
 			List<ManifestEntry> FilesRequiringUpdate = new List<ManifestEntry>();
 			foreach (ManifestEntry Entry in Manifest)
@@ -501,10 +500,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			{
 				username = Config.GetRemoteUsername();
 				password = Config.GetRemotePassword();
-			}
-
-			// The buffer size is 256kb. More or less than this reduces download speeds.
-			byte[] buffer = new byte[262144];
+			}		
 
 			try
 			{
@@ -513,22 +509,39 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 				request.Method = WebRequestMethods.Ftp.DownloadFile;
 				sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
-
+				           
 				string data = "";
-            
-				using (Stream reader = request.GetResponse().GetResponseStream())
+				using (Stream remoteStream = request.GetResponse().GetResponseStream())
 				{
-					int bytesRead;
-					while (true)
+					long fileSize;
+					using (FtpWebResponse sizeResponse = (FtpWebResponse)sizerequest.GetResponse())
 					{
-						bytesRead = reader.Read(buffer, 0, buffer.Length);
+						fileSize = sizeResponse.ContentLength;
+					}
 
-						if (bytesRead == 0)
+					if (fileSize < 262144)
+					{
+						byte[] smallBuffer = new byte[fileSize];
+						remoteStream.Read(smallBuffer, 0, smallBuffer.Length);
+
+						data = Encoding.UTF8.GetString(smallBuffer, 0, smallBuffer.Length);
+					}
+					else
+					{
+						// The large buffer size is 256kb. More or less than this reduces download speeds.
+						byte[] buffer = new byte[262144];
+
+						while (true)
 						{
-							break;
-						}
+							int bytesRead = remoteStream.Read(buffer, 0, buffer.Length);
 
-						data = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+							if (bytesRead == 0)
+							{
+								break;
+							}
+
+							data += Encoding.UTF8.GetString(buffer, 0, bytesRead);
+						}
 					}
 				}
 
@@ -632,14 +645,14 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// Downloads an FTP file.
 		/// </summary>
 		/// <returns>The FTP file's location on disk, or the exception message.</returns>
-		/// <param name="rawRemoteURL">Ftp source file path.</param>
+		/// <param name="URL">Ftp source file path.</param>
 		/// <param name="localPath">Local destination.</param>
 		/// <param name="contentOffset">Offset into the remote file where downloading should start</param>
 		/// <param name="useAnonymousLogin">If set to <c>true</c> b use anonymous.</param>
-		public void DownloadFTPFile(string rawRemoteURL, string localPath, long contentOffset = 0, bool useAnonymousLogin = false)
+		public void DownloadFTPFile(string URL, string localPath, long contentOffset = 0, bool useAnonymousLogin = false)
 		{
 			//clean the URL string
-			string remoteURL = rawRemoteURL.Replace(Path.DirectorySeparatorChar, '/');
+			string remoteURL = URL.Replace(Path.DirectorySeparatorChar, '/');
 
 			string username;
 			string password;
@@ -653,9 +666,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				username = Config.GetRemoteUsername();
 				password = Config.GetRemotePassword();
 			}
-					
-			//the buffer size is 256kb. More or less than this reduces download speeds.
-			byte[] buffer = new byte[262144];
 
 			try
 			{
@@ -666,43 +676,62 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				request.ContentOffset = contentOffset;
 
 				sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
-								            
-				using (Stream reader = request.GetResponse().GetResponseStream())
-				{				
+
+				using (Stream contentStream = request.GetResponse().GetResponseStream())
+				{
 					long fileSize;
 					using (FtpWebResponse sizereader = (FtpWebResponse)sizerequest.GetResponse())
 					{
 						fileSize = sizereader.ContentLength;
 					}
 
-					// Select an appending or creating filestream object based on whether or not we're attempting
-					// to complete an existing file
 					using (FileStream fileStream = contentOffset > 0 ? new FileStream(localPath, FileMode.Append) :
 																		new FileStream(localPath, FileMode.Create))
 					{
-						// Sets the content offset for the file stream, allowing it to begin writing where it last stopped.
 						fileStream.Position = contentOffset;
-						long FTPbytesDownloaded = contentOffset;
+						long totalBytesDownloaded = contentOffset;
 
-						int bytesRead = 0;
-						while (true)
+						if (fileSize < 262144)
 						{
-							bytesRead = reader.Read(buffer, 0, buffer.Length);
+							byte[] smallBuffer = new byte[fileSize];
+							contentStream.Read(smallBuffer, 0, smallBuffer.Length);
 
-							if (bytesRead == 0)
-							{
-								break;
-							}
+							fileStream.Write(smallBuffer, 0, smallBuffer.Length);
 
-							FTPbytesDownloaded = FTPbytesDownloaded + bytesRead;
-							fileStream.Write(buffer, 0, bytesRead);
+							totalBytesDownloaded += smallBuffer.Length;
 
-							// Set file progress info
-							ModuleDownloadProgressArgs.ProgressBarMessage = GetDownloadProgressBarMessage(Path.GetFileName(remoteURL), FTPbytesDownloaded, fileSize);
-							ModuleDownloadProgressArgs.ProgressFraction = (double)FTPbytesDownloaded / (double)fileSize;
+							// Report download progress
+							ModuleDownloadProgressArgs.ProgressBarMessage = GetDownloadProgressBarMessage(Path.GetFileName(remoteURL), 
+								totalBytesDownloaded, fileSize);
+							ModuleDownloadProgressArgs.ProgressFraction = (double)totalBytesDownloaded / (double)fileSize;
 							OnModuleDownloadProgressChanged();
 						}
-					}				
+						else
+						{
+							// The large buffer size is 256kb. More or less than this reduces download speeds.
+							byte[] buffer = new byte[262144];
+
+							while (true)
+							{
+								int bytesRead = contentStream.Read(buffer, 0, buffer.Length);
+
+								if (bytesRead == 0)
+								{
+									break;
+								}
+
+								fileStream.Write(buffer, 0, bytesRead);
+
+								totalBytesDownloaded += bytesRead;
+
+								// Report download progress
+								ModuleDownloadProgressArgs.ProgressBarMessage = GetDownloadProgressBarMessage(Path.GetFileName(remoteURL), 
+									totalBytesDownloaded, fileSize);
+								ModuleDownloadProgressArgs.ProgressFraction = (double)totalBytesDownloaded / (double)fileSize;
+								OnModuleDownloadProgressChanged();
+							}
+						}
+					}
 				}
 			}
 			catch (WebException wex)
@@ -773,7 +802,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// </summary>
 		private void RefreshManifest()
 		{
-			if (File.Exists(ManifestHandler.GetManifestPath()))
+			if (File.Exists(ManifestHandler.GetGameManifestPath()))
 			{
 				if (IsManifestOutdated())
 				{
@@ -792,12 +821,11 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <returns><c>true</c> if the manifest is outdated; otherwise, <c>false</c>.</returns>
 		private bool IsManifestOutdated()
 		{
-			if (File.Exists(ManifestHandler.GetManifestPath()))
+			if (File.Exists(ManifestHandler.GetGameManifestPath()))
 			{
-				string manifestURL = GetManifestChecksumURL();
-				string remoteHash = ReadFTPFile(manifestURL);
+				string remoteHash = GetRemoteManifestChecksum();
 
-				using (Stream file = File.OpenRead(ManifestHandler.GetManifestPath()))
+				using (Stream file = File.OpenRead(ManifestHandler.GetGameManifestPath()))
 				{
 					string localHash = MD5Handler.GetStreamHash(file);
 
@@ -817,15 +845,15 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		{
 			try
 			{
-				string RemoteURL = GetManifestURL();
-				string LocalPath = ManifestHandler.GetManifestPath();
+				string RemoteURL = manifestHandler.GetGameManifestURL();
+				string LocalPath = ManifestHandler.GetGameManifestPath();
 
-				if (File.Exists(ManifestHandler.GetManifestPath()))
+				if (File.Exists(ManifestHandler.GetGameManifestPath()))
 				{
 					// Create a backup of the old manifest so that we can compare them when updating the game
-					if (File.Exists(ManifestHandler.GetOldManifestPath()))
+					if (File.Exists(ManifestHandler.GetOldGameManifestPath()))
 					{
-						File.Delete(ManifestHandler.GetOldManifestPath());
+						File.Delete(ManifestHandler.GetOldGameManifestPath());
 					}
 
 					File.Move(LocalPath, LocalPath + ".old");			
@@ -862,6 +890,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 		}
 
+		//TODO: Maybe move to ManifestHandler?
 		/// <summary>
 		/// Gets the remote game version.
 		/// </summary>
@@ -885,13 +914,14 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 		}
 
+		//TODO: Maybe move to ManifestHandler?
 		/// <summary>
 		/// Gets the remote manifest checksum.
 		/// </summary>
 		/// <returns>The remote manifest checksum.</returns>
 		public string GetRemoteManifestChecksum()
 		{
-			string checksum = ReadFTPFile(GetManifestChecksumURL());
+			string checksum = ReadFTPFile(manifestHandler.GetGameManifestChecksumURL());
 			checksum = Utilities.Clean(checksum);
 
 			return checksum;
@@ -967,32 +997,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 
 			return true;
-		}
-
-		/// <summary>
-		/// Gets the manifest URL.
-		/// </summary>
-		/// <returns>The manifest URL.</returns>
-		public string GetManifestURL()
-		{
-			string manifestURL = String.Format("{0}/game/{1}/LauncherManifest.txt", 
-				                     Config.GetBaseFTPUrl(),
-				                     Config.GetSystemTarget());
-
-			return manifestURL;
-		}
-
-		/// <summary>
-		/// Gets the manifest checksum URL.
-		/// </summary>
-		/// <returns>The manifest checksum URL.</returns>
-		public string GetManifestChecksumURL()
-		{
-			string manifestChecksumURL = String.Format("{0}/game/{1}/LauncherManifest.checksum", 
-				                             Config.GetBaseFTPUrl(), 
-				                             Config.GetSystemTarget());
-
-			return manifestChecksumURL;
 		}
 	}
 }

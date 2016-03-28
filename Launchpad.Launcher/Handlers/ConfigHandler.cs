@@ -521,7 +521,7 @@ namespace Launchpad.Launcher.Handlers
 			if (GetDoOfficialUpdates())
 			{
 				launcherURL = String.Format("{0}/launcher/bin/", 
-					"ftp://directorate.asuscomm.com");
+					GetOfficialBaseProtocolURL());
 			}
 			else
 			{
@@ -543,7 +543,7 @@ namespace Launchpad.Launcher.Handlers
 			if (GetDoOfficialUpdates())
 			{
 				versionURL = String.Format("{0}/launcher/LauncherVersion.txt", 
-					"ftp://directorate.asuscomm.com");
+					GetOfficialBaseProtocolURL());
 			}
 			else
 			{
@@ -985,6 +985,25 @@ namespace Launchpad.Launcher.Handlers
 				default:
 					{
 						return GetBaseFTPUrl();
+					}
+			}
+		}
+
+		public string GetOfficialBaseProtocolURL()
+		{
+			switch (GetPatchProtocolString())
+			{
+				case "FTP":
+					{
+						return "ftp://directorate.asuscomm.com";
+					}
+				case "HTTP":
+					{
+						return "http://directorate.asuscomm.com/launchpad";
+					}
+				default:
+					{
+						return "ftp://directorate.asuscomm.com";
 					}
 			}
 		}

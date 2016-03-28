@@ -106,6 +106,7 @@ namespace Launchpad.Launcher.UnixUI
 				dialog.Run();
 				dialog.Destroy();
 				IndicatorLabel.Text = LocalizationCatalog.GetString("Could not connect to server.");
+				refreshAction1.Sensitive = false;
 			}
 			else
 			{

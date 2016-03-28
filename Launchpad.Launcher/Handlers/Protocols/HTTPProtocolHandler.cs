@@ -20,6 +20,11 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 using Launchpad.Launcher.Utility.Enums;
 using System;
+using System.Net;
+using System.IO;
+using System.Text;
+using Launchpad.Launcher.Utility;
+using System.Collections.Generic;
 
 namespace Launchpad.Launcher.Handlers.Protocols
 {
@@ -31,19 +36,59 @@ namespace Launchpad.Launcher.Handlers.Protocols
 	/// </summary>
 	internal sealed class HTTPProtocolHandler : PatchProtocolHandler
 	{
-		public HTTPProtocolHandler(bool bShouldUseHTTPS = false)
+		private readonly ManifestHandler manifestHandler = new ManifestHandler();
+
+		public HTTPProtocolHandler()
 			: base()
 		{
 		}
 
 		public override bool CanPatch()
 		{
-			return false;
+			bool bCanConnectToServer;
+
+			try
+			{
+				HttpWebRequest plainRequest = CreateHttpWebRequest(Config.GetBaseHTTPUrl(), 
+					                              Config.GetRemoteUsername(), Config.GetRemotePassword());
+
+				plainRequest.Method = WebRequestMethods.Http.Head;
+				plainRequest.Timeout = 4000;
+
+				try
+				{
+					using (WebResponse response = plainRequest.GetResponse())
+					{
+						bCanConnectToServer = true;
+					}
+				}
+				catch (WebException wex)
+				{
+					Console.WriteLine("WebException in HTTPProcolHandler.CanPatch(): " + wex.Message);
+					bCanConnectToServer = false;
+				}
+			}
+			catch (WebException wex)
+			{
+				Console.WriteLine("WebException in HTTPProcolHandler.CanPatch() (Invalid URL): " + wex.Message);
+				bCanConnectToServer = false;
+			}
+
+			if (!bCanConnectToServer)
+			{
+				Console.WriteLine("Failed to connect to HTTP server at: {0}", Config.GetBaseHTTPUrl());
+			}
+
+			return bCanConnectToServer;
 		}
 
 		public override bool IsPlatformAvailable(ESystemTarget Platform)
 		{
-			return false;
+			string remote = String.Format("{0}/game/{1}/.provides", 
+				                Config.GetBaseHTTPUrl(), 
+				                Platform);
+
+			return DoesRemotePathOrFileExist(remote);
 		}
 
 		public override bool CanProvideChangelog()
@@ -58,27 +103,102 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 		public override bool IsLauncherOutdated()
 		{
-			return false;
+			try
+			{
+				Version local = Config.GetLocalLauncherVersion();
+				Version remote = GetRemoteLauncherVersion();
+
+				return local < remote;
+			}
+			catch (WebException wex)
+			{
+				Console.WriteLine("WebException in IsLauncherOutdated(): " + wex.Message);
+				return false;	
+			}
 		}
 
 		public override bool IsGameOutdated()
 		{
-			return false;
+			try
+			{
+				Version local = Config.GetLocalGameVersion();
+				Version remote = GetRemoteGameVersion();
+
+				return local < remote;
+			}
+			catch (WebException wex)
+			{
+				Console.WriteLine("WebException in IsGameOutdated(): " + wex.Message);
+				return false;
+			}
 		}
 
 		public override void InstallGame()
 		{
+			ModuleInstallFinishedArgs.Module = EModule.Game;
+			ModuleInstallFailedArgs.Module = EModule.Game;
 
+			try
+			{
+				//create the .install file to mark that an installation has begun
+				//if it exists, do nothing.
+				ConfigHandler.CreateInstallCookie();
+
+				// Make sure the manifest is up to date
+				RefreshGameManifest();
+
+				// Download Game
+				DownloadGame();
+
+				// Verify Game
+				VerifyGame();
+			}
+			catch (IOException ioex)
+			{
+				Console.WriteLine("IOException in InstallGame(): " + ioex.Message);
+				OnModuleInstallationFailed();
+			}
 		}
 
 		public override void DownloadLauncher()
 		{
-
+			// TODO: Implement launcher manifest
 		}
 
 		protected override void DownloadGame()
 		{
+			List<ManifestEntry> Manifest = manifestHandler.GameManifest;
 
+			//in order to be able to resume downloading, we check if there is an entry
+			//stored in the install cookie.
+			//attempt to parse whatever is inside the install cookie
+			ManifestEntry lastDownloadedFile;
+			if (ManifestEntry.TryParse(File.ReadAllText(ConfigHandler.GetInstallCookiePath()), out lastDownloadedFile))
+			{
+				//loop through all the entries in the manifest until we encounter
+				//an entry which matches the one in the install cookie
+
+				foreach (ManifestEntry Entry in Manifest)
+				{
+					if (lastDownloadedFile == Entry)
+					{
+						//remove all entries before the one we were last at.
+						Manifest.RemoveRange(0, Manifest.IndexOf(Entry));
+					}
+				}
+			}
+
+			int downloadedFiles = 0;
+			foreach (ManifestEntry Entry in Manifest)
+			{
+				++downloadedFiles;
+
+				// Prepare the progress event contents
+				ModuleDownloadProgressArgs.IndicatorLabelMessage = GetDownloadIndicatorLabelMessage(downloadedFiles, Path.GetFileName(Entry.RelativePath), Manifest.Count);
+				OnModuleDownloadProgressChanged();
+
+				DownloadEntry(Entry);
+			}
 		}
 
 		public override void VerifyLauncher()
@@ -88,12 +208,581 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 		public override void VerifyGame()
 		{
+			try
+			{
+				List<ManifestEntry> Manifest = manifestHandler.GameManifest;			
+				List<ManifestEntry> BrokenFiles = new List<ManifestEntry>();
+							
+				int verifiedFiles = 0;
+				foreach (ManifestEntry Entry in Manifest)
+				{
+					string LocalPath = String.Format("{0}{1}", 
+						                   Config.GetGamePath(),
+						                   Entry.RelativePath);
 
+					++verifiedFiles;
+
+					// Prepare the progress event contents
+					ModuleVerifyProgressArgs.IndicatorLabelMessage = GetVerifyIndicatorLabelMessage(verifiedFiles, Path.GetFileName(LocalPath), Manifest.Count);
+					OnModuleVerifyProgressChanged();
+
+					for (int i = 0; i > Config.GetFileRetries(); ++i)
+					{					
+						if (!File.Exists(LocalPath))
+						{
+							BrokenFiles.Add(Entry);
+						}
+						else
+						{
+							FileInfo fileInfo = new FileInfo(LocalPath);
+							if (fileInfo.Length != Entry.Size)
+							{
+								BrokenFiles.Add(Entry);
+							}
+							else
+							{
+								using (Stream file = File.OpenRead(LocalPath))
+								{
+									string localHash = MD5Handler.GetStreamHash(file);
+									if (localHash != Entry.Hash)
+									{
+										BrokenFiles.Add(Entry);
+									}
+								}
+							}
+						}
+					}	
+				}
+
+				int downloadedFiles = 0;
+				foreach (ManifestEntry Entry in BrokenFiles)
+				{					
+					++downloadedFiles;
+					// Prepare the progress event contents
+					ModuleDownloadProgressArgs.IndicatorLabelMessage = GetDownloadIndicatorLabelMessage(downloadedFiles, Path.GetFileName(Entry.RelativePath), BrokenFiles.Count);
+					OnModuleDownloadProgressChanged();
+
+					DownloadEntry(Entry);
+				}
+			}
+			catch (IOException ioex)
+			{
+				Console.WriteLine("IOException in VerifyGame(): " + ioex.Message);
+				OnModuleInstallationFailed();			
+			}
+
+			OnModuleInstallationFinished();
 		}
 
 		public override void UpdateGame()
 		{
+			// Make sure the local copy of the manifest is up to date
+			RefreshGameManifest();
 
+			//check all local files against the manifest for file size changes.
+			//if the file is missing or the wrong size, download it.
+			//better system - compare old & new manifests for changes and download those?
+			List<ManifestEntry> Manifest = manifestHandler.GameManifest;
+			List<ManifestEntry> OldManifest = manifestHandler.OldGameManifest;
+
+			List<ManifestEntry> FilesRequiringUpdate = new List<ManifestEntry>();
+			foreach (ManifestEntry Entry in Manifest)
+			{
+				if (!OldManifest.Contains(Entry))
+				{
+					FilesRequiringUpdate.Add(Entry);
+				}
+			}
+
+			try
+			{
+				int updatedFiles = 0;
+				foreach (ManifestEntry Entry in FilesRequiringUpdate)
+				{
+					++updatedFiles;
+
+					ModuleUpdateProgressArgs.IndicatorLabelMessage = GetUpdateIndicatorLabelMessage(Path.GetFileName(Entry.RelativePath), 
+						updatedFiles, 
+						FilesRequiringUpdate.Count);
+					OnModuleUpdateProgressChanged();
+
+					DownloadEntry(Entry);
+				}
+			}
+			catch (IOException ioex)
+			{
+				Console.WriteLine("IOException in UpdateGameAsync(): " + ioex.Message);
+				OnModuleInstallationFailed();
+			}
+
+			OnModuleInstallationFinished();
+		}
+
+		/// <summary>
+		/// Downloads the provided manifest entry.
+		/// This function resumes incomplete files, verifies downloaded files and 
+		/// downloads missing files.
+		/// </summary>
+		/// <param name="Entry">The entry to download.</param>
+		private void DownloadEntry(ManifestEntry Entry)
+		{
+			string RemotePath = String.Format("{0}{1}", 
+				                    Config.GetGameURL(), 
+				                    Entry.RelativePath);
+
+			string LocalPath = String.Format("{0}{1}{2}", 
+				                   Config.GetGamePath(),
+				                   Path.DirectorySeparatorChar, 
+				                   Entry.RelativePath);
+					                   				
+			// Make sure we have a directory to put the file in
+			Directory.CreateDirectory(Path.GetDirectoryName(LocalPath));
+				
+			// Reset the cookie
+			File.WriteAllText(ConfigHandler.GetInstallCookiePath(), String.Empty);
+
+			// Write the current file progress to the install cookie
+			using (TextWriter textWriterProgress = new StreamWriter(ConfigHandler.GetInstallCookiePath()))
+			{					
+				textWriterProgress.WriteLine(Entry);
+				textWriterProgress.Flush();
+			}
+
+			if (File.Exists(LocalPath))
+			{
+				FileInfo fileInfo = new FileInfo(LocalPath);
+				if (fileInfo.Length != Entry.Size)
+				{
+					// If the file is partial, resume the download.
+					if (fileInfo.Length < Entry.Size)
+					{
+						DownloadRemoteFile(RemotePath, LocalPath, fileInfo.Length);
+					}
+					else
+					{
+						// If it's larger than expected, toss it in the bin and try again.
+						File.Delete(LocalPath);
+						DownloadRemoteFile(RemotePath, LocalPath);
+					}
+				}									
+			}
+			else
+			{
+				//no file, download it
+				DownloadRemoteFile(RemotePath, LocalPath);
+			}		
+
+			if (ChecksHandler.IsRunningOnUnix())
+			{
+				//if we're dealing with a file that should be executable, 
+				string gameName = Config.GetGameName();
+				bool bFileIsGameExecutable = (Path.GetFileName(LocalPath).EndsWith(".exe")) || (Path.GetFileName(LocalPath) == gameName);
+				if (bFileIsGameExecutable)
+				{
+					//set the execute bits
+					UnixHandler.MakeExecutable(LocalPath);
+				}					
+			}
+
+			// We've finished the download, so empty the cookie
+			File.WriteAllText(ConfigHandler.GetInstallCookiePath(), String.Empty);
+		}
+
+		private bool DoesRemotePathOrFileExist(string URL)
+		{
+			string cleanURL = URL.Replace(Path.DirectorySeparatorChar, '/');
+			HttpWebRequest request = CreateHttpWebRequest(cleanURL, 
+				                         Config.GetRemoteUsername(), Config.GetRemotePassword());
+
+			request.Method = WebRequestMethods.Http.Head;
+			HttpWebResponse response = null;
+			try
+			{
+				response = (HttpWebResponse)request.GetResponse();
+				if (response.StatusCode != HttpStatusCode.OK)
+				{
+					return false;
+				}
+			}
+			catch (WebException wex)
+			{
+				response = (HttpWebResponse)wex.Response;
+				if (response.StatusCode == HttpStatusCode.NotFound)
+				{
+					return false;
+				}
+			}
+			finally
+			{
+				if (response != null)
+				{
+					response.Dispose();
+				}
+			}
+
+			return true;
+		}
+
+		private void DownloadRemoteFile(string URL, string localPath, long contentOffset = 0, bool useAnonymousLogin = false)
+		{
+			//clean the URL string
+			string remoteURL = URL.Replace(Path.DirectorySeparatorChar, '/');
+
+			string username;
+			string password;
+			if (useAnonymousLogin)
+			{
+				username = "anonymous";
+				password = "anonymous";
+			}
+			else
+			{
+				username = Config.GetRemoteUsername();
+				password = Config.GetRemotePassword();
+			}
+
+			try
+			{
+				HttpWebRequest request = CreateHttpWebRequest(remoteURL, username, password);
+
+				request.Method = WebRequestMethods.Http.Get;
+				request.AddRange(contentOffset);
+
+				using (Stream contentStream = request.GetResponse().GetResponseStream())
+				{
+					using (FileStream fileStream = contentOffset > 0 ? new FileStream(localPath, FileMode.Append) :
+																		new FileStream(localPath, FileMode.Create))
+					{
+						fileStream.Position = contentOffset;
+						long totalBytesDownloaded = contentOffset;
+
+						if (contentStream.Length < 262144)
+						{
+							byte[] smallBuffer = new byte[contentStream.Length];
+							contentStream.Read(smallBuffer, 0, smallBuffer.Length);
+
+							fileStream.Write(smallBuffer, 0, smallBuffer.Length);
+
+							totalBytesDownloaded += smallBuffer.Length;
+
+							// Report download progress
+							ModuleDownloadProgressArgs.ProgressBarMessage = GetDownloadProgressBarMessage(Path.GetFileName(remoteURL), 
+								totalBytesDownloaded, contentStream.Length);
+							ModuleDownloadProgressArgs.ProgressFraction = (double)totalBytesDownloaded / (double)contentStream.Length;
+							OnModuleDownloadProgressChanged();
+						}
+						else
+						{
+							// The large buffer size is 256kb. More or less than this reduces download speeds.
+							byte[] buffer = new byte[262144];
+
+							while (true)
+							{
+								int bytesRead = contentStream.Read(buffer, 0, buffer.Length);
+
+								if (bytesRead == 0)
+								{
+									break;
+								}
+
+								fileStream.Write(buffer, 0, bytesRead);
+
+								totalBytesDownloaded += bytesRead;
+
+								// Report download progress
+								ModuleDownloadProgressArgs.ProgressBarMessage = GetDownloadProgressBarMessage(Path.GetFileName(remoteURL), 
+									totalBytesDownloaded, contentStream.Length);
+								ModuleDownloadProgressArgs.ProgressFraction = (double)totalBytesDownloaded / (double)contentStream.Length;
+								OnModuleDownloadProgressChanged();
+							}
+						}
+					}
+				}
+			}
+			catch (WebException wex)
+			{
+				Console.Write("WebException in DownloadRemoteFile(): ");
+				Console.WriteLine(wex.Message + " (" + remoteURL + ")");
+			}
+			catch (IOException ioex)
+			{
+				Console.Write("IOException in DownloadRemoteFile(): ");
+				Console.WriteLine(ioex.Message + " (" + remoteURL + ")");
+			}
+		}
+
+		private string ReadRemoteFile(string URL, bool useAnonymousLogin = false)
+		{
+
+			string remoteURL = URL.Replace(Path.DirectorySeparatorChar, '/');
+
+			string username;
+			string password;
+			if (useAnonymousLogin)
+			{
+				username = "anonymous";
+				password = "anonymous";
+
+			}
+			else
+			{
+				username = Config.GetRemoteUsername();
+				password = Config.GetRemotePassword();
+			}
+
+			try
+			{
+				HttpWebRequest request = CreateHttpWebRequest(remoteURL, username, password);
+
+				request.Method = WebRequestMethods.Http.Get;
+
+				string data = "";
+				using (Stream remoteStream = request.GetResponse().GetResponseStream())
+				{
+					if (remoteStream.Length < 262144)
+					{
+						byte[] smallBuffer = new byte[remoteStream.Length];
+						remoteStream.Read(smallBuffer, 0, smallBuffer.Length);
+
+						data = Encoding.UTF8.GetString(smallBuffer, 0, smallBuffer.Length);
+					}
+					else
+					{
+						// The large buffer size is 256kb. More or less than this reduces download speeds.
+						byte[] buffer = new byte[262144];
+
+						while (true)
+						{
+							int bytesRead = remoteStream.Read(buffer, 0, buffer.Length);
+
+							if (bytesRead == 0)
+							{
+								break;
+							}
+
+							data += Encoding.UTF8.GetString(buffer, 0, bytesRead);
+						}
+					}
+				}
+
+				return Utilities.Clean(data);
+			}
+			catch (WebException wex)
+			{
+				Console.Write("WebException in ReadRemoteFile(): ");
+				Console.WriteLine(wex.Message + " (" + remoteURL + ")");
+				return wex.Message;
+			}
+		}
+
+		/// <summary>
+		/// Gets the indicator label message to display to the user while installing.
+		/// </summary>
+		/// <returns>The indicator label message.</returns>
+		/// <param name="nFilesDownloaded">N files downloaded.</param>
+		/// <param name="currentFilename">Current filename.</param>
+		/// <param name="totalFilesToDownload">Total files to download.</param>
+		private string GetDownloadIndicatorLabelMessage(int nFilesDownloaded, string currentFilename, int totalFilesToDownload)
+		{
+			return String.Format("Downloading file {0} ({1} of {2})", currentFilename, nFilesDownloaded, totalFilesToDownload);
+		}
+
+		/// <summary>
+		/// Gets the progress bar message.
+		/// </summary>
+		/// <returns>The progress bar message.</returns>
+		/// <param name="filename">Filename.</param>
+		/// <param name="downloadedBytes">Downloaded bytes.</param>
+		/// <param name="totalBytes">Total bytes.</param>
+		private string GetDownloadProgressBarMessage(string filename, long downloadedBytes, long totalBytes)
+		{
+			return String.Format("Downloading {0}: {1} out of {2} bytes", filename, downloadedBytes, totalBytes);
+		}
+
+		/// <summary>
+		/// Gets the indicator label message to display to the user while repairing.
+		/// </summary>
+		/// <returns>The indicator label message.</returns>
+		/// <param name="nFilesToVerify">N files downloaded.</param>
+		/// <param name="currentFilename">Current filename.</param>
+		/// <param name="totalFilesVerified">Total files to download.</param>
+		private string GetVerifyIndicatorLabelMessage(int nFilesToVerify, string currentFilename, int totalFilesVerified)
+		{
+			return String.Format("Verifying file {0} ({1} of {2})", currentFilename, nFilesToVerify, totalFilesVerified);
+		}
+
+		/// <summary>
+		/// Gets the indicator label message to display to the user while repairing.
+		/// </summary>
+		/// <returns>The indicator label message.</returns>	
+		/// <param name="currentFilename">Current filename.</param>
+		/// <param name="updatedFiles">Number of files that have been updated</param>
+		/// <param name="totalFiles">Total files that are to be updated</param>
+		private string GetUpdateIndicatorLabelMessage(string currentFilename, int updatedFiles, int totalFiles)
+		{
+			return String.Format("Verifying file {0} ({1} of {2})", currentFilename, updatedFiles, totalFiles);
+		}
+
+		/// <summary>
+		/// Creates a HTTP web request.
+		/// </summary>
+		/// <returns>The HTTP web request.</returns>
+		/// <param name="URL">URL of the desired remote object.</param>
+		/// <param name="Username">The username used for authentication.</param>
+		/// <param name="Password">The password used for authentication.</param>
+		private HttpWebRequest CreateHttpWebRequest(string URL, string Username, string Password)
+		{
+			try
+			{
+				HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri(URL));
+				request.Proxy = null;
+				request.Credentials = new NetworkCredential(Username, Password);
+
+				return request;
+			}
+			catch (WebException wex)
+			{
+				Console.WriteLine("WebException in CreateHttpWebRequest(): " + wex.Message);
+
+				return null;
+			}
+			catch (ArgumentException aex)
+			{
+				Console.WriteLine("ArgumentException in CreateHttpWebRequest(): " + aex.Message);
+
+				return null;
+			}
+		}
+
+		/// <summary>
+		/// Gets the remote launcher version.
+		/// </summary>
+		/// <returns>The remote launcher version. 
+		/// If the version could not be retrieved from the server, a version of 0.0.0 is returned.</returns>
+		public Version GetRemoteLauncherVersion()
+		{			
+			string remoteVersionPath = Config.GetLauncherVersionURL();
+
+			// Config.GetDoOfficialUpdates is used here since the official update server always allows anonymous logins.
+			string remoteVersion = ReadRemoteFile(remoteVersionPath, Config.GetDoOfficialUpdates());
+
+			Version version;
+			if (Version.TryParse(remoteVersion, out version))
+			{
+				return version;
+			}
+			else
+			{
+				return new Version("0.0.0");
+			}
+		}
+
+		/// <summary>
+		/// Gets the remote game version.
+		/// </summary>
+		/// <returns>The remote game version.</returns>
+		public Version GetRemoteGameVersion()
+		{
+			string remoteVersionPath = String.Format("{0}/game/{1}/bin/GameVersion.txt", 
+				                           Config.GetBaseHTTPUrl(), 
+				                           Config.GetSystemTarget());
+
+			string remoteVersion = ReadRemoteFile(remoteVersionPath);
+
+			Version version;
+			if (Version.TryParse(remoteVersion, out version))
+			{
+				return version;
+			}
+			else
+			{
+				return new Version("0.0.0");
+			}
+		}
+
+		/// <summary>
+		/// Refreshs the local copy of the manifest.
+		/// </summary>
+		private void RefreshGameManifest()
+		{
+			if (File.Exists(ManifestHandler.GetGameManifestPath()))
+			{
+				if (IsGameManifestOutdated())
+				{
+					DownloadGameManifest();
+				}
+			}
+			else
+			{
+				DownloadGameManifest();
+			}
+		}
+
+		//TODO: Maybe move to ManifestHandler?
+		/// <summary>
+		/// Determines whether the  manifest is outdated.
+		/// </summary>
+		/// <returns><c>true</c> if the manifest is outdated; otherwise, <c>false</c>.</returns>
+		private bool IsGameManifestOutdated()
+		{
+			if (File.Exists(ManifestHandler.GetGameManifestPath()))
+			{
+				string remoteHash = GetRemoteManifestChecksum();
+
+				using (Stream file = File.OpenRead(ManifestHandler.GetGameManifestPath()))
+				{
+					string localHash = MD5Handler.GetStreamHash(file);
+
+					return remoteHash != localHash;
+				}
+			}
+			else
+			{
+				return true;
+			}
+		}
+
+		//TODO: Maybe move to ManifestHandler?
+		/// <summary>
+		/// Gets the remote manifest checksum.
+		/// </summary>
+		/// <returns>The remote manifest checksum.</returns>
+		public string GetRemoteManifestChecksum()
+		{
+			string checksum = ReadRemoteFile(manifestHandler.GetGameManifestChecksumURL());
+			checksum = Utilities.Clean(checksum);
+
+			return checksum;
+		}
+
+		//TODO: Maybe move to ManifestHandler?
+		/// <summary>
+		/// Downloads the manifest.
+		/// </summary>
+		private void DownloadGameManifest()
+		{
+			try
+			{
+				string RemoteURL = manifestHandler.GetGameManifestURL();
+				string LocalPath = ManifestHandler.GetGameManifestPath();
+
+				if (File.Exists(ManifestHandler.GetGameManifestPath()))
+				{
+					// Create a backup of the old manifest so that we can compare them when updating the game
+					if (File.Exists(ManifestHandler.GetOldGameManifestPath()))
+					{
+						File.Delete(ManifestHandler.GetOldGameManifestPath());
+					}
+
+					File.Move(LocalPath, LocalPath + ".old");			
+				}						
+
+				DownloadRemoteFile(RemoteURL, LocalPath);
+			}
+			catch (IOException ioex)
+			{
+				Console.WriteLine("IOException in DownloadManifest(): " + ioex.Message);
+			}
 		}
 	}
 }
