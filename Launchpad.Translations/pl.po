@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: launchpad\n"
 "POT-Creation-Date: 2016-03-23 15:31:47+0100\n"
-"PO-Revision-Date: 2016-03-23 11:55-0400\n"
+"PO-Revision-Date: 2016-03-26 12:25-0400\n"
 "Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
 "Language-Team: Polish\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgstr "O {0}"
 
 #: ../Launchpad.Launcher/Windows-UI/AboutBox.cs:3
 msgid "Version {0}"
-msgstr ""
+msgstr "Wersja {0}"
 
 #: ../Launchpad.Launcher/Windows-UI/AboutBox.Designer.cs:3
 msgid "Product Name"
@@ -33,11 +33,11 @@ msgstr "Wersja"
 
 #: ../Launchpad.Launcher/Windows-UI/AboutBox.Designer.cs:3
 msgid "Copyright"
-msgstr ""
+msgstr "Prawa autorskie"
 
 #: ../Launchpad.Launcher/Windows-UI/AboutBox.Designer.cs:3
 msgid "Company Name"
-msgstr ""
+msgstr "Nazwa firmy"
 
 #: ../Launchpad.Launcher/Windows-UI/AboutBox.Designer.cs:3
 msgid "Description"
@@ -180,7 +180,7 @@ msgstr "Aktualizacja gry gotowa. Miłej gry!"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.Designer.cs:3
 msgid "About"
-msgstr ""
+msgstr "O Programie"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.Designer.cs:3
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs:2
@@ -203,11 +203,11 @@ msgstr "Napraw Grę"
 
 #: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:13
 msgid "{0} : {1} out of {2}"
-msgstr ""
+msgstr "{0} : {1} z {2}"
 
 #: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:15
 msgid "Finished"
-msgstr ""
+msgstr "Zakończono"
 
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UnixUI.MainWindow.cs:2
 msgid "Launchpad Utilities - Manifest"

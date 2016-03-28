@@ -59,7 +59,6 @@ namespace Launchpad.Launcher.WindowsUI
 		// Initialize localization
 		private readonly ICatalog LocalizationCatalog = new Catalog("Launchpad", "./locale");
 
-
 		public MainForm()
 		{
 			InitializeComponent();
