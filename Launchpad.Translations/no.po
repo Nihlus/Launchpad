@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: launchpad\n"
 "POT-Creation-Date: 2016-03-23 15:31:47+0100\n"
-"PO-Revision-Date: 2016-03-23 10:32-0400\n"
+"PO-Revision-Date: 2016-03-28 10:01-0400\n"
 "Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
 "Language-Team: Norwegian\n"
 "MIME-Version: 1.0\n"
@@ -17,31 +17,31 @@ msgstr ""
 
 #: ../Launchpad.Launcher/Windows-UI/AboutBox.cs:3
 msgid "About {0}"
-msgstr ""
+msgstr "Om {0}"
 
 #: ../Launchpad.Launcher/Windows-UI/AboutBox.cs:3
 msgid "Version {0}"
-msgstr ""
+msgstr "Versjon {0}"
 
 #: ../Launchpad.Launcher/Windows-UI/AboutBox.Designer.cs:3
 msgid "Product Name"
-msgstr ""
+msgstr "Produktnavn"
 
 #: ../Launchpad.Launcher/Windows-UI/AboutBox.Designer.cs:3
 msgid "Version"
-msgstr ""
+msgstr "Versjon"
 
 #: ../Launchpad.Launcher/Windows-UI/AboutBox.Designer.cs:3
 msgid "Copyright"
-msgstr ""
+msgstr "Opphavsrett"
 
 #: ../Launchpad.Launcher/Windows-UI/AboutBox.Designer.cs:3
 msgid "Company Name"
-msgstr ""
+msgstr "Firmanavn"
 
 #: ../Launchpad.Launcher/Windows-UI/AboutBox.Designer.cs:3
 msgid "Description"
-msgstr ""
+msgstr "Beskrivelse"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:12
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:47
@@ -180,7 +180,7 @@ msgstr "Spill opdatering ferdig. Spill i vei!"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.Designer.cs:3
 msgid "About"
-msgstr ""
+msgstr "Om"
 
 #: ../Launchpad.Launcher/Windows-UI/MainForm.Designer.cs:3
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs:2
@@ -202,11 +202,11 @@ msgstr "Reparere spillet"
 
 #: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:13
 msgid "{0} : {1} out of {2}"
-msgstr ""
+msgstr "{0} : {1} av {2}"
 
 #: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:15
 msgid "Finished"
-msgstr ""
+msgstr "Ferdig"
 
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UnixUI.MainWindow.cs:2
 msgid "Launchpad Utilities - Manifest"
@@ -218,7 +218,7 @@ msgstr "Status: "
 
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UnixUI.MainWindow.cs:2
 msgid "/some/file/path : 1 out of 100"
-msgstr ""
+msgstr "/some/file/path: 1 av 100"
 
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UnixUI.MainWindow.cs:2
 msgid "Generate Manifest"
