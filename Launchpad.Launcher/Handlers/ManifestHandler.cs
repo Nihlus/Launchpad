@@ -177,6 +177,44 @@ namespace Launchpad.Launcher.Handlers
 
 			return manifestChecksumURL;
 		}
+
+		/// <summary>
+		/// Verifies the integrity of the file in the manifest entry.
+		/// </summary>
+		/// <returns><c>true</c>, if file was complete and undamaged, <c>false</c> otherwise.</returns>
+		/// <param name="Entry">Entry.</param>
+		public bool IsFileIntegrityIntact(ManifestEntry Entry)
+		{
+			string LocalPath = String.Format("{0}{1}", 
+				                   Config.GetGamePath(),
+				                   Entry.RelativePath);
+
+			if (!File.Exists(LocalPath))
+			{
+				return false;
+			}
+			else
+			{
+				FileInfo fileInfo = new FileInfo(LocalPath);
+				if (fileInfo.Length != Entry.Size)
+				{
+					return false;
+				}
+				else
+				{
+					using (Stream file = File.OpenRead(LocalPath))
+					{
+						string localHash = MD5Handler.GetStreamHash(file);
+						if (localHash != Entry.Hash)
+						{
+							return false;
+						}
+					}
+				}
+			}
+
+			return true;
+		}
 	}
 
 	/// <summary>

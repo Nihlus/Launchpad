@@ -88,7 +88,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				                Config.GetBaseHTTPUrl(), 
 				                Platform);
 
-			return DoesRemotePathOrFileExist(remote);
+			return DoesRemoteDirectoryOrFileExist(remote);
 		}
 
 		public override bool CanProvideChangelog()
@@ -222,7 +222,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					ModuleVerifyProgressArgs.IndicatorLabelMessage = GetVerifyIndicatorLabelMessage(verifiedFiles, Path.GetFileName(Entry.RelativePath), Manifest.Count);
 					OnModuleVerifyProgressChanged();
 
-					if (!VerifyFile(Entry))
+					if (!manifestHandler.IsFileIntegrityIntact(Entry))
 					{
 						BrokenFiles.Add(Entry);
 					}
@@ -239,9 +239,13 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 					for (int i = 0; i < Config.GetFileRetries(); ++i)
 					{					
-						if (!VerifyFile(Entry))
+						if (!manifestHandler.IsFileIntegrityIntact(Entry))
 						{
 							DownloadEntry(Entry);
+						}
+						else
+						{
+							break;
 						}
 					}
 				}
@@ -253,39 +257,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 
 			OnModuleInstallationFinished();
-		}
-
-		private bool VerifyFile(ManifestEntry Entry)
-		{
-			string LocalPath = String.Format("{0}{1}", 
-				                   Config.GetGamePath(),
-				                   Entry.RelativePath);
-
-			if (!File.Exists(LocalPath))
-			{
-				return false;
-			}
-			else
-			{
-				FileInfo fileInfo = new FileInfo(LocalPath);
-				if (fileInfo.Length != Entry.Size)
-				{
-					return false;
-				}
-				else
-				{
-					using (Stream file = File.OpenRead(LocalPath))
-					{
-						string localHash = MD5Handler.GetStreamHash(file);
-						if (localHash != Entry.Hash)
-						{
-							return false;
-						}
-					}
-				}
-			}
-
-			return true;
 		}
 
 		public override void UpdateGame()
@@ -402,7 +373,12 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			File.WriteAllText(ConfigHandler.GetInstallCookiePath(), String.Empty);
 		}
 
-		private bool DoesRemotePathOrFileExist(string URL)
+		/// <summary>
+		/// Checks if the provided path points to a valid directory or file.
+		/// </summary>
+		/// <returns><c>true</c>, if the directory or file exists, <c>false</c> otherwise.</returns>
+		/// <param name="URL">The remote URL of the directory or file.</param>
+		private bool DoesRemoteDirectoryOrFileExist(string URL)
 		{
 			string cleanURL = URL.Replace(Path.DirectorySeparatorChar, '/');
 			HttpWebRequest request = CreateHttpWebRequest(cleanURL, 
@@ -437,6 +413,13 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			return true;
 		}
 
+		/// <summary>
+		/// Downloads a remote file to a local file path.
+		/// </summary>
+		/// <param name="URL">The remote URL of the file..</param>
+		/// <param name="localPath">Local path where the file is to be stored.</param>
+		/// <param name="contentOffset">Content offset. If nonzero, appends data to an existing file.</param>
+		/// <param name="useAnonymousLogin">If set to <c>true</c> use anonymous login.</param>
 		private void DownloadRemoteFile(string URL, string localPath, long contentOffset = 0, bool useAnonymousLogin = false)
 		{
 			//clean the URL string
@@ -527,9 +510,15 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 		}
 
+		/// <summary>
+		/// Reads the string content of a remote file. The output is scrubbed
+		/// of all \r, \n and \0 characters before it is returned.
+		/// </summary>
+		/// <returns>The contents of the remote file.</returns>
+		/// <param name="URL">The remote URL of the file.</param>
+		/// <param name="useAnonymousLogin">If set to <c>true</c> use anonymous login.</param>
 		private string ReadRemoteFile(string URL, bool useAnonymousLogin = false)
 		{
-
 			string remoteURL = URL.Replace(Path.DirectorySeparatorChar, '/');
 
 			string username;

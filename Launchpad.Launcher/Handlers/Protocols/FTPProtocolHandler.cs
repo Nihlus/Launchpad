@@ -238,7 +238,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					ModuleVerifyProgressArgs.IndicatorLabelMessage = GetVerifyIndicatorLabelMessage(verifiedFiles, Path.GetFileName(Entry.RelativePath), Manifest.Count);
 					OnModuleVerifyProgressChanged();
 
-					if (!VerifyFile(Entry))
+					if (!manifestHandler.IsFileIntegrityIntact(Entry))
 					{
 						BrokenFiles.Add(Entry);
 					}
@@ -248,15 +248,20 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				foreach (ManifestEntry Entry in BrokenFiles)
 				{					
 					++downloadedFiles;
+
 					// Prepare the progress event contents
 					ModuleDownloadProgressArgs.IndicatorLabelMessage = GetDownloadIndicatorLabelMessage(downloadedFiles, Path.GetFileName(Entry.RelativePath), BrokenFiles.Count);
 					OnModuleDownloadProgressChanged();
 
 					for (int i = 0; i < Config.GetFileRetries(); ++i)
 					{					
-						if (!VerifyFile(Entry))
+						if (!manifestHandler.IsFileIntegrityIntact(Entry))
 						{
 							DownloadEntry(Entry);
+						}
+						else
+						{
+							break;
 						}
 					}
 				}
@@ -268,39 +273,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 
 			OnModuleInstallationFinished();
-		}
-
-		private bool VerifyFile(ManifestEntry Entry)
-		{
-			string LocalPath = String.Format("{0}{1}", 
-				                   Config.GetGamePath(),
-				                   Entry.RelativePath);
-
-			if (!File.Exists(LocalPath))
-			{
-				return false;
-			}
-			else
-			{
-				FileInfo fileInfo = new FileInfo(LocalPath);
-				if (fileInfo.Length != Entry.Size)
-				{
-					return false;
-				}
-				else
-				{
-					using (Stream file = File.OpenRead(LocalPath))
-					{
-						string localHash = MD5Handler.GetStreamHash(file);
-						if (localHash != Entry.Hash)
-						{
-							return false;
-						}
-					}
-				}
-			}
-
-			return true;
 		}
 
 		public override void DownloadLauncher()
