@@ -215,54 +215,35 @@ namespace Launchpad.Launcher.Handlers.Protocols
 							
 				int verifiedFiles = 0;
 				foreach (ManifestEntry Entry in Manifest)
-				{
-					string LocalPath = String.Format("{0}{1}", 
-						                   Config.GetGamePath(),
-						                   Entry.RelativePath);
-
+				{					
 					++verifiedFiles;
 
 					// Prepare the progress event contents
-					ModuleVerifyProgressArgs.IndicatorLabelMessage = GetVerifyIndicatorLabelMessage(verifiedFiles, Path.GetFileName(LocalPath), Manifest.Count);
+					ModuleVerifyProgressArgs.IndicatorLabelMessage = GetVerifyIndicatorLabelMessage(verifiedFiles, Path.GetFileName(Entry.RelativePath), Manifest.Count);
 					OnModuleVerifyProgressChanged();
 
-					for (int i = 0; i > Config.GetFileRetries(); ++i)
-					{					
-						if (!File.Exists(LocalPath))
-						{
-							BrokenFiles.Add(Entry);
-						}
-						else
-						{
-							FileInfo fileInfo = new FileInfo(LocalPath);
-							if (fileInfo.Length != Entry.Size)
-							{
-								BrokenFiles.Add(Entry);
-							}
-							else
-							{
-								using (Stream file = File.OpenRead(LocalPath))
-								{
-									string localHash = MD5Handler.GetStreamHash(file);
-									if (localHash != Entry.Hash)
-									{
-										BrokenFiles.Add(Entry);
-									}
-								}
-							}
-						}
-					}	
+					if (!VerifyFile(Entry))
+					{
+						BrokenFiles.Add(Entry);
+					}
 				}
 
 				int downloadedFiles = 0;
 				foreach (ManifestEntry Entry in BrokenFiles)
 				{					
 					++downloadedFiles;
+
 					// Prepare the progress event contents
 					ModuleDownloadProgressArgs.IndicatorLabelMessage = GetDownloadIndicatorLabelMessage(downloadedFiles, Path.GetFileName(Entry.RelativePath), BrokenFiles.Count);
 					OnModuleDownloadProgressChanged();
 
-					DownloadEntry(Entry);
+					for (int i = 0; i < Config.GetFileRetries(); ++i)
+					{					
+						if (!VerifyFile(Entry))
+						{
+							DownloadEntry(Entry);
+						}
+					}
 				}
 			}
 			catch (IOException ioex)
@@ -272,6 +253,39 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 
 			OnModuleInstallationFinished();
+		}
+
+		private bool VerifyFile(ManifestEntry Entry)
+		{
+			string LocalPath = String.Format("{0}{1}", 
+				                   Config.GetGamePath(),
+				                   Entry.RelativePath);
+
+			if (!File.Exists(LocalPath))
+			{
+				return false;
+			}
+			else
+			{
+				FileInfo fileInfo = new FileInfo(LocalPath);
+				if (fileInfo.Length != Entry.Size)
+				{
+					return false;
+				}
+				else
+				{
+					using (Stream file = File.OpenRead(LocalPath))
+					{
+						string localHash = MD5Handler.GetStreamHash(file);
+						if (localHash != Entry.Hash)
+						{
+							return false;
+						}
+					}
+				}
+			}
+
+			return true;
 		}
 
 		public override void UpdateGame()
@@ -455,8 +469,9 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					{
 						fileStream.Position = contentOffset;
 						long totalBytesDownloaded = contentOffset;
+						long totalFileSize = contentOffset + contentStream.Length;
 
-						if (contentStream.Length < 262144)
+						if (contentStream.Length < 4096)
 						{
 							byte[] smallBuffer = new byte[contentStream.Length];
 							contentStream.Read(smallBuffer, 0, smallBuffer.Length);
@@ -467,14 +482,13 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 							// Report download progress
 							ModuleDownloadProgressArgs.ProgressBarMessage = GetDownloadProgressBarMessage(Path.GetFileName(remoteURL), 
-								totalBytesDownloaded, contentStream.Length);
-							ModuleDownloadProgressArgs.ProgressFraction = (double)totalBytesDownloaded / (double)contentStream.Length;
+								totalBytesDownloaded, totalFileSize);
+							ModuleDownloadProgressArgs.ProgressFraction = (double)totalBytesDownloaded / (double)totalFileSize;
 							OnModuleDownloadProgressChanged();
 						}
 						else
 						{
-							// The large buffer size is 256kb. More or less than this reduces download speeds.
-							byte[] buffer = new byte[262144];
+							byte[] buffer = new byte[4096];
 
 							while (true)
 							{
@@ -491,11 +505,13 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 								// Report download progress
 								ModuleDownloadProgressArgs.ProgressBarMessage = GetDownloadProgressBarMessage(Path.GetFileName(remoteURL), 
-									totalBytesDownloaded, contentStream.Length);
-								ModuleDownloadProgressArgs.ProgressFraction = (double)totalBytesDownloaded / (double)contentStream.Length;
+									totalBytesDownloaded, totalFileSize);
+								ModuleDownloadProgressArgs.ProgressFraction = (double)totalBytesDownloaded / (double)totalFileSize;
 								OnModuleDownloadProgressChanged();
 							}
 						}
+
+						fileStream.Flush();
 					}
 				}
 			}
