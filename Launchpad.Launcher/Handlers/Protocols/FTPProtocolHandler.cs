@@ -238,7 +238,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					ModuleVerifyProgressArgs.IndicatorLabelMessage = GetVerifyIndicatorLabelMessage(verifiedFiles, Path.GetFileName(Entry.RelativePath), Manifest.Count);
 					OnModuleVerifyProgressChanged();
 
-					if (!manifestHandler.IsFileIntegrityIntact(Entry))
+					if (!Entry.IsFileIntegrityIntact())
 					{
 						BrokenFiles.Add(Entry);
 					}
@@ -255,7 +255,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 					for (int i = 0; i < Config.GetFileRetries(); ++i)
 					{					
-						if (!manifestHandler.IsFileIntegrityIntact(Entry))
+						if (!Entry.IsFileIntegrityIntact())
 						{
 							DownloadEntry(Entry);
 						}
