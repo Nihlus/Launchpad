@@ -13,18 +13,25 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+		Debug-Util-Batch|Any CPU = Debug-Util-Batch|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{66B99540-16D2-4480-9D3A-F539AECD88B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{66B99540-16D2-4480-9D3A-F539AECD88B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66B99540-16D2-4480-9D3A-F539AECD88B4}.Debug-Util-Batch|Any CPU.ActiveCfg = Debug-Util-Batch|Any CPU
+		{66B99540-16D2-4480-9D3A-F539AECD88B4}.Debug-Util-Batch|Any CPU.Build.0 = Debug-Util-Batch|Any CPU
 		{66B99540-16D2-4480-9D3A-F539AECD88B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66B99540-16D2-4480-9D3A-F539AECD88B4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{676312FB-AF67-4340-B86F-9CCEB22D802F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{676312FB-AF67-4340-B86F-9CCEB22D802F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{676312FB-AF67-4340-B86F-9CCEB22D802F}.Debug-Util-Batch|Any CPU.ActiveCfg = Debug-Util-Batch|Any CPU
+		{676312FB-AF67-4340-B86F-9CCEB22D802F}.Debug-Util-Batch|Any CPU.Build.0 = Debug-Util-Batch|Any CPU
 		{676312FB-AF67-4340-B86F-9CCEB22D802F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{676312FB-AF67-4340-B86F-9CCEB22D802F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Debug-Util-Batch|Any CPU.ActiveCfg = Debug-Util-Batch|Any CPU
+		{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Debug-Util-Batch|Any CPU.Build.0 = Debug-Util-Batch|Any CPU
 		{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection

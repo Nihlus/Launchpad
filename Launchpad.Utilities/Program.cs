@@ -50,11 +50,37 @@ namespace Launchpad.Utilities
 					// Don't load the UI - instead, run the manifest generation directly
 					Console.WriteLine("[Info]: Running in batch mode.");
 
+					EManifestType ManifestType = EManifestType.Game;
+					if (Arguments.Contains(ManifestTypeSwitch))
+					{
+						if (Arguments.IndexOf(ManifestTypeSwitch) != args.Length - 1)
+						{
+							string targetManifest = Arguments[(Arguments.IndexOf(ManifestTypeSwitch) + 1)];
+
+							if (EManifestType.Game.ToString() == targetManifest)
+							{
+								ManifestType = EManifestType.Game;
+							}
+							else if (EManifestType.Launchpad.ToString() == targetManifest)
+							{
+								ManifestType = EManifestType.Launchpad;
+							}
+							else
+							{
+								Console.WriteLine("[Warning]: The '-m' manifest switch must be followed by either 'Game' or 'Launcher'.");
+							}
+						}
+						else
+						{
+							Console.WriteLine("[Warning]: The '-m' manifest switch must be followed by either 'Game' or 'Launcher'.");
+						}
+					}
+
 					if (Arguments.Contains(DirectorySwitch))
 					{
 						if (Arguments.IndexOf(DirectorySwitch) != args.Length - 1)
 						{
-							string TargetDirectory = Arguments[(Arguments.IndexOf(DirectorySwitch) + 1)];
+							string TargetDirectory = Arguments[(Arguments.IndexOf(DirectorySwitch) + 1)].TrimEnd(Path.DirectorySeparatorChar);
 							Console.WriteLine(TargetDirectory);
 
 							if (Directory.Exists(TargetDirectory))
@@ -66,7 +92,7 @@ namespace Launchpad.Utilities
 								Manifest.ManifestGenerationProgressChanged += OnProgressChanged;
 								Manifest.ManifestGenerationFinished += OnGenerationFinished;
 
-								Manifest.GenerateManifest(TargetDirectory, EManifestType.Game);
+								Manifest.GenerateManifest(TargetDirectory, ManifestType);
 							}
 							else
 							{
@@ -88,12 +114,12 @@ namespace Launchpad.Utilities
 						Manifest.ManifestGenerationProgressChanged += OnProgressChanged;
 						Manifest.ManifestGenerationFinished += OnGenerationFinished;
 
-						Manifest.GenerateManifest(Directory.GetCurrentDirectory(), EManifestType.Game);
+						Manifest.GenerateManifest(Directory.GetCurrentDirectory(), ManifestType);
 					}
 				}
 				else
 				{
-					Console.WriteLine("[Info]: Run the program with -b to enable batch mode. Use -d <directory> to select the target directory, or omit it to use the working directory.");
+					Console.WriteLine("[Info]: Run the program with -b to enable batch mode. Use -d <directory> to select the target directory, or omit it to use the working directory. Use -m [Game|Launcher] to select the type of manifest (default is Game).");
 				}
 			}
 			else
@@ -108,7 +134,7 @@ namespace Launchpad.Utilities
 		}
 
 		private static void OnProgressChanged(object sender, ManifestGenerationProgressChangedEventArgs e)
-		{
+		{			
 			Console.WriteLine(String.Format("[Info]: Processed file {0} : {1} : {2}", e.Filepath, e.MD5, e.Filesize));
 		}
 

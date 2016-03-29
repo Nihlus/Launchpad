@@ -18,6 +18,9 @@ do
 	if [ ! -z "$LOCALE_NAME" ];
 	then
 		cp "$D/messages.po" "../$LOCALE_NAME.po"
+		
+		mkdir -p "../../Extras/locale/$LOCALE_NAME/LC_MESSAGES/"
+		cp "$D/messages.po" "../../Extras/locale/$LOCALE_NAME/LC_MESSAGES/messages.po"
 	fi	
 done
 
@@ -26,7 +29,9 @@ rm index.html
 
 for D in `find . -type d`
 do
-	rm -r $D
+	if [ ! $D == "." ]; then
+		rm -r $D
+	fi	
 done
 
 cd ..

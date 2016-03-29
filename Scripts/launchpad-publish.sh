@@ -21,6 +21,9 @@ LOG_SUFFIX='\033[0m'
 echo -e "$LOG_PREFIX Building Release configuration of Launchpad Launcher... $LOG_SUFFIX"
 xbuild /p:Configuration="Release" "$LAUNCHPAD_ROOT/Launchpad.Launcher/Launchpad.Launcher.csproj"
 
+echo -e "$LOG_PREFIX Building Release configuration of Launchpad Utilities... $LOG_SUFFIX"
+xbuild /p:Configuration="Release" "$LAUNCHPAD_ROOT/Launchpad.Utilities/Launchpad.Utilities.csproj"
+
 LAUNCHPAD_ASSEMBLY_VERSION=$(monodis --assembly "$LAUNCHPAD_ROOT/Launchpad.Launcher/bin/Release/Launchpad.exe" | grep Version | egrep -o '[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*d*')
 
 echo -e "$LOG_PREFIX Copying files to output directory... $LOG_SUFFIX"
@@ -32,26 +35,40 @@ fi
 
 # Create a staging folder for this version
 mkdir "$OUTPUT_ROOT/launchpad-$LAUNCHPAD_ASSEMBLY_VERSION"
+mkdir "$OUTPUT_ROOT/launchpad-$LAUNCHPAD_ASSEMBLY_VERSION/bin"
 
 # Copy the neccesary files
-cp -r "$LAUNCHPAD_ROOT/Launchpad.Launcher/bin/Release/." "$OUTPUT_ROOT/launchpad-$LAUNCHPAD_ASSEMBLY_VERSION/"
-cp -r "$LAUNCHPAD_ROOT/Extras/Linux/." "$OUTPUT_ROOT/launchpad-$LAUNCHPAD_ASSEMBLY_VERSION/"
+echo ""
+echo -e "$LOG_PREFIX Updating and copying translation files... $LOG_SUFFIX"
+bash "$LAUNCHPAD_ROOT/Scripts/update-translations.sh"
+cp -r "$LAUNCHPAD_ROOT/Extras/locale" "$OUTPUT_ROOT/launchpad-$LAUNCHPAD_ASSEMBLY_VERSION/bin"
 
+cp -r "$LAUNCHPAD_ROOT/Launchpad.Launcher/bin/Release/." "$OUTPUT_ROOT/launchpad-$LAUNCHPAD_ASSEMBLY_VERSION/bin"
+cp -r "$LAUNCHPAD_ROOT/Extras/Linux/." "$OUTPUT_ROOT/launchpad-$LAUNCHPAD_ASSEMBLY_VERSION/bin"
+
+# Generate launcher binary manifest
+echo ""
+echo -e "$LOG_PREFIX Generating launcher binary manifest... $LOG_SUFFIX"
+mono "$LAUNCHPAD_ROOT/Launchpad.Utilities/bin/Release/Launchpad.Utilities.exe" -b -d "$OUTPUT_ROOT/launchpad-$LAUNCHPAD_ASSEMBLY_VERSION/bin" -m Launchpad
+
+echo "$LAUNCHPAD_ASSEMBLY_VERSION" > "$OUTPUT_ROOT/launchpad-$LAUNCHPAD_ASSEMBLY_VERSION/LauncherVersion.txt"
 
 # Create compressed packages for distribution
 echo ""
 echo -e "$LOG_PREFIX Compressing binary packages... $LOG_SUFFIX"
-echo -e "$LOG_PREFIX Compressing ZIP package... $LOG_SUFFIX"
 
 # Move to the release directory for compatibility purposes
-cd $LAUNCHPAD_ROOT
-zip -r9 "release/launchpad-$LAUNCHPAD_ASSEMBLY_VERSION.zip" "release/launchpad-$LAUNCHPAD_ASSEMBLY_VERSION/"
-# Move back to the previous working directory
-cd -
+cd "$LAUNCHPAD_ROOT/release"
+
+echo -e "$LOG_PREFIX Compressing ZIP package... $LOG_SUFFIX"
+zip -r9 "launchpad-$LAUNCHPAD_ASSEMBLY_VERSION.zip" "launchpad-$LAUNCHPAD_ASSEMBLY_VERSION/"
 
 echo ""
 echo -e "$LOG_PREFIX Compressing tarball... $LOG_SUFFIX"
-tar cfJ "$OUTPUT_ROOT/launchpad-$LAUNCHPAD_ASSEMBLY_VERSION.tar.xz" "$OUTPUT_ROOT/launchpad-$LAUNCHPAD_ASSEMBLY_VERSION/"
+tar cfJ "launchpad-$LAUNCHPAD_ASSEMBLY_VERSION.tar.xz" "launchpad-$LAUNCHPAD_ASSEMBLY_VERSION/"
+
+# Move back to the previous working directory
+cd -
 
 # Create simple debian package
 echo ""
@@ -95,11 +112,8 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 	echo -e "$LOG_PREFIX Uploading files to remote server... $LOG_SUFFIX"
 	
 	# Upload using SFTP
-	ssh $REMOTEUSER@$REMOTEHOST "mkdir -p $REMOTEUPLOAD/bin/"
-	
-	echo "$LAUNCHPAD_ASSEMBLY_VERSION" > "$OUTPUT_ROOT/launchpad-$LAUNCHPAD_ASSEMBLY_VERSION/LauncherVersion.txt"
-    scp "$OUTPUT_ROOT/launchpad-$LAUNCHPAD_ASSEMBLY_VERSION/LauncherVersion.txt" "$REMOTEUSER@$REMOTEHOST:$REMOTEUPLOAD/"
-    scp -r "$OUTPUT_ROOT/launchpad-$LAUNCHPAD_ASSEMBLY_VERSION/." "$REMOTEUSER@$REMOTEHOST:$REMOTEUPLOAD/bin/"
+	ssh $REMOTEUSER@$REMOTEHOST "mkdir -p $REMOTEUPLOAD"		
+    scp -r "$OUTPUT_ROOT/launchpad-$LAUNCHPAD_ASSEMBLY_VERSION/." "$REMOTEUSER@$REMOTEHOST:$REMOTEUPLOAD"
     
     echo ""
 	echo -e "$LOG_PREFIX Upload successful! $LOG_SUFFIX"

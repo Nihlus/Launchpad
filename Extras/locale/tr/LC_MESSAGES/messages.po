@@ -1,0 +1,227 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: launchpad\n"
+"POT-Creation-Date: 2016-03-23 15:31:47+0100\n"
+"PO-Revision-Date: 2016-03-23 11:55-0400\n"
+"Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
+"Language-Team: Turkish\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: crowdin.com\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n\n"
+"X-Crowdin-Project: launchpad\n"
+"X-Crowdin-Language: tr\n"
+"X-Crowdin-File: messages.po\n"
+"Language: tr_TR\n"
+
+#: ../Launchpad.Launcher/Windows-UI/AboutBox.cs:3
+msgid "About {0}"
+msgstr "{0} hakkında"
+
+#: ../Launchpad.Launcher/Windows-UI/AboutBox.cs:3
+msgid "Version {0}"
+msgstr "Sürüm {0}"
+
+#: ../Launchpad.Launcher/Windows-UI/AboutBox.Designer.cs:3
+msgid "Product Name"
+msgstr "Ürün Adı"
+
+#: ../Launchpad.Launcher/Windows-UI/AboutBox.Designer.cs:3
+msgid "Version"
+msgstr "Sürüm"
+
+#: ../Launchpad.Launcher/Windows-UI/AboutBox.Designer.cs:3
+msgid "Copyright"
+msgstr "Telif Hakkı"
+
+#: ../Launchpad.Launcher/Windows-UI/AboutBox.Designer.cs:3
+msgid "Company Name"
+msgstr "Firma Adı"
+
+#: ../Launchpad.Launcher/Windows-UI/AboutBox.Designer.cs:3
+msgid "Description"
+msgstr "Açıklama"
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:12
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:47
+#: ../Launchpad.Launcher/Windows-UI/MainForm.Designer.cs:3
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:15
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:40
+#: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs:2
+#: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:6
+msgid "Idle"
+msgstr "Boşta"
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:15
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:16
+msgid "Failed to connect to the patch server. Please check your settings."
+msgstr "Yama sunucusuna bağlanılamadı. Lütfen ayarlarınızı kontrol edin."
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:15
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:16
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:17
+msgid "Could not connect to server."
+msgstr "Sunucuya bağlanılamadı."
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:16
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:17
+msgid "This appears to be the first time you're starting the launcher.\n"
+"Is this the location where you would like to install the game?\n\n"
+"{0}"
+msgstr "Başlatıcıyı ilk kez açıyorsunuz gibi duruyor.\n"
+"Oyunu yüklemek istediğiniz konum bu mu?\n\n"
+"{0}"
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:16
+msgid "Initial startup"
+msgstr "İlk açılış"
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:23
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:26
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:31
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:28
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:29
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:31
+msgid "Launchpad - Platform not provided!"
+msgstr "Launchpad - Platform temin edilmemiş!"
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:23
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:26
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:31
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:28
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:29
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:31
+msgid "The server does not provide the game for the selected platform."
+msgstr "Sunucu oyunu seçili platform için temin etmiyor."
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:25
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:28
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:33
+msgid "The server does not provide files for the selected platform."
+msgstr "Sunucu, seçilen platform için dosya temin etmiyor."
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
+msgid "Installing..."
+msgstr "Yükleniyor..."
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
+msgid "Install"
+msgstr "Yükle"
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
+msgid "Updating..."
+msgstr "Güncelleniyor..."
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
+msgid "Update"
+msgstr "Güncelle"
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
+msgid "Repairing..."
+msgstr "Tamir ediliyor..."
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
+msgid "Repair"
+msgstr "Tamir Et"
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
+msgid "Launching..."
+msgstr "Başlatılıyor..."
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
+msgid "Launch"
+msgstr "Başlat"
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Windows-UI/MainForm.Designer.cs:3
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
+#: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs:2
+msgid "Inactive"
+msgstr "Devre dışı"
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:40
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:35
+msgid "Launchpad - Failed to launch the game."
+msgstr "Launchpad - Oyun başlatılamadı."
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:40
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:35
+msgid "The game failed to launch. Try repairing the installation."
+msgstr "Oyun başlayamadı. Yüklemeyi tamir etmeyi deneyin."
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:50
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:42
+msgid "Launchpad - Info"
+msgstr "Launchpad - Bilgi"
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:50
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:42
+msgid "Game download finished. Play away!"
+msgstr "Oyun indirme bitti. Hemen oyna!"
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:50
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:42
+msgid "Launchpad has finished repairing the game installation. Play away!"
+msgstr "Launchpad oyun yüklemesini tamir etmeyi bitirdi. Hemen oyna!"
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:50
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:42
+msgid "Game update finished. Play away!"
+msgstr "Oyun güncellemesi bitti. Oynamaya devam!"
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.Designer.cs:3
+msgid "About"
+msgstr "Hakkında"
+
+#: ../Launchpad.Launcher/Windows-UI/MainForm.Designer.cs:3
+#: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs:2
+msgid "Launchpad - <GameName>"
+msgstr "Launchpad - <GameName>"
+
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:44
+msgid "Whoops! The game appears to have crashed.\n"
+"Would you like the launcher to verify the installation?"
+msgstr "Haydaa! Oyun çökmüşe benziyor.\n"
+"Başlatıcının yüklemeyi teyit etmesini ister misiniz?"
+
+#: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs:2
+msgid "Actions"
+msgstr "Eylemler"
+
+#: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs:2
+msgid "Repair Game"
+msgstr "Oyunu Tamir Et"
+
+#: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:13
+msgid "{0} : {1} out of {2}"
+msgstr "{0} : {2}'de {1}"
+
+#: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:15
+msgid "Finished"
+msgstr "Bitti"
+
+#: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UnixUI.MainWindow.cs:2
+msgid "Launchpad Utilities - Manifest"
+msgstr "Launchpad Hizmetleri - Manifesto"
+
+#: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UnixUI.MainWindow.cs:2
+msgid "Progress: "
+msgstr "İlerleme: "
+
+#: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UnixUI.MainWindow.cs:2
+msgid "/some/file/path : 1 out of 100"
+msgstr "/bir/dosya/dizini : 100'de 1"
+
+#: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UnixUI.MainWindow.cs:2
+msgid "Generate Manifest"
+msgstr "Manifesto Oluştur"
+
