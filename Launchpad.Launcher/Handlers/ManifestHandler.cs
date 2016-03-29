@@ -60,7 +60,7 @@ namespace Launchpad.Launcher.Handlers
 			get
 			{
 				LoadGameManifest();
-				return launchpadManifest;
+				return gameManifest;
 			}
 		}
 
