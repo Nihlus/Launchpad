@@ -36,7 +36,11 @@ namespace Launchpad.Utilities.UnixUI
 		
 		private global::Gtk.Alignment alignment15;
 		
-		private global::Gtk.Button generateManifestButton;
+		private global::Gtk.Button generateGameManifestButton;
+		
+		private global::Gtk.Alignment alignment1;
+		
+		private global::Gtk.Button generateLaunchpadManifestButton;
 
 		protected virtual void Build ()
 		{
@@ -151,23 +155,41 @@ namespace Launchpad.Utilities.UnixUI
 			this.alignment15.RightPadding = ((uint)(8));
 			this.alignment15.BottomPadding = ((uint)(8));
 			// Container child alignment15.Gtk.Container+ContainerChild
-			this.generateManifestButton = new global::Gtk.Button ();
-			this.generateManifestButton.CanFocus = true;
-			this.generateManifestButton.Name = "generateManifestButton";
-			this.generateManifestButton.UseUnderline = true;
-			this.generateManifestButton.Label = global::Mono.Unix.Catalog.GetString ("Generate Manifest");
-			this.alignment15.Add (this.generateManifestButton);
+			this.generateGameManifestButton = new global::Gtk.Button ();
+			this.generateGameManifestButton.CanFocus = true;
+			this.generateGameManifestButton.Name = "generateGameManifestButton";
+			this.generateGameManifestButton.UseUnderline = true;
+			this.generateGameManifestButton.Label = global::Mono.Unix.Catalog.GetString ("Generate Game Manifest");
+			this.alignment15.Add (this.generateGameManifestButton);
 			this.hbox3.Add (this.alignment15);
 			global::Gtk.Box.BoxChild w15 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.alignment15]));
 			w15.PackType = ((global::Gtk.PackType)(1));
 			w15.Position = 0;
 			w15.Expand = false;
 			w15.Fill = false;
+			// Container child hbox3.Gtk.Box+BoxChild
+			this.alignment1 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
+			this.alignment1.Name = "alignment1";
+			this.alignment1.RightPadding = ((uint)(8));
+			this.alignment1.BottomPadding = ((uint)(8));
+			// Container child alignment1.Gtk.Container+ContainerChild
+			this.generateLaunchpadManifestButton = new global::Gtk.Button ();
+			this.generateLaunchpadManifestButton.CanFocus = true;
+			this.generateLaunchpadManifestButton.Name = "generateLaunchpadManifestButton";
+			this.generateLaunchpadManifestButton.UseUnderline = true;
+			this.generateLaunchpadManifestButton.Label = global::Mono.Unix.Catalog.GetString ("Generate Launchpad Manifest");
+			this.alignment1.Add (this.generateLaunchpadManifestButton);
+			this.hbox3.Add (this.alignment1);
+			global::Gtk.Box.BoxChild w17 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.alignment1]));
+			w17.PackType = ((global::Gtk.PackType)(1));
+			w17.Position = 1;
+			w17.Expand = false;
+			w17.Fill = false;
 			this.vbox3.Add (this.hbox3);
-			global::Gtk.Box.BoxChild w16 = ((global::Gtk.Box.BoxChild)(this.vbox3 [this.hbox3]));
-			w16.Position = 6;
-			w16.Expand = false;
-			w16.Fill = false;
+			global::Gtk.Box.BoxChild w18 = ((global::Gtk.Box.BoxChild)(this.vbox3 [this.hbox3]));
+			w18.Position = 5;
+			w18.Expand = false;
+			w18.Fill = false;
 			this.Add (this.vbox3);
 			if ((this.Child != null)) {
 				this.Child.ShowAll ();
@@ -176,7 +198,7 @@ namespace Launchpad.Utilities.UnixUI
 			this.DefaultHeight = 384;
 			this.Show ();
 			this.DeleteEvent += new global::Gtk.DeleteEventHandler (this.OnDeleteEvent);
-			this.generateManifestButton.Clicked += new global::System.EventHandler (this.OnGenerateManifestButtonClicked);
+			this.generateLaunchpadManifestButton.Clicked += new global::System.EventHandler (this.OnGenerateLaunchpadManifestButtonClicked);
 		}
 	}
 }

@@ -35,15 +35,18 @@ namespace Launchpad.Utilities.Handlers
 		ManifestGenerationProgressChangedEventArgs ProgressArgs = new ManifestGenerationProgressChangedEventArgs();
 
 		private string TargetPath;
+		EManifestType ManifestType;
 
 		/// <summary>
 		/// Generates a manifest containing the relative path, MD5 hash and file size from
 		/// all files in the provided root path.
 		/// </summary>
 		/// <param name="rootPath">The root path of the directory the manifest should represent.</param>
-		public void GenerateManifest(string rootPath)
+		/// <param name="InManifestType">The type of manifest that should be generated.</param>
+		public void GenerateManifest(string rootPath, EManifestType InManifestType)
 		{			
 			TargetPath = rootPath;
+			ManifestType = InManifestType;
 
 			Thread t = new Thread(GenerateManifest_Implementation);
 			t.Start();
@@ -55,8 +58,8 @@ namespace Launchpad.Utilities.Handlers
 		private void GenerateManifest_Implementation()
 		{
 			string parentDirectory = Directory.GetParent(TargetPath).ToString();
-			string manifestPath = String.Format(@"{0}{1}LauncherManifest.txt", parentDirectory, Path.DirectorySeparatorChar);
-			string manifestChecksumPath = String.Format(@"{0}{1}LauncherManifest.checksum", parentDirectory, Path.DirectorySeparatorChar);
+			string manifestPath = String.Format(@"{0}{1}{2}Manifest.txt", parentDirectory, Path.DirectorySeparatorChar, ManifestType);
+			string manifestChecksumPath = String.Format(@"{0}{1}{2}Manifest.checksum", parentDirectory, Path.DirectorySeparatorChar, ManifestType);
 
 			List<string> Files = new List<string>(Directory
 				.EnumerateFiles(TargetPath, "*", SearchOption.AllDirectories));
@@ -132,6 +135,15 @@ namespace Launchpad.Utilities.Handlers
 				ManifestGenerationFinished(this, EventArgs.Empty);
 			}
 		}
+	}
+
+	/// <summary>
+	/// Enum defining the type of manifest.
+	/// </summary>
+	public enum EManifestType : byte
+	{
+		Launchpad,
+		Game
 	}
 
 	/// <summary>

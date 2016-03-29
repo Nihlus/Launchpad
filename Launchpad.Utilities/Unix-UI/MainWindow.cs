@@ -58,9 +58,10 @@ namespace Launchpad.Utilities.UnixUI
 			a.RetVal = true;
 		}
 
-		protected void OnGenerateManifestButtonClicked(object sender, EventArgs e)
+		protected void OnGenerateGameManifestButtonClicked(object sender, EventArgs e)
 		{
-			generateManifestButton.Sensitive = false;
+			generateGameManifestButton.Sensitive = false;
+			generateLaunchpadManifestButton.Sensitive = false;
 
 			string TargetDirectory = fileChooser.Filename;
 
@@ -69,7 +70,22 @@ namespace Launchpad.Utilities.UnixUI
 			Manifest.ManifestGenerationProgressChanged += OnGenerateManifestProgressChanged;
 			Manifest.ManifestGenerationFinished += OnGenerateManifestFinished;
 
-			Manifest.GenerateManifest(TargetDirectory);
+			Manifest.GenerateManifest(TargetDirectory, EManifestType.Game);
+		}
+
+		protected void OnGenerateLaunchpadManifestButtonClicked(object sender, EventArgs e)
+		{
+			generateGameManifestButton.Sensitive = false;
+			generateLaunchpadManifestButton.Sensitive = false;
+
+			string TargetDirectory = fileChooser.Filename;
+
+			ManifestHandler Manifest = new ManifestHandler();
+
+			Manifest.ManifestGenerationProgressChanged += OnGenerateManifestProgressChanged;
+			Manifest.ManifestGenerationFinished += OnGenerateManifestFinished;
+
+			Manifest.GenerateManifest(TargetDirectory, EManifestType.Launchpad);
 		}
 
 		/// <summary>
@@ -98,7 +114,8 @@ namespace Launchpad.Utilities.UnixUI
 			Application.Invoke(delegate
 				{
 					progressLabel.Text = LocalizationCatalog.GetString("Finished");
-					generateManifestButton.Sensitive = true;
+					generateGameManifestButton.Sensitive = true;
+					generateLaunchpadManifestButton.Sensitive = true;
 				});
 		}
 	}
