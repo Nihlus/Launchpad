@@ -49,6 +49,10 @@ fi
     echo "Prohibiting anonymous uploading of files..."
     sed -i "s/^#anon_upload_enable/anon_upload_enable/" /etc/vsftpd.conf
     sed -i "s/\(anon_upload_enable *= *\).*/\1NO/" /etc/vsftpd.conf
+    
+    echo "Changing service PAM name.."
+    sed -i "s/^#pam_service_name/pam_service_name/" /etc/vsftpd.conf
+    sed -i "s/\(pam_service_name *= *\).*/\1ftp/" /etc/vsftpd.conf
     service vsftpd restart
     
 #create folders
