@@ -26,6 +26,7 @@ using Launchpad.Launcher.Handlers;
 using Launchpad.Launcher.Utility.Enums;
 using Launchpad.Launcher.Handlers.Protocols;
 using NGettext;
+using System.Diagnostics;
 
 namespace Launchpad.Launcher.WindowsUI
 {
@@ -261,6 +262,8 @@ namespace Launchpad.Launcher.WindowsUI
 						{
 							//update the launcher synchronously.
 							SetLauncherMode(ELauncherMode.Update, true);
+							Launcher.LauncherDownloadFinished += OnLauncherDownloadFinished;
+							Launcher.LauncherDownloadProgressChanged += OnModuleInstallationProgressChanged;
 							Launcher.UpdateLauncher();                            
 						}
 						else
@@ -473,7 +476,7 @@ namespace Launchpad.Launcher.WindowsUI
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">Contains the progress values and current filename.</param>
-		private void OnModuleInstallationProgressChanged(object sender, ModuleProgressChangedArgs e)
+		protected void OnModuleInstallationProgressChanged(object sender, ModuleProgressChangedArgs e)
 		{
 			this.Invoke((MethodInvoker)delegate
 				{
@@ -488,6 +491,20 @@ namespace Launchpad.Launcher.WindowsUI
 					mainProgressBar.Update();  
                
 				});                      
+		}
+
+		protected void OnLauncherDownloadFinished(object sender, ModuleInstallationFinishedArgs e)
+		{
+			this.Invoke((MethodInvoker)delegate
+				{
+					if (e.Module == EModule.Launcher)
+					{
+						ProcessStartInfo script = LauncherHandler.CreateUpdateScript();
+
+						Process.Start(script);
+						Application.Exit();
+					}
+				});
 		}
 
 		/// <summary>

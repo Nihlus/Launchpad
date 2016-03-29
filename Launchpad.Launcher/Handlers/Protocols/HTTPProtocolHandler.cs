@@ -162,7 +162,45 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 		public override void DownloadLauncher()
 		{
-			// TODO: Implement launcher manifest
+			RefreshLaunchpadManifest();
+
+			ModuleInstallFinishedArgs.Module = EModule.Launcher;
+			ModuleInstallFailedArgs.Module = EModule.Launcher;
+
+			List<ManifestEntry> Manifest = manifestHandler.LaunchpadManifest;
+
+			//in order to be able to resume downloading, we check if there is an entry
+			//stored in the install cookie.
+			//attempt to parse whatever is inside the install cookie
+			ManifestEntry lastDownloadedFile;
+			if (ManifestEntry.TryParse(File.ReadAllText(ConfigHandler.GetInstallCookiePath()), out lastDownloadedFile))
+			{
+				//loop through all the entries in the manifest until we encounter
+				//an entry which matches the one in the install cookie
+
+				foreach (ManifestEntry Entry in Manifest)
+				{
+					if (lastDownloadedFile == Entry)
+					{
+						//remove all entries before the one we were last at.
+						Manifest.RemoveRange(0, Manifest.IndexOf(Entry));
+					}
+				}
+			}
+
+			int downloadedFiles = 0;
+			foreach (ManifestEntry Entry in Manifest)
+			{
+				++downloadedFiles;
+
+				// Prepare the progress event contents
+				ModuleDownloadProgressArgs.IndicatorLabelMessage = GetDownloadIndicatorLabelMessage(downloadedFiles, Path.GetFileName(Entry.RelativePath), Manifest.Count);
+				OnModuleDownloadProgressChanged();
+
+				DownloadEntry(Entry, EModule.Launcher);
+			}
+
+			VerifyLauncher();
 		}
 
 		protected override void DownloadGame()
@@ -197,13 +235,61 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				ModuleDownloadProgressArgs.IndicatorLabelMessage = GetDownloadIndicatorLabelMessage(downloadedFiles, Path.GetFileName(Entry.RelativePath), Manifest.Count);
 				OnModuleDownloadProgressChanged();
 
-				DownloadEntry(Entry);
+				DownloadEntry(Entry, EModule.Game);
 			}
 		}
 
 		public override void VerifyLauncher()
 		{
+			try
+			{
+				List<ManifestEntry> Manifest = manifestHandler.LaunchpadManifest;			
+				List<ManifestEntry> BrokenFiles = new List<ManifestEntry>();
+							
+				int verifiedFiles = 0;
+				foreach (ManifestEntry Entry in Manifest)
+				{					
+					++verifiedFiles;
 
+					// Prepare the progress event contents
+					ModuleVerifyProgressArgs.IndicatorLabelMessage = GetVerifyIndicatorLabelMessage(verifiedFiles, Path.GetFileName(Entry.RelativePath), Manifest.Count);
+					OnModuleVerifyProgressChanged();
+
+					if (!Entry.IsFileIntegrityIntact())
+					{
+						BrokenFiles.Add(Entry);
+					}
+				}
+
+				int downloadedFiles = 0;
+				foreach (ManifestEntry Entry in BrokenFiles)
+				{					
+					++downloadedFiles;
+
+					// Prepare the progress event contents
+					ModuleDownloadProgressArgs.IndicatorLabelMessage = GetDownloadIndicatorLabelMessage(downloadedFiles, Path.GetFileName(Entry.RelativePath), BrokenFiles.Count);
+					OnModuleDownloadProgressChanged();
+
+					for (int i = 0; i < Config.GetFileRetries(); ++i)
+					{					
+						if (!Entry.IsFileIntegrityIntact())
+						{
+							DownloadEntry(Entry, EModule.Launcher);
+						}
+						else
+						{
+							break;
+						}
+					}
+				}
+			}
+			catch (IOException ioex)
+			{
+				Console.WriteLine("IOException in VerifyLauncher(): " + ioex.Message);
+				OnModuleInstallationFailed();			
+			}
+
+			OnModuleInstallationFinished();
 		}
 
 		public override void VerifyGame()
@@ -241,7 +327,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					{					
 						if (!Entry.IsFileIntegrityIntact())
 						{
-							DownloadEntry(Entry);
+							DownloadEntry(Entry, EModule.Game);
 						}
 						else
 						{
@@ -291,7 +377,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 						FilesRequiringUpdate.Count);
 					OnModuleUpdateProgressChanged();
 
-					DownloadEntry(Entry);
+					DownloadEntry(Entry, EModule.Game);
 				}
 			}
 			catch (IOException ioex)
@@ -309,14 +395,29 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// downloads missing files.
 		/// </summary>
 		/// <param name="Entry">The entry to download.</param>
-		private void DownloadEntry(ManifestEntry Entry)
+		private void DownloadEntry(ManifestEntry Entry, EModule Module)
 		{
+			ModuleDownloadProgressArgs.Module = Module;
+
+			string baseRemotePath;
+			string baseLocalPath;
+			if (Module == EModule.Game)
+			{
+				baseRemotePath = Config.GetGameURL();
+				baseLocalPath = Config.GetGamePath();
+			}
+			else
+			{
+				baseRemotePath = Config.GetLauncherBinariesURL();
+				baseLocalPath = ConfigHandler.GetTempLauncherDownloadPath();
+			}
+
 			string RemotePath = String.Format("{0}{1}", 
-				                    Config.GetGameURL(), 
+				                    baseRemotePath, 
 				                    Entry.RelativePath);
 
 			string LocalPath = String.Format("{0}{1}{2}", 
-				                   Config.GetGamePath(),
+				                   baseLocalPath,
 				                   Path.DirectorySeparatorChar, 
 				                   Entry.RelativePath);
 					                   				
@@ -723,6 +824,24 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 		}
 
+		/// <summary>
+		/// Refreshs the local copy of the launchpad manifest.
+		/// </summary>
+		private void RefreshLaunchpadManifest()
+		{
+			if (File.Exists(ManifestHandler.GetLaunchpadManifestPath()))
+			{
+				if (IsLaunchpadManifestOutdated())
+				{
+					DownloadLaunchpadManifest();
+				}
+			}
+			else
+			{
+				DownloadLaunchpadManifest();
+			}
+		}
+
 		//TODO: Maybe move to ManifestHandler?
 		/// <summary>
 		/// Determines whether the  manifest is outdated.
@@ -732,9 +851,32 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		{
 			if (File.Exists(ManifestHandler.GetGameManifestPath()))
 			{
-				string remoteHash = GetRemoteManifestChecksum();
+				string remoteHash = GetRemoteGameManifestChecksum();
 
 				using (Stream file = File.OpenRead(ManifestHandler.GetGameManifestPath()))
+				{
+					string localHash = MD5Handler.GetStreamHash(file);
+
+					return remoteHash != localHash;
+				}
+			}
+			else
+			{
+				return true;
+			}
+		}
+
+		/// <summary>
+		/// Determines whether the launchpad manifest is outdated.
+		/// </summary>
+		/// <returns><c>true</c> if the manifest is outdated; otherwise, <c>false</c>.</returns>
+		private bool IsLaunchpadManifestOutdated()
+		{
+			if (File.Exists(ManifestHandler.GetLaunchpadManifestPath()))
+			{
+				string remoteHash = GetRemoteLaunchpadManifestChecksum();
+
+				using (Stream file = File.OpenRead(ManifestHandler.GetLaunchpadManifestPath()))
 				{
 					string localHash = MD5Handler.GetStreamHash(file);
 
@@ -752,7 +894,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// Gets the remote manifest checksum.
 		/// </summary>
 		/// <returns>The remote manifest checksum.</returns>
-		public string GetRemoteManifestChecksum()
+		public string GetRemoteGameManifestChecksum()
 		{
 			string checksum = ReadRemoteFile(manifestHandler.GetGameManifestChecksumURL());
 			checksum = Utilities.Clean(checksum);
@@ -760,9 +902,20 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			return checksum;
 		}
 
-		//TODO: Maybe move to ManifestHandler?
 		/// <summary>
-		/// Downloads the manifest.
+		/// Gets the remote launchpad manifest checksum.
+		/// </summary>
+		/// <returns>The remote launchpad manifest checksum.</returns>
+		public string GetRemoteLaunchpadManifestChecksum()
+		{
+			string checksum = ReadRemoteFile(manifestHandler.GetLaunchpadManifestChecksumURL());
+			checksum = Utilities.Clean(checksum);
+
+			return checksum;
+		}
+
+		/// <summary>
+		/// Downloads the game manifest.
 		/// </summary>
 		private void DownloadGameManifest()
 		{
@@ -770,23 +923,54 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			{
 				string RemoteURL = manifestHandler.GetGameManifestURL();
 				string LocalPath = ManifestHandler.GetGameManifestPath();
+				string OldLocalPath = ManifestHandler.GetOldGameManifestPath();
 
 				if (File.Exists(ManifestHandler.GetGameManifestPath()))
 				{
 					// Create a backup of the old manifest so that we can compare them when updating the game
-					if (File.Exists(ManifestHandler.GetOldGameManifestPath()))
+					if (File.Exists(OldLocalPath))
 					{
-						File.Delete(ManifestHandler.GetOldGameManifestPath());
+						File.Delete(OldLocalPath);
 					}
 
-					File.Move(LocalPath, LocalPath + ".old");			
+					File.Move(LocalPath, OldLocalPath);			
 				}						
 
 				DownloadRemoteFile(RemoteURL, LocalPath);
 			}
 			catch (IOException ioex)
 			{
-				Console.WriteLine("IOException in DownloadManifest(): " + ioex.Message);
+				Console.WriteLine("IOException in DownloadGameManifest(): " + ioex.Message);
+			}
+		}
+
+		/// <summary>
+		/// Downloads the launchpad manifest.
+		/// </summary>
+		private void DownloadLaunchpadManifest()
+		{
+			try
+			{
+				string RemoteURL = manifestHandler.GetLaunchpadManifestURL();
+				string LocalPath = ManifestHandler.GetLaunchpadManifestPath();
+				string OldLocalPath = ManifestHandler.GetOldLaunchpadManifestPath();
+
+				if (File.Exists(LocalPath))
+				{
+					// Create a backup of the old manifest so that we can compare them when updating the game
+					if (File.Exists(OldLocalPath))
+					{
+						File.Delete(OldLocalPath);
+					}
+
+					File.Move(LocalPath, OldLocalPath);			
+				}						
+
+				DownloadRemoteFile(RemoteURL, LocalPath);
+			}
+			catch (IOException ioex)
+			{
+				Console.WriteLine("IOException in DownloadLaunchpadManifest(): " + ioex.Message);
 			}
 		}
 	}

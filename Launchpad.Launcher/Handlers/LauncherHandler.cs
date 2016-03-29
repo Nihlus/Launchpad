@@ -46,34 +46,47 @@ namespace Launchpad.Launcher.Handlers
 	internal sealed class LauncherHandler
 	{
 		public event ChangelogDownloadFinishedEventHandler ChangelogDownloadFinished;
+		public event LauncherDownloadFinishedEventHandler LauncherDownloadFinished;
+		public event LauncherDownloadProgressChangedEventHandler LauncherDownloadProgressChanged;
 
 		private readonly ChangelogDownloadFinishedEventArgs ChangelogDownloadFinishedArgs = new ChangelogDownloadFinishedEventArgs();
+		private readonly PatchProtocolHandler Patch;
 
 		/// <summary>
 		/// The config handler reference.
 		/// </summary>
 		ConfigHandler Config = ConfigHandler.Instance;
 
-		//TODO: Run asynchronously
 		/// <summary>
-		/// Updates the launcher synchronously.
+		/// Initializes a new instance of the <see cref="Launchpad.Launcher.Handlers.LauncherHandler"/> class.
+		/// </summary>
+		public LauncherHandler()
+		{
+			Patch = Config.GetPatchProtocol();
+		}
+
+		/// <summary>
+		/// Updates the launcher asynchronously.
 		/// </summary>
 		public void UpdateLauncher()
 		{
 			try
-			{				
-				PatchProtocolHandler Patch = Config.GetPatchProtocol();
-				Patch.DownloadLauncher();
-				
-				ProcessStartInfo script = CreateUpdateScript();
+			{
+				Patch.ModuleDownloadProgressChanged += OnLauncherDownloadProgressChanged;
+				Patch.ModuleInstallationFinished += OnLauncherDownloadFinished;
 
-				Process.Start(script);
-				Environment.Exit(0);
+				Thread t = new Thread(UpdateLauncher_Implementation);
+				t.Start();
 			}
 			catch (IOException ioex)
 			{
 				Console.WriteLine("IOException in UpdateLauncher(): " + ioex.Message);
 			}
+		}
+
+		private void UpdateLauncher_Implementation()
+		{
+			Patch.DownloadLauncher();
 		}
 
 		/// <summary>
@@ -110,8 +123,6 @@ namespace Launchpad.Launcher.Handlers
 
 		private void LoadFallbackChangelog_Implementation()
 		{
-			PatchProtocolHandler Patch = Config.GetPatchProtocol();
-
 			if (Patch.CanProvideChangelog())
 			{
 				ChangelogDownloadFinishedArgs.HTML = Patch.GetChangelog();
@@ -125,7 +136,7 @@ namespace Launchpad.Launcher.Handlers
 		/// Creates the update script on disk.
 		/// </summary>
 		/// <returns>ProcessStartInfo for the update script.</returns>
-		private static ProcessStartInfo CreateUpdateScript()
+		public static ProcessStartInfo CreateUpdateScript()
 		{
 			try
 			{
@@ -145,7 +156,7 @@ namespace Launchpad.Launcher.Handlers
 						using (TextWriter tw = new StreamWriter(updateScript))
 						{							
 							string copyCom = String.Format("cp -rf {0} {1}", 
-								                 Path.GetTempPath() + "launchpad/*",
+								                 Path.GetTempPath() + "launchpad/launcher/*",
 								                 ConfigHandler.GetLocalDir());
 
 							string delCom = String.Format("rm -rf {0}", 
@@ -188,7 +199,7 @@ namespace Launchpad.Launcher.Handlers
 						{
 							//write commands to the script
 							//wait three seconds, then copy the new executable
-							tw.WriteLine(String.Format(@"timeout 3 & xcopy /e /s /y ""{0}\launchpad"" ""{1}"" && rmdir /s /q {0}\launchpad", 
+							tw.WriteLine(String.Format(@"timeout 3 & xcopy /e /s /y ""{0}\launchpad\launcher"" ""{1}"" && rmdir /s /q {0}\launchpad", 
 									Path.GetTempPath(), 
 									ConfigHandler.GetLocalDir()));
 
@@ -228,12 +239,30 @@ namespace Launchpad.Launcher.Handlers
 				ChangelogDownloadFinished(this, ChangelogDownloadFinishedArgs);
 			}
 		}
+
+		private void OnLauncherDownloadProgressChanged(object sender, ModuleProgressChangedArgs e)
+		{
+			if (LauncherDownloadProgressChanged != null)
+			{
+				LauncherDownloadProgressChanged(sender, e);
+			}
+		}
+
+		private void OnLauncherDownloadFinished(object sender, ModuleInstallationFinishedArgs e)
+		{
+			if (LauncherDownloadFinished != null)
+			{
+				LauncherDownloadFinished(sender, e);
+			}
+		}
 	}
 
 	/*
 		Launcher-specific events
 	*/
 	public delegate void ChangelogDownloadFinishedEventHandler(object sender,ChangelogDownloadFinishedEventArgs e);
+	public delegate void LauncherDownloadProgressChangedEventHandler(object sender,ModuleProgressChangedArgs e);
+	public delegate void LauncherDownloadFinishedEventHandler(object sendre,ModuleInstallationFinishedArgs e);
 
 	/*
 		Launcher-specific event arguments

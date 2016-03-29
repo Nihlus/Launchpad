@@ -23,6 +23,8 @@ using System;
 using Launchpad.Launcher.UnixUI;
 using Launchpad.Launcher.WindowsUI;
 using Launchpad.Launcher.Handlers;
+using System.IO;
+using System.Reflection;
 
 [assembly: CLSCompliant(true)]
 namespace Launchpad.Launcher
@@ -35,6 +37,9 @@ namespace Launchpad.Launcher
 		[STAThread]
 		static void Main()
 		{
+			// Set correct working directory for compatibility with double-clicking
+			Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+
 			if (ChecksHandler.IsRunningOnUnix())
 			{
 				// run a GTK UI instead of WinForms

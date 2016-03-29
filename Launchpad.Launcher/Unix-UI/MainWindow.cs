@@ -27,6 +27,7 @@ using NGettext;
 using Launchpad.Launcher.Handlers;
 using Launchpad.Launcher.Utility.Enums;
 using Launchpad.Launcher.Handlers.Protocols;
+using System.Diagnostics;
 
 namespace Launchpad.Launcher.UnixUI
 {
@@ -367,6 +368,8 @@ namespace Launchpad.Launcher.UnixUI
 						if (Checks.IsLauncherOutdated())
 						{				
 							SetLauncherMode(ELauncherMode.Update, true);
+							Launcher.LauncherDownloadFinished += OnLauncherDownloadFinished;
+							Launcher.LauncherDownloadProgressChanged += OnModuleInstallationProgressChanged;
 							Launcher.UpdateLauncher();                        
 						}
 						else
@@ -427,6 +430,20 @@ namespace Launchpad.Launcher.UnixUI
 			Application.Invoke(delegate
 				{
 					Browser.LoadHtmlString(e.HTML, e.URL);
+				});
+		}
+
+		protected void OnLauncherDownloadFinished(object sender, ModuleInstallationFinishedArgs e)
+		{
+			Application.Invoke(delegate
+				{
+					if (e.Module == EModule.Launcher)
+					{
+						ProcessStartInfo script = LauncherHandler.CreateUpdateScript();
+
+						Process.Start(script);
+						Application.Quit();
+					}
 				});
 		}
 

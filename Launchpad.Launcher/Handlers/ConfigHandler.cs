@@ -395,7 +395,7 @@ namespace Launchpad.Launcher.Handlers
 		/// Gets the temporary launcher download directory.
 		/// </summary>
 		/// <returns>A full path to the directory.</returns>
-		public static string GetTempLauncherDownloadDir()
+		public static string GetTempLauncherDownloadPath()
 		{
 			return String.Format(@"{0}{1}launchpad{1}launcher", 
 				Path.GetTempPath(), 
