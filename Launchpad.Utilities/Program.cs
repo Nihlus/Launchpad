@@ -32,8 +32,9 @@ namespace Launchpad.Utilities
 {
 	static class Program
 	{
-		static readonly string BatchSwitch = "-b";
-		static readonly string DirectorySwitch = "-d";
+		public const string BatchSwitch = "-b";
+		public const string DirectorySwitch = "-d";
+		public const string ManifestTypeSwitch = "-m";
 
 		/// <summary>
 		/// The main entry point for the application.
@@ -65,7 +66,7 @@ namespace Launchpad.Utilities
 								Manifest.ManifestGenerationProgressChanged += OnProgressChanged;
 								Manifest.ManifestGenerationFinished += OnGenerationFinished;
 
-								Manifest.GenerateManifest(TargetDirectory);
+								Manifest.GenerateManifest(TargetDirectory, EManifestType.Game);
 							}
 							else
 							{
@@ -87,7 +88,7 @@ namespace Launchpad.Utilities
 						Manifest.ManifestGenerationProgressChanged += OnProgressChanged;
 						Manifest.ManifestGenerationFinished += OnGenerationFinished;
 
-						Manifest.GenerateManifest(Directory.GetCurrentDirectory());
+						Manifest.GenerateManifest(Directory.GetCurrentDirectory(), EManifestType.Game);
 					}
 				}
 				else
