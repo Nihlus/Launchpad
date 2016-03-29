@@ -5,6 +5,8 @@ An UE4-compatible game launcher
 
 [![Build Status](https://travis-ci.org/Nihlus/Launchpad.svg?branch=master)](https://travis-ci.org/Nihlus/Launchpad)
 
+![Launchpad (GTK# on Linux)](https://i.imgur.com/Xq1mtRl.png "Launchpad (GTK# on Linux)")
+
 Features:
 
 * Self-updating
