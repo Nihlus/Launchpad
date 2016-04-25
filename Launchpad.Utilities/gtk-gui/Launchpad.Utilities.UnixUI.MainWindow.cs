@@ -199,6 +199,7 @@ namespace Launchpad.Utilities.UnixUI
 			this.Show ();
 			this.DeleteEvent += new global::Gtk.DeleteEventHandler (this.OnDeleteEvent);
 			this.generateLaunchpadManifestButton.Clicked += new global::System.EventHandler (this.OnGenerateLaunchpadManifestButtonClicked);
+			this.generateGameManifestButton.Clicked += new global::System.EventHandler (this.OnGenerateGameManifestButtonClicked);
 		}
 	}
 }
