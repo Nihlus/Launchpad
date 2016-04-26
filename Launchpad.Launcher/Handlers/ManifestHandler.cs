@@ -473,11 +473,26 @@ namespace Launchpad.Launcher.Handlers
 			return RelativePath + ":" + Hash + ":" + Size;
 		}
 
+		/// <summary>
+		/// Determines whether the specified <see cref="Launchpad.Launcher.Handlers.ManifestEntry"/> is equal to the current <see cref="Launchpad.Launcher.Handlers.ManifestEntry"/>.
+		/// </summary>
+		/// <param name="Other">The <see cref="Launchpad.Launcher.Handlers.ManifestEntry"/> to compare with the current <see cref="Launchpad.Launcher.Handlers.ManifestEntry"/>.</param>
+		/// <returns><c>true</c> if the specified <see cref="Launchpad.Launcher.Handlers.ManifestEntry"/> is equal to the current
+		/// <see cref="Launchpad.Launcher.Handlers.ManifestEntry"/>; otherwise, <c>false</c>.</returns>
 		public bool Equals(ManifestEntry Other)
 		{
 			return this.RelativePath == Other.RelativePath &&
 			this.Hash == Other.Hash &&
 			this.Size == Other.Size;
+		}
+
+		/// <summary>
+		/// Serves as a hash function for a <see cref="Launchpad.Launcher.Handlers.ManifestEntry"/> object.
+		/// </summary>
+		/// <returns>A hash code for this instance that is suitable for use in hashing algorithms and data structures such as a hash table.</returns>
+		public int GetHashCode()
+		{
+			return this.ToString().GetHashCode();
 		}
 
 		/// <summary>

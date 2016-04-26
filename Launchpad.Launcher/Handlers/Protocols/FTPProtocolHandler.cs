@@ -472,7 +472,21 @@ namespace Launchpad.Launcher.Handlers.Protocols
 						File.Delete(LocalPath);
 						DownloadRemoteFile(RemotePath, LocalPath);
 					}
-				}									
+				}
+				else
+				{
+					string LocalHash;
+					using (FileStream fs = File.OpenRead(LocalPath))
+					{
+						LocalHash = MD5Handler.GetStreamHash(fs);
+					}
+
+					if (LocalHash != Entry.Hash)
+					{
+						File.Delete(LocalPath);
+						DownloadRemoteFile(RemotePath, LocalPath);
+					}
+				}								
 			}
 			else
 			{

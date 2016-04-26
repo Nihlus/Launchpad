@@ -18,6 +18,7 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 using Launchpad.Launcher.Utility.Enums;
 using System;
 using System.Net;
@@ -450,7 +451,21 @@ namespace Launchpad.Launcher.Handlers.Protocols
 						File.Delete(LocalPath);
 						DownloadRemoteFile(RemotePath, LocalPath);
 					}
-				}									
+				}
+				else
+				{
+					string LocalHash;
+					using (FileStream fs = File.OpenRead(LocalPath))
+					{
+						LocalHash = MD5Handler.GetStreamHash(fs);
+					}
+
+					if (LocalHash != Entry.Hash)
+					{
+						File.Delete(LocalPath);
+						DownloadRemoteFile(RemotePath, LocalPath);
+					}
+				}							
 			}
 			else
 			{

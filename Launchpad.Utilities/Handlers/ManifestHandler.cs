@@ -24,6 +24,7 @@ using Launchpad.Utilities.Utility.Events;
 using System.Threading;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Launchpad.Utilities.Handlers
 {
@@ -62,7 +63,8 @@ namespace Launchpad.Utilities.Handlers
 			string manifestChecksumPath = String.Format(@"{0}{1}{2}Manifest.checksum", parentDirectory, Path.DirectorySeparatorChar, ManifestType);
 
 			List<string> Files = new List<string>(Directory
-				.EnumerateFiles(TargetPath, "*", SearchOption.AllDirectories));
+				.EnumerateFiles(TargetPath, "*", SearchOption.AllDirectories)
+				.Where(s => !s.EndsWith(".install") && !s.EndsWith(".update")));
 
 			using (TextWriter tw = new StreamWriter(File.Create(manifestPath)))
 			{
