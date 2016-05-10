@@ -32,6 +32,7 @@ OutputBaseFilename={#MyAppName}-setup-{#MyAppVersion}
 Compression=lzma
 SolidCompression=yes
 UninstallDisplayIcon={app}\{#MyAppExeName}
+PrivilegesRequires=admin
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}"
@@ -57,4 +58,4 @@ Name: "{app}\"; Permissions: everyone-modify
 
 [Run]
 Filename: "msiexec.exe"; Parameters: "/i ""{tmp}\gtk-sharp-2.12.26.msi"" /qn"
-Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: runascurrentuser nowait postinstall skipifsilent
