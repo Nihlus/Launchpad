@@ -1,30 +1,8 @@
-//
-//  ChecksHandler.cs
-//
-//  Author:
-//       Jarl Gullberg <jarl.gullberg@gmail.com>
-//
-//  Copyright (c) 2016 Jarl Gullberg
-//
-//  This program is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
-//
-//  This program is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
-//
-//  You should have received a copy of the GNU General Public License
-//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 using System;
 using System.IO;
-using Launchpad.Launcher.Utility.Enums;
-using Launchpad.Launcher.Handlers.Protocols;
+using System.Net;
 
-namespace Launchpad.Launcher.Handlers
+namespace Launchpad.Launcher
 {
 	/// <summary>
 	/// This class handles all the launcher's checks, returning bools for each function.
@@ -36,23 +14,70 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// The config handler reference.
 		/// </summary>
-		readonly ConfigHandler Config = ConfigHandler.Instance;
+		private ConfigHandler Config = ConfigHandler._instance;
 
 		/// <summary>
-		/// Determines whether this instance can connect to a patching service.
+		/// Initializes a new instance of the <see cref="Launchpad_Launcher.ChecksHandler"/> class.
 		/// </summary>
-		/// <returns><c>true</c> if this instance can connect to a patching service; otherwise, <c>false</c>.</returns>
-		public bool CanPatch()
+		public ChecksHandler ()
 		{
-			PatchProtocolHandler Patch = Config.GetPatchProtocol();
-			if (Patch != null)
+
+		}
+
+
+		/// <summary>
+		/// Determines whether this instance can connect to the FTP server. Run as little as possible, since it blocks the main thread while checking.
+		/// </summary>
+		/// <returns><c>true</c> if this instance can connect to the FTP server; otherwise, <c>false</c>.</returns>
+		public bool CanConnectToFTP()
+		{
+			bool bCanConnectToFTP;
+
+			string FTPURL = Config.GetFTPUrl();
+			string FTPUserName = Config.GetFTPUsername();
+			string FTPPassword = Config.GetFTPPassword();
+
+			try
 			{
-				return Patch.CanPatch();
+				FtpWebRequest plainRequest = (FtpWebRequest)FtpWebRequest.Create(FTPURL);
+				plainRequest.Credentials = new NetworkCredential(FTPUserName, FTPPassword);
+				plainRequest.Method = WebRequestMethods.Ftp.ListDirectory;
+				plainRequest.Timeout = 8000;
+
+				try
+				{
+					WebResponse response = plainRequest.GetResponse();
+
+					plainRequest.Abort();
+					response.Close();
+
+					bCanConnectToFTP = true;
+				}
+				catch (WebException wex)
+				{
+                    Console.WriteLine("WebException in CanConnectToFTP(): " + wex.Message);
+                    Console.WriteLine(FTPURL);
+
+					plainRequest.Abort();
+					bCanConnectToFTP = false;
+				}
 			}
-			else
+			catch (WebException wex)
 			{
-				return false;
+				//case where FTP URL in config is not valid
+				Console.WriteLine ("WebException CanConnectToFTP() (Invalid URL): " + wex.Message);
+
+				bCanConnectToFTP = false;
+				return bCanConnectToFTP;
 			}
+
+			if (!bCanConnectToFTP)
+			{
+				Console.WriteLine("Failed to connect to FTP server at: {0}", Config.GetBaseFTPUrl());
+				bCanConnectToFTP = false;
+			}
+
+			return bCanConnectToFTP;
 		}
 
 		/// <summary>
@@ -64,7 +89,7 @@ namespace Launchpad.Launcher.Handlers
 			//we use an empty file to determine if this is the first launch or not
 			if (!File.Exists(ConfigHandler.GetUpdateCookiePath()))
 			{
-				Console.WriteLine("First time starting launcher.");
+				Console.WriteLine ("First time starting launcher.");
 				return true;
 			}
 			else
@@ -99,11 +124,11 @@ namespace Launchpad.Launcher.Handlers
 		{
 			//Criteria for considering the game 'installed'
 			//Does the game directory exist?
-			bool bHasDirectory = Directory.Exists(Config.GetGamePath());
+			bool bHasDirectory = Directory.Exists(Config.GetGamePath(true));
 			//Is there an .install file in the directory?
 			bool bHasInstallationCookie = File.Exists(ConfigHandler.GetInstallCookiePath());
 			//is there a version file?
-			bool bHasGameVersion = File.Exists(Config.GetGameVersionPath());
+			bool bHasGameVersion = File.Exists (Config.GetGameVersionPath ());
 
 			//If any of these criteria are false, the game is not considered fully installed.
 			return bHasDirectory && bHasInstallationCookie && IsInstallCookieEmpty() && bHasGameVersion;
@@ -115,8 +140,26 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns><c>true</c> if the game is outdated; otherwise, <c>false</c>.</returns>
 		public bool IsGameOutdated()
 		{
-			PatchProtocolHandler Patch = Config.GetPatchProtocol();
-			return Patch.IsGameOutdated();
+			FTPHandler FTP = new FTPHandler ();
+			try
+			{
+				Version local = Config.GetLocalGameVersion();
+				Version remote = FTP.GetRemoteGameVersion(true);
+
+				if (local < remote)
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			catch (WebException wex)
+			{
+				Console.WriteLine ("WebException in IsGameOutdated(): " + wex.Message);
+				return true;
+			}
 		}
 
 		/// <summary>
@@ -125,8 +168,26 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns><c>true</c> if the launcher is outdated; otherwise, <c>false</c>.</returns>
 		public bool IsLauncherOutdated()
 		{
-			PatchProtocolHandler Patch = Config.GetPatchProtocol();
-			return Patch.IsLauncherOutdated();
+			FTPHandler FTP = new FTPHandler();
+			try
+			{
+				Version local = Config.GetLocalLauncherVersion ();
+				Version remote = FTP.GetRemoteLauncherVersion ();	
+
+				if (local < remote)
+				{
+					return true;
+				} 
+				else
+				{
+					return false;
+				}
+			} 
+			catch (WebException wex)
+			{
+				Console.WriteLine ("WebException in IsLauncherOutdated(): " + wex.Message);
+				return false;	
+			}
 		}
 
 		/// <summary>
@@ -149,14 +210,44 @@ namespace Launchpad.Launcher.Handlers
 		}
 
 		/// <summary>
-		/// Checks whether or not the server provides binaries and patches for the specified platform.
+		/// Determines whether the  manifest is outdated.
 		/// </summary>
-		/// <returns><c>true</c>, if the server does provide files for the platform, <c>false</c> otherwise.</returns>
-		/// <param name="Platform">Platform.</param>
-		public bool IsPlatformAvailable(ESystemTarget Platform)
+		/// <returns><c>true</c> if the manifest is outdated; otherwise, <c>false</c>.</returns>
+		public bool IsManifestOutdated()
 		{
-			PatchProtocolHandler Patch = Config.GetPatchProtocol();
-			return Patch.IsPlatformAvailable(Platform);
+			if (File.Exists(ConfigHandler.GetManifestPath()))
+			{
+				FTPHandler FTP = new FTPHandler ();
+
+				string manifestURL = Config.GetManifestURL ();
+				string remoteHash = FTP.ReadFTPFile (manifestURL);
+                string localHash = MD5Handler.GetFileHash(File.OpenRead(ConfigHandler.GetManifestPath()));
+
+				if (remoteHash != localHash)
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else
+			{
+				return true;
+			}
+		}
+
+		public bool DoesServerProvidePlatform(ESystemTarget Platform)
+		{
+			FTPHandler FTP = new FTPHandler ();
+
+			string remote = String.Format ("{0}/game/{1}/.provides",
+			                                        Config.GetFTPUrl(),
+			                                        Platform.ToString());
+
+			return FTP.DoesFileExist (remote);
+			
 		}
 	}
 }
