@@ -1,62 +1,33 @@
-﻿//
-//  Program.cs
-//
-//  Author:
-//       Jarl Gullberg <jarl.gullberg@gmail.com>
-//
-//  Copyright (c) 2016 Jarl Gullberg
-//
-//  This program is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
-//
-//  This program is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
-//
-//  You should have received a copy of the GNU General Public License
-//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-using System;
-using Launchpad.Launcher.UnixUI;
-using Launchpad.Launcher.WindowsUI;
-using Launchpad.Launcher.Handlers;
-using System.IO;
-using System.Reflection;
+﻿using System;
 
 [assembly: CLSCompliant(true)]
 namespace Launchpad.Launcher
 {
-	class Program
-	{
-		/// <summary>
-		/// The main entry point for the application.
-		/// </summary>
-		[STAThread]
-		static void Main()
-		{
-			// Set correct working directory for compatibility with double-clicking
-			Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-
-			if (ChecksHandler.IsRunningOnUnix())
+    class Program
+    {
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        static void Main()
+        {
+			if (ChecksHandler.IsRunningOnUnix ()) 
 			{
-				// run a GTK UI instead of WinForms
-				Gtk.Application.Init();
+                // run a GTK UI instead of WinForms
+				Gtk.Application.Init ();
 
-				MainWindow win = new MainWindow();
-				win.Show();
-				Gtk.Application.Run();
+				MainWindow win = new MainWindow ();
+				win.Show ();
+				Gtk.Application.Run ();
 			}
-			else
+			else 
 			{
-				// run a WinForms UI instead of GTK
+                // run a WinForms UI instead of GTK
 				System.Windows.Forms.Application.EnableVisualStyles();
 				System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
 				System.Windows.Forms.Application.Run(new MainForm());
 			}
             
-		}
-	}
+        }
+    }
 }
