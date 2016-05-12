@@ -153,6 +153,7 @@
     <Compile Include="Handlers\Protocols\HTTPProtocolHandler.cs" />
     <Compile Include="Handlers\Protocols\BitTorrentProtocolHandler.cs" />
     <Compile Include="gtk-gui\Launchpad.Launcher.UnixUI.MainWindow.cs" />
+    <EmbeddedResource Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
