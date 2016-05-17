@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f16a2963-c622-4c27-93e8-8e8f631c2eae" name="Default" comment="" />
+    <list default="true" id="f16a2963-c622-4c27-93e8-8e8f631c2eae" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/codeStyleSettings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Launchpad.Launcher/Handlers/Protocols/HTTPProtocolHandler.cs" afterPath="$PROJECT_DIR$/Launchpad.Launcher/Handlers/Protocols/HTTPProtocolHandler.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Launchpad.Launcher/Unix-UI/MainWindow.cs" afterPath="$PROJECT_DIR$/Launchpad.Launcher/Unix-UI/MainWindow.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Launchpad.sln" afterPath="$PROJECT_DIR$/Launchpad.sln" />
+    </list>
     <ignored path="Launchpad.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -11,7 +19,6 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
   </component>
@@ -19,13 +26,173 @@
   <component name="FavoritesManager">
     <favorites_list name="Launchpad" />
   </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="MainWindow.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Launchpad.Launcher/Unix-UI/MainWindow.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="489">
+              <caret line="112" column="13" selection-start-line="112" selection-start-column="13" selection-end-line="112" selection-end-column="13" />
+              <folding>
+                <marker date="1463510754158" expanded="true" signature="791:1006" ph="..." />
+                <marker date="1463510754158" expanded="true" signature="1043:18388" ph="{...}" />
+                <marker date="1463510754158" expanded="true" signature="1110:18386" ph="{...}" />
+                <marker date="1463510754158" expanded="true" signature="1116:1182" ph="/// ..." />
+                <marker date="1463510754158" expanded="true" signature="1252:1318" ph="/// ..." />
+                <marker date="1463510754158" expanded="true" signature="1363:1476" ph="/// ..." />
+                <marker date="1463510754158" expanded="true" signature="1525:1631" ph="/// ..." />
+                <marker date="1463510754158" expanded="true" signature="1672:1731" ph="/// ..." />
+                <marker date="1463510754158" expanded="true" signature="1787:1919" ph="/// ..." />
+                <marker date="1463510754158" expanded="true" signature="1970:2032" ph="/// ..." />
+                <marker date="1463510754158" expanded="true" signature="2174:6084" ph="{...}" />
+                <marker date="1463510754158" expanded="true" signature="6088:6323" ph="/// ..." />
+                <marker date="1463510754158" expanded="true" signature="6395:8224" ph="{...}" />
+                <marker date="1463510754158" expanded="true" signature="8228:8417" ph="/// ..." />
+                <marker date="1463510754158" expanded="true" signature="8482:8533" ph="{...}" />
+                <marker date="1463510754158" expanded="true" signature="8537:8718" ph="/// ..." />
+                <marker date="1463510754158" expanded="true" signature="8791:8945" ph="{...}" />
+                <marker date="1463510754158" expanded="true" signature="8949:9267" ph="/// ..." />
+                <marker date="1463510754158" expanded="true" signature="9335:13077" ph="{...}" />
+                <marker date="1463510754158" expanded="true" signature="13081:13327" ph="/// ..." />
+                <marker date="1463510754158" expanded="true" signature="13425:13623" ph="{...}" />
+                <marker date="1463510754158" expanded="true" signature="13717:13949" ph="{...}" />
+                <marker date="1463510754158" expanded="true" signature="13953:14162" ph="/// ..." />
+                <marker date="1463510754158" expanded="true" signature="14224:14618" ph="{...}" />
+                <marker date="1463510754158" expanded="true" signature="14639:14904" ph="/// ..." />
+                <marker date="1463510754158" expanded="true" signature="14968:15304" ph="{...}" />
+                <marker date="1463510754158" expanded="true" signature="15308:15559" ph="/// ..." />
+                <marker date="1463510754158" expanded="true" signature="15656:15863" ph="{...}" />
+                <marker date="1463510754158" expanded="true" signature="15867:16090" ph="/// ..." />
+                <marker date="1463510754158" expanded="true" signature="16158:17474" ph="{...}" />
+                <marker date="1463510754158" expanded="true" signature="17539:18383" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="HTTPProtocolHandler.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Launchpad.Launcher/Handlers/Protocols/HTTPProtocolHandler.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1047">
+              <caret line="566" column="28" selection-start-line="566" selection-start-column="28" selection-end-line="566" selection-end-column="28" />
+              <folding>
+                <marker date="1463511379790" expanded="true" signature="800:969" ph="..." />
+                <marker date="1463511379790" expanded="true" signature="1018:28155" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="1022:1188" ph="/// ..." />
+                <marker date="1463511379790" expanded="true" signature="1254:28153" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="1368:2316" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="2384:2580" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="2626:2651" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="2692:2724" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="2769:3061" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="3102:3381" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="3419:3986" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="4029:5353" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="5395:6545" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="6586:7941" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="7978:9320" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="9357:10596" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="10600:10840" ph="/// ..." />
+                <marker date="1463511379790" expanded="true" signature="10906:13503" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="13507:13776" ph="/// ..." />
+                <marker date="1463511379790" expanded="true" signature="13834:14567" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="14571:15076" ph="/// ..." />
+                <marker date="1463511379790" expanded="true" signature="15212:17570" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="17591:17961" ph="/// ..." />
+                <marker date="1463511379790" expanded="true" signature="18037:19456" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="19460:19825" ph="/// ..." />
+                <marker date="1463511379790" expanded="true" signature="19947:20074" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="20078:20357" ph="/// ..." />
+                <marker date="1463511379790" expanded="true" signature="20460:20573" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="20577:20937" ph="/// ..." />
+                <marker date="1463511379790" expanded="true" signature="21053:21174" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="21178:21558" ph="/// ..." />
+                <marker date="1463511379790" expanded="true" signature="21664:21775" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="21779:22106" ph="/// ..." />
+                <marker date="1463511379790" expanded="true" signature="22198:22701" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="22705:22923" ph="/// ..." />
+                <marker date="1463511379790" expanded="true" signature="22967:23400" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="23404:23520" ph="/// ..." />
+                <marker date="1463511379790" expanded="true" signature="23560:23981" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="23985:24062" ph="/// ..." />
+                <marker date="1463511379790" expanded="true" signature="24099:24297" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="24301:24388" ph="/// ..." />
+                <marker date="1463511379790" expanded="true" signature="24430:24648" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="24693:24866" ph="/// ..." />
+                <marker date="1463511379790" expanded="true" signature="24906:25261" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="25265:25447" ph="/// ..." />
+                <marker date="1463511379790" expanded="true" signature="25492:25862" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="25907:26033" ph="/// ..." />
+                <marker date="1463511379790" expanded="true" signature="26081:26234" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="26238:26384" ph="/// ..." />
+                <marker date="1463511379790" expanded="true" signature="26437:26595" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="26599:26664" ph="/// ..." />
+                <marker date="1463511379790" expanded="true" signature="26702:27380" ph="{...}" />
+                <marker date="1463511379790" expanded="true" signature="27384:27454" ph="/// ..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Launchpad.sln" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Launchpad.sln">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="30">
+              <caret line="2" column="20" selection-start-line="2" selection-start-column="20" selection-end-line="2" selection-end-column="20" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/Launchpad.Launcher/Unix-UI/MainWindow.cs" />
+        <option value="$PROJECT_DIR$/Launchpad.Launcher/Handlers/Protocols/HTTPProtocolHandler.cs" />
+        <option value="$PROJECT_DIR$/Launchpad.sln" />
+      </list>
+    </option>
+  </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="3359" />
-    <option name="width" value="1442" />
-    <option name="height" value="900" />
+    <option name="x" value="1439" />
+    <option name="width" value="1922" />
+    <option name="height" value="1055" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+          <State>
+            <id>General</id>
+          </State>
+          <State>
+            <id>HTML</id>
+          </State>
+          <State>
+            <id>Internationalization issues</id>
+          </State>
+          <State>
+            <id>RELAX NG</id>
+          </State>
+          <State>
+            <id>XML</id>
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>HTML</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -61,7 +228,7 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="Launchpad" />
-              <option name="myItemType" value="com.jetbrains.resharper.projectView.nodes.RiderProjectViewNode" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -71,20 +238,100 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="Launchpad" />
-              <option name="myItemType" value="com.jetbrains.resharper.projectView.nodes.RiderProjectViewNode" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="Launchpad.Translations" />
-              <option name="myItemType" value="com.jetbrains.resharper.projectView.nodes.RiderProjectViewNode" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="References" />
-              <option name="myItemType" value="com.jetbrains.resharper.projectView.nodes.RiderProjectViewNode" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Launchpad" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Launchpad" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Launchpad.Launcher" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Launchpad" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Launchpad" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Launchpad.Launcher" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Unix-UI" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MainWindow.cs" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Launchpad" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Launchpad" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Launchpad.Launcher" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Handlers" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Launchpad" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Launchpad" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Launchpad.Launcher" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Handlers" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Protocols" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
     </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
+    <property name="settings.editor.splitter.proportion" value="0.2" />
   </component>
   <component name="RunManager" selected=".NET Project.Default">
     <configuration default="true" type="DotNetProject" factoryName=".NET Project">
@@ -118,31 +365,32 @@
       <changelist id="f16a2963-c622-4c27-93e8-8e8f631c2eae" name="Default" comment="" />
       <created>1458231548117</created>
       <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
       <updated>1458231548117</updated>
     </task>
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="3359" y="0" width="1442" height="900" extended-state="6" />
-    <editor active="false" />
+    <frame x="1439" y="0" width="1922" height="1055" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Errors in solution" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Build" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32917705" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1875" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Errors in solution" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Build" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32845187" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3294979" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="NuGet" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="NuGet" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -160,5 +408,117 @@
   <component name="XDebuggerManager">
     <breakpoint-manager />
     <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/Launchpad.Launcher/Unix-UI/MainWindow.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="489">
+          <caret line="112" column="13" selection-start-line="112" selection-start-column="13" selection-end-line="112" selection-end-column="13" />
+          <folding>
+            <marker date="1463510754158" expanded="true" signature="791:1006" ph="..." />
+            <marker date="1463510754158" expanded="true" signature="1043:18388" ph="{...}" />
+            <marker date="1463510754158" expanded="true" signature="1110:18386" ph="{...}" />
+            <marker date="1463510754158" expanded="true" signature="1116:1182" ph="/// ..." />
+            <marker date="1463510754158" expanded="true" signature="1252:1318" ph="/// ..." />
+            <marker date="1463510754158" expanded="true" signature="1363:1476" ph="/// ..." />
+            <marker date="1463510754158" expanded="true" signature="1525:1631" ph="/// ..." />
+            <marker date="1463510754158" expanded="true" signature="1672:1731" ph="/// ..." />
+            <marker date="1463510754158" expanded="true" signature="1787:1919" ph="/// ..." />
+            <marker date="1463510754158" expanded="true" signature="1970:2032" ph="/// ..." />
+            <marker date="1463510754158" expanded="true" signature="2174:6084" ph="{...}" />
+            <marker date="1463510754158" expanded="true" signature="6088:6323" ph="/// ..." />
+            <marker date="1463510754158" expanded="true" signature="6395:8224" ph="{...}" />
+            <marker date="1463510754158" expanded="true" signature="8228:8417" ph="/// ..." />
+            <marker date="1463510754158" expanded="true" signature="8482:8533" ph="{...}" />
+            <marker date="1463510754158" expanded="true" signature="8537:8718" ph="/// ..." />
+            <marker date="1463510754158" expanded="true" signature="8791:8945" ph="{...}" />
+            <marker date="1463510754158" expanded="true" signature="8949:9267" ph="/// ..." />
+            <marker date="1463510754158" expanded="true" signature="9335:13077" ph="{...}" />
+            <marker date="1463510754158" expanded="true" signature="13081:13327" ph="/// ..." />
+            <marker date="1463510754158" expanded="true" signature="13425:13623" ph="{...}" />
+            <marker date="1463510754158" expanded="true" signature="13717:13949" ph="{...}" />
+            <marker date="1463510754158" expanded="true" signature="13953:14162" ph="/// ..." />
+            <marker date="1463510754158" expanded="true" signature="14224:14618" ph="{...}" />
+            <marker date="1463510754158" expanded="true" signature="14639:14904" ph="/// ..." />
+            <marker date="1463510754158" expanded="true" signature="14968:15304" ph="{...}" />
+            <marker date="1463510754158" expanded="true" signature="15308:15559" ph="/// ..." />
+            <marker date="1463510754158" expanded="true" signature="15656:15863" ph="{...}" />
+            <marker date="1463510754158" expanded="true" signature="15867:16090" ph="/// ..." />
+            <marker date="1463510754158" expanded="true" signature="16158:17474" ph="{...}" />
+            <marker date="1463510754158" expanded="true" signature="17539:18383" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Launchpad.Launcher/Handlers/Protocols/HTTPProtocolHandler.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1047">
+          <caret line="566" column="28" selection-start-line="566" selection-start-column="28" selection-end-line="566" selection-end-column="28" />
+          <folding>
+            <marker date="1463511379790" expanded="true" signature="800:969" ph="..." />
+            <marker date="1463511379790" expanded="true" signature="1018:28155" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="1022:1188" ph="/// ..." />
+            <marker date="1463511379790" expanded="true" signature="1254:28153" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="1368:2316" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="2384:2580" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="2626:2651" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="2692:2724" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="2769:3061" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="3102:3381" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="3419:3986" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="4029:5353" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="5395:6545" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="6586:7941" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="7978:9320" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="9357:10596" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="10600:10840" ph="/// ..." />
+            <marker date="1463511379790" expanded="true" signature="10906:13503" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="13507:13776" ph="/// ..." />
+            <marker date="1463511379790" expanded="true" signature="13834:14567" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="14571:15076" ph="/// ..." />
+            <marker date="1463511379790" expanded="true" signature="15212:17570" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="17591:17961" ph="/// ..." />
+            <marker date="1463511379790" expanded="true" signature="18037:19456" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="19460:19825" ph="/// ..." />
+            <marker date="1463511379790" expanded="true" signature="19947:20074" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="20078:20357" ph="/// ..." />
+            <marker date="1463511379790" expanded="true" signature="20460:20573" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="20577:20937" ph="/// ..." />
+            <marker date="1463511379790" expanded="true" signature="21053:21174" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="21178:21558" ph="/// ..." />
+            <marker date="1463511379790" expanded="true" signature="21664:21775" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="21779:22106" ph="/// ..." />
+            <marker date="1463511379790" expanded="true" signature="22198:22701" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="22705:22923" ph="/// ..." />
+            <marker date="1463511379790" expanded="true" signature="22967:23400" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="23404:23520" ph="/// ..." />
+            <marker date="1463511379790" expanded="true" signature="23560:23981" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="23985:24062" ph="/// ..." />
+            <marker date="1463511379790" expanded="true" signature="24099:24297" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="24301:24388" ph="/// ..." />
+            <marker date="1463511379790" expanded="true" signature="24430:24648" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="24693:24866" ph="/// ..." />
+            <marker date="1463511379790" expanded="true" signature="24906:25261" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="25265:25447" ph="/// ..." />
+            <marker date="1463511379790" expanded="true" signature="25492:25862" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="25907:26033" ph="/// ..." />
+            <marker date="1463511379790" expanded="true" signature="26081:26234" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="26238:26384" ph="/// ..." />
+            <marker date="1463511379790" expanded="true" signature="26437:26595" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="26599:26664" ph="/// ..." />
+            <marker date="1463511379790" expanded="true" signature="26702:27380" ph="{...}" />
+            <marker date="1463511379790" expanded="true" signature="27384:27454" ph="/// ..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Launchpad.sln">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="20" selection-start-line="2" selection-start-column="20" selection-end-line="2" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
   </component>
 </project>

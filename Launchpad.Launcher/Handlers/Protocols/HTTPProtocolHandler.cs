@@ -39,11 +39,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 	{
 		private readonly ManifestHandler manifestHandler = new ManifestHandler();
 
-		public HTTPProtocolHandler()
-			: base()
-		{
-		}
-
 		public override bool CanPatch()
 		{
 			bool bCanConnectToServer;
@@ -244,12 +239,12 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		{
 			try
 			{
-				List<ManifestEntry> Manifest = manifestHandler.LaunchpadManifest;			
+				List<ManifestEntry> Manifest = manifestHandler.LaunchpadManifest;
 				List<ManifestEntry> BrokenFiles = new List<ManifestEntry>();
-							
+
 				int verifiedFiles = 0;
 				foreach (ManifestEntry Entry in Manifest)
-				{					
+				{
 					++verifiedFiles;
 
 					// Prepare the progress event contents
@@ -264,7 +259,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 				int downloadedFiles = 0;
 				foreach (ManifestEntry Entry in BrokenFiles)
-				{					
+				{
 					++downloadedFiles;
 
 					// Prepare the progress event contents
@@ -272,7 +267,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					OnModuleDownloadProgressChanged();
 
 					for (int i = 0; i < Config.GetFileRetries(); ++i)
-					{					
+					{
 						if (!Entry.IsFileIntegrityIntact())
 						{
 							DownloadEntry(Entry, EModule.Launcher);
@@ -287,7 +282,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			catch (IOException ioex)
 			{
 				Console.WriteLine("IOException in VerifyLauncher(): " + ioex.Message);
-				OnModuleInstallationFailed();			
+				OnModuleInstallationFailed();
 			}
 
 			OnModuleInstallationFinished();
@@ -297,12 +292,12 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		{
 			try
 			{
-				List<ManifestEntry> Manifest = manifestHandler.GameManifest;			
+				List<ManifestEntry> Manifest = manifestHandler.GameManifest;
 				List<ManifestEntry> BrokenFiles = new List<ManifestEntry>();
-							
+
 				int verifiedFiles = 0;
 				foreach (ManifestEntry Entry in Manifest)
-				{					
+				{
 					++verifiedFiles;
 
 					// Prepare the progress event contents
@@ -317,7 +312,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 				int downloadedFiles = 0;
 				foreach (ManifestEntry Entry in BrokenFiles)
-				{					
+				{
 					++downloadedFiles;
 
 					// Prepare the progress event contents
@@ -325,7 +320,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					OnModuleDownloadProgressChanged();
 
 					for (int i = 0; i < Config.GetFileRetries(); ++i)
-					{					
+					{
 						if (!Entry.IsFileIntegrityIntact())
 						{
 							DownloadEntry(Entry, EModule.Game);
@@ -340,7 +335,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			catch (IOException ioex)
 			{
 				Console.WriteLine("IOException in VerifyGame(): " + ioex.Message);
-				OnModuleInstallationFailed();			
+				OnModuleInstallationFailed();
 			}
 
 			OnModuleInstallationFinished();
@@ -421,16 +416,16 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				                   baseLocalPath,
 				                   Path.DirectorySeparatorChar, 
 				                   Entry.RelativePath);
-					                   				
+
 			// Make sure we have a directory to put the file in
 			Directory.CreateDirectory(Path.GetDirectoryName(LocalPath));
-				
+
 			// Reset the cookie
 			File.WriteAllText(ConfigHandler.GetInstallCookiePath(), String.Empty);
 
 			// Write the current file progress to the install cookie
 			using (TextWriter textWriterProgress = new StreamWriter(ConfigHandler.GetInstallCookiePath()))
-			{					
+			{
 				textWriterProgress.WriteLine(Entry);
 				textWriterProgress.Flush();
 			}
@@ -443,13 +438,13 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					// If the file is partial, resume the download.
 					if (fileInfo.Length < Entry.Size)
 					{
-						DownloadRemoteFile(RemotePath, LocalPath, fileInfo.Length);
+						DownloadRemoteFile(RemotePath, LocalPath, Entry.Size, fileInfo.Length);
 					}
 					else
 					{
 						// If it's larger than expected, toss it in the bin and try again.
 						File.Delete(LocalPath);
-						DownloadRemoteFile(RemotePath, LocalPath);
+						DownloadRemoteFile(RemotePath, LocalPath, Entry.Size);
 					}
 				}
 				else
@@ -463,15 +458,15 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					if (LocalHash != Entry.Hash)
 					{
 						File.Delete(LocalPath);
-						DownloadRemoteFile(RemotePath, LocalPath);
+						DownloadRemoteFile(RemotePath, LocalPath, Entry.Size);
 					}
-				}							
+				}
 			}
 			else
 			{
 				//no file, download it
-				DownloadRemoteFile(RemotePath, LocalPath);
-			}		
+				DownloadRemoteFile(RemotePath, LocalPath, Entry.Size);
+			}
 
 			if (ChecksHandler.IsRunningOnUnix())
 			{
@@ -482,7 +477,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				{
 					//set the execute bits
 					UnixHandler.MakeExecutable(LocalPath);
-				}					
+				}
 			}
 
 			// We've finished the download, so empty the cookie
@@ -534,9 +529,10 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// </summary>
 		/// <param name="URL">The remote URL of the file..</param>
 		/// <param name="localPath">Local path where the file is to be stored.</param>
+		/// <param name="totalSize">Total size of the file as stated in the manifest.</param>
 		/// <param name="contentOffset">Content offset. If nonzero, appends data to an existing file.</param>
 		/// <param name="useAnonymousLogin">If set to <c>true</c> use anonymous login.</param>
-		private void DownloadRemoteFile(string URL, string localPath, long contentOffset = 0, bool useAnonymousLogin = false)
+		private void DownloadRemoteFile(string URL, string localPath, long totalSize, long contentOffset = 0, bool useAnonymousLogin = false)
 		{
 			//clean the URL string
 			string remoteURL = URL.Replace(Path.DirectorySeparatorChar, '/');
@@ -566,27 +562,21 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					using (FileStream fileStream = contentOffset > 0 ? new FileStream(localPath, FileMode.Append) :
 																		new FileStream(localPath, FileMode.Create))
 					{
-						fileStream.Position = contentOffset;
-						long totalBytesDownloaded = contentOffset;
-						long totalFileSize = contentOffset + contentStream.Length;
-
-						if (contentStream.Length < 4096)
+						try
 						{
-							byte[] smallBuffer = new byte[contentStream.Length];
-							contentStream.Read(smallBuffer, 0, smallBuffer.Length);
+							fileStream.Position = contentOffset;
+							long totalBytesDownloaded = contentOffset;
 
-							fileStream.Write(smallBuffer, 0, smallBuffer.Length);
+							long totalFileSize;
+							if (contentStream.CanSeek)
+							{
+								totalFileSize = contentOffset + contentStream.Length;
+							}
+							else
+							{
+								totalFileSize = totalSize;
+							}
 
-							totalBytesDownloaded += smallBuffer.Length;
-
-							// Report download progress
-							ModuleDownloadProgressArgs.ProgressBarMessage = GetDownloadProgressBarMessage(Path.GetFileName(remoteURL), 
-								totalBytesDownloaded, totalFileSize);
-							ModuleDownloadProgressArgs.ProgressFraction = (double)totalBytesDownloaded / (double)totalFileSize;
-							OnModuleDownloadProgressChanged();
-						}
-						else
-						{
 							byte[] buffer = new byte[4096];
 
 							while (true)
@@ -603,14 +593,19 @@ namespace Launchpad.Launcher.Handlers.Protocols
 								totalBytesDownloaded += bytesRead;
 
 								// Report download progress
-								ModuleDownloadProgressArgs.ProgressBarMessage = GetDownloadProgressBarMessage(Path.GetFileName(remoteURL), 
+								ModuleDownloadProgressArgs.ProgressBarMessage = GetDownloadProgressBarMessage(Path.GetFileName(remoteURL),
 									totalBytesDownloaded, totalFileSize);
 								ModuleDownloadProgressArgs.ProgressFraction = (double)totalBytesDownloaded / (double)totalFileSize;
 								OnModuleDownloadProgressChanged();
 							}
-						}
 
-						fileStream.Flush();
+							fileStream.Flush();
+						}
+						catch (NullReferenceException nex)
+						{
+
+							Console.WriteLine(String.Format("NullReferenceException in DownloadRemoteFile: Couldn't establish a network connection. {0}", nex.Message));
+						}
 					}
 				}
 			}
@@ -948,10 +943,10 @@ namespace Launchpad.Launcher.Handlers.Protocols
 						File.Delete(OldLocalPath);
 					}
 
-					File.Move(LocalPath, OldLocalPath);			
-				}						
+					File.Move(LocalPath, OldLocalPath);
+				}
 
-				DownloadRemoteFile(RemoteURL, LocalPath);
+				DownloadRemoteFile(RemoteURL, LocalPath, 0);
 			}
 			catch (IOException ioex)
 			{
@@ -978,10 +973,10 @@ namespace Launchpad.Launcher.Handlers.Protocols
 						File.Delete(OldLocalPath);
 					}
 
-					File.Move(LocalPath, OldLocalPath);			
-				}						
+					File.Move(LocalPath, OldLocalPath);
+				}
 
-				DownloadRemoteFile(RemoteURL, LocalPath);
+				DownloadRemoteFile(RemoteURL, LocalPath, 0);
 			}
 			catch (IOException ioex)
 			{

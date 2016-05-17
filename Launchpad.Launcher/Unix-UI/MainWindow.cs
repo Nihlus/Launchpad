@@ -37,7 +37,7 @@ namespace Launchpad.Launcher.UnixUI
 		/// <summary>
 		/// The config handler reference.
 		/// </summary>
-		ConfigHandler Config = ConfigHandler.Instance;
+		private readonly ConfigHandler Config = ConfigHandler.Instance;
 
 		/// <summary>
 		/// The checks handler reference.
@@ -57,7 +57,7 @@ namespace Launchpad.Launcher.UnixUI
 		/// <summary>
 		/// The changelog browser.
 		/// </summary>
-		WebView Browser = new WebView();
+		private readonly WebView Browser = new WebView();
 
 		/// <summary>
 		/// The current mode that the launcher is in. Determines what the primary button does when pressed.
@@ -71,7 +71,7 @@ namespace Launchpad.Launcher.UnixUI
 
 		public MainWindow()
 			: base(WindowType.Toplevel)
-		{					
+		{
 			//Initialize the config files and check values.
 			Config.Initialize();
 
@@ -139,8 +139,8 @@ namespace Launchpad.Launcher.UnixUI
 						Console.WriteLine("Exiting...");
 						Environment.Exit(0);
 					}
-				} 
-				
+				}
+
 				if (Config.ShouldAllowAnonymousStats())
 				{
 					StatsHandler.SendUsageStats();
@@ -215,7 +215,7 @@ namespace Launchpad.Launcher.UnixUI
 						{
 							PrimaryButton.Sensitive = true;
 							PrimaryButton.Label = LocalizationCatalog.GetString("Install");
-						}	
+						}
 						break;
 					}
 				case ELauncherMode.Update:
@@ -229,9 +229,9 @@ namespace Launchpad.Launcher.UnixUI
 						{
 							PrimaryButton.Sensitive = true;
 							PrimaryButton.Label = LocalizationCatalog.GetString("Update");
-						}					
+						}
 						break;
-					}					
+					}
 				case ELauncherMode.Repair:
 					{
 						if (bInProgress)
@@ -243,9 +243,9 @@ namespace Launchpad.Launcher.UnixUI
 						{
 							PrimaryButton.Sensitive = true;
 							PrimaryButton.Label = LocalizationCatalog.GetString("Repair");
-						}	
+						}
 						break;
-					}					
+					}
 				case ELauncherMode.Launch:
 					{
 						if (bInProgress)
@@ -257,7 +257,7 @@ namespace Launchpad.Launcher.UnixUI
 						{
 							PrimaryButton.Sensitive = true;
 							PrimaryButton.Label = LocalizationCatalog.GetString("Launch");
-						}	
+						}
 						break;
 					}
 				case ELauncherMode.Inactive:
@@ -265,10 +265,10 @@ namespace Launchpad.Launcher.UnixUI
 						PrimaryButton.Sensitive = false;
 						PrimaryButton.Label = LocalizationCatalog.GetString("Inactive");
 						break;
-					}					
+					}
 				default:
 					{
-						throw new ArgumentOutOfRangeException("newMode", "Invalid mode was passed to SetLauncherMode");
+						throw new ArgumentOutOfRangeException(nameof(newMode), "Invalid mode was passed to SetLauncherMode");
 					}
 			}
 		}
@@ -290,7 +290,7 @@ namespace Launchpad.Launcher.UnixUI
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
 		protected void OnRepairGameActionActivated(object sender, EventArgs e)
-		{			
+		{
 			SetLauncherMode(ELauncherMode.Repair, false);
 
 			// Simulate a button press from the user.
@@ -313,7 +313,7 @@ namespace Launchpad.Launcher.UnixUI
 			{
 				case ELauncherMode.Repair:
 					{
-						//bind events for UI updating					
+						//bind events for UI updating
 						Game.ProgressChanged += OnModuleInstallationProgressChanged;
 						Game.GameDownloadFinished += OnGameDownloadFinished;
 						Game.GameDownloadFailed += OnGameDownloadFailed;
@@ -322,7 +322,7 @@ namespace Launchpad.Launcher.UnixUI
 						{
 							//Repair the game asynchronously
 							SetLauncherMode(ELauncherMode.Repair, true);
-							Game.VerifyGame();                        
+							Game.VerifyGame();
 						}
 						else
 						{
@@ -338,18 +338,18 @@ namespace Launchpad.Launcher.UnixUI
 					}
 				case ELauncherMode.Install:
 					{
-						//bind events for UI updating					
+						//bind events for UI updating
 						Game.ProgressChanged += OnModuleInstallationProgressChanged;
 						Game.GameDownloadFinished += OnGameDownloadFinished;
 						Game.GameDownloadFailed += OnGameDownloadFailed;
-						
+
 						//check for a .provides file in the platform directory on the server
 						//if there is none, the server does not provide a game for that platform
 						if (Checks.IsPlatformAvailable(Config.GetSystemTarget()))
 						{
 							//install the game asynchronously
 							SetLauncherMode(ELauncherMode.Install, true);
-							Game.InstallGame();                        
+							Game.InstallGame();
 						}
 						else
 						{
@@ -366,14 +366,14 @@ namespace Launchpad.Launcher.UnixUI
 				case ELauncherMode.Update:
 					{
 						if (Checks.IsLauncherOutdated())
-						{				
+						{
 							SetLauncherMode(ELauncherMode.Update, true);
 							Launcher.LauncherDownloadFinished += OnLauncherDownloadFinished;
 							Launcher.LauncherDownloadProgressChanged += OnModuleInstallationProgressChanged;
-							Launcher.UpdateLauncher();                        
+							Launcher.UpdateLauncher();
 						}
 						else
-						{					
+						{
 							//bind events for UI updating
 							Game.ProgressChanged += OnModuleInstallationProgressChanged;
 							Game.GameDownloadFinished += OnGameDownloadFinished;
@@ -384,7 +384,7 @@ namespace Launchpad.Launcher.UnixUI
 							{
 								//install the game asynchronously
 								SetLauncherMode(ELauncherMode.Update, true);
-								Game.UpdateGame();                            
+								Game.UpdateGame();
 							}
 							else
 							{
@@ -395,8 +395,8 @@ namespace Launchpad.Launcher.UnixUI
 								noProvide.Show();
 
 								SetLauncherMode(ELauncherMode.Install, false);
-							}								
-						}												
+							}
+						}
 						break;
 					}
 				case ELauncherMode.Launch:
@@ -408,7 +408,7 @@ namespace Launchpad.Launcher.UnixUI
 						//thus, we set the mode before the actual launching of the game.
 						SetLauncherMode(ELauncherMode.Launch, true);
 						Game.LaunchGame();
-					
+
 						break;
 					}
 				default:
@@ -492,7 +492,7 @@ namespace Launchpad.Launcher.UnixUI
 					}
 			}
 
-			SetLauncherMode(Mode, false);		
+			SetLauncherMode(Mode, false);
 		}
 
 		/// <summary>
@@ -503,7 +503,7 @@ namespace Launchpad.Launcher.UnixUI
 		protected void OnModuleInstallationProgressChanged(object sender, ModuleProgressChangedArgs e)
 		{
 			Application.Invoke(delegate
-				{			
+				{
 					MainProgressBar.Text = e.ProgressBarMessage;
 					IndicatorLabel.Text = e.IndicatorLabelMessage;
 					MainProgressBar.Fraction = e.ProgressFraction;
@@ -540,20 +540,20 @@ namespace Launchpad.Launcher.UnixUI
 								break;
 							}
 						case ELauncherMode.Update:
-							{								
+							{
 								downloadCompleteNotification.Summary = LocalizationCatalog.GetString("Launchpad - Info");
 								downloadCompleteNotification.Body = LocalizationCatalog.GetString("Game update finished. Play away!");
 								break;
 							}
 						default:
-							{								
+							{
 								break;
 							}
 					}
 
 					downloadCompleteNotification.Show();
 					SetLauncherMode(ELauncherMode.Launch, false);
-				});			          
+				});
 		}
 
 		private void OnGameExited(object sender, GameExitEventArgs e)
