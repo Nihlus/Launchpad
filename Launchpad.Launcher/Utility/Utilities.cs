@@ -26,6 +26,11 @@ namespace Launchpad.Launcher.Utility
 {
 	internal static class Utilities
 	{
+		public static int Clamp(this int value, int min, int max)
+		{  
+			return (value < min) ? min : (value > max) ? max : value;  
+		}
+
 		/// <summary>
 		/// Clean the specified input from newlines and nulls (\r, \n and \0)
 		/// </summary>

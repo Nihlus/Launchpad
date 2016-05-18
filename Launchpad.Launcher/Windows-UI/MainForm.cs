@@ -27,6 +27,7 @@ using Launchpad.Launcher.Utility.Enums;
 using Launchpad.Launcher.Handlers.Protocols;
 using NGettext;
 using System.Diagnostics;
+using Launchpad.Launcher.Utility;
 
 namespace Launchpad.Launcher.WindowsUI
 {
@@ -487,7 +488,8 @@ namespace Launchpad.Launcher.WindowsUI
 					mainProgressBar.Maximum = 10000;
 
 					double fraction = e.ProgressFraction * 10000;
-					mainProgressBar.Value = (int)fraction;
+					// HACK: Clamping the value, it goes bonkers sometimes and explodes into huge values.
+					mainProgressBar.Value = ((int)fraction).Clamp(mainProgressBar.Minimum, mainProgressBar.Maximum);
 					mainProgressBar.Update();  
                
 				});                      
