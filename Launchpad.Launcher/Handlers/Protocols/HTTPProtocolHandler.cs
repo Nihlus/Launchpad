@@ -655,30 +655,20 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				string data = "";
 				using (Stream remoteStream = request.GetResponse().GetResponseStream())
 				{
-					if (remoteStream.Length < 262144)
-					{
-						byte[] smallBuffer = new byte[remoteStream.Length];
-						remoteStream.Read(smallBuffer, 0, smallBuffer.Length);
+					byte[] buffer = new byte[4096];
 
-						data = Encoding.UTF8.GetString(smallBuffer, 0, smallBuffer.Length);
-					}
-					else
+					while (true)
 					{
-						// The large buffer size is 256kb. More or less than this reduces download speeds.
-						byte[] buffer = new byte[262144];
+						int bytesRead = remoteStream.Read(buffer, 0, buffer.Length);
 
-						while (true)
+						if (bytesRead == 0)
 						{
-							int bytesRead = remoteStream.Read(buffer, 0, buffer.Length);
-
-							if (bytesRead == 0)
-							{
-								break;
-							}
-
-							data += Encoding.UTF8.GetString(buffer, 0, bytesRead);
+							break;
 						}
+
+						data += Encoding.UTF8.GetString(buffer, 0, bytesRead);
 					}
+					
 				}
 
 				return Utilities.Clean(data);
