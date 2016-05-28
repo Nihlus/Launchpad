@@ -5,7 +5,7 @@
     <target-gtk-version>2.12</target-gtk-version>
   </configuration>
   <import>
-    <widget-library name="../bin/Release-Windows/Launchpad.Utilities.exe" internal="true" />
+    <widget-library name="../bin/Debug/Launchpad.Utilities.exe" internal="true" />
   </import>
   <widget class="Gtk.Window" id="Launchpad.Utilities.UnixUI.MainWindow" design-size="640 384">
     <action-group name="Default" />

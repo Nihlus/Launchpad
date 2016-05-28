@@ -161,4 +161,11 @@
     <Folder Include="Utility\Events\" />
     <Folder Include="Unix-UI\" />
   </ItemGroup>
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <GtkDesignInfo generateGettext="False" />
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
 </Project>
