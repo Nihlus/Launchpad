@@ -1,7 +1,8 @@
 Launchpad
 =========
 
-An UE4-compatible game launcher
+An open-souce launcher for your games.
+Launchpad was originally made for Unreal Engine 4, but supports arbitrary software and games. 
 
 [![Build Status](https://travis-ci.org/Nihlus/Launchpad.svg?branch=master)](https://travis-ci.org/Nihlus/Launchpad)
 
@@ -11,7 +12,7 @@ Features:
 
 * Self-updating
 * Can install, update and verify the game installation
-* Basic design (I am not an artist)
+* Support for a number of widespread protocols (currently FTP and HTTP/HTTPS)
 
 Usage guide: https://forums.unrealengine.com/showthread.php?29904-Launchpad-A-free-open-source-UE4-compatible-game-launcher
 

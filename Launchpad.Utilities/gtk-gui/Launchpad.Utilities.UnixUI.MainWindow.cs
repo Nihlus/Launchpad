@@ -53,7 +53,7 @@ namespace Launchpad.Utilities.UnixUI
 			this.WidthRequest = 640;
 			this.HeightRequest = 384;
 			this.Name = "Launchpad.Utilities.UnixUI.MainWindow";
-			this.Title = global::Mono.Unix.Catalog.GetString ("Launchpad Utilities - Manifest");
+			this.Title = LocalizationCatalog.GetString ("Launchpad Utilities - Manifest");
 			this.Icon = global::Gdk.Pixbuf.LoadFromResource ("Launchpad.Utilities.Resources.Icons8-Android-Industry-Engineering.ico");
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
 			// Container child Launchpad.Utilities.UnixUI.MainWindow.Gtk.Container+ContainerChild
@@ -105,7 +105,7 @@ namespace Launchpad.Utilities.UnixUI
 			// Container child alignment18.Gtk.Container+ContainerChild
 			this.label4 = new global::Gtk.Label ();
 			this.label4.Name = "label4";
-			this.label4.LabelProp = global::Mono.Unix.Catalog.GetString ("Progress: ");
+			this.label4.LabelProp = LocalizationCatalog.GetString ("Progress: ");
 			this.alignment18.Add (this.label4);
 			this.hbox4.Add (this.alignment18);
 			global::Gtk.Box.BoxChild w8 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.alignment18]));
@@ -119,7 +119,7 @@ namespace Launchpad.Utilities.UnixUI
 			// Container child alignment19.Gtk.Container+ContainerChild
 			this.progressLabel = new global::Gtk.Label ();
 			this.progressLabel.Name = "progressLabel";
-			this.progressLabel.LabelProp = global::Mono.Unix.Catalog.GetString ("/some/file/path : 1 out of 100");
+			this.progressLabel.LabelProp = LocalizationCatalog.GetString ("/some/file/path : 1 out of 100");
 			this.alignment19.Add (this.progressLabel);
 			this.hbox4.Add (this.alignment19);
 			global::Gtk.Box.BoxChild w10 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.alignment19]));
@@ -159,7 +159,7 @@ namespace Launchpad.Utilities.UnixUI
 			this.generateGameManifestButton.CanFocus = true;
 			this.generateGameManifestButton.Name = "generateGameManifestButton";
 			this.generateGameManifestButton.UseUnderline = true;
-			this.generateGameManifestButton.Label = global::Mono.Unix.Catalog.GetString ("Generate Game Manifest");
+			this.generateGameManifestButton.Label = LocalizationCatalog.GetString ("Generate Game Manifest");
 			this.alignment15.Add (this.generateGameManifestButton);
 			this.hbox3.Add (this.alignment15);
 			global::Gtk.Box.BoxChild w15 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.alignment15]));
@@ -177,7 +177,7 @@ namespace Launchpad.Utilities.UnixUI
 			this.generateLaunchpadManifestButton.CanFocus = true;
 			this.generateLaunchpadManifestButton.Name = "generateLaunchpadManifestButton";
 			this.generateLaunchpadManifestButton.UseUnderline = true;
-			this.generateLaunchpadManifestButton.Label = global::Mono.Unix.Catalog.GetString ("Generate Launchpad Manifest");
+			this.generateLaunchpadManifestButton.Label = LocalizationCatalog.GetString ("Generate Launchpad Manifest");
 			this.alignment1.Add (this.generateLaunchpadManifestButton);
 			this.hbox3.Add (this.alignment1);
 			global::Gtk.Box.BoxChild w17 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.alignment1]));
