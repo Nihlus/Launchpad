@@ -26,6 +26,7 @@ using System.IO;
 using System.Text;
 using Launchpad.Launcher.Utility;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace Launchpad.Launcher.Handlers.Protocols
 {
@@ -95,6 +96,27 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		public override string GetChangelog()
 		{
 			return String.Empty;
+		}
+
+		public override bool CanProvideBanner()
+		{
+			string bannerURL = String.Format("{0}/launcher/banner.png", 
+				                   Config.GetBaseHTTPUrl());
+
+			return DoesRemoteDirectoryOrFileExist(bannerURL);
+		}
+
+		public override Bitmap GetBanner()
+		{
+			string bannerURL = String.Format("{0}/launcher/banner.png", 
+				                   Config.GetBaseHTTPUrl());
+
+			string localBannerPath = String.Format("{0}/banner.png", 
+				                         Path.GetTempPath());
+
+			DownloadRemoteFile(bannerURL, localBannerPath, 0);
+
+			return new Bitmap(localBannerPath);
 		}
 
 		public override bool IsLauncherOutdated()
@@ -391,6 +413,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// downloads missing files.
 		/// </summary>
 		/// <param name="Entry">The entry to download.</param>
+		/// <param name="Module">The module the entry is used for.</param>
 		private void DownloadEntry(ManifestEntry Entry, EModule Module)
 		{
 			ModuleDownloadProgressArgs.Module = Module;

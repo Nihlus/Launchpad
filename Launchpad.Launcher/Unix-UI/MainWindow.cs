@@ -28,11 +28,14 @@ using Launchpad.Launcher.Handlers;
 using Launchpad.Launcher.Utility.Enums;
 using Launchpad.Launcher.Handlers.Protocols;
 using System.Diagnostics;
+using System.IO;
+using Gdk;
+using System.Drawing.Imaging;
 
 namespace Launchpad.Launcher.UnixUI
 {
 	[CLSCompliant(false)]
-	public partial class MainWindow : Window
+	public partial class MainWindow : Gtk.Window
 	{
 		/// <summary>
 		/// The config handler reference.
@@ -70,7 +73,7 @@ namespace Launchpad.Launcher.UnixUI
 		private readonly ICatalog LocalizationCatalog = new Catalog("Launchpad", "./locale");
 
 		public MainWindow()
-			: base(WindowType.Toplevel)
+			: base(Gtk.WindowType.Toplevel)
 		{
 			//Initialize the config files and check values.
 			Config.Initialize();
@@ -111,6 +114,21 @@ namespace Launchpad.Launcher.UnixUI
 			}
 			else
 			{
+				// TODO: Load this asynchronously
+				// Load the game banner (if there is one)
+				if (Config.GetPatchProtocol().CanProvideBanner())
+				{
+					using (MemoryStream bannerStream = new MemoryStream())
+					{
+						// Fetch the banner from the server
+						Config.GetPatchProtocol().GetBanner().Save(bannerStream, ImageFormat.Png);
+
+						// Load the image into a pixel buffer
+						bannerStream.Position = 0;
+						this.GameBanner.Pixbuf = new Pixbuf(bannerStream);
+					}
+				}
+
 				//if we can connect, proceed with the rest of our checks.
 				if (ChecksHandler.IsInitialStartup())
 				{
@@ -268,7 +286,7 @@ namespace Launchpad.Launcher.UnixUI
 					}
 				default:
 					{
-						throw new ArgumentOutOfRangeException(nameof(newMode), "Invalid mode was passed to SetLauncherMode");
+						throw new ArgumentOutOfRangeException("newMode", "Invalid mode was passed to SetLauncherMode");
 					}
 			}
 		}

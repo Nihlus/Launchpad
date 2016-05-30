@@ -21,6 +21,7 @@
 
 using System;
 using Launchpad.Launcher.Utility.Enums;
+using System.Drawing;
 
 namespace Launchpad.Launcher.Handlers.Protocols
 {
@@ -82,10 +83,22 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		public abstract bool CanProvideChangelog();
 
 		/// <summary>
+		/// Determines whether this protocol can provide access to a banner for the game.
+		/// </summary>
+		/// <returns><c>true</c> if this instance can provide banner; otherwise, <c>false</c>.</returns>
+		public abstract bool CanProvideBanner();
+
+		/// <summary>
 		/// Gets the changelog.
 		/// </summary>
 		/// <returns>The changelog.</returns>
 		public abstract string GetChangelog();
+
+		/// <summary>
+		/// Gets the banner.
+		/// </summary>
+		/// <returns>The banner.</returns>
+		public abstract Bitmap GetBanner();
 
 		/// <summary>
 		/// Checks whether or not the launcher has a new patch available.

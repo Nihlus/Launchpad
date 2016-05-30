@@ -9,7 +9,7 @@
     <widget-library name="webkit-sharp" />
     <widget-library name="../bin/Debug/Launchpad.exe" internal="true" />
   </import>
-  <widget class="Gtk.Window" id="Launchpad.Launcher.UnixUI.MainWindow" design-size="760 439">
+  <widget class="Gtk.Window" id="Launchpad.Launcher.UnixUI.MainWindow" design-size="764 403">
     <action-group name="Default">
       <action id="ActionsAction1">
         <property name="Type">Action</property>
@@ -96,12 +96,28 @@
               </packing>
             </child>
             <child>
-              <placeholder />
+              <widget class="Gtk.Alignment" id="alignment5">
+                <property name="MemberName" />
+                <child>
+                  <widget class="Gtk.Image" id="GameBanner">
+                    <property name="MemberName" />
+                    <property name="WidthRequest">450</property>
+                    <property name="HeightRequest">300</property>
+                    <property name="Pixbuf">resource:Launchpad.Launcher.Resources.RocketIcon.ico</property>
+                  </widget>
+                </child>
+              </widget>
+              <packing>
+                <property name="Position">1</property>
+                <property name="AutoSize">False</property>
+              </packing>
             </child>
           </widget>
           <packing>
             <property name="Position">1</property>
             <property name="AutoSize">True</property>
+            <property name="Expand">False</property>
+            <property name="Fill">False</property>
           </packing>
         </child>
         <child>

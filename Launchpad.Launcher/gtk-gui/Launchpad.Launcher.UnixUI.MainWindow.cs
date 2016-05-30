@@ -22,6 +22,10 @@ namespace Launchpad.Launcher.UnixUI
 		
 		private global::Gtk.ScrolledWindow ScrolledBrowserWindow;
 		
+		private global::Gtk.Alignment alignment5;
+		
+		private global::Gtk.Image GameBanner;
+		
 		private global::Gtk.Alignment alignment1;
 		
 		private global::Gtk.Label IndicatorLabel;
@@ -99,9 +103,24 @@ namespace Launchpad.Launcher.UnixUI
 			global::Gtk.Box.BoxChild w5 = ((global::Gtk.Box.BoxChild)(this.hbox2 [this.BrowserContainer]));
 			w5.Position = 0;
 			w5.Expand = false;
+			// Container child hbox2.Gtk.Box+BoxChild
+			this.alignment5 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
+			this.alignment5.Name = "alignment5";
+			// Container child alignment5.Gtk.Container+ContainerChild
+			this.GameBanner = new global::Gtk.Image ();
+			this.GameBanner.WidthRequest = 450;
+			this.GameBanner.HeightRequest = 300;
+			this.GameBanner.Name = "GameBanner";
+			this.GameBanner.Pixbuf = global::Gdk.Pixbuf.LoadFromResource ("Launchpad.Launcher.Resources.RocketIcon.ico");
+			this.alignment5.Add (this.GameBanner);
+			this.hbox2.Add (this.alignment5);
+			global::Gtk.Box.BoxChild w7 = ((global::Gtk.Box.BoxChild)(this.hbox2 [this.alignment5]));
+			w7.Position = 1;
 			this.vbox1.Add (this.hbox2);
-			global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.hbox2]));
-			w6.Position = 1;
+			global::Gtk.Box.BoxChild w8 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.hbox2]));
+			w8.Position = 1;
+			w8.Expand = false;
+			w8.Fill = false;
 			// Container child vbox1.Gtk.Box+BoxChild
 			this.alignment1 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
 			this.alignment1.Name = "alignment1";
@@ -113,10 +132,10 @@ namespace Launchpad.Launcher.UnixUI
 			this.IndicatorLabel.LabelProp = global::Mono.Unix.Catalog.GetString ("Idle");
 			this.alignment1.Add (this.IndicatorLabel);
 			this.vbox1.Add (this.alignment1);
-			global::Gtk.Box.BoxChild w8 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.alignment1]));
-			w8.Position = 2;
-			w8.Expand = false;
-			w8.Fill = false;
+			global::Gtk.Box.BoxChild w10 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.alignment1]));
+			w10.Position = 2;
+			w10.Expand = false;
+			w10.Fill = false;
 			// Container child vbox1.Gtk.Box+BoxChild
 			this.hbox3 = new global::Gtk.HBox ();
 			this.hbox3.Name = "hbox3";
@@ -130,8 +149,8 @@ namespace Launchpad.Launcher.UnixUI
 			this.MainProgressBar.Name = "MainProgressBar";
 			this.alignment4.Add (this.MainProgressBar);
 			this.hbox3.Add (this.alignment4);
-			global::Gtk.Box.BoxChild w10 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.alignment4]));
-			w10.Position = 0;
+			global::Gtk.Box.BoxChild w12 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.alignment4]));
+			w12.Position = 0;
 			// Container child hbox3.Gtk.Box+BoxChild
 			this.hbox4 = new global::Gtk.HBox ();
 			this.hbox4.Name = "hbox4";
@@ -150,18 +169,18 @@ namespace Launchpad.Launcher.UnixUI
 			this.PrimaryButton.Label = global::Mono.Unix.Catalog.GetString ("Inactive");
 			this.alignment3.Add (this.PrimaryButton);
 			this.hbox4.Add (this.alignment3);
-			global::Gtk.Box.BoxChild w12 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.alignment3]));
-			w12.Position = 0;
+			global::Gtk.Box.BoxChild w14 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.alignment3]));
+			w14.Position = 0;
 			this.hbox3.Add (this.hbox4);
-			global::Gtk.Box.BoxChild w13 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.hbox4]));
-			w13.Position = 1;
-			w13.Expand = false;
-			w13.Fill = false;
+			global::Gtk.Box.BoxChild w15 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.hbox4]));
+			w15.Position = 1;
+			w15.Expand = false;
+			w15.Fill = false;
 			this.vbox1.Add (this.hbox3);
-			global::Gtk.Box.BoxChild w14 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.hbox3]));
-			w14.Position = 3;
-			w14.Expand = false;
-			w14.Fill = false;
+			global::Gtk.Box.BoxChild w16 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.hbox3]));
+			w16.Position = 3;
+			w16.Expand = false;
+			w16.Fill = false;
 			this.Add (this.vbox1);
 			if ((this.Child != null)) {
 				this.Child.ShowAll ();

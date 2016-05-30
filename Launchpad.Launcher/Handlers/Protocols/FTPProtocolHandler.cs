@@ -26,6 +26,7 @@ using System.Text;
 using System.Collections.Generic;
 using Launchpad.Launcher.Utility;
 using Launchpad.Launcher.Utility.Enums;
+using System.Drawing;
 
 namespace Launchpad.Launcher.Handlers.Protocols
 {
@@ -105,6 +106,27 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		public override bool CanProvideChangelog()
 		{
 			return true;
+		}
+
+		public override bool CanProvideBanner()
+		{
+			string bannerURL = String.Format("{0}/launcher/banner.png", 
+				                   Config.GetBaseFTPUrl());
+
+			return DoesRemoteFileExist(bannerURL);
+		}
+
+		public override Bitmap GetBanner()
+		{
+			string bannerURL = String.Format("{0}/launcher/banner.png", 
+				                   Config.GetBaseFTPUrl());
+
+			string localBannerPath = String.Format("{0}/banner.png", 
+				                         Path.GetTempPath());
+
+			DownloadRemoteFile(bannerURL, localBannerPath);
+
+			return new Bitmap(localBannerPath);
 		}
 
 		public override string GetChangelog()

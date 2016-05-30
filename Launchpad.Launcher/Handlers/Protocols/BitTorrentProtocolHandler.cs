@@ -22,6 +22,7 @@
 // TODO: Look into MonoTorrent
 using Launchpad.Launcher.Utility.Enums;
 using System;
+using System.Drawing;
 
 
 namespace Launchpad.Launcher.Handlers.Protocols
@@ -57,6 +58,16 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		public override string GetChangelog()
 		{
 			return String.Empty;
+		}
+
+		public override bool CanProvideBanner()
+		{
+			return false;
+		}
+
+		public override Bitmap GetBanner()
+		{
+			return null;
 		}
 
 		public override bool IsLauncherOutdated()
