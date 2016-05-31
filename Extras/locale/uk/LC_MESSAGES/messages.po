@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: launchpad\n"
-"POT-Creation-Date: 2016-03-23 15:31:47+0100\n"
-"PO-Revision-Date: 2016-03-28 10:01-0400\n"
+"POT-Creation-Date: 2016-03-29 15:14:24+0200\n"
+"PO-Revision-Date: 2016-05-31 07:57-0400\n"
 "Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
 "Language-Team: Ukrainian\n"
 "MIME-Version: 1.0\n"
@@ -10,10 +10,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: crowdin.com\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Language: uk_UA\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: GetString\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: ../Launchpad.Launcher\n"
+"X-Poedit-SearchPath-1: ../Launchpad.Utilities\n"
 "X-Crowdin-Project: launchpad\n"
 "X-Crowdin-Language: uk\n"
 "X-Crowdin-File: messages.po\n"
-"Language: uk_UA\n"
 
 #: ../Launchpad.Launcher/Windows-UI/AboutBox.cs:3
 msgid "About {0}"
@@ -43,136 +48,136 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:12
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:47
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:11
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:48
 #: ../Launchpad.Launcher/Windows-UI/MainForm.Designer.cs:3
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:15
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:40
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:42
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs:2
 #: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:6
 msgid "Idle"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:15
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:14
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:16
 msgid "Failed to connect to the patch server. Please check your settings."
 msgstr ""
 
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:14
 #: ../Launchpad.Launcher/Windows-UI/MainForm.cs:15
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:16
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:17
 msgid "Could not connect to server."
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:16
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:15
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:17
 msgid "This appears to be the first time you're starting the launcher.\n"
 "Is this the location where you would like to install the game?\n\n"
 "{0}"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:16
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:15
 msgid "Initial startup"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:23
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:26
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:31
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:22
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:25
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:30
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:28
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:29
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:31
 msgid "Launchpad - Platform not provided!"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:23
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:26
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:31
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:22
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:25
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:30
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:28
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:29
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:31
 msgid "The server does not provide the game for the selected platform."
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:25
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:28
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:33
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:24
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:27
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:32
 msgid "The server does not provide files for the selected platform."
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:36
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
 msgid "Installing..."
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:36
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
 msgid "Install"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:36
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
 msgid "Updating..."
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:36
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
 msgid "Update"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:36
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
 msgid "Repairing..."
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:36
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
 msgid "Repair"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:36
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
 msgid "Launching..."
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:36
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
 msgid "Launch"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:37
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:36
 #: ../Launchpad.Launcher/Windows-UI/MainForm.Designer.cs:3
 #: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs:2
 msgid "Inactive"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:40
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:35
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:39
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:37
 msgid "Launchpad - Failed to launch the game."
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:40
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:35
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:39
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:37
 msgid "The game failed to launch. Try repairing the installation."
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:50
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:42
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:51
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:44
 msgid "Launchpad - Info"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:50
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:42
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:51
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:44
 msgid "Game download finished. Play away!"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:50
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:42
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:51
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:44
 msgid "Launchpad has finished repairing the game installation. Play away!"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:50
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:42
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:51
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:44
 msgid "Game update finished. Play away!"
 msgstr ""
 
@@ -185,7 +190,7 @@ msgstr ""
 msgid "Launchpad - <GameName>"
 msgstr ""
 
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:44
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:46
 msgid "Whoops! The game appears to have crashed.\n"
 "Would you like the launcher to verify the installation?"
 msgstr ""
@@ -198,11 +203,11 @@ msgstr ""
 msgid "Repair Game"
 msgstr ""
 
-#: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:13
+#: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:18
 msgid "{0} : {1} out of {2}"
 msgstr ""
 
-#: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:15
+#: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:20
 msgid "Finished"
 msgstr ""
 
@@ -219,6 +224,10 @@ msgid "/some/file/path : 1 out of 100"
 msgstr ""
 
 #: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UnixUI.MainWindow.cs:2
-msgid "Generate Manifest"
+msgid "Generate Game Manifest"
+msgstr ""
+
+#: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UnixUI.MainWindow.cs:2
+msgid "Generate Launchpad Manifest"
 msgstr ""
 
