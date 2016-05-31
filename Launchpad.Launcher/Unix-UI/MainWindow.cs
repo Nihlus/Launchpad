@@ -101,10 +101,10 @@ namespace Launchpad.Launcher.UnixUI
 			if (!Checks.CanPatch())
 			{
 				MessageDialog dialog = new MessageDialog(
-					                       null, 
-					                       DialogFlags.Modal, 
-					                       MessageType.Warning, 
-					                       ButtonsType.Ok, 
+					                       null,
+					                       DialogFlags.Modal,
+					                       MessageType.Warning,
+					                       ButtonsType.Ok,
 					                       LocalizationCatalog.GetString("Failed to connect to the patch server. Please check your settings."));
 
 				dialog.Run();
@@ -133,10 +133,10 @@ namespace Launchpad.Launcher.UnixUI
 				if (ChecksHandler.IsInitialStartup())
 				{
 					MessageDialog shouldInstallHereDialog = new MessageDialog(
-						                                        null, 
-						                                        DialogFlags.Modal, 
-						                                        MessageType.Question, 
-						                                        ButtonsType.OkCancel, 
+						                                        null,
+						                                        DialogFlags.Modal,
+						                                        MessageType.Question,
+						                                        ButtonsType.OkCancel,
 						                                        String.Format(LocalizationCatalog.GetString(
 								                                        "This appears to be the first time you're starting the launcher.\n" +
 								                                        "Is this the location where you would like to install the game?" +
@@ -146,14 +146,16 @@ namespace Launchpad.Launcher.UnixUI
 					if (shouldInstallHereDialog.Run() == (int)ResponseType.Ok)
 					{
 						shouldInstallHereDialog.Destroy();
-						//yes, install here
+
+						// Yes, install here
 						Console.WriteLine("Installing in current directory.");
 						ConfigHandler.CreateUpdateCookie();
 					}
 					else
 					{
 						shouldInstallHereDialog.Destroy();
-						//no, don't install here
+
+						// No, don't install here
 						Console.WriteLine("Exiting...");
 						Environment.Exit(0);
 					}
@@ -164,7 +166,7 @@ namespace Launchpad.Launcher.UnixUI
 					StatsHandler.SendUsageStats();
 				}
 
-				// Load the changelog. Try a direct URL first, and a protocol-specific 
+				// Load the changelog. Try a direct URL first, and a protocol-specific
 				// implementation after.
 				if (Launcher.CanAccessStandardChangelog())
 				{
@@ -181,29 +183,29 @@ namespace Launchpad.Launcher.UnixUI
 				{
 					if (!Checks.IsGameInstalled())
 					{
-						//if the game is not installed, offer to install it
+						// If the game is not installed, offer to install it
 						Console.WriteLine("Not installed.");
 						SetLauncherMode(ELauncherMode.Install, false);
 					}
 					else
 					{
-						//if the game is installed (which it should be at this point), check if it needs to be updated
+						// If the game is installed (which it should be at this point), check if it needs to be updated
 						if (Checks.IsGameOutdated())
 						{
-							//if it does, offer to update it
+							// If it does, offer to update it
 							Console.WriteLine("Game is outdated or not installed");
 							SetLauncherMode(ELauncherMode.Update, false);
 						}
 						else
 						{
-							//if not, enable launching the game
+							// All checks passed, so we can offer to launch the game.
 							SetLauncherMode(ELauncherMode.Launch, false);
 						}
 					}
 				}
 				else
 				{
-					//the launcher was outdated.
+					// The launcher was outdated.
 					SetLauncherMode(ELauncherMode.Update, false);
 				}
 			}
@@ -492,22 +494,22 @@ namespace Launchpad.Launcher.UnixUI
 			switch (Mode)
 			{
 				case ELauncherMode.Install:
-					{
-						break;
-					}
+				{
+					break;
+				}
 				case ELauncherMode.Update:
-					{
-						break;
-					}
+				{
+					break;
+				}
 				case ELauncherMode.Repair:
-					{
-						break;
-					}
+				{
+					break;
+				}
 				default:
-					{
-						SetLauncherMode(ELauncherMode.Repair, false);
-						break;
-					}
+				{
+					SetLauncherMode(ELauncherMode.Repair, false);
+					break;
+				}
 			}
 
 			SetLauncherMode(Mode, false);
@@ -579,10 +581,10 @@ namespace Launchpad.Launcher.UnixUI
 			if (e.ExitCode != 0)
 			{
 				MessageDialog crashDialog = new MessageDialog(
-					                            this, 
-					                            DialogFlags.Modal, 
-					                            MessageType.Question, 
-					                            ButtonsType.YesNo, 
+					                            this,
+					                            DialogFlags.Modal,
+					                            MessageType.Question,
+					                            ButtonsType.YesNo,
 					                            String.Format(LocalizationCatalog.GetString(
 							                            "Whoops! The game appears to have crashed.\n" +
 							                            "Would you like the launcher to verify the installation?"

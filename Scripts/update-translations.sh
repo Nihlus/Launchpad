@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Move to the base folder where the script is located.
+cd $(dirname $0)
+
 LAUNCHPAD_TRANSLATIONS_ROOT="../Launchpad.Translations/"
 cd $LAUNCHPAD_TRANSLATIONS_ROOT
 

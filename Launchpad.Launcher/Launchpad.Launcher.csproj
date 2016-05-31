@@ -59,6 +59,12 @@
     <StartupObject>Launchpad.Launcher.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a">
+      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="NGettext, Version=0.6.1.0, Culture=neutral, PublicKeyToken=08d3d1c89dfd2985">
+      <HintPath>..\packages\NGettext.0.6.1\lib\net46\NGettext.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
@@ -84,9 +90,6 @@
     </Reference>
     <Reference Include="webkit-sharp">
       <HintPath>External Assemblies\webkit-sharp-1.1\webkit-sharp.dll</HintPath>
-    </Reference>
-    <Reference Include="NGettext">
-      <HintPath>..\packages\NGettext.0.5.0\lib\net45\NGettext.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
   </ItemGroup>
@@ -171,23 +174,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4.5 %28x86 and x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup />
   <PropertyGroup>
     <PostBuildEvent>echo [Launchpad/Extras/Linux] : warning L0001: Remember to copy the Linux extras to the output folder if you are building on Windows.</PostBuildEvent>
