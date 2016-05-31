@@ -23,11 +23,17 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Launchpad.Launcher.Utility;
+using log4net;
 
 namespace Launchpad.Launcher.Handlers
 {
 	internal sealed class ManifestHandler
 	{
+		/// <summary>
+		/// Logger instance for this class.
+		/// </summary>
+		private static readonly ILog Log = LogManager.GetLogger(typeof(ManifestHandler));
+
 		private readonly object GameManifestLock = new object();
 		private readonly object OldGameManifestLock = new object();
 
@@ -51,7 +57,7 @@ namespace Launchpad.Launcher.Handlers
 		}
 
 		/// <summary>
-		/// Gets the manifest. Call sparsely, as it loads the entire manifest from disk each time 
+		/// Gets the manifest. Call sparsely, as it loads the entire manifest from disk each time
 		/// this property is accessed.
 		/// </summary>
 		/// <value>The manifest.</value>
@@ -129,7 +135,7 @@ namespace Launchpad.Launcher.Handlers
 			}
 			catch (IOException ioex)
 			{
-				Console.WriteLine("IOException in LoadGameManifest(): " + ioex.Message);
+				Log.Warn("Could not load game manifest (IOException): " + ioex.Message);
 			}
 		}
 
@@ -160,7 +166,7 @@ namespace Launchpad.Launcher.Handlers
 			}
 			catch (IOException ioex)
 			{
-				Console.WriteLine("IOException in LoadOldGameManifest(): " + ioex.Message);
+				Log.Warn("Could not load old game manifest (IOException): " + ioex.Message);
 			}
 		}
 
@@ -192,7 +198,7 @@ namespace Launchpad.Launcher.Handlers
 			}
 			catch (IOException ioex)
 			{
-				Console.WriteLine("IOException in LoadLaunchpadManifest(): " + ioex.Message);
+				Log.Warn("Could not load launcher manifest (IOException): " + ioex.Message);
 			}
 		}
 
@@ -223,7 +229,7 @@ namespace Launchpad.Launcher.Handlers
 			}
 			catch (IOException ioex)
 			{
-				Console.WriteLine("IOException in LoadOldLaunchpadManifest(): " + ioex.Message);
+				Log.Warn("Could not load old launcher manifest (IOException): " + ioex.Message);
 			}
 		}
 
@@ -233,7 +239,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The game manifest path.</returns>
 		public static string GetGameManifestPath()
 		{
-			string manifestPath = String.Format(@"{0}GameManifest.txt", 
+			string manifestPath = String.Format(@"{0}GameManifest.txt",
 				                      ConfigHandler.GetLocalDir());
 			return manifestPath;
 		}
@@ -244,7 +250,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The old game manifest's path.</returns>
 		public static string GetOldGameManifestPath()
 		{
-			string oldManifestPath = String.Format(@"{0}GameManifest.txt.old", 
+			string oldManifestPath = String.Format(@"{0}GameManifest.txt.old",
 				                         ConfigHandler.GetLocalDir());
 			return oldManifestPath;
 		}
@@ -255,7 +261,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The launchpad manifest path.</returns>
 		public static string GetLaunchpadManifestPath()
 		{
-			string manifestPath = String.Format(@"{0}LaunchpadManifest.txt", 
+			string manifestPath = String.Format(@"{0}LaunchpadManifest.txt",
 				                      ConfigHandler.GetLocalDir());
 			return manifestPath;
 		}
@@ -266,7 +272,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The old launchpad manifest's path.</returns>
 		public static string GetOldLaunchpadManifestPath()
 		{
-			string oldManifestPath = String.Format(@"{0}LaunchpadManifest.txt.old", 
+			string oldManifestPath = String.Format(@"{0}LaunchpadManifest.txt.old",
 				                         ConfigHandler.GetLocalDir());
 			return oldManifestPath;
 		}
@@ -277,7 +283,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The deprecated manifest path.</returns>
 		private static string GetDeprecatedGameManifestPath()
 		{
-			string manifestPath = String.Format(@"{0}LauncherManifest.txt", 
+			string manifestPath = String.Format(@"{0}LauncherManifest.txt",
 				                      ConfigHandler.GetLocalDir());
 			return manifestPath;
 		}
@@ -288,7 +294,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The deprecated old manifest's path.</returns>
 		private static string GetDeprecatedOldGameManifestPath()
 		{
-			string oldManifestPath = String.Format(@"{0}LauncherManifest.txt.old", 
+			string oldManifestPath = String.Format(@"{0}LauncherManifest.txt.old",
 				                         ConfigHandler.GetLocalDir());
 			return oldManifestPath;
 		}
@@ -299,7 +305,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The game manifest URL.</returns>
 		public string GetGameManifestURL()
 		{
-			string manifestURL = String.Format("{0}/game/{1}/GameManifest.txt", 
+			string manifestURL = String.Format("{0}/game/{1}/GameManifest.txt",
 				                     Config.GetBaseProtocolURL(),
 				                     Config.GetSystemTarget());
 
@@ -312,8 +318,8 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The game manifest checksum URL.</returns>
 		public string GetGameManifestChecksumURL()
 		{
-			string manifestChecksumURL = String.Format("{0}/game/{1}/GameManifest.checksum", 
-				                             Config.GetBaseProtocolURL(), 
+			string manifestChecksumURL = String.Format("{0}/game/{1}/GameManifest.checksum",
+				                             Config.GetBaseProtocolURL(),
 				                             Config.GetSystemTarget());
 
 			return manifestChecksumURL;
@@ -325,7 +331,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The launchpad manifest URL.</returns>
 		public string GetLaunchpadManifestURL()
 		{
-			string manifestURL = String.Format("{0}/launcher/LaunchpadManifest.txt", 
+			string manifestURL = String.Format("{0}/launcher/LaunchpadManifest.txt",
 				                     Config.GetBaseProtocolURL());
 
 			return manifestURL;
@@ -337,7 +343,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The launchpad manifest checksum URL.</returns>
 		public string GetLaunchpadManifestChecksumURL()
 		{
-			string manifestChecksumURL = String.Format("{0}/launcher/LaunchpadManifest.checksum", 
+			string manifestChecksumURL = String.Format("{0}/launcher/LaunchpadManifest.checksum",
 				                             Config.GetBaseProtocolURL());
 
 			return manifestChecksumURL;
@@ -351,6 +357,7 @@ namespace Launchpad.Launcher.Handlers
 		{
 			if (File.Exists(GetDeprecatedGameManifestPath()))
 			{
+				Log.Info("Found deprecated game manifest in install folder. Moving to new filename.");
 				lock (GameManifestLock)
 				{
 					File.Move(GetDeprecatedGameManifestPath(), GetGameManifestPath());
@@ -359,6 +366,7 @@ namespace Launchpad.Launcher.Handlers
 
 			if (File.Exists(GetDeprecatedOldGameManifestPath()))
 			{
+				Log.Info("Found deprecated old game manifest in install folder. Moving to new filename.");			
 				lock (OldGameManifestLock)
 				{
 					File.Move(GetDeprecatedOldGameManifestPath(), GetOldGameManifestPath());
@@ -413,7 +421,7 @@ namespace Launchpad.Launcher.Handlers
 
 			if (!String.IsNullOrEmpty(rawInput))
 			{
-				//remove any and all bad characters from the input string, 
+				//remove any and all bad characters from the input string,
 				//such as \0, \n and \r.
 				string cleanInput = Utilities.Clean(rawInput);
 
@@ -490,7 +498,7 @@ namespace Launchpad.Launcher.Handlers
 		/// Serves as a hash function for a <see cref="Launchpad.Launcher.Handlers.ManifestEntry"/> object.
 		/// </summary>
 		/// <returns>A hash code for this instance that is suitable for use in hashing algorithms and data structures such as a hash table.</returns>
-		public int GetHashCode()
+		public override int GetHashCode()
 		{
 			return this.ToString().GetHashCode();
 		}
@@ -501,7 +509,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns><c>true</c>, if file was complete and undamaged, <c>false</c> otherwise.</returns>
 		public bool IsFileIntegrityIntact()
 		{
-			string LocalPath = String.Format("{0}{1}", 
+			string LocalPath = String.Format("{0}{1}",
 				                   ConfigHandler.Instance.GetGamePath(),
 				                   RelativePath);
 

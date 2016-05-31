@@ -31,12 +31,18 @@ using System.Diagnostics;
 using System.IO;
 using Gdk;
 using System.Drawing.Imaging;
+using log4net;
 
 namespace Launchpad.Launcher.UnixUI
 {
 	[CLSCompliant(false)]
 	public partial class MainWindow : Gtk.Window
 	{
+		/// <summary>
+		/// Logger instance for this class.
+		/// </summary>
+		private static readonly ILog Log = LogManager.GetLogger(typeof(MainWindow));
+
 		/// <summary>
 		/// The config handler reference.
 		/// </summary>
@@ -75,9 +81,6 @@ namespace Launchpad.Launcher.UnixUI
 		public MainWindow()
 			: base(Gtk.WindowType.Toplevel)
 		{
-			//Initialize the config files and check values.
-			Config.Initialize();
-
 			// The config must be initialized before the handlers can be instantiated
 			Checks = new ChecksHandler();
 			Launcher = new LauncherHandler();
@@ -108,6 +111,7 @@ namespace Launchpad.Launcher.UnixUI
 					                       LocalizationCatalog.GetString("Failed to connect to the patch server. Please check your settings."));
 
 				dialog.Run();
+
 				dialog.Destroy();
 				IndicatorLabel.Text = LocalizationCatalog.GetString("Could not connect to server.");
 				refreshAction1.Sensitive = false;
@@ -132,6 +136,8 @@ namespace Launchpad.Launcher.UnixUI
 				//if we can connect, proceed with the rest of our checks.
 				if (ChecksHandler.IsInitialStartup())
 				{
+					Log.Info("This instance is the first start of the application in this folder.");
+
 					MessageDialog shouldInstallHereDialog = new MessageDialog(
 						                                        null,
 						                                        DialogFlags.Modal,
@@ -148,7 +154,8 @@ namespace Launchpad.Launcher.UnixUI
 						shouldInstallHereDialog.Destroy();
 
 						// Yes, install here
-						Console.WriteLine("Installing in current directory.");
+						Log.Info("User accepted installation in this directory. Installing in current directory.");
+
 						ConfigHandler.CreateUpdateCookie();
 					}
 					else
@@ -156,8 +163,8 @@ namespace Launchpad.Launcher.UnixUI
 						shouldInstallHereDialog.Destroy();
 
 						// No, don't install here
-						Console.WriteLine("Exiting...");
-						Environment.Exit(0);
+						Log.Info("User declined installation in this directory. Exiting...");
+						Environment.Exit(2);
 					}
 				}
 
@@ -184,7 +191,7 @@ namespace Launchpad.Launcher.UnixUI
 					if (!Checks.IsGameInstalled())
 					{
 						// If the game is not installed, offer to install it
-						Console.WriteLine("Not installed.");
+						Log.Info("The game has not yet been installed.");
 						SetLauncherMode(ELauncherMode.Install, false);
 					}
 					else
@@ -193,12 +200,13 @@ namespace Launchpad.Launcher.UnixUI
 						if (Checks.IsGameOutdated())
 						{
 							// If it does, offer to update it
-							Console.WriteLine("Game is outdated or not installed");
+							Log.Info(String.Format("The game is outdated. \n\tLocal version: {0}", Config.GetLocalGameVersion()));
 							SetLauncherMode(ELauncherMode.Update, false);
 						}
 						else
 						{
 							// All checks passed, so we can offer to launch the game.
+							Log.Info("All checks passed. Game can be launched.");
 							SetLauncherMode(ELauncherMode.Launch, false);
 						}
 					}
@@ -206,6 +214,7 @@ namespace Launchpad.Launcher.UnixUI
 				else
 				{
 					// The launcher was outdated.
+					Log.Info(String.Format("The launcher is outdated. \n\tLocal version: {0}", Config.GetLocalLauncherVersion()));
 					SetLauncherMode(ELauncherMode.Update, false);
 				}
 			}
@@ -352,6 +361,8 @@ namespace Launchpad.Launcher.UnixUI
 							noProvide.Body = LocalizationCatalog.GetString("The server does not provide the game for the selected platform.");
 							noProvide.Show();
 
+							Log.Info(String.Format("The server does not provide files for platform \"{0}\". A .provides file must be present in the platforms' root directory.",
+									ConfigHandler.GetCurrentPlatform()));
 							SetLauncherMode(ELauncherMode.Install, false);
 						}
 						break;
@@ -379,6 +390,8 @@ namespace Launchpad.Launcher.UnixUI
 							noProvide.Body = LocalizationCatalog.GetString("The server does not provide the game for the selected platform.");
 							noProvide.Show();
 
+							Log.Info(String.Format("The server does not provide files for platform \"{0}\". A .provides file must be present in the platforms' root directory.",
+									ConfigHandler.GetCurrentPlatform()));
 							SetLauncherMode(ELauncherMode.Install, false);
 						}
 						break;
@@ -414,6 +427,8 @@ namespace Launchpad.Launcher.UnixUI
 								noProvide.Body = LocalizationCatalog.GetString("The server does not provide the game for the selected platform.");
 								noProvide.Show();
 
+								Log.Info(String.Format("The server does not provide files for platform \"{0}\". A .provides file must be present in the platforms' root directory.",
+										ConfigHandler.GetCurrentPlatform()));
 								SetLauncherMode(ELauncherMode.Install, false);
 							}
 						}
@@ -433,7 +448,7 @@ namespace Launchpad.Launcher.UnixUI
 					}
 				default:
 					{
-						Console.WriteLine("No functionality for this mode.");
+						Log.Warn("The main button was pressed with an invalid active mode. No functionality has been defined for this mode.");
 						break;
 					}
 			}
@@ -494,22 +509,22 @@ namespace Launchpad.Launcher.UnixUI
 			switch (Mode)
 			{
 				case ELauncherMode.Install:
-				{
-					break;
-				}
+					{
+						break;
+					}
 				case ELauncherMode.Update:
-				{
-					break;
-				}
+					{
+						break;
+					}
 				case ELauncherMode.Repair:
-				{
-					break;
-				}
+					{
+						break;
+					}
 				default:
-				{
-					SetLauncherMode(ELauncherMode.Repair, false);
-					break;
-				}
+					{
+						SetLauncherMode(ELauncherMode.Repair, false);
+						break;
+					}
 			}
 
 			SetLauncherMode(Mode, false);

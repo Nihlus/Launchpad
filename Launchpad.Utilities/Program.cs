@@ -26,12 +26,18 @@ using System.IO;
 using Launchpad.Utilities.Handlers;
 using Launchpad.Utilities.Utility.Events;
 using Launchpad.Utilities.UnixUI;
+using log4net;
 
 [assembly: CLSCompliant(true)]
 namespace Launchpad.Utilities
 {
 	static class Program
 	{
+		/// <summary>
+		/// Logger instance for this class.
+		/// </summary>
+		private static readonly ILog Log = LogManager.GetLogger(typeof(Program));
+
 		public const string BatchSwitch = "-b";
 		public const string DirectorySwitch = "-d";
 		public const string ManifestTypeSwitch = "-m";
@@ -48,7 +54,7 @@ namespace Launchpad.Utilities
 				if (Arguments.Contains(BatchSwitch))
 				{	
 					// Don't load the UI - instead, run the manifest generation directly
-					Console.WriteLine("[Info]: Running in batch mode.");
+					Log.Info("Running in batch mode.");
 
 					EManifestType ManifestType = EManifestType.Game;
 					if (Arguments.Contains(ManifestTypeSwitch))
@@ -67,12 +73,12 @@ namespace Launchpad.Utilities
 							}
 							else
 							{
-								Console.WriteLine("[Warning]: The '-m' manifest switch must be followed by either 'Game' or 'Launcher'.");
+								Log.Warn("The '-m' manifest switch must be followed by either 'Game' or 'Launcher'.");
 							}
 						}
 						else
 						{
-							Console.WriteLine("[Warning]: The '-m' manifest switch must be followed by either 'Game' or 'Launcher'.");
+							Log.Warn("The '-m' manifest switch must be followed by either 'Game' or 'Launcher'.");
 						}
 					}
 
@@ -81,11 +87,11 @@ namespace Launchpad.Utilities
 						if (Arguments.IndexOf(DirectorySwitch) != args.Length - 1)
 						{
 							string TargetDirectory = Arguments[(Arguments.IndexOf(DirectorySwitch) + 1)].TrimEnd(Path.DirectorySeparatorChar);
-							Console.WriteLine(TargetDirectory);
+							Log.Info("Target: " + TargetDirectory);
 
 							if (Directory.Exists(TargetDirectory))
 							{
-								Console.WriteLine("[Info]: Generating manifest...");
+								Log.Info("Generating manifest...");
 
 								ManifestHandler Manifest = new ManifestHandler();
 
@@ -96,18 +102,18 @@ namespace Launchpad.Utilities
 							}
 							else
 							{
-								Console.WriteLine("[Warning]: The '-d' directory switch must be followed by a valid directory.");
+								Log.Warn("The '-d' directory switch must be followed by a valid directory.");
 							}
 						}
 						else
 						{
-							Console.WriteLine("[Warning]: The '-d' directory switch must be followed by a valid directory.");
+							Log.Warn("The '-d' directory switch must be followed by a valid directory.");
 						}
 					}
 					else
 					{
-						Console.WriteLine("[Warning]: No directory provided for batch mode, using working directory.");
-						Console.WriteLine("[Info]: Generating manifest...");
+						Log.Warn("No directory provided for batch mode, using working directory.");
+						Log.Info("Generating manifest...");
 
 						ManifestHandler Manifest = new ManifestHandler();
 
@@ -119,7 +125,7 @@ namespace Launchpad.Utilities
 				}
 				else
 				{
-					Console.WriteLine("[Info]: Run the program with -b to enable batch mode. Use -d <directory> to select the target directory, or omit it to use the working directory. Use -m [Game|Launcher] to select the type of manifest (default is Game).");
+					Log.Info("Run the program with -b to enable batch mode. Use -d <directory> to select the target directory, or omit it to use the working directory. Use -m [Game|Launcher] to select the type of manifest (default is Game).");
 				}
 			}
 			else
@@ -135,12 +141,12 @@ namespace Launchpad.Utilities
 
 		private static void OnProgressChanged(object sender, ManifestGenerationProgressChangedEventArgs e)
 		{			
-			Console.WriteLine(String.Format("[Info]: Processed file {0} : {1} : {2}", e.Filepath, e.MD5, e.Filesize));
+			Log.Info(String.Format("Processed file {0} : {1} : {2}", e.Filepath, e.MD5, e.Filesize));
 		}
 
 		private static void OnGenerationFinished(object sender, EventArgs e)
 		{
-			Console.WriteLine("[Info]: Generation finished.");
+			Log.Info("Generation finished.");
 		}
 	}
 }

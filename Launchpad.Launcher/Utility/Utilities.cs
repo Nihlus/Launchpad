@@ -21,11 +21,17 @@
 
 using System;
 using Launchpad.Launcher.Utility.Enums;
+using log4net;
 
 namespace Launchpad.Launcher.Utility
 {
 	internal static class Utilities
 	{
+		/// <summary>
+		/// Logger instance for this class.
+		/// </summary>
+		private static readonly ILog Log = LogManager.GetLogger(typeof(Utilities));
+
 		public static int Clamp(this int value, int min, int max)
 		{  
 			return (value < min) ? min : (value > max) ? max : value;  
@@ -49,15 +55,18 @@ namespace Launchpad.Launcher.Utility
 			}
 			catch (ArgumentNullException anex)
 			{ 
-				Console.WriteLine("ArgumentNullException in ParseSystemTarget(): " + anex.Message);
+				Log.Warn("Failed to parse the system target from the input string (ArgumentNullException): " + anex.Message +
+					"\n\tInput: null");	
 			}
 			catch (ArgumentException aex)
 			{
-				Console.WriteLine("ArgumentException in ParseSystemTarget(): " + aex.Message);
+				Log.Warn("Failed to parse the system target from the input string (ArgumentException): " + aex.Message +
+					"\n\tInput: " + input);	
 			}
 			catch (OverflowException oex)
 			{
-				Console.WriteLine("OverflowException in ParseSystemTarget(): " + oex.Message);
+				Log.Warn("Failed to parse the system target from the input string (OverflowException): " + oex.Message +
+					"\n\tInput: " + input);	
 			}
 
 			return Target;

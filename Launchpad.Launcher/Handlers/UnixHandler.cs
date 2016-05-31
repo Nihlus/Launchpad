@@ -22,6 +22,7 @@
 using Mono.Unix.Native;
 using System;
 using System.Runtime.Serialization;
+using log4net;
 
 namespace Launchpad.Launcher.Handlers
 {
@@ -30,6 +31,11 @@ namespace Launchpad.Launcher.Handlers
 	/// </summary>
 	internal static class UnixHandler
 	{
+		/// <summary>
+		/// Logger instance for this class.
+		/// </summary>
+		private static readonly ILog Log = LogManager.GetLogger(typeof(UnixHandler));
+
 		/// <summary>
 		/// Sets the execute bit on target file. Note that this replaces all previous
 		/// permissions on the file, resulting in rwx-r-x-r-- permissions.
@@ -45,7 +51,7 @@ namespace Launchpad.Launcher.Handlers
 			}
 			catch (ApplicationException aex)
 			{
-				Console.WriteLine("ApplicationException in MakeExecutable(): " + aex.Message);
+				Log.Error("Failed to set the execute bit on the game executable (ApplicationException): " + aex.Message);			
 				throw new BitOperationException("Failed to set the execute bit on " + fileName, aex);
 			}
 		}

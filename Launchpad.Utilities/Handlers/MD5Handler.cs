@@ -23,7 +23,7 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 
-namespace Launchpad.Utilities.Handlers
+namespace Launchpad.Launcher.Handlers
 {
 	/// <summary>
 	/// MD5 hashing handler. Used to ensure file integrity.
@@ -37,26 +37,13 @@ namespace Launchpad.Utilities.Handlers
 		/// <param name="dataStream">File stream.</param>
 		public static string GetStreamHash(Stream dataStream)
 		{
-			try
+			using (MD5 md5 = MD5.Create())
 			{
-				using (MD5 md5 = MD5.Create())
-				{
-					//calculate the hash of the stream.
-					string resultString = BitConverter.ToString(md5.ComputeHash(dataStream)).Replace("-", "");
+				//calculate the hash of the stream.
+				string resultString = BitConverter.ToString(md5.ComputeHash(dataStream)).Replace("-", "");
 
-					return resultString;
-				}
+				return resultString;
 			}
-			catch (IOException ioex)
-			{
-				Console.WriteLine("IOException in GetFileHash(): " + ioex.Message);
-			}
-			catch (NullReferenceException nex)
-			{
-				Console.WriteLine("NullReferenceException in GetFileHash(): " + nex.Message);
-			}
-
-			return String.Empty;
 		}
 	}
 }

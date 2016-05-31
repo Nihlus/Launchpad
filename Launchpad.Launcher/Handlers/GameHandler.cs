@@ -23,6 +23,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using log4net;
 using Launchpad.Launcher.Handlers.Protocols;
 
 namespace Launchpad.Launcher.Handlers
@@ -30,16 +31,20 @@ namespace Launchpad.Launcher.Handlers
 	/// <summary>
 	///  This class has a lot of async stuff going on. It handles installing the game
 	///  and updating it when it needs to.
-	///  
+	///
 	///  The download protocol is selected based on the configuration each time this is
 	///  instantiated, and control is then handed over to whatever the protocol needs
 	///  to do.
-	/// 
+	///
 	///	 Since this class starts new threads in which it does the larger computations,
 	///	 there must be no useage of UI code in this class. Keep it clean!
 	/// </summary>
 	internal sealed class GameHandler
 	{
+		/// <summary>
+		/// Logger instance for this class.
+		/// </summary>
+		private static readonly ILog Log = LogManager.GetLogger(typeof(GameHandler));
 
 		public event ModuleInstallationProgressChangedEventHandler ProgressChanged;
 
@@ -69,8 +74,8 @@ namespace Launchpad.Launcher.Handlers
 				Patch.ModuleDownloadProgressChanged += OnModuleInstallProgressChanged;
 				Patch.ModuleVerifyProgressChanged += OnModuleInstallProgressChanged;
 				Patch.ModuleInstallationFinished += OnModuleInstallationFinished;
-				Patch.ModuleInstallationFailed += OnModuleInstallationFailed;	
-			}				
+				Patch.ModuleInstallationFailed += OnModuleInstallationFailed;
+			}
 		}
 
 		/// <summary>
@@ -78,7 +83,8 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		public void InstallGame()
 		{
-			Thread t = new Thread(Patch.InstallGame);
+			Log.Info(String.Format("Starting installation of game files using protocol \"{0}\"", this.Patch.GetType().Name));
+			Thread t = new Thread(this.Patch.InstallGame);
 			t.Start();
 		}
 
@@ -87,7 +93,8 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		public void UpdateGame()
 		{
-			Thread t = new Thread(Patch.UpdateGame);
+			Log.Info(String.Format("Starting update of game files using protocol \"{0}\"", this.Patch.GetType().Name));
+			Thread t = new Thread(this.Patch.UpdateGame);
 			t.Start();
 		}
 
@@ -96,7 +103,8 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		public void VerifyGame()
 		{
-			Thread t = new Thread(Patch.VerifyGame);
+			Log.Info("Beginning verification of game files.");
+			Thread t = new Thread(this.Patch.VerifyGame);
 			t.Start();
 		}
 
@@ -114,18 +122,25 @@ namespace Launchpad.Launcher.Handlers
 				gameStartInfo.FileName = Config.GetGameExecutable();
 				GameExitArgs.GameName = Config.GetGameName();
 
+				Log.Info(String.Format("Launching game. \n\tExecutable path: {0}", gameStartInfo.FileName));
+
 				Process game = Process.Start(gameStartInfo);
 				game.EnableRaisingEvents = true;
 
 				game.Exited += delegate
-				{					
+				{
+					if (game.ExitCode != 0)
+					{
+						Log.Info(String.Format("The game exited with an exit code of {0}. " +
+						                       "There may have been issues during runtime, or the game may not have started at all.", game.ExitCode));
+					}
 					GameExitArgs.ExitCode = game.ExitCode;
 					OnGameExited();
-				};					
+				};
 			}
 			catch (IOException ioex)
 			{
-				Console.WriteLine("IOException in LaunchGame(): " + ioex.Message);
+				Log.Warn(String.Format("Game launch failed (IOException): ", ioex.Message));
 				GameExitArgs.ExitCode = 1;
 
 				OnGameLaunchFailed();
@@ -133,7 +148,7 @@ namespace Launchpad.Launcher.Handlers
 		}
 
 		/// <summary>
-		/// Passes the internal event in the protocol handler to the outward-facing 
+		/// Passes the internal event in the protocol handler to the outward-facing
 		/// event.
 		/// </summary>
 		/// <param name="sender">Sender.</param>
@@ -147,7 +162,7 @@ namespace Launchpad.Launcher.Handlers
 		}
 
 		/// <summary>
-		/// Passes the internal event in the protocol handler to the outward-facing 
+		/// Passes the internal event in the protocol handler to the outward-facing
 		/// event.
 		/// </summary>
 		/// <param name="sender">Sender.</param>
@@ -161,7 +176,7 @@ namespace Launchpad.Launcher.Handlers
 		}
 
 		/// <summary>
-		/// Passes the internal event in the protocol handler to the outward-facing 
+		/// Passes the internal event in the protocol handler to the outward-facing
 		/// event.
 		/// </summary>
 		/// <param name="sender">Sender.</param>

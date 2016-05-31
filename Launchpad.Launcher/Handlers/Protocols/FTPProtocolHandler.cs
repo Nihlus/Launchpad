@@ -27,21 +27,27 @@ using System.Collections.Generic;
 using Launchpad.Launcher.Utility;
 using Launchpad.Launcher.Utility.Enums;
 using System.Drawing;
+using log4net;
 
 namespace Launchpad.Launcher.Handlers.Protocols
 {
 	/// <summary>
 	/// FTP handler. Handles downloading and reading files on a remote FTP server.
 	/// There are also functions for retrieving remote version information of the game and the launcher.
-	/// 
+	///
 	/// This protocol uses a manifest.
 	/// </summary>
 	internal sealed class FTPProtocolHandler : PatchProtocolHandler
 	{
+		/// <summary>
+		/// Logger instance for this class.
+		/// </summary>
+		private static readonly ILog Log = LogManager.GetLogger(typeof(FTPProtocolHandler));
+
 		private readonly ManifestHandler manifestHandler = new ManifestHandler();
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Launchpad.Launcher.Handlers.Protocols.FTPProtocolHandler"/> class. 
+		/// Initializes a new instance of the <see cref="Launchpad.Launcher.Handlers.Protocols.FTPProtocolHandler"/> class.
 		/// This also calls the base PatchProtocolHandler constructor, setting up the common functionality.
 		/// </summary>
 		public FTPProtocolHandler()
@@ -52,7 +58,9 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 		public override bool CanPatch()
 		{
-			bool bCanConnectToFTP;
+			Log.Info("Pinging remote patching server to determine if we can connect to it.");
+
+			bool bCanConnectToServer;
 
 			string FTPURL = Config.GetBaseFTPUrl();
 			string FTPUserName = Config.GetRemoteUsername();
@@ -69,29 +77,22 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				{
 					using (WebResponse response = plainRequest.GetResponse())
 					{
-						bCanConnectToFTP = true;
-					}					
+						bCanConnectToServer = true;
+					}
 				}
 				catch (WebException wex)
 				{
-					Console.WriteLine("WebException in FTPProtocolHandler.CanPatch(): " + wex.Message);
-					bCanConnectToFTP = false;
+					Log.Warn("Unable to connect to remote patch server (WebException): " + wex.Message);
+					bCanConnectToServer = false;
 				}
 			}
 			catch (WebException wex)
 			{
-				// Case where FTP URL in config is not valid
-				Console.WriteLine("WebException FTPProtocolHandler.CanPatch() (Invalid URL): " + wex.Message);
-
-				bCanConnectToFTP = false;
+				Log.Warn("Unable to connect due a malformed URL in the configuration (WebException): " + wex.Message);
+				bCanConnectToServer = false;
 			}
 
-			if (!bCanConnectToFTP)
-			{
-				Console.WriteLine("Failed to connect to FTP server at: {0}", Config.GetBaseFTPUrl());
-			}
-
-			return bCanConnectToFTP;
+			return bCanConnectToServer;
 		}
 
 		public override bool IsPlatformAvailable(ESystemTarget Platform)
@@ -110,7 +111,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 		public override bool CanProvideBanner()
 		{
-			string bannerURL = String.Format("{0}/launcher/banner.png", 
+			string bannerURL = String.Format("{0}/launcher/banner.png",
 				                   Config.GetBaseFTPUrl());
 
 			return DoesRemoteFileExist(bannerURL);
@@ -118,10 +119,10 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 		public override Bitmap GetBanner()
 		{
-			string bannerURL = String.Format("{0}/launcher/banner.png", 
+			string bannerURL = String.Format("{0}/launcher/banner.png",
 				                   Config.GetBaseFTPUrl());
 
-			string localBannerPath = String.Format("{0}/banner.png", 
+			string localBannerPath = String.Format("{0}/banner.png",
 				                         Path.GetTempPath());
 
 			DownloadRemoteFile(bannerURL, localBannerPath);
@@ -131,7 +132,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 		public override string GetChangelog()
 		{
-			string changelogURL = String.Format("{0}/launcher/changelog.html", 
+			string changelogURL = String.Format("{0}/launcher/changelog.html",
 				                      Config.GetBaseFTPUrl());
 
 			// Return simple raw HTML
@@ -144,14 +145,14 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			try
 			{
 				Version local = Config.GetLocalLauncherVersion();
-				Version remote = GetRemoteLauncherVersion();	
+				Version remote = GetRemoteLauncherVersion();
 
 				return local < remote;
 			}
 			catch (WebException wex)
 			{
-				Console.WriteLine("WebException in IsLauncherOutdated(): " + wex.Message);
-				return false;	
+				Log.Warn("Unable to determine whether or not the launcher was outdated (WebException): " + wex.Message);
+				return false;
 			}
 		}
 
@@ -166,7 +167,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			catch (WebException wex)
 			{
-				Console.WriteLine("WebException in IsGameOutdated(): " + wex.Message);
+				Log.Warn("Unable to determine whether or not the game was outdated (WebException): " + wex.Message);
 				return false;
 			}
 		}
@@ -193,10 +194,10 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			catch (IOException ioex)
 			{
-				Console.WriteLine("IOException in InstallGame(): " + ioex.Message);
+				Log.Warn("Game installation failed (IOException): " + ioex.Message);
 			}
 
-			// OnModuleInstallationFinished and OnModuleInstallationFailed is in VerifyGame 
+			// OnModuleInstallationFinished and OnModuleInstallationFailed is in VerifyGame
 			// in order to allow it to run as a standalone action, while still keeping this functional.
 
 			// As a side effect, it is required that it is the last action to run in Install and Update,
@@ -286,12 +287,12 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		{
 			try
 			{
-				List<ManifestEntry> Manifest = manifestHandler.LaunchpadManifest;			
+				List<ManifestEntry> Manifest = manifestHandler.LaunchpadManifest;
 				List<ManifestEntry> BrokenFiles = new List<ManifestEntry>();
-							
+
 				int verifiedFiles = 0;
 				foreach (ManifestEntry Entry in Manifest)
-				{					
+				{
 					++verifiedFiles;
 
 					// Prepare the progress event contents
@@ -306,7 +307,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 				int downloadedFiles = 0;
 				foreach (ManifestEntry Entry in BrokenFiles)
-				{					
+				{
 					++downloadedFiles;
 
 					// Prepare the progress event contents
@@ -314,7 +315,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					OnModuleDownloadProgressChanged();
 
 					for (int i = 0; i < Config.GetFileRetries(); ++i)
-					{					
+					{
 						if (!Entry.IsFileIntegrityIntact())
 						{
 							DownloadEntry(Entry, EModule.Launcher);
@@ -328,8 +329,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			catch (IOException ioex)
 			{
-				Console.WriteLine("IOException in VerifyLauncher(): " + ioex.Message);
-				OnModuleInstallationFailed();			
+				Log.Warn("Verification of launcher files failed (IOException): " + ioex.Message);
+				OnModuleInstallationFailed();
 			}
 
 			OnModuleInstallationFinished();
@@ -339,12 +340,12 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		{
 			try
 			{
-				List<ManifestEntry> Manifest = manifestHandler.GameManifest;			
+				List<ManifestEntry> Manifest = manifestHandler.GameManifest;
 				List<ManifestEntry> BrokenFiles = new List<ManifestEntry>();
-							
+
 				int verifiedFiles = 0;
 				foreach (ManifestEntry Entry in Manifest)
-				{					
+				{
 					++verifiedFiles;
 
 					// Prepare the progress event contents
@@ -359,7 +360,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 				int downloadedFiles = 0;
 				foreach (ManifestEntry Entry in BrokenFiles)
-				{					
+				{
 					++downloadedFiles;
 
 					// Prepare the progress event contents
@@ -367,7 +368,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					OnModuleDownloadProgressChanged();
 
 					for (int i = 0; i < Config.GetFileRetries(); ++i)
-					{					
+					{
 						if (!Entry.IsFileIntegrityIntact())
 						{
 							DownloadEntry(Entry, EModule.Game);
@@ -381,8 +382,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			catch (IOException ioex)
 			{
-				Console.WriteLine("IOException in VerifyGame(): " + ioex.Message);
-				OnModuleInstallationFailed();			
+				Log.Warn("Verification of game files failed (IOException): " + ioex.Message);
+				OnModuleInstallationFailed();
 			}
 
 			OnModuleInstallationFinished();
@@ -415,8 +416,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				{
 					++updatedFiles;
 
-					ModuleUpdateProgressArgs.IndicatorLabelMessage = GetUpdateIndicatorLabelMessage(Path.GetFileName(Entry.RelativePath), 
-						updatedFiles, 
+					ModuleUpdateProgressArgs.IndicatorLabelMessage = GetUpdateIndicatorLabelMessage(Path.GetFileName(Entry.RelativePath),
+						updatedFiles,
 						FilesRequiringUpdate.Count);
 					OnModuleUpdateProgressChanged();
 
@@ -425,7 +426,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			catch (IOException ioex)
 			{
-				Console.WriteLine("IOException in UpdateGameAsync(): " + ioex.Message);
+				Log.Warn("Updating of game files failed (IOException): " + ioex.Message);
 				OnModuleInstallationFailed();
 			}
 
@@ -434,7 +435,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 		/// <summary>
 		/// Downloads the provided manifest entry.
-		/// This function resumes incomplete files, verifies downloaded files and 
+		/// This function resumes incomplete files, verifies downloaded files and
 		/// downloads missing files.
 		/// </summary>
 		/// <param name="Entry">The entry to download.</param>
@@ -456,24 +457,24 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				baseLocalPath = ConfigHandler.GetTempLauncherDownloadPath();
 			}
 
-			string RemotePath = String.Format("{0}{1}", 
-				                    baseRemotePath, 
+			string RemotePath = String.Format("{0}{1}",
+				                    baseRemotePath,
 				                    Entry.RelativePath);
 
-			string LocalPath = String.Format("{0}{1}{2}", 
+			string LocalPath = String.Format("{0}{1}{2}",
 				                   baseLocalPath,
-				                   Path.DirectorySeparatorChar, 
+				                   Path.DirectorySeparatorChar,
 				                   Entry.RelativePath);
-					                   				
+
 			// Make sure we have a directory to put the file in
 			Directory.CreateDirectory(Path.GetDirectoryName(LocalPath));
-				
+
 			// Reset the cookie
 			File.WriteAllText(ConfigHandler.GetInstallCookiePath(), String.Empty);
 
 			// Write the current file progress to the install cookie
 			using (TextWriter textWriterProgress = new StreamWriter(ConfigHandler.GetInstallCookiePath()))
-			{					
+			{
 				textWriterProgress.WriteLine(Entry);
 				textWriterProgress.Flush();
 			}
@@ -508,24 +509,24 @@ namespace Launchpad.Launcher.Handlers.Protocols
 						File.Delete(LocalPath);
 						DownloadRemoteFile(RemotePath, LocalPath);
 					}
-				}								
+				}
 			}
 			else
 			{
 				//no file, download it
 				DownloadRemoteFile(RemotePath, LocalPath);
-			}		
+			}
 
 			if (ChecksHandler.IsRunningOnUnix())
 			{
-				//if we're dealing with a file that should be executable, 
+				//if we're dealing with a file that should be executable,
 				string gameName = Config.GetGameName();
 				bool bFileIsGameExecutable = (Path.GetFileName(LocalPath).EndsWith(".exe")) || (Path.GetFileName(LocalPath) == gameName);
 				if (bFileIsGameExecutable)
 				{
 					//set the execute bits
 					UnixHandler.MakeExecutable(LocalPath);
-				}					
+				}
 			}
 
 			// We've finished the download, so empty the cookie
@@ -559,7 +560,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <summary>
 		/// Gets the indicator label message to display to the user while repairing.
 		/// </summary>
-		/// <returns>The indicator label message.</returns>	
+		/// <returns>The indicator label message.</returns>
 		/// <param name="currentFilename">Current filename.</param>
 		/// <param name="updatedFiles">Number of files that have been updated</param>
 		/// <param name="totalFiles">Total files that are to be updated</param>
@@ -575,7 +576,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <param name="rawRemoteURL">FTP file path.</param>
 		/// <param name="useAnonymousLogin">Force anonymous credentials for the connection.</param>
 		public string ReadRemoteFile(string rawRemoteURL, bool useAnonymousLogin = false)
-		{			
+		{
 			// Clean the input URL first
 			string remoteURL = rawRemoteURL.Replace(Path.DirectorySeparatorChar, '/');
 
@@ -591,7 +592,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			{
 				username = Config.GetRemoteUsername();
 				password = Config.GetRemotePassword();
-			}		
+			}
 
 			try
 			{
@@ -600,7 +601,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 				request.Method = WebRequestMethods.Ftp.DownloadFile;
 				sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
-				           
+
 				string data = "";
 				using (Stream remoteStream = request.GetResponse().GetResponseStream())
 				{
@@ -640,95 +641,9 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			catch (WebException wex)
 			{
-				Console.Write("WebException in ReadRemoteFileException: ");
-				Console.WriteLine(wex.Message + " (" + remoteURL + ")");
-				return wex.Message;
+				Log.Error(String.Format("Failed to read the contents of remote file \"{0}\" (WebException): {1}", remoteURL, wex.Message));
+				return String.Empty;
 			}
-		}
-
-		/// <summary>
-		/// Gets the relative paths for all files in the specified FTP directory.
-		/// </summary>
-		/// <param name="rawRemoteURL">The URL to search.</param>
-		/// <param name="bRecursively">Should the search should include subdirectories?</param>
-		/// <returns>A list of relative paths for the files in the specified directory.</returns>
-		public List<string> GetFilePaths(string rawRemoteURL, bool bRecursively)
-		{			
-			string remoteURL = Utilities.Clean(rawRemoteURL) + "/";
-			List<string> relativePaths = new List<string>();
-
-			if (DoesRemoteDirectoryExist(remoteURL))
-			{
-				try
-				{
-					FtpWebRequest request = CreateFtpWebRequest(
-						                        remoteURL, 
-						                        Config.GetRemoteUsername(), 
-						                        Config.GetRemotePassword());
-
-					request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
-
-					using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
-					{
-						using (StreamReader sr = new StreamReader(response.GetResponseStream()))
-						{
-							string rawListing = sr.ReadToEnd();
-							string[] listing = rawListing.Replace("\r", String.Empty).Split('\n');
-
-							List<string> directories = new List<string>();
-							foreach (string fileOrDir in listing)
-							{
-								// We only need to save the directories if we're searching recursively
-								if (bRecursively && fileOrDir.StartsWith("d"))
-								{
-									// It's a directory, add it to directories
-									string[] parts = fileOrDir.Split(' ');                        
-									string relativeDirectoryPath = parts[parts.Length - 1];
-
-									directories.Add(relativeDirectoryPath);
-								}
-								else
-								{
-									// There's a file, add it to our relative paths
-									string[] filePath = fileOrDir.Split(' ');
-									if (!String.IsNullOrEmpty(filePath[filePath.Length - 1]))
-									{
-										string relativePath = "/" + filePath[filePath.Length - 1];
-										relativePaths.Add(relativePath);
-									}                        
-								}
-							}
-
-							// If we should search recursively, keep looking in subdirectories.
-							if (bRecursively)
-							{
-								if (directories.Count != 0)
-								{
-									foreach (string directory in directories)
-									{
-										string parentDirectory = remoteURL.Replace(Config.GetLauncherBinariesURL(), String.Empty);
-
-										string recursiveURL = Config.GetLauncherBinariesURL() + parentDirectory + "/" + directory;
-										List<string> files = GetFilePaths(recursiveURL, true);
-										foreach (string rawPath in files)
-										{
-											string relativePath = "/" + directory + rawPath;
-											relativePaths.Add(relativePath);
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-				catch (WebException wex)
-				{
-					Console.WriteLine("WebException in GetFileURLs(): " + wex.Message);
-					return null;
-				}
-			}	
-
-			return relativePaths;
 		}
 
 		/// <summary>
@@ -791,7 +706,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 							totalBytesDownloaded += smallBuffer.Length;
 
 							// Report download progress
-							ModuleDownloadProgressArgs.ProgressBarMessage = GetDownloadProgressBarMessage(Path.GetFileName(remoteURL), 
+							ModuleDownloadProgressArgs.ProgressBarMessage = GetDownloadProgressBarMessage(Path.GetFileName(remoteURL),
 								totalBytesDownloaded, fileSize);
 							ModuleDownloadProgressArgs.ProgressFraction = (double)totalBytesDownloaded / (double)fileSize;
 							OnModuleDownloadProgressChanged();
@@ -814,7 +729,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 								totalBytesDownloaded += bytesRead;
 
 								// Report download progress
-								ModuleDownloadProgressArgs.ProgressBarMessage = GetDownloadProgressBarMessage(Path.GetFileName(remoteURL), 
+								ModuleDownloadProgressArgs.ProgressBarMessage = GetDownloadProgressBarMessage(Path.GetFileName(remoteURL),
 									totalBytesDownloaded, fileSize);
 								ModuleDownloadProgressArgs.ProgressFraction = (double)totalBytesDownloaded / (double)fileSize;
 								OnModuleDownloadProgressChanged();
@@ -825,13 +740,11 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			catch (WebException wex)
 			{
-				Console.Write("WebException in DownloadRemoteFile: ");
-				Console.WriteLine(wex.Message + " (" + remoteURL + ")");
+				Log.Error(String.Format("Failed to download the remote file at \"{0}\" (WebException): {1}", remoteURL, wex.Message));			
 			}
 			catch (IOException ioex)
 			{
-				Console.Write("IOException in DownloadRemoteFile: ");
-				Console.WriteLine(ioex.Message + " (" + remoteURL + ")");
+				Log.Error(String.Format("Failed to download the remote file at \"{0}\" (IOException): {1}", remoteURL, ioex.Message));
 			}
 		}
 
@@ -860,7 +773,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			{
 				FtpWebRequest request = (FtpWebRequest)WebRequest.Create(new Uri(ftpDirectoryPath));
 
-				//Set proxy to null. Under current configuration if this option is not set then the proxy 
+				//Set proxy to null. Under current configuration if this option is not set then the proxy
 				//that is used will get an html response from the web content gateway (firewall monitoring system)
 				request.Proxy = null;
 
@@ -873,17 +786,14 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			catch (WebException wex)
 			{
-				Console.WriteLine("WebException in CreateFTPWebRequest(): " + wex.Message);
-
+				Log.Warn("Unable to create a WebRequest for the specified file (WebException): " + wex.Message);
 				return null;
 			}
 			catch (ArgumentException aex)
 			{
-				Console.WriteLine("ArgumentException in CreateFTPWebRequest(): " + aex.Message);
-
+				Log.Warn("Unable to create a WebRequest for the specified file (ArgumentException): " + aex.Message);
 				return null;
 			}
-            
 		}
 
 		/// <summary>
@@ -973,29 +883,30 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// </summary>
 		private void DownloadGameManifest()
 		{
-			try
-			{
-				string RemoteURL = manifestHandler.GetGameManifestURL();
-				string LocalPath = ManifestHandler.GetGameManifestPath();
-				string OldLocalPath = ManifestHandler.GetOldGameManifestPath();
+			string RemoteURL = manifestHandler.GetGameManifestURL();
+			string LocalPath = ManifestHandler.GetGameManifestPath();
+			string OldLocalPath = ManifestHandler.GetOldGameManifestPath();
 
-				if (File.Exists(ManifestHandler.GetGameManifestPath()))
+			if (File.Exists(ManifestHandler.GetGameManifestPath()))
+			{
+				try
 				{
-					// Create a backup of the old manifest so that we can compare them when updating the game
+					// Delete the old backup (if there is one)
 					if (File.Exists(OldLocalPath))
 					{
 						File.Delete(OldLocalPath);
 					}
 
-					File.Move(LocalPath, OldLocalPath);			
-				}						
+					// Create a backup of the old manifest so that we can compare them when updating the game
+					File.Move(LocalPath, OldLocalPath);
+				}
+				catch (IOException ioex)
+				{
+					Log.Warn("Failed to back up the old game manifest (IOException): " + ioex.Message);			
+				}
+			}
 
-				DownloadRemoteFile(RemoteURL, LocalPath);
-			}
-			catch (IOException ioex)
-			{
-				Console.WriteLine("IOException in DownloadGameManifest(): " + ioex.Message);
-			}
+			DownloadRemoteFile(RemoteURL, LocalPath);
 		}
 
 		/// <summary>
@@ -1003,38 +914,36 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// </summary>
 		private void DownloadLaunchpadManifest()
 		{
+			string RemoteURL = manifestHandler.GetLaunchpadManifestURL();
+			string LocalPath = ManifestHandler.GetLaunchpadManifestPath();
+			string OldLocalPath = ManifestHandler.GetOldLaunchpadManifestPath();
+
 			try
 			{
-				string RemoteURL = manifestHandler.GetLaunchpadManifestURL();
-				string LocalPath = ManifestHandler.GetLaunchpadManifestPath();
-				string OldLocalPath = ManifestHandler.GetOldLaunchpadManifestPath();
-
-				if (File.Exists(LocalPath))
+				// Delete the old backup (if there is one)
+				if (File.Exists(OldLocalPath))
 				{
-					// Create a backup of the old manifest so that we can compare them when updating the game
-					if (File.Exists(OldLocalPath))
-					{
-						File.Delete(OldLocalPath);
-					}
+					File.Delete(OldLocalPath);
+				}
 
-					File.Move(LocalPath, OldLocalPath);			
-				}						
-
-				DownloadRemoteFile(RemoteURL, LocalPath);
+				// Create a backup of the old manifest so that we can compare them when updating the game
+				File.Move(LocalPath, OldLocalPath);
 			}
 			catch (IOException ioex)
 			{
-				Console.WriteLine("IOException in DownloadLaunchpadManifest(): " + ioex.Message);
+				Log.Warn("Failed to back up the old launcher manifest (IOException): " + ioex.Message);			
 			}
+
+			DownloadRemoteFile(RemoteURL, LocalPath);
 		}
 
 		/// <summary>
 		/// Gets the remote launcher version.
 		/// </summary>
-		/// <returns>The remote launcher version. 
+		/// <returns>The remote launcher version.
 		/// If the version could not be retrieved from the server, a version of 0.0.0 is returned.</returns>
 		public Version GetRemoteLauncherVersion()
-		{			
+		{
 			string remoteVersionPath = Config.GetLauncherVersionURL();
 
 			// Config.GetDoOfficialUpdates is used here since the official update server always allows anonymous logins.
@@ -1047,6 +956,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			else
 			{
+				Log.Warn("Failed to parse the remote launcher version. Using the default of 0.0.0 instead.");
 				return new Version("0.0.0");
 			}
 		}
@@ -1058,8 +968,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <returns>The remote game version.</returns>
 		public Version GetRemoteGameVersion()
 		{
-			string remoteVersionPath = String.Format("{0}/game/{1}/bin/GameVersion.txt", 
-				                           Config.GetBaseFTPUrl(), 
+			string remoteVersionPath = String.Format("{0}/game/{1}/bin/GameVersion.txt",
+				                           Config.GetBaseFTPUrl(),
 				                           Config.GetSystemTarget());
 
 			string remoteVersion = ReadRemoteFile(remoteVersionPath);
@@ -1071,6 +981,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			else
 			{
+				Log.Warn("Failed to parse the remote game version. Using the default of 0.0.0 instead.");
 				return new Version("0.0.0");
 			}
 		}
@@ -1107,7 +1018,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <param name="remotePath">Remote path.</param>
 		public bool DoesRemoteDirectoryExist(string remotePath)
 		{
-			FtpWebRequest request = CreateFtpWebRequest(remotePath, 
+			FtpWebRequest request = CreateFtpWebRequest(remotePath,
 				                        Config.GetRemoteUsername(),
 				                        Config.GetRemotePassword());
 			FtpWebResponse response = null;
@@ -1134,7 +1045,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 
 			return true;
-			
+
 		}
 
 		/// <summary>
@@ -1144,7 +1055,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <param name="remotePath">Remote path.</param>
 		public bool DoesRemoteFileExist(string remotePath)
 		{
-			FtpWebRequest request = CreateFtpWebRequest(remotePath, 
+			FtpWebRequest request = CreateFtpWebRequest(remotePath,
 				                        Config.GetRemoteUsername(),
 				                        Config.GetRemotePassword());
 			FtpWebResponse response = null;

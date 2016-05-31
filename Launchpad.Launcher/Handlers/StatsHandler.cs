@@ -21,6 +21,7 @@
 
 using System;
 using System.Net;
+using log4net;
 
 namespace Launchpad.Launcher.Handlers
 {
@@ -29,6 +30,11 @@ namespace Launchpad.Launcher.Handlers
 	/// </summary>
 	internal static class StatsHandler
 	{
+		/// <summary>
+		/// Logger instance for this class.
+		/// </summary>
+		private static readonly ILog Log = LogManager.GetLogger(typeof(StatsHandler));
+
 		/// <summary>
 		/// The config handler reference.
 		/// </summary>
@@ -57,7 +63,7 @@ namespace Launchpad.Launcher.Handlers
 			}
 			catch (WebException wex)
 			{
-				Console.WriteLine("WebException in SendUsageStats(): " + wex.Message);
+				Log.Warn("Could not send usage stats (WebException): " + wex.Message);			
 			}
 		}
 	}

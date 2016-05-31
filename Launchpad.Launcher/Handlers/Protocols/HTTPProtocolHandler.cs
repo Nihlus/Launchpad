@@ -27,6 +27,7 @@ using System.Text;
 using Launchpad.Launcher.Utility;
 using System.Collections.Generic;
 using System.Drawing;
+using log4net;
 
 namespace Launchpad.Launcher.Handlers.Protocols
 {
@@ -38,10 +39,17 @@ namespace Launchpad.Launcher.Handlers.Protocols
 	/// </summary>
 	internal sealed class HTTPProtocolHandler : PatchProtocolHandler
 	{
+		/// <summary>
+		/// Logger instance for this class.
+		/// </summary>
+		private static readonly ILog Log = LogManager.GetLogger(typeof(HTTPProtocolHandler));
+
 		private readonly ManifestHandler manifestHandler = new ManifestHandler();
 
 		public override bool CanPatch()
 		{
+			Log.Info("Pinging remote patching server to determine if we can connect to it.");
+
 			bool bCanConnectToServer;
 
 			try
@@ -61,19 +69,14 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				}
 				catch (WebException wex)
 				{
-					Console.WriteLine("WebException in HTTPProcolHandler.CanPatch(): " + wex.Message);
+					Log.Warn("Unable to connect to remote patch server (WebException): " + wex.Message);
 					bCanConnectToServer = false;
 				}
 			}
 			catch (WebException wex)
 			{
-				Console.WriteLine("WebException in HTTPProcolHandler.CanPatch() (Invalid URL): " + wex.Message);
+				Log.Warn("Unable to connect due a malformed URL in the configuration (WebException): " + wex.Message);
 				bCanConnectToServer = false;
-			}
-
-			if (!bCanConnectToServer)
-			{
-				Console.WriteLine("Failed to connect to HTTP server at: {0}", Config.GetBaseHTTPUrl());
 			}
 
 			return bCanConnectToServer;
@@ -130,7 +133,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			catch (WebException wex)
 			{
-				Console.WriteLine("WebException in IsLauncherOutdated(): " + wex.Message);
+				Log.Warn("Unable to determine whether or not the launcher was outdated (WebException): " + wex.Message);
 				return false;	
 			}
 		}
@@ -146,7 +149,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			catch (WebException wex)
 			{
-				Console.WriteLine("WebException in IsGameOutdated(): " + wex.Message);
+				Log.Warn("Unable to determine whether or not the game was outdated (WebException): " + wex.Message);
 				return false;
 			}
 		}
@@ -173,7 +176,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			catch (IOException ioex)
 			{
-				Console.WriteLine("IOException in InstallGame(): " + ioex.Message);
+				Log.Warn("Game installation failed (IOException): " + ioex.Message);
 				OnModuleInstallationFailed();
 			}
 		}
@@ -303,7 +306,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			catch (IOException ioex)
 			{
-				Console.WriteLine("IOException in VerifyLauncher(): " + ioex.Message);
+				Log.Warn("Verification of launcher files failed (IOException): " + ioex.Message);
 				OnModuleInstallationFailed();
 			}
 
@@ -356,7 +359,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			catch (IOException ioex)
 			{
-				Console.WriteLine("IOException in VerifyGame(): " + ioex.Message);
+				Log.Warn("Verification of game files failed (IOException): " + ioex.Message);
 				OnModuleInstallationFailed();
 			}
 
@@ -400,7 +403,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			catch (IOException ioex)
 			{
-				Console.WriteLine("IOException in UpdateGameAsync(): " + ioex.Message);
+				Log.Warn("Updating of game files failed (IOException): " + ioex.Message);
 				OnModuleInstallationFailed();
 			}
 
@@ -626,21 +629,18 @@ namespace Launchpad.Launcher.Handlers.Protocols
 						}
 						catch (NullReferenceException nex)
 						{
-
-							Console.WriteLine(String.Format("NullReferenceException in DownloadRemoteFile: Couldn't establish a network connection. {0}", nex.Message));
+							Log.Error("Failed to establish a network connection, or the connection was interrupted during the download (NullReferenceException): " + nex.Message);
 						}
 					}
 				}
 			}
 			catch (WebException wex)
 			{
-				Console.Write("WebException in DownloadRemoteFile(): ");
-				Console.WriteLine(wex.Message + " (" + remoteURL + ")");
+				Log.Error(String.Format("Failed to download the remote file at \"{0}\" (WebException): {1}", remoteURL, wex.Message));			
 			}
 			catch (IOException ioex)
 			{
-				Console.Write("IOException in DownloadRemoteFile(): ");
-				Console.WriteLine(ioex.Message + " (" + remoteURL + ")");
+				Log.Error(String.Format("Failed to download the remote file at \"{0}\" (IOException): {1}", remoteURL, ioex.Message));
 			}
 		}
 
@@ -698,9 +698,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			catch (WebException wex)
 			{
-				Console.Write("WebException in ReadRemoteFile(): ");
-				Console.WriteLine(wex.Message + " (" + remoteURL + ")");
-				return wex.Message;
+				Log.Error(String.Format("Failed to read the contents of remote file \"{0}\" (WebException): {1}", remoteURL, wex.Message));
+				return String.Empty;
 			}
 		}
 
@@ -771,14 +770,12 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			catch (WebException wex)
 			{
-				Console.WriteLine("WebException in CreateHttpWebRequest(): " + wex.Message);
-
+				Log.Warn("Unable to create a WebRequest for the specified file (WebException): " + wex.Message);
 				return null;
 			}
 			catch (ArgumentException aex)
 			{
-				Console.WriteLine("ArgumentException in CreateHttpWebRequest(): " + aex.Message);
-
+				Log.Warn("Unable to create a WebRequest for the specified file (ArgumentException): " + aex.Message);
 				return null;
 			}
 		}
@@ -802,6 +799,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			else
 			{
+				Log.Warn("Failed to parse the remote launcher version. Using the default of 0.0.0 instead.");
 				return new Version("0.0.0");
 			}
 		}
@@ -825,6 +823,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			else
 			{
+				Log.Warn("Failed to parse the remote game version. Using the default of 0.0.0 instead.");			
 				return new Version("0.0.0");
 			}
 		}
@@ -942,29 +941,30 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// </summary>
 		private void DownloadGameManifest()
 		{
-			try
-			{
-				string RemoteURL = manifestHandler.GetGameManifestURL();
-				string LocalPath = ManifestHandler.GetGameManifestPath();
-				string OldLocalPath = ManifestHandler.GetOldGameManifestPath();
+			string RemoteURL = manifestHandler.GetGameManifestURL();
+			string LocalPath = ManifestHandler.GetGameManifestPath();
+			string OldLocalPath = ManifestHandler.GetOldGameManifestPath();
 
-				if (File.Exists(ManifestHandler.GetGameManifestPath()))
+			if (File.Exists(ManifestHandler.GetGameManifestPath()))
+			{
+				try
 				{
-					// Create a backup of the old manifest so that we can compare them when updating the game
+					// Delete the old backup (if there is one)
 					if (File.Exists(OldLocalPath))
 					{
 						File.Delete(OldLocalPath);
 					}
 
+					// Create a backup of the old manifest so that we can compare them when updating the game
 					File.Move(LocalPath, OldLocalPath);
 				}
+				catch (IOException ioex)
+				{
+					Log.Warn("Failed to back up the old game manifest (IOException): " + ioex.Message);			
+				}
+			}
 
-				DownloadRemoteFile(RemoteURL, LocalPath, 0);
-			}
-			catch (IOException ioex)
-			{
-				Console.WriteLine("IOException in DownloadGameManifest(): " + ioex.Message);
-			}
+			DownloadRemoteFile(RemoteURL, LocalPath, 0);
 		}
 
 		/// <summary>
@@ -972,29 +972,27 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// </summary>
 		private void DownloadLaunchpadManifest()
 		{
+			string RemoteURL = manifestHandler.GetLaunchpadManifestURL();
+			string LocalPath = ManifestHandler.GetLaunchpadManifestPath();
+			string OldLocalPath = ManifestHandler.GetOldLaunchpadManifestPath();
+
 			try
 			{
-				string RemoteURL = manifestHandler.GetLaunchpadManifestURL();
-				string LocalPath = ManifestHandler.GetLaunchpadManifestPath();
-				string OldLocalPath = ManifestHandler.GetOldLaunchpadManifestPath();
-
-				if (File.Exists(LocalPath))
+				// Delete the old backup (if there is one)
+				if (File.Exists(OldLocalPath))
 				{
-					// Create a backup of the old manifest so that we can compare them when updating the game
-					if (File.Exists(OldLocalPath))
-					{
-						File.Delete(OldLocalPath);
-					}
-
-					File.Move(LocalPath, OldLocalPath);
+					File.Delete(OldLocalPath);
 				}
 
-				DownloadRemoteFile(RemoteURL, LocalPath, 0);
+				// Create a backup of the old manifest so that we can compare them when updating the game
+				File.Move(LocalPath, OldLocalPath);
 			}
 			catch (IOException ioex)
 			{
-				Console.WriteLine("IOException in DownloadLaunchpadManifest(): " + ioex.Message);
+				Log.Warn("Failed to back up the old launcher manifest (IOException): " + ioex.Message);			
 			}
+
+			DownloadRemoteFile(RemoteURL, LocalPath, 0);
 		}
 	}
 }

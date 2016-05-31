@@ -64,12 +64,10 @@ namespace Launchpad.Launcher.Handlers
 			//we use an empty file to determine if this is the first launch or not
 			if (!File.Exists(ConfigHandler.GetUpdateCookiePath()))
 			{
-				Console.WriteLine("First time starting launcher.");
 				return true;
 			}
 			else
 			{
-				Console.WriteLine("Initial setup already complete.");
 				return false;
 			}
 		}

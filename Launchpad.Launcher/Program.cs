@@ -25,6 +25,7 @@ using Launchpad.Launcher.WindowsUI;
 using Launchpad.Launcher.Handlers;
 using System.IO;
 using System.Reflection;
+using log4net;
 
 [assembly: CLSCompliant(true)]
 namespace Launchpad.Launcher
@@ -32,16 +33,31 @@ namespace Launchpad.Launcher
 	class Program
 	{
 		/// <summary>
+		/// The config handler reference.
+		/// </summary>
+		private static readonly ConfigHandler Config = ConfigHandler.Instance;
+
+		/// <summary>
+		/// Logger instance for this class.
+		/// </summary>
+		private static readonly ILog Log = LogManager.GetLogger(typeof(Program));
+
+		/// <summary>
 		/// The main entry point for the application.
 		/// </summary>
 		[STAThread]
 		static void Main()
 		{
+			Log.Info("----------------");
+			Log.Info(String.Format("Launchpad v{0} starting...", Config.GetLocalLauncherVersion()));
+			Log.Info(String.Format("Current platform: {0} ({1})", ConfigHandler.GetCurrentPlatform(), Environment.Is64BitOperatingSystem ? "x64" : "x86"));
+
 			// Set correct working directory for compatibility with double-clicking
 			Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
 
 			if (ChecksHandler.IsRunningOnUnix())
 			{
+				Log.Info("Initializing GTK UI.");
 				// run a GTK UI instead of WinForms
 				Gtk.Application.Init();
 
@@ -51,6 +67,8 @@ namespace Launchpad.Launcher
 			}
 			else
 			{
+				Log.Info("Initializing WinForms UI.");
+
 				// run a WinForms UI instead of GTK
 				System.Windows.Forms.Application.EnableVisualStyles();
 				System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);

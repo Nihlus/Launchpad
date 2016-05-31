@@ -27,12 +27,18 @@ using Launchpad.Launcher.Utility.Enums;
 using Launchpad.Launcher.Handlers.Protocols;
 using NGettext;
 using System.Diagnostics;
+using log4net;
 using Launchpad.Launcher.Utility;
 
 namespace Launchpad.Launcher.WindowsUI
 {
 	internal partial class MainForm : Form
 	{
+		/// <summary>
+		/// Logger instance for this class.
+		/// </summary>
+		private static readonly ILog Log = LogManager.GetLogger(typeof(MainForm));
+
 		/// <summary>
 		/// The config handler reference.
 		/// </summary>
@@ -66,9 +72,6 @@ namespace Launchpad.Launcher.WindowsUI
 			InitializeComponent();
 			InitializeLocalizedStrings();
 
-			Config.Initialize();
-
-			// The config must be initialized before the handlers can be instantiated
 			Checks = new ChecksHandler();
 			Launcher = new LauncherHandler();
 			Game = new GameHandler();
@@ -98,9 +101,11 @@ namespace Launchpad.Launcher.WindowsUI
 			}
 			else
 			{
-				//if we can connect, proceed with the rest of our checks.                
+				//if we can connect, proceed with the rest of our checks.
 				if (ChecksHandler.IsInitialStartup())
 				{
+					Log.Info("This instance is the first start of the application in this folder.");
+
 					DialogResult shouldInstallHere = MessageBox.Show(
 						                                 this,
 						                                 String.Format(
@@ -114,23 +119,26 @@ namespace Launchpad.Launcher.WindowsUI
 
 					if (shouldInstallHere == DialogResult.Yes)
 					{
-						//yes, install here
+						// Yes, install here
+						Log.Info("User accepted installation in this directory. Installing in current directory.");
+
 						ConfigHandler.CreateUpdateCookie();
 					}
 					else
 					{
-						//no, don't install here
+						// No, don't install here
+						Log.Info("User declined installation in this directory. Exiting...");
 						Environment.Exit(2);
 					}
 				}
-                
+
 
 				if (Config.ShouldAllowAnonymousStats())
 				{
 					StatsHandler.SendUsageStats();
 				}
 
-				// Load the changelog. Try a direct URL first, and a protocol-specific 
+				// Load the changelog. Try a direct URL first, and a protocol-specific
 				// implementation after.
 				if (Launcher.CanAccessStandardChangelog())
 				{
@@ -141,31 +149,35 @@ namespace Launchpad.Launcher.WindowsUI
 					Launcher.ChangelogDownloadFinished += OnChangelogDownloadFinished;
 					Launcher.LoadFallbackChangelog();
 				}
-                
+
 				//Does the launcher need an update?
 				if (!Checks.IsLauncherOutdated())
-				{					
+				{
 					if (!Checks.IsGameInstalled())
 					{
+						Log.Info("The game has not yet been installed.");
 						SetLauncherMode(ELauncherMode.Install, false);
 					}
 					else
 					{
 						if (Checks.IsGameOutdated())
 						{
+							Log.Info(String.Format("The game is outdated. \n\tLocal version: {0}", Config.GetLocalGameVersion()));
 							SetLauncherMode(ELauncherMode.Update, false);
 						}
 						else
 						{
+							Log.Info("All checks passed. Game can be launched.");
 							SetLauncherMode(ELauncherMode.Launch, false);
 						}
 					}
 				}
 				else
 				{
+					Log.Info(String.Format("The launcher is outdated. \n\tLocal version: {0}", Config.GetLocalLauncherVersion()));
 					SetLauncherMode(ELauncherMode.Update, false);
 				}
-			}      
+			}
 		}
 
 		/// <summary>
@@ -194,7 +206,7 @@ namespace Launchpad.Launcher.WindowsUI
 			{
 				case ELauncherMode.Repair:
 					{
-						//bind events for UI updating					
+						//bind events for UI updating
 						Game.ProgressChanged += OnModuleInstallationProgressChanged;
 						Game.GameDownloadFinished += OnGameDownloadFinished;
 						Game.GameDownloadFailed += OnGameDownloadFailed;
@@ -221,6 +233,8 @@ namespace Launchpad.Launcher.WindowsUI
 
 								platformNotProvidedNotification.ShowBalloonTip(10000);
 							}
+							Log.Info(String.Format("The server does not provide files for platform \"{0}\". A .provides file must be present in the platforms' root directory.",
+									ConfigHandler.GetCurrentPlatform()));
 
 							MessageLabel.Text = LocalizationCatalog.GetString("The server does not provide files for the selected platform.");
 							SetLauncherMode(ELauncherMode.Install, false);
@@ -229,16 +243,16 @@ namespace Launchpad.Launcher.WindowsUI
 					}
 				case ELauncherMode.Install:
 					{
-						//bind events for UI updating                        
+						//bind events for UI updating
 						Game.ProgressChanged += OnModuleInstallationProgressChanged;
 						Game.GameDownloadFinished += OnGameDownloadFinished;
 						Game.GameDownloadFailed += OnGameDownloadFailed;
-                                                                       
+
 						if (Checks.IsPlatformAvailable(Config.GetSystemTarget()))
 						{
 							//install the game asynchronously
 							SetLauncherMode(ELauncherMode.Install, true);
-							Game.InstallGame();                             
+							Game.InstallGame();
 						}
 						else
 						{
@@ -256,16 +270,18 @@ namespace Launchpad.Launcher.WindowsUI
 
 								platformNotProvidedNotification.ShowBalloonTip(10000);
 							}
+							Log.Info(String.Format("The server does not provide files for platform \"{0}\". A .provides file must be present in the platforms' root directory.",
+									ConfigHandler.GetCurrentPlatform()));
 
 							MessageLabel.Text = LocalizationCatalog.GetString("The server does not provide files for the selected platform.");
 							SetLauncherMode(ELauncherMode.Install, false);
-						}   
+						}
 
 						break;
 					}
 				case ELauncherMode.Update:
 					{
-						//bind events for UI updating                        
+						//bind events for UI updating
 						Game.ProgressChanged += OnModuleInstallationProgressChanged;
 						Game.GameDownloadFinished += OnGameDownloadFinished;
 						Game.GameDownloadFailed += OnGameDownloadFailed;
@@ -276,15 +292,15 @@ namespace Launchpad.Launcher.WindowsUI
 							SetLauncherMode(ELauncherMode.Update, true);
 							Launcher.LauncherDownloadFinished += OnLauncherDownloadFinished;
 							Launcher.LauncherDownloadProgressChanged += OnModuleInstallationProgressChanged;
-							Launcher.UpdateLauncher();                            
+							Launcher.UpdateLauncher();
 						}
 						else
 						{
 							if (Checks.IsPlatformAvailable(Config.GetSystemTarget()))
 							{
-								//update the game asynchronously                                
-								SetLauncherMode(ELauncherMode.Update, true);                                
-								Game.UpdateGame();                                
+								//update the game asynchronously
+								SetLauncherMode(ELauncherMode.Update, true);
+								Game.UpdateGame();
 							}
 							else
 							{
@@ -302,12 +318,14 @@ namespace Launchpad.Launcher.WindowsUI
 
 									platformNotProvidedNotification.ShowBalloonTip(10000);
 								}
+								Log.Info(String.Format("The server does not provide files for platform \"{0}\". A .provides file must be present in the platforms' root directory.",
+										ConfigHandler.GetCurrentPlatform()));
 
 								MessageLabel.Text = LocalizationCatalog.GetString("The server does not provide files for the selected platform.");
 								SetLauncherMode(ELauncherMode.Install, false);
 							}
 						}
-                        
+
 						break;
 					}
 				case ELauncherMode.Launch:
@@ -322,7 +340,7 @@ namespace Launchpad.Launcher.WindowsUI
 					}
 				default:
 					{
-						Console.WriteLine("No functionality for this mode.");
+						Log.Warn("The main button was pressed with an invalid active mode. No functionality has been defined for this mode.");
 						break;
 					}
 			}
@@ -419,7 +437,7 @@ namespace Launchpad.Launcher.WindowsUI
 		{
 			changelogBrowser.DocumentText = e.HTML;
 			changelogBrowser.Url = new Uri(e.URL);
-			changelogBrowser.Refresh();         
+			changelogBrowser.Refresh();
 		}
 
 		/// <summary>
@@ -480,7 +498,7 @@ namespace Launchpad.Launcher.WindowsUI
 								break;
 							}
 					}
-				});                                   
+				});
 		}
 
 		/// <summary>
@@ -501,9 +519,9 @@ namespace Launchpad.Launcher.WindowsUI
 					double fraction = e.ProgressFraction * 10000;
 					// HACK: Clamping the value, it goes bonkers sometimes and explodes into huge values.
 					mainProgressBar.Value = ((int)fraction).Clamp(mainProgressBar.Minimum, mainProgressBar.Maximum);
-					mainProgressBar.Update();  
-               
-				});                      
+					mainProgressBar.Update();
+
+				});
 		}
 
 		protected void OnLauncherDownloadFinished(object sender, ModuleInstallationFinishedArgs e)
@@ -538,7 +556,7 @@ namespace Launchpad.Launcher.WindowsUI
 					using (Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Launcher.Resources.RocketIcon.ico"))
 					{
 						if (iconStream != null)
-						{						
+						{
 							downloadCompleteNotification.Icon = new System.Drawing.Icon(iconStream);
 						}
 					}
@@ -570,8 +588,8 @@ namespace Launchpad.Launcher.WindowsUI
 					}
 
 					downloadCompleteNotification.ShowBalloonTip(10000);
-					SetLauncherMode(ELauncherMode.Launch, false);					           
-				});            
+					SetLauncherMode(ELauncherMode.Launch, false);
+				});
 		}
 
 		/// <summary>
