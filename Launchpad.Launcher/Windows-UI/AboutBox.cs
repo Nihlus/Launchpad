@@ -31,12 +31,13 @@ namespace Launchpad.Launcher.WindowsUI
 		/// <summary>
 		/// The localization catalog.
 		/// </summary>
-		private readonly ICatalog LocalizationCatalog = new Catalog("Launchpad", "./locale");
+		private static readonly ICatalog LocalizationCatalog = new Catalog("Launchpad", "./locale");
 
 		public LaunchpadAboutBox()
 		{
 			InitializeComponent();
 			this.Text = String.Format(LocalizationCatalog.GetString("About {0}"), AssemblyTitle);
+
 			this.labelProductName.Text = AssemblyProduct;
 			this.labelVersion.Text = String.Format(LocalizationCatalog.GetString("Version {0}"), AssemblyVersion);
 			this.labelCopyright.Text = AssemblyCopyright;

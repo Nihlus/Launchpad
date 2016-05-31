@@ -59,11 +59,12 @@ namespace Launchpad.Launcher.WindowsUI
 		ELauncherMode Mode = ELauncherMode.Inactive;
 
 		// Initialize localization
-		private readonly ICatalog LocalizationCatalog = new Catalog("Launchpad", "./locale");
+		private static readonly ICatalog LocalizationCatalog = new Catalog("Launchpad", "./locale");
 
 		public MainForm()
 		{
 			InitializeComponent();
+			InitializeLocalizedStrings();
 
 			Config.Initialize();
 
@@ -167,6 +168,16 @@ namespace Launchpad.Launcher.WindowsUI
 			}      
 		}
 
+		/// <summary>
+		/// Initializes the localized strings for different UI elements.
+		/// </summary>
+		private void InitializeLocalizedStrings()
+		{
+			this.MessageLabel.Text = LocalizationCatalog.GetString("Idle");
+			this.aboutLink.Text = LocalizationCatalog.GetString("About");
+			this.PrimaryButton.Text = LocalizationCatalog.GetString("Inactive");
+			this.Text = LocalizationCatalog.GetString("Launchpad - <GameName>");
+		}
 
 		/// <summary>
 		/// Handles switching between different functionalities depending on what is visible on the button to the user, such as

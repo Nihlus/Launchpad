@@ -70,7 +70,7 @@ namespace Launchpad.Launcher.UnixUI
 		/// <summary>
 		/// The localization catalog.
 		/// </summary>
-		private readonly ICatalog LocalizationCatalog = new Catalog("Launchpad", "./locale");
+		private static readonly ICatalog LocalizationCatalog = new Catalog("Launchpad", "./locale");
 
 		public MainWindow()
 			: base(Gtk.WindowType.Toplevel)
