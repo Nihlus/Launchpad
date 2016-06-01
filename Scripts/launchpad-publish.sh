@@ -19,10 +19,10 @@ LOG_SUFFIX='\033[0m'
 
 # Build a release version of launchpad
 echo -e "$LOG_PREFIX Building Release configuration of Launchpad Launcher... $LOG_SUFFIX"
-xbuild /p:Configuration="Release" "$LAUNCHPAD_ROOT/Launchpad.Launcher/Launchpad.Launcher.csproj"
+xbuild /p:Configuration="Release|x86" "$LAUNCHPAD_ROOT/Launchpad.Launcher/Launchpad.Launcher.csproj"
 
 echo -e "$LOG_PREFIX Building Release configuration of Launchpad Utilities... $LOG_SUFFIX"
-xbuild /p:Configuration="Release" "$LAUNCHPAD_ROOT/Launchpad.Utilities/Launchpad.Utilities.csproj"
+xbuild /p:Configuration="Release|x86" "$LAUNCHPAD_ROOT/Launchpad.Utilities/Launchpad.Utilities.csproj"
 
 LAUNCHPAD_ASSEMBLY_VERSION=$(monodis --assembly "$LAUNCHPAD_ROOT/Launchpad.Launcher/bin/Release/Launchpad.exe" | grep Version | egrep -o '[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*d*')
 
@@ -97,24 +97,41 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 	read -p "Enter remote host: " -r REMOTEHOST
 	read -p "Enter remote username: " -r REMOTEUSER
 	read -p "Enter full path to remote upload directory [/srv/ftp/launcher/]: " -r REMOTEUPLOAD
+	read -p "Enter full path to remote binary directory [/var/www/files/public/Launchpad/Binaries]: " -r REMOTEUPLOADBINARIES
 	
-	# Give the variable a default value if no input was provided
+	# Give the remote launcher dir a default value if no input was provided
 	if [ -z "$REMOTEUPLOAD" ]; then
 		REMOTEUPLOAD="/srv/ftp/launcher/"
 	fi
 	
-	# Make sure it ends with a slash
-	if [[ ! "$REMOTEUPLOAD" == */ ]]; then
+	# Give the remote binary dir a default value if no input was provided
+	if [ -z "$REMOTEUPLOADBINARIES" ]; then
+		REMOTEUPLOADBINARIES="/var/www/files/public/Launchpad/Binaries"
+	fi
+	
+	# Make sure the remote launcher dir ends with a slash
+	if [[ ! "$REMOTEUPLOADBINARIES" == */ ]]; then
+		REMOTEUPLOAD+="/"
+	fi
+	
+	# Make sure the remote binary dir ends with a slash
+	if [[ ! "$REMOTEUPLOADBINARIES" == */ ]]; then
 		REMOTEUPLOAD+="/"
 	fi
 	
 	echo ""
 	echo -e "$LOG_PREFIX Uploading files to remote server... $LOG_SUFFIX"
 	
-	# Upload using SFTP
+	# Upload the binaries used by the launcher to update itself
 	ssh $REMOTEUSER@$REMOTEHOST "mkdir -p $REMOTEUPLOAD"		
-    scp -r "$OUTPUT_ROOT/launchpad-$LAUNCHPAD_ASSEMBLY_VERSION/." "$REMOTEUSER@$REMOTEHOST:$REMOTEUPLOAD"
+    #scp -r "$OUTPUT_ROOT/launchpad-$LAUNCHPAD_ASSEMBLY_VERSION/." "$REMOTEUSER@$REMOTEHOST:$REMOTEUPLOAD"
     
+    # Upload new packaged binaries (zip, tarball, debian)
+    ssh $REMOTEUSER@$REMOTEHOST "mkdir -p $REMOTEUPLOADBINARIES"
+    scp "$OUTPUT_ROOT/launchpad-$LAUNCHPAD_ASSEMBLY_VERSION.zip" "$REMOTEUSER@$REMOTEHOST:$REMOTEUPLOADBINARIES"
+    scp "$OUTPUT_ROOT/launchpad-$LAUNCHPAD_ASSEMBLY_VERSION.tar.xz" "$REMOTEUSER@$REMOTEHOST:$REMOTEUPLOADBINARIES"
+    scp "$OUTPUT_ROOT/launchpad-$LAUNCHPAD_ASSEMBLY_VERSION-all.deb" "$REMOTEUSER@$REMOTEHOST:$REMOTEUPLOADBINARIES"
+        
     echo ""
 	echo -e "$LOG_PREFIX Upload successful! $LOG_SUFFIX"
 fi

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Launchpad\n"
-"POT-Creation-Date: 2016-05-31 13:48+0100\n"
-"PO-Revision-Date: 2016-05-31 13:58+0100\n"
+"POT-Creation-Date: 2016-06-01 19:53+0100\n"
+"PO-Revision-Date: 2016-06-01 19:53+0100\n"
 "Last-Translator: Jarl Gullberg <jarl.gullberg@gmail.com>\n"
 "Language-Team: Launchpad Translation Team <jarl.gullberg@gmail.com>\n"
 "Language: en-GB\n"
@@ -17,29 +17,29 @@ msgstr ""
 "X-Poedit-SearchPath-0: ../Launchpad.Launcher\n"
 "X-Poedit-SearchPath-1: ../Launchpad.Utilities\n"
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:77
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:176
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:532
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:80
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:188
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:550
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs:132
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:98
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:540
-#: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:47
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:101
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:557
+#: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:49
 msgid "Idle"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:89
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:108
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:92
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:111
 msgid "Failed to connect to the patch server. Please check your settings."
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:90
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:95
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:112
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:93
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:98
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:116
 msgid "Could not connect to server."
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:107
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:141
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:112
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:147
 #, csharp-format
 msgid ""
 "This appears to be the first time you're starting the launcher.\n"
@@ -48,121 +48,121 @@ msgid ""
 "{0}"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:110
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:115
 msgid "Initial startup"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:177
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:189
 msgid "About"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:178
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:403
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:190
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:421
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs:169
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:284
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:295
 msgid "Inactive"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:179
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:191
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs:60
 msgid "Launchpad - <GameName>"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:219
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:254
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:300
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:349
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:376
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:411
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:231
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:268
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:316
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:360
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:389
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:426
 msgid "Launchpad - Platform not provided!"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:220
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:255
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:301
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:350
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:377
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:412
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:232
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:269
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:317
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:361
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:390
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:427
 msgid "The server does not provide the game for the selected platform."
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:225
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:260
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:306
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:239
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:276
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:324
 msgid "The server does not provide files for the selected platform."
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:349
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:230
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:367
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:241
 msgid "Installing..."
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:354
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:235
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:372
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:246
 msgid "Install"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:363
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:244
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:381
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:255
 msgid "Updating..."
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:368
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:249
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:386
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:260
 msgid "Update"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:377
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:258
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:395
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:269
 msgid "Repairing..."
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:382
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:263
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:400
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:274
 msgid "Repair"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:391
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:272
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:409
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:283
 msgid "Launching..."
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:396
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:277
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:414
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:288
 msgid "Launch"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:441
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:477
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:459
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:494
 msgid "Launchpad - Failed to launch the game."
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:442
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:478
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:460
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:495
 msgid "The game failed to launch. Try repairing the installation."
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:550
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:556
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:562
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:550
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:556
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:562
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:568
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:574
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:580
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:567
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:573
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:579
 msgid "Launchpad - Info"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:551
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:551
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:569
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:568
 msgid "Game download finished. Play away!"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:557
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:557
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:575
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:574
 msgid "Launchpad has finished repairing the game installation. Play away!"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:563
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:563
+#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:581
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:580
 msgid "Game update finished. Play away!"
 msgstr ""
 
@@ -186,7 +186,7 @@ msgstr ""
 msgid "Repair Game"
 msgstr ""
 
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:587
+#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:604
 #, csharp-format
 msgid ""
 "Whoops! The game appears to have crashed.\n"
@@ -213,11 +213,18 @@ msgstr ""
 msgid "Generate Launchpad Manifest"
 msgstr ""
 
-#: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:100
+#: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:76
+msgid ""
+"No GameVersion.txt file could be found in the target directory. This file is "
+"required.\n"
+"Would you like to add one? The version will be \"1.0.0\"."
+msgstr ""
+
+#: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:128
 #, csharp-format
 msgid "{0} : {1} out of {2}"
 msgstr ""
 
-#: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:116
+#: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:144
 msgid "Finished"
 msgstr ""

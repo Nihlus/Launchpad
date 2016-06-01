@@ -53,8 +53,8 @@ namespace Launchpad.Launcher
 			AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
 
 			Log.Info("----------------");
-			Log.Info(String.Format("Launchpad v{0} starting...", Config.GetLocalLauncherVersion()));
-			Log.Info(String.Format("Current platform: {0} ({1})", ConfigHandler.GetCurrentPlatform(), Environment.Is64BitOperatingSystem ? "x64" : "x86"));
+			Log.Info($"Launchpad v{Config.GetLocalLauncherVersion()} starting...");
+			Log.Info($"Current platform: {ConfigHandler.GetCurrentPlatform()} ({(Environment.Is64BitOperatingSystem ? "x64" : "x86")})");
 
 			// Set correct working directory for compatibility with double-clicking
 			Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
