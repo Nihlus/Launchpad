@@ -42,6 +42,7 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		/// <returns><c>true</c>, if operation succeeded, <c>false</c> otherwise.</returns>
 		/// <param name="fileName">File name.</param>
+		/// <exception cref="BitOperationException">Throws a BitOperationException if the executable bit could not be set for any reason.</exception>
 		public static bool MakeExecutable(string fileName)
 		{
 			try
@@ -51,7 +52,7 @@ namespace Launchpad.Launcher.Handlers
 			}
 			catch (ApplicationException aex)
 			{
-				Log.Error("Failed to set the execute bit on the game executable (ApplicationException): " + aex.Message);			
+				Log.Error("Failed to set the execute bit on the game executable (ApplicationException): " + aex.Message);
 				throw new BitOperationException("Failed to set the execute bit on " + fileName, aex);
 			}
 		}

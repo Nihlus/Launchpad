@@ -43,9 +43,9 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// The config handler reference.
 		/// </summary>
-		ConfigHandler Config = ConfigHandler.Instance;
+		private static readonly ConfigHandler Config = ConfigHandler.Instance;
 
-		private List<ManifestEntry> gameManifest = new List<ManifestEntry>();
+		private readonly List<ManifestEntry> gameManifest = new List<ManifestEntry>();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Launchpad.Launcher.Handlers.ManifestHandler"/> class.
@@ -239,8 +239,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The game manifest path.</returns>
 		public static string GetGameManifestPath()
 		{
-			string manifestPath = String.Format(@"{0}GameManifest.txt",
-				                      ConfigHandler.GetLocalDir());
+			string manifestPath = $@"{ConfigHandler.GetLocalDir()}GameManifest.txt";
 			return manifestPath;
 		}
 
@@ -250,8 +249,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The old game manifest's path.</returns>
 		public static string GetOldGameManifestPath()
 		{
-			string oldManifestPath = String.Format(@"{0}GameManifest.txt.old",
-				                         ConfigHandler.GetLocalDir());
+			string oldManifestPath = $@"{ConfigHandler.GetLocalDir()}GameManifest.txt.old";
 			return oldManifestPath;
 		}
 
@@ -261,8 +259,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The launchpad manifest path.</returns>
 		public static string GetLaunchpadManifestPath()
 		{
-			string manifestPath = String.Format(@"{0}LaunchpadManifest.txt",
-				                      ConfigHandler.GetLocalDir());
+			string manifestPath = $@"{ConfigHandler.GetLocalDir()}LaunchpadManifest.txt";
 			return manifestPath;
 		}
 
@@ -272,8 +269,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The old launchpad manifest's path.</returns>
 		public static string GetOldLaunchpadManifestPath()
 		{
-			string oldManifestPath = String.Format(@"{0}LaunchpadManifest.txt.old",
-				                         ConfigHandler.GetLocalDir());
+			string oldManifestPath = $@"{ConfigHandler.GetLocalDir()}LaunchpadManifest.txt.old";
 			return oldManifestPath;
 		}
 
@@ -283,8 +279,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The deprecated manifest path.</returns>
 		private static string GetDeprecatedGameManifestPath()
 		{
-			string manifestPath = String.Format(@"{0}LauncherManifest.txt",
-				                      ConfigHandler.GetLocalDir());
+			string manifestPath = $@"{ConfigHandler.GetLocalDir()}LauncherManifest.txt";
 			return manifestPath;
 		}
 
@@ -294,8 +289,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The deprecated old manifest's path.</returns>
 		private static string GetDeprecatedOldGameManifestPath()
 		{
-			string oldManifestPath = String.Format(@"{0}LauncherManifest.txt.old",
-				                         ConfigHandler.GetLocalDir());
+			string oldManifestPath = $@"{ConfigHandler.GetLocalDir()}LauncherManifest.txt.old";
 			return oldManifestPath;
 		}
 
@@ -305,9 +299,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The game manifest URL.</returns>
 		public string GetGameManifestURL()
 		{
-			string manifestURL = String.Format("{0}/game/{1}/GameManifest.txt",
-				                     Config.GetBaseProtocolURL(),
-				                     Config.GetSystemTarget());
+			string manifestURL = $"{Config.GetBaseProtocolURL()}/game/{Config.GetSystemTarget()}/GameManifest.txt";
 
 			return manifestURL;
 		}
@@ -318,9 +310,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The game manifest checksum URL.</returns>
 		public string GetGameManifestChecksumURL()
 		{
-			string manifestChecksumURL = String.Format("{0}/game/{1}/GameManifest.checksum",
-				                             Config.GetBaseProtocolURL(),
-				                             Config.GetSystemTarget());
+			string manifestChecksumURL = $"{Config.GetBaseProtocolURL()}/game/{Config.GetSystemTarget()}/GameManifest.checksum";
 
 			return manifestChecksumURL;
 		}
@@ -331,8 +321,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The launchpad manifest URL.</returns>
 		public string GetLaunchpadManifestURL()
 		{
-			string manifestURL = String.Format("{0}/launcher/LaunchpadManifest.txt",
-				                     Config.GetBaseProtocolURL());
+			string manifestURL = $"{Config.GetBaseProtocolURL()}/launcher/LaunchpadManifest.txt";
 
 			return manifestURL;
 		}
@@ -343,8 +332,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The launchpad manifest checksum URL.</returns>
 		public string GetLaunchpadManifestChecksumURL()
 		{
-			string manifestChecksumURL = String.Format("{0}/launcher/LaunchpadManifest.checksum",
-				                             Config.GetBaseProtocolURL());
+			string manifestChecksumURL = $"{Config.GetBaseProtocolURL()}/launcher/LaunchpadManifest.checksum";
 
 			return manifestChecksumURL;
 		}
@@ -366,7 +354,7 @@ namespace Launchpad.Launcher.Handlers
 
 			if (File.Exists(GetDeprecatedOldGameManifestPath()))
 			{
-				Log.Info("Found deprecated old game manifest in install folder. Moving to new filename.");			
+				Log.Info("Found deprecated old game manifest in install folder. Moving to new filename.");
 				lock (OldGameManifestLock)
 				{
 					File.Move(GetDeprecatedOldGameManifestPath(), GetOldGameManifestPath());
@@ -402,8 +390,8 @@ namespace Launchpad.Launcher.Handlers
 
 		public ManifestEntry()
 		{
-			RelativePath = String.Empty;
-			Hash = String.Empty;
+			RelativePath = string.Empty;
+			Hash = string.Empty;
 			Size = 0;
 		}
 
@@ -509,9 +497,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns><c>true</c>, if file was complete and undamaged, <c>false</c> otherwise.</returns>
 		public bool IsFileIntegrityIntact()
 		{
-			string LocalPath = String.Format("{0}{1}",
-				                   ConfigHandler.Instance.GetGamePath(),
-				                   RelativePath);
+			string LocalPath = $"{ConfigHandler.Instance.GetGamePath()}{RelativePath}";
 
 			if (!File.Exists(LocalPath))
 			{

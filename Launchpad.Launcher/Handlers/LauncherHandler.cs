@@ -61,7 +61,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// The config handler reference.
 		/// </summary>
-		ConfigHandler Config = ConfigHandler.Instance;
+		private static readonly ConfigHandler Config = ConfigHandler.Instance;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Launchpad.Launcher.Handlers.LauncherHandler"/> class.
@@ -78,7 +78,7 @@ namespace Launchpad.Launcher.Handlers
 		{
 			try
 			{
-				Log.Info(String.Format("Starting update of lancher files using protocol \"{0}\"", this.Patch.GetType().Name));
+				Log.Info($"Starting update of lancher files using protocol \"{this.Patch.GetType().Name}\"");
 
 				Patch.ModuleDownloadProgressChanged += OnLauncherDownloadProgressChanged;
 				Patch.ModuleInstallationFinished += OnLauncherDownloadFinished;
@@ -155,23 +155,18 @@ namespace Launchpad.Launcher.Handlers
 				if (ChecksHandler.IsRunningOnUnix())
 				{
 					//creating a .sh script
-					string scriptPath = String.Format(@"{0}launchpadupdate.sh",
-						                    Path.GetTempPath());
+					string scriptPath = $@"{Path.GetTempPath()}launchpadupdate.sh";
 
 
 					using (FileStream updateScript = File.Create(scriptPath))
 					{
 						using (TextWriter tw = new StreamWriter(updateScript))
 						{
-							string copyCom = String.Format("cp -rf {0} {1}",
-								                 Path.GetTempPath() + "launchpad/launcher/*",
-								                 ConfigHandler.GetLocalDir());
+							string copyCom = $"cp -rf {Path.GetTempPath() + "launchpad/launcher/*"} {ConfigHandler.GetLocalDir()}";
+							string delCom = $"rm -rf {Path.GetTempPath() + "launchpad"}";
+							string dirCom = $"cd {ConfigHandler.GetLocalDir()}";
+							string launchCom = $@"nohup ./{executableName} &";
 
-							string delCom = String.Format("rm -rf {0}",
-								                Path.GetTempPath() + "launchpad");
-
-							string dirCom = String.Format("cd {0}", ConfigHandler.GetLocalDir());
-							string launchCom = String.Format(@"nohup ./{0} &", executableName);
 							tw.WriteLine(@"#!/bin/sh");
 							tw.WriteLine("sleep 5");
 							tw.WriteLine(copyCom);
@@ -186,20 +181,20 @@ namespace Launchpad.Launcher.Handlers
 
 
 					//Now create some ProcessStartInfo for this script
-					ProcessStartInfo updateShellProcess = new ProcessStartInfo();
-
-					updateShellProcess.FileName = scriptPath;
-					updateShellProcess.UseShellExecute = false;
-					updateShellProcess.RedirectStandardOutput = false;
-					updateShellProcess.WindowStyle = ProcessWindowStyle.Hidden;
+					ProcessStartInfo updateShellProcess = new ProcessStartInfo
+					{
+						FileName = scriptPath,
+						UseShellExecute = false,
+						RedirectStandardOutput = false,
+						WindowStyle = ProcessWindowStyle.Hidden
+					};
 
 					return updateShellProcess;
 				}
 				else
 				{
 					//creating a .bat script
-					string scriptPath = String.Format(@"{0}launchpadupdate.bat",
-						                    Path.GetTempPath());
+					string scriptPath = $@"{Path.GetTempPath()}launchpadupdate.bat";
 
 					using (FileStream updateScript = File.Create(scriptPath))
 					{
@@ -207,22 +202,22 @@ namespace Launchpad.Launcher.Handlers
 						{
 							//write commands to the script
 							//wait three seconds, then copy the new executable
-							tw.WriteLine(String.Format(@"timeout 3 & xcopy /e /s /y ""{0}\launchpad\launcher"" ""{1}"" && rmdir /s /q {0}\launchpad",
-									Path.GetTempPath(),
-									ConfigHandler.GetLocalDir()));
+							tw.WriteLine(
+								$"timeout 3 & xcopy /e /s /y \"{Path.GetTempPath()}\\launchpad\\launcher\" \"{ConfigHandler.GetLocalDir()}\" && rmdir /s /q {Path.GetTempPath()}\\launchpad");
 
 							//then start the new executable
-							tw.WriteLine(String.Format(@"start {0}", executableName));
+							tw.WriteLine($"start {executableName}");
 							tw.Close();
 						}
 					}
 
-					ProcessStartInfo updateBatchProcess = new ProcessStartInfo();
-
-					updateBatchProcess.FileName = scriptPath;
-					updateBatchProcess.UseShellExecute = true;
-					updateBatchProcess.RedirectStandardOutput = false;
-					updateBatchProcess.WindowStyle = ProcessWindowStyle.Hidden;
+					ProcessStartInfo updateBatchProcess = new ProcessStartInfo
+					{
+						FileName = scriptPath,
+						UseShellExecute = true,
+						RedirectStandardOutput = false,
+						WindowStyle = ProcessWindowStyle.Hidden
+					};
 
 					return updateBatchProcess;
 				}

@@ -19,10 +19,10 @@ LOG_SUFFIX='\033[0m'
 
 # Build a release version of launchpad
 echo -e "$LOG_PREFIX Building Release configuration of Launchpad Launcher... $LOG_SUFFIX"
-xbuild /p:Configuration="Release|x86" "$LAUNCHPAD_ROOT/Launchpad.Launcher/Launchpad.Launcher.csproj"
+xbuild /p:Configuration="Release" "$LAUNCHPAD_ROOT/Launchpad.Launcher/Launchpad.Launcher.csproj"
 
 echo -e "$LOG_PREFIX Building Release configuration of Launchpad Utilities... $LOG_SUFFIX"
-xbuild /p:Configuration="Release|x86" "$LAUNCHPAD_ROOT/Launchpad.Utilities/Launchpad.Utilities.csproj"
+xbuild /p:Configuration="Release" "$LAUNCHPAD_ROOT/Launchpad.Utilities/Launchpad.Utilities.csproj"
 
 LAUNCHPAD_ASSEMBLY_VERSION=$(monodis --assembly "$LAUNCHPAD_ROOT/Launchpad.Launcher/bin/Release/Launchpad.exe" | grep Version | egrep -o '[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*d*')
 

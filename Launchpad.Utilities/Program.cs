@@ -52,7 +52,7 @@ namespace Launchpad.Utilities
 			if (args.Length > 0)
 			{
 				if (Arguments.Contains(BatchSwitch))
-				{	
+				{
 					// Don't load the UI - instead, run the manifest generation directly
 					Log.Info("Running in batch mode.");
 
@@ -140,8 +140,8 @@ namespace Launchpad.Utilities
 		}
 
 		private static void OnProgressChanged(object sender, ManifestGenerationProgressChangedEventArgs e)
-		{			
-			Log.Info(String.Format("Processed file {0} : {1} : {2}", e.Filepath, e.MD5, e.Filesize));
+		{
+			Log.Info($"Processed file {e.Filepath} : {e.MD5} : {e.Filesize}");
 		}
 
 		private static void OnGenerationFinished(object sender, EventArgs e)

@@ -47,11 +47,11 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// The config lock object.
 		/// </summary>
-		private object ReadLock = new Object();
+		private readonly object ReadLock = new Object();
 		/// <summary>
 		/// The write lock object.
 		/// </summary>
-		private object WriteLock = new Object();
+		private readonly object WriteLock = new Object();
 
 		/// <summary>
 		/// The singleton Instance. Will always point to one shared object.
@@ -83,8 +83,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The config path.</returns>
 		private static string GetConfigPath()
 		{
-			string configPath = String.Format(@"{0}LauncherConfig.ini",
-				                    GetConfigDir());
+			string configPath = $@"{GetConfigDir()}LauncherConfig.ini";
 
 			return configPath;
 		}
@@ -95,9 +94,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The config dir, terminated with a directory separator.</returns>
 		private static string GetConfigDir()
 		{
-			string configDir = String.Format(@"{0}Config{1}",
-				                   GetLocalDir(),
-				                   Path.DirectorySeparatorChar);
+			string configDir = $@"{GetLocalDir()}Config{Path.DirectorySeparatorChar}";
 			return configDir;
 		}
 
@@ -335,8 +332,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The update cookie.</returns>
 		public static string GetUpdateCookiePath()
 		{
-			string updateCookie = String.Format(@"{0}.update",
-				                      GetLocalDir());
+			string updateCookie = $@"{GetLocalDir()}.update";
 			return updateCookie;
 		}
 
@@ -365,8 +361,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The install cookie.</returns>
 		public static string GetInstallCookiePath()
 		{
-			string installCookie = String.Format(@"{0}.install",
-				                       GetLocalDir());
+			string installCookie = $@"{GetLocalDir()}.install";
 			return installCookie;
 		}
 
@@ -396,9 +391,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The local dir, terminated by a directory separator.</returns>
 		public static string GetLocalDir()
 		{
-			string localDir = String.Format(@"{0}{1}",
-				                  Directory.GetCurrentDirectory(),
-				                  Path.DirectorySeparatorChar);
+			string localDir = $@"{Directory.GetCurrentDirectory()}{Path.DirectorySeparatorChar}";
 			return localDir;
 		}
 
@@ -408,9 +401,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>A full path to the directory.</returns>
 		public static string GetTempLauncherDownloadPath()
 		{
-			return String.Format(@"{0}{1}launchpad{1}launcher",
-				Path.GetTempPath(),
-				Path.DirectorySeparatorChar);
+			return $@"{Path.GetTempPath()}{Path.DirectorySeparatorChar}launchpad{Path.DirectorySeparatorChar}launcher";
 		}
 
 		/// <summary>
@@ -419,10 +410,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The game path, terminated by a directory separator.</returns>
 		public string GetGamePath()
 		{
-			return String.Format(@"{0}Game{2}{1}{2}",
-				GetLocalDir(),
-				GetSystemTarget(),
-				Path.DirectorySeparatorChar);
+			return $@"{GetLocalDir()}Game{Path.DirectorySeparatorChar}{GetSystemTarget()}{Path.DirectorySeparatorChar}";
 		}
 
 		/// <summary>
@@ -438,30 +426,22 @@ namespace Launchpad.Launcher.Handlers
 			if (ChecksHandler.IsRunningOnUnix())
 			{
 				//should return something along the lines of "./Game/<ExecutableName>"
-				executablePathRootLevel = String.Format(@"{0}{1}",
-					GetGamePath(),
-					GetGameName());
+				executablePathRootLevel = $@"{GetGamePath()}{GetGameName()}";
 
 				//should return something along the lines of "./Game/<GameName>/Binaries/<SystemTarget>/<ExecutableName>"
-				executablePathTargetLevel = String.Format(@"{0}{1}{3}Binaries{3}{2}{3}{1}",
-					GetGamePath(),
-					GetGameName(),
-					GetSystemTarget(),
-					Path.DirectorySeparatorChar);
+				executablePathTargetLevel =
+					$@"{GetGamePath()}{GetGameName()}{Path.DirectorySeparatorChar}Binaries" +
+					$"{Path.DirectorySeparatorChar}{GetSystemTarget()}{Path.DirectorySeparatorChar}{GetGameName()}";
 			}
 			else
 			{
 				//should return something along the lines of "./Game/<ExecutableName>.exe"
-				executablePathRootLevel = String.Format(@"{0}{1}.exe",
-					GetGamePath(),
-					GetGameName());
+				executablePathRootLevel = $@"{GetGamePath()}{GetGameName()}.exe";
 
 				//should return something along the lines of "./Game/<GameName>/Binaries/<SystemTarget>/<ExecutableName>.exe"
-				executablePathTargetLevel = String.Format(@"{0}{1}{3}Binaries{3}{2}{3}{1}.exe",
-					GetGamePath(),
-					GetGameName(),
-					GetSystemTarget(),
-					Path.DirectorySeparatorChar);
+				executablePathTargetLevel =
+					$@"{GetGamePath()}{GetGameName()}{Path.DirectorySeparatorChar}Binaries" +
+					$"{Path.DirectorySeparatorChar}{GetSystemTarget()}{Path.DirectorySeparatorChar}{GetGameName()}.exe";
 			}
 
 
@@ -469,18 +449,18 @@ namespace Launchpad.Launcher.Handlers
 			{
 				return executablePathRootLevel;
 			}
-			else if (File.Exists(executablePathTargetLevel))
+
+			if (File.Exists(executablePathTargetLevel))
 			{
 				return executablePathTargetLevel;
 			}
-			else
-			{
-				Log.Warn("Could not find the game executable. " +
-					"\n\tSearched at : " + executablePathRootLevel +
-					"\n\t Searched at: " + executablePathTargetLevel);
 
-				throw new FileNotFoundException("The game executable could not be found.");
-			}
+			Log.Warn("Could not find the game executable. " +
+				"\n\tSearched at : " + executablePathRootLevel +
+				"\n\t Searched at: " + executablePathTargetLevel);
+
+			throw new FileNotFoundException("The game executable could not be found.");
+
 		}
 
 		/// <summary>
@@ -519,8 +499,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The game version path.</returns>
 		public string GetGameVersionPath()
 		{
-			string localVersionPath = String.Format(@"{0}GameVersion.txt",
-				                          GetGamePath());
+			string localVersionPath = $@"{GetGamePath()}GameVersion.txt";
 
 			return localVersionPath;
 		}
@@ -534,13 +513,11 @@ namespace Launchpad.Launcher.Handlers
 			string launcherURL;
 			if (GetDoOfficialUpdates())
 			{
-				launcherURL = String.Format("{0}/launcher/bin/",
-					GetOfficialBaseProtocolURL());
+				launcherURL = $"{GetOfficialBaseProtocolURL()}/launcher/bin/";
 			}
 			else
 			{
-				launcherURL = String.Format("{0}/launcher/bin/",
-					GetBaseProtocolURL());
+				launcherURL = $"{GetBaseProtocolURL()}/launcher/bin/";
 			}
 
 			return launcherURL;
@@ -556,13 +533,11 @@ namespace Launchpad.Launcher.Handlers
 			string versionURL;
 			if (GetDoOfficialUpdates())
 			{
-				versionURL = String.Format("{0}/launcher/LauncherVersion.txt",
-					GetOfficialBaseProtocolURL());
+				versionURL = $"{GetOfficialBaseProtocolURL()}/launcher/LauncherVersion.txt";
 			}
 			else
 			{
-				versionURL = String.Format("{0}/launcher/LauncherVersion.txt",
-					GetBaseProtocolURL());
+				versionURL = $"{GetBaseProtocolURL()}/launcher/LauncherVersion.txt";
 			}
 
 			return versionURL;
@@ -574,9 +549,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The game URL.</returns>
 		public string GetGameURL()
 		{
-			return String.Format("{0}/game/{1}/bin/",
-				GetBaseProtocolURL(),
-				GetSystemTarget());
+			return $"{GetBaseProtocolURL()}/game/{GetSystemTarget()}/bin/";
 		}
 
 		/// <summary>
@@ -659,7 +632,7 @@ namespace Launchpad.Launcher.Handlers
 				catch (IOException ioex)
 				{
 					Log.Warn("Could not get the game name (IOException): " + ioex.Message);
-					return String.Empty;
+					return string.Empty;
 				}
 			}
 		}
@@ -707,7 +680,7 @@ namespace Launchpad.Launcher.Handlers
 							}
 						default:
 							{
-								throw new NotImplementedException(String.Format("Protocol \"{0}\" was not recognized or implemented.", patchProtocol));
+								throw new NotImplementedException($"Protocol \"{patchProtocol}\" was not recognized or implemented.");
 							}
 					}
 				}
@@ -861,7 +834,7 @@ namespace Launchpad.Launcher.Handlers
 				catch (IOException ioex)
 				{
 					Log.Warn("Could not get the remote username (IOException): " + ioex.Message);
-					return String.Empty;
+					return string.Empty;
 				}
 			}
 		}
@@ -1042,7 +1015,7 @@ namespace Launchpad.Launcher.Handlers
 				catch (IOException ioex)
 				{
 					Log.Warn("Could not get the base FTP URL (IOException): " + ioex.Message);
-					return String.Empty;
+					return string.Empty;
 				}
 			}
 		}
@@ -1097,7 +1070,7 @@ namespace Launchpad.Launcher.Handlers
 				catch (IOException ioex)
 				{
 					Log.Warn("Could not get the base HTTP URL (IOException): " + ioex.Message);
-					return String.Empty;
+					return string.Empty;
 				}
 			}
 		}
@@ -1285,8 +1258,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The install GUID path.</returns>
 		public string GetInstallGUIDPath()
 		{
-			return String.Format("{0}/Launchpad/.installguid",
-				Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
+			return $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}/Launchpad/.installguid";
 		}
 
 		/// <summary>
@@ -1311,11 +1283,9 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns><c>true</c>, if an old config was copied over to the new format, <c>false</c> otherwise.</returns>
 		private bool UpdateOldConfig()
 		{
-			string oldConfigPath = String.Format(@"{0}config{1}launcherConfig.ini",
-				                       GetLocalDir(),
-				                       Path.DirectorySeparatorChar);
+			string oldConfigPath = $@"{GetLocalDir()}config{Path.DirectorySeparatorChar}launcherConfig.ini";
 
-			string oldConfigDir = String.Format(@"{0}config", GetLocalDir());
+			string oldConfigDir = $@"{GetLocalDir()}config";
 
 			if (ChecksHandler.IsRunningOnUnix())
 			{
@@ -1416,13 +1386,11 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		private static void ReplaceOldUpdateCookie()
 		{
-			string oldUpdateCookiePath = String.Format(@"{0}.updatecookie",
-				                             GetLocalDir());
+			string oldUpdateCookiePath = $@"{GetLocalDir()}.updatecookie";
 
 			if (File.Exists(oldUpdateCookiePath))
 			{
-				string updateCookiePath = String.Format(@"{0}.update",
-					                          GetLocalDir());
+				string updateCookiePath = $@"{GetLocalDir()}.update";
 
 				File.Move(oldUpdateCookiePath, updateCookiePath);
 			}

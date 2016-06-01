@@ -162,7 +162,7 @@ namespace Launchpad.Launcher.WindowsUI
 					{
 						if (Checks.IsGameOutdated())
 						{
-							Log.Info(String.Format("The game is outdated. \n\tLocal version: {0}", Config.GetLocalGameVersion()));
+							Log.Info($"The game is outdated. \n\tLocal version: {Config.GetLocalGameVersion()}");
 							SetLauncherMode(ELauncherMode.Update, false);
 						}
 						else
@@ -174,7 +174,7 @@ namespace Launchpad.Launcher.WindowsUI
 				}
 				else
 				{
-					Log.Info(String.Format("The launcher is outdated. \n\tLocal version: {0}", Config.GetLocalLauncherVersion()));
+					Log.Info($"The launcher is outdated. \n\tLocal version: {Config.GetLocalLauncherVersion()}");
 					SetLauncherMode(ELauncherMode.Update, false);
 				}
 			}
@@ -224,17 +224,20 @@ namespace Launchpad.Launcher.WindowsUI
 							Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Launcher.Resources.RocketIcon.ico");
 							if (iconStream != null)
 							{
-								NotifyIcon platformNotProvidedNotification = new NotifyIcon();
-								platformNotProvidedNotification.Icon = new System.Drawing.Icon(iconStream);
-								platformNotProvidedNotification.Visible = true;
+								NotifyIcon platformNotProvidedNotification = new NotifyIcon
+								{
+									Icon = new System.Drawing.Icon(iconStream),
+									Visible = true,
+									BalloonTipTitle = LocalizationCatalog.GetString("Launchpad - Platform not provided!"),
+									BalloonTipText =
+										LocalizationCatalog.GetString("The server does not provide the game for the selected platform.")
+								};
 
-								platformNotProvidedNotification.BalloonTipTitle = LocalizationCatalog.GetString("Launchpad - Platform not provided!");
-								platformNotProvidedNotification.BalloonTipText = LocalizationCatalog.GetString("The server does not provide the game for the selected platform.");
 
 								platformNotProvidedNotification.ShowBalloonTip(10000);
 							}
-							Log.Info(String.Format("The server does not provide files for platform \"{0}\". A .provides file must be present in the platforms' root directory.",
-									ConfigHandler.GetCurrentPlatform()));
+							Log.Info($"The server does not provide files for platform \"{ConfigHandler.GetCurrentPlatform()}\". " +
+								"A .provides file must be present in the platforms' root directory.");
 
 							MessageLabel.Text = LocalizationCatalog.GetString("The server does not provide files for the selected platform.");
 							SetLauncherMode(ELauncherMode.Install, false);
@@ -261,17 +264,20 @@ namespace Launchpad.Launcher.WindowsUI
 							Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Launcher.Resources.RocketIcon.ico");
 							if (iconStream != null)
 							{
-								NotifyIcon platformNotProvidedNotification = new NotifyIcon();
-								platformNotProvidedNotification.Icon = new System.Drawing.Icon(iconStream);
-								platformNotProvidedNotification.Visible = true;
+								NotifyIcon platformNotProvidedNotification = new NotifyIcon
+								{
+									Icon = new System.Drawing.Icon(iconStream),
+									Visible = true,
+									BalloonTipTitle = LocalizationCatalog.GetString("Launchpad - Platform not provided!"),
+									BalloonTipText =
+										LocalizationCatalog.GetString("The server does not provide the game for the selected platform.")
+								};
 
-								platformNotProvidedNotification.BalloonTipTitle = LocalizationCatalog.GetString("Launchpad - Platform not provided!");
-								platformNotProvidedNotification.BalloonTipText = LocalizationCatalog.GetString("The server does not provide the game for the selected platform.");
 
 								platformNotProvidedNotification.ShowBalloonTip(10000);
 							}
-							Log.Info(String.Format("The server does not provide files for platform \"{0}\". A .provides file must be present in the platforms' root directory.",
-									ConfigHandler.GetCurrentPlatform()));
+							Log.Info($"The server does not provide files for platform \"{ConfigHandler.GetCurrentPlatform()}\". " +
+								"A .provides file must be present in the platforms' root directory.");
 
 							MessageLabel.Text = LocalizationCatalog.GetString("The server does not provide files for the selected platform.");
 							SetLauncherMode(ELauncherMode.Install, false);
@@ -309,17 +315,20 @@ namespace Launchpad.Launcher.WindowsUI
 								Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Launcher.Resources.RocketIcon.ico");
 								if (iconStream != null)
 								{
-									NotifyIcon platformNotProvidedNotification = new NotifyIcon();
-									platformNotProvidedNotification.Icon = new System.Drawing.Icon(iconStream);
-									platformNotProvidedNotification.Visible = true;
+									NotifyIcon platformNotProvidedNotification = new NotifyIcon
+									{
+										Icon = new System.Drawing.Icon(iconStream),
+										Visible = true,
+										BalloonTipTitle = LocalizationCatalog.GetString("Launchpad - Platform not provided!"),
+										BalloonTipText =
+											LocalizationCatalog.GetString("The server does not provide the game for the selected platform.")
+									};
 
-									platformNotProvidedNotification.BalloonTipTitle = LocalizationCatalog.GetString("Launchpad - Platform not provided!");
-									platformNotProvidedNotification.BalloonTipText = LocalizationCatalog.GetString("The server does not provide the game for the selected platform.");
 
 									platformNotProvidedNotification.ShowBalloonTip(10000);
 								}
-								Log.Info(String.Format("The server does not provide files for platform \"{0}\". A .provides file must be present in the platforms' root directory.",
-										ConfigHandler.GetCurrentPlatform()));
+								Log.Info($"The server does not provide files for platform \"{ConfigHandler.GetCurrentPlatform()}\". " +
+                                								"A .provides file must be present in the platforms' root directory.");
 
 								MessageLabel.Text = LocalizationCatalog.GetString("The server does not provide files for the selected platform.");
 								SetLauncherMode(ELauncherMode.Install, false);
@@ -423,7 +432,7 @@ namespace Launchpad.Launcher.WindowsUI
 					}
 				default:
 					{
-						throw new ArgumentOutOfRangeException("newMode", "Invalid mode was passed to SetLauncherMode");
+						throw new ArgumentOutOfRangeException(nameof(newMode), "Invalid mode was passed to SetLauncherMode");
 					}
 			}
 		}
@@ -452,12 +461,14 @@ namespace Launchpad.Launcher.WindowsUI
 					Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Launcher.Resources.RocketIcon.ico");
 					if (iconStream != null)
 					{
-						NotifyIcon launchFailedNotification = new NotifyIcon();
-						launchFailedNotification.Icon = new System.Drawing.Icon(iconStream);
-						launchFailedNotification.Visible = true;
+						NotifyIcon launchFailedNotification = new NotifyIcon
+						{
+							Icon = new System.Drawing.Icon(iconStream),
+							Visible = true,
+							BalloonTipTitle = LocalizationCatalog.GetString("Launchpad - Failed to launch the game."),
+							BalloonTipText = LocalizationCatalog.GetString("The game failed to launch. Try repairing the installation.")
+						};
 
-						launchFailedNotification.BalloonTipTitle = LocalizationCatalog.GetString("Launchpad - Failed to launch the game.");
-						launchFailedNotification.BalloonTipText = LocalizationCatalog.GetString("The game failed to launch. Try repairing the installation.");
 
 						launchFailedNotification.ShowBalloonTip(10000);
 					}

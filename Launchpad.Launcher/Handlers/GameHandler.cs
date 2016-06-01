@@ -62,9 +62,9 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// The config handler reference.
 		/// </summary>
-		private ConfigHandler Config = ConfigHandler.Instance;
+		private static readonly ConfigHandler Config = ConfigHandler.Instance;
 
-		private PatchProtocolHandler Patch;
+		private readonly PatchProtocolHandler Patch;
 
 		public GameHandler()
 		{
@@ -83,7 +83,7 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		public void InstallGame()
 		{
-			Log.Info(String.Format("Starting installation of game files using protocol \"{0}\"", this.Patch.GetType().Name));
+			Log.Info($"Starting installation of game files using protocol \"{this.Patch.GetType().Name}\"");
 			Thread t = new Thread(this.Patch.InstallGame);
 			t.Start();
 		}
@@ -93,7 +93,7 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		public void UpdateGame()
 		{
-			Log.Info(String.Format("Starting update of game files using protocol \"{0}\"", this.Patch.GetType().Name));
+			Log.Info($"Starting update of game files using protocol \"{this.Patch.GetType().Name}\"");
 			Thread t = new Thread(this.Patch.UpdateGame);
 			t.Start();
 		}
@@ -122,7 +122,7 @@ namespace Launchpad.Launcher.Handlers
 				gameStartInfo.FileName = Config.GetGameExecutable();
 				GameExitArgs.GameName = Config.GetGameName();
 
-				Log.Info(String.Format("Launching game. \n\tExecutable path: {0}", gameStartInfo.FileName));
+				Log.Info($"Launching game. \n\tExecutable path: {gameStartInfo.FileName}");
 
 				Process game = Process.Start(gameStartInfo);
 				game.EnableRaisingEvents = true;
@@ -131,8 +131,8 @@ namespace Launchpad.Launcher.Handlers
 				{
 					if (game.ExitCode != 0)
 					{
-						Log.Info(String.Format("The game exited with an exit code of {0}. " +
-						                       "There may have been issues during runtime, or the game may not have started at all.", game.ExitCode));
+						Log.Info($"The game exited with an exit code of {game.ExitCode}. " +
+						         "There may have been issues during runtime, or the game may not have started at all.");
 					}
 					GameExitArgs.ExitCode = game.ExitCode;
 					OnGameExited();
@@ -140,7 +140,7 @@ namespace Launchpad.Launcher.Handlers
 			}
 			catch (IOException ioex)
 			{
-				Log.Warn(String.Format("Game launch failed (IOException): ", ioex.Message));
+				Log.Warn($"Game launch failed (IOException): {ioex.Message}");
 				GameExitArgs.ExitCode = 1;
 
 				OnGameLaunchFailed();

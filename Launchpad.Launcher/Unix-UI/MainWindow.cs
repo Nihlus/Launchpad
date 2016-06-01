@@ -200,7 +200,7 @@ namespace Launchpad.Launcher.UnixUI
 						if (Checks.IsGameOutdated())
 						{
 							// If it does, offer to update it
-							Log.Info(String.Format("The game is outdated. \n\tLocal version: {0}", Config.GetLocalGameVersion()));
+							Log.Info($"The game is outdated. \n\tLocal version: {Config.GetLocalGameVersion()}");
 							SetLauncherMode(ELauncherMode.Update, false);
 						}
 						else
@@ -214,7 +214,7 @@ namespace Launchpad.Launcher.UnixUI
 				else
 				{
 					// The launcher was outdated.
-					Log.Info(String.Format("The launcher is outdated. \n\tLocal version: {0}", Config.GetLocalLauncherVersion()));
+					Log.Info($"The launcher is outdated. \n\tLocal version: {Config.GetLocalLauncherVersion()}");
 					SetLauncherMode(ELauncherMode.Update, false);
 				}
 			}
@@ -297,7 +297,7 @@ namespace Launchpad.Launcher.UnixUI
 					}
 				default:
 					{
-						throw new ArgumentOutOfRangeException("newMode", "Invalid mode was passed to SetLauncherMode");
+						throw new ArgumentOutOfRangeException(nameof(newMode), "Invalid mode was passed to SetLauncherMode");
 					}
 			}
 		}
@@ -355,14 +355,17 @@ namespace Launchpad.Launcher.UnixUI
 						}
 						else
 						{
-							Notification noProvide = new Notification();
-							noProvide.IconName = Stock.DialogError;
-							noProvide.Summary = LocalizationCatalog.GetString("Launchpad - Platform not provided!");
-							noProvide.Body = LocalizationCatalog.GetString("The server does not provide the game for the selected platform.");
+							Notification noProvide = new Notification
+							{
+								IconName = Stock.DialogError,
+								Summary = LocalizationCatalog.GetString("Launchpad - Platform not provided!"),
+								Body = LocalizationCatalog.GetString("The server does not provide the game for the selected platform.")
+							};
 							noProvide.Show();
 
-							Log.Info(String.Format("The server does not provide files for platform \"{0}\". A .provides file must be present in the platforms' root directory.",
-									ConfigHandler.GetCurrentPlatform()));
+							Log.Info($"The server does not provide files for platform \"{ConfigHandler.GetCurrentPlatform()}\". " +
+								"A .provides file must be present in the platforms' root directory.");
+
 							SetLauncherMode(ELauncherMode.Install, false);
 						}
 						break;
@@ -384,14 +387,17 @@ namespace Launchpad.Launcher.UnixUI
 						}
 						else
 						{
-							Notification noProvide = new Notification();
-							noProvide.IconName = Stock.DialogError;
-							noProvide.Summary = LocalizationCatalog.GetString("Launchpad - Platform not provided!");
-							noProvide.Body = LocalizationCatalog.GetString("The server does not provide the game for the selected platform.");
+							Notification noProvide = new Notification
+							{
+								IconName = Stock.DialogError,
+								Summary = LocalizationCatalog.GetString("Launchpad - Platform not provided!"),
+								Body = LocalizationCatalog.GetString("The server does not provide the game for the selected platform.")
+							};
 							noProvide.Show();
 
-							Log.Info(String.Format("The server does not provide files for platform \"{0}\". A .provides file must be present in the platforms' root directory.",
-									ConfigHandler.GetCurrentPlatform()));
+							Log.Info($"The server does not provide files for platform \"{ConfigHandler.GetCurrentPlatform()}\". " +
+                            								"A .provides file must be present in the platforms' root directory.");
+
 							SetLauncherMode(ELauncherMode.Install, false);
 						}
 						break;
@@ -421,14 +427,17 @@ namespace Launchpad.Launcher.UnixUI
 							}
 							else
 							{
-								Notification noProvide = new Notification();
-								noProvide.IconName = Stock.DialogError;
-								noProvide.Summary = LocalizationCatalog.GetString("Launchpad - Platform not provided!");
-								noProvide.Body = LocalizationCatalog.GetString("The server does not provide the game for the selected platform.");
+								Notification noProvide = new Notification
+								{
+									IconName = Stock.DialogError,
+									Summary = LocalizationCatalog.GetString("Launchpad - Platform not provided!"),
+									Body = LocalizationCatalog.GetString("The server does not provide the game for the selected platform.")
+								};
 								noProvide.Show();
 
-								Log.Info(String.Format("The server does not provide files for platform \"{0}\". A .provides file must be present in the platforms' root directory.",
-										ConfigHandler.GetCurrentPlatform()));
+								Log.Info($"The server does not provide files for platform \"{ConfigHandler.GetCurrentPlatform()}\". " +
+                                								"A .provides file must be present in the platforms' root directory.");
+
 								SetLauncherMode(ELauncherMode.Install, false);
 							}
 						}
@@ -489,10 +498,12 @@ namespace Launchpad.Launcher.UnixUI
 		/// <param name="e">Empty event args.</param>
 		private void OnGameLaunchFailed(object sender, EventArgs e)
 		{
-			Notification launchFailed = new Notification();
-			launchFailed.IconName = Stock.DialogError;
-			launchFailed.Summary = LocalizationCatalog.GetString("Launchpad - Failed to launch the game.");
-			launchFailed.Body = LocalizationCatalog.GetString("The game failed to launch. Try repairing the installation.");
+			Notification launchFailed = new Notification
+			{
+				IconName = Stock.DialogError,
+				Summary = LocalizationCatalog.GetString("Launchpad - Failed to launch the game."),
+				Body = LocalizationCatalog.GetString("The game failed to launch. Try repairing the installation.")
+			};
 			launchFailed.Show();
 
 			SetLauncherMode(ELauncherMode.Repair, false);
@@ -596,14 +607,14 @@ namespace Launchpad.Launcher.UnixUI
 			if (e.ExitCode != 0)
 			{
 				MessageDialog crashDialog = new MessageDialog(
-					                            this,
-					                            DialogFlags.Modal,
-					                            MessageType.Question,
-					                            ButtonsType.YesNo,
-					                            String.Format(LocalizationCatalog.GetString(
-							                            "Whoops! The game appears to have crashed.\n" +
-							                            "Would you like the launcher to verify the installation?"
-						                            )));
+										this,
+										DialogFlags.Modal,
+										MessageType.Question,
+										ButtonsType.YesNo,
+										String.Format(LocalizationCatalog.GetString(
+												"Whoops! The game appears to have crashed.\n" +
+												"Would you like the launcher to verify the installation?"
+											)));
 
 				if (crashDialog.Run() == (int)ResponseType.Yes)
 				{

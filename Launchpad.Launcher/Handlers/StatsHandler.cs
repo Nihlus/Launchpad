@@ -43,27 +43,25 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// Sends the usage stats to the official launchpad server.
 		/// </summary>
-		static public void SendUsageStats()
-		{			
+		public static void SendUsageStats()
+		{
 			try
 			{
 				const string baseURL = "http://directorate.asuscomm.com/launchpad/stats.php?";
-				string formattedURL = String.Format(baseURL + "guid={0}&launcherVersion={1}&gameName={2}&systemType={3}&officialUpdates={4}&installguid={5}",
-					                      Config.GetGameGUID(),
-					                      Config.GetLocalLauncherVersion(),
-					                      Config.GetGameName(),
-					                      Config.GetSystemTarget(),
-					                      Config.GetDoOfficialUpdates(),
-					                      Config.GetInstallGUID()
-				                      );
+				string formattedURL = $"{baseURL}guid={Config.GetGameGUID()}" +
+				                      $"&launcherVersion={Config.GetLocalLauncherVersion()}" +
+				                      $"&gameName={Config.GetGameName()}" +
+				                      $"&systemType={Config.GetSystemTarget()}" +
+				                      $"&officialUpdates={Config.GetDoOfficialUpdates()}" +
+									  $"&installguid={Config.GetInstallGUID()}";
 
 
 				WebRequest sendStatsRequest = WebRequest.Create(formattedURL);
-				sendStatsRequest.GetResponse();                            
+				sendStatsRequest.GetResponse();
 			}
 			catch (WebException wex)
 			{
-				Log.Warn("Could not send usage stats (WebException): " + wex.Message);			
+				Log.Warn("Could not send usage stats (WebException): " + wex.Message);
 			}
 		}
 	}

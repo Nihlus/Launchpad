@@ -46,16 +46,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 		private readonly ManifestHandler manifestHandler = new ManifestHandler();
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Launchpad.Launcher.Handlers.Protocols.FTPProtocolHandler"/> class.
-		/// This also calls the base PatchProtocolHandler constructor, setting up the common functionality.
-		/// </summary>
-		public FTPProtocolHandler()
-			: base()
-		{
-
-		}
-
 		public override bool CanPatch()
 		{
 			Log.Info("Pinging remote patching server to determine if we can connect to it.");
@@ -97,9 +87,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 		public override bool IsPlatformAvailable(ESystemTarget Platform)
 		{
-			string remote = String.Format("{0}/game/{1}/.provides",
-				                Config.GetBaseFTPUrl(),
-				                Platform);
+			string remote = $"{Config.GetBaseFTPUrl()}/game/{Platform}/.provides";
 
 			return DoesRemoteFileExist(remote);
 		}
@@ -111,19 +99,16 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 		public override bool CanProvideBanner()
 		{
-			string bannerURL = String.Format("{0}/launcher/banner.png",
-				                   Config.GetBaseFTPUrl());
+			string bannerURL = $"{Config.GetBaseFTPUrl()}/launcher/banner.png";
 
 			return DoesRemoteFileExist(bannerURL);
 		}
 
 		public override Bitmap GetBanner()
 		{
-			string bannerURL = String.Format("{0}/launcher/banner.png",
-				                   Config.GetBaseFTPUrl());
+			string bannerURL = $"{Config.GetBaseFTPUrl()}/launcher/banner.png";
 
-			string localBannerPath = String.Format("{0}/banner.png",
-				                         Path.GetTempPath());
+			string localBannerPath = $"{Path.GetTempPath()}/banner.png";
 
 			DownloadRemoteFile(bannerURL, localBannerPath);
 
@@ -132,8 +117,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 		public override string GetChangelog()
 		{
-			string changelogURL = String.Format("{0}/launcher/changelog.html",
-				                      Config.GetBaseFTPUrl());
+			string changelogURL = $"{Config.GetBaseFTPUrl()}/launcher/changelog.html";
 
 			// Return simple raw HTML
 			return ReadRemoteFile(changelogURL);
@@ -457,14 +441,9 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				baseLocalPath = ConfigHandler.GetTempLauncherDownloadPath();
 			}
 
-			string RemotePath = String.Format("{0}{1}",
-				                    baseRemotePath,
-				                    Entry.RelativePath);
+			string RemotePath = $"{baseRemotePath}{Entry.RelativePath}";
 
-			string LocalPath = String.Format("{0}{1}{2}",
-				                   baseLocalPath,
-				                   Path.DirectorySeparatorChar,
-				                   Entry.RelativePath);
+			string LocalPath = $"{baseLocalPath}{Path.DirectorySeparatorChar}{Entry.RelativePath}";
 
 			// Make sure we have a directory to put the file in
 			Directory.CreateDirectory(Path.GetDirectoryName(LocalPath));
@@ -530,7 +509,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 
 			// We've finished the download, so empty the cookie
-			File.WriteAllText(ConfigHandler.GetInstallCookiePath(), String.Empty);
+			File.WriteAllText(ConfigHandler.GetInstallCookiePath(), string.Empty);
 		}
 
 		/// <summary>
@@ -540,9 +519,9 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <param name="nFilesDownloaded">N files downloaded.</param>
 		/// <param name="currentFilename">Current filename.</param>
 		/// <param name="totalFilesToDownload">Total files to download.</param>
-		private string GetDownloadIndicatorLabelMessage(int nFilesDownloaded, string currentFilename, int totalFilesToDownload)
+		private static string GetDownloadIndicatorLabelMessage(int nFilesDownloaded, string currentFilename, int totalFilesToDownload)
 		{
-			return String.Format("Downloading file {0} ({1} of {2})", currentFilename, nFilesDownloaded, totalFilesToDownload);
+			return $"Downloading file {currentFilename} ({nFilesDownloaded} of {totalFilesToDownload})";
 		}
 
 		/// <summary>
@@ -552,9 +531,9 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <param name="nFilesToVerify">N files downloaded.</param>
 		/// <param name="currentFilename">Current filename.</param>
 		/// <param name="totalFilesVerified">Total files to download.</param>
-		private string GetVerifyIndicatorLabelMessage(int nFilesToVerify, string currentFilename, int totalFilesVerified)
+		private static string GetVerifyIndicatorLabelMessage(int nFilesToVerify, string currentFilename, int totalFilesVerified)
 		{
-			return String.Format("Verifying file {0} ({1} of {2})", currentFilename, nFilesToVerify, totalFilesVerified);
+			return $"Verifying file {currentFilename} ({nFilesToVerify} of {totalFilesVerified})";
 		}
 
 		/// <summary>
@@ -564,9 +543,21 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <param name="currentFilename">Current filename.</param>
 		/// <param name="updatedFiles">Number of files that have been updated</param>
 		/// <param name="totalFiles">Total files that are to be updated</param>
-		private string GetUpdateIndicatorLabelMessage(string currentFilename, int updatedFiles, int totalFiles)
+		private static string GetUpdateIndicatorLabelMessage(string currentFilename, int updatedFiles, int totalFiles)
 		{
-			return String.Format("Verifying file {0} ({1} of {2})", currentFilename, updatedFiles, totalFiles);
+			return $"Verifying file {currentFilename} ({updatedFiles} of {totalFiles})";
+		}
+
+		/// <summary>
+		/// Gets the progress bar message.
+		/// </summary>
+		/// <returns>The progress bar message.</returns>
+		/// <param name="filename">Filename.</param>
+		/// <param name="downloadedBytes">Downloaded bytes.</param>
+		/// <param name="totalBytes">Total bytes.</param>
+		private static string GetDownloadProgressBarMessage(string filename, long downloadedBytes, long totalBytes)
+		{
+			return $"Downloading {filename}: {downloadedBytes} out of {totalBytes} bytes";
 		}
 
 		/// <summary>
@@ -641,8 +632,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			catch (WebException wex)
 			{
-				Log.Error(String.Format("Failed to read the contents of remote file \"{0}\" (WebException): {1}", remoteURL, wex.Message));
-				return String.Empty;
+				Log.Error($"Failed to read the contents of remote file \"{remoteURL}\" (WebException): {wex.Message}");
+				return string.Empty;
 			}
 		}
 
@@ -740,24 +731,12 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			catch (WebException wex)
 			{
-				Log.Error(String.Format("Failed to download the remote file at \"{0}\" (WebException): {1}", remoteURL, wex.Message));			
+				Log.Error($"Failed to download the remote file at \"{remoteURL}\" (WebException): {wex.Message}");
 			}
 			catch (IOException ioex)
 			{
-				Log.Error(String.Format("Failed to download the remote file at \"{0}\" (IOException): {1}", remoteURL, ioex.Message));
+				Log.Error($"Failed to download the remote file at \"{remoteURL}\" (IOException): {ioex.Message}");
 			}
-		}
-
-		/// <summary>
-		/// Gets the progress bar message.
-		/// </summary>
-		/// <returns>The progress bar message.</returns>
-		/// <param name="filename">Filename.</param>
-		/// <param name="downloadedBytes">Downloaded bytes.</param>
-		/// <param name="totalBytes">Total bytes.</param>
-		private string GetDownloadProgressBarMessage(string filename, long downloadedBytes, long totalBytes)
-		{
-			return String.Format("Downloading {0}: {1} out of {2} bytes", filename, downloadedBytes, totalBytes);
 		}
 
 		/// <summary>
@@ -902,7 +881,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				}
 				catch (IOException ioex)
 				{
-					Log.Warn("Failed to back up the old game manifest (IOException): " + ioex.Message);			
+					Log.Warn("Failed to back up the old game manifest (IOException): " + ioex.Message);
 				}
 			}
 
@@ -931,7 +910,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			catch (IOException ioex)
 			{
-				Log.Warn("Failed to back up the old launcher manifest (IOException): " + ioex.Message);			
+				Log.Warn("Failed to back up the old launcher manifest (IOException): " + ioex.Message);
 			}
 
 			DownloadRemoteFile(RemoteURL, LocalPath);
@@ -968,9 +947,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <returns>The remote game version.</returns>
 		public Version GetRemoteGameVersion()
 		{
-			string remoteVersionPath = String.Format("{0}/game/{1}/bin/GameVersion.txt",
-				                           Config.GetBaseFTPUrl(),
-				                           Config.GetSystemTarget());
+			string remoteVersionPath = $"{Config.GetBaseFTPUrl()}/game/{Config.GetSystemTarget()}/bin/GameVersion.txt";
 
 			string remoteVersion = ReadRemoteFile(remoteVersionPath);
 

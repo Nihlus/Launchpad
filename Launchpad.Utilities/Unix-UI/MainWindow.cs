@@ -67,7 +67,7 @@ namespace Launchpad.Utilities.UnixUI
 
 			string TargetDirectory = fileChooser.Filename;
 
-			if (!Directory.GetFiles(TargetDirectory).Contains("GameVersion.txt"))
+			if (!Directory.GetFiles(TargetDirectory).Any(s => s.Contains("GameVersion.txt")))
 			{
 				MessageDialog dialog = new MessageDialog(this,
 					DialogFlags.Modal,
