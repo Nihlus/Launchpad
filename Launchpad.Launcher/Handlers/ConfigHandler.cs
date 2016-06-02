@@ -35,7 +35,7 @@ namespace Launchpad.Launcher.Handlers
 	/// <summary>
 	/// Config handler. This class handles reading and writing to the launcher's configuration.
 	/// Read and write operations are synchronized by locks, so it should be threadsafe.
-	/// This is a singleton class, and it should always be accessed through _Instance.
+	/// This is a singleton class, and it should always be accessed through <see cref="Instance"/>.
 	/// </summary>
 	public sealed class ConfigHandler
 	{
@@ -47,11 +47,11 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// The config lock object.
 		/// </summary>
-		private readonly object ReadLock = new Object();
+		private readonly object ReadLock = new object();
 		/// <summary>
 		/// The write lock object.
 		/// </summary>
-		private readonly object WriteLock = new Object();
+		private readonly object WriteLock = new object();
 
 		/// <summary>
 		/// The singleton Instance. Will always point to one shared object.
@@ -65,7 +65,7 @@ namespace Launchpad.Launcher.Handlers
 
 		/// <summary>
 		/// Writes the config data to disk. This method is thread-blocking, and all write operations
-		/// are synchronized via lock(WriteLock).
+		/// are synchronized via lock(<see cref="WriteLock"/>).
 		/// </summary>
 		/// <param name="Parser">The parser dealing with the current data.</param>
 		/// <param name="Data">The data which should be written to file.</param>
