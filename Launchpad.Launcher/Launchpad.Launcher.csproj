@@ -159,6 +159,8 @@
     <Compile Include="Handlers\Protocols\BitTorrentProtocolHandler.cs" />
     <Compile Include="gtk-gui\Launchpad.Launcher.UnixUI.MainWindow.cs" />
     <EmbeddedResource Include="app.manifest" />
+    <EmbeddedResource Include="Resources\launchpad_update.bat" />
+    <EmbeddedResource Include="Resources\launchpad_update.sh" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -195,9 +197,5 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Handlers\Protocols\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\launchpad_update.bat" />
-    <Content Include="Resources\launchpad_update.sh" />
   </ItemGroup>
 </Project>

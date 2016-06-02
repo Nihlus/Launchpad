@@ -157,7 +157,6 @@ namespace Launchpad.Launcher.Handlers
 					//creating a .sh script
 					string scriptPath = $@"{Path.GetTempPath()}launchpadupdate.sh";
 
-
 					using (FileStream updateScript = File.Create(scriptPath))
 					{
 						using (TextWriter tw = new StreamWriter(updateScript))
@@ -178,7 +177,6 @@ namespace Launchpad.Launcher.Handlers
 					}
 
 					UnixHandler.MakeExecutable(scriptPath);
-
 
 					//Now create some ProcessStartInfo for this script
 					ProcessStartInfo updateShellProcess = new ProcessStartInfo
@@ -227,6 +225,57 @@ namespace Launchpad.Launcher.Handlers
 				Log.Warn("Failed to create update script (IOException): " + ioex.Message);
 
 				return null;
+			}
+		}
+
+		/// <summary>
+		/// Extracts the bundled update script and populates the variables in it
+		/// with the data needed for the update procedure.
+		/// </summary>
+		private string GetPopulatedUpdateScript()
+		{
+			// Load the script from the embedded resources
+			Assembly localAssembly = Assembly.GetExecutingAssembly();
+
+			string scriptContents = "";
+			string resourceName = GetUpdateScriptResourceName();
+			using (Stream resourceStream = localAssembly.GetManifestResourceStream(resourceName))
+			{
+				if (resourceStream != null)
+				{
+					using (StreamReader reader = new StreamReader(resourceStream))
+					{
+						scriptContents = reader.ReadToEnd();
+					}
+				}
+			}
+
+			// Replace the variables in the script with actual data
+			const string TempDirectoryVariable = "%temp%";
+			const string LocalInstallDirectoryVariable = "%localDir%";
+			const string LocalExecutableName = "%launchpadExecutable%";
+
+			string transientScript = scriptContents;
+
+			transientScript = transientScript.Replace(TempDirectoryVariable, Path.GetTempPath());
+			transientScript = transientScript.Replace(LocalInstallDirectoryVariable, ConfigHandler.GetLocalDir());
+			transientScript = transientScript.Replace(LocalExecutableName, Path.GetFileName(localAssembly.Location));
+
+			return transientScript;
+		}
+
+		/// <summary>
+		/// Gets the name of the embedded update script.
+		/// </summary>
+		private string GetUpdateScriptResourceName()
+		{
+			if (ChecksHandler.IsRunningOnUnix())
+			{
+				return "Launchpad.Launcher.Resources.launchpad_update.sh";
+			}
+			else
+			{
+				 return "Launchpad.Launcher.Resources.launchpad_update.bat";
 			}
 		}
 

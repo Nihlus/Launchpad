@@ -22,4 +22,4 @@
 @echo off
 
 timeout 3 && xcopy /e /s /y "%temp%\launchpad\launcher" "%localDir%" && rmdir /s /q "%temp%\launchpad"
-start "%executableName%"
+start "%launchpadExecutable%"
