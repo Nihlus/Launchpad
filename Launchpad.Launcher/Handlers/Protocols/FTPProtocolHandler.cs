@@ -337,43 +337,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		}
 
 		/// <summary>
-		/// Checks if a given directory exists on the remote FTP server.
-		/// </summary>
-		/// <returns><c>true</c>, if the directory exists, <c>false</c> otherwise.</returns>
-		/// <param name="remotePath">Remote path.</param>
-		private bool DoesRemoteDirectoryExist(string remotePath)
-		{
-			FtpWebRequest request = CreateFtpWebRequest(remotePath,
-				                        Config.GetRemoteUsername(),
-				                        Config.GetRemotePassword());
-			FtpWebResponse response = null;
-
-			try
-			{
-				request.Method = WebRequestMethods.Ftp.ListDirectory;
-				response = (FtpWebResponse)request.GetResponse();
-			}
-			catch (WebException ex)
-			{
-				response = (FtpWebResponse)ex.Response;
-				if (response.StatusCode == FtpStatusCode.ActionNotTakenFileUnavailable)
-				{
-					return false;
-				}
-			}
-			finally
-			{
-				if (response != null)
-				{
-					response.Dispose();
-				}
-			}
-
-			return true;
-
-		}
-
-		/// <summary>
 		/// Checks if a given file exists on the remote FTP server.
 		/// </summary>
 		/// <returns><c>true</c>, if the file exists, <c>false</c> otherwise.</returns>

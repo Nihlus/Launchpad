@@ -430,26 +430,30 @@ namespace Launchpad.Launcher.Handlers
 			string executablePathRootLevel;
 			string executablePathTargetLevel;
 
+			// While not recommended nor supported, the user may add an executable extension to the executable name.
+			// We strip it out here (if it exists) just to be safe.
+			string executableName = GetMainExecutableName().Replace(".exe", "");
+
 			//unix doesn't need (or have!) the .exe extension.
 			if (ChecksHandler.IsRunningOnUnix())
 			{
 				//should return something along the lines of "./Game/<ExecutableName>"
-				executablePathRootLevel = $@"{GetGamePath()}{GetMainExecutableName()}";
+				executablePathRootLevel = $@"{GetGamePath()}{executableName}";
 
 				//should return something along the lines of "./Game/<GameName>/Binaries/<SystemTarget>/<ExecutableName>"
 				executablePathTargetLevel =
 					$@"{GetGamePath()}{GetGameName()}{Path.DirectorySeparatorChar}Binaries" +
-					$"{Path.DirectorySeparatorChar}{GetSystemTarget()}{Path.DirectorySeparatorChar}{GetMainExecutableName()}";
+					$"{Path.DirectorySeparatorChar}{GetSystemTarget()}{Path.DirectorySeparatorChar}{executableName}";
 			}
 			else
 			{
 				//should return something along the lines of "./Game/<ExecutableName>.exe"
-				executablePathRootLevel = $@"{GetGamePath()}{GetMainExecutableName()}.exe";
+				executablePathRootLevel = $@"{GetGamePath()}{executableName}.exe";
 
 				//should return something along the lines of "./Game/<GameName>/Binaries/<SystemTarget>/<ExecutableName>.exe"
 				executablePathTargetLevel =
 					$@"{GetGamePath()}{GetGameName()}{Path.DirectorySeparatorChar}Binaries" +
-					$"{Path.DirectorySeparatorChar}{GetSystemTarget()}{Path.DirectorySeparatorChar}{GetMainExecutableName()}.exe";
+					$"{Path.DirectorySeparatorChar}{GetSystemTarget()}{Path.DirectorySeparatorChar}{executableName}.exe";
 			}
 
 
@@ -477,28 +481,26 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The local game version.</returns>
 		public Version GetLocalGameVersion()
 		{
-			string rawGameVersion = String.Empty;
-			Version gameVersion = null;
 			try
 			{
-				rawGameVersion = File.ReadAllText(GetGameVersionPath());
+                Version gameVersion = null;
+				string rawGameVersion = File.ReadAllText(GetGameVersionPath());
+
+				if (Version.TryParse(rawGameVersion, out gameVersion))
+				{
+					return gameVersion;
+				}
+				else
+				{
+					Log.Warn("Could not parse local game version. Contents: " + rawGameVersion);
+					return new Version("0.0.0");
+				}
 			}
 			catch (IOException ioex)
 			{
 				Log.Warn("Could not read local game version (IOException): " + ioex.Message);
+				return null;
 			}
-
-			if (Version.TryParse(rawGameVersion, out gameVersion))
-			{
-
-			}
-			else
-			{
-				Log.Warn("Could not parse local game version. Contents: " + rawGameVersion);
-				return new Version("0.0.0");
-			}
-
-			return gameVersion;
 		}
 
 		/// <summary>
@@ -929,7 +931,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// Gets the number of times the patching protocol should retry to download files.
 		/// </summary>
-		/// <returns>The number of file retries..</returns>
+		/// <returns>The number of file retries.</returns>
 		public int GetFileRetries()
 		{
 			lock (ReadLock)
