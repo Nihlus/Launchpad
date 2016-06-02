@@ -148,6 +148,7 @@ namespace Launchpad.Launcher.Handlers
 						data["Local"].AddKey("GameName", "LaunchpadExample");
 						data["Local"].AddKey("SystemTarget", GetCurrentPlatform().ToString());
 						data["Local"].AddKey("GUID", GenerateSeededGUID("LaunchpadExample"));
+						data["Local"].AddKey("MainExecutableName", "LaunchpadExample");
 
 						data["Remote"].AddKey("ChangelogURL", "http://directorate.asuscomm.com/launchpad/changelog/changelog.html");
 						data["Remote"].AddKey("Protocol", "FTP");
@@ -278,6 +279,12 @@ namespace Launchpad.Launcher.Handlers
 						data["Remote"].AddKey("FileRetries", "2");
 					}
 					// End March 21 - 2016
+
+					// June 2 - 2016: Adds main executable redirection option
+					if (!data["Local"].ContainsKey("MainExecutuableName"))
+					{
+						data["Local"].AddKey("MainExecutableName", "LaunchpadExample");
+					}
 
 					// ...
 					WriteConfig(Parser, data);
@@ -969,7 +976,7 @@ namespace Launchpad.Launcher.Handlers
 					}
 				default:
 					{
-						return GetBaseFTPUrl();
+						throw new ArgumentOutOfRangeException(nameof(GetPatchProtocolString), null, "Invalid protocol set in the configuration file.");
 					}
 			}
 		}
@@ -988,7 +995,7 @@ namespace Launchpad.Launcher.Handlers
 					}
 				default:
 					{
-						return "ftp://directorate.asuscomm.com";
+						throw new ArgumentOutOfRangeException(nameof(GetPatchProtocolString), null, "Invalid protocol set in the configuration file.");
 					}
 			}
 		}
@@ -1063,9 +1070,9 @@ namespace Launchpad.Launcher.Handlers
 					string configPath = GetConfigPath();
 					IniData data = Parser.ReadFile(configPath);
 
-					string FTPURL = data["HTTP"]["URL"];
+					string HTTPURL = data["HTTP"]["URL"];
 
-					return FTPURL;
+					return HTTPURL;
 				}
 				catch (IOException ioex)
 				{
@@ -1118,14 +1125,14 @@ namespace Launchpad.Launcher.Handlers
 					string configPath = GetConfigPath();
 					IniData data = Parser.ReadFile(configPath);
 
-					string FTPURL = data["BitTorrent"]["Magnet"];
+					string magnetLink = data["BitTorrent"]["Magnet"];
 
-					return FTPURL;
+					return magnetLink;
 				}
 				catch (IOException ioex)
 				{
 					Log.Warn("Could not get the BitTorrent magnet link (IOException): " + ioex.Message);
-					return String.Empty;
+					return string.Empty;
 				}
 			}
 		}
@@ -1153,6 +1160,61 @@ namespace Launchpad.Launcher.Handlers
 					catch (IOException ioex)
 					{
 						Log.Warn("Could not set the BitTorrent magnet link (IOException): " + ioex.Message);
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the name of the main executable.
+		/// </summary>
+		/// <returns>The name of the main executable.</returns>
+		public string GetMainExecutableName()
+		{
+			lock (ReadLock)
+			{
+				try
+				{
+					FileIniDataParser Parser = new FileIniDataParser();
+
+					string configPath = GetConfigPath();
+					IniData data = Parser.ReadFile(configPath);
+
+					string mainExecutableName = data["Local"]["MainExecutableName"];
+
+					return mainExecutableName;
+				}
+				catch (IOException ioex)
+				{
+					Log.Warn("Could not get the main executable name (IOException): " + ioex.Message);
+					return string.Empty;
+				}
+			}
+		}
+
+
+		/// <summary>
+		/// Sets the name of the main executable.
+		/// </summary>
+		/// <param name="MainExecutableName">The new main executable name.</param>
+		public void SetMainExecutableName(string MainExecutableName)
+		{
+			lock (ReadLock)
+			{
+				lock (WriteLock)
+				{
+					try
+					{
+						FileIniDataParser Parser = new FileIniDataParser();
+						IniData data = Parser.ReadFile(GetConfigPath());
+
+						data["Local"]["MainExecutableName"] = MainExecutableName;
+
+						WriteConfig(Parser, data);
+					}
+					catch (IOException ioex)
+					{
+						Log.Warn("Could not set the main executable name (IOException): " + ioex.Message);
 					}
 				}
 			}
@@ -1250,7 +1312,6 @@ namespace Launchpad.Launcher.Handlers
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Gets the path to the install-unique GUID.
