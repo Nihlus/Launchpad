@@ -94,7 +94,7 @@ namespace Launchpad.Launcher.Handlers
 
 		private void UpdateLauncher_Implementation()
 		{
-			Patch.DownloadLauncher();
+			Patch.UpdateModule(EModule.Launcher);
 		}
 
 		/// <summary>

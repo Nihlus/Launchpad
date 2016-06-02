@@ -368,7 +368,7 @@ namespace Launchpad.Launcher.Handlers
 	/// Contains the relative path of the referenced file, as well as
 	/// its MD5 hash and size in bytes.
 	/// </summary>
-	internal sealed class ManifestEntry : IEquatable<ManifestEntry>
+	public sealed class ManifestEntry : IEquatable<ManifestEntry>
 	{
 		public string RelativePath
 		{

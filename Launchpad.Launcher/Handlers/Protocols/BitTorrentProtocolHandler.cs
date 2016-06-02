@@ -30,16 +30,11 @@ namespace Launchpad.Launcher.Handlers.Protocols
 	/// <summary>
 	/// Bit torrent protocol handler. Downloads and patches the game
 	/// and launcher using a P2P BitTorrent protocol.
-	/// 
+	///
 	/// This protocol does not use a manifest.
 	/// </summary>
 	internal sealed class BitTorrentProtocolHandler : PatchProtocolHandler
 	{
-		public BitTorrentProtocolHandler()
-			: base()
-		{
-		}
-
 		public override bool CanPatch()
 		{
 			return false;
@@ -57,7 +52,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 		public override string GetChangelog()
 		{
-			return String.Empty;
+			return string.Empty;
 		}
 
 		public override bool CanProvideBanner()
@@ -70,44 +65,29 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			return null;
 		}
 
-		public override bool IsLauncherOutdated()
+		public override bool IsModuleOutdated(EModule Module)
 		{
-			return false;
-		}
-
-		public override bool IsGameOutdated()
-		{
-			return false;
+			throw new NotImplementedException();
 		}
 
 		public override void InstallGame()
 		{
-
+			throw new NotImplementedException();
 		}
 
-		public override void DownloadLauncher()
+		protected override void DownloadModule(EModule Module)
 		{
-
+			throw new NotImplementedException();
 		}
 
-		protected override void DownloadGame()
+		public override void UpdateModule(EModule Module)
 		{
-
+			throw new NotImplementedException();
 		}
 
-		public override void VerifyLauncher()
+		public override void VerifyModule(EModule Module)
 		{
-
-		}
-
-		public override void VerifyGame()
-		{
-
-		}
-
-		public override void UpdateGame()
-		{
-
+			throw new NotImplementedException();
 		}
 	}
 }

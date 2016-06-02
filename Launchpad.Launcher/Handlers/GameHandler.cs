@@ -94,7 +94,7 @@ namespace Launchpad.Launcher.Handlers
 		public void UpdateGame()
 		{
 			Log.Info($"Starting update of game files using protocol \"{this.Patch.GetType().Name}\"");
-			Thread t = new Thread(this.Patch.UpdateGame);
+			Thread t = new Thread(() => this.Patch.UpdateModule(EModule.Game));
 			t.Start();
 		}
 
@@ -104,7 +104,7 @@ namespace Launchpad.Launcher.Handlers
 		public void VerifyGame()
 		{
 			Log.Info("Beginning verification of game files.");
-			Thread t = new Thread(this.Patch.VerifyGame);
+			Thread t = new Thread(() => this.Patch.VerifyModule(EModule.Game));
 			t.Start();
 		}
 

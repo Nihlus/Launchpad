@@ -23,7 +23,6 @@ using System;
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Collections.Generic;
 using Launchpad.Launcher.Utility;
 using Launchpad.Launcher.Utility.Enums;
 using System.Drawing;
@@ -37,14 +36,12 @@ namespace Launchpad.Launcher.Handlers.Protocols
 	///
 	/// This protocol uses a manifest.
 	/// </summary>
-	internal sealed class FTPProtocolHandler : PatchProtocolHandler
+	internal sealed class FTPProtocolHandler : ManifestBasedProtocolHandler
 	{
 		/// <summary>
 		/// Logger instance for this class.
 		/// </summary>
 		private static readonly ILog Log = LogManager.GetLogger(typeof(FTPProtocolHandler));
-
-		private readonly ManifestHandler manifestHandler = new ManifestHandler();
 
 		public override bool CanPatch()
 		{
@@ -97,6 +94,14 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			return true;
 		}
 
+		public override string GetChangelog()
+		{
+			string changelogURL = $"{Config.GetBaseFTPUrl()}/launcher/changelog.html";
+
+			// Return simple raw HTML
+			return ReadRemoteFile(changelogURL);
+		}
+
 		public override bool CanProvideBanner()
 		{
 			string bannerURL = $"{Config.GetBaseFTPUrl()}/launcher/banner.png";
@@ -115,461 +120,16 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			return new Bitmap(localBannerPath);
 		}
 
-		public override string GetChangelog()
-		{
-			string changelogURL = $"{Config.GetBaseFTPUrl()}/launcher/changelog.html";
-
-			// Return simple raw HTML
-			return ReadRemoteFile(changelogURL);
-		}
-
-
-		public override bool IsLauncherOutdated()
-		{
-			try
-			{
-				Version local = Config.GetLocalLauncherVersion();
-				Version remote = GetRemoteLauncherVersion();
-
-				return local < remote;
-			}
-			catch (WebException wex)
-			{
-				Log.Warn("Unable to determine whether or not the launcher was outdated (WebException): " + wex.Message);
-				return false;
-			}
-		}
-
-		public override bool IsGameOutdated()
-		{
-			try
-			{
-				Version local = Config.GetLocalGameVersion();
-				Version remote = GetRemoteGameVersion();
-
-				return local < remote;
-			}
-			catch (WebException wex)
-			{
-				Log.Warn("Unable to determine whether or not the game was outdated (WebException): " + wex.Message);
-				return false;
-			}
-		}
-
-		public override void InstallGame()
-		{
-			ModuleInstallFinishedArgs.Module = EModule.Game;
-			ModuleInstallFailedArgs.Module = EModule.Game;
-
-			try
-			{
-				//create the .install file to mark that an installation has begun
-				//if it exists, do nothing.
-				ConfigHandler.CreateInstallCookie();
-
-				// Make sure the manifest is up to date
-				RefreshGameManifest();
-
-				// Download Game
-				DownloadGame();
-
-				// Verify Game
-				VerifyGame();
-			}
-			catch (IOException ioex)
-			{
-				Log.Warn("Game installation failed (IOException): " + ioex.Message);
-			}
-
-			// OnModuleInstallationFinished and OnModuleInstallationFailed is in VerifyGame
-			// in order to allow it to run as a standalone action, while still keeping this functional.
-
-			// As a side effect, it is required that it is the last action to run in Install and Update,
-			// which happens to coincide with the general design.
-		}
-
-		public override void DownloadLauncher()
-		{
-			RefreshLaunchpadManifest();
-
-			ModuleInstallFinishedArgs.Module = EModule.Launcher;
-			ModuleInstallFailedArgs.Module = EModule.Launcher;
-
-			List<ManifestEntry> Manifest = manifestHandler.LaunchpadManifest;
-
-			//in order to be able to resume downloading, we check if there is an entry
-			//stored in the install cookie.
-			//attempt to parse whatever is inside the install cookie
-			ManifestEntry lastDownloadedFile;
-			if (ManifestEntry.TryParse(File.ReadAllText(ConfigHandler.GetInstallCookiePath()), out lastDownloadedFile))
-			{
-				//loop through all the entries in the manifest until we encounter
-				//an entry which matches the one in the install cookie
-
-				foreach (ManifestEntry Entry in Manifest)
-				{
-					if (lastDownloadedFile == Entry)
-					{
-						//remove all entries before the one we were last at.
-						Manifest.RemoveRange(0, Manifest.IndexOf(Entry));
-					}
-				}
-			}
-
-			int downloadedFiles = 0;
-			foreach (ManifestEntry Entry in Manifest)
-			{
-				++downloadedFiles;
-
-				// Prepare the progress event contents
-				ModuleDownloadProgressArgs.IndicatorLabelMessage = GetDownloadIndicatorLabelMessage(downloadedFiles, Path.GetFileName(Entry.RelativePath), Manifest.Count);
-				OnModuleDownloadProgressChanged();
-
-				DownloadEntry(Entry, EModule.Launcher);
-			}
-
-			VerifyLauncher();
-		}
-
-		protected override void DownloadGame()
-		{
-			List<ManifestEntry> Manifest = manifestHandler.GameManifest;
-
-			//in order to be able to resume downloading, we check if there is an entry
-			//stored in the install cookie.
-			//attempt to parse whatever is inside the install cookie
-			ManifestEntry lastDownloadedFile;
-			if (ManifestEntry.TryParse(File.ReadAllText(ConfigHandler.GetInstallCookiePath()), out lastDownloadedFile))
-			{
-				//loop through all the entries in the manifest until we encounter
-				//an entry which matches the one in the install cookie
-
-				foreach (ManifestEntry Entry in Manifest)
-				{
-					if (lastDownloadedFile == Entry)
-					{
-						//remove all entries before the one we were last at.
-						Manifest.RemoveRange(0, Manifest.IndexOf(Entry));
-					}
-				}
-			}
-
-			int downloadedFiles = 0;
-			foreach (ManifestEntry Entry in Manifest)
-			{
-				++downloadedFiles;
-
-				// Prepare the progress event contents
-				ModuleDownloadProgressArgs.IndicatorLabelMessage = GetDownloadIndicatorLabelMessage(downloadedFiles, Path.GetFileName(Entry.RelativePath), Manifest.Count);
-				OnModuleDownloadProgressChanged();
-
-				DownloadEntry(Entry, EModule.Game);
-			}
-		}
-
-		public override void VerifyLauncher()
-		{
-			try
-			{
-				List<ManifestEntry> Manifest = manifestHandler.LaunchpadManifest;
-				List<ManifestEntry> BrokenFiles = new List<ManifestEntry>();
-
-				int verifiedFiles = 0;
-				foreach (ManifestEntry Entry in Manifest)
-				{
-					++verifiedFiles;
-
-					// Prepare the progress event contents
-					ModuleVerifyProgressArgs.IndicatorLabelMessage = GetVerifyIndicatorLabelMessage(verifiedFiles, Path.GetFileName(Entry.RelativePath), Manifest.Count);
-					OnModuleVerifyProgressChanged();
-
-					if (!Entry.IsFileIntegrityIntact())
-					{
-						BrokenFiles.Add(Entry);
-					}
-				}
-
-				int downloadedFiles = 0;
-				foreach (ManifestEntry Entry in BrokenFiles)
-				{
-					++downloadedFiles;
-
-					// Prepare the progress event contents
-					ModuleDownloadProgressArgs.IndicatorLabelMessage = GetDownloadIndicatorLabelMessage(downloadedFiles, Path.GetFileName(Entry.RelativePath), BrokenFiles.Count);
-					OnModuleDownloadProgressChanged();
-
-					for (int i = 0; i < Config.GetFileRetries(); ++i)
-					{
-						if (!Entry.IsFileIntegrityIntact())
-						{
-							DownloadEntry(Entry, EModule.Launcher);
-						}
-						else
-						{
-							break;
-						}
-					}
-				}
-			}
-			catch (IOException ioex)
-			{
-				Log.Warn("Verification of launcher files failed (IOException): " + ioex.Message);
-				OnModuleInstallationFailed();
-			}
-
-			OnModuleInstallationFinished();
-		}
-
-		public override void VerifyGame()
-		{
-			try
-			{
-				List<ManifestEntry> Manifest = manifestHandler.GameManifest;
-				List<ManifestEntry> BrokenFiles = new List<ManifestEntry>();
-
-				int verifiedFiles = 0;
-				foreach (ManifestEntry Entry in Manifest)
-				{
-					++verifiedFiles;
-
-					// Prepare the progress event contents
-					ModuleVerifyProgressArgs.IndicatorLabelMessage = GetVerifyIndicatorLabelMessage(verifiedFiles, Path.GetFileName(Entry.RelativePath), Manifest.Count);
-					OnModuleVerifyProgressChanged();
-
-					if (!Entry.IsFileIntegrityIntact())
-					{
-						BrokenFiles.Add(Entry);
-					}
-				}
-
-				int downloadedFiles = 0;
-				foreach (ManifestEntry Entry in BrokenFiles)
-				{
-					++downloadedFiles;
-
-					// Prepare the progress event contents
-					ModuleDownloadProgressArgs.IndicatorLabelMessage = GetDownloadIndicatorLabelMessage(downloadedFiles, Path.GetFileName(Entry.RelativePath), BrokenFiles.Count);
-					OnModuleDownloadProgressChanged();
-
-					for (int i = 0; i < Config.GetFileRetries(); ++i)
-					{
-						if (!Entry.IsFileIntegrityIntact())
-						{
-							DownloadEntry(Entry, EModule.Game);
-						}
-						else
-						{
-							break;
-						}
-					}
-				}
-			}
-			catch (IOException ioex)
-			{
-				Log.Warn("Verification of game files failed (IOException): " + ioex.Message);
-				OnModuleInstallationFailed();
-			}
-
-			OnModuleInstallationFinished();
-		}
-
-		public override void UpdateGame()
-		{
-			// Make sure the local copy of the manifest is up to date
-			RefreshGameManifest();
-
-			//check all local files against the manifest for file size changes.
-			//if the file is missing or the wrong size, download it.
-			//better system - compare old & new manifests for changes and download those?
-			List<ManifestEntry> Manifest = manifestHandler.GameManifest;
-			List<ManifestEntry> OldManifest = manifestHandler.OldGameManifest;
-
-			List<ManifestEntry> FilesRequiringUpdate = new List<ManifestEntry>();
-			foreach (ManifestEntry Entry in Manifest)
-			{
-				if (!OldManifest.Contains(Entry))
-				{
-					FilesRequiringUpdate.Add(Entry);
-				}
-			}
-
-			try
-			{
-				int updatedFiles = 0;
-				foreach (ManifestEntry Entry in FilesRequiringUpdate)
-				{
-					++updatedFiles;
-
-					ModuleUpdateProgressArgs.IndicatorLabelMessage = GetUpdateIndicatorLabelMessage(Path.GetFileName(Entry.RelativePath),
-						updatedFiles,
-						FilesRequiringUpdate.Count);
-					OnModuleUpdateProgressChanged();
-
-					DownloadEntry(Entry, EModule.Game);
-				}
-			}
-			catch (IOException ioex)
-			{
-				Log.Warn("Updating of game files failed (IOException): " + ioex.Message);
-				OnModuleInstallationFailed();
-			}
-
-			OnModuleInstallationFinished();
-		}
-
-		/// <summary>
-		/// Downloads the provided manifest entry.
-		/// This function resumes incomplete files, verifies downloaded files and
-		/// downloads missing files.
-		/// </summary>
-		/// <param name="Entry">The entry to download.</param>
-		/// <param name="Module">The module to download the file for. Determines download location.</param>
-		private void DownloadEntry(ManifestEntry Entry, EModule Module)
-		{
-			ModuleDownloadProgressArgs.Module = Module;
-
-			string baseRemotePath;
-			string baseLocalPath;
-			if (Module == EModule.Game)
-			{
-				baseRemotePath = Config.GetGameURL();
-				baseLocalPath = Config.GetGamePath();
-			}
-			else
-			{
-				baseRemotePath = Config.GetLauncherBinariesURL();
-				baseLocalPath = ConfigHandler.GetTempLauncherDownloadPath();
-			}
-
-			string RemotePath = $"{baseRemotePath}{Entry.RelativePath}";
-
-			string LocalPath = $"{baseLocalPath}{Path.DirectorySeparatorChar}{Entry.RelativePath}";
-
-			// Make sure we have a directory to put the file in
-			Directory.CreateDirectory(Path.GetDirectoryName(LocalPath));
-
-			// Reset the cookie
-			File.WriteAllText(ConfigHandler.GetInstallCookiePath(), String.Empty);
-
-			// Write the current file progress to the install cookie
-			using (TextWriter textWriterProgress = new StreamWriter(ConfigHandler.GetInstallCookiePath()))
-			{
-				textWriterProgress.WriteLine(Entry);
-				textWriterProgress.Flush();
-			}
-
-			if (File.Exists(LocalPath))
-			{
-				FileInfo fileInfo = new FileInfo(LocalPath);
-				if (fileInfo.Length != Entry.Size)
-				{
-					// If the file is partial, resume the download.
-					if (fileInfo.Length < Entry.Size)
-					{
-						DownloadRemoteFile(RemotePath, LocalPath, fileInfo.Length);
-					}
-					else
-					{
-						// If it's larger than expected, toss it in the bin and try again.
-						File.Delete(LocalPath);
-						DownloadRemoteFile(RemotePath, LocalPath);
-					}
-				}
-				else
-				{
-					string LocalHash;
-					using (FileStream fs = File.OpenRead(LocalPath))
-					{
-						LocalHash = MD5Handler.GetStreamHash(fs);
-					}
-
-					if (LocalHash != Entry.Hash)
-					{
-						File.Delete(LocalPath);
-						DownloadRemoteFile(RemotePath, LocalPath);
-					}
-				}
-			}
-			else
-			{
-				//no file, download it
-				DownloadRemoteFile(RemotePath, LocalPath);
-			}
-
-			if (ChecksHandler.IsRunningOnUnix())
-			{
-				//if we're dealing with a file that should be executable,
-				string gameName = Config.GetGameName();
-				bool bFileIsGameExecutable = (Path.GetFileName(LocalPath).EndsWith(".exe")) || (Path.GetFileName(LocalPath) == gameName);
-				if (bFileIsGameExecutable)
-				{
-					//set the execute bits
-					UnixHandler.MakeExecutable(LocalPath);
-				}
-			}
-
-			// We've finished the download, so empty the cookie
-			File.WriteAllText(ConfigHandler.GetInstallCookiePath(), string.Empty);
-		}
-
-		/// <summary>
-		/// Gets the indicator label message to display to the user while installing.
-		/// </summary>
-		/// <returns>The indicator label message.</returns>
-		/// <param name="nFilesDownloaded">N files downloaded.</param>
-		/// <param name="currentFilename">Current filename.</param>
-		/// <param name="totalFilesToDownload">Total files to download.</param>
-		private static string GetDownloadIndicatorLabelMessage(int nFilesDownloaded, string currentFilename, int totalFilesToDownload)
-		{
-			return $"Downloading file {currentFilename} ({nFilesDownloaded} of {totalFilesToDownload})";
-		}
-
-		/// <summary>
-		/// Gets the indicator label message to display to the user while repairing.
-		/// </summary>
-		/// <returns>The indicator label message.</returns>
-		/// <param name="nFilesToVerify">N files downloaded.</param>
-		/// <param name="currentFilename">Current filename.</param>
-		/// <param name="totalFilesVerified">Total files to download.</param>
-		private static string GetVerifyIndicatorLabelMessage(int nFilesToVerify, string currentFilename, int totalFilesVerified)
-		{
-			return $"Verifying file {currentFilename} ({nFilesToVerify} of {totalFilesVerified})";
-		}
-
-		/// <summary>
-		/// Gets the indicator label message to display to the user while repairing.
-		/// </summary>
-		/// <returns>The indicator label message.</returns>
-		/// <param name="currentFilename">Current filename.</param>
-		/// <param name="updatedFiles">Number of files that have been updated</param>
-		/// <param name="totalFiles">Total files that are to be updated</param>
-		private static string GetUpdateIndicatorLabelMessage(string currentFilename, int updatedFiles, int totalFiles)
-		{
-			return $"Verifying file {currentFilename} ({updatedFiles} of {totalFiles})";
-		}
-
-		/// <summary>
-		/// Gets the progress bar message.
-		/// </summary>
-		/// <returns>The progress bar message.</returns>
-		/// <param name="filename">Filename.</param>
-		/// <param name="downloadedBytes">Downloaded bytes.</param>
-		/// <param name="totalBytes">Total bytes.</param>
-		private static string GetDownloadProgressBarMessage(string filename, long downloadedBytes, long totalBytes)
-		{
-			return $"Downloading {filename}: {downloadedBytes} out of {totalBytes} bytes";
-		}
-
 		/// <summary>
 		/// Reads a text file from a remote FTP server.
 		/// </summary>
 		/// <returns>The FTP file contents.</returns>
 		/// <param name="rawRemoteURL">FTP file path.</param>
 		/// <param name="useAnonymousLogin">Force anonymous credentials for the connection.</param>
-		public string ReadRemoteFile(string rawRemoteURL, bool useAnonymousLogin = false)
+		protected override string ReadRemoteFile(string URL, bool useAnonymousLogin = false)
 		{
 			// Clean the input URL first
-			string remoteURL = rawRemoteURL.Replace(Path.DirectorySeparatorChar, '/');
+			string remoteURL = URL.Replace(Path.DirectorySeparatorChar, '/');
 
 			string username;
 			string password;
@@ -643,9 +203,10 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <returns>The FTP file's location on disk, or the exception message.</returns>
 		/// <param name="URL">Ftp source file path.</param>
 		/// <param name="localPath">Local destination.</param>
+		/// <param name="totalSize">The total expected size of the file.</param>
 		/// <param name="contentOffset">Offset into the remote file where downloading should start</param>
 		/// <param name="useAnonymousLogin">If set to <c>true</c> b use anonymous.</param>
-		public void DownloadRemoteFile(string URL, string localPath, long contentOffset = 0, bool useAnonymousLogin = false)
+		protected override void DownloadRemoteFile(string URL, string localPath, long totalSize = 0, long contentOffset = 0, bool useAnonymousLogin = false)
 		{
 			//clean the URL string
 			string remoteURL = URL.Replace(Path.DirectorySeparatorChar, '/');
@@ -776,224 +337,11 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		}
 
 		/// <summary>
-		/// Refreshs the local copy of the launchpad manifest.
-		/// </summary>
-		private void RefreshGameManifest()
-		{
-			if (File.Exists(ManifestHandler.GetGameManifestPath()))
-			{
-				if (IsGameManifestOutdated())
-				{
-					DownloadGameManifest();
-				}
-			}
-			else
-			{
-				DownloadGameManifest();
-			}
-		}
-
-		/// <summary>
-		/// Refreshs the local copy of the launchpad manifest.
-		/// </summary>
-		private void RefreshLaunchpadManifest()
-		{
-			if (File.Exists(ManifestHandler.GetLaunchpadManifestPath()))
-			{
-				if (IsLaunchpadManifestOutdated())
-				{
-					DownloadLaunchpadManifest();
-				}
-			}
-			else
-			{
-				DownloadLaunchpadManifest();
-			}
-		}
-
-		/// <summary>
-		/// Determines whether the game manifest is outdated.
-		/// </summary>
-		/// <returns><c>true</c> if the manifest is outdated; otherwise, <c>false</c>.</returns>
-		private bool IsGameManifestOutdated()
-		{
-			if (File.Exists(ManifestHandler.GetGameManifestPath()))
-			{
-				string remoteHash = GetRemoteGameManifestChecksum();
-
-				using (Stream file = File.OpenRead(ManifestHandler.GetGameManifestPath()))
-				{
-					string localHash = MD5Handler.GetStreamHash(file);
-
-					return remoteHash != localHash;
-				}
-			}
-			else
-			{
-				return true;
-			}
-		}
-
-		/// <summary>
-		/// Determines whether the launchpad manifest is outdated.
-		/// </summary>
-		/// <returns><c>true</c> if the manifest is outdated; otherwise, <c>false</c>.</returns>
-		private bool IsLaunchpadManifestOutdated()
-		{
-			if (File.Exists(ManifestHandler.GetLaunchpadManifestPath()))
-			{
-				string remoteHash = GetRemoteLaunchpadManifestChecksum();
-
-				using (Stream file = File.OpenRead(ManifestHandler.GetLaunchpadManifestPath()))
-				{
-					string localHash = MD5Handler.GetStreamHash(file);
-
-					return remoteHash != localHash;
-				}
-			}
-			else
-			{
-				return true;
-			}
-		}
-
-		/// <summary>
-		/// Downloads the game manifest.
-		/// </summary>
-		private void DownloadGameManifest()
-		{
-			string RemoteURL = manifestHandler.GetGameManifestURL();
-			string LocalPath = ManifestHandler.GetGameManifestPath();
-			string OldLocalPath = ManifestHandler.GetOldGameManifestPath();
-
-			if (File.Exists(ManifestHandler.GetGameManifestPath()))
-			{
-				try
-				{
-					// Delete the old backup (if there is one)
-					if (File.Exists(OldLocalPath))
-					{
-						File.Delete(OldLocalPath);
-					}
-
-					// Create a backup of the old manifest so that we can compare them when updating the game
-					File.Move(LocalPath, OldLocalPath);
-				}
-				catch (IOException ioex)
-				{
-					Log.Warn("Failed to back up the old game manifest (IOException): " + ioex.Message);
-				}
-			}
-
-			DownloadRemoteFile(RemoteURL, LocalPath);
-		}
-
-		/// <summary>
-		/// Downloads the launchpad manifest.
-		/// </summary>
-		private void DownloadLaunchpadManifest()
-		{
-			string RemoteURL = manifestHandler.GetLaunchpadManifestURL();
-			string LocalPath = ManifestHandler.GetLaunchpadManifestPath();
-			string OldLocalPath = ManifestHandler.GetOldLaunchpadManifestPath();
-
-			try
-			{
-				// Delete the old backup (if there is one)
-				if (File.Exists(OldLocalPath))
-				{
-					File.Delete(OldLocalPath);
-				}
-
-				// Create a backup of the old manifest so that we can compare them when updating the game
-				File.Move(LocalPath, OldLocalPath);
-			}
-			catch (IOException ioex)
-			{
-				Log.Warn("Failed to back up the old launcher manifest (IOException): " + ioex.Message);
-			}
-
-			DownloadRemoteFile(RemoteURL, LocalPath);
-		}
-
-		/// <summary>
-		/// Gets the remote launcher version.
-		/// </summary>
-		/// <returns>The remote launcher version.
-		/// If the version could not be retrieved from the server, a version of 0.0.0 is returned.</returns>
-		public Version GetRemoteLauncherVersion()
-		{
-			string remoteVersionPath = Config.GetLauncherVersionURL();
-
-			// Config.GetDoOfficialUpdates is used here since the official update server always allows anonymous logins.
-			string remoteVersion = ReadRemoteFile(remoteVersionPath, Config.GetDoOfficialUpdates());
-
-			Version version;
-			if (Version.TryParse(remoteVersion, out version))
-			{
-				return version;
-			}
-			else
-			{
-				Log.Warn("Failed to parse the remote launcher version. Using the default of 0.0.0 instead.");
-				return new Version("0.0.0");
-			}
-		}
-
-		//TODO: Maybe move to ManifestHandler?
-		/// <summary>
-		/// Gets the remote game version.
-		/// </summary>
-		/// <returns>The remote game version.</returns>
-		public Version GetRemoteGameVersion()
-		{
-			string remoteVersionPath = $"{Config.GetBaseFTPUrl()}/game/{Config.GetSystemTarget()}/bin/GameVersion.txt";
-
-			string remoteVersion = ReadRemoteFile(remoteVersionPath);
-
-			Version version;
-			if (Version.TryParse(remoteVersion, out version))
-			{
-				return version;
-			}
-			else
-			{
-				Log.Warn("Failed to parse the remote game version. Using the default of 0.0.0 instead.");
-				return new Version("0.0.0");
-			}
-		}
-
-		//TODO: Maybe move to ManifestHandler?
-		/// <summary>
-		/// Gets the remote game manifest checksum.
-		/// </summary>
-		/// <returns>The remote game manifest checksum.</returns>
-		public string GetRemoteGameManifestChecksum()
-		{
-			string checksum = ReadRemoteFile(manifestHandler.GetGameManifestChecksumURL());
-			checksum = Utilities.Clean(checksum);
-
-			return checksum;
-		}
-
-		/// <summary>
-		/// Gets the remote launchpad manifest checksum.
-		/// </summary>
-		/// <returns>The remote launchpad manifest checksum.</returns>
-		public string GetRemoteLaunchpadManifestChecksum()
-		{
-			string checksum = ReadRemoteFile(manifestHandler.GetLaunchpadManifestChecksumURL());
-			checksum = Utilities.Clean(checksum);
-
-			return checksum;
-		}
-
-		/// <summary>
 		/// Checks if a given directory exists on the remote FTP server.
 		/// </summary>
 		/// <returns><c>true</c>, if the directory exists, <c>false</c> otherwise.</returns>
 		/// <param name="remotePath">Remote path.</param>
-		public bool DoesRemoteDirectoryExist(string remotePath)
+		private bool DoesRemoteDirectoryExist(string remotePath)
 		{
 			FtpWebRequest request = CreateFtpWebRequest(remotePath,
 				                        Config.GetRemoteUsername(),
@@ -1030,7 +378,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// </summary>
 		/// <returns><c>true</c>, if the file exists, <c>false</c> otherwise.</returns>
 		/// <param name="remotePath">Remote path.</param>
-		public bool DoesRemoteFileExist(string remotePath)
+		private bool DoesRemoteFileExist(string remotePath)
 		{
 			FtpWebRequest request = CreateFtpWebRequest(remotePath,
 				                        Config.GetRemoteUsername(),

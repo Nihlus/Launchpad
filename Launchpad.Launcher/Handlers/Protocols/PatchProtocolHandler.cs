@@ -22,6 +22,9 @@
 using System;
 using Launchpad.Launcher.Utility.Enums;
 using System.Drawing;
+using System.IO;
+using GLib;
+using log4net;
 
 namespace Launchpad.Launcher.Handlers.Protocols
 {
@@ -37,6 +40,11 @@ namespace Launchpad.Launcher.Handlers.Protocols
 	/// </summary>
 	public abstract class PatchProtocolHandler
 	{
+		/// <summary>
+		/// Logger instance for this class.
+		/// </summary>
+		private static readonly ILog Log = LogManager.GetLogger(typeof(PatchProtocolHandler));
+
 		protected PatchProtocolHandler()
 		{
 			ModuleInstallFinishedArgs = new ModuleInstallationFinishedArgs();
@@ -101,46 +109,57 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		public abstract Bitmap GetBanner();
 
 		/// <summary>
-		/// Checks whether or not the launcher has a new patch available.
+		/// Determines whether or not the specified module is outdated.
 		/// </summary>
-		/// <returns><c>true</c>, if there's a patch available, <c>false</c> otherwise.</returns>
-		public abstract bool IsLauncherOutdated();
-
-		/// <summary>
-		/// Checks whether or not the game has a new patch available.
-		/// </summary>
-		/// <returns><c>true</c>, if there's a patch available, <c>false</c> otherwise.</returns>
-		public abstract bool IsGameOutdated();
+		public abstract bool IsModuleOutdated(EModule Module);
 
 		/// <summary>
 		/// Installs the game.
 		/// </summary>
-		public abstract void InstallGame();
+		public virtual void InstallGame()
+		{
+			ModuleInstallFinishedArgs.Module = EModule.Game;
+			ModuleInstallFailedArgs.Module = EModule.Game;
+
+			try
+			{
+				//create the .install file to mark that an installation has begun
+				//if it exists, do nothing.
+				ConfigHandler.CreateInstallCookie();
+
+				// Download Game
+				DownloadModule(EModule.Game);
+
+				// Verify Game
+				VerifyModule(EModule.Game);
+			}
+			catch (IOException ioex)
+			{
+				Log.Warn("Game installation failed (IOException): " + ioex.Message);
+			}
+
+			// OnModuleInstallationFinished and OnModuleInstallationFailed is in VerifyGame
+			// in order to allow it to run as a standalone action, while still keeping this functional.
+
+			// As a side effect, it is required that it is the last action to run in Install and Update,
+			// which happens to coincide with the general design.
+		}
 
 		/// <summary>
-		/// Downloads the latest version of the game.
+		/// Downloads the latest version of the specified module.
 		/// </summary>
-		protected abstract void DownloadGame();
+		protected abstract void DownloadModule(EModule Module);
 
 		/// <summary>
-		/// Verifies and repairs the game files.
+		/// Updates the specified module to the latest version.
 		/// </summary>
-		public abstract void VerifyGame();
+		/// <param name="Module">The module to update.</param>
+		public abstract void UpdateModule(EModule Module);
 
 		/// <summary>
-		/// Updates the game to the latest version.
+		/// Verifies and repairs the files of the specified module.
 		/// </summary>
-		public abstract void UpdateGame();
-
-		/// <summary>
-		/// Downloads the latest version of the launcher.
-		/// </summary>
-		public abstract void DownloadLauncher();
-
-		/// <summary>
-		/// Verifies and repairs the launcher files.
-		/// </summary>
-		public abstract void VerifyLauncher();
+		public abstract void VerifyModule(EModule Module);
 
 
 		protected void OnModuleDownloadProgressChanged()

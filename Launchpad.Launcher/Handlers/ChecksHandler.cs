@@ -28,7 +28,7 @@ namespace Launchpad.Launcher.Handlers
 {
 	/// <summary>
 	/// This class handles all the launcher's checks, returning bools for each function.
-	/// Since this class is meant to be used in both the Forms UI and the GTK UI, 
+	/// Since this class is meant to be used in both the Forms UI and the GTK UI,
 	/// there must be no useage of UI code in this class. Keep it clean!
 	/// </summary>
 	internal sealed class ChecksHandler
@@ -114,7 +114,7 @@ namespace Launchpad.Launcher.Handlers
 		public bool IsGameOutdated()
 		{
 			PatchProtocolHandler Patch = Config.GetPatchProtocol();
-			return Patch.IsGameOutdated();
+			return Patch.IsModuleOutdated(EModule.Game);
 		}
 
 		/// <summary>
@@ -124,7 +124,7 @@ namespace Launchpad.Launcher.Handlers
 		public bool IsLauncherOutdated()
 		{
 			PatchProtocolHandler Patch = Config.GetPatchProtocol();
-			return Patch.IsLauncherOutdated();
+			return Patch.IsModuleOutdated(EModule.Launcher);
 		}
 
 		/// <summary>
