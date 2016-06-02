@@ -162,8 +162,8 @@ namespace Launchpad.Launcher.Handlers
 					{
 						using (TextWriter tw = new StreamWriter(updateScript))
 						{
-							string copyCom = $"cp -rf {Path.GetTempPath() + "launchpad/launcher/*"} {ConfigHandler.GetLocalDir()}";
-							string delCom = $"rm -rf {Path.GetTempPath() + "launchpad"}";
+							string copyCom = $"cp -rf {Path.GetTempPath()}launchpad/launcher/* {ConfigHandler.GetLocalDir()}";
+							string delCom = $"rm -rf {Path.GetTempPath()}launchpad";
 							string dirCom = $"cd {ConfigHandler.GetLocalDir()}";
 							string launchCom = $@"nohup ./{executableName} &";
 

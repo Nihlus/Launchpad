@@ -196,4 +196,8 @@
   <ItemGroup>
     <Folder Include="Handlers\Protocols\" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\launchpad_update.bat" />
+    <Content Include="Resources\launchpad_update.sh" />
+  </ItemGroup>
 </Project>
