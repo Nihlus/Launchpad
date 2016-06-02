@@ -433,22 +433,22 @@ namespace Launchpad.Launcher.Handlers
 			if (ChecksHandler.IsRunningOnUnix())
 			{
 				//should return something along the lines of "./Game/<ExecutableName>"
-				executablePathRootLevel = $@"{GetGamePath()}{GetGameName()}";
+				executablePathRootLevel = $@"{GetGamePath()}{GetMainExecutableName()}";
 
 				//should return something along the lines of "./Game/<GameName>/Binaries/<SystemTarget>/<ExecutableName>"
 				executablePathTargetLevel =
 					$@"{GetGamePath()}{GetGameName()}{Path.DirectorySeparatorChar}Binaries" +
-					$"{Path.DirectorySeparatorChar}{GetSystemTarget()}{Path.DirectorySeparatorChar}{GetGameName()}";
+					$"{Path.DirectorySeparatorChar}{GetSystemTarget()}{Path.DirectorySeparatorChar}{GetMainExecutableName()}";
 			}
 			else
 			{
 				//should return something along the lines of "./Game/<ExecutableName>.exe"
-				executablePathRootLevel = $@"{GetGamePath()}{GetGameName()}.exe";
+				executablePathRootLevel = $@"{GetGamePath()}{GetMainExecutableName()}.exe";
 
 				//should return something along the lines of "./Game/<GameName>/Binaries/<SystemTarget>/<ExecutableName>.exe"
 				executablePathTargetLevel =
 					$@"{GetGamePath()}{GetGameName()}{Path.DirectorySeparatorChar}Binaries" +
-					$"{Path.DirectorySeparatorChar}{GetSystemTarget()}{Path.DirectorySeparatorChar}{GetGameName()}.exe";
+					$"{Path.DirectorySeparatorChar}{GetSystemTarget()}{Path.DirectorySeparatorChar}{GetMainExecutableName()}.exe";
 			}
 
 
