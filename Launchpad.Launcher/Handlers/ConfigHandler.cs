@@ -283,7 +283,8 @@ namespace Launchpad.Launcher.Handlers
 					// June 2 - 2016: Adds main executable redirection option
 					if (!data["Local"].ContainsKey("MainExecutuableName"))
 					{
-						data["Local"].AddKey("MainExecutableName", "LaunchpadExample");
+						string gameName = data["Local"]["GameName"];
+						data["Local"].AddKey("MainExecutableName", gameName);
 					}
 
 					// ...
