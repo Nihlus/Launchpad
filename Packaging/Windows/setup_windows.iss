@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Launchpad"
-#define MyAppVersion "0.1.0"
+#define MyAppVersion "0.2.4.34678"
 #define MyAppPublisher "Jarl Gullberg"
 #define MyAppURL "https://github.com/Nihlus/Launchpad/"
 #define MyAppExeName "Launchpad.exe"
@@ -10,7 +10,7 @@
 ;
  ; Fill this out with the path to your built launchpad binaries.
 ;
-#define LaunchpadReleaseDir "C:\Users\Jarl\Desktop\launchpad-winpack"
+#define LaunchpadReleaseDir "..\..\release\launchpad-0.2.4.34678\bin"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -47,7 +47,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Source: "{#LaunchpadReleaseDir}\Launchpad.exe"; DestDir: "{app}";
 Source: "{#LaunchpadReleaseDir}\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs
 ; Extra libraries - GTK# must be included.
-Source: "{#LaunchpadReleaseDir}\gtk-sharp-2.12.26.msi"; DestDir: "{tmp}";
+Source: "{#LaunchpadReleaseDir}\gtk-sharp-2.12.38.msi"; DestDir: "{tmp}";
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
@@ -57,5 +57,5 @@ Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: 
 Name: "{app}\"; Permissions: everyone-modify
 
 [Run]
-Filename: "msiexec.exe"; Parameters: "/i ""{tmp}\gtk-sharp-2.12.26.msi"" /qn" Flags: runascurrentuser;
+Filename: "msiexec.exe"; Parameters: "/i ""{tmp}\gtk-sharp-2.12.38.msi"" /qn"; Flags: runascurrentuser;
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: runascurrentuser nowait postinstall skipifsilent
