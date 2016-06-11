@@ -148,77 +148,25 @@ namespace Launchpad.Launcher.Handlers
 		{
 			try
 			{
-				//maintain the executable name if it was renamed to something other than 'Launchpad'
-				string assemblyPath = Assembly.GetEntryAssembly().Location;
-				string executableName = Path.GetFileName(assemblyPath);
+				string updateScriptPath = GetUpdateScriptPath();
+				string updateScriptSource = GetUpdateScriptSource();
+
+				File.WriteAllText(updateScriptPath, updateScriptSource);
 
 				if (ChecksHandler.IsRunningOnUnix())
 				{
-					//creating a .sh script
-					string scriptPath = $@"{Path.GetTempPath()}launchpadupdate.sh";
-
-					using (FileStream updateScript = File.Create(scriptPath))
-					{
-						using (TextWriter tw = new StreamWriter(updateScript))
-						{
-							string copyCom = $"cp -rf {Path.GetTempPath()}launchpad/launcher/* {ConfigHandler.GetLocalDir()}";
-							string delCom = $"rm -rf {Path.GetTempPath()}launchpad";
-							string dirCom = $"cd {ConfigHandler.GetLocalDir()}";
-							string launchCom = $@"nohup ./{executableName} &";
-
-							tw.WriteLine(@"#!/bin/sh");
-							tw.WriteLine("sleep 5");
-							tw.WriteLine(copyCom);
-							tw.WriteLine(delCom);
-							tw.WriteLine(dirCom);
-							tw.WriteLine("chmod +x " + executableName);
-							tw.WriteLine(launchCom);
-						}
-					}
-
-					UnixHandler.MakeExecutable(scriptPath);
-
-					//Now create some ProcessStartInfo for this script
-					ProcessStartInfo updateShellProcess = new ProcessStartInfo
-					{
-						FileName = scriptPath,
-						UseShellExecute = false,
-						RedirectStandardOutput = false,
-						WindowStyle = ProcessWindowStyle.Hidden
-					};
-
-					return updateShellProcess;
+					UnixHandler.MakeExecutable(updateScriptPath);
 				}
-				else
+
+				ProcessStartInfo updateShellProcess = new ProcessStartInfo
 				{
-					//creating a .bat script
-					string scriptPath = $@"{Path.GetTempPath()}launchpadupdate.bat";
+					FileName = updateScriptPath,
+					UseShellExecute = false,
+					RedirectStandardOutput = false,
+					WindowStyle = ProcessWindowStyle.Hidden
+				};
 
-					using (FileStream updateScript = File.Create(scriptPath))
-					{
-						using (TextWriter tw = new StreamWriter(updateScript))
-						{
-							//write commands to the script
-							//wait three seconds, then copy the new executable
-							tw.WriteLine(
-								$"timeout 3 & xcopy /e /s /y \"{Path.GetTempPath()}\\launchpad\\launcher\" \"{ConfigHandler.GetLocalDir()}\" && rmdir /s /q {Path.GetTempPath()}\\launchpad");
-
-							//then start the new executable
-							tw.WriteLine($"start {executableName}");
-							tw.Close();
-						}
-					}
-
-					ProcessStartInfo updateBatchProcess = new ProcessStartInfo
-					{
-						FileName = scriptPath,
-						UseShellExecute = true,
-						RedirectStandardOutput = false,
-						WindowStyle = ProcessWindowStyle.Hidden
-					};
-
-					return updateBatchProcess;
-				}
+				return updateShellProcess;
 			}
 			catch (IOException ioex)
 			{
@@ -232,12 +180,12 @@ namespace Launchpad.Launcher.Handlers
 		/// Extracts the bundled update script and populates the variables in it
 		/// with the data needed for the update procedure.
 		/// </summary>
-		private string GetPopulatedUpdateScript()
+		private static string GetUpdateScriptSource()
 		{
 			// Load the script from the embedded resources
 			Assembly localAssembly = Assembly.GetExecutingAssembly();
 
-			string scriptContents = "";
+			string scriptSource = "";
 			string resourceName = GetUpdateScriptResourceName();
 			using (Stream resourceStream = localAssembly.GetManifestResourceStream(resourceName))
 			{
@@ -245,7 +193,7 @@ namespace Launchpad.Launcher.Handlers
 				{
 					using (StreamReader reader = new StreamReader(resourceStream))
 					{
-						scriptContents = reader.ReadToEnd();
+						scriptSource = reader.ReadToEnd();
 					}
 				}
 			}
@@ -255,19 +203,19 @@ namespace Launchpad.Launcher.Handlers
 			const string LocalInstallDirectoryVariable = "%localDir%";
 			const string LocalExecutableName = "%launchpadExecutable%";
 
-			string transientScript = scriptContents;
+			string transientScriptSource = scriptSource;
 
-			transientScript = transientScript.Replace(TempDirectoryVariable, Path.GetTempPath());
-			transientScript = transientScript.Replace(LocalInstallDirectoryVariable, ConfigHandler.GetLocalDir());
-			transientScript = transientScript.Replace(LocalExecutableName, Path.GetFileName(localAssembly.Location));
+			transientScriptSource = transientScriptSource.Replace(TempDirectoryVariable, Path.GetTempPath());
+			transientScriptSource = transientScriptSource.Replace(LocalInstallDirectoryVariable, ConfigHandler.GetLocalDir());
+			transientScriptSource = transientScriptSource.Replace(LocalExecutableName, Path.GetFileName(localAssembly.Location));
 
-			return transientScript;
+			return transientScriptSource;
 		}
 
 		/// <summary>
 		/// Gets the name of the embedded update script.
 		/// </summary>
-		private string GetUpdateScriptResourceName()
+		private static string GetUpdateScriptResourceName()
 		{
 			if (ChecksHandler.IsRunningOnUnix())
 			{
@@ -276,6 +224,21 @@ namespace Launchpad.Launcher.Handlers
 			else
 			{
 				 return "Launchpad.Launcher.Resources.launchpad_update.bat";
+			}
+		}
+
+		/// <summary>
+		/// Gets the name of the embedded update script.
+		/// </summary>
+		private static string GetUpdateScriptPath()
+		{
+			if (ChecksHandler.IsRunningOnUnix())
+			{
+				return $@"{Path.GetTempPath()}launchpad_update.sh";
+			}
+			else
+			{
+				 return $@"{Path.GetTempPath()}launchpad_update.bat";
 			}
 		}
 
