@@ -21,6 +21,7 @@
 
 using System;
 using System.IO;
+using log4net;
 using Launchpad.Launcher.Utility.Enums;
 using Launchpad.Launcher.Handlers.Protocols;
 
@@ -37,6 +38,11 @@ namespace Launchpad.Launcher.Handlers
 		/// The config handler reference.
 		/// </summary>
 		readonly ConfigHandler Config = ConfigHandler.Instance;
+
+		/// <summary>
+		/// Logger instance for this class.
+		/// </summary>
+		private static readonly ILog Log = LogManager.GetLogger(typeof(ChecksHandler));
 
 		/// <summary>
 		/// Determines whether this instance can connect to a patching service.
@@ -95,18 +101,26 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns><c>true</c> if the game is installed; otherwise, <c>false</c>.</returns>
 		public bool IsGameInstalled()
 		{
-			//Criteria for considering the game 'installed'
-			//Does the game directory exist?
-			bool bHasDirectory = Directory.Exists(Config.GetGamePath());
+			// Criteria for considering the game 'installed'
+			// Does the game directory exist?
+			bool bHasGameDirectory = Directory.Exists(Config.GetGamePath());
 
-			//Is there an .install file in the directory?
+			// Is there an .install file in the directory?
 			bool bHasInstallationCookie = File.Exists(ConfigHandler.GetInstallCookiePath());
 
-			//is there a version file?
+			// Is there a version file?
 			bool bHasGameVersion = File.Exists(Config.GetGameVersionPath());
 
-			//If any of these criteria are false, the game is not considered fully installed.
-			return bHasDirectory && bHasInstallationCookie && IsInstallCookieEmpty() && bHasGameVersion;
+			if (!bHasGameVersion && bHasGameDirectory)
+			{
+				Log.Warn("No GameVersion.txt file was found in the installation directory.\n" +
+				         "This may be due to a download error, or the develop may not have included one.\n" +
+				         "Without it, the game cannot be considered fully installed.\n" +
+				         "If you are the developer of this game, add one to your game files with your desired version in it.");
+			}
+
+			// If any of these criteria are false, the game is not considered fully installed.
+			return bHasGameDirectory && bHasInstallationCookie && IsInstallCookieEmpty() && bHasGameVersion;
 		}
 
 		/// <summary>
