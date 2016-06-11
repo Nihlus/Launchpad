@@ -27,7 +27,7 @@ cp -rf "%temp%/launchpad/launcher/"* "%localDir%"
 rm -rf "%temp%/launchpad"
 
 # Go to the installation directory
-cd "%localdir%"
+cd "%localDir%"
 
 # Start the launcher detached from this process
 chmod +x %launchpadExecutable%
