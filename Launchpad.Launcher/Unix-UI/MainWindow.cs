@@ -81,7 +81,6 @@ namespace Launchpad.Launcher.UnixUI
 		public MainWindow()
 			: base(Gtk.WindowType.Toplevel)
 		{
-			// The config must be initialized before the handlers can be instantiated
 			Checks = new ChecksHandler();
 			Launcher = new LauncherHandler();
 			Game = new GameHandler();

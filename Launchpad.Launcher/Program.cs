@@ -24,7 +24,6 @@ using Launchpad.Launcher.UnixUI;
 using Launchpad.Launcher.WindowsUI;
 using Launchpad.Launcher.Handlers;
 using System.IO;
-using System.Reflection;
 using System.Threading;
 using log4net;
 
@@ -47,7 +46,7 @@ namespace Launchpad.Launcher
 		/// The main entry point for the application.
 		/// </summary>
 		[STAThread]
-		static void Main()
+		private static void Main()
 		{
 			// Bind any unhandled exceptions in the main thread so that they are logged.
 			AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
@@ -57,7 +56,7 @@ namespace Launchpad.Launcher
 			Log.Info($"Current platform: {ConfigHandler.GetCurrentPlatform()} ({(Environment.Is64BitOperatingSystem ? "x64" : "x86")})");
 
 			// Set correct working directory for compatibility with double-clicking
-			Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+			Directory.SetCurrentDirectory(ConfigHandler.GetLocalDir());
 
 			if (ChecksHandler.IsRunningOnUnix())
 			{
