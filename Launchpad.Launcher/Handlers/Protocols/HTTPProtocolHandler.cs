@@ -52,6 +52,11 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				HttpWebRequest plainRequest = CreateHttpWebRequest(Config.GetBaseHTTPUrl(),
 					                              Config.GetRemoteUsername(), Config.GetRemotePassword());
 
+				if (plainRequest == null)
+				{
+					return false;
+				}
+
 				plainRequest.Method = WebRequestMethods.Http.Head;
 				plainRequest.Timeout = 4000;
 
@@ -305,6 +310,12 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			catch (ArgumentException aex)
 			{
 				Log.Warn("Unable to create a WebRequest for the specified file (ArgumentException): " + aex.Message);
+				return null;
+			}
+			catch (UriFormatException uex)
+			{
+				Log.Warn("Unable to create a WebRequest for the specified file (UriFormatException): " + uex.Message + "\n" +
+					"You may need to add \"http://\" before the url in the config.");
 				return null;
 			}
 		}

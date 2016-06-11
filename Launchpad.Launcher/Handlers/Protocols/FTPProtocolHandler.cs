@@ -57,6 +57,11 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			{
 				FtpWebRequest plainRequest = CreateFtpWebRequest(FTPURL, FTPUserName, FTPPassword);
 
+				if (plainRequest == null)
+				{
+					return false;
+				}
+
 				plainRequest.Method = WebRequestMethods.Ftp.ListDirectory;
 				plainRequest.Timeout = 4000;
 
@@ -311,7 +316,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		{
 			try
 			{
-				FtpWebRequest request = (FtpWebRequest)WebRequest.Create(new Uri(ftpDirectoryPath));
+				FtpWebRequest request = (FtpWebRequest) WebRequest.Create(new Uri(ftpDirectoryPath));
 
 				//Set proxy to null. Under current configuration if this option is not set then the proxy
 				//that is used will get an html response from the web content gateway (firewall monitoring system)
@@ -333,6 +338,12 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			{
 				Log.Warn("Unable to create a WebRequest for the specified file (ArgumentException): " + aex.Message);
 				return null;
+			}
+			catch (UriFormatException uex)
+			{
+				Log.Warn("Unable to create a WebRequest for the specified file (UriFormatException): " + uex.Message + "\n" +
+                         "You may need to add \"ftp://\" before the url in the config.");
+                return null;
 			}
 		}
 
