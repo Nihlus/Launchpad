@@ -23,6 +23,7 @@ using IniParser;
 using IniParser.Model;
 using System;
 using System.IO;
+using System.Reflection;
 using Launchpad.Launcher.Utility.Enums;
 using Launchpad.Launcher.Utility;
 using Launchpad.Launcher.Handlers.Protocols;
@@ -399,8 +400,8 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The local dir, terminated by a directory separator.</returns>
 		public static string GetLocalDir()
 		{
-			string localDir = $@"{Directory.GetCurrentDirectory()}{Path.DirectorySeparatorChar}";
-			return localDir;
+			Uri codeBaseURI = new UriBuilder(Assembly.GetExecutingAssembly().Location).Uri;
+			return Path.GetDirectoryName(Uri.UnescapeDataString(codeBaseURI.AbsolutePath)) + Path.DirectorySeparatorChar;
 		}
 
 		/// <summary>
