@@ -28,7 +28,7 @@ using Launchpad.Utilities.Utility.Events;
 using NGettext;
 using Launchpad.Utilities.Handlers;
 
-namespace Launchpad.Utilities.UnixUI
+namespace Launchpad.Utilities.Interface
 {
 	[CLSCompliant(false)]
 	public partial class MainWindow : Gtk.Window

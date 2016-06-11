@@ -69,6 +69,9 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CommandLine, Version=1.9.71.2, Culture=neutral, PublicKeyToken=de6f01bd326f8c32">
+      <HintPath>..\packages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
+    </Reference>
     <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
       <Package>gtk-sharp-2.0</Package>
     </Reference>
@@ -96,6 +99,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Options\CLIOptions.cs" />
     <EmbeddedResource Include="gtk-gui\gui.stetic">
       <LogicalName>gui.stetic</LogicalName>
     </EmbeddedResource>
@@ -117,12 +121,12 @@
     <Compile Include="Handlers\ManifestHandler.cs" />
     <Compile Include="Utility\Events\Arguments.cs" />
     <Compile Include="Utility\Events\Delegates.cs" />
-    <Compile Include="Unix-UI\MainWindow.cs" />
+    <Compile Include="Interface\MainWindow.cs" />
     <Compile Include="Handlers\ChecksHandler.cs" />
     <EmbeddedResource Include="Resources\Icons8-Android-Industry-Engineering.ico">
       <DeployService-UseProjectRelativePath>True</DeployService-UseProjectRelativePath>
     </EmbeddedResource>
-    <Compile Include="gtk-gui\Launchpad.Utilities.UnixUI.MainWindow.cs" />
+    <Compile Include="gtk-gui\Launchpad.Utilities.Interface.MainWindow.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -139,6 +143,7 @@
   -->
   <ItemGroup>
     <Folder Include="Handlers\" />
+    <Folder Include="Options" />
     <Folder Include="Utility\" />
     <Folder Include="Utility\Events\" />
     <Folder Include="Unix-UI\" />
