@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f16a2963-c622-4c27-93e8-8e8f631c2eae" name="Default" comment="Added logging for">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Launchpad.Launcher/Handlers/LauncherHandler.cs" afterPath="$PROJECT_DIR$/Launchpad.Launcher/Handlers/LauncherHandler.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Launchpad.Launcher/Handlers/Protocols/FTPProtocolHandler.cs" afterPath="$PROJECT_DIR$/Launchpad.Launcher/Handlers/Protocols/FTPProtocolHandler.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Launchpad.Launcher/Handlers/Protocols/HTTPProtocolHandler.cs" afterPath="$PROJECT_DIR$/Launchpad.Launcher/Handlers/Protocols/HTTPProtocolHandler.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Launchpad.Launcher/Handlers/StatsHandler.cs" afterPath="$PROJECT_DIR$/Launchpad.Launcher/Handlers/StatsHandler.cs" />
     </list>
     <ignored path="Launchpad.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -25,11 +22,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="ConfigHandler.cs" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ConfigHandler.cs" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Launchpad.Launcher/Handlers/ConfigHandler.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="605">
-              <caret line="490" column="17" selection-start-line="490" selection-start-column="17" selection-end-line="490" selection-end-column="17" />
+            <state relative-caret-position="327">
+              <caret line="1298" column="32" selection-start-line="1298" selection-start-column="32" selection-end-line="1298" selection-end-column="32" />
               <folding>
                 <marker date="1465642489961" expanded="true" signature="794:1072" ph="..." />
                 <marker date="1465642489961" expanded="true" signature="1111:39558" ph="{...}" />
@@ -142,6 +139,25 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="StatsHandler.cs" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Launchpad.Launcher/Handlers/StatsHandler.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="382">
+              <caret line="41" column="0" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
+              <folding>
+                <marker date="1465645670209" expanded="true" signature="793:833" ph="..." />
+                <marker date="1465645670209" expanded="true" signature="872:2169" ph="{...}" />
+                <marker date="1465645670209" expanded="true" signature="876:942" ph="/// ..." />
+                <marker date="1465645670209" expanded="true" signature="978:2167" ph="{...}" />
+                <marker date="1465645670209" expanded="true" signature="984:1052" ph="/// ..." />
+                <marker date="1465645670209" expanded="true" signature="1137:1203" ph="/// ..." />
+                <marker date="1465645670209" expanded="true" signature="1371:1463" ph="/// ..." />
+                <marker date="1465645670209" expanded="true" signature="1501:2164" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
     </leaf>
   </component>
   <component name="Git.Settings">
@@ -156,7 +172,6 @@
         <option value="$PROJECT_DIR$/Launchpad.Utilities/Properties/AssemblyInfo.cs" />
         <option value="$PROJECT_DIR$/Launchpad.Launcher/Windows-UI/MainForm.cs" />
         <option value="$PROJECT_DIR$/Launchpad.Launcher/Windows-UI/AboutBox.cs" />
-        <option value="$PROJECT_DIR$/Launchpad.Launcher/Handlers/StatsHandler.cs" />
         <option value="$PROJECT_DIR$/Launchpad.Utilities/Unix-UI/MainWindow.cs" />
         <option value="$PROJECT_DIR$/Launchpad.Launcher/Handlers/UnixHandler.cs" />
         <option value="$PROJECT_DIR$/Launchpad.Launcher/Handlers/GameHandler.cs" />
@@ -174,6 +189,7 @@
         <option value="$PROJECT_DIR$/Launchpad.Launcher/Handlers/Protocols/HTTPProtocolHandler.cs" />
         <option value="$PROJECT_DIR$/Launchpad.Launcher/Handlers/Protocols/FTPProtocolHandler.cs" />
         <option value="$PROJECT_DIR$/Launchpad.Launcher/Handlers/LauncherHandler.cs" />
+        <option value="$PROJECT_DIR$/Launchpad.Launcher/Handlers/StatsHandler.cs" />
       </list>
     </option>
   </component>
@@ -420,7 +436,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2497332" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3289183" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="NuGet" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3289183" sideWeight="0.5032017" order="10" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26710817" sideWeight="0.4967983" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26710817" sideWeight="0.4967983" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -673,13 +689,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="540">
           <caret line="36" column="37" selection-start-line="36" selection-start-column="37" selection-end-line="36" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Launchpad.Launcher/Handlers/StatsHandler.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="232">
-          <caret line="32" column="21" selection-start-line="32" selection-start-column="21" selection-end-line="32" selection-end-column="21" />
         </state>
       </provider>
     </entry>
@@ -1004,8 +1013,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Launchpad.Launcher/Handlers/ConfigHandler.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="605">
-          <caret line="490" column="17" selection-start-line="490" selection-start-column="17" selection-end-line="490" selection-end-column="17" />
+        <state relative-caret-position="327">
+          <caret line="1298" column="32" selection-start-line="1298" selection-start-column="32" selection-end-line="1298" selection-end-column="32" />
           <folding>
             <marker date="1465642489961" expanded="true" signature="794:1072" ph="..." />
             <marker date="1465642489961" expanded="true" signature="1111:39558" ph="{...}" />
@@ -1113,6 +1122,23 @@
             <marker date="1465642489961" expanded="true" signature="38237:38476" ph="{...}" />
             <marker date="1465642489961" expanded="true" signature="38480:38617" ph="/// ..." />
             <marker date="1465642489961" expanded="true" signature="38668:39553" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Launchpad.Launcher/Handlers/StatsHandler.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="382">
+          <caret line="41" column="0" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
+          <folding>
+            <marker date="1465645670209" expanded="true" signature="793:833" ph="..." />
+            <marker date="1465645670209" expanded="true" signature="872:2169" ph="{...}" />
+            <marker date="1465645670209" expanded="true" signature="876:942" ph="/// ..." />
+            <marker date="1465645670209" expanded="true" signature="978:2167" ph="{...}" />
+            <marker date="1465645670209" expanded="true" signature="984:1052" ph="/// ..." />
+            <marker date="1465645670209" expanded="true" signature="1137:1203" ph="/// ..." />
+            <marker date="1465645670209" expanded="true" signature="1371:1463" ph="/// ..." />
+            <marker date="1465645670209" expanded="true" signature="1501:2164" ph="{...}" />
           </folding>
         </state>
       </provider>

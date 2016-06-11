@@ -40,6 +40,8 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		private static readonly ConfigHandler Config = ConfigHandler.Instance;
 
+		private const string BASE_URL = "http://directorate.asuscomm.com/launchpad/stats.php?";
+
 		/// <summary>
 		/// Sends the usage stats to the official launchpad server.
 		/// </summary>
@@ -47,8 +49,7 @@ namespace Launchpad.Launcher.Handlers
 		{
 			try
 			{
-				const string baseURL = "http://directorate.asuscomm.com/launchpad/stats.php?";
-				string formattedURL = $"{baseURL}guid={Config.GetGameGUID()}" +
+				string formattedURL = $"{BASE_URL}guid={Config.GetGameGUID()}" +
 				                      $"&launcherVersion={Config.GetLocalLauncherVersion()}" +
 				                      $"&gameName={Config.GetGameName()}" +
 				                      $"&systemType={Config.GetSystemTarget()}" +
