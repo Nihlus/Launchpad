@@ -51,17 +51,17 @@ namespace Launchpad.Launcher.UnixUI
 		/// <summary>
 		/// The checks handler reference.
 		/// </summary>
-		private readonly ChecksHandler Checks;
+		private readonly ChecksHandler Checks = new ChecksHandler();
 
 		/// <summary>
 		/// The launcher handler. Allows updating the launcher and loading the changelog
 		/// </summary>
-		private readonly LauncherHandler Launcher;
+		private readonly LauncherHandler Launcher = new LauncherHandler();
 
 		/// <summary>
 		/// The game handler. Allows updating, installing and repairing the game.
 		/// </summary>
-		private readonly GameHandler Game;
+		private readonly GameHandler Game = new GameHandler();
 
 		/// <summary>
 		/// The changelog browser.
@@ -81,17 +81,25 @@ namespace Launchpad.Launcher.UnixUI
 		public MainWindow()
 			: base(Gtk.WindowType.Toplevel)
 		{
-			Checks = new ChecksHandler();
-			Launcher = new LauncherHandler();
-			Game = new GameHandler();
-
-			//Initialize the GTK UI
+			// Initialize the GTK UI
 			this.Build();
+
+			// Bind the handler events
+			Game.ProgressChanged += OnModuleInstallationProgressChanged;
+			Game.GameDownloadFinished += OnGameDownloadFinished;
+			Game.GameDownloadFailed += OnGameDownloadFailed;
+			Game.GameLaunchFailed += OnGameLaunchFailed;
+            Game.GameExited += OnGameExited;
+
+			Launcher.LauncherDownloadProgressChanged += OnModuleInstallationProgressChanged;
+			Launcher.LauncherDownloadFinished += OnLauncherDownloadFinished;
+			Launcher.ChangelogDownloadFinished += OnChangelogDownloadFinished;
+
 
 			// Set the initial launcher mode
 			SetLauncherMode(ELauncherMode.Inactive, false);
 
-			//set the window title
+			// Set the window title
 			Title = "Launchpad - " + Config.GetGameName();
 
 			ScrolledBrowserWindow.Add(Browser);
@@ -99,7 +107,7 @@ namespace Launchpad.Launcher.UnixUI
 
 			IndicatorLabel.Text = LocalizationCatalog.GetString("Idle");
 
-			//First of all, check if we can connect to the FTP server.
+			// First of all, check if we can connect to the patching service.
 			if (!Checks.CanPatch())
 			{
 				MessageDialog dialog = new MessageDialog(
@@ -132,7 +140,7 @@ namespace Launchpad.Launcher.UnixUI
 					}
 				}
 
-				//if we can connect, proceed with the rest of our checks.
+				// If we can connect, proceed with the rest of our checks.
 				if (ChecksHandler.IsInitialStartup())
 				{
 					Log.Info("This instance is the first start of the application in this folder.");
@@ -142,7 +150,7 @@ namespace Launchpad.Launcher.UnixUI
 						                                        DialogFlags.Modal,
 						                                        MessageType.Question,
 						                                        ButtonsType.OkCancel,
-						                                        String.Format(LocalizationCatalog.GetString(
+						                                        string.Format(LocalizationCatalog.GetString(
 								                                        "This appears to be the first time you're starting the launcher.\n" +
 								                                        "Is this the location where you would like to install the game?" +
 								                                        "\n\n{0}"), ConfigHandler.GetLocalDir()
@@ -180,7 +188,6 @@ namespace Launchpad.Launcher.UnixUI
 				}
 				else
 				{
-					Launcher.ChangelogDownloadFinished += OnChangelogDownloadFinished;
 					Launcher.LoadFallbackChangelog();
 				}
 
@@ -226,10 +233,10 @@ namespace Launchpad.Launcher.UnixUI
 		/// <param name="bInProgress">If set to <c>true</c>, the selected mode is in progress.</param>
 		private void SetLauncherMode(ELauncherMode newMode, bool bInProgress)
 		{
-			//set the global launcher mode
+			// Set the global launcher mode
 			Mode = newMode;
 
-			//set the UI elements to match
+			// Set the UI elements to match
 			switch (newMode)
 			{
 				case ELauncherMode.Install:
@@ -340,49 +347,72 @@ namespace Launchpad.Launcher.UnixUI
 			switch (Mode)
 			{
 				case ELauncherMode.Repair:
+				{
+					if (Checks.IsPlatformAvailable(Config.GetSystemTarget()))
 					{
-						//bind events for UI updating
-						Game.ProgressChanged += OnModuleInstallationProgressChanged;
-						Game.GameDownloadFinished += OnGameDownloadFinished;
-						Game.GameDownloadFailed += OnGameDownloadFailed;
-
-						if (Checks.IsPlatformAvailable(Config.GetSystemTarget()))
-						{
-							//Repair the game asynchronously
-							SetLauncherMode(ELauncherMode.Repair, true);
-							Game.VerifyGame();
-						}
-						else
-						{
-							Notification noProvide = new Notification
-							{
-								IconName = Stock.DialogError,
-								Summary = LocalizationCatalog.GetString("Launchpad - Platform not provided!"),
-								Body = LocalizationCatalog.GetString("The server does not provide the game for the selected platform.")
-							};
-							noProvide.Show();
-
-							Log.Info($"The server does not provide files for platform \"{ConfigHandler.GetCurrentPlatform()}\". " +
-								"A .provides file must be present in the platforms' root directory.");
-
-							SetLauncherMode(ELauncherMode.Install, false);
-						}
-						break;
+						// Repair the game asynchronously
+						SetLauncherMode(ELauncherMode.Repair, true);
+						Game.VerifyGame();
 					}
+					else
+					{
+						Notification noProvide = new Notification
+						{
+							IconName = Stock.DialogError,
+							Summary = LocalizationCatalog.GetString("Launchpad - Platform not provided!"),
+							Body = LocalizationCatalog.GetString("The server does not provide the game for the selected platform.")
+						};
+						noProvide.Show();
+
+						Log.Info($"The server does not provide files for platform \"{ConfigHandler.GetCurrentPlatform()}\". " +
+							"A .provides file must be present in the platforms' root directory.");
+
+						SetLauncherMode(ELauncherMode.Install, false);
+					}
+					break;
+				}
 				case ELauncherMode.Install:
+				{
+					//check for a .provides file in the platform directory on the server
+					//if there is none, the server does not provide a game for that platform
+					if (Checks.IsPlatformAvailable(Config.GetSystemTarget()))
 					{
-						//bind events for UI updating
-						Game.ProgressChanged += OnModuleInstallationProgressChanged;
-						Game.GameDownloadFinished += OnGameDownloadFinished;
-						Game.GameDownloadFailed += OnGameDownloadFailed;
+						//install the game asynchronously
+						SetLauncherMode(ELauncherMode.Install, true);
+						Game.InstallGame();
+					}
+					else
+					{
+						Notification noProvide = new Notification
+						{
+							IconName = Stock.DialogError,
+							Summary = LocalizationCatalog.GetString("Launchpad - Platform not provided!"),
+							Body = LocalizationCatalog.GetString("The server does not provide the game for the selected platform.")
+						};
+						noProvide.Show();
 
-						//check for a .provides file in the platform directory on the server
-						//if there is none, the server does not provide a game for that platform
+						Log.Info($"The server does not provide files for platform \"{ConfigHandler.GetCurrentPlatform()}\". " +
+														"A .provides file must be present in the platforms' root directory.");
+
+						SetLauncherMode(ELauncherMode.Install, false);
+					}
+					break;
+				}
+				case ELauncherMode.Update:
+				{
+					if (Checks.IsLauncherOutdated())
+					{
+						SetLauncherMode(ELauncherMode.Update, true);
+						Launcher.UpdateLauncher();
+					}
+					else
+					{
+						// Uppdate the game asynchronously
 						if (Checks.IsPlatformAvailable(Config.GetSystemTarget()))
 						{
-							//install the game asynchronously
-							SetLauncherMode(ELauncherMode.Install, true);
-							Game.InstallGame();
+							// Install the game asynchronously
+							SetLauncherMode(ELauncherMode.Update, true);
+							Game.UpdateGame();
 						}
 						else
 						{
@@ -395,70 +425,32 @@ namespace Launchpad.Launcher.UnixUI
 							noProvide.Show();
 
 							Log.Info($"The server does not provide files for platform \"{ConfigHandler.GetCurrentPlatform()}\". " +
-                            								"A .provides file must be present in the platforms' root directory.");
+															"A .provides file must be present in the platforms' root directory.");
 
 							SetLauncherMode(ELauncherMode.Install, false);
 						}
-						break;
 					}
-				case ELauncherMode.Update:
-					{
-						if (Checks.IsLauncherOutdated())
-						{
-							SetLauncherMode(ELauncherMode.Update, true);
-							Launcher.LauncherDownloadFinished += OnLauncherDownloadFinished;
-							Launcher.LauncherDownloadProgressChanged += OnModuleInstallationProgressChanged;
-							Launcher.UpdateLauncher();
-						}
-						else
-						{
-							//bind events for UI updating
-							Game.ProgressChanged += OnModuleInstallationProgressChanged;
-							Game.GameDownloadFinished += OnGameDownloadFinished;
-							Game.GameDownloadFailed += OnGameDownloadFailed;
-
-							//update the game asynchronously
-							if (Checks.IsPlatformAvailable(Config.GetSystemTarget()))
-							{
-								//install the game asynchronously
-								SetLauncherMode(ELauncherMode.Update, true);
-								Game.UpdateGame();
-							}
-							else
-							{
-								Notification noProvide = new Notification
-								{
-									IconName = Stock.DialogError,
-									Summary = LocalizationCatalog.GetString("Launchpad - Platform not provided!"),
-									Body = LocalizationCatalog.GetString("The server does not provide the game for the selected platform.")
-								};
-								noProvide.Show();
-
-								Log.Info($"The server does not provide files for platform \"{ConfigHandler.GetCurrentPlatform()}\". " +
-                                								"A .provides file must be present in the platforms' root directory.");
-
-								SetLauncherMode(ELauncherMode.Install, false);
-							}
-						}
-						break;
-					}
+					break;
+				}
 				case ELauncherMode.Launch:
-					{
-						Game.GameLaunchFailed += OnGameLaunchFailed;
-						Game.GameExited += OnGameExited;
+				{
+					// Events such as LaunchFailed can fire before this has finished
+					// Thus, we set the mode before the actual launching of the game.
+					SetLauncherMode(ELauncherMode.Launch, true);
+					Game.LaunchGame();
 
-						//events such as LaunchFailed can fire before this has finished
-						//thus, we set the mode before the actual launching of the game.
-						SetLauncherMode(ELauncherMode.Launch, true);
-						Game.LaunchGame();
-
-						break;
-					}
+					break;
+				}
+				case ELauncherMode.Inactive:
+				{
+					Log.Warn("The main button was pressed with an invalid active mode. No functionality has been defined for this mode.");
+                    break;
+				}
 				default:
-					{
-						Log.Warn("The main button was pressed with an invalid active mode. No functionality has been defined for this mode.");
-						break;
-					}
+				{
+					Log.Warn("The main button was pressed with an invalid active mode. No functionality has been defined for this mode.");
+					break;
+				}
 			}
 		}
 

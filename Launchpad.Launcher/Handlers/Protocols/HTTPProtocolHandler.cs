@@ -111,8 +111,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			string bannerURL = $"{Config.GetBaseHTTPUrl()}/launcher/banner.png";
 			string localBannerPath = $"{Path.GetTempPath()}/banner.png";
 
-			DownloadRemoteFile(bannerURL, localBannerPath, 0);
-
+			DownloadRemoteFile(bannerURL, localBannerPath);
 			return new Bitmap(localBannerPath);
 		}
 
@@ -153,9 +152,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				{
 					if (contentStream == null)
 					{
-						Log.Error($"Failed to read the contents of remote file \"{remoteURL}\": " +
-								  "Remote stream was null. This could be due to a network interruption " +
-								  "or issues with the remote file.");
+						Log.Error($"Failed to download the remote file at \"{remoteURL}\" (NullReferenceException from the content stream). " +
+								  "Check your internet connection.");
 
 						return;
 					}
@@ -271,7 +269,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					}
 				}
 
-				return Utilities.Clean(data);
+				return Utilities.SanitizeString(data);
 			}
 			catch (WebException wex)
 			{

@@ -37,7 +37,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// The config handler reference.
 		/// </summary>
-		readonly ConfigHandler Config = ConfigHandler.Instance;
+		readonly ConfigHandler Configuration = ConfigHandler.Instance;
 
 		/// <summary>
 		/// Logger instance for this class.
@@ -50,15 +50,9 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns><c>true</c> if this instance can connect to a patching service; otherwise, <c>false</c>.</returns>
 		public bool CanPatch()
 		{
-			PatchProtocolHandler Patch = Config.GetPatchProtocol();
-			if (Patch != null)
-			{
-				return Patch.CanPatch();
-			}
-			else
-			{
-				return false;
-			}
+			PatchProtocolHandler patchService = Configuration.GetPatchProtocol();
+
+			return patchService != null && patchService.CanPatch();
 		}
 
 		/// <summary>
@@ -67,15 +61,8 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns><c>true</c> if this is the first time; otherwise, <c>false</c>.</returns>
 		public static bool IsInitialStartup()
 		{
-			//we use an empty file to determine if this is the first launch or not
-			if (!File.Exists(ConfigHandler.GetUpdateCookiePath()))
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			// We use an empty file to determine if this is the first launch or not
+			return !File.Exists(ConfigHandler.GetUpdateCookiePath());
 		}
 
 		/// <summary>
@@ -84,8 +71,8 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns><c>true</c> if this instance is running on unix; otherwise, <c>false</c>.</returns>
 		public static bool IsRunningOnUnix()
 		{
-			int p = (int)Environment.OSVersion.Platform;
-			if ((p == 4) || (p == 6) || (p == 128))
+			int platform = (int)Environment.OSVersion.Platform;
+			if ((platform == 4) || (platform == 6) || (platform == 128))
 			{
 				return true;
 			}
@@ -103,13 +90,13 @@ namespace Launchpad.Launcher.Handlers
 		{
 			// Criteria for considering the game 'installed'
 			// Does the game directory exist?
-			bool bHasGameDirectory = Directory.Exists(Config.GetGamePath());
+			bool bHasGameDirectory = Directory.Exists(Configuration.GetGamePath());
 
 			// Is there an .install file in the directory?
 			bool bHasInstallationCookie = File.Exists(ConfigHandler.GetInstallCookiePath());
 
 			// Is there a version file?
-			bool bHasGameVersion = File.Exists(Config.GetGameVersionPath());
+			bool bHasGameVersion = File.Exists(Configuration.GetGameVersionPath());
 
 			if (!bHasGameVersion && bHasGameDirectory)
 			{
@@ -129,8 +116,8 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns><c>true</c> if the game is outdated; otherwise, <c>false</c>.</returns>
 		public bool IsGameOutdated()
 		{
-			PatchProtocolHandler Patch = Config.GetPatchProtocol();
-			return Patch.IsModuleOutdated(EModule.Game);
+			PatchProtocolHandler patchService = Configuration.GetPatchProtocol();
+			return patchService.IsModuleOutdated(EModule.Game);
 		}
 
 		/// <summary>
@@ -139,8 +126,8 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns><c>true</c> if the launcher is outdated; otherwise, <c>false</c>.</returns>
 		public bool IsLauncherOutdated()
 		{
-			PatchProtocolHandler Patch = Config.GetPatchProtocol();
-			return Patch.IsModuleOutdated(EModule.Launcher);
+			PatchProtocolHandler patchService = Configuration.GetPatchProtocol();
+			return patchService.IsModuleOutdated(EModule.Launcher);
 		}
 
 		/// <summary>
@@ -169,8 +156,8 @@ namespace Launchpad.Launcher.Handlers
 		/// <param name="Platform">Platform.</param>
 		public bool IsPlatformAvailable(ESystemTarget Platform)
 		{
-			PatchProtocolHandler Patch = Config.GetPatchProtocol();
-			return Patch.IsPlatformAvailable(Platform);
+			PatchProtocolHandler patchService = Configuration.GetPatchProtocol();
+			return patchService.IsPlatformAvailable(Platform);
 		}
 	}
 }

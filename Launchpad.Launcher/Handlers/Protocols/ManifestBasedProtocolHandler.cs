@@ -38,7 +38,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// </summary>
 		private static readonly ILog Log = LogManager.GetLogger(typeof(ManifestBasedProtocolHandler));
 
-		private readonly ManifestHandler manifestHandler = new ManifestHandler();
+		private readonly ManifestHandler Manifest = new ManifestHandler();
 
 		public override void InstallGame()
 		{
@@ -47,8 +47,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 			try
 			{
-				//create the .install file to mark that an installation has begun
-				//if it exists, do nothing.
+				// Create the .install file to mark that an installation has begun.
+				// If it exists, do nothing.
 				ConfigHandler.CreateInstallCookie();
 
 				// Make sure the manifest is up to date
@@ -85,8 +85,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 					ModuleInstallFinishedArgs.Module = EModule.Launcher;
 					ModuleInstallFailedArgs.Module = EModule.Launcher;
-					Manifest = manifestHandler.LaunchpadManifest;
-					OldManifest = manifestHandler.OldLaunchpadManifest;
+					Manifest = this.Manifest.LaunchpadManifest;
+					OldManifest = this.Manifest.OldLaunchpadManifest;
 					break;
 				}
 				case EModule.Game:
@@ -96,8 +96,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 					ModuleInstallFinishedArgs.Module = EModule.Game;
 					ModuleInstallFailedArgs.Module = EModule.Game;
-					Manifest = manifestHandler.GameManifest;
-					OldManifest = manifestHandler.OldGameManifest;
+					Manifest = this.Manifest.GameManifest;
+					OldManifest = this.Manifest.OldGameManifest;
 					break;
 				}
 				default:
@@ -145,11 +145,11 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			List<ManifestEntry> BrokenFiles = new List<ManifestEntry>();
 			if (Module == EModule.Game)
 			{
-				Manifest = manifestHandler.GameManifest;
+				Manifest = this.Manifest.GameManifest;
 			}
 			else
 			{
-				Manifest = manifestHandler.LaunchpadManifest;
+				Manifest = this.Manifest.LaunchpadManifest;
 			}
 
 			try
@@ -204,7 +204,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 		protected override void DownloadModule(EModule Module)
 		{
-			List<ManifestEntry> Manifest;
+			List<ManifestEntry> moduleManifest;
 			switch (Module)
 			{
 				case EModule.Launcher:
@@ -214,7 +214,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 					ModuleInstallFinishedArgs.Module = EModule.Launcher;
 					ModuleInstallFailedArgs.Module = EModule.Launcher;
-					Manifest = manifestHandler.LaunchpadManifest;
+					moduleManifest = Manifest.LaunchpadManifest;
 					break;
 				}
 				case EModule.Game:
@@ -224,7 +224,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 					ModuleInstallFinishedArgs.Module = EModule.Game;
 					ModuleInstallFailedArgs.Module = EModule.Game;
-					Manifest = manifestHandler.GameManifest;
+					moduleManifest = Manifest.GameManifest;
 					break;
 				}
 				default:
@@ -233,32 +233,33 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				}
 			}
 
-			//in order to be able to resume downloading, we check if there is an entry
-			//stored in the install cookie.
-			//attempt to parse whatever is inside the install cookie
+			// In order to be able to resume downloading, we check if there is an entry
+			// stored in the install cookie.
+
+			// Attempt to parse whatever is inside the install cookie
 			ManifestEntry lastDownloadedFile;
 			if (ManifestEntry.TryParse(File.ReadAllText(ConfigHandler.GetInstallCookiePath()), out lastDownloadedFile))
 			{
-				//loop through all the entries in the manifest until we encounter
-				//an entry which matches the one in the install cookie
+				// Loop through all the entries in the manifest until we encounter
+				// an entry which matches the one in the install cookie
 
-				foreach (ManifestEntry Entry in Manifest)
+				foreach (ManifestEntry Entry in moduleManifest)
 				{
 					if (lastDownloadedFile == Entry)
 					{
-						//remove all entries before the one we were last at.
-						Manifest.RemoveRange(0, Manifest.IndexOf(Entry));
+						// Remove all entries before the one we were last at.
+						moduleManifest.RemoveRange(0, moduleManifest.IndexOf(Entry));
 					}
 				}
 			}
 
 			int downloadedFiles = 0;
-			foreach (ManifestEntry Entry in Manifest)
+			foreach (ManifestEntry Entry in moduleManifest)
 			{
 				++downloadedFiles;
 
 				// Prepare the progress event contents
-				ModuleDownloadProgressArgs.IndicatorLabelMessage = GetDownloadIndicatorLabelMessage(downloadedFiles, Path.GetFileName(Entry.RelativePath), Manifest.Count);
+				ModuleDownloadProgressArgs.IndicatorLabelMessage = GetDownloadIndicatorLabelMessage(downloadedFiles, Path.GetFileName(Entry.RelativePath), moduleManifest.Count);
 				OnModuleDownloadProgressChanged();
 
 				DownloadManifestEntry(Entry, Module);
@@ -397,18 +398,18 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			else
 			{
-				//no file, download it
+				// No file, download it
 				DownloadRemoteFile(remoteURL, localPath,Entry.Size);
 			}
 
 			if (ChecksHandler.IsRunningOnUnix())
 			{
-				//if we're dealing with a file that should be executable,
+				// If we're dealing with a file that should be executable,
 				string gameName = Config.GetGameName();
 				bool bFileIsGameExecutable = (Path.GetFileName(localPath).EndsWith(".exe")) || (Path.GetFileName(localPath) == gameName);
 				if (bFileIsGameExecutable)
 				{
-					//set the execute bits
+					// Set the execute bits
 					UnixHandler.MakeExecutable(localPath);
 				}
 			}
@@ -465,12 +466,12 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			{
 				case EModule.Launcher:
 				{
-					checksum = ReadRemoteFile(manifestHandler.GetLaunchpadManifestChecksumURL());
+					checksum = ReadRemoteFile(Manifest.GetLaunchpadManifestChecksumURL());
 					break;
 				}
 				case EModule.Game:
 				{
-					checksum = ReadRemoteFile(manifestHandler.GetGameManifestChecksumURL());
+					checksum = ReadRemoteFile(Manifest.GetGameManifestChecksumURL());
 					break;
 				}
 				default:
@@ -479,7 +480,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				}
 			}
 
-			return Utilities.Clean(checksum);
+			return Utilities.SanitizeString(checksum);
 		}
 
 		/// <summary>
@@ -532,7 +533,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			{
 				case EModule.Launcher:
 				{
-					RemoteURL = manifestHandler.GetLaunchpadManifestURL();
+					RemoteURL = Manifest.GetLaunchpadManifestURL();
 					LocalPath = ManifestHandler.GetLaunchpadManifestPath();
 					OldLocalPath = ManifestHandler.GetOldLaunchpadManifestPath();
 
@@ -540,7 +541,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				}
 				case EModule.Game:
 				{
-					RemoteURL = manifestHandler.GetGameManifestURL();
+					RemoteURL = Manifest.GetGameManifestURL();
 					LocalPath = ManifestHandler.GetGameManifestPath();
 					OldLocalPath = ManifestHandler.GetOldGameManifestPath();
 

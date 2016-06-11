@@ -1,4 +1,4 @@
-//
+﻿//
 //  Utilities.cs
 //
 //  Author:
@@ -33,40 +33,41 @@ namespace Launchpad.Launcher.Utility
 		private static readonly ILog Log = LogManager.GetLogger(typeof(Utilities));
 
 		public static int Clamp(this int value, int min, int max)
-		{  
-			return (value < min) ? min : (value > max) ? max : value;  
+		{
+			return (value < min) ? min : (value > max) ? max : value;
 		}
 
 		/// <summary>
-		/// Clean the specified input from newlines and nulls (\r, \n and \0)
+		/// Sanitizes the input string, removing any \n, \r, or \0 characters.
 		/// </summary>
 		/// <param name="input">Input string.</param>
-		public static string Clean(string input)
+		public static string SanitizeString(string input)
 		{
-			return input.Replace("\n", String.Empty).Replace("\0", String.Empty).Replace("\r", String.Empty);
+			return input.Replace("\n", string.Empty).Replace("\0", string.Empty).Replace("\r", string.Empty);
 		}
 
 		public static ESystemTarget ParseSystemTarget(string input)
 		{
 			ESystemTarget Target = ESystemTarget.Unknown;
+
 			try
 			{
 				Target = (ESystemTarget)Enum.Parse(typeof(ESystemTarget), input);
 			}
 			catch (ArgumentNullException anex)
-			{ 
+			{
 				Log.Warn("Failed to parse the system target from the input string (ArgumentNullException): " + anex.Message +
-					"\n\tInput: null");	
+					"\n\tInput: null");
 			}
 			catch (ArgumentException aex)
 			{
 				Log.Warn("Failed to parse the system target from the input string (ArgumentException): " + aex.Message +
-					"\n\tInput: " + input);	
+					"\n\tInput: " + input);
 			}
 			catch (OverflowException oex)
 			{
 				Log.Warn("Failed to parse the system target from the input string (OverflowException): " + oex.Message +
-					"\n\tInput: " + input);	
+					"\n\tInput: " + input);
 			}
 
 			return Target;

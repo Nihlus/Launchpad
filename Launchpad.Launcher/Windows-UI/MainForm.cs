@@ -47,17 +47,17 @@ namespace Launchpad.Launcher.WindowsUI
 		/// <summary>
 		/// The checks handler reference.
 		/// </summary>
-		private readonly ChecksHandler Checks;
+		private readonly ChecksHandler Checks = new ChecksHandler();
 
 		/// <summary>
 		/// The launcher handler. Allows updating the launcher and loading the changelog
 		/// </summary>
-		private readonly LauncherHandler Launcher;
+		private readonly LauncherHandler Launcher = new LauncherHandler();
 
 		/// <summary>
 		/// The game handler. Allows updating, installing and repairing the game.
 		/// </summary>
-		private readonly GameHandler Game;
+		private readonly GameHandler Game = new GameHandler();
 
 		/// <summary>
 		/// The current mode that the launcher is in. Determines what the primary button does when pressed.
@@ -72,19 +72,26 @@ namespace Launchpad.Launcher.WindowsUI
 			InitializeComponent();
 			InitializeLocalizedStrings();
 
-			Checks = new ChecksHandler();
-			Launcher = new LauncherHandler();
-			Game = new GameHandler();
+			// Bind the handler events
+			Game.ProgressChanged += OnModuleInstallationProgressChanged;
+			Game.GameDownloadFinished += OnGameDownloadFinished;
+			Game.GameDownloadFailed += OnGameDownloadFailed;
+			Game.GameLaunchFailed += OnGameLaunchFailed;
+			Game.GameExited += OnGameExited;
+
+			Launcher.LauncherDownloadProgressChanged += OnModuleInstallationProgressChanged;
+			Launcher.LauncherDownloadFinished += OnLauncherDownloadFinished;
+			Launcher.ChangelogDownloadFinished += OnChangelogDownloadFinished;
 
 			SetLauncherMode(ELauncherMode.Inactive, false);
 			MessageLabel.Text = LocalizationCatalog.GetString("Idle");
 
-			downloadProgressLabel.Text = String.Empty;
+			downloadProgressLabel.Text = string.Empty;
 
-			//set the window text to match the game name
+			// Set the window text to match the game name
 			this.Text = "Launchpad - " + Config.GetGameName();
 
-			//first of all, check if we can connect to the FTP server.
+			// First of all, check if we can connect to the FTP server.
 			if (!Checks.CanPatch())
 			{
 				MessageBox.Show(
@@ -101,14 +108,14 @@ namespace Launchpad.Launcher.WindowsUI
 			}
 			else
 			{
-				//if we can connect, proceed with the rest of our checks.
+				// If we can connect, proceed with the rest of our checks.
 				if (ChecksHandler.IsInitialStartup())
 				{
 					Log.Info("This instance is the first start of the application in this folder.");
 
 					DialogResult shouldInstallHere = MessageBox.Show(
 						                                 this,
-						                                 String.Format(
+						                                 string.Format(
 							                                 LocalizationCatalog.GetString("This appears to be the first time you're starting the launcher.\n" +
 								                                 "Is this the location where you would like to install the game?" +
 								                                 "\n\n{0}"), ConfigHandler.GetLocalDir()),
@@ -146,11 +153,10 @@ namespace Launchpad.Launcher.WindowsUI
 				}
 				else
 				{
-					Launcher.ChangelogDownloadFinished += OnChangelogDownloadFinished;
 					Launcher.LoadFallbackChangelog();
 				}
 
-				//Does the launcher need an update?
+				// Does the launcher need an update?
 				if (!Checks.IsLauncherOutdated())
 				{
 					if (!Checks.IsGameInstalled())
@@ -206,21 +212,16 @@ namespace Launchpad.Launcher.WindowsUI
 			{
 				case ELauncherMode.Repair:
 					{
-						//bind events for UI updating
-						Game.ProgressChanged += OnModuleInstallationProgressChanged;
-						Game.GameDownloadFinished += OnGameDownloadFinished;
-						Game.GameDownloadFailed += OnGameDownloadFailed;
-
 						if (Checks.IsPlatformAvailable(Config.GetSystemTarget()))
 						{
-							//repair the game asynchronously
+							// Repair the game asynchronously
 							Game.VerifyGame();
 							SetLauncherMode(ELauncherMode.Repair, true);
 						}
 						else
 						{
-							//whoops, the server doesn't provide the game for the platform we requested (usually the on we're running on)
-							//alert the user and revert back to the default install mode
+							// Whoops, the server doesn't provide the game for the platform we requested (usually the on we're running on)
+							// Alert the user and revert back to the default install mode
 							Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Launcher.Resources.RocketIcon.ico");
 							if (iconStream != null)
 							{
@@ -246,21 +247,16 @@ namespace Launchpad.Launcher.WindowsUI
 					}
 				case ELauncherMode.Install:
 					{
-						//bind events for UI updating
-						Game.ProgressChanged += OnModuleInstallationProgressChanged;
-						Game.GameDownloadFinished += OnGameDownloadFinished;
-						Game.GameDownloadFailed += OnGameDownloadFailed;
-
 						if (Checks.IsPlatformAvailable(Config.GetSystemTarget()))
 						{
-							//install the game asynchronously
+							// Install the game asynchronously
 							SetLauncherMode(ELauncherMode.Install, true);
 							Game.InstallGame();
 						}
 						else
 						{
-							//whoops, the server doesn't provide the game for the platform we requested (usually the on we're running on)
-							//alert the user and revert back to the default install mode
+							// Whoops, the server doesn't provide the game for the platform we requested (usually the on we're running on)
+							// Alert the user and revert back to the default install mode
 							Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Launcher.Resources.RocketIcon.ico");
 							if (iconStream != null)
 							{
@@ -287,31 +283,24 @@ namespace Launchpad.Launcher.WindowsUI
 					}
 				case ELauncherMode.Update:
 					{
-						//bind events for UI updating
-						Game.ProgressChanged += OnModuleInstallationProgressChanged;
-						Game.GameDownloadFinished += OnGameDownloadFinished;
-						Game.GameDownloadFailed += OnGameDownloadFailed;
-
 						if (Checks.IsLauncherOutdated())
 						{
-							//update the launcher synchronously.
+							// Update the launcher synchronously.
 							SetLauncherMode(ELauncherMode.Update, true);
-							Launcher.LauncherDownloadFinished += OnLauncherDownloadFinished;
-							Launcher.LauncherDownloadProgressChanged += OnModuleInstallationProgressChanged;
 							Launcher.UpdateLauncher();
 						}
 						else
 						{
 							if (Checks.IsPlatformAvailable(Config.GetSystemTarget()))
 							{
-								//update the game asynchronously
+								// Update the game asynchronously
 								SetLauncherMode(ELauncherMode.Update, true);
 								Game.UpdateGame();
 							}
 							else
 							{
-								//whoops, the server doesn't provide the game for the platform we requested (usually the on we're running on)
-								//alert the user and revert back to the default install mode
+								// Whoops, the server doesn't provide the game for the platform we requested (usually the on we're running on)
+								// Alert the user and revert back to the default install mode
 								Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Launcher.Resources.RocketIcon.ico");
 								if (iconStream != null)
 								{
@@ -339,9 +328,6 @@ namespace Launchpad.Launcher.WindowsUI
 					}
 				case ELauncherMode.Launch:
 					{
-						Game.GameLaunchFailed += OnGameLaunchFailed;
-						Game.GameExited += OnGameExited;
-
 						SetLauncherMode(ELauncherMode.Launch, true);
 						Game.LaunchGame();
 
@@ -362,10 +348,10 @@ namespace Launchpad.Launcher.WindowsUI
 		/// <param name="bInProgress">If set to <c>true</c>, the selected mode is in progress.</param>
 		private void SetLauncherMode(ELauncherMode newMode, bool bInProgress)
 		{
-			//set the global launcher mode
+			// Set the global launcher mode
 			Mode = newMode;
 
-			//set the UI elements to match
+			// Set the UI elements to match
 			switch (newMode)
 			{
 				case ELauncherMode.Install:
@@ -601,16 +587,6 @@ namespace Launchpad.Launcher.WindowsUI
 					downloadCompleteNotification.ShowBalloonTip(10000);
 					SetLauncherMode(ELauncherMode.Launch, false);
 				});
-		}
-
-		/// <summary>
-		/// Passes the update finished event to a generic handler.
-		/// </summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">Contains the result of the download.</param>
-		private void OnGameUpdateFinished(object sender, EventArgs e)
-		{
-			OnGameDownloadFinished(sender, e);
 		}
 
 		private void aboutLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

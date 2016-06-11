@@ -1312,7 +1312,7 @@ namespace Launchpad.Launcher.Handlers
 				catch (IOException ioex)
 				{
 					Log.Warn("Could not load the game GUID (IOException): " + ioex.Message);
-					return String.Empty;
+					return string.Empty;
 				}
 			}
 		}
@@ -1354,26 +1354,26 @@ namespace Launchpad.Launcher.Handlers
 
 			if (ChecksHandler.IsRunningOnUnix())
 			{
-				//Case sensitive
-				//Is there an old config file?
+				// Case sensitive
+				// Is there an old config file?
 				if (File.Exists(oldConfigPath))
 				{
 					lock (ReadLock)
 					{
-						//Have we not already created the new config dir?
+						// Have we not already created the new config dir?
 						if (!Directory.Exists(GetConfigDir()))
 						{
-							//if not, create it.
+							// If not, create it.
 							Directory.CreateDirectory(GetConfigDir());
 
-							//Copy the old config file to the new location.
+							// Copy the old config file to the new location.
 							File.Copy(oldConfigPath, GetConfigPath());
 
-							//read our new file.
+							// Read our new file.
 							FileIniDataParser Parser = new FileIniDataParser();
 							IniData data = Parser.ReadFile(GetConfigPath());
 
-							//replace the old invalid keys with new, updated keys.
+							// Replace the old invalid keys with new, updated keys.
 							string launcherVersion = data["Local"]["launcherVersion"];
 							string gameName = data["Local"]["gameName"];
 							string systemTarget = data["Local"]["systemTarget"];
@@ -1387,7 +1387,7 @@ namespace Launchpad.Launcher.Handlers
 							data["Local"].AddKey("SystemTarget", systemTarget);
 
 							WriteConfig(Parser, data);
-							//We were successful, so return true.
+							// We were successful, so return true.
 
 							File.Delete(oldConfigPath);
 							Directory.Delete(oldConfigDir, true);
@@ -1395,8 +1395,8 @@ namespace Launchpad.Launcher.Handlers
 						}
 						else
 						{
-							//The new config dir already exists, so we'll just toss out the old one.
-							//Delete the old config
+							// The new config dir already exists, so we'll just toss out the old one.
+							// Delete the old config
 							File.Delete(oldConfigPath);
 							Directory.Delete(oldConfigDir, true);
 							return false;
@@ -1412,13 +1412,13 @@ namespace Launchpad.Launcher.Handlers
 			{
 				lock (ReadLock)
 				{
-					//Windows is not case sensitive, so we'll use direct access without copying.
+					// Windows is not case sensitive, so we'll use direct access without copying.
 					if (File.Exists(oldConfigPath))
 					{
 						FileIniDataParser Parser = new FileIniDataParser();
 						IniData data = Parser.ReadFile(GetConfigPath());
 
-						//replace the old invalid keys with new, updated keys.
+						// Replace the old invalid keys with new, updated keys.
 						string launcherVersion = data["Local"]["launcherVersion"];
 						string gameName = data["Local"]["gameName"];
 						string systemTarget = data["Local"]["systemTarget"];
@@ -1433,7 +1433,7 @@ namespace Launchpad.Launcher.Handlers
 
 						WriteConfig(Parser, data);
 
-						//We were successful, so return true.
+						// We were successful, so return true.
 						return true;
 					}
 					else

@@ -1,4 +1,4 @@
-//
+﻿//
 //  ManifestHandler.cs
 //
 //  Author:
@@ -404,22 +404,22 @@ namespace Launchpad.Launcher.Handlers
 		/// <param name="inEntry">The resulting entry.</param>
 		public static bool TryParse(string rawInput, out ManifestEntry inEntry)
 		{
-			//clear out the entry for the new data
+			// Clear out the entry for the new data
 			inEntry = new ManifestEntry();
 
-			if (!String.IsNullOrEmpty(rawInput))
+			if (!string.IsNullOrEmpty(rawInput))
 			{
-				//remove any and all bad characters from the input string,
-				//such as \0, \n and \r.
-				string cleanInput = Utilities.Clean(rawInput);
+				// Remove any and all bad characters from the input string,
+				// Such as \0, \n and \r.
+				string cleanInput = Utilities.SanitizeString(rawInput);
 
-				//split the string into its three components - file, hash and size
+				// Split the string into its three components - file, hash and size
 				string[] entryElements = cleanInput.Split(':');
 
-				//if we have three elements (which we should always have), set them in the provided entry
+				// If we have three elements (which we should always have), set them in the provided entry
 				if (entryElements.Length == 3)
 				{
-					//clean the manifest path, converting \ to / on unix and / to \ on Windows.
+					// Sanitize the manifest path, converting \ to / on unix and / to \ on Windows.
 					if (ChecksHandler.IsRunningOnUnix())
 					{
 						inEntry.RelativePath = entryElements[0].Replace("\\", "/");
@@ -429,33 +429,23 @@ namespace Launchpad.Launcher.Handlers
 						inEntry.RelativePath = entryElements[0].Replace("/", "\\");
 					}
 
-					//set the hash to the second element
+					// Set the hash to the second element
 					inEntry.Hash = entryElements[1];
 
-					//attempt to parse the final element as a long-type byte count.
+					// Attempt to parse the final element as a long-type byte count.
 					long parsedSize;
-					if (long.TryParse(entryElements[2], out parsedSize))
+					if (!long.TryParse(entryElements[2], out parsedSize))
 					{
-						inEntry.Size = parsedSize;
-						return true;
-					}
-					else
-					{
-						//could not parse the size, parsing has failed.
+						// Oops. The parsing failed, so this entry is invalid.
 						return false;
 					}
-				}
-				else
-				{
-					//wrong number of raw entry elements, parsing has failed.
-					return false;
+
+					inEntry.Size = parsedSize;
+					return true;
 				}
 			}
-			else
-			{
-				//no input, parsing has failed
-				return false;
-			}
+
+			return false;
 		}
 
 		/// <summary>
@@ -497,29 +487,24 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns><c>true</c>, if file was complete and undamaged, <c>false</c> otherwise.</returns>
 		public bool IsFileIntegrityIntact()
 		{
-			string LocalPath = $"{ConfigHandler.Instance.GetGamePath()}{RelativePath}";
-
-			if (!File.Exists(LocalPath))
+			string localPath = $"{ConfigHandler.Instance.GetGamePath()}{RelativePath}";
+			if (!File.Exists(localPath))
 			{
 				return false;
 			}
-			else
+
+			FileInfo fileInfo = new FileInfo(localPath);
+			if (fileInfo.Length != Size)
 			{
-				FileInfo fileInfo = new FileInfo(LocalPath);
-				if (fileInfo.Length != Size)
+				return false;
+			}
+
+			using (Stream file = File.OpenRead(localPath))
+			{
+				string localHash = MD5Handler.GetStreamHash(file);
+				if (localHash != Hash)
 				{
 					return false;
-				}
-				else
-				{
-					using (Stream file = File.OpenRead(LocalPath))
-					{
-						string localHash = MD5Handler.GetStreamHash(file);
-						if (localHash != Hash)
-						{
-							return false;
-						}
-					}
 				}
 			}
 

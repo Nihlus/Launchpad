@@ -121,7 +121,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			string localBannerPath = $"{Path.GetTempPath()}/banner.png";
 
 			DownloadRemoteFile(bannerURL, localBannerPath);
-
 			return new Bitmap(localBannerPath);
 		}
 
@@ -129,7 +128,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// Reads a text file from a remote FTP server.
 		/// </summary>
 		/// <returns>The FTP file contents.</returns>
-		/// <param name="rawRemoteURL">FTP file path.</param>
+		/// <param name="URL">FTP file path.</param>
 		/// <param name="useAnonymousLogin">Force anonymous credentials for the connection.</param>
 		protected override string ReadRemoteFile(string URL, bool useAnonymousLogin = false)
 		{
@@ -192,8 +191,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					}
 				}
 
-				//clean the output from \n and \0, then return
-				return Utilities.Clean(data);
+				// Clean the output from \n and \0, then return
+				return Utilities.SanitizeString(data);
 			}
 			catch (WebException wex)
 			{
@@ -213,7 +212,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <param name="useAnonymousLogin">If set to <c>true</c> b use anonymous.</param>
 		protected override void DownloadRemoteFile(string URL, string localPath, long totalSize = 0, long contentOffset = 0, bool useAnonymousLogin = false)
 		{
-			//clean the URL string
+			// Make sure we're not passing in any backslashes in the URL
 			string remoteURL = URL.Replace(Path.DirectorySeparatorChar, '/');
 
 			string username;
@@ -241,14 +240,23 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 				using (Stream contentStream = request.GetResponse().GetResponseStream())
 				{
+					if (contentStream == null)
+					{
+						Log.Error($"Failed to download the remote file at \"{remoteURL}\" (NullReferenceException from the content stream). " +
+						          "Check your internet connection.");
+
+						return;
+					}
+
 					long fileSize = contentOffset;
-					using (FtpWebResponse sizereader = (FtpWebResponse)sizerequest.GetResponse())
+					using (FtpWebResponse sizereader = (FtpWebResponse) sizerequest.GetResponse())
 					{
 						fileSize += sizereader.ContentLength;
 					}
 
-					using (FileStream fileStream = contentOffset > 0 ? new FileStream(localPath, FileMode.Append) :
-																		new FileStream(localPath, FileMode.Create))
+					using (FileStream fileStream = contentOffset > 0
+						                               ? new FileStream(localPath, FileMode.Append)
+						                               : new FileStream(localPath, FileMode.Create))
 					{
 						fileStream.Position = contentOffset;
 						long totalBytesDownloaded = contentOffset;
@@ -265,7 +273,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 							// Report download progress
 							ModuleDownloadProgressArgs.ProgressBarMessage = GetDownloadProgressBarMessage(Path.GetFileName(remoteURL),
 								totalBytesDownloaded, fileSize);
-							ModuleDownloadProgressArgs.ProgressFraction = (double)totalBytesDownloaded / (double)fileSize;
+							ModuleDownloadProgressArgs.ProgressFraction = (double) totalBytesDownloaded / (double) fileSize;
 							OnModuleDownloadProgressChanged();
 						}
 						else
@@ -288,7 +296,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 								// Report download progress
 								ModuleDownloadProgressArgs.ProgressBarMessage = GetDownloadProgressBarMessage(Path.GetFileName(remoteURL),
 									totalBytesDownloaded, fileSize);
-								ModuleDownloadProgressArgs.ProgressFraction = (double)totalBytesDownloaded / (double)fileSize;
+								ModuleDownloadProgressArgs.ProgressFraction = (double) totalBytesDownloaded / (double) fileSize;
 								OnModuleDownloadProgressChanged();
 							}
 						}
