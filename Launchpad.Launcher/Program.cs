@@ -61,30 +61,37 @@ namespace Launchpad.Launcher
 			if (ChecksHandler.IsRunningOnUnix())
 			{
 				Log.Info("Initializing GTK UI.");
-
-				// Bind any unhandled exceptions in the GTK UI so that they are logged.
-				GLib.ExceptionManager.UnhandledException += OnGLibUnhandledException;
-
-				// Run the GTK UI
-				Gtk.Application.Init();
-				MainWindow win = new MainWindow();
-				win.Show();
-				Gtk.Application.Run();
+				RunUnixInterface();
 			}
 			else
 			{
 				Log.Info("Initializing WinForms UI.");
-
-				// Bind any unhandled exceptions in the WinForms UI so that they are logged.
-				System.Windows.Forms.Application.ThreadException += OnFormsThreadException;
-
-				// run a WinForms UI instead of GTK
-				System.Windows.Forms.Application.EnableVisualStyles();
-				System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
-				System.Windows.Forms.Application.Run(new MainForm());
+				RunWindowsInterface();
 			}
 		}
 
+		private static void RunUnixInterface()
+		{
+			// Bind any unhandled exceptions in the GTK UI so that they are logged.
+            GLib.ExceptionManager.UnhandledException += OnGLibUnhandledException;
+
+			// Run the GTK UI
+			Gtk.Application.Init();
+			MainWindow win = new MainWindow();
+			win.Show();
+			Gtk.Application.Run();
+		}
+
+		private static void RunWindowsInterface()
+		{
+			// Bind any unhandled exceptions in the WinForms UI so that they are logged.
+			System.Windows.Forms.Application.ThreadException += OnFormsThreadException;
+
+			// run a WinForms UI instead of GTK
+			System.Windows.Forms.Application.EnableVisualStyles();
+			System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
+			System.Windows.Forms.Application.Run(new MainForm());
+		}
 
 		/// <summary>
 		/// Passes any unhandled exceptions from the Forms UI to the generic handler.
