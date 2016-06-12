@@ -62,7 +62,7 @@ namespace Launchpad.Launcher.WindowsUI
 		/// <summary>
 		/// The current mode that the launcher is in. Determines what the primary button does when pressed.
 		/// </summary>
-		ELauncherMode Mode = ELauncherMode.Inactive;
+		private ELauncherMode Mode = ELauncherMode.Inactive;
 
 		// Initialize localization
 		private static readonly ICatalog LocalizationCatalog = new Catalog("Launchpad", "./locale");
@@ -89,7 +89,7 @@ namespace Launchpad.Launcher.WindowsUI
 			downloadProgressLabel.Text = string.Empty;
 
 			// Set the window text to match the game name
-			this.Text = "Launchpad - " + Config.GetGameName();
+			this.Text = LocalizationCatalog.GetString("Launchpad - ") + Config.GetGameName();
 
 			// First of all, check if we can connect to the FTP server.
 			if (!Checks.CanPatch())
@@ -103,7 +103,7 @@ namespace Launchpad.Launcher.WindowsUI
 					MessageBoxDefaultButton.Button1);
 
 				MessageLabel.Text = LocalizationCatalog.GetString("Could not connect to server.");
-				PrimaryButton.Text = ":(";
+				PrimaryButton.Text = LocalizationCatalog.GetString("Inactive");
 				PrimaryButton.Enabled = false;
 			}
 			else

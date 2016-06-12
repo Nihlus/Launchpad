@@ -22,17 +22,22 @@
 using System;
 using System.IO;
 using System.Linq;
-using Gtk;
-
+using Launchpad.Utilities.Handlers;
 using Launchpad.Utilities.Utility.Events;
 using NGettext;
-using Launchpad.Utilities.Handlers;
+using Gtk;
+
 
 namespace Launchpad.Utilities.Interface
 {
 	[CLSCompliant(false)]
 	public partial class MainWindow : Gtk.Window
 	{
+		/// <summary>
+		/// The manifest generation handler.
+		/// </summary>
+		private readonly ManifestHandler Manifest = new ManifestHandler();
+
 		/// <summary>
 		/// The localization catalog.
 		/// </summary>
@@ -42,6 +47,9 @@ namespace Launchpad.Utilities.Interface
 			: base(Gtk.WindowType.Toplevel)
 		{
 			this.Build();
+
+			Manifest.ManifestGenerationProgressChanged += OnGenerateManifestProgressChanged;
+			Manifest.ManifestGenerationFinished += OnGenerateManifestFinished;
 
 			fileChooser.SetCurrentFolder(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory));
 			fileChooser.SelectMultiple = false;
@@ -90,11 +98,6 @@ namespace Launchpad.Utilities.Interface
 				}
 			}
 
-			ManifestHandler Manifest = new ManifestHandler();
-
-			Manifest.ManifestGenerationProgressChanged += OnGenerateManifestProgressChanged;
-			Manifest.ManifestGenerationFinished += OnGenerateManifestFinished;
-
 			Manifest.GenerateManifest(TargetDirectory, EManifestType.Game);
 		}
 
@@ -104,13 +107,6 @@ namespace Launchpad.Utilities.Interface
 			generateLaunchpadManifestButton.Sensitive = false;
 
 			string TargetDirectory = fileChooser.Filename;
-
-
-			// Generate the manifest
-			ManifestHandler Manifest = new ManifestHandler();
-
-			Manifest.ManifestGenerationProgressChanged += OnGenerateManifestProgressChanged;
-			Manifest.ManifestGenerationFinished += OnGenerateManifestFinished;
 
 			Manifest.GenerateManifest(TargetDirectory, EManifestType.Launchpad);
 
@@ -126,7 +122,7 @@ namespace Launchpad.Utilities.Interface
 			Application.Invoke(delegate
 				{
 					string progressString = LocalizationCatalog.GetString("{0} : {1} out of {2}");
-					progressLabel.Text = String.Format(progressString, e.Filepath, e.CompletedFiles, e.TotalFiles);
+					progressLabel.Text = string.Format(progressString, e.Filepath, e.CompletedFiles, e.TotalFiles);
 
 					progressbar.Fraction = (double)e.CompletedFiles / (double)e.TotalFiles;
 				});

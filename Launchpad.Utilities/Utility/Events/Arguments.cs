@@ -43,7 +43,7 @@ namespace Launchpad.Utilities.Utility.Events
 			set;
 		}
 
-		public string MD5
+		public string Hash
 		{
 			get;
 			set;

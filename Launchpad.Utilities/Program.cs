@@ -76,7 +76,7 @@ namespace Launchpad.Utilities
 				}
 				else if (string.IsNullOrEmpty(options.TargetDirectory) && options.ManifestType == EManifestType.Unknown)
 				{
-					// run a GTK UI instead of batch processing
+					// Run a GTK UI instead of batch processing
 					Gtk.Application.Init();
 
 					MainWindow win = new MainWindow();
@@ -92,7 +92,7 @@ namespace Launchpad.Utilities
 
 		private static void OnProgressChanged(object sender, ManifestGenerationProgressChangedEventArgs e)
 		{
-			Log.Info($"Processed file {e.Filepath} : {e.MD5} : {e.Filesize}");
+			Log.Info($"Processed file {e.Filepath} : {e.Hash} : {e.Filesize}");
 		}
 
 		private static void OnGenerationFinished(object sender, EventArgs e)

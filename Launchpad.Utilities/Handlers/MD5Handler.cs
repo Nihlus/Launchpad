@@ -23,7 +23,7 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 
-namespace Launchpad.Launcher.Handlers
+namespace Launchpad.Utilities.Handlers
 {
 	/// <summary>
 	/// MD5 hashing handler. Used to ensure file integrity.

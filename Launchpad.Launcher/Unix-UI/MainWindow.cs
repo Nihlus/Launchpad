@@ -71,7 +71,7 @@ namespace Launchpad.Launcher.UnixUI
 		/// <summary>
 		/// The current mode that the launcher is in. Determines what the primary button does when pressed.
 		/// </summary>
-		ELauncherMode Mode = ELauncherMode.Inactive;
+		private ELauncherMode Mode = ELauncherMode.Inactive;
 
 		/// <summary>
 		/// The localization catalog.
@@ -100,7 +100,7 @@ namespace Launchpad.Launcher.UnixUI
 			SetLauncherMode(ELauncherMode.Inactive, false);
 
 			// Set the window title
-			Title = "Launchpad - " + Config.GetGameName();
+			Title = LocalizationCatalog.GetString("Launchpad - ") + Config.GetGameName();
 
 			ScrolledBrowserWindow.Add(Browser);
 			ScrolledBrowserWindow.ShowAll();
@@ -559,8 +559,7 @@ namespace Launchpad.Launcher.UnixUI
 					IndicatorLabel.Text = LocalizationCatalog.GetString("Idle");
 					MainProgressBar.Text = "";
 
-					Notification downloadCompleteNotification = new Notification();
-					downloadCompleteNotification.IconName = Stock.Info;
+					Notification downloadCompleteNotification = new Notification {IconName = Stock.Info};
 
 					switch (Mode)
 					{
@@ -602,7 +601,7 @@ namespace Launchpad.Launcher.UnixUI
 										DialogFlags.Modal,
 										MessageType.Question,
 										ButtonsType.YesNo,
-										String.Format(LocalizationCatalog.GetString(
+										string.Format(LocalizationCatalog.GetString(
 												"Whoops! The game appears to have crashed.\n" +
 												"Would you like the launcher to verify the installation?"
 											)));

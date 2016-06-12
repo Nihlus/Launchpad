@@ -25,7 +25,6 @@ using System.Threading;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-using Launchpad.Launcher.Handlers;
 
 namespace Launchpad.Utilities.Handlers
 {
@@ -34,7 +33,7 @@ namespace Launchpad.Utilities.Handlers
 		public event ManifestGenerationProgressChangedEventHandler ManifestGenerationProgressChanged;
 		public event ManifestGenerationFinishedEventHandler ManifestGenerationFinished;
 
-		private readonly ManifestGenerationProgressChangedEventArgs ProgressArgs = new ManifestGenerationProgressChangedEventArgs();
+		private readonly ManifestGenerationProgressChangedEventArgs GenerationProgressArgs = new ManifestGenerationProgressChangedEventArgs();
 
 		/// <summary>
 		/// Generates a manifest containing the relative path, MD5 hash and file size from
@@ -59,46 +58,46 @@ namespace Launchpad.Utilities.Handlers
 			string manifestPath = $@"{parentDirectory}{Path.DirectorySeparatorChar}{manifestType}Manifest.txt";
 			string manifestChecksumPath = $@"{parentDirectory}{Path.DirectorySeparatorChar}{manifestType}Manifest.checksum";
 
-			List<string> Files = new List<string>(Directory
+			List<string> manifestFilePaths = new List<string>(Directory
 				.EnumerateFiles(targetPath, "*", SearchOption.AllDirectories)
 				.Where(s => !s.EndsWith(".install") && !s.EndsWith(".update")));
 
 			using (TextWriter tw = new StreamWriter(File.Create(manifestPath)))
 			{
 				int completedFiles = 0;
-				foreach (string file in Files)
+				foreach (string filePath in manifestFilePaths)
 				{
 					// Calculate the MD5 hash of the file
 					string hash;
-					using (FileStream fileStream = File.OpenRead(file))
+					using (FileStream fileStream = File.OpenRead(filePath))
 					{
 						hash = MD5Handler.GetStreamHash(fileStream);
 					}
 
 					// Get the file size on disk
-					FileInfo Info = new FileInfo(file);
-					long fileSize = Info.Length;
+					FileInfo fileInfo = new FileInfo(filePath);
+					long fileSize = fileInfo.Length;
 
 					// Get the relative path of the file
-					string relativeFilePath = file.Substring(targetPath.Length);
+					string relativeFilePath = filePath.Substring(targetPath.Length);
 
 					// Write the entry to the manifest
-					ManifestEntry Entry = new ManifestEntry
+					ManifestEntry newEntry = new ManifestEntry
 					{
 						RelativePath = relativeFilePath,
 						Hash = hash,
 						Size = fileSize
 					};
 
-					tw.WriteLine(Entry);
+					tw.WriteLine(newEntry);
 
 					completedFiles++;
 
-					ProgressArgs.Filepath = relativeFilePath;
-					ProgressArgs.TotalFiles = Files.Count;
-					ProgressArgs.CompletedFiles = completedFiles;
-					ProgressArgs.MD5 = hash;
-					ProgressArgs.Filesize = fileSize;
+					GenerationProgressArgs.Filepath = relativeFilePath;
+					GenerationProgressArgs.TotalFiles = manifestFilePaths.Count;
+					GenerationProgressArgs.CompletedFiles = completedFiles;
+					GenerationProgressArgs.Hash = hash;
+					GenerationProgressArgs.Filesize = fileSize;
 					OnManifestGenerationProgressChanged();
 				}
 			}
@@ -125,7 +124,7 @@ namespace Launchpad.Utilities.Handlers
 		{
 			if (ManifestGenerationProgressChanged != null)
 			{
-				ManifestGenerationProgressChanged(this, ProgressArgs);
+				ManifestGenerationProgressChanged(this, GenerationProgressArgs);
 			}
 		}
 
@@ -195,8 +194,8 @@ namespace Launchpad.Utilities.Handlers
 			if (!string.IsNullOrEmpty(rawInput))
 			{
 				// Remove any and all bad characters from the input string,
-				// Such as \0, \n and \r.
-				string cleanInput = SanitizeInput(rawInput);
+				// such as \0, \n and \r.
+				string cleanInput = SanitizeString(rawInput);
 
 				// Split the string into its three components - file, hash and size
 				string[] entryElements = cleanInput.Split(':');
@@ -204,7 +203,7 @@ namespace Launchpad.Utilities.Handlers
 				// If we have three elements (which we should always have), set them in the provided entry
 				if (entryElements.Length == 3)
 				{
-					// Sanitize the manifest path, converting \ to / on unix and / to \ on Windows.
+					// Normalize the manifest path, converting \ to / on unix and / to \ on Windows.
 					if (ChecksHandler.IsRunningOnUnix())
 					{
 						inEntry.RelativePath = entryElements[0].Replace("\\", "/");
@@ -237,7 +236,7 @@ namespace Launchpad.Utilities.Handlers
 		/// Clean the specified input from newlines and nulls (\r, \n and \0)
 		/// </summary>
 		/// <param name="input">Input string.</param>
-		private static string SanitizeInput(string input)
+		private static string SanitizeString(string input)
 		{
 			return input.Replace("\n", string.Empty).Replace("\0", string.Empty).Replace("\r", string.Empty);
 		}
@@ -253,11 +252,11 @@ namespace Launchpad.Utilities.Handlers
 			return RelativePath + ":" + Hash + ":" + Size;
 		}
 
-		public bool Equals(ManifestEntry Other)
+		public bool Equals(ManifestEntry other)
 		{
-			return this.RelativePath == Other.RelativePath &&
-			this.Hash == Other.Hash &&
-			this.Size == Other.Size;
+			return this.RelativePath == other.RelativePath &&
+			this.Hash == other.Hash &&
+			this.Size == other.Size;
 		}
 	}
 }
