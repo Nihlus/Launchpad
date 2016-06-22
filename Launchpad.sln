@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Launchpad.Launcher", "Launc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Launchpad.Utilities", "Launchpad.Utilities\Launchpad.Utilities.csproj", "{BA9D77D3-1767-4D9C-80F3-409C52B03861}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Launchpad.Tests", "Launchpad.Tests\Launchpad.Tests\Launchpad.Tests.csproj", "{C4C74BF4-3E1C-4342-8F56-E7A6F6A3A1AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +38,16 @@ Global
 		{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Release-Windows|Any CPU.ActiveCfg = Release-Windows|Any CPU
 		{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Release-Windows|Any CPU.Build.0 = Release-Windows|Any CPU
+		{C4C74BF4-3E1C-4342-8F56-E7A6F6A3A1AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4C74BF4-3E1C-4342-8F56-E7A6F6A3A1AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4C74BF4-3E1C-4342-8F56-E7A6F6A3A1AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4C74BF4-3E1C-4342-8F56-E7A6F6A3A1AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4C74BF4-3E1C-4342-8F56-E7A6F6A3A1AA}.Debug-Util-Batch|Any CPU.ActiveCfg = Debug-Util-Batch|Any CPU
+		{C4C74BF4-3E1C-4342-8F56-E7A6F6A3A1AA}.Debug-Util-Batch|Any CPU.Build.0 = Debug-Util-Batch|Any CPU
+		{C4C74BF4-3E1C-4342-8F56-E7A6F6A3A1AA}.Release-Windows|Any CPU.ActiveCfg = Release-Windows|Any CPU
+		{C4C74BF4-3E1C-4342-8F56-E7A6F6A3A1AA}.Release-Windows|Any CPU.Build.0 = Release-Windows|Any CPU
+		{C4C74BF4-3E1C-4342-8F56-E7A6F6A3A1AA}.Default|Any CPU.ActiveCfg = Default|Any CPU
+		{C4C74BF4-3E1C-4342-8F56-E7A6F6A3A1AA}.Default|Any CPU.Build.0 = Default|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0

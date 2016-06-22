@@ -54,6 +54,51 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		private readonly object WriteLock = new object();
 
+
+		/*
+			Constants for different default configuration options. Changing one option here should be reflected with
+			a corresponding update block in the initialization.
+		*/
+
+		private const string DefaultGameName = "LaunchpadExample";
+		private const string DefaultChangelogURL = "http://directorate.asuscomm.com/launchpad/changelog/changelog.html";
+		private const string DefaultProtocol = "FTP";
+		private const string DefaultFileRetries = "2";
+		private const string DefaultUsername = "anonymous";
+		private const string DefaultPassword = "anonymous";
+		private const string DefaultFTPURL = "ftp://directorate.asuscomm.com";
+		private const string DefaultHTTPURL = "http://directorate.asuscomm.com/launchpad";
+		private const string DefaultUseOfficialUpdates = "true";
+		private const string DefaultAllowAnonymousStatus = "true";
+
+		private const string ConfigurationFolderName = "Config";
+		private const string ConfigurationFileName = "LauncherConfig";
+
+		private const string SectionNameLocal = "Local";
+		private const string SectionNameRemote = "Remote";
+		private const string SectionNameFTP = "FTP";
+		private const string SectionNameHTTP = "HTTP";
+		private const string SectionNameBitTorrent = "BitTorrent";
+		private const string SectionNameLaunchpad = "Launchpad";
+
+		private const string LocalVersionKey = "LauncherVersion";
+		private const string LocalGameNameKey = "GameName";
+		private const string LocalSystemTargetKey = "SystemTarget";
+		private const string LocalGameGUIDKey = "GUID";
+		private const string LocalMainExecutableNameKey = "MainExecutableName";
+
+		private const string RemoteChangelogURLKey = "ChangelogURL";
+		private const string RemoteProtocolKey = "Protocol";
+		private const string RemoteFileRetriesKey = "FileRetries";
+		private const string RemoteUsernameKey = "Username";
+		private const string RemotePasswordKey = "Password";
+
+		private const string FTPURLKey = "URL";
+		private const string HTTPURLKey = "URL";
+
+		private const string LaunchpadOfficialUpdatesKey = "bOfficialUpdates";
+		private const string LaunchpadAnonymousStatsKey = "bAllowAnonymousStats";
+
 		/// <summary>
 		/// The singleton Instance. Will always point to one shared object.
 		/// </summary>
@@ -61,7 +106,7 @@ namespace Launchpad.Launcher.Handlers
 
 		private ConfigHandler()
 		{
-			this.Initialize();
+			Initialize();
 		}
 
 		/// <summary>
@@ -84,7 +129,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The config path.</returns>
 		private static string GetConfigPath()
 		{
-			string configPath = $@"{GetConfigDir()}LauncherConfig.ini";
+			string configPath = $@"{GetConfigDir()}{ConfigurationFileName}.ini";
 
 			return configPath;
 		}
@@ -95,7 +140,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The config dir, terminated with a directory separator.</returns>
 		private static string GetConfigDir()
 		{
-			string configDir = $@"{GetLocalDir()}Config{Path.DirectorySeparatorChar}";
+			string configDir = $@"{GetLocalDir()}{ConfigurationFolderName}{Path.DirectorySeparatorChar}";
 			return configDir;
 		}
 
@@ -138,33 +183,33 @@ namespace Launchpad.Launcher.Handlers
 					{
 						IniData data = Parser.ReadFile(GetConfigPath());
 
-						data.Sections.AddSection("Local");
-						data.Sections.AddSection("Remote");
-						data.Sections.AddSection("FTP");
-						data.Sections.AddSection("HTTP");
-						data.Sections.AddSection("BitTorrent");
-						data.Sections.AddSection("Launchpad");
+						data.Sections.AddSection(SectionNameLocal);
+						data.Sections.AddSection(SectionNameRemote);
+						data.Sections.AddSection(SectionNameFTP);
+						data.Sections.AddSection(SectionNameHTTP);
+						data.Sections.AddSection(SectionNameBitTorrent);
+						data.Sections.AddSection(SectionNameLaunchpad);
 
-						data["Local"].AddKey("LauncherVersion", defaultLauncherVersion.ToString());
-						data["Local"].AddKey("GameName", "LaunchpadExample");
-						data["Local"].AddKey("SystemTarget", GetCurrentPlatform().ToString());
-						data["Local"].AddKey("GUID", GenerateSeededGUID("LaunchpadExample"));
-						data["Local"].AddKey("MainExecutableName", "LaunchpadExample");
+						data[SectionNameLocal].AddKey(LocalVersionKey, defaultLauncherVersion.ToString());
+						data[SectionNameLocal].AddKey(LocalGameNameKey, DefaultGameName);
+						data[SectionNameLocal].AddKey(LocalSystemTargetKey, GetCurrentPlatform().ToString());
+						data[SectionNameLocal].AddKey(LocalGameGUIDKey, GenerateSeededGUID(DefaultGameName));
+						data[SectionNameLocal].AddKey(LocalMainExecutableNameKey, DefaultGameName);
 
-						data["Remote"].AddKey("ChangelogURL", "http://directorate.asuscomm.com/launchpad/changelog/changelog.html");
-						data["Remote"].AddKey("Protocol", "FTP");
-						data["Remote"].AddKey("FileRetries", "2");
-						data["Remote"].AddKey("Username", "anonymous");
-						data["Remote"].AddKey("Password", "anonymous");
+						data[SectionNameRemote].AddKey(RemoteChangelogURLKey, DefaultChangelogURL);
+						data[SectionNameRemote].AddKey(RemoteProtocolKey, DefaultProtocol);
+						data[SectionNameRemote].AddKey(RemoteFileRetriesKey, DefaultFileRetries);
+						data[SectionNameRemote].AddKey(RemoteUsernameKey, DefaultUsername);
+						data[SectionNameRemote].AddKey(RemotePasswordKey, DefaultPassword);
 
-						data["FTP"].AddKey("URL", "ftp://directorate.asuscomm.com");
+						data[SectionNameFTP].AddKey(FTPURLKey, DefaultFTPURL);
 
-						data["HTTP"].AddKey("URL", "http://directorate.asuscomm.com/launchpad");
+						data[SectionNameHTTP].AddKey(HTTPURLKey, DefaultHTTPURL);
 
-						data["BitTorrent"].AddKey("Magnet", "");
+						data[SectionNameBitTorrent].AddKey("Magnet", "");
 
-						data["Launchpad"].AddKey("bOfficialUpdates", "true");
-						data["Launchpad"].AddKey("bAllowAnonymousStats", "true");
+						data[SectionNameLaunchpad].AddKey(LaunchpadOfficialUpdatesKey, DefaultUseOfficialUpdates);
+						data[SectionNameLaunchpad].AddKey(LaunchpadAnonymousStatsKey, DefaultAllowAnonymousStatus);
 
 						WriteConfig(Parser, data);
 					}
@@ -691,18 +736,14 @@ namespace Launchpad.Launcher.Handlers
 							}
 						default:
 							{
-								throw new NotImplementedException($"Protocol \"{patchProtocol}\" was not recognized or implemented.");
+								Log.Error($"Failed to load protocol handler: Protocol \"{patchProtocol}\" was not recognized or implemented.");
+                                return null;
 							}
 					}
 				}
 				catch (IOException ioex)
 				{
 					Log.Warn("Could not read desired protocol (IOException): " + ioex.Message);
-					return null;
-				}
-				catch (NotImplementedException nex)
-				{
-					Log.Error("Failed to load protocol handler (NotImplementedException): " + nex.Message);
 					return null;
 				}
 			}
