@@ -58,7 +58,6 @@ namespace Launchpad.Utilities.Handlers
 			string manifestPath = $@"{parentDirectory}{Path.DirectorySeparatorChar}{manifestType}Manifest.txt";
 			string manifestChecksumPath = $@"{parentDirectory}{Path.DirectorySeparatorChar}{manifestType}Manifest.checksum";
 
-			// Get all
 			List<string> manifestFilePaths = new List<string>(Directory
 				.EnumerateFiles(targetPath, "*", SearchOption.AllDirectories)
 				.Where(s => !IsPathABlacklistedFile(s)));

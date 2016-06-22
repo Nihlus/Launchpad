@@ -21,6 +21,7 @@
 
 using System;
 using System.IO;
+using Gtk;
 using Launchpad.Utilities.Handlers;
 using Launchpad.Utilities.Utility.Events;
 using Launchpad.Utilities.Interface;
@@ -36,10 +37,6 @@ namespace Launchpad.Utilities
 		/// Logger instance for this class.
 		/// </summary>
 		private static readonly ILog Log = LogManager.GetLogger(typeof(Program));
-
-		public const string BatchSwitch = "-b";
-		public const string DirectorySwitch = "-d";
-		public const string ManifestTypeSwitch = "-m";
 
 		/// <summary>
 		/// The main entry point for the application.
@@ -77,11 +74,11 @@ namespace Launchpad.Utilities
 				else if (string.IsNullOrEmpty(options.TargetDirectory) && options.ManifestType == EManifestType.Unknown)
 				{
 					// Run a GTK UI instead of batch processing
-					Gtk.Application.Init();
+					Application.Init();
 
 					MainWindow win = new MainWindow();
 					win.Show();
-					Gtk.Application.Run();
+					Application.Run();
 				}
 				else
 				{

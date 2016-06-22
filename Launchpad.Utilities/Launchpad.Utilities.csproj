@@ -106,16 +106,6 @@
     <Compile Include="gtk-gui\generated.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <None Include="Launchpad-StrongKey-NoPass.snk" />
     <Compile Include="Handlers\MD5Handler.cs" />
     <Compile Include="Handlers\ManifestHandler.cs" />
@@ -146,7 +136,6 @@
     <Folder Include="Options" />
     <Folder Include="Utility\" />
     <Folder Include="Utility\Events\" />
-    <Folder Include="Unix-UI\" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>

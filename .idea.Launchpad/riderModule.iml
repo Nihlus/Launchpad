@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="RIDER_MODULE" version="4">
   <component name="NewModuleRootManager">
+    <content url="file://$USER_HOME$/.local/share/JetBrains/Shared/v06/DecompilerCache/decompiler/B73C2DBF-7CB3-44DA-893B-4F0C7456A637/b7/8dc44d84/Environment.cs">
+      <sourceFolder url="file://$USER_HOME$/.local/share/JetBrains/Shared/v06/DecompilerCache/decompiler/B73C2DBF-7CB3-44DA-893B-4F0C7456A637/b7/8dc44d84/Environment.cs" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.local/share/JetBrains/Shared/v06/DecompilerCache/decompiler/B73C2DBF-7CB3-44DA-893B-4F0C7456A637/ea/59858851/OperatingSystem.cs">
+      <sourceFolder url="file://$USER_HOME$/.local/share/JetBrains/Shared/v06/DecompilerCache/decompiler/B73C2DBF-7CB3-44DA-893B-4F0C7456A637/ea/59858851/OperatingSystem.cs" isTestSource="false" />
+    </content>
     <content url="file://$MODULE_DIR$/..">
       <sourceFolder url="file://$MODULE_DIR$/.." isTestSource="false" />
     </content>
