@@ -23,7 +23,6 @@ using System;
 using Launchpad.Launcher.Utility.Enums;
 using System.Drawing;
 using System.IO;
-using GLib;
 using log4net;
 
 namespace Launchpad.Launcher.Handlers.Protocols

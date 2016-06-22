@@ -58,46 +58,28 @@ namespace Launchpad.Utilities.Handlers
 			string manifestPath = $@"{parentDirectory}{Path.DirectorySeparatorChar}{manifestType}Manifest.txt";
 			string manifestChecksumPath = $@"{parentDirectory}{Path.DirectorySeparatorChar}{manifestType}Manifest.checksum";
 
+			// Get all
 			List<string> manifestFilePaths = new List<string>(Directory
 				.EnumerateFiles(targetPath, "*", SearchOption.AllDirectories)
-				.Where(s => !s.EndsWith(".install") && !s.EndsWith(".update")));
+				.Where(s => !IsPathABlacklistedFile(s)));
 
 			using (TextWriter tw = new StreamWriter(File.Create(manifestPath)))
 			{
 				int completedFiles = 0;
 				foreach (string filePath in manifestFilePaths)
 				{
-					// Calculate the MD5 hash of the file
-					string hash;
-					using (FileStream fileStream = File.OpenRead(filePath))
-					{
-						hash = MD5Handler.GetStreamHash(fileStream);
-					}
-
-					// Get the file size on disk
-					FileInfo fileInfo = new FileInfo(filePath);
-					long fileSize = fileInfo.Length;
-
-					// Get the relative path of the file
-					string relativeFilePath = filePath.Substring(targetPath.Length);
-
-					// Write the entry to the manifest
-					ManifestEntry newEntry = new ManifestEntry
-					{
-						RelativePath = relativeFilePath,
-						Hash = hash,
-						Size = fileSize
-					};
+					ManifestEntry newEntry = CreateEntryForFile(targetPath, filePath);
 
 					tw.WriteLine(newEntry);
+					tw.Flush();
 
 					completedFiles++;
 
-					GenerationProgressArgs.Filepath = relativeFilePath;
 					GenerationProgressArgs.TotalFiles = manifestFilePaths.Count;
 					GenerationProgressArgs.CompletedFiles = completedFiles;
-					GenerationProgressArgs.Hash = hash;
-					GenerationProgressArgs.Filesize = fileSize;
+					GenerationProgressArgs.Filepath = newEntry.RelativePath;
+					GenerationProgressArgs.Hash = newEntry.Hash;
+					GenerationProgressArgs.Filesize = newEntry.Size;
 					OnManifestGenerationProgressChanged();
 				}
 			}
@@ -120,20 +102,49 @@ namespace Launchpad.Utilities.Handlers
 			OnManifestGenerationFinished();
 		}
 
+		private static ManifestEntry CreateEntryForFile(string parentDirectory, string filePath)
+		{
+			string hash;
+			long fileSize;
+			using (FileStream fileStream = File.OpenRead(filePath))
+			{
+				// Calculate the hash of the file
+				hash = MD5Handler.GetStreamHash(fileStream);
+
+				// Get the disk size of the file
+				fileSize = fileStream.Length;
+			}
+
+			// Get the relative path of the file
+			string relativeFilePath = filePath.Substring(parentDirectory.Length);
+
+			// Write the entry to the manifest
+			ManifestEntry newEntry = new ManifestEntry
+			{
+				RelativePath = relativeFilePath,
+				Hash = hash,
+				Size = fileSize
+			};
+
+			return newEntry;
+		}
+
+		private static bool IsPathABlacklistedFile(string filePath)
+		{
+			return 	filePath.EndsWith(".install") ||
+			       	filePath.EndsWith(".update") ||
+			       	filePath.EndsWith("GameManifest.txt") ||
+					filePath.EndsWith("GameManifest.checksum");
+		}
+
 		private void OnManifestGenerationProgressChanged()
 		{
-			if (ManifestGenerationProgressChanged != null)
-			{
-				ManifestGenerationProgressChanged(this, GenerationProgressArgs);
-			}
+			ManifestGenerationProgressChanged?.Invoke(this, GenerationProgressArgs);
 		}
 
 		private void OnManifestGenerationFinished()
 		{
-			if (ManifestGenerationFinished != null)
-			{
-				ManifestGenerationFinished(this, EventArgs.Empty);
-			}
+			ManifestGenerationFinished?.Invoke(this, EventArgs.Empty);
 		}
 	}
 
