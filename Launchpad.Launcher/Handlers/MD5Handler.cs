@@ -28,7 +28,7 @@ namespace Launchpad.Launcher.Handlers
 	/// <summary>
 	/// MD5 hashing handler. Used to ensure file integrity.
 	/// </summary>
-	internal static class MD5Handler
+	public static class MD5Handler
 	{
 		/// <summary>
 		/// Gets the file hash from a data stream.
