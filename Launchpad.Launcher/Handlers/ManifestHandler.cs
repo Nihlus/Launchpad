@@ -34,6 +34,8 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		private static readonly ILog Log = LogManager.GetLogger(typeof(ManifestHandler));
 
+		public static ManifestHandler Instance = new ManifestHandler();
+
 		private readonly object GameManifestLock = new object();
 		private readonly object OldGameManifestLock = new object();
 
@@ -51,7 +53,7 @@ namespace Launchpad.Launcher.Handlers
 		/// Initializes a new instance of the <see cref="Launchpad.Launcher.Handlers.ManifestHandler"/> class.
 		/// This constructor also serves to updated outdated file paths for the manifests.
 		/// </summary>
-		public ManifestHandler()
+		private ManifestHandler()
 		{
 			ReplaceDeprecatedManifest();
 		}

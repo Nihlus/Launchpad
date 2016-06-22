@@ -38,7 +38,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// </summary>
 		private static readonly ILog Log = LogManager.GetLogger(typeof(ManifestBasedProtocolHandler));
 
-		private readonly ManifestHandler Manifest = new ManifestHandler();
+		private readonly ManifestHandler Manifest = ManifestHandler.Instance;
 
 		public override void InstallGame()
 		{

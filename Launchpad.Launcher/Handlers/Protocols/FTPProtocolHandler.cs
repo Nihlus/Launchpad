@@ -36,7 +36,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 	///
 	/// This protocol uses a manifest.
 	/// </summary>
-	internal sealed class FTPProtocolHandler : ManifestBasedProtocolHandler
+	public sealed class FTPProtocolHandler : ManifestBasedProtocolHandler
 	{
 		/// <summary>
 		/// Logger instance for this class.
