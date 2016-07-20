@@ -36,7 +36,7 @@
     <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>Launchpad-StrongKey-NoPass.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\launchpad.snk</AssemblyOriginatorKeyFile>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
@@ -46,7 +46,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>Launchpad-StrongKey-NoPass.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\launchpad.snk</AssemblyOriginatorKeyFile>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup>
@@ -99,7 +99,6 @@
     <Compile Include="gtk-gui\Launchpad.Utilities.Interface.MainWindow.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Launchpad-StrongKey-NoPass.snk" />
     <None Include="packages.config" />
     <None Include="App.config" />
   </ItemGroup>

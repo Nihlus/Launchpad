@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectResources">
+    <resource url="urn:schemas-microsoft-com:asm.v1" location="$PROJECT_DIR$/../../XML Schemas/manifest-file-schema.xsd" />
+  </component>
+</project>
