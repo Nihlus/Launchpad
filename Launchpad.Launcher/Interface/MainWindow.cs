@@ -20,7 +20,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using Gtk;
-using Notifications;
 using System;
 using NGettext;
 using Launchpad.Launcher.Handlers;
@@ -33,7 +32,7 @@ using System.Drawing.Imaging;
 using log4net;
 using Launchpad.Launcher.Interface.ChangelogBrowser;
 
-namespace Launchpad.Launcher.UnixUI
+namespace Launchpad.Launcher.Interface
 {
 	[CLSCompliant(false)]
 	public partial class MainWindow : Gtk.Window
@@ -66,7 +65,7 @@ namespace Launchpad.Launcher.UnixUI
 		/// <summary>
 		/// The changelog browser.
 		/// </summary>
-		private readonly ChangelogBrowser Browser = null;
+		private readonly Changelog Browser;
 
 		/// <summary>
 		/// The current mode that the launcher is in. Determines what the primary button does when pressed.
@@ -102,7 +101,7 @@ namespace Launchpad.Launcher.UnixUI
 			// Set the window title
 			Title = LocalizationCatalog.GetString("Launchpad - ") + Config.GetGameName();
 
-			this.Browser = new ChangelogBrowser(this.ScrolledBrowserWindow);
+			this.Browser = new Changelog(this.ScrolledBrowserWindow);
 			ScrolledBrowserWindow.ShowAll();
 
 			IndicatorLabel.Text = LocalizationCatalog.GetString("Idle");
@@ -356,13 +355,9 @@ namespace Launchpad.Launcher.UnixUI
 					}
 					else
 					{
-						Notification noProvide = new Notification
-						{
-							IconName = Stock.DialogError,
-							Summary = LocalizationCatalog.GetString("Launchpad - Platform not provided!"),
-							Body = LocalizationCatalog.GetString("The server does not provide the game for the selected platform.")
-						};
-						noProvide.Show();
+						IndicatorLabel.Text =
+							LocalizationCatalog.GetString("The server does not provide the game for the selected platform.");
+						MainProgressBar.Text = "";
 
 						Log.Info($"The server does not provide files for platform \"{ConfigHandler.GetCurrentPlatform()}\". " +
 							"A .provides file must be present in the platforms' root directory.");
@@ -383,13 +378,9 @@ namespace Launchpad.Launcher.UnixUI
 					}
 					else
 					{
-						Notification noProvide = new Notification
-						{
-							IconName = Stock.DialogError,
-							Summary = LocalizationCatalog.GetString("Launchpad - Platform not provided!"),
-							Body = LocalizationCatalog.GetString("The server does not provide the game for the selected platform.")
-						};
-						noProvide.Show();
+						IndicatorLabel.Text =
+							LocalizationCatalog.GetString("The server does not provide the game for the selected platform.");
+						MainProgressBar.Text = "";
 
 						Log.Info($"The server does not provide files for platform \"{ConfigHandler.GetCurrentPlatform()}\". " +
 														"A .provides file must be present in the platforms' root directory.");
@@ -416,13 +407,8 @@ namespace Launchpad.Launcher.UnixUI
 						}
 						else
 						{
-							Notification noProvide = new Notification
-							{
-								IconName = Stock.DialogError,
-								Summary = LocalizationCatalog.GetString("Launchpad - Platform not provided!"),
-								Body = LocalizationCatalog.GetString("The server does not provide the game for the selected platform.")
-							};
-							noProvide.Show();
+							IndicatorLabel.Text = LocalizationCatalog.GetString("The server does not provide the game for the selected platform.");
+							MainProgressBar.Text = "";
 
 							Log.Info($"The server does not provide files for platform \"{ConfigHandler.GetCurrentPlatform()}\". " +
 															"A .provides file must be present in the platforms' root directory.");
@@ -434,17 +420,15 @@ namespace Launchpad.Launcher.UnixUI
 				}
 				case ELauncherMode.Launch:
 				{
+					IndicatorLabel.Text = LocalizationCatalog.GetString("Idle");
+					MainProgressBar.Text = "";
+
 					// Events such as LaunchFailed can fire before this has finished
 					// Thus, we set the mode before the actual launching of the game.
 					SetLauncherMode(ELauncherMode.Launch, true);
 					Game.LaunchGame();
 
 					break;
-				}
-				case ELauncherMode.Inactive:
-				{
-					Log.Warn("The main button was pressed with an invalid active mode. No functionality has been defined for this mode.");
-                    break;
 				}
 				default:
 				{
@@ -489,13 +473,8 @@ namespace Launchpad.Launcher.UnixUI
 		/// <param name="e">Empty event args.</param>
 		private void OnGameLaunchFailed(object sender, EventArgs e)
 		{
-			Notification launchFailed = new Notification
-			{
-				IconName = Stock.DialogError,
-				Summary = LocalizationCatalog.GetString("Launchpad - Failed to launch the game."),
-				Body = LocalizationCatalog.GetString("The game failed to launch. Try repairing the installation.")
-			};
-			launchFailed.Show();
+			IndicatorLabel.Text = LocalizationCatalog.GetString("The game failed to launch. Try repairing the installation.");
+			MainProgressBar.Text = "";
 
 			SetLauncherMode(ELauncherMode.Repair, false);
 		}
@@ -557,37 +536,31 @@ namespace Launchpad.Launcher.UnixUI
 			Application.Invoke(delegate
 				{
 					IndicatorLabel.Text = LocalizationCatalog.GetString("Idle");
-					MainProgressBar.Text = "";
-
-					Notification downloadCompleteNotification = new Notification {IconName = Stock.Info};
 
 					switch (Mode)
 					{
 						case ELauncherMode.Install:
-							{
-								downloadCompleteNotification.Summary = LocalizationCatalog.GetString("Launchpad - Info");
-								downloadCompleteNotification.Body = LocalizationCatalog.GetString("Game download finished. Play away!");
-								break;
-							}
-						case ELauncherMode.Repair:
-							{
-								downloadCompleteNotification.Summary = LocalizationCatalog.GetString("Launchpad - Info");
-								downloadCompleteNotification.Body = LocalizationCatalog.GetString("Launchpad has finished repairing the game installation. Play away!");
-								break;
-							}
+						{
+							MainProgressBar.Text = LocalizationCatalog.GetString("Installation finished");
+							break;
+						}
 						case ELauncherMode.Update:
-							{
-								downloadCompleteNotification.Summary = LocalizationCatalog.GetString("Launchpad - Info");
-								downloadCompleteNotification.Body = LocalizationCatalog.GetString("Game update finished. Play away!");
-								break;
-							}
+						{
+							MainProgressBar.Text = LocalizationCatalog.GetString("Update finished");
+							break;
+						}
+						case ELauncherMode.Repair:
+						{
+							MainProgressBar.Text = LocalizationCatalog.GetString("Repair finished");
+							break;
+						}
 						default:
-							{
-								break;
-							}
+						{
+							MainProgressBar.Text = "";
+							break;
+						}
 					}
 
-					downloadCompleteNotification.Show();
 					SetLauncherMode(ELauncherMode.Launch, false);
 				});
 		}

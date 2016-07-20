@@ -11,31 +11,21 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
 		Release|x86 = Release|x86
-		Debug-Util-Batch|x86 = Debug-Util-Batch|x86
-		Release-Windows|x86 = Release-Windows|x86
 		Default|x86 = Default|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{676312FB-AF67-4340-B86F-9CCEB22D802F}.Debug|x86.ActiveCfg = Debug|x86
 		{676312FB-AF67-4340-B86F-9CCEB22D802F}.Debug|x86.Build.0 = Debug|x86
-		{676312FB-AF67-4340-B86F-9CCEB22D802F}.Debug-Util-Batch|x86.ActiveCfg = Debug-Util-Batch|x86
-		{676312FB-AF67-4340-B86F-9CCEB22D802F}.Debug-Util-Batch|x86.Build.0 = Debug-Util-Batch|x86
 		{676312FB-AF67-4340-B86F-9CCEB22D802F}.Default|x86.ActiveCfg = Debug|x86
 		{676312FB-AF67-4340-B86F-9CCEB22D802F}.Default|x86.Build.0 = Debug|x86
 		{676312FB-AF67-4340-B86F-9CCEB22D802F}.Release|x86.ActiveCfg = Release|x86
 		{676312FB-AF67-4340-B86F-9CCEB22D802F}.Release|x86.Build.0 = Release|x86
-		{676312FB-AF67-4340-B86F-9CCEB22D802F}.Release-Windows|x86.ActiveCfg = Release-Windows|x86
-		{676312FB-AF67-4340-B86F-9CCEB22D802F}.Release-Windows|x86.Build.0 = Release-Windows|x86
 		{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Debug|x86.ActiveCfg = Debug|x86
 		{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Debug|x86.Build.0 = Debug|x86
-		{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Debug-Util-Batch|x86.ActiveCfg = Debug-Util-Batch|x86
-		{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Debug-Util-Batch|x86.Build.0 = Debug-Util-Batch|x86
 		{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Default|x86.ActiveCfg = Debug|x86
 		{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Default|x86.Build.0 = Debug|x86
 		{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Release|x86.ActiveCfg = Release|x86
 		{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Release|x86.Build.0 = Release|x86
-		{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Release-Windows|x86.ActiveCfg = Release-Windows|x86
-		{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Release-Windows|x86.Build.0 = Release-Windows|x86
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0

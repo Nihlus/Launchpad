@@ -26,17 +26,45 @@ using Gtk;
 
 namespace Launchpad.Launcher.Interface.ChangelogBrowser
 {
+	/// <summary>
+	/// A GTK-supported wrapper around a WinForms <see cref="WebBrowser"/> widget. This class creates a WebBrowser, and
+	/// sets its parent to a <see cref="Socket"/> which is then bound to an input <see cref="Container"/> in the GTK UI.
+	/// </summary>
 	public class WindowsBrowser
 	{
+		/// <summary>
+		/// Imported unmanaged function for setting the parent of a window. In our case, it's used for setting the parent
+		/// of a <see cref="WebBrowser"/> to a <see cref="Socket"/>.
+		/// </summary>
 		[DllImport("user32.dll", EntryPoint = "SetParent")]
 		internal static extern IntPtr SetParent([In] IntPtr hWndChild, [In] IntPtr hWndNewParent);
 
+		/// <summary>
+		/// The <see cref="WebBrowser"/> we're using for rendering.
+		/// </summary>
 		private readonly WebBrowser browser = new WebBrowser();
+
+		/// <summary>
+		/// The <see cref="Viewport"/> the <see cref="browser"/> is rendered inside, using the <see cref="socket"/>.
+		/// </summary>
 		private readonly Viewport viewport = new Viewport();
+
+		/// <summary>
+		/// The <see cref="Socket"/> which the <see cref="browser"/> is bound to.
+		/// </summary>
 		private readonly Socket socket = new Socket();
 
+		/// <summary>
+		/// A public-facing handle that the UI can use to move the browser around, once it's been created. This points
+		/// to the viewport which has the socket inside it.
+		/// </summary>
 		public Widget WidgetHandle => this.viewport;
 
+		/// <summary>
+		/// Creates a new <see cref="WindowsBrowser"/> object, binding a <see cref="WebBrowser"/> to
+		/// the input <see cref="Container"/>.
+		/// </summary>
+		/// <param name="parentContainer">The parent container which will hold the browser.</param>
 		public WindowsBrowser(Container parentContainer)
 		{
 			parentContainer.Add(this.viewport);
@@ -52,17 +80,28 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 			SetParent(browserHandle, socketHandle);
 		}
 
+		/// <summary>
+		/// Handles resizing the <see cref="browser"/> widget when the viewport gets a new size allocated to it.
+		/// </summary>
 		private void OnViewportSizeAllocated(object o, SizeAllocatedArgs args)
 		{
 			this.browser.Width = args.Allocation.Width;
 			this.browser.Height = args.Allocation.Height;
 		}
 
+		/// <summary>
+		/// Navigates to the specified URL, displaying it in the changelog browser.
+		/// </summary>
+		/// <param name="url">The URL to navigate to.</param>
 		public void Navigate(string url)
 		{
 			browser.Navigate(url);
 		}
 
+		/// <summary>
+		/// Loads the specified HTML string as a webpage, and sets the current webpage to the provided URL.
+		/// </summary>
+		/// <param name="htmlContent">The HTML string to load.</param>
 		public void LoadHTML(string htmlContent)
 		{
 			Navigate("about:blank");

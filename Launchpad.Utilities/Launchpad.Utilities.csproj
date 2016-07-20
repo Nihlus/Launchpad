@@ -35,7 +35,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>true</RunCodeAnalysis>
-    <CodeAnalysisRuleSet>..\..\User Files\Documents\Visual Studio\Rulesets\Extended-correctness-design-managed-security.ruleset</CodeAnalysisRuleSet>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Launchpad-StrongKey-NoPass.snk</AssemblyOriginatorKeyFile>
     <PlatformTarget>x86</PlatformTarget>
@@ -55,20 +54,6 @@
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>Launchpad.Utilities.Program</StartupObject>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug-Util-Batch|x86' ">
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug-Util-Batch</OutputPath>
-    <WarningLevel>4</WarningLevel>
-    <Externalconsole>true</Externalconsole>
-    <Commandlineparameters>-b -d /home/jarl/launchpad/launcher/bin -m Launchpad</Commandlineparameters>
-    <PlatformTarget>x86</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-Windows|x86' ">
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Release-Windows</OutputPath>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommandLine, Version=1.9.71.2, Culture=neutral, PublicKeyToken=de6f01bd326f8c32">
@@ -101,30 +86,37 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Program.cs" />
     <Compile Include="Options\CLIOptions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Interface\MainWindow.cs" />
+    <Compile Include="Handlers\MD5Handler.cs" />
+    <Compile Include="Handlers\ManifestHandler.cs" />
+    <Compile Include="Handlers\ChecksHandler.cs" />
+    <Compile Include="Utility\Events\Arguments.cs" />
+    <Compile Include="Utility\Events\Delegates.cs" />
+    <Compile Include="gtk-gui\generated.cs" />
+    <Compile Include="gtk-gui\Launchpad.Utilities.Interface.MainWindow.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Launchpad-StrongKey-NoPass.snk" />
+    <None Include="packages.config" />
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="gtk-gui\gui.stetic">
       <LogicalName>gui.stetic</LogicalName>
     </EmbeddedResource>
-    <Compile Include="gtk-gui\generated.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="Launchpad-StrongKey-NoPass.snk" />
-    <Compile Include="Handlers\MD5Handler.cs" />
-    <Compile Include="Handlers\ManifestHandler.cs" />
-    <Compile Include="Utility\Events\Arguments.cs" />
-    <Compile Include="Utility\Events\Delegates.cs" />
-    <Compile Include="Interface\MainWindow.cs" />
-    <Compile Include="Handlers\ChecksHandler.cs" />
     <EmbeddedResource Include="Resources\Icons8-Android-Industry-Engineering.ico">
       <DeployService-UseProjectRelativePath>True</DeployService-UseProjectRelativePath>
     </EmbeddedResource>
-    <Compile Include="gtk-gui\Launchpad.Utilities.Interface.MainWindow.cs" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <Folder Include="Handlers\" />
+    <Folder Include="Options" />
+    <Folder Include="Utility\" />
+    <Folder Include="Utility\Events\" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -133,12 +125,6 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <Folder Include="Handlers\" />
-    <Folder Include="Options" />
-    <Folder Include="Utility\" />
-    <Folder Include="Utility\Events\" />
-  </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
       <Properties>

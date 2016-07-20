@@ -20,7 +20,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using Launchpad.Launcher.UnixUI;
+using Launchpad.Launcher.Interface;
 using Launchpad.Launcher.Handlers;
 using System.IO;
 using log4net;

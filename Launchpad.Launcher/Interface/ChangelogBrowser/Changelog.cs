@@ -1,5 +1,5 @@
 ﻿//
-//  ChangelogBrowser.cs
+//  Changelog.cs
 //
 //  Author:
 //       Jarl Gullberg <jarl.gullberg@gmail.com>
@@ -19,24 +19,46 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using Gtk;
 using Launchpad.Launcher.Handlers;
 using WebKit;
 
 namespace Launchpad.Launcher.Interface.ChangelogBrowser
 {
-	public class ChangelogBrowser
+	/// <summary>
+	/// A GTK-supported changelog browser widget, capable of switching between a WinForms implementation (for Windows)
+	/// and a Webkit implementation (for Mac and Linux).
+	/// </summary>
+	[CLSCompliant(false)]
+	public class Changelog
 	{
+		/// <summary>
+		/// The WinForms browser for Windows.
+		/// </summary>
 		private readonly WindowsBrowser windowsBrowser;
+
+		/// <summary>
+		/// The webkit browser for Mac and Linux.
+		/// </summary>
 		private readonly WebView unixBrowser;
 
+		/// <summary>
+		/// A handle for the underlying widget used. For windows, this will be a <see cref="Viewport"/>. For
+		/// Mac and Linux, it will be a <see cref="WebView"/>.
+		/// </summary>
 		public Widget WidgetHandle
 		{
 			get;
 			private set;
 		}
 
-		public ChangelogBrowser(Container parentContainer)
+		/// <summary>
+		/// Creates a new <see cref="Changelog"/> object, and adds the visible changelog widget to the provided
+		/// parent container.
+		/// </summary>
+		/// <param name="parentContainer">The parent GTK container where the changelog should be added.</param>
+		public Changelog(Container parentContainer)
 		{
 			if (!ChecksHandler.IsRunningOnUnix())
 			{
@@ -52,12 +74,21 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 			}
 		}
 
+		/// <summary>
+		/// Navigates to the specified URL, displaying it in the changelog browser.
+		/// </summary>
+		/// <param name="url">The URL to navigate to.</param>
 		public void Navigate(string url)
 		{
 			this.windowsBrowser?.Navigate(url);
 			this.unixBrowser?.Open(url);
 		}
 
+		/// <summary>
+		/// Loads the specified HTML string as a webpage, and sets the current webpage to the provided URL.
+		/// </summary>
+		/// <param name="html">The HTML string to load.</param>
+		/// <param name="url">The base URL for the page source.</param>
 		public void LoadHTML(string html, string url)
 		{
 			this.windowsBrowser?.LoadHTML(html);

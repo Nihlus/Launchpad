@@ -56,14 +56,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Resources\RocketIcon.ico</ApplicationIcon>
-  </PropertyGroup>
-  <PropertyGroup>
     <StartupObject>Launchpad.Launcher.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CommandLine, Version=2.0.275.0, Culture=neutral, PublicKeyToken=de6f01bd326f8c32">
-      <HintPath>..\packages\CommandLineParser.2.0.275-beta\lib\net45\CommandLine.dll</HintPath>
-    </Reference>
     <Reference Include="INIFileParser, Version=2.3.0.0, Culture=neutral, PublicKeyToken=79af7b307b65cf3c">
       <HintPath>..\packages\ini-parser.2.3.0\lib\net20\INIFileParser.dll</HintPath>
     </Reference>
@@ -73,8 +68,6 @@
     <Reference Include="NGettext, Version=0.6.1.0, Culture=neutral, PublicKeyToken=08d3d1c89dfd2985">
       <HintPath>..\packages\NGettext.0.6.1\lib\net46\NGettext.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
       <Package>gtk-sharp-2.0</Package>
     </Reference>
@@ -90,72 +83,55 @@
     <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
       <Package>glib-sharp-2.0</Package>
     </Reference>
-    <Reference Include="notify-sharp">
-      <HintPath>External Assemblies\notify-sharp-0.4\notify-sharp.dll</HintPath>
-    </Reference>
     <Reference Include="webkit-sharp">
       <HintPath>External Assemblies\webkit-sharp-1.1\webkit-sharp.dll</HintPath>
     </Reference>
-    <Reference Include="System.Drawing" />
+	<Reference Include="System" />
+	<Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Handlers\Protocols\ManifestBasedProtocolHandler.cs" />
-    <Compile Include="Interface\ChangelogBrowser\ChangelogBrowser.cs" />
-    <Compile Include="Interface\ChangelogBrowser\WindowsBrowser.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Interface\MainWindow.cs" />
+    <Compile Include="Interface\ChangelogBrowser\Changelog.cs" />
+    <Compile Include="Interface\ChangelogBrowser\WindowsBrowser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <None Include="Launchpad-StrongKey-NoPass.snk" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <EmbeddedResource Include="gtk-gui\gui.stetic">
-      <LogicalName>gui.stetic</LogicalName>
-    </EmbeddedResource>
-    <Compile Include="gtk-gui\generated.cs" />
     <Compile Include="Handlers\MD5Handler.cs" />
     <Compile Include="Handlers\ConfigHandler.cs" />
     <Compile Include="Handlers\ChecksHandler.cs" />
     <Compile Include="Handlers\StatsHandler.cs" />
-    <Compile Include="Interface\MainWindow.cs" />
-    <EmbeddedResource Include="Resources\RocketIcon.ico" />
     <Compile Include="Handlers\GameHandler.cs" />
     <Compile Include="Handlers\LauncherHandler.cs" />
     <Compile Include="Handlers\UnixHandler.cs" />
-    <Compile Include="Utility\Utilities.cs" />
-    <Compile Include="Utility\Enums\ESystemTarget.cs" />
     <Compile Include="Handlers\ManifestHandler.cs" />
-    <Compile Include="Utility\Enums\ELauncherMode.cs" />
-    <None Include="packages.config" />
     <Compile Include="Handlers\Protocols\PatchProtocolHandler.cs" />
+    <Compile Include="Handlers\Protocols\ManifestBasedProtocolHandler.cs" />
     <Compile Include="Handlers\Protocols\FTPProtocolHandler.cs" />
     <Compile Include="Handlers\Protocols\HTTPProtocolHandler.cs" />
     <Compile Include="Handlers\Protocols\BitTorrentProtocolHandler.cs" />
-    <Compile Include="gtk-gui\Launchpad.Launcher.UnixUI.MainWindow.cs" />
+    <Compile Include="Utility\Utilities.cs" />
+    <Compile Include="Utility\Enums\ESystemTarget.cs" />
+    <Compile Include="Utility\Enums\ELauncherMode.cs" />
+    <Compile Include="gtk-gui\generated.cs" />
+    <Compile Include="gtk-gui\Launchpad.Launcher.Interface.MainWindow.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="gtk-gui\gui.stetic">
+      <LogicalName>gui.stetic</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App.config" />
+    <EmbeddedResource Include="Resources\RocketIcon.ico" />
     <EmbeddedResource Include="app.manifest" />
     <EmbeddedResource Include="Resources\launchpad_update.bat" />
     <EmbeddedResource Include="Resources\launchpad_update.sh" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="packages.config" />
+    <None Include="Launchpad-StrongKey-NoPass.snk" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Background_hexagon_textbox.png" />
+    <Folder Include="Handlers\Protocols\" />
+    <Folder Include="Interface\ChangelogBrowser" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -165,28 +141,11 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup />
-  <ItemGroup />
-  <PropertyGroup>
-    <PostBuildEvent>echo [Launchpad/Extras/Linux] : warning L0001: Remember to copy the Linux extras to the output folder if you are building on Windows.</PostBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug-Util-Batch|x86' ">
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug-Util-Batch</OutputPath>
-    <WarningLevel>4</WarningLevel>
-    <AssemblyName>Launchpad</AssemblyName>
-    <PlatformTarget>x86</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-Windows|x86' ">
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release-Windows</OutputPath>
-    <WarningLevel>4</WarningLevel>
-    <AssemblyName>Launchpad.Launcher</AssemblyName>
-    <PlatformTarget>x86</PlatformTarget>
-    <DefineConstants>TRACE</DefineConstants>
-  </PropertyGroup>
-  <ItemGroup>
-    <Folder Include="Handlers\Protocols\" />
-    <Folder Include="Interface\ChangelogBrowser" />
-  </ItemGroup>
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <GtkDesignInfo generateGettext="False" />
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
 </Project>
