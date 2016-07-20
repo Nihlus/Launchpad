@@ -2,14 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1edebc49-7aee-4412-b7b2-58bf6a209799" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Launchpad.Launcher/Unix-UI/MainWindow.cs" afterPath="$PROJECT_DIR$/../Launchpad.Launcher/Interface/MainWindow.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Launchpad.Launcher/Launchpad.Launcher.csproj" afterPath="$PROJECT_DIR$/../Launchpad.Launcher/Launchpad.Launcher.csproj" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Launchpad.Launcher/Program.cs" afterPath="$PROJECT_DIR$/../Launchpad.Launcher/Program.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs" afterPath="$PROJECT_DIR$/../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Launchpad.Launcher/packages.config" afterPath="$PROJECT_DIR$/../Launchpad.Launcher/packages.config" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Launchpad.Utilities/Launchpad.Utilities.csproj" afterPath="$PROJECT_DIR$/../Launchpad.Utilities/Launchpad.Utilities.csproj" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Launchpad.sln" afterPath="$PROJECT_DIR$/../Launchpad.sln" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Launchpad.Launcher/Properties/AssemblyInfo.cs" afterPath="$PROJECT_DIR$/../Launchpad.Launcher/Properties/AssemblyInfo.cs" />
     </list>
     <ignored path="Launchpad.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -71,7 +64,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MainWindow.cs" pinned="false" current-in-tab="true">
+      <file leaf-file-name="MainWindow.cs" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../Launchpad.Launcher/Interface/MainWindow.cs">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="300">
@@ -115,6 +108,21 @@
                 <marker date="1469036960463" expanded="true" signature="17150:17373" ph="/// ..." />
                 <marker date="1469036960463" expanded="true" signature="17441:18722" ph="{...}" />
                 <marker date="1469036960463" expanded="true" signature="18787:19443" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AssemblyInfo.cs" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/../Launchpad.Launcher/Properties/AssemblyInfo.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="315">
+              <caret line="21" column="61" selection-start-line="21" selection-start-column="61" selection-end-line="21" selection-end-column="61" />
+              <folding>
+                <marker date="1469039190019" expanded="true" signature="6:86" ph="..." />
+                <marker date="1469039190019" expanded="true" signature="88:274" ph="/* ... */" />
+                <marker date="1469039190019" expanded="true" signature="752:960" ph="/* ... */" />
+                <marker date="1469039190019" expanded="true" signature="1135:1460" ph="/* ... */" />
               </folding>
             </state>
           </provider>
@@ -165,6 +173,7 @@
         <option value="$PROJECT_DIR$/../Launchpad.Launcher/Interface/MainWindow.cs" />
         <option value="$PROJECT_DIR$/../Launchpad.Launcher/Interface/ChangelogBrowser/ChangelogBrowser.cs" />
         <option value="$PROJECT_DIR$/../Launchpad.Launcher/Interface/ChangelogBrowser/WindowsBrowser.cs" />
+        <option value="$PROJECT_DIR$/../Launchpad.Launcher/Properties/AssemblyInfo.cs" />
       </list>
     </option>
   </component>
@@ -222,6 +231,50 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="Launchpad.Launcher" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Launchpad" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Launchpad.Launcher" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Properties" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Settings.settings" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Settings.Designer.cs" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Launchpad" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Launchpad.Launcher" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Properties" />
               <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
             </PATH_ELEMENT>
           </PATH>
@@ -290,12 +343,12 @@
       <workItem from="1469034252606" duration="48000" />
       <workItem from="1469034311833" duration="1678000" />
       <workItem from="1469036267577" duration="1444000" />
-      <workItem from="1469037722767" duration="1343000" />
+      <workItem from="1469037722767" duration="1472000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="6422000" />
+    <option name="totallyTimeSpent" value="6551000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -351,53 +404,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../Launchpad.Launcher/Interface/MainWindow.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1469036960463" expanded="true" signature="0:783" ph="/* ... */" />
-            <marker date="1469036960463" expanded="true" signature="791:1065" ph="..." />
-            <marker date="1469036960463" expanded="true" signature="791:1118" ph="..." />
-            <marker date="1469036960463" expanded="true" signature="1155:19448" ph="{...}" />
-            <marker date="1469036960463" expanded="true" signature="1226:19446" ph="{...}" />
-            <marker date="1469036960463" expanded="true" signature="1232:1300" ph="/// ..." />
-            <marker date="1469036960463" expanded="true" signature="1383:1449" ph="/// ..." />
-            <marker date="1469036960463" expanded="true" signature="1519:1585" ph="/// ..." />
-            <marker date="1469036960463" expanded="true" signature="1652:1765" ph="/// ..." />
-            <marker date="1469036960463" expanded="true" signature="1838:1944" ph="/// ..." />
-            <marker date="1469036960463" expanded="true" signature="2005:2064" ph="/// ..." />
-            <marker date="1469036960463" expanded="true" signature="2120:2252" ph="/// ..." />
-            <marker date="1469036960463" expanded="true" signature="2311:2373" ph="/// ..." />
-            <marker date="1469036960463" expanded="true" signature="2526:7575" ph="{...}" />
-            <marker date="1469036960463" expanded="true" signature="4106:4185" ph="/* ... */" />
-            <marker date="1469036960463" expanded="true" signature="6156:6255" ph="/* ... */" />
-            <marker date="1469036960463" expanded="true" signature="7579:7814" ph="/// ..." />
-            <marker date="1469036960463" expanded="true" signature="7886:9717" ph="{...}" />
-            <marker date="1469036960463" expanded="true" signature="9721:9910" ph="/// ..." />
-            <marker date="1469036960463" expanded="true" signature="9975:10026" ph="{...}" />
-            <marker date="1469036960463" expanded="true" signature="10030:10211" ph="/// ..." />
-            <marker date="1469036960463" expanded="true" signature="10284:10438" ph="{...}" />
-            <marker date="1469036960463" expanded="true" signature="10442:10760" ph="/// ..." />
-            <marker date="1469036960463" expanded="true" signature="10828:14395" ph="{...}" />
-            <marker date="1469036960463" expanded="true" signature="11736:11882" ph="/* ... */" />
-            <marker date="1469036960463" expanded="true" signature="13801:13936" ph="/* ... */" />
-            <marker date="1469036960463" expanded="true" signature="14399:14645" ph="/// ..." />
-            <marker date="1469036960463" expanded="true" signature="14743:14935" ph="{...}" />
-            <marker date="1469036960463" expanded="true" signature="15029:15261" ph="{...}" />
-            <marker date="1469036960463" expanded="true" signature="15265:15474" ph="/// ..." />
-            <marker date="1469036960463" expanded="true" signature="15536:15901" ph="{...}" />
-            <marker date="1469036960463" expanded="true" signature="15922:16187" ph="/// ..." />
-            <marker date="1469036960463" expanded="true" signature="16251:16587" ph="{...}" />
-            <marker date="1469036960463" expanded="true" signature="16591:16842" ph="/// ..." />
-            <marker date="1469036960463" expanded="true" signature="16939:17146" ph="{...}" />
-            <marker date="1469036960463" expanded="true" signature="17150:17373" ph="/// ..." />
-            <marker date="1469036960463" expanded="true" signature="17441:18722" ph="{...}" />
-            <marker date="1469036960463" expanded="true" signature="18787:19443" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../Launchpad.Launcher/Interface/ChangelogBrowser/WindowsBrowser.cs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="780">
@@ -875,6 +881,19 @@
             <marker date="1469036960463" expanded="true" signature="17150:17373" ph="/// ..." />
             <marker date="1469036960463" expanded="true" signature="17441:18722" ph="{...}" />
             <marker date="1469036960463" expanded="true" signature="18787:19443" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../Launchpad.Launcher/Properties/AssemblyInfo.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" column="61" selection-start-line="21" selection-start-column="61" selection-end-line="21" selection-end-column="61" />
+          <folding>
+            <marker date="1469039190019" expanded="true" signature="6:86" ph="..." />
+            <marker date="1469039190019" expanded="true" signature="88:274" ph="/* ... */" />
+            <marker date="1469039190019" expanded="true" signature="752:960" ph="/* ... */" />
+            <marker date="1469039190019" expanded="true" signature="1135:1460" ph="/* ... */" />
           </folding>
         </state>
       </provider>
