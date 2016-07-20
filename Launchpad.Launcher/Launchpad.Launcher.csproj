@@ -3,7 +3,7 @@
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProjectGuid>{676312FB-AF67-4340-B86F-9CCEB22D802F}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -28,7 +28,7 @@
     <SynchReleaseVersion>false</SynchReleaseVersion>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -41,8 +41,9 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Launchpad-StrongKey-NoPass.snk</AssemblyOriginatorKeyFile>
     <AssemblyName>Launchpad</AssemblyName>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -51,6 +52,7 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Launchpad-StrongKey-NoPass.snk</AssemblyOriginatorKeyFile>
     <AssemblyName>Launchpad</AssemblyName>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Resources\RocketIcon.ico</ApplicationIcon>
@@ -98,6 +100,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Handlers\Protocols\ManifestBasedProtocolHandler.cs" />
+    <Compile Include="Interface\ChangelogBrowser\ChangelogBrowser.cs" />
+    <Compile Include="Interface\ChangelogBrowser\WindowsBrowser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -128,25 +132,7 @@
     <Compile Include="Handlers\ConfigHandler.cs" />
     <Compile Include="Handlers\ChecksHandler.cs" />
     <Compile Include="Handlers\StatsHandler.cs" />
-    <Compile Include="Windows-UI\AboutBox.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Windows-UI\AboutBox.Designer.cs">
-      <DependentUpon>AboutBox.cs</DependentUpon>
-    </Compile>
-    <EmbeddedResource Include="Windows-UI\AboutBox.resx">
-      <DependentUpon>AboutBox.cs</DependentUpon>
-    </EmbeddedResource>
-    <Compile Include="Windows-UI\MainForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Windows-UI\MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </Compile>
-    <EmbeddedResource Include="Windows-UI\MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <Compile Include="Unix-UI\MainWindow.cs" />
+    <Compile Include="Interface\MainWindow.cs" />
     <EmbeddedResource Include="Resources\RocketIcon.ico" />
     <Compile Include="Handlers\GameHandler.cs" />
     <Compile Include="Handlers\LauncherHandler.cs" />
@@ -184,13 +170,14 @@
   <PropertyGroup>
     <PostBuildEvent>echo [Launchpad/Extras/Linux] : warning L0001: Remember to copy the Linux extras to the output folder if you are building on Windows.</PostBuildEvent>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug-Util-Batch|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug-Util-Batch|x86' ">
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug-Util-Batch</OutputPath>
     <WarningLevel>4</WarningLevel>
     <AssemblyName>Launchpad</AssemblyName>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-Windows|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-Windows|x86' ">
     <Optimize>true</Optimize>
     <OutputPath>bin\Release-Windows</OutputPath>
     <WarningLevel>4</WarningLevel>
@@ -200,5 +187,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Handlers\Protocols\" />
+    <Folder Include="Interface\ChangelogBrowser" />
   </ItemGroup>
 </Project>

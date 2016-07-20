@@ -5,41 +5,41 @@ namespace Launchpad.Launcher.UnixUI
 	public partial class MainWindow
 	{
 		private global::Gtk.UIManager UIManager;
-		
+
 		private global::Gtk.Action ActionsAction1;
-		
+
 		private global::Gtk.Action refreshAction1;
-		
+
 		private global::Gtk.VBox vbox1;
-		
+
 		private global::Gtk.MenuBar menubar1;
-		
+
 		private global::Gtk.HBox hbox2;
-		
+
 		private global::Gtk.VBox BrowserContainer;
-		
+
 		private global::Gtk.Alignment alignment2;
-		
+
 		private global::Gtk.ScrolledWindow ScrolledBrowserWindow;
-		
+
 		private global::Gtk.Alignment alignment5;
-		
+
 		private global::Gtk.Image GameBanner;
-		
+
 		private global::Gtk.Alignment alignment1;
-		
+
 		private global::Gtk.Label IndicatorLabel;
-		
+
 		private global::Gtk.HBox hbox3;
-		
+
 		private global::Gtk.Alignment alignment4;
-		
+
 		private global::Gtk.ProgressBar MainProgressBar;
-		
+
 		private global::Gtk.HBox hbox4;
-		
+
 		private global::Gtk.Alignment alignment3;
-		
+
 		private global::Gtk.Button PrimaryButton;
 
 		protected virtual void Build ()
@@ -48,16 +48,16 @@ namespace Launchpad.Launcher.UnixUI
 			// Widget Launchpad.Launcher.UnixUI.MainWindow
 			this.UIManager = new global::Gtk.UIManager ();
 			global::Gtk.ActionGroup w1 = new global::Gtk.ActionGroup ("Default");
-			this.ActionsAction1 = new global::Gtk.Action ("ActionsAction1", global::Mono.Unix.Catalog.GetString ("Actions"), null, null);
-			this.ActionsAction1.ShortLabel = global::Mono.Unix.Catalog.GetString ("Actions");
+			this.ActionsAction1 = new global::Gtk.Action ("ActionsAction1", LocalizationCatalog.GetString ("Actions"), null, null);
+			this.ActionsAction1.ShortLabel = LocalizationCatalog.GetString ("Actions");
 			w1.Add (this.ActionsAction1, null);
-			this.refreshAction1 = new global::Gtk.Action ("refreshAction1", global::Mono.Unix.Catalog.GetString ("Repair Game"), null, "gtk-refresh");
-			this.refreshAction1.ShortLabel = global::Mono.Unix.Catalog.GetString ("Repair Game");
+			this.refreshAction1 = new global::Gtk.Action ("refreshAction1", LocalizationCatalog.GetString ("Repair Game"), null, "gtk-refresh");
+			this.refreshAction1.ShortLabel = LocalizationCatalog.GetString ("Repair Game");
 			w1.Add (this.refreshAction1, null);
 			this.UIManager.InsertActionGroup (w1, 0);
 			this.AddAccelGroup (this.UIManager.AccelGroup);
 			this.Name = "Launchpad.Launcher.UnixUI.MainWindow";
-			this.Title = global::Mono.Unix.Catalog.GetString ("Launchpad - <GameName>");
+			this.Title = LocalizationCatalog.GetString ("Launchpad - <GameName>");
 			this.Icon = global::Gdk.Pixbuf.LoadFromResource ("Launchpad.Launcher.Resources.RocketIcon.ico");
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
 			this.DefaultWidth = 755;
@@ -129,7 +129,7 @@ namespace Launchpad.Launcher.UnixUI
 			this.IndicatorLabel = new global::Gtk.Label ();
 			this.IndicatorLabel.Name = "IndicatorLabel";
 			this.IndicatorLabel.Xalign = 0F;
-			this.IndicatorLabel.LabelProp = global::Mono.Unix.Catalog.GetString ("Idle");
+			this.IndicatorLabel.LabelProp = LocalizationCatalog.GetString ("Idle");
 			this.alignment1.Add (this.IndicatorLabel);
 			this.vbox1.Add (this.alignment1);
 			global::Gtk.Box.BoxChild w10 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.alignment1]));
@@ -166,7 +166,7 @@ namespace Launchpad.Launcher.UnixUI
 			this.PrimaryButton.CanFocus = true;
 			this.PrimaryButton.Name = "PrimaryButton";
 			this.PrimaryButton.UseUnderline = true;
-			this.PrimaryButton.Label = global::Mono.Unix.Catalog.GetString ("Inactive");
+			this.PrimaryButton.Label = LocalizationCatalog.GetString ("Inactive");
 			this.alignment3.Add (this.PrimaryButton);
 			this.hbox4.Add (this.alignment3);
 			global::Gtk.Box.BoxChild w14 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.alignment3]));

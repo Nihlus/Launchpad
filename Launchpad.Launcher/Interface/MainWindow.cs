@@ -22,7 +22,6 @@
 using Gtk;
 using Notifications;
 using System;
-using WebKit;
 using NGettext;
 using Launchpad.Launcher.Handlers;
 using Launchpad.Launcher.Utility.Enums;
@@ -32,6 +31,7 @@ using System.IO;
 using Gdk;
 using System.Drawing.Imaging;
 using log4net;
+using Launchpad.Launcher.Interface.ChangelogBrowser;
 
 namespace Launchpad.Launcher.UnixUI
 {
@@ -66,7 +66,7 @@ namespace Launchpad.Launcher.UnixUI
 		/// <summary>
 		/// The changelog browser.
 		/// </summary>
-		private readonly WebView Browser = new WebView();
+		private readonly ChangelogBrowser Browser = null;
 
 		/// <summary>
 		/// The current mode that the launcher is in. Determines what the primary button does when pressed.
@@ -102,7 +102,7 @@ namespace Launchpad.Launcher.UnixUI
 			// Set the window title
 			Title = LocalizationCatalog.GetString("Launchpad - ") + Config.GetGameName();
 
-			ScrolledBrowserWindow.Add(Browser);
+			this.Browser = new ChangelogBrowser(this.ScrolledBrowserWindow);
 			ScrolledBrowserWindow.ShowAll();
 
 			IndicatorLabel.Text = LocalizationCatalog.GetString("Idle");
@@ -184,7 +184,7 @@ namespace Launchpad.Launcher.UnixUI
 				// implementation after.
 				if (Launcher.CanAccessStandardChangelog())
 				{
-					Browser.Open(Config.GetChangelogURL());
+					Browser.Navigate(Config.GetChangelogURL());
 				}
 				else
 				{
@@ -464,7 +464,7 @@ namespace Launchpad.Launcher.UnixUI
 			//Take the resulting HTML string from the changelog download and send it to the changelog browser
 			Application.Invoke(delegate
 				{
-					Browser.LoadHtmlString(e.HTML, e.URL);
+					Browser.LoadHTML(e.HTML, e.URL);
 				});
 		}
 

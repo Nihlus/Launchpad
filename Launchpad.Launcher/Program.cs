@@ -21,10 +21,8 @@
 
 using System;
 using Launchpad.Launcher.UnixUI;
-using Launchpad.Launcher.WindowsUI;
 using Launchpad.Launcher.Handlers;
 using System.IO;
-using System.Threading;
 using log4net;
 
 [assembly: CLSCompliant(true)]
@@ -58,49 +56,15 @@ namespace Launchpad.Launcher
 			// Set correct working directory for compatibility with double-clicking
 			Directory.SetCurrentDirectory(ConfigHandler.GetLocalDir());
 
-			if (ChecksHandler.IsRunningOnUnix())
-			{
-				Log.Info("Initializing GTK UI.");
-				RunUnixInterface();
-			}
-			else
-			{
-				Log.Info("Initializing WinForms UI.");
-				RunWindowsInterface();
-			}
-		}
-
-		private static void RunUnixInterface()
-		{
+			Log.Info("Initializing UI...");
 			// Bind any unhandled exceptions in the GTK UI so that they are logged.
-            GLib.ExceptionManager.UnhandledException += OnGLibUnhandledException;
+			GLib.ExceptionManager.UnhandledException += OnGLibUnhandledException;
 
 			// Run the GTK UI
 			Gtk.Application.Init();
 			MainWindow win = new MainWindow();
 			win.Show();
 			Gtk.Application.Run();
-		}
-
-		private static void RunWindowsInterface()
-		{
-			// Bind any unhandled exceptions in the WinForms UI so that they are logged.
-			System.Windows.Forms.Application.ThreadException += OnFormsThreadException;
-
-			// run a WinForms UI instead of GTK
-			System.Windows.Forms.Application.EnableVisualStyles();
-			System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
-			System.Windows.Forms.Application.Run(new MainForm());
-		}
-
-		/// <summary>
-		/// Passes any unhandled exceptions from the Forms UI to the generic handler.
-		/// </summary>
-		/// <param name="sender">The sending object.</param>
-		/// <param name="threadExceptionEventArgs">The event object containing the information about the exception.</param>
-		private static void OnFormsThreadException(object sender, ThreadExceptionEventArgs threadExceptionEventArgs)
-		{
-			OnUnhandledException(sender, new UnhandledExceptionEventArgs(threadExceptionEventArgs.Exception, true));
 		}
 
 		/// <summary>
