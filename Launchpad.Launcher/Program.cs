@@ -57,6 +57,7 @@ namespace Launchpad.Launcher
 			Directory.SetCurrentDirectory(ConfigHandler.GetLocalDir());
 
 			Log.Info("Initializing UI...");
+
 			// Bind any unhandled exceptions in the GTK UI so that they are logged.
 			GLib.ExceptionManager.UnhandledException += OnGLibUnhandledException;
 

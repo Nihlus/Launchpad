@@ -86,8 +86,8 @@
     <Reference Include="webkit-sharp">
       <HintPath>External Assemblies\webkit-sharp-1.1\webkit-sharp.dll</HintPath>
     </Reference>
-	<Reference Include="System" />
-	<Reference Include="System.Drawing" />
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
@@ -120,8 +120,8 @@
       <LogicalName>gui.stetic</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="App.config" />
-    <EmbeddedResource Include="Resources\RocketIcon.ico" />
     <EmbeddedResource Include="app.manifest" />
+    <EmbeddedResource Include="Resources\RocketIcon.ico" />
     <EmbeddedResource Include="Resources\launchpad_update.bat" />
     <EmbeddedResource Include="Resources\launchpad_update.sh" />
   </ItemGroup>
