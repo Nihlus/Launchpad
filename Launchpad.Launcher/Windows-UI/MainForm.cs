@@ -547,8 +547,33 @@ namespace Launchpad.Launcher.WindowsUI
 					MessageLabel.Text = LocalizationCatalog.GetString("Idle");
 					downloadProgressLabel.Text = "";
 
-					NotifyIcon downloadCompleteNotification = new NotifyIcon();
-					downloadCompleteNotification.Visible = true;
+					string tipTitle = LocalizationCatalog.GetString("Launchpad - Info");
+					string tipText = LocalizationCatalog.GetString("Game download finished. Play away!");
+					switch (Mode)
+					{
+						case ELauncherMode.Repair:
+						{
+							tipText =
+								LocalizationCatalog.GetString("Launchpad has finished repairing the game installation. Play away!");
+							break;
+						}
+						case ELauncherMode.Update:
+						{
+							tipText = LocalizationCatalog.GetString("Game update finished. Play away!");
+							break;
+						}
+						default:
+						{
+							break;
+						}
+					}
+
+					NotifyIcon downloadCompleteNotification = new NotifyIcon
+					{
+						Visible = true,
+						BalloonTipTitle = tipTitle,
+						BalloonTipText = tipText
+					};
 
 					using (Stream iconStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Launchpad.Launcher.Resources.RocketIcon.ico"))
 					{
@@ -556,32 +581,6 @@ namespace Launchpad.Launcher.WindowsUI
 						{
 							downloadCompleteNotification.Icon = new System.Drawing.Icon(iconStream);
 						}
-					}
-
-					switch (Mode)
-					{
-						case ELauncherMode.Install:
-							{
-								downloadCompleteNotification.BalloonTipTitle = LocalizationCatalog.GetString("Launchpad - Info");
-								downloadCompleteNotification.BalloonTipText = LocalizationCatalog.GetString("Game download finished. Play away!");
-								break;
-							}
-						case ELauncherMode.Repair:
-							{
-								downloadCompleteNotification.BalloonTipTitle = LocalizationCatalog.GetString("Launchpad - Info");
-								downloadCompleteNotification.BalloonTipText = LocalizationCatalog.GetString("Launchpad has finished repairing the game installation. Play away!");
-								break;
-							}
-						case ELauncherMode.Update:
-							{
-								downloadCompleteNotification.BalloonTipTitle = LocalizationCatalog.GetString("Launchpad - Info");
-								downloadCompleteNotification.BalloonTipText = LocalizationCatalog.GetString("Game update finished. Play away!");
-								break;
-							}
-						default:
-							{
-								break;
-							}
 					}
 
 					downloadCompleteNotification.ShowBalloonTip(10000);
