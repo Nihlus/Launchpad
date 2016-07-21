@@ -75,16 +75,16 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			catch (WebException wex)
 			{
-				Log.Warn("Unable to connect due a malformed URL in the configuration (WebException): " + wex.Message);
+				Log.Warn("Unable to connect due a malformed url in the configuration (WebException): " + wex.Message);
 				bCanConnectToServer = false;
 			}
 
 			return bCanConnectToServer;
 		}
 
-		public override bool IsPlatformAvailable(ESystemTarget Platform)
+		public override bool IsPlatformAvailable(ESystemTarget platform)
 		{
-			string remote = $"{Config.GetBaseHTTPUrl()}/game/{Platform}/.provides";
+			string remote = $"{Config.GetBaseHTTPUrl()}/game/{platform}/.provides";
 
 			return DoesRemoteDirectoryOrFileExist(remote);
 		}
@@ -118,15 +118,15 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <summary>
 		/// Downloads a remote file to a local file path.
 		/// </summary>
-		/// <param name="URL">The remote URL of the file..</param>
+		/// <param name="url">The remote url of the file..</param>
 		/// <param name="localPath">Local path where the file is to be stored.</param>
 		/// <param name="totalSize">Total size of the file as stated in the manifest.</param>
 		/// <param name="contentOffset">Content offset. If nonzero, appends data to an existing file.</param>
 		/// <param name="useAnonymousLogin">If set to <c>true</c> use anonymous login.</param>
-		protected override void DownloadRemoteFile(string URL, string localPath, long totalSize = 0, long contentOffset = 0, bool useAnonymousLogin = false)
+		protected override void DownloadRemoteFile(string url, string localPath, long totalSize = 0, long contentOffset = 0, bool useAnonymousLogin = false)
 		{
-			//clean the URL string
-			string remoteURL = URL.Replace(Path.DirectorySeparatorChar, '/');
+			//clean the url string
+			string remoteURL = url.Replace(Path.DirectorySeparatorChar, '/');
 
 			string username;
 			string password;
@@ -215,11 +215,11 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// of all \r, \n and \0 characters before it is returned.
 		/// </summary>
 		/// <returns>The contents of the remote file.</returns>
-		/// <param name="URL">The remote URL of the file.</param>
+		/// <param name="url">The remote url of the file.</param>
 		/// <param name="useAnonymousLogin">If set to <c>true</c> use anonymous login.</param>
-		protected override string ReadRemoteFile(string URL, bool useAnonymousLogin = false)
+		protected override string ReadRemoteFile(string url, bool useAnonymousLogin = false)
 		{
-			string remoteURL = URL.Replace(Path.DirectorySeparatorChar, '/');
+			string remoteURL = url.Replace(Path.DirectorySeparatorChar, '/');
 
 			string username;
 			string password;
@@ -287,16 +287,16 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// Creates a HTTP web request.
 		/// </summary>
 		/// <returns>The HTTP web request.</returns>
-		/// <param name="URL">URL of the desired remote object.</param>
-		/// <param name="Username">The username used for authentication.</param>
-		/// <param name="Password">The password used for authentication.</param>
-		private static HttpWebRequest CreateHttpWebRequest(string URL, string Username, string Password)
+		/// <param name="url">url of the desired remote object.</param>
+		/// <param name="username">The username used for authentication.</param>
+		/// <param name="password">The password used for authentication.</param>
+		private static HttpWebRequest CreateHttpWebRequest(string url, string username, string password)
 		{
 			try
 			{
-				HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri(URL));
+				HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri(url));
 				request.Proxy = null;
-				request.Credentials = new NetworkCredential(Username, Password);
+				request.Credentials = new NetworkCredential(username, password);
 
 				return request;
 			}
@@ -322,10 +322,10 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// Checks if the provided path points to a valid directory or file.
 		/// </summary>
 		/// <returns><c>true</c>, if the directory or file exists, <c>false</c> otherwise.</returns>
-		/// <param name="URL">The remote URL of the directory or file.</param>
-		private bool DoesRemoteDirectoryOrFileExist(string URL)
+		/// <param name="url">The remote url of the directory or file.</param>
+		private bool DoesRemoteDirectoryOrFileExist(string url)
 		{
-			string cleanURL = URL.Replace(Path.DirectorySeparatorChar, '/');
+			string cleanURL = url.Replace(Path.DirectorySeparatorChar, '/');
 			HttpWebRequest request = CreateHttpWebRequest(cleanURL,
 										 Config.GetRemoteUsername(), Config.GetRemotePassword());
 
@@ -349,10 +349,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			finally
 			{
-				if (response != null)
-				{
-					response.Dispose();
-				}
+				response?.Dispose();
 			}
 
 			return true;

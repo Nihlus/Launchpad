@@ -72,11 +72,11 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			// which happens to coincide with the general design.
 		}
 
-		public override void UpdateModule(EModule Module)
+		public override void UpdateModule(EModule module)
 		{
-			List<ManifestEntry> Manifest;
-			List<ManifestEntry> OldManifest;
-			switch (Module)
+			List<ManifestEntry> manifest;
+			List<ManifestEntry> oldManifest;
+			switch (module)
 			{
 				case EModule.Launcher:
 				{
@@ -85,8 +85,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 					ModuleInstallFinishedArgs.Module = EModule.Launcher;
 					ModuleInstallFailedArgs.Module = EModule.Launcher;
-					Manifest = this.Manifest.LaunchpadManifest;
-					OldManifest = this.Manifest.OldLaunchpadManifest;
+					manifest = this.Manifest.LaunchpadManifest;
+					oldManifest = this.Manifest.OldLaunchpadManifest;
 					break;
 				}
 				case EModule.Game:
@@ -96,95 +96,95 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 					ModuleInstallFinishedArgs.Module = EModule.Game;
 					ModuleInstallFailedArgs.Module = EModule.Game;
-					Manifest = this.Manifest.GameManifest;
-					OldManifest = this.Manifest.OldGameManifest;
+					manifest = this.Manifest.GameManifest;
+					oldManifest = this.Manifest.OldGameManifest;
 					break;
 				}
 				default:
 				{
-					throw new ArgumentOutOfRangeException(nameof(Module), Module, null);
+					throw new ArgumentOutOfRangeException(nameof(module), module, null);
 				}
 			}
 
-			List<ManifestEntry> FilesRequiringUpdate = new List<ManifestEntry>();
-			foreach (ManifestEntry Entry in Manifest)
+			List<ManifestEntry> filesRequiringUpdate = new List<ManifestEntry>();
+			foreach (ManifestEntry fileEntry in manifest)
 			{
-				if (!OldManifest.Contains(Entry))
+				if (!oldManifest.Contains(fileEntry))
 				{
-					FilesRequiringUpdate.Add(Entry);
+					filesRequiringUpdate.Add(fileEntry);
 				}
 			}
 
 			try
 			{
 				int updatedFiles = 0;
-				foreach (ManifestEntry Entry in FilesRequiringUpdate)
+				foreach (ManifestEntry fileEntry in filesRequiringUpdate)
 				{
 					++updatedFiles;
 
-					ModuleUpdateProgressArgs.IndicatorLabelMessage = GetUpdateIndicatorLabelMessage(Path.GetFileName(Entry.RelativePath),
+					ModuleUpdateProgressArgs.IndicatorLabelMessage = GetUpdateIndicatorLabelMessage(Path.GetFileName(fileEntry.RelativePath),
 						updatedFiles,
-						FilesRequiringUpdate.Count);
+						filesRequiringUpdate.Count);
 					OnModuleUpdateProgressChanged();
 
-					DownloadManifestEntry(Entry, Module);
+					DownloadManifestEntry(fileEntry, module);
 				}
 			}
 			catch (IOException ioex)
 			{
-				Log.Warn($"Updating of {Module} files failed (IOException): " + ioex.Message);
+				Log.Warn($"Updating of {module} files failed (IOException): " + ioex.Message);
 				OnModuleInstallationFailed();
 			}
 
 			OnModuleInstallationFinished();
 		}
 
-		public override void VerifyModule(EModule Module)
+		public override void VerifyModule(EModule module)
 		{
-			List<ManifestEntry> Manifest;
-			List<ManifestEntry> BrokenFiles = new List<ManifestEntry>();
-			if (Module == EModule.Game)
+			List<ManifestEntry> manifest;
+			List<ManifestEntry> brokenFiles = new List<ManifestEntry>();
+			if (module == EModule.Game)
 			{
-				Manifest = this.Manifest.GameManifest;
+				manifest = this.Manifest.GameManifest;
 			}
 			else
 			{
-				Manifest = this.Manifest.LaunchpadManifest;
+				manifest = this.Manifest.LaunchpadManifest;
 			}
 
 			try
 			{
 				int verifiedFiles = 0;
-				foreach (ManifestEntry Entry in Manifest)
+				foreach (ManifestEntry fileEntry in manifest)
 				{
 					++verifiedFiles;
 
 					// Prepare the progress event contents
-					ModuleVerifyProgressArgs.IndicatorLabelMessage = GetVerifyIndicatorLabelMessage(verifiedFiles, Path.GetFileName(Entry.RelativePath), Manifest.Count);
+					ModuleVerifyProgressArgs.IndicatorLabelMessage = GetVerifyIndicatorLabelMessage(verifiedFiles, Path.GetFileName(fileEntry.RelativePath), manifest.Count);
 					OnModuleVerifyProgressChanged();
 
-					if (!Entry.IsFileIntegrityIntact())
+					if (!fileEntry.IsFileIntegrityIntact())
 					{
-						BrokenFiles.Add(Entry);
-						Log.Info($"File \"{Path.GetFileName(Entry.RelativePath)}\" failed its integrity check and was queued for redownload.");
+						brokenFiles.Add(fileEntry);
+						Log.Info($"File \"{Path.GetFileName(fileEntry.RelativePath)}\" failed its integrity check and was queued for redownload.");
 					}
 				}
 
 				int downloadedFiles = 0;
-				foreach (ManifestEntry Entry in BrokenFiles)
+				foreach (ManifestEntry fileEntry in brokenFiles)
 				{
 					++downloadedFiles;
 
 					// Prepare the progress event contents
-					ModuleDownloadProgressArgs.IndicatorLabelMessage = GetDownloadIndicatorLabelMessage(downloadedFiles, Path.GetFileName(Entry.RelativePath), BrokenFiles.Count);
+					ModuleDownloadProgressArgs.IndicatorLabelMessage = GetDownloadIndicatorLabelMessage(downloadedFiles, Path.GetFileName(fileEntry.RelativePath), brokenFiles.Count);
 					OnModuleDownloadProgressChanged();
 
 					for (int i = 0; i < Config.GetFileRetries(); ++i)
 					{
-						if (!Entry.IsFileIntegrityIntact())
+						if (!fileEntry.IsFileIntegrityIntact())
 						{
-							DownloadManifestEntry(Entry, Module);
-							Log.Info($"File \"{Path.GetFileName(Entry.RelativePath)}\" failed its integrity check again after redownloading. ({i} retries)");
+							DownloadManifestEntry(fileEntry, module);
+							Log.Info($"File \"{Path.GetFileName(fileEntry.RelativePath)}\" failed its integrity check again after redownloading. ({i} retries)");
 						}
 						else
 						{
@@ -195,17 +195,17 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			catch (IOException ioex)
 			{
-				Log.Warn($"Verification of {Module} files failed (IOException): " + ioex.Message);
+				Log.Warn($"Verification of {module} files failed (IOException): " + ioex.Message);
 				OnModuleInstallationFailed();
 			}
 
 			OnModuleInstallationFinished();
 		}
 
-		protected override void DownloadModule(EModule Module)
+		protected override void DownloadModule(EModule module)
 		{
 			List<ManifestEntry> moduleManifest;
-			switch (Module)
+			switch (module)
 			{
 				case EModule.Launcher:
 				{
@@ -229,7 +229,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				}
 				default:
 				{
-					throw new ArgumentOutOfRangeException(nameof(Module), Module, null);
+					throw new ArgumentOutOfRangeException(nameof(module), module, null);
 				}
 			}
 
@@ -243,42 +243,42 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				// Loop through all the entries in the manifest until we encounter
 				// an entry which matches the one in the install cookie
 
-				foreach (ManifestEntry Entry in moduleManifest)
+				foreach (ManifestEntry fileEntry in moduleManifest)
 				{
-					if (lastDownloadedFile == Entry)
+					if (lastDownloadedFile == fileEntry)
 					{
 						// Remove all entries before the one we were last at.
-						moduleManifest.RemoveRange(0, moduleManifest.IndexOf(Entry));
+						moduleManifest.RemoveRange(0, moduleManifest.IndexOf(fileEntry));
 					}
 				}
 			}
 
 			int downloadedFiles = 0;
-			foreach (ManifestEntry Entry in moduleManifest)
+			foreach (ManifestEntry fileEntry in moduleManifest)
 			{
 				++downloadedFiles;
 
 				// Prepare the progress event contents
-				ModuleDownloadProgressArgs.IndicatorLabelMessage = GetDownloadIndicatorLabelMessage(downloadedFiles, Path.GetFileName(Entry.RelativePath), moduleManifest.Count);
+				ModuleDownloadProgressArgs.IndicatorLabelMessage = GetDownloadIndicatorLabelMessage(downloadedFiles, Path.GetFileName(fileEntry.RelativePath), moduleManifest.Count);
 				OnModuleDownloadProgressChanged();
 
-				DownloadManifestEntry(Entry, Module);
+				DownloadManifestEntry(fileEntry, module);
 			}
 		}
 
-		protected abstract string ReadRemoteFile(string URL, bool useAnonymousLong = false);
+		protected abstract string ReadRemoteFile(string url, bool useAnonymousLong = false);
 
-		protected abstract void DownloadRemoteFile(string URL, string localPath, long totalSize = 0, long contentOffset = 0,
+		protected abstract void DownloadRemoteFile(string url, string localPath, long totalSize = 0, long contentOffset = 0,
 			bool useAnonymousLogin = false);
 
-		public override bool IsModuleOutdated(EModule Module)
+		public override bool IsModuleOutdated(EModule module)
 		{
 			try
 			{
 				Version local;
 				Version remote;
 
-				switch (Module)
+				switch (module)
 				{
 					case EModule.Launcher:
 					{
@@ -294,7 +294,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					}
 					default:
 					{
-						throw new ArgumentOutOfRangeException(nameof(Module), Module, null);
+						throw new ArgumentOutOfRangeException(nameof(module), module, null);
 					}
 				}
 
@@ -307,13 +307,13 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 		}
 
-		protected virtual void DownloadManifestEntry(ManifestEntry Entry, EModule Module)
+		protected virtual void DownloadManifestEntry(ManifestEntry fileEntry, EModule module)
 		{
-			ModuleDownloadProgressArgs.Module = Module;
+			ModuleDownloadProgressArgs.Module = module;
 
 			string baseRemoteURL;
 			string baseLocalPath;
-			switch (Module)
+			switch (module)
 			{
 				case EModule.Launcher:
 				{
@@ -329,16 +329,16 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				}
 				default:
 				{
-					throw new ArgumentOutOfRangeException(nameof(Module), Module, "The module passed to DownloadManifestEntry was invalid.");
+					throw new ArgumentOutOfRangeException(nameof(module), module, "The module passed to DownloadManifestEntry was invalid.");
 				}
 			}
 
 			// Build the access strings
-			string remoteURL = $"{baseRemoteURL}{Entry.RelativePath}";
-			string localPath = $"{baseLocalPath}{Path.DirectorySeparatorChar}{Entry.RelativePath}";
+			string remoteURL = $"{baseRemoteURL}{fileEntry.RelativePath}";
+			string localPath = $"{baseLocalPath}{Path.DirectorySeparatorChar}{fileEntry.RelativePath}";
 
 			// Make sure we have a directory to put the file in
-			if (Path.GetDirectoryName(localPath) != null)
+			if (!string.IsNullOrEmpty(localPath) &&  Path.GetDirectoryName(localPath) != null)
 			{
 				Directory.CreateDirectory(Path.GetDirectoryName(localPath));
 			}
@@ -353,28 +353,28 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			// Write the current file progress to the install cookie
 			using (TextWriter textWriterProgress = new StreamWriter(ConfigHandler.GetInstallCookiePath()))
 			{
-				textWriterProgress.WriteLine(Entry);
+				textWriterProgress.WriteLine(fileEntry);
 				textWriterProgress.Flush();
 			}
 
 			if (File.Exists(localPath))
 			{
 				FileInfo fileInfo = new FileInfo(localPath);
-				if (fileInfo.Length != Entry.Size)
+				if (fileInfo.Length != fileEntry.Size)
 				{
 					// If the file is partial, resume the download.
-					if (fileInfo.Length < Entry.Size)
+					if (fileInfo.Length < fileEntry.Size)
 					{
-						Log.Info($"Resuming interrupted file \"{Path.GetFileNameWithoutExtension(Entry.RelativePath)}\" at byte {fileInfo.Length}.");
-						DownloadRemoteFile(remoteURL, localPath, Entry.Size, fileInfo.Length);
+						Log.Info($"Resuming interrupted file \"{Path.GetFileNameWithoutExtension(fileEntry.RelativePath)}\" at byte {fileInfo.Length}.");
+						DownloadRemoteFile(remoteURL, localPath, fileEntry.Size, fileInfo.Length);
 					}
 					else
 					{
 						// If it's larger than expected, toss it in the bin and try again.
-						Log.Info($"Restarting interrupted file \"{Path.GetFileNameWithoutExtension(Entry.RelativePath)}\": File bigger than expected.");
+						Log.Info($"Restarting interrupted file \"{Path.GetFileNameWithoutExtension(fileEntry.RelativePath)}\": File bigger than expected.");
 
 						File.Delete(localPath);
-						DownloadRemoteFile(remoteURL, localPath, Entry.Size);
+						DownloadRemoteFile(remoteURL, localPath, fileEntry.Size);
 					}
 				}
 				else
@@ -385,33 +385,21 @@ namespace Launchpad.Launcher.Handlers.Protocols
 						localHash = MD5Handler.GetStreamHash(fs);
 					}
 
-					if (localHash != Entry.Hash)
+					if (localHash != fileEntry.Hash)
 					{
 						// If the hash doesn't match, toss it in the bin and try again.
-						Log.Info($"Redownloading file \"{Path.GetFileNameWithoutExtension(Entry.RelativePath)}\": " +
-						         $"Hash sum mismatch. Local: {localHash}, Expected: {Entry.Hash}");
+						Log.Info($"Redownloading file \"{Path.GetFileNameWithoutExtension(fileEntry.RelativePath)}\": " +
+						         $"Hash sum mismatch. Local: {localHash}, Expected: {fileEntry.Hash}");
 
 						File.Delete(localPath);
-						DownloadRemoteFile(remoteURL, localPath, Entry.Size);
+						DownloadRemoteFile(remoteURL, localPath, fileEntry.Size);
 					}
 				}
 			}
 			else
 			{
 				// No file, download it
-				DownloadRemoteFile(remoteURL, localPath,Entry.Size);
-			}
-
-			if (ChecksHandler.IsRunningOnUnix())
-			{
-				// If we're dealing with a file that should be executable,
-				string gameName = Config.GetGameName();
-				bool bFileIsGameExecutable = (Path.GetFileName(localPath).EndsWith(".exe")) || (Path.GetFileName(localPath) == gameName);
-				if (bFileIsGameExecutable)
-				{
-					// Set the execute bits
-					UnixHandler.MakeExecutable(localPath);
-				}
+				DownloadRemoteFile(remoteURL, localPath,fileEntry.Size);
 			}
 
 			// We've finished the download, so empty the cookie
@@ -421,10 +409,10 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <summary>
 		/// Determines whether or not the local copy of the manifest for the specifed module is outdated.
 		/// </summary>
-		protected virtual bool IsModuleManifestOutdated(EModule Module)
+		protected virtual bool IsModuleManifestOutdated(EModule module)
 		{
 			string manifestPath;
-			switch (Module)
+			switch (module)
 			{
 				case EModule.Launcher:
 				{
@@ -438,13 +426,13 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				}
 				default:
 				{
-					throw new ArgumentOutOfRangeException(nameof(Module), Module, "The module passed to RefreshModuleManifest was invalid.");
+					throw new ArgumentOutOfRangeException(nameof(module), module, "The module passed to RefreshModuleManifest was invalid.");
 				}
 			}
 
 			if (File.Exists(manifestPath))
 			{
-				string remoteHash = GetRemoteModuleManifestChecksum(Module);
+				string remoteHash = GetRemoteModuleManifestChecksum(module);
 				using (Stream file = File.OpenRead(manifestPath))
 				{
 					string localHash = MD5Handler.GetStreamHash(file);
@@ -459,10 +447,10 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <summary>
 		/// Gets the checksum of the manifest for the specified module.
 		/// </summary>
-		protected virtual string GetRemoteModuleManifestChecksum(EModule Module)
+		protected virtual string GetRemoteModuleManifestChecksum(EModule module)
 		{
 			string checksum;
-			switch (Module)
+			switch (module)
 			{
 				case EModule.Launcher:
 				{
@@ -476,7 +464,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				}
 				default:
 				{
-					throw new ArgumentOutOfRangeException(nameof(Module), Module, null);
+					throw new ArgumentOutOfRangeException(nameof(module), module, null);
 				}
 			}
 
@@ -486,10 +474,10 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <summary>
 		/// Refreshes the current manifest by redownloading it, if required;
 		/// </summary>
-		protected virtual void RefreshModuleManifest(EModule Module)
+		protected virtual void RefreshModuleManifest(EModule module)
 		{
 			bool doesManifestExist;
-			switch (Module)
+			switch (module)
 			{
 				case EModule.Launcher:
 				{
@@ -503,73 +491,72 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				}
 				default:
 				{
-					throw new ArgumentOutOfRangeException(nameof(Module), Module, "The module passed to RefreshModuleManifest was invalid.");
+					throw new ArgumentOutOfRangeException(nameof(module), module, "The module passed to RefreshModuleManifest was invalid.");
 				}
 			}
 
 			if (doesManifestExist)
 			{
-				if (IsModuleManifestOutdated(Module))
+				if (IsModuleManifestOutdated(module))
 				{
-					DownloadModuleManifest(Module);
+					DownloadModuleManifest(module);
 				}
 			}
 			else
 			{
-				DownloadModuleManifest(Module);
+				DownloadModuleManifest(module);
 			}
 		}
 
 		/// <summary>
 		/// Downloads the manifest for the specified module, and backs up the old copy of the manifest.
 		/// </summary>
-		protected virtual void DownloadModuleManifest(EModule Module)
+		protected virtual void DownloadModuleManifest(EModule module)
 		{
-
-			string RemoteURL;
-			string LocalPath;
-			string OldLocalPath;
-			switch (Module)
+			string remoteURL;
+			string localPath;
+			string oldLocalPath;
+			switch (module)
 			{
 				case EModule.Launcher:
 				{
-					RemoteURL = Manifest.GetLaunchpadManifestURL();
-					LocalPath = ManifestHandler.GetLaunchpadManifestPath();
-					OldLocalPath = ManifestHandler.GetOldLaunchpadManifestPath();
+					remoteURL = Manifest.GetLaunchpadManifestURL();
+					localPath = ManifestHandler.GetLaunchpadManifestPath();
+					oldLocalPath = ManifestHandler.GetOldLaunchpadManifestPath();
 
 					break;
 				}
 				case EModule.Game:
 				{
-					RemoteURL = Manifest.GetGameManifestURL();
-					LocalPath = ManifestHandler.GetGameManifestPath();
-					OldLocalPath = ManifestHandler.GetOldGameManifestPath();
+					remoteURL = Manifest.GetGameManifestURL();
+					localPath = ManifestHandler.GetGameManifestPath();
+					oldLocalPath = ManifestHandler.GetOldGameManifestPath();
 
 					break;
 				}
 				default:
 				{
-					throw new ArgumentOutOfRangeException(nameof(Module), Module, "The module passed to DownloadModuleManifest was invalid.");
+					throw new ArgumentOutOfRangeException(nameof(module), module, "The module passed to DownloadModuleManifest was invalid.");
 				}
 			}
 
 			try
 			{
 				// Delete the old backup (if there is one)
-				if (File.Exists(OldLocalPath))
+				if (File.Exists(oldLocalPath))
 				{
-					File.Delete(OldLocalPath);
+					File.Delete(oldLocalPath);
 				}
 
 				// Create a backup of the old manifest so that we can compare them when updating the game
-				File.Move(LocalPath, OldLocalPath);
+				File.Move(localPath, oldLocalPath);
 			}
 			catch (IOException ioex)
 			{
 				Log.Warn("Failed to back up the old launcher manifest (IOException): " + ioex.Message);
 			}
 
-			DownloadRemoteFile(RemoteURL, LocalPath);
+			DownloadRemoteFile(remoteURL, localPath);
 		}
 
 		/// <summary>

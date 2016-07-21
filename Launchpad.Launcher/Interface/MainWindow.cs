@@ -101,6 +101,7 @@ namespace Launchpad.Launcher.Interface
 			// Set the window title
 			Title = LocalizationCatalog.GetString("Launchpad - ") + Config.GetGameName();
 
+			// Create a new changelog widget, and add it to the scrolled window
 			this.Browser = new Changelog(this.ScrolledBrowserWindow);
 			ScrolledBrowserWindow.ShowAll();
 
@@ -149,11 +150,11 @@ namespace Launchpad.Launcher.Interface
 						                                        DialogFlags.Modal,
 						                                        MessageType.Question,
 						                                        ButtonsType.OkCancel,
-						                                        string.Format(LocalizationCatalog.GetString(
+						                                        LocalizationCatalog.GetString(
 								                                        "This appears to be the first time you're starting the launcher.\n" +
-								                                        "Is this the location where you would like to install the game?" +
-								                                        "\n\n{0}"), ConfigHandler.GetLocalDir()
-						                                        ));
+								                                        "Is this the location where you would like to install the game?") +
+								                                        $"\n\n{ConfigHandler.GetLocalDir()}"
+						                                        );
 
 					if (shouldInstallHereDialog.Run() == (int)ResponseType.Ok)
 					{
@@ -574,10 +575,10 @@ namespace Launchpad.Launcher.Interface
 										DialogFlags.Modal,
 										MessageType.Question,
 										ButtonsType.YesNo,
-										string.Format(LocalizationCatalog.GetString(
+										LocalizationCatalog.GetString(
 												"Whoops! The game appears to have crashed.\n" +
 												"Would you like the launcher to verify the installation?"
-											)));
+											));
 
 				if (crashDialog.Run() == (int)ResponseType.Yes)
 				{

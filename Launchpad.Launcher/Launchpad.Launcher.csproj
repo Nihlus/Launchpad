@@ -102,7 +102,6 @@
     <Compile Include="Handlers\StatsHandler.cs" />
     <Compile Include="Handlers\GameHandler.cs" />
     <Compile Include="Handlers\LauncherHandler.cs" />
-    <Compile Include="Handlers\UnixHandler.cs" />
     <Compile Include="Handlers\ManifestHandler.cs" />
     <Compile Include="Handlers\Protocols\PatchProtocolHandler.cs" />
     <Compile Include="Handlers\Protocols\ManifestBasedProtocolHandler.cs" />

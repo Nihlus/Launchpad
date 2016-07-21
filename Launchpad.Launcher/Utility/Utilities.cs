@@ -31,12 +31,6 @@ namespace Launchpad.Launcher.Utility
 		/// Logger instance for this class.
 		/// </summary>
 		private static readonly ILog Log = LogManager.GetLogger(typeof(Utilities));
-
-		public static int Clamp(this int value, int min, int max)
-		{
-			return (value < min) ? min : (value > max) ? max : value;
-		}
-
 		/// <summary>
 		/// Sanitizes the input string, removing any \n, \r, or \0 characters.
 		/// </summary>

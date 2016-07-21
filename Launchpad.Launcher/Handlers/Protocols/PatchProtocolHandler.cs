@@ -81,7 +81,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// Determines whether the protocol can provide patches and updates for the provided platform.
 		/// </summary>
 		/// <returns><c>true</c> if the platform is available; otherwise, <c>false</c>.</returns>
-		public abstract bool IsPlatformAvailable(ESystemTarget Platform);
+		public abstract bool IsPlatformAvailable(ESystemTarget platform);
 
 		/// <summary>
 		/// Determines whether this protocol can provide access to a changelog.
@@ -110,7 +110,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <summary>
 		/// Determines whether or not the specified module is outdated.
 		/// </summary>
-		public abstract bool IsModuleOutdated(EModule Module);
+		public abstract bool IsModuleOutdated(EModule module);
 
 		/// <summary>
 		/// Installs the game.
@@ -147,19 +147,18 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <summary>
 		/// Downloads the latest version of the specified module.
 		/// </summary>
-		protected abstract void DownloadModule(EModule Module);
+		protected abstract void DownloadModule(EModule module);
 
 		/// <summary>
 		/// Updates the specified module to the latest version.
 		/// </summary>
-		/// <param name="Module">The module to update.</param>
-		public abstract void UpdateModule(EModule Module);
+		/// <param name="module">The module to update.</param>
+		public abstract void UpdateModule(EModule module);
 
 		/// <summary>
 		/// Verifies and repairs the files of the specified module.
 		/// </summary>
-		public abstract void VerifyModule(EModule Module);
-
+		public abstract void VerifyModule(EModule module);
 
 		protected void OnModuleDownloadProgressChanged()
 		{

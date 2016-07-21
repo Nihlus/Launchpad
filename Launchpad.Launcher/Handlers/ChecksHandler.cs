@@ -138,12 +138,13 @@ namespace Launchpad.Launcher.Handlers
 		{
 			//Is there an .install file in the directory?
 			bool bHasInstallationCookie = File.Exists(ConfigHandler.GetInstallCookiePath());
+
 			//Is the .install file empty? Assume false.
 			bool bIsInstallCookieEmpty = false;
 
 			if (bHasInstallationCookie)
 			{
-				bIsInstallCookieEmpty = String.IsNullOrEmpty(File.ReadAllText(ConfigHandler.GetInstallCookiePath()));
+				bIsInstallCookieEmpty = string.IsNullOrEmpty(File.ReadAllText(ConfigHandler.GetInstallCookiePath()));
 			}
 
 			return bIsInstallCookieEmpty;
@@ -153,11 +154,11 @@ namespace Launchpad.Launcher.Handlers
 		/// Checks whether or not the server provides binaries and patches for the specified platform.
 		/// </summary>
 		/// <returns><c>true</c>, if the server does provide files for the platform, <c>false</c> otherwise.</returns>
-		/// <param name="Platform">Platform.</param>
-		public bool IsPlatformAvailable(ESystemTarget Platform)
+		/// <param name="platform">platform.</param>
+		public bool IsPlatformAvailable(ESystemTarget platform)
 		{
 			PatchProtocolHandler patchService = Configuration.GetPatchProtocol();
-			return patchService.IsPlatformAvailable(Platform);
+			return patchService.IsPlatformAvailable(platform);
 		}
 	}
 }

@@ -44,7 +44,7 @@ namespace Launchpad.Utilities.Interface
 		private readonly ICatalog LocalizationCatalog = new Catalog("Launchpad", "./locale");
 
 		public MainWindow()
-			: base(Gtk.WindowType.Toplevel)
+			: base(WindowType.Toplevel)
 		{
 			this.Build();
 
@@ -73,9 +73,9 @@ namespace Launchpad.Utilities.Interface
 			generateGameManifestButton.Sensitive = false;
 			generateLaunchpadManifestButton.Sensitive = false;
 
-			string TargetDirectory = fileChooser.Filename;
+			string targetDirectory = fileChooser.Filename;
 
-			if (!Directory.GetFiles(TargetDirectory).Any(s => s.Contains("GameVersion.txt")))
+			if (!Directory.GetFiles(targetDirectory).Any(s => s.Contains("GameVersion.txt")))
 			{
 				MessageDialog dialog = new MessageDialog(this,
 					DialogFlags.Modal,
@@ -86,7 +86,7 @@ namespace Launchpad.Utilities.Interface
 
 				if (dialog.Run() == (int) ResponseType.Yes)
 				{
-					string gameVersionPath = $"{TargetDirectory}{System.IO.Path.DirectorySeparatorChar}GameVersion.txt";
+					string gameVersionPath = $"{targetDirectory}{System.IO.Path.DirectorySeparatorChar}GameVersion.txt";
 					File.WriteAllText(gameVersionPath, new Version("1.0.0").ToString());
 
 					dialog.Destroy();
@@ -98,7 +98,7 @@ namespace Launchpad.Utilities.Interface
 				}
 			}
 
-			Manifest.GenerateManifest(TargetDirectory, EManifestType.Game);
+			Manifest.GenerateManifest(targetDirectory, EManifestType.Game);
 		}
 
 		protected void OnGenerateLaunchpadManifestButtonClicked(object sender, EventArgs e)
@@ -106,9 +106,9 @@ namespace Launchpad.Utilities.Interface
 			generateGameManifestButton.Sensitive = false;
 			generateLaunchpadManifestButton.Sensitive = false;
 
-			string TargetDirectory = fileChooser.Filename;
+			string targetDirectory = fileChooser.Filename;
 
-			Manifest.GenerateManifest(TargetDirectory, EManifestType.Launchpad);
+			Manifest.GenerateManifest(targetDirectory, EManifestType.Launchpad);
 
 		}
 

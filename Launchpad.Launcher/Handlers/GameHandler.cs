@@ -109,7 +109,6 @@ namespace Launchpad.Launcher.Handlers
 			t.Start();
 		}
 
-		//TODO: Implement better crash or failure to launch recognition
 		/// <summary>
 		/// Launches the game.
 		/// </summary>
@@ -118,26 +117,36 @@ namespace Launchpad.Launcher.Handlers
 			//start new process of the game executable
 			try
 			{
-				ProcessStartInfo gameStartInfo = new ProcessStartInfo();
-				gameStartInfo.UseShellExecute = false;
-				gameStartInfo.FileName = Config.GetGameExecutable();
+				ProcessStartInfo gameStartInfo = new ProcessStartInfo
+				{
+					UseShellExecute = false,
+					FileName = Config.GetGameExecutable()
+				};
 				GameExitArgs.GameName = Config.GetGameName();
 
 				Log.Info($"Launching game. \n\tExecutable path: {gameStartInfo.FileName}");
 
-				Process game = Process.Start(gameStartInfo);
-				game.EnableRaisingEvents = true;
-
-				game.Exited += delegate
+				Process gameProcess = new Process
 				{
-					if (game.ExitCode != 0)
+					StartInfo = gameStartInfo,
+					EnableRaisingEvents = true
+				};
+
+				gameProcess.Exited += delegate
+				{
+					if (gameProcess.ExitCode != 0)
 					{
-						Log.Info($"The game exited with an exit code of {game.ExitCode}. " +
+						Log.Info($"The game exited with an exit code of {gameProcess.ExitCode}. " +
 						         "There may have been issues during runtime, or the game may not have started at all.");
 					}
-					GameExitArgs.ExitCode = game.ExitCode;
+					GameExitArgs.ExitCode = gameProcess.ExitCode;
 					OnGameExited();
+
+					// Manual disposing
+					gameProcess.Dispose();
 				};
+
+				gameProcess.Start();
 			}
 			catch (IOException ioex)
 			{

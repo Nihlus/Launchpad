@@ -74,7 +74,7 @@ namespace Launchpad.Launcher
 		/// <param name="args">The event object containing the information about the exception.</param>
 		private static void OnGLibUnhandledException(GLib.UnhandledExceptionArgs args)
 		{
-			OnUnhandledException(null, new UnhandledExceptionEventArgs(args.ExceptionObject, args.IsTerminating));
+			OnUnhandledException(null, args);
 		}
 
 		/// <summary>

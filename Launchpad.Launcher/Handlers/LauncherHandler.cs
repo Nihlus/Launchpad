@@ -153,11 +153,6 @@ namespace Launchpad.Launcher.Handlers
 
 				File.WriteAllText(updateScriptPath, updateScriptSource);
 
-				if (ChecksHandler.IsRunningOnUnix())
-				{
-					UnixHandler.MakeExecutable(updateScriptPath);
-				}
-
 				ProcessStartInfo updateShellProcess = new ProcessStartInfo
 				{
 					FileName = updateScriptPath,
@@ -250,7 +245,6 @@ namespace Launchpad.Launcher.Handlers
 		{
 			if (ChangelogDownloadFinished != null)
 			{
-				//raise the event
 				ChangelogDownloadFinished(this, ChangelogDownloadFinishedArgs);
 			}
 		}

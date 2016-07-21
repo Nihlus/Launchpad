@@ -126,7 +126,7 @@ namespace Launchpad.Launcher.Handlers
 						string[] rawGameManifest = File.ReadAllLines(GetGameManifestPath());
 						foreach (string rawEntry in rawGameManifest)
 						{
-							ManifestEntry newEntry = new ManifestEntry();
+							ManifestEntry newEntry;
 							if (ManifestEntry.TryParse(rawEntry, out newEntry))
 							{
 								gameManifest.Add(newEntry);
@@ -157,7 +157,7 @@ namespace Launchpad.Launcher.Handlers
 						string[] rawOldGameManifest = File.ReadAllLines(GetOldGameManifestPath());
 						foreach (string rawEntry in rawOldGameManifest)
 						{
-							ManifestEntry newEntry = new ManifestEntry();
+							ManifestEntry newEntry;
 							if (ManifestEntry.TryParse(rawEntry, out newEntry))
 							{
 								oldGameManifest.Add(newEntry);
@@ -189,7 +189,7 @@ namespace Launchpad.Launcher.Handlers
 						string[] rawLaunchpadManifest = File.ReadAllLines(GetLaunchpadManifestPath());
 						foreach (string rawEntry in rawLaunchpadManifest)
 						{
-							ManifestEntry newEntry = new ManifestEntry();
+							ManifestEntry newEntry;
 							if (ManifestEntry.TryParse(rawEntry, out newEntry))
 							{
 								launchpadManifest.Add(newEntry);
@@ -220,7 +220,7 @@ namespace Launchpad.Launcher.Handlers
 						string[] rawOldLaunchpadManifest = File.ReadAllLines(GetOldGameManifestPath());
 						foreach (string rawEntry in rawOldLaunchpadManifest)
 						{
-							ManifestEntry newEntry = new ManifestEntry();
+							ManifestEntry newEntry;
 							if (ManifestEntry.TryParse(rawEntry, out newEntry))
 							{
 								oldLaunchpadManifest.Add(newEntry);
@@ -409,45 +409,47 @@ namespace Launchpad.Launcher.Handlers
 			// Clear out the entry for the new data
 			inEntry = new ManifestEntry();
 
-			if (!string.IsNullOrEmpty(rawInput))
+			if (string.IsNullOrEmpty(rawInput))
 			{
-				// Remove any and all bad characters from the input string,
-				// Such as \0, \n and \r.
-				string cleanInput = Utilities.SanitizeString(rawInput);
-
-				// Split the string into its three components - file, hash and size
-				string[] entryElements = cleanInput.Split(':');
-
-				// If we have three elements (which we should always have), set them in the provided entry
-				if (entryElements.Length == 3)
-				{
-					// Sanitize the manifest path, converting \ to / on unix and / to \ on Windows.
-					if (ChecksHandler.IsRunningOnUnix())
-					{
-						inEntry.RelativePath = entryElements[0].Replace("\\", "/");
-					}
-					else
-					{
-						inEntry.RelativePath = entryElements[0].Replace("/", "\\");
-					}
-
-					// Set the hash to the second element
-					inEntry.Hash = entryElements[1];
-
-					// Attempt to parse the final element as a long-type byte count.
-					long parsedSize;
-					if (!long.TryParse(entryElements[2], out parsedSize))
-					{
-						// Oops. The parsing failed, so this entry is invalid.
-						return false;
-					}
-
-					inEntry.Size = parsedSize;
-					return true;
-				}
+				return false;
 			}
 
-			return false;
+			// Remove any and all bad characters from the input string,
+			// Such as \0, \n and \r.
+			string cleanInput = Utilities.SanitizeString(rawInput);
+
+			// Split the string into its three components - file, hash and size
+			string[] entryElements = cleanInput.Split(':');
+
+			// If we have three elements (which we should always have), set them in the provided entry
+			if (entryElements.Length != 3)
+			{
+				return false;
+			}
+
+			// Sanitize the manifest path, converting \ to / on unix and / to \ on Windows.
+			if (ChecksHandler.IsRunningOnUnix())
+			{
+				inEntry.RelativePath = entryElements[0].Replace("\\", "/");
+			}
+			else
+			{
+				inEntry.RelativePath = entryElements[0].Replace("/", "\\");
+			}
+
+			// Set the hash to the second element
+			inEntry.Hash = entryElements[1];
+
+			// Attempt to parse the final element as a long-type byte count.
+			long parsedSize;
+			if (!long.TryParse(entryElements[2], out parsedSize))
+			{
+				// Oops. The parsing failed, so this entry is invalid.
+				return false;
+			}
+
+			inEntry.Size = parsedSize;
+			return true;
 		}
 
 		/// <summary>
@@ -464,14 +466,14 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// Determines whether the specified <see cref="Launchpad.Launcher.Handlers.ManifestEntry"/> is equal to the current <see cref="Launchpad.Launcher.Handlers.ManifestEntry"/>.
 		/// </summary>
-		/// <param name="Other">The <see cref="Launchpad.Launcher.Handlers.ManifestEntry"/> to compare with the current <see cref="Launchpad.Launcher.Handlers.ManifestEntry"/>.</param>
+		/// <param name="other">The <see cref="Launchpad.Launcher.Handlers.ManifestEntry"/> to compare with the current <see cref="Launchpad.Launcher.Handlers.ManifestEntry"/>.</param>
 		/// <returns><c>true</c> if the specified <see cref="Launchpad.Launcher.Handlers.ManifestEntry"/> is equal to the current
 		/// <see cref="Launchpad.Launcher.Handlers.ManifestEntry"/>; otherwise, <c>false</c>.</returns>
-		public bool Equals(ManifestEntry Other)
+		public bool Equals(ManifestEntry other)
 		{
-			return this.RelativePath == Other.RelativePath &&
-			this.Hash == Other.Hash &&
-			this.Size == Other.Size;
+			return this.RelativePath == other.RelativePath &&
+			this.Hash == other.Hash &&
+			this.Size == other.Size;
 		}
 
 		/// <summary>

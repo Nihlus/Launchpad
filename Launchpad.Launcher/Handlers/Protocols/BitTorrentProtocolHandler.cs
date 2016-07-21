@@ -40,7 +40,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			return false;
 		}
 
-		public override bool IsPlatformAvailable(ESystemTarget Platform)
+		public override bool IsPlatformAvailable(ESystemTarget platform)
 		{
 			return false;
 		}
@@ -65,7 +65,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			return null;
 		}
 
-		public override bool IsModuleOutdated(EModule Module)
+		public override bool IsModuleOutdated(EModule module)
 		{
 			throw new NotImplementedException();
 		}
@@ -75,17 +75,17 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			throw new NotImplementedException();
 		}
 
-		protected override void DownloadModule(EModule Module)
+		protected override void DownloadModule(EModule module)
 		{
 			throw new NotImplementedException();
 		}
 
-		public override void UpdateModule(EModule Module)
+		public override void UpdateModule(EModule module)
 		{
 			throw new NotImplementedException();
 		}
 
-		public override void VerifyModule(EModule Module)
+		public override void VerifyModule(EModule module)
 		{
 			throw new NotImplementedException();
 		}

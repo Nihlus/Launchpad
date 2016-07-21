@@ -151,7 +151,7 @@ namespace Launchpad.Launcher.Handlers
 		public void Initialize()
 		{
 			//Since Initialize will write to the config, we'll create the parser here and load the file later
-			FileIniDataParser Parser = new FileIniDataParser();
+			FileIniDataParser parser = new FileIniDataParser();
 
 			string configDir = GetConfigDir();
 			string configPath = GetConfigPath();
@@ -181,7 +181,7 @@ namespace Launchpad.Launcher.Handlers
 					//read the file as an INI file
 					try
 					{
-						IniData data = Parser.ReadFile(GetConfigPath());
+						IniData data = parser.ReadFile(GetConfigPath());
 
 						data.Sections.AddSection(SectionNameLocal);
 						data.Sections.AddSection(SectionNameRemote);
@@ -211,7 +211,7 @@ namespace Launchpad.Launcher.Handlers
 						data[SectionNameLaunchpad].AddKey(LaunchpadOfficialUpdatesKey, DefaultUseOfficialUpdates);
 						data[SectionNameLaunchpad].AddKey(LaunchpadAnonymousStatsKey, DefaultAllowAnonymousStatus);
 
-						WriteConfig(Parser, data);
+						WriteConfig(parser, data);
 					}
 					catch (IOException ioex)
 					{
@@ -229,112 +229,112 @@ namespace Launchpad.Launcher.Handlers
 						small informational header with the date and change.
 					*/
 
-					IniData data = Parser.ReadFile(GetConfigPath());
+					IniData data = parser.ReadFile(GetConfigPath());
 
 					// Update the user-visible version of the launcher
-					data["Local"]["LauncherVersion"] = defaultLauncherVersion.ToString();
+					data[SectionNameLocal][LocalVersionKey] = defaultLauncherVersion.ToString();
 
 					// ...
 
 					// March 22 - 2016: Changed GUID generation to create a unique GUID for each game name
 					// Update config files without GUID keys
-					string seededGUID = GenerateSeededGUID(data["Local"].GetKeyData("GameName").Value);
-					if (!data["Local"].ContainsKey("GUID"))
+					string seededGUID = GenerateSeededGUID(data[SectionNameLocal].GetKeyData(LocalGameNameKey).Value);
+					if (!data[SectionNameLocal].ContainsKey(LocalGameGUIDKey))
 					{
-						data["Local"].AddKey("GUID", seededGUID);
+						data[SectionNameLocal].AddKey(LocalGameGUIDKey, seededGUID);
 					}
 					else
 					{
 						// Update the game GUID
-						data["Local"]["GUID"] = seededGUID;
+						data[SectionNameLocal][LocalGameGUIDKey] = seededGUID;
 					}
 					// End March 22 - 2016
 
 					// Update config files without protocol keys
-					if (!data["Remote"].ContainsKey("Protocol"))
+					if (!data[SectionNameRemote].ContainsKey(RemoteProtocolKey))
 					{
-						data["Remote"].AddKey("Protocol", "FTP");
+						data[SectionNameRemote].AddKey(RemoteProtocolKey, DefaultProtocol);
 					}
 
 					// Update config files without changelog keys
-					if (!data["Remote"].ContainsKey("ChangelogURL"))
+					if (!data[SectionNameRemote].ContainsKey(RemoteChangelogURLKey))
 					{
-						data["Remote"].AddKey("ChangelogURL", "http://directorate.asuscomm.com/launchpad/changelog/changelog.html");
+						data[SectionNameRemote].AddKey(RemoteChangelogURLKey, DefaultChangelogURL);
 					}
 
 					// March 21 - 2016: Moves FTP url to its own section
 					// March 21 - 2016: Renames FTP credential keys
 					// March 21 - 2016: Adds sections for FTP, HTTP and BitTorrent.
 					// March 21 - 2016: Adds configuration option for number of times to retry broken files
-					if (data["Remote"].ContainsKey("FTPUsername"))
+					if (data[SectionNameRemote].ContainsKey("FTPUsername"))
 					{
-						string username = data["Remote"].GetKeyData("FTPUsername").Value;
-						data["Remote"].RemoveKey("FTPUsername");
+						string username = data[SectionNameRemote].GetKeyData("FTPUsername").Value;
+						data[SectionNameRemote].RemoveKey("FTPUsername");
 
-						data["Remote"].AddKey("Username", username);
+						data[SectionNameRemote].AddKey(RemoteUsernameKey, username);
 
 					}
-					if (data["Remote"].ContainsKey("FTPPassword"))
+					if (data[SectionNameRemote].ContainsKey("FTPPassword"))
 					{
-						string password = data["Remote"].GetKeyData("FTPPassword").Value;
-						data["Remote"].RemoveKey("FTPPassword");
+						string password = data[SectionNameRemote].GetKeyData("FTPPassword").Value;
+						data[SectionNameRemote].RemoveKey("FTPPassword");
 
-						data["Remote"].AddKey("Password", password);
+						data[SectionNameRemote].AddKey(RemotePasswordKey, password);
 					}
 
-					if (!data.Sections.ContainsSection("FTP"))
+					if (!data.Sections.ContainsSection(SectionNameFTP))
 					{
-						data.Sections.AddSection("FTP");
+						data.Sections.AddSection(SectionNameFTP);
 					}
 
-					if (data["Remote"].ContainsKey("FTPUrl"))
+					if (data[SectionNameRemote].ContainsKey("FTPUrl"))
 					{
-						string ftpurl = data["Remote"].GetKeyData("FTPUrl").Value;
-						data["Remote"].RemoveKey("FTPUrl");
+						string ftpurl = data[SectionNameRemote].GetKeyData("FTPUrl").Value;
+						data[SectionNameRemote].RemoveKey("FTPUrl");
 
-						data["FTP"].AddKey("URL", ftpurl);
+						data[SectionNameFTP].AddKey(FTPURLKey, ftpurl);
 					}
 
-					if (!data.Sections.ContainsSection("HTTP"))
+					if (!data.Sections.ContainsSection(SectionNameHTTP))
 					{
-						data.Sections.AddSection("HTTP");
+						data.Sections.AddSection(SectionNameHTTP);
 					}
 
-					if (!data["HTTP"].ContainsKey("URL"))
+					if (!data[SectionNameHTTP].ContainsKey(HTTPURLKey))
 					{
-						data["HTTP"].AddKey("URL", "http://directorate.asuscomm.com/launchpad");
+						data[SectionNameHTTP].AddKey(HTTPURLKey, "http://directorate.asuscomm.com/launchpad");
 					}
 
-					if (!data.Sections.ContainsSection("BitTorrent"))
+					if (!data.Sections.ContainsSection(SectionNameBitTorrent))
 					{
-						data.Sections.AddSection("BitTorrent");
+						data.Sections.AddSection(SectionNameBitTorrent);
 					}
 
-					if (!data["BitTorrent"].ContainsKey("Magnet"))
+					if (!data[SectionNameBitTorrent].ContainsKey("Magnet"))
 					{
-						data["BitTorrent"].AddKey("Magnet", "");
+						data[SectionNameBitTorrent].AddKey("Magnet", "");
 					}
 
-					if (!data["Launchpad"].ContainsKey("bAllowAnonymousStats"))
+					if (!data[SectionNameLaunchpad].ContainsKey("bAllowAnonymousStats"))
 					{
-						data["Launchpad"].AddKey("bAllowAnonymousStats", "true");
+						data[SectionNameLaunchpad].AddKey("bAllowAnonymousStats", "true");
 					}
 
-					if (!data["Remote"].ContainsKey("FileRetries"))
+					if (!data[SectionNameRemote].ContainsKey(RemoteFileRetriesKey))
 					{
-						data["Remote"].AddKey("FileRetries", "2");
+						data[SectionNameRemote].AddKey(RemoteFileRetriesKey, "2");
 					}
 					// End March 21 - 2016
 
 					// June 2 - 2016: Adds main executable redirection option
-					if (!data["Local"].ContainsKey("MainExecutuableName"))
+					if (!data[SectionNameLocal].ContainsKey("MainExecutuableName"))
 					{
-						string gameName = data["Local"]["GameName"];
-						data["Local"].AddKey("MainExecutableName", gameName);
+						string gameName = data[SectionNameLocal][LocalGameNameKey];
+						data[SectionNameLocal].AddKey(LocalMainExecutableNameKey, gameName);
 					}
 
 					// ...
-					WriteConfig(Parser, data);
+					WriteConfig(parser, data);
 				}
 			}
 
@@ -342,12 +342,20 @@ namespace Launchpad.Launcher.Handlers
 			if (!File.Exists(GetInstallGUIDPath()))
 			{
 				// Make sure all the folders needed exist.
-				string GUIDDirectoryPath = Path.GetDirectoryName(GetInstallGUIDPath());
-				Directory.CreateDirectory(GUIDDirectoryPath);
+				string installGUIDDirectoryPath = Path.GetDirectoryName(GetInstallGUIDPath());
+				if (string.IsNullOrEmpty(installGUIDDirectoryPath))
+				{
+					Log.Error("Could not get a valid path for the creation of the install GUID folder.\n" +
+					          "This is most likely due to a fault in the operating system.");
+				}
+				else
+				{
+					Directory.CreateDirectory(installGUIDDirectoryPath);
+				}
 
 				// Generate and store a GUID.
-				string GeneratedGUID = Guid.NewGuid().ToString();
-				File.WriteAllText(GetInstallGUIDPath(), GeneratedGUID);
+				string generatedInstallGUID = Guid.NewGuid().ToString();
+				File.WriteAllText(GetInstallGUIDPath(), generatedInstallGUID);
 			}
 			else
 			{
@@ -356,8 +364,8 @@ namespace Launchpad.Launcher.Handlers
 				if (guidInfo.Length <= 0)
 				{
 					// Generate and store a GUID.
-					string GeneratedGUID = Guid.NewGuid().ToString();
-					File.WriteAllText(GetInstallGUIDPath(), GeneratedGUID);
+					string generatedInstallGUID = Guid.NewGuid().ToString();
+					File.WriteAllText(GetInstallGUIDPath(), generatedInstallGUID);
 				}
 			}
 		}
@@ -529,7 +537,7 @@ namespace Launchpad.Launcher.Handlers
 		{
 			try
 			{
-                Version gameVersion = null;
+				Version gameVersion;
 				string rawGameVersion = File.ReadAllText(GetGameVersionPath());
 
 				if (Version.TryParse(rawGameVersion, out gameVersion))
@@ -618,10 +626,10 @@ namespace Launchpad.Launcher.Handlers
 			{
 				try
 				{
-					FileIniDataParser Parser = new FileIniDataParser();
-					IniData data = Parser.ReadFile(GetConfigPath());
+					FileIniDataParser parser = new FileIniDataParser();
+					IniData data = parser.ReadFile(GetConfigPath());
 
-					string changelogURL = data["Remote"]["ChangelogURL"];
+					string changelogURL = data[SectionNameRemote][RemoteChangelogURLKey];
 
 					return changelogURL;
 
@@ -644,10 +652,10 @@ namespace Launchpad.Launcher.Handlers
 			{
 				try
 				{
-					FileIniDataParser Parser = new FileIniDataParser();
-					IniData data = Parser.ReadFile(GetConfigPath());
+					FileIniDataParser parser = new FileIniDataParser();
+					IniData data = parser.ReadFile(GetConfigPath());
 
-					string launcherVersion = data["Local"]["LauncherVersion"];
+					string launcherVersion = data[SectionNameLocal][LocalVersionKey];
 
 					Version localLauncherVersion;
 					if (Version.TryParse(launcherVersion, out localLauncherVersion))
@@ -678,10 +686,10 @@ namespace Launchpad.Launcher.Handlers
 			{
 				try
 				{
-					FileIniDataParser Parser = new FileIniDataParser();
-					IniData data = Parser.ReadFile(GetConfigPath());
+					FileIniDataParser parser = new FileIniDataParser();
+					IniData data = parser.ReadFile(GetConfigPath());
 
-					string gameName = data["Local"]["GameName"];
+					string gameName = data[SectionNameLocal][LocalGameNameKey];
 
 					return gameName;
 				}
@@ -693,18 +701,6 @@ namespace Launchpad.Launcher.Handlers
 			}
 		}
 
-		// TODO: More dynamic loading of protocols? Maybe even a plugin system?
-		// Could use a static registry list in PatchProtocolHandler where plugin
-		// protocols register their keys and types
-		//
-		// private static readonly List<ProtocolDescriptor> AvailableProtocols = new List<ProtocolDescriptor>();
-		// ProtocolDescriptor protocol = new ProtocolDescriptor();
-		// protocol.Key = "HyperspaceRTL";
-		// protocol.Type = typeof(this);
-		//
-		// PatchProtocolHandler.RegisterProtocol(protocol);
-		// PatchProtocolHandler.UnregisterProtocol(protocol);
-		//
 		/// <summary>
 		/// Gets an instance of the desired patch protocol. Currently, FTP, HTTP and BitTorrent are supported.
 		/// </summary>
@@ -715,10 +711,10 @@ namespace Launchpad.Launcher.Handlers
 			{
 				try
 				{
-					FileIniDataParser Parser = new FileIniDataParser();
-					IniData data = Parser.ReadFile(GetConfigPath());
+					FileIniDataParser parser = new FileIniDataParser();
+					IniData data = parser.ReadFile(GetConfigPath());
 
-					string patchProtocol = data["Remote"]["Protocol"];
+					string patchProtocol = data[SectionNameRemote][RemoteProtocolKey];
 
 					switch (patchProtocol)
 					{
@@ -759,10 +755,10 @@ namespace Launchpad.Launcher.Handlers
 			{
 				try
 				{
-					FileIniDataParser Parser = new FileIniDataParser();
-					IniData data = Parser.ReadFile(GetConfigPath());
+					FileIniDataParser parser = new FileIniDataParser();
+					IniData data = parser.ReadFile(GetConfigPath());
 
-					return data["Remote"]["Protocol"];
+					return data[SectionNameRemote][RemoteProtocolKey];
 				}
 				catch (IOException ioex)
 				{
@@ -775,8 +771,8 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// Sets the name of the game.
 		/// </summary>
-		/// <param name="GameName">Game name.</param>
-		public void SetGameName(string GameName)
+		/// <param name="gameName">Game name.</param>
+		public void SetGameName(string gameName)
 		{
 			lock (ReadLock)
 			{
@@ -784,12 +780,12 @@ namespace Launchpad.Launcher.Handlers
 				{
 					try
 					{
-						FileIniDataParser Parser = new FileIniDataParser();
-						IniData data = Parser.ReadFile(GetConfigPath());
+						FileIniDataParser parser = new FileIniDataParser();
+						IniData data = parser.ReadFile(GetConfigPath());
 
-						data["Local"]["GameName"] = GameName;
+						data[SectionNameLocal][LocalGameNameKey] = gameName;
 
-						WriteConfig(Parser, data);
+						WriteConfig(parser, data);
 					}
 					catch (IOException ioex)
 					{
@@ -814,10 +810,10 @@ namespace Launchpad.Launcher.Handlers
 			{
 				try
 				{
-					FileIniDataParser Parser = new FileIniDataParser();
-					IniData data = Parser.ReadFile(GetConfigPath());
+					FileIniDataParser parser = new FileIniDataParser();
+					IniData data = parser.ReadFile(GetConfigPath());
 
-					string systemTarget = data["Local"]["SystemTarget"];
+					string systemTarget = data[SectionNameLocal][LocalSystemTargetKey];
 
 					return Utilities.ParseSystemTarget(systemTarget);
 				}
@@ -837,8 +833,8 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// Sets the system target.
 		/// </summary>
-		/// <param name="SystemTarget">System target.</param>
-		public void SetSystemTarget(ESystemTarget SystemTarget)
+		/// <param name="systemTarget">System target.</param>
+		public void SetSystemTarget(ESystemTarget systemTarget)
 		{
 			//possible values are:
 			//Win64
@@ -851,12 +847,12 @@ namespace Launchpad.Launcher.Handlers
 				{
 					try
 					{
-						FileIniDataParser Parser = new FileIniDataParser();
-						IniData data = Parser.ReadFile(GetConfigPath());
+						FileIniDataParser parser = new FileIniDataParser();
+						IniData data = parser.ReadFile(GetConfigPath());
 
-						data["Local"]["SystemTarget"] = SystemTarget.ToString();
+						data[SectionNameLocal][LocalSystemTargetKey] = systemTarget.ToString();
 
-						WriteConfig(Parser, data);
+						WriteConfig(parser, data);
 					}
 					catch (IOException ioex)
 					{
@@ -876,10 +872,10 @@ namespace Launchpad.Launcher.Handlers
 			{
 				try
 				{
-					FileIniDataParser Parser = new FileIniDataParser();
-					IniData data = Parser.ReadFile(GetConfigPath());
+					FileIniDataParser parser = new FileIniDataParser();
+					IniData data = parser.ReadFile(GetConfigPath());
 
-					string remoteUsername = data["Remote"]["Username"];
+					string remoteUsername = data[SectionNameRemote][RemoteUsernameKey];
 
 					return remoteUsername;
 				}
@@ -894,8 +890,8 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// Sets the username for the remote service.
 		/// </summary>
-		/// <param name="Username">The remote username..</param>
-		public void SetRemoteUsername(string Username)
+		/// <param name="username">The remote username..</param>
+		public void SetRemoteUsername(string username)
 		{
 			lock (ReadLock)
 			{
@@ -903,12 +899,12 @@ namespace Launchpad.Launcher.Handlers
 				{
 					try
 					{
-						FileIniDataParser Parser = new FileIniDataParser();
-						IniData data = Parser.ReadFile(GetConfigPath());
+						FileIniDataParser parser = new FileIniDataParser();
+						IniData data = parser.ReadFile(GetConfigPath());
 
-						data["Remote"]["Username"] = Username;
+						data[SectionNameRemote][RemoteUsernameKey] = username;
 
-						WriteConfig(Parser, data);
+						WriteConfig(parser, data);
 					}
 					catch (IOException ioex)
 					{
@@ -928,10 +924,10 @@ namespace Launchpad.Launcher.Handlers
 			{
 				try
 				{
-					FileIniDataParser Parser = new FileIniDataParser();
-					IniData data = Parser.ReadFile(GetConfigPath());
+					FileIniDataParser parser = new FileIniDataParser();
+					IniData data = parser.ReadFile(GetConfigPath());
 
-					string remotePassword = data["Remote"]["Password"];
+					string remotePassword = data[SectionNameRemote][RemotePasswordKey];
 
 					return remotePassword;
 				}
@@ -946,8 +942,8 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// Sets the password for the remote service.
 		/// </summary>
-		/// <param name="Password">The remote password.</param>
-		public void SetRemotePassword(string Password)
+		/// <param name="password">The remote password.</param>
+		public void SetRemotePassword(string password)
 		{
 			lock (ReadLock)
 			{
@@ -955,12 +951,12 @@ namespace Launchpad.Launcher.Handlers
 				{
 					try
 					{
-						FileIniDataParser Parser = new FileIniDataParser();
-						IniData data = Parser.ReadFile(GetConfigPath());
+						FileIniDataParser parser = new FileIniDataParser();
+						IniData data = parser.ReadFile(GetConfigPath());
 
-						data["Remote"]["Password"] = Password;
+						data[SectionNameRemote][RemotePasswordKey] = password;
 
-						WriteConfig(Parser, data);
+						WriteConfig(parser, data);
 					}
 					catch (IOException ioex)
 					{
@@ -980,10 +976,10 @@ namespace Launchpad.Launcher.Handlers
 			{
 				try
 				{
-					FileIniDataParser Parser = new FileIniDataParser();
-					IniData data = Parser.ReadFile(GetConfigPath());
+					FileIniDataParser parser = new FileIniDataParser();
+					IniData data = parser.ReadFile(GetConfigPath());
 
-					string fileRetries = data["Remote"]["FileRetries"];
+					string fileRetries = data[SectionNameRemote][RemoteFileRetriesKey];
 
 					int retries;
 					if (int.TryParse(fileRetries, out retries))
@@ -1055,14 +1051,14 @@ namespace Launchpad.Launcher.Handlers
 			{
 				try
 				{
-					FileIniDataParser Parser = new FileIniDataParser();
+					FileIniDataParser parser = new FileIniDataParser();
 
 					string configPath = GetConfigPath();
-					IniData data = Parser.ReadFile(configPath);
+					IniData data = parser.ReadFile(configPath);
 
-					string FTPURL = data["FTP"]["URL"];
+					string url = data[SectionNameFTP][FTPURLKey];
 
-					return FTPURL;
+					return url;
 				}
 				catch (IOException ioex)
 				{
@@ -1076,8 +1072,8 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// Sets the base FTP URL.
 		/// </summary>
-		/// <param name="Url">URL.</param>
-		public void SetBaseFTPUrl(string Url)
+		/// <param name="url">URL.</param>
+		public void SetBaseFTPUrl(string url)
 		{
 			lock (ReadLock)
 			{
@@ -1085,12 +1081,12 @@ namespace Launchpad.Launcher.Handlers
 				{
 					try
 					{
-						FileIniDataParser Parser = new FileIniDataParser();
-						IniData data = Parser.ReadFile(GetConfigPath());
+						FileIniDataParser parser = new FileIniDataParser();
+						IniData data = parser.ReadFile(GetConfigPath());
 
-						data["FTP"]["URL"] = Url;
+						data[SectionNameFTP][FTPURLKey] = url;
 
-						WriteConfig(Parser, data);
+						WriteConfig(parser, data);
 					}
 					catch (IOException ioex)
 					{
@@ -1110,14 +1106,14 @@ namespace Launchpad.Launcher.Handlers
 			{
 				try
 				{
-					FileIniDataParser Parser = new FileIniDataParser();
+					FileIniDataParser parser = new FileIniDataParser();
 
 					string configPath = GetConfigPath();
-					IniData data = Parser.ReadFile(configPath);
+					IniData data = parser.ReadFile(configPath);
 
-					string HTTPURL = data["HTTP"]["URL"];
+					string url = data[SectionNameHTTP][HTTPURLKey];
 
-					return HTTPURL;
+					return url;
 				}
 				catch (IOException ioex)
 				{
@@ -1131,8 +1127,8 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// Sets the base HTTP URL.
 		/// </summary>
-		/// <param name="Url">The new URL.</param>
-		public void SetBaseHTTPUrl(string Url)
+		/// <param name="url">The new URL.</param>
+		public void SetBaseHTTPUrl(string url)
 		{
 			lock (ReadLock)
 			{
@@ -1140,12 +1136,12 @@ namespace Launchpad.Launcher.Handlers
 				{
 					try
 					{
-						FileIniDataParser Parser = new FileIniDataParser();
-						IniData data = Parser.ReadFile(GetConfigPath());
+						FileIniDataParser parser = new FileIniDataParser();
+						IniData data = parser.ReadFile(GetConfigPath());
 
-						data["HTTP"]["URL"] = Url;
+						data[SectionNameHTTP][HTTPURLKey] = url;
 
-						WriteConfig(Parser, data);
+						WriteConfig(parser, data);
 					}
 					catch (IOException ioex)
 					{
@@ -1165,12 +1161,12 @@ namespace Launchpad.Launcher.Handlers
 			{
 				try
 				{
-					FileIniDataParser Parser = new FileIniDataParser();
+					FileIniDataParser parser = new FileIniDataParser();
 
 					string configPath = GetConfigPath();
-					IniData data = Parser.ReadFile(configPath);
+					IniData data = parser.ReadFile(configPath);
 
-					string magnetLink = data["BitTorrent"]["Magnet"];
+					string magnetLink = data[SectionNameBitTorrent]["Magnet"];
 
 					return magnetLink;
 				}
@@ -1186,8 +1182,8 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// Sets the BitTorrent magnet link.
 		/// </summary>
-		/// <param name="Magnet">The new magnet link.</param>
-		public void SetBitTorrentMagnet(string Magnet)
+		/// <param name="magnet">The new magnet link.</param>
+		public void SetBitTorrentMagnet(string magnet)
 		{
 			lock (ReadLock)
 			{
@@ -1195,12 +1191,12 @@ namespace Launchpad.Launcher.Handlers
 				{
 					try
 					{
-						FileIniDataParser Parser = new FileIniDataParser();
-						IniData data = Parser.ReadFile(GetConfigPath());
+						FileIniDataParser parser = new FileIniDataParser();
+						IniData data = parser.ReadFile(GetConfigPath());
 
-						data["BitTorrent"]["Magnet"] = Magnet;
+						data[SectionNameBitTorrent]["Magnet"] = magnet;
 
-						WriteConfig(Parser, data);
+						WriteConfig(parser, data);
 					}
 					catch (IOException ioex)
 					{
@@ -1220,12 +1216,12 @@ namespace Launchpad.Launcher.Handlers
 			{
 				try
 				{
-					FileIniDataParser Parser = new FileIniDataParser();
+					FileIniDataParser parser = new FileIniDataParser();
 
 					string configPath = GetConfigPath();
-					IniData data = Parser.ReadFile(configPath);
+					IniData data = parser.ReadFile(configPath);
 
-					string mainExecutableName = data["Local"]["MainExecutableName"];
+					string mainExecutableName = data[SectionNameLocal][LocalMainExecutableNameKey];
 
 					return mainExecutableName;
 				}
@@ -1241,8 +1237,8 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// Sets the name of the main executable.
 		/// </summary>
-		/// <param name="MainExecutableName">The new main executable name.</param>
-		public void SetMainExecutableName(string MainExecutableName)
+		/// <param name="mainExecutableName">The new main executable name.</param>
+		public void SetMainExecutableName(string mainExecutableName)
 		{
 			lock (ReadLock)
 			{
@@ -1250,12 +1246,12 @@ namespace Launchpad.Launcher.Handlers
 				{
 					try
 					{
-						FileIniDataParser Parser = new FileIniDataParser();
-						IniData data = Parser.ReadFile(GetConfigPath());
+						FileIniDataParser parser = new FileIniDataParser();
+						IniData data = parser.ReadFile(GetConfigPath());
 
-						data["Local"]["MainExecutableName"] = MainExecutableName;
+						data[SectionNameLocal][LocalMainExecutableNameKey] = mainExecutableName;
 
-						WriteConfig(Parser, data);
+						WriteConfig(parser, data);
 					}
 					catch (IOException ioex)
 					{
@@ -1275,10 +1271,10 @@ namespace Launchpad.Launcher.Handlers
 			{
 				try
 				{
-					FileIniDataParser Parser = new FileIniDataParser();
-					IniData data = Parser.ReadFile(GetConfigPath());
+					FileIniDataParser parser = new FileIniDataParser();
+					IniData data = parser.ReadFile(GetConfigPath());
 
-					string rawDoOfficialUpdates = data["Launchpad"]["bOfficialUpdates"];
+					string rawDoOfficialUpdates = data[SectionNameLaunchpad]["bOfficialUpdates"];
 
 					bool doOfficialUpdates;
 					if (bool.TryParse(rawDoOfficialUpdates, out doOfficialUpdates))
@@ -1309,10 +1305,10 @@ namespace Launchpad.Launcher.Handlers
 			{
 				try
 				{
-					FileIniDataParser Parser = new FileIniDataParser();
-					IniData data = Parser.ReadFile(GetConfigPath());
+					FileIniDataParser parser = new FileIniDataParser();
+					IniData data = parser.ReadFile(GetConfigPath());
 
-					string rawAllowAnonymousStats = data["Launchpad"]["bAllowAnonymousStats"];
+					string rawAllowAnonymousStats = data[SectionNameLaunchpad]["bAllowAnonymousStats"];
 
 					bool allowAnonymousStats;
 					if (bool.TryParse(rawAllowAnonymousStats, out allowAnonymousStats))
@@ -1343,10 +1339,10 @@ namespace Launchpad.Launcher.Handlers
 			{
 				try
 				{
-					FileIniDataParser Parser = new FileIniDataParser();
-					IniData data = Parser.ReadFile(GetConfigPath());
+					FileIniDataParser parser = new FileIniDataParser();
+					IniData data = parser.ReadFile(GetConfigPath());
 
-					string guid = data["Local"]["GUID"];
+					string guid = data[SectionNameLocal][LocalGameGUIDKey];
 
 					return guid;
 				}
@@ -1411,23 +1407,23 @@ namespace Launchpad.Launcher.Handlers
 							File.Copy(oldConfigPath, GetConfigPath());
 
 							// Read our new file.
-							FileIniDataParser Parser = new FileIniDataParser();
-							IniData data = Parser.ReadFile(GetConfigPath());
+							FileIniDataParser parser = new FileIniDataParser();
+							IniData data = parser.ReadFile(GetConfigPath());
 
 							// Replace the old invalid keys with new, updated keys.
-							string launcherVersion = data["Local"]["launcherVersion"];
-							string gameName = data["Local"]["gameName"];
-							string systemTarget = data["Local"]["systemTarget"];
+							string launcherVersion = data[SectionNameLocal]["launcherVersion"];
+							string gameName = data[SectionNameLocal]["gameName"];
+							string systemTarget = data[SectionNameLocal]["systemTarget"];
 
-							data["Local"].RemoveKey("launcherVersion");
-							data["Local"].RemoveKey("gameName");
-							data["Local"].RemoveKey("systemTarget");
+							data[SectionNameLocal].RemoveKey("launcherVersion");
+							data[SectionNameLocal].RemoveKey("gameName");
+							data[SectionNameLocal].RemoveKey("systemTarget");
 
-							data["Local"].AddKey("LauncherVersion", launcherVersion);
-							data["Local"].AddKey("GameName", gameName);
-							data["Local"].AddKey("SystemTarget", systemTarget);
+							data[SectionNameLocal].AddKey(LocalVersionKey, launcherVersion);
+							data[SectionNameLocal].AddKey(LocalGameNameKey, gameName);
+							data[SectionNameLocal].AddKey(LocalSystemTargetKey, systemTarget);
 
-							WriteConfig(Parser, data);
+							WriteConfig(parser, data);
 							// We were successful, so return true.
 
 							File.Delete(oldConfigPath);
@@ -1456,23 +1452,23 @@ namespace Launchpad.Launcher.Handlers
 					// Windows is not case sensitive, so we'll use direct access without copying.
 					if (File.Exists(oldConfigPath))
 					{
-						FileIniDataParser Parser = new FileIniDataParser();
-						IniData data = Parser.ReadFile(GetConfigPath());
+						FileIniDataParser parser = new FileIniDataParser();
+						IniData data = parser.ReadFile(GetConfigPath());
 
 						// Replace the old invalid keys with new, updated keys.
-						string launcherVersion = data["Local"]["launcherVersion"];
-						string gameName = data["Local"]["gameName"];
-						string systemTarget = data["Local"]["systemTarget"];
+						string launcherVersion = data[SectionNameLocal]["launcherVersion"];
+						string gameName = data[SectionNameLocal]["gameName"];
+						string systemTarget = data[SectionNameLocal]["systemTarget"];
 
-						data["Local"].RemoveKey("launcherVersion");
-						data["Local"].RemoveKey("gameName");
-						data["Local"].RemoveKey("systemTarget");
+						data[SectionNameLocal].RemoveKey("launcherVersion");
+						data[SectionNameLocal].RemoveKey("gameName");
+						data[SectionNameLocal].RemoveKey("systemTarget");
 
-						data["Local"].AddKey("LauncherVersion", launcherVersion);
-						data["Local"].AddKey("GameName", gameName);
-						data["Local"].AddKey("SystemTarget", systemTarget);
+						data[SectionNameLocal].AddKey(LocalVersionKey, launcherVersion);
+						data[SectionNameLocal].AddKey(LocalGameNameKey, gameName);
+						data[SectionNameLocal].AddKey(LocalSystemTargetKey, systemTarget);
 
-						WriteConfig(Parser, data);
+						WriteConfig(parser, data);
 
 						// We were successful, so return true.
 						return true;

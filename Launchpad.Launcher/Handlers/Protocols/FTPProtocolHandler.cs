@@ -49,13 +49,13 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 			bool bCanConnectToServer;
 
-			string FTPURL = Config.GetBaseFTPUrl();
-			string FTPUserName = Config.GetRemoteUsername();
-			string FTPPassword = Config.GetRemotePassword();
+			string url = Config.GetBaseFTPUrl();
+			string username = Config.GetRemoteUsername();
+			string password = Config.GetRemotePassword();
 
 			try
 			{
-				FtpWebRequest plainRequest = CreateFtpWebRequest(FTPURL, FTPUserName, FTPPassword);
+				FtpWebRequest plainRequest = CreateFtpWebRequest(url, username, password);
 
 				if (plainRequest == null)
 				{
@@ -80,16 +80,16 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			catch (WebException wex)
 			{
-				Log.Warn("Unable to connect due a malformed URL in the configuration (WebException): " + wex.Message);
+				Log.Warn("Unable to connect due a malformed url in the configuration (WebException): " + wex.Message);
 				bCanConnectToServer = false;
 			}
 
 			return bCanConnectToServer;
 		}
 
-		public override bool IsPlatformAvailable(ESystemTarget Platform)
+		public override bool IsPlatformAvailable(ESystemTarget platform)
 		{
-			string remote = $"{Config.GetBaseFTPUrl()}/game/{Platform}/.provides";
+			string remote = $"{Config.GetBaseFTPUrl()}/game/{platform}/.provides";
 
 			return DoesRemoteFileExist(remote);
 		}
@@ -128,12 +128,12 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// Reads a text file from a remote FTP server.
 		/// </summary>
 		/// <returns>The FTP file contents.</returns>
-		/// <param name="URL">FTP file path.</param>
+		/// <param name="url">FTP file path.</param>
 		/// <param name="useAnonymousLogin">Force anonymous credentials for the connection.</param>
-		protected override string ReadRemoteFile(string URL, bool useAnonymousLogin = false)
+		protected override string ReadRemoteFile(string url, bool useAnonymousLogin = false)
 		{
-			// Clean the input URL first
-			string remoteURL = URL.Replace(Path.DirectorySeparatorChar, '/');
+			// Clean the input url first
+			string remoteURL = url.Replace(Path.DirectorySeparatorChar, '/');
 
 			string username;
 			string password;
@@ -160,6 +160,11 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				string data = "";
 				using (Stream remoteStream = request.GetResponse().GetResponseStream())
 				{
+					if (remoteStream == null)
+					{
+						return string.Empty;
+					}
+
 					long fileSize;
 					using (FtpWebResponse sizeResponse = (FtpWebResponse)sizerequest.GetResponse())
 					{
@@ -205,15 +210,15 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// Downloads an FTP file.
 		/// </summary>
 		/// <returns>The FTP file's location on disk, or the exception message.</returns>
-		/// <param name="URL">Ftp source file path.</param>
+		/// <param name="url">Ftp source file path.</param>
 		/// <param name="localPath">Local destination.</param>
 		/// <param name="totalSize">The total expected size of the file.</param>
 		/// <param name="contentOffset">Offset into the remote file where downloading should start</param>
 		/// <param name="useAnonymousLogin">If set to <c>true</c> b use anonymous.</param>
-		protected override void DownloadRemoteFile(string URL, string localPath, long totalSize = 0, long contentOffset = 0, bool useAnonymousLogin = false)
+		protected override void DownloadRemoteFile(string url, string localPath, long totalSize = 0, long contentOffset = 0, bool useAnonymousLogin = false)
 		{
-			// Make sure we're not passing in any backslashes in the URL
-			string remoteURL = URL.Replace(Path.DirectorySeparatorChar, '/');
+			// Make sure we're not passing in any backslashes in the url
+			string remoteURL = url.Replace(Path.DirectorySeparatorChar, '/');
 
 			string username;
 			string password;
@@ -381,10 +386,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			finally
 			{
-				if (response != null)
-				{
-					response.Dispose();
-				}
+				response?.Dispose();
 			}
 
 			return true;
