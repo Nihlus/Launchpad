@@ -35,7 +35,7 @@ using Launchpad.Launcher.Interface.ChangelogBrowser;
 namespace Launchpad.Launcher.Interface
 {
 	[CLSCompliant(false)]
-	public partial class MainWindow : Gtk.Window
+	public sealed partial class MainWindow : Gtk.Window
 	{
 		/// <summary>
 		/// Logger instance for this class.

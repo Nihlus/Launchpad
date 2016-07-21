@@ -69,10 +69,10 @@ namespace Launchpad.Utilities.Interface
 			};
 			// Container child vbox3.Gtk.Box+BoxChild
 			UIManager.AddUiFromString ("<ui><menubar name='menubar1'/></ui>");
-			menubar1 = ((MenuBar)(UIManager.GetWidget ("/menubar1")));
+			menubar1 = (MenuBar)(UIManager.GetWidget ("/menubar1"));
 			menubar1.Name = "menubar1";
 			vbox3.Add (menubar1);
-			Box.BoxChild w2 = ((Box.BoxChild)(vbox3 [menubar1]));
+			Box.BoxChild w2 = (Box.BoxChild)vbox3 [menubar1];
 			w2.Position = 0;
 			w2.Expand = false;
 			w2.Fill = false;
@@ -84,14 +84,14 @@ namespace Launchpad.Utilities.Interface
 				RightPadding = 8
 			};
 			// Container child alignment14.Gtk.Container+ContainerChild
-			fileChooser = new FileChooserWidget(((FileChooserAction) (2)))
+			fileChooser = new FileChooserWidget((FileChooserAction) 2)
 			{
 				Name = "fileChooser",
 				LocalOnly = false
 			};
 			alignment14.Add (fileChooser);
 			vbox3.Add (alignment14);
-			Box.BoxChild w4 = ((Box.BoxChild)(vbox3 [alignment14]));
+			Box.BoxChild w4 = (Box.BoxChild)vbox3 [alignment14];
 			w4.Position = 1;
 			// Container child vbox3.Gtk.Box+BoxChild
 			alignment12 = new Alignment(0.5F, 0.5F, 1F, 1F)
@@ -105,7 +105,7 @@ namespace Launchpad.Utilities.Interface
 			};
 			alignment12.Add (hseparator3);
 			vbox3.Add (alignment12);
-			Box.BoxChild w6 = ((Box.BoxChild)(vbox3 [alignment12]));
+			Box.BoxChild w6 = (Box.BoxChild)vbox3 [alignment12];
 			w6.Position = 2;
 			w6.Expand = false;
 			w6.Fill = false;
@@ -129,7 +129,7 @@ namespace Launchpad.Utilities.Interface
 			};
 			alignment18.Add (label4);
 			hbox4.Add (alignment18);
-			Box.BoxChild w8 = ((Box.BoxChild)(hbox4 [alignment18]));
+			Box.BoxChild w8 = (Box.BoxChild)hbox4 [alignment18];
 			w8.Position = 0;
 			w8.Expand = false;
 			w8.Fill = false;
@@ -152,7 +152,7 @@ namespace Launchpad.Utilities.Interface
 			w10.Expand = false;
 			w10.Fill = false;
 			vbox3.Add (hbox4);
-			Box.BoxChild w11 = ((Box.BoxChild)(vbox3 [hbox4]));
+			Box.BoxChild w11 = (Box.BoxChild)vbox3 [hbox4];
 			w11.Position = 3;
 			w11.Expand = false;
 			w11.Fill = false;
@@ -170,7 +170,7 @@ namespace Launchpad.Utilities.Interface
 			};
 			alignment17.Add (progressbar);
 			vbox3.Add (alignment17);
-			Box.BoxChild w13 = ((Box.BoxChild)(vbox3 [alignment17]));
+			Box.BoxChild w13 = (Box.BoxChild)vbox3 [alignment17];
 			w13.Position = 4;
 			w13.Expand = false;
 			w13.Fill = false;
@@ -197,8 +197,8 @@ namespace Launchpad.Utilities.Interface
 			};
 			alignment15.Add (generateGameManifestButton);
 			hbox3.Add (alignment15);
-			Box.BoxChild w15 = ((Box.BoxChild)(hbox3 [alignment15]));
-			w15.PackType = ((PackType)(1));
+			Box.BoxChild w15 = (Box.BoxChild)hbox3 [alignment15];
+			w15.PackType = (PackType)1;
 			w15.Position = 0;
 			w15.Expand = false;
 			w15.Fill = false;
@@ -233,9 +233,12 @@ namespace Launchpad.Utilities.Interface
 			if ((Child != null)) {
 				Child.ShowAll ();
 			}
-			DefaultWidth = 640;
-			DefaultHeight = 384;
-			Show ();
+
+			this.DefaultWidth = 640;
+			this.DefaultHeight = 384;
+
+			this.Show ();
+
 			DeleteEvent += OnDeleteEvent;
 			generateLaunchpadManifestButton.Clicked += OnGenerateLaunchpadManifestButtonClicked;
 			generateGameManifestButton.Clicked += OnGenerateGameManifestButtonClicked;
