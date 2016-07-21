@@ -313,7 +313,7 @@ namespace Launchpad.Launcher.Interface
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="a">The alpha component.</param>
-		protected void OnDeleteEvent(object sender, DeleteEventArgs a)
+		private void OnDeleteEvent(object sender, DeleteEventArgs a)
 		{
 			Application.Quit();
 			a.RetVal = true;
@@ -324,7 +324,7 @@ namespace Launchpad.Launcher.Interface
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		protected void OnRepairGameActionActivated(object sender, EventArgs e)
+		private void OnRepairGameActionActivated(object sender, EventArgs e)
 		{
 			SetLauncherMode(ELauncherMode.Repair, false);
 
@@ -342,7 +342,7 @@ namespace Launchpad.Launcher.Interface
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">Empty arguments.</param>
-		protected void OnPrimaryButtonClicked(object sender, EventArgs e)
+		private void OnPrimaryButtonClicked(object sender, EventArgs e)
 		{
 			switch (Mode)
 			{
@@ -444,7 +444,7 @@ namespace Launchpad.Launcher.Interface
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The arguments containing the HTML from the server.</param>
-		protected void OnChangelogDownloadFinished(object sender, ChangelogDownloadFinishedEventArgs e)
+		private void OnChangelogDownloadFinished(object sender, ChangelogDownloadFinishedEventArgs e)
 		{
 			//Take the resulting HTML string from the changelog download and send it to the changelog browser
 			Application.Invoke(delegate
@@ -453,7 +453,7 @@ namespace Launchpad.Launcher.Interface
 				});
 		}
 
-		protected void OnLauncherDownloadFinished(object sender, ModuleInstallationFinishedArgs e)
+		private static void OnLauncherDownloadFinished(object sender, ModuleInstallationFinishedArgs e)
 		{
 			Application.Invoke(delegate
 				{
@@ -517,7 +517,7 @@ namespace Launchpad.Launcher.Interface
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">Contains the progress values and current filename.</param>
-		protected void OnModuleInstallationProgressChanged(object sender, ModuleProgressChangedArgs e)
+		private void OnModuleInstallationProgressChanged(object sender, ModuleProgressChangedArgs e)
 		{
 			Application.Invoke(delegate
 				{
@@ -532,7 +532,7 @@ namespace Launchpad.Launcher.Interface
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">Contains the result of the download.</param>
-		protected void OnGameDownloadFinished(object sender, EventArgs e)
+		private void OnGameDownloadFinished(object sender, EventArgs e)
 		{
 			Application.Invoke(delegate
 				{

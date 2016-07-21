@@ -454,7 +454,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			{
 				case EModule.Launcher:
 				{
-					checksum = ReadRemoteFile(Manifest.GetLaunchpadManifestChecksumURL());
+					checksum = ReadRemoteFile(ManifestHandler.GetLaunchpadManifestChecksumURL());
 					break;
 				}
 				case EModule.Game:
@@ -520,7 +520,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			{
 				case EModule.Launcher:
 				{
-					remoteURL = Manifest.GetLaunchpadManifestURL();
+					remoteURL = ManifestHandler.GetLaunchpadManifestURL();
 					localPath = ManifestHandler.GetLaunchpadManifestPath();
 					oldLocalPath = ManifestHandler.GetOldLaunchpadManifestPath();
 

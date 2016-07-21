@@ -321,7 +321,7 @@ namespace Launchpad.Launcher.Handlers
 		/// Gets the launchpad manifest URL.
 		/// </summary>
 		/// <returns>The launchpad manifest URL.</returns>
-		public string GetLaunchpadManifestURL()
+		public static string GetLaunchpadManifestURL()
 		{
 			string manifestURL = $"{Config.GetBaseProtocolURL()}/launcher/LaunchpadManifest.txt";
 
@@ -332,7 +332,7 @@ namespace Launchpad.Launcher.Handlers
 		/// Gets the launchpad manifest checksum URL.
 		/// </summary>
 		/// <returns>The launchpad manifest checksum URL.</returns>
-		public string GetLaunchpadManifestChecksumURL()
+		public static string GetLaunchpadManifestChecksumURL()
 		{
 			string manifestChecksumURL = $"{Config.GetBaseProtocolURL()}/launcher/LaunchpadManifest.checksum";
 
@@ -343,7 +343,7 @@ namespace Launchpad.Launcher.Handlers
 		/// Replaces the deprecated manifest, moving LauncherManifest to GameManifest (if present).
 		/// This function should only be called once per launcher start.
 		/// </summary>
-		public void ReplaceDeprecatedManifest()
+		private void ReplaceDeprecatedManifest()
 		{
 			if (File.Exists(GetDeprecatedGameManifestPath()))
 			{

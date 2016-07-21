@@ -99,7 +99,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			return true;
 		}
 
-		public override string GetChangelog()
+		public override string GetChangelogSource()
 		{
 			string changelogURL = $"{Config.GetBaseFTPUrl()}/launcher/changelog.html";
 

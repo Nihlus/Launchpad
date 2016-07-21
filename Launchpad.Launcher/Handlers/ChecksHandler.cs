@@ -37,7 +37,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// The config handler reference.
 		/// </summary>
-		readonly ConfigHandler Configuration = ConfigHandler.Instance;
+		private readonly ConfigHandler Configuration = ConfigHandler.Instance;
 
 		/// <summary>
 		/// Logger instance for this class.
@@ -134,7 +134,7 @@ namespace Launchpad.Launcher.Handlers
 		/// Determines whether the install cookie is empty
 		/// </summary>
 		/// <returns><c>true</c> if the install cookie is empty, otherwise, <c>false</c>.</returns>
-		public static bool IsInstallCookieEmpty()
+		private static bool IsInstallCookieEmpty()
 		{
 			//Is there an .install file in the directory?
 			bool bHasInstallationCookie = File.Exists(ConfigHandler.GetInstallCookiePath());

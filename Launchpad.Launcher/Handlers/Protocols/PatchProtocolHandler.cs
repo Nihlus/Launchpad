@@ -63,12 +63,11 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		public event ModuleInstallationFailedEventHandler ModuleInstallationFailed;
 
 		protected readonly ModuleProgressChangedArgs ModuleDownloadProgressArgs = new ModuleProgressChangedArgs();
-		protected readonly ModuleProgressChangedArgs ModuleCopyProgressArgs = new ModuleProgressChangedArgs();
 		protected readonly ModuleProgressChangedArgs ModuleVerifyProgressArgs = new ModuleProgressChangedArgs();
 		protected readonly ModuleProgressChangedArgs ModuleUpdateProgressArgs = new ModuleProgressChangedArgs();
 
-		protected ModuleInstallationFinishedArgs ModuleInstallFinishedArgs;
-		protected ModuleInstallationFailedArgs ModuleInstallFailedArgs;
+		protected readonly ModuleInstallationFinishedArgs ModuleInstallFinishedArgs;
+		protected readonly ModuleInstallationFailedArgs ModuleInstallFailedArgs;
 
 		/// <summary>
 		/// Determines whether this instance can provide patches. Checks for an active connection to the
@@ -99,7 +98,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// Gets the changelog.
 		/// </summary>
 		/// <returns>The changelog.</returns>
-		public abstract string GetChangelog();
+		public abstract string GetChangelogSource();
 
 		/// <summary>
 		/// Gets the banner.

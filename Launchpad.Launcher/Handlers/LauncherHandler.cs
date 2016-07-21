@@ -83,18 +83,13 @@ namespace Launchpad.Launcher.Handlers
 				Patch.ModuleDownloadProgressChanged += OnLauncherDownloadProgressChanged;
 				Patch.ModuleInstallationFinished += OnLauncherDownloadFinished;
 
-				Thread t = new Thread(UpdateLauncher_Implementation);
+				Thread t = new Thread(() => this.Patch.UpdateModule(EModule.Launcher));
 				t.Start();
 			}
 			catch (IOException ioex)
 			{
 				Log.Warn("The launcher update failed (IOException): " + ioex.Message);
 			}
-		}
-
-		private void UpdateLauncher_Implementation()
-		{
-			Patch.UpdateModule(EModule.Launcher);
 		}
 
 		/// <summary>
@@ -133,7 +128,7 @@ namespace Launchpad.Launcher.Handlers
 		{
 			if (Patch.CanProvideChangelog())
 			{
-				ChangelogDownloadFinishedArgs.HTML = Patch.GetChangelog();
+				ChangelogDownloadFinishedArgs.HTML = Patch.GetChangelogSource();
 				ChangelogDownloadFinishedArgs.URL = Config.GetChangelogURL();
 			}
 

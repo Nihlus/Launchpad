@@ -22,16 +22,15 @@
 using System;
 using System.IO;
 using System.Linq;
+using Gtk;
 using Launchpad.Utilities.Handlers;
 using Launchpad.Utilities.Utility.Events;
 using NGettext;
-using Gtk;
-
 
 namespace Launchpad.Utilities.Interface
 {
 	[CLSCompliant(false)]
-	public partial class MainWindow : Gtk.Window
+	public partial class MainWindow : Window
 	{
 		/// <summary>
 		/// The manifest generation handler.
@@ -46,7 +45,7 @@ namespace Launchpad.Utilities.Interface
 		public MainWindow()
 			: base(WindowType.Toplevel)
 		{
-			this.Build();
+			Build();
 
 			Manifest.ManifestGenerationProgressChanged += OnGenerateManifestProgressChanged;
 			Manifest.ManifestGenerationFinished += OnGenerateManifestFinished;
@@ -62,13 +61,13 @@ namespace Launchpad.Utilities.Interface
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="a">The alpha component.</param>
-		protected void OnDeleteEvent(object sender, DeleteEventArgs a)
+		private static void OnDeleteEvent(object sender, DeleteEventArgs a)
 		{
 			Application.Quit();
 			a.RetVal = true;
 		}
 
-		protected void OnGenerateGameManifestButtonClicked(object sender, EventArgs e)
+		private void OnGenerateGameManifestButtonClicked(object sender, EventArgs e)
 		{
 			generateGameManifestButton.Sensitive = false;
 			generateLaunchpadManifestButton.Sensitive = false;
@@ -101,7 +100,7 @@ namespace Launchpad.Utilities.Interface
 			Manifest.GenerateManifest(targetDirectory, EManifestType.Game);
 		}
 
-		protected void OnGenerateLaunchpadManifestButtonClicked(object sender, EventArgs e)
+		private void OnGenerateLaunchpadManifestButtonClicked(object sender, EventArgs e)
 		{
 			generateGameManifestButton.Sensitive = false;
 			generateLaunchpadManifestButton.Sensitive = false;
@@ -117,14 +116,14 @@ namespace Launchpad.Utilities.Interface
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">Arguments containing information about the entered file.</param>
-		protected void OnGenerateManifestProgressChanged(object sender, ManifestGenerationProgressChangedEventArgs e)
+		private void OnGenerateManifestProgressChanged(object sender, ManifestGenerationProgressChangedEventArgs e)
 		{
 			Application.Invoke(delegate
 				{
 					string progressString = LocalizationCatalog.GetString("{0} : {1} out of {2}");
 					progressLabel.Text = string.Format(progressString, e.Filepath, e.CompletedFiles, e.TotalFiles);
 
-					progressbar.Fraction = (double)e.CompletedFiles / (double)e.TotalFiles;
+					progressbar.Fraction = e.CompletedFiles / (double)e.TotalFiles;
 				});
 		}
 
@@ -133,7 +132,7 @@ namespace Launchpad.Utilities.Interface
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">Empty arguments</param>
-		protected void OnGenerateManifestFinished(object sender, EventArgs e)
+		private void OnGenerateManifestFinished(object sender, EventArgs e)
 		{
 			Application.Invoke(delegate
 				{

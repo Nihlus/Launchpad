@@ -66,8 +66,8 @@ namespace Launchpad.Launcher.Handlers
 		private const string DefaultFileRetries = "2";
 		private const string DefaultUsername = "anonymous";
 		private const string DefaultPassword = "anonymous";
-		private const string DefaultFTPURL = "ftp://directorate.asuscomm.com";
-		private const string DefaultHTTPURL = "http://directorate.asuscomm.com/launchpad";
+		private const string DefaultFTPAddress = "ftp://directorate.asuscomm.com";
+		private const string DefaultHTTPAddress = "http://directorate.asuscomm.com/launchpad";
 		private const string DefaultUseOfficialUpdates = "true";
 		private const string DefaultAllowAnonymousStatus = "true";
 
@@ -93,8 +93,8 @@ namespace Launchpad.Launcher.Handlers
 		private const string RemoteUsernameKey = "Username";
 		private const string RemotePasswordKey = "Password";
 
-		private const string FTPURLKey = "URL";
-		private const string HTTPURLKey = "URL";
+		private const string FTPAddressKey = "URL";
+		private const string HTTPAddressKey = "URL";
 
 		private const string LaunchpadOfficialUpdatesKey = "bOfficialUpdates";
 		private const string LaunchpadAnonymousStatsKey = "bAllowAnonymousStats";
@@ -113,13 +113,13 @@ namespace Launchpad.Launcher.Handlers
 		/// Writes the config data to disk. This method is thread-blocking, and all write operations
 		/// are synchronized via lock(<see cref="WriteLock"/>).
 		/// </summary>
-		/// <param name="Parser">The parser dealing with the current data.</param>
-		/// <param name="Data">The data which should be written to file.</param>
-		private void WriteConfig(FileIniDataParser Parser, IniData Data)
+		/// <param name="parser">The parser dealing with the current data.</param>
+		/// <param name="data">The data which should be written to file.</param>
+		private void WriteConfig(FileIniDataParser parser, IniData data)
 		{
 			lock (WriteLock)
 			{
-				Parser.WriteFile(GetConfigPath(), Data);
+				parser.WriteFile(GetConfigPath(), data);
 			}
 		}
 
@@ -148,7 +148,7 @@ namespace Launchpad.Launcher.Handlers
 		/// Initializes the config by checking for bad values or files.
 		/// Run once when the launcher starts, then avoid unless absolutely neccesary.
 		/// </summary>
-		public void Initialize()
+		private void Initialize()
 		{
 			//Since Initialize will write to the config, we'll create the parser here and load the file later
 			FileIniDataParser parser = new FileIniDataParser();
@@ -202,9 +202,9 @@ namespace Launchpad.Launcher.Handlers
 						data[SectionNameRemote].AddKey(RemoteUsernameKey, DefaultUsername);
 						data[SectionNameRemote].AddKey(RemotePasswordKey, DefaultPassword);
 
-						data[SectionNameFTP].AddKey(FTPURLKey, DefaultFTPURL);
+						data[SectionNameFTP].AddKey(FTPAddressKey, DefaultFTPAddress);
 
-						data[SectionNameHTTP].AddKey(HTTPURLKey, DefaultHTTPURL);
+						data[SectionNameHTTP].AddKey(HTTPAddressKey, DefaultHTTPAddress);
 
 						data[SectionNameBitTorrent].AddKey("Magnet", "");
 
@@ -292,7 +292,7 @@ namespace Launchpad.Launcher.Handlers
 						string ftpurl = data[SectionNameRemote].GetKeyData("FTPUrl").Value;
 						data[SectionNameRemote].RemoveKey("FTPUrl");
 
-						data[SectionNameFTP].AddKey(FTPURLKey, ftpurl);
+						data[SectionNameFTP].AddKey(FTPAddressKey, ftpurl);
 					}
 
 					if (!data.Sections.ContainsSection(SectionNameHTTP))
@@ -300,9 +300,9 @@ namespace Launchpad.Launcher.Handlers
 						data.Sections.AddSection(SectionNameHTTP);
 					}
 
-					if (!data[SectionNameHTTP].ContainsKey(HTTPURLKey))
+					if (!data[SectionNameHTTP].ContainsKey(HTTPAddressKey))
 					{
-						data[SectionNameHTTP].AddKey(HTTPURLKey, "http://directorate.asuscomm.com/launchpad");
+						data[SectionNameHTTP].AddKey(HTTPAddressKey, "http://directorate.asuscomm.com/launchpad");
 					}
 
 					if (!data.Sections.ContainsSection(SectionNameBitTorrent))
@@ -379,7 +379,7 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		/// <returns>The seeded GUI.</returns>
 		/// <param name="seed">Seed.</param>
-		public static string GenerateSeededGUID(string seed)
+		private static string GenerateSeededGUID(string seed)
 		{
 			using (MD5 md5 = MD5.Create())
 			{
@@ -402,18 +402,12 @@ namespace Launchpad.Launcher.Handlers
 		/// Creates the update cookie.
 		/// </summary>
 		/// <returns>The update cookie's path.</returns>
-		public static string CreateUpdateCookie()
+		public static void CreateUpdateCookie()
 		{
 			bool bCookieExists = File.Exists(GetUpdateCookiePath());
 			if (!bCookieExists)
 			{
 				File.Create(GetUpdateCookiePath());
-
-				return GetUpdateCookiePath();
-			}
-			else
-			{
-				return GetUpdateCookiePath();
 			}
 		}
 
@@ -431,19 +425,13 @@ namespace Launchpad.Launcher.Handlers
 		/// Creates the install cookie.
 		/// </summary>
 		/// <returns>The install cookie's path.</returns>
-		public static string CreateInstallCookie()
+		public static void CreateInstallCookie()
 		{
 			bool bCookieExists = File.Exists(GetInstallCookiePath());
 
 			if (!bCookieExists)
 			{
 				File.Create(GetInstallCookiePath()).Close();
-
-				return GetInstallCookiePath();
-			}
-			else
-			{
-				return GetInstallCookiePath();
 			}
 		}
 
@@ -749,7 +737,7 @@ namespace Launchpad.Launcher.Handlers
 		/// Gets the set protocol string.
 		/// </summary>
 		/// <returns>The patch protocol.</returns>
-		public string GetPatchProtocolString()
+		private string GetPatchProtocolString()
 		{
 			lock (ReadLock)
 			{
@@ -1022,7 +1010,7 @@ namespace Launchpad.Launcher.Handlers
 			}
 		}
 
-		public string GetOfficialBaseProtocolURL()
+		private string GetOfficialBaseProtocolURL()
 		{
 			switch (GetPatchProtocolString())
 			{
@@ -1056,7 +1044,7 @@ namespace Launchpad.Launcher.Handlers
 					string configPath = GetConfigPath();
 					IniData data = parser.ReadFile(configPath);
 
-					string url = data[SectionNameFTP][FTPURLKey];
+					string url = data[SectionNameFTP][FTPAddressKey];
 
 					return url;
 				}
@@ -1084,7 +1072,7 @@ namespace Launchpad.Launcher.Handlers
 						FileIniDataParser parser = new FileIniDataParser();
 						IniData data = parser.ReadFile(GetConfigPath());
 
-						data[SectionNameFTP][FTPURLKey] = url;
+						data[SectionNameFTP][FTPAddressKey] = url;
 
 						WriteConfig(parser, data);
 					}
@@ -1111,7 +1099,7 @@ namespace Launchpad.Launcher.Handlers
 					string configPath = GetConfigPath();
 					IniData data = parser.ReadFile(configPath);
 
-					string url = data[SectionNameHTTP][HTTPURLKey];
+					string url = data[SectionNameHTTP][HTTPAddressKey];
 
 					return url;
 				}
@@ -1139,7 +1127,7 @@ namespace Launchpad.Launcher.Handlers
 						FileIniDataParser parser = new FileIniDataParser();
 						IniData data = parser.ReadFile(GetConfigPath());
 
-						data[SectionNameHTTP][HTTPURLKey] = url;
+						data[SectionNameHTTP][HTTPAddressKey] = url;
 
 						WriteConfig(parser, data);
 					}
@@ -1210,7 +1198,7 @@ namespace Launchpad.Launcher.Handlers
 		/// Gets the name of the main executable.
 		/// </summary>
 		/// <returns>The name of the main executable.</returns>
-		public string GetMainExecutableName()
+		private string GetMainExecutableName()
 		{
 			lock (ReadLock)
 			{
@@ -1358,7 +1346,7 @@ namespace Launchpad.Launcher.Handlers
 		/// Gets the path to the install-unique GUID.
 		/// </summary>
 		/// <returns>The install GUID path.</returns>
-		public string GetInstallGUIDPath()
+		private static string GetInstallGUIDPath()
 		{
 			return $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}/Launchpad/.installguid";
 		}

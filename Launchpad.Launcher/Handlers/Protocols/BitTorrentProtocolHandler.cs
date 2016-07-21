@@ -50,7 +50,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			return false;
 		}
 
-		public override string GetChangelog()
+		public override string GetChangelogSource()
 		{
 			return string.Empty;
 		}

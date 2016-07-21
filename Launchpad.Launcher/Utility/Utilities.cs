@@ -42,11 +42,11 @@ namespace Launchpad.Launcher.Utility
 
 		public static ESystemTarget ParseSystemTarget(string input)
 		{
-			ESystemTarget Target = ESystemTarget.Unknown;
+			ESystemTarget systemTarget = ESystemTarget.Unknown;
 
 			try
 			{
-				Target = (ESystemTarget)Enum.Parse(typeof(ESystemTarget), input);
+				systemTarget = (ESystemTarget)Enum.Parse(typeof(ESystemTarget), input);
 			}
 			catch (ArgumentNullException anex)
 			{
@@ -64,7 +64,7 @@ namespace Launchpad.Launcher.Utility
 					"\n\tInput: " + input);
 			}
 
-			return Target;
+			return systemTarget;
 		}
 	}
 }

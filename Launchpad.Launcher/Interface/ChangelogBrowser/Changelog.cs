@@ -47,10 +47,9 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 		/// A handle for the underlying widget used. For windows, this will be a <see cref="Viewport"/>. For
 		/// Mac and Linux, it will be a <see cref="WebView"/>.
 		/// </summary>
-		public Widget WidgetHandle
+		private Widget WidgetHandle
 		{
 			get;
-			private set;
 		}
 
 		/// <summary>

@@ -37,7 +37,7 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 		/// of a <see cref="WebBrowser"/> to a <see cref="Socket"/>.
 		/// </summary>
 		[DllImport("user32.dll", EntryPoint = "SetParent")]
-		internal static extern IntPtr SetParent([In] IntPtr hWndChild, [In] IntPtr hWndNewParent);
+		private static extern IntPtr SetParent([In] IntPtr hWndChild, [In] IntPtr hWndNewParent);
 
 		/// <summary>
 		/// The <see cref="WebBrowser"/> we're using for rendering.
