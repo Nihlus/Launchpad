@@ -313,7 +313,7 @@ namespace Launchpad.Launcher.Interface
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="a">The alpha component.</param>
-		private void OnDeleteEvent(object sender, DeleteEventArgs a)
+		private static void OnDeleteEvent(object sender, DeleteEventArgs a)
 		{
 			Application.Quit();
 			a.RetVal = true;

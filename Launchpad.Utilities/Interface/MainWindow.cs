@@ -26,6 +26,7 @@ using Gtk;
 using Launchpad.Utilities.Handlers;
 using Launchpad.Utilities.Utility.Events;
 using NGettext;
+using SysPath = System.IO.Path;
 
 namespace Launchpad.Utilities.Interface
 {
@@ -85,7 +86,7 @@ namespace Launchpad.Utilities.Interface
 
 				if (dialog.Run() == (int) ResponseType.Yes)
 				{
-					string gameVersionPath = $"{targetDirectory}{System.IO.Path.DirectorySeparatorChar}GameVersion.txt";
+					string gameVersionPath = $"{targetDirectory}{SysPath.DirectorySeparatorChar}GameVersion.txt";
 					File.WriteAllText(gameVersionPath, new Version("1.0.0").ToString());
 
 					dialog.Destroy();

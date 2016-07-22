@@ -259,7 +259,7 @@ namespace Launchpad.Launcher.Interface
 			}
 			this.PrimaryButton.HasDefault = true;
 			this.Show ();
-			this.DeleteEvent += this.OnDeleteEvent;
+			this.DeleteEvent += OnDeleteEvent;
 			this.refreshAction1.Activated += this.OnRepairGameActionActivated;
 			this.PrimaryButton.Clicked += this.OnPrimaryButtonClicked;
 		}

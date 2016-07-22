@@ -53,7 +53,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <summary>
 		/// The config handler reference.
 		/// </summary>
-		protected ConfigHandler Config = ConfigHandler.Instance;
+		protected readonly ConfigHandler Config = ConfigHandler.Instance;
 
 		public event ModuleDownloadProgressChangedEventHandler ModuleDownloadProgressChanged;
 		public event ModuleVerifyProgressChangedEventHandler ModuleVerifyProgressChanged;

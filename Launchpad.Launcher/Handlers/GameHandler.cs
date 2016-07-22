@@ -73,6 +73,7 @@ namespace Launchpad.Launcher.Handlers
 			{
 				Patch.ModuleDownloadProgressChanged += OnModuleInstallProgressChanged;
 				Patch.ModuleVerifyProgressChanged += OnModuleInstallProgressChanged;
+				Patch.ModuleUpdateProgressChanged += OnModuleInstallProgressChanged;
 
 				Patch.ModuleInstallationFinished += OnModuleInstallationFinished;
 				Patch.ModuleInstallationFailed += OnModuleInstallationFailed;

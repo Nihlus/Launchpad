@@ -25,6 +25,7 @@ using System.IO;
 using System.Net;
 using log4net;
 using Launchpad.Launcher.Utility;
+using NGettext;
 
 namespace Launchpad.Launcher.Handlers.Protocols
 {
@@ -33,6 +34,11 @@ namespace Launchpad.Launcher.Handlers.Protocols
 	/// </summary>
 	public abstract class ManifestBasedProtocolHandler : PatchProtocolHandler
 	{
+		/// <summary>
+		/// The localization catalog.
+		/// </summary>
+		private static readonly ICatalog LocalizationCatalog = new Catalog("Launchpad", "./locale");
+
 		/// <summary>
 		/// Logger instance for this class.
 		/// </summary>
@@ -160,7 +166,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					++verifiedFiles;
 
 					// Prepare the progress event contents
-					ModuleVerifyProgressArgs.IndicatorLabelMessage = GetVerifyIndicatorLabelMessage(verifiedFiles, Path.GetFileName(fileEntry.RelativePath), manifest.Count);
+					ModuleVerifyProgressArgs.IndicatorLabelMessage = GetVerifyIndicatorLabelMessage(Path.GetFileName(fileEntry.RelativePath),
+						verifiedFiles, manifest.Count);
 					OnModuleVerifyProgressChanged();
 
 					if (!fileEntry.IsFileIntegrityIntact())
@@ -176,7 +183,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					++downloadedFiles;
 
 					// Prepare the progress event contents
-					ModuleDownloadProgressArgs.IndicatorLabelMessage = GetDownloadIndicatorLabelMessage(downloadedFiles, Path.GetFileName(fileEntry.RelativePath), brokenFiles.Count);
+					ModuleDownloadProgressArgs.IndicatorLabelMessage = GetDownloadIndicatorLabelMessage(Path.GetFileName(fileEntry.RelativePath),
+						downloadedFiles, brokenFiles.Count);
 					OnModuleDownloadProgressChanged();
 
 					for (int i = 0; i < Config.GetFileRetries(); ++i)
@@ -259,7 +267,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				++downloadedFiles;
 
 				// Prepare the progress event contents
-				ModuleDownloadProgressArgs.IndicatorLabelMessage = GetDownloadIndicatorLabelMessage(downloadedFiles, Path.GetFileName(fileEntry.RelativePath), moduleManifest.Count);
+				ModuleDownloadProgressArgs.IndicatorLabelMessage = GetDownloadIndicatorLabelMessage(Path.GetFileName(fileEntry.RelativePath),
+					downloadedFiles, moduleManifest.Count);
 				OnModuleDownloadProgressChanged();
 
 				DownloadManifestEntry(fileEntry, module);
@@ -608,12 +617,12 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// Gets the indicator label message to display to the user while repairing.
 		/// </summary>
 		/// <returns>The indicator label message.</returns>
-		/// <param name="nFilesToVerify">N files downloaded.</param>
+		/// <param name="verifiedFiles">N files downloaded.</param>
 		/// <param name="currentFilename">Current filename.</param>
-		/// <param name="totalFilesVerified">Total files to download.</param>
-		protected virtual string GetVerifyIndicatorLabelMessage(int nFilesToVerify, string currentFilename, int totalFilesVerified)
+		/// <param name="totalFiles">Total files to download.</param>
+		protected virtual string GetVerifyIndicatorLabelMessage(string currentFilename, int verifiedFiles, int totalFiles)
 		{
-			return $"Verifying file {currentFilename} ({nFilesToVerify} of {totalFilesVerified})";
+			return LocalizationCatalog.GetString("Verifying file {0} ({1} of {2})", currentFilename, verifiedFiles, totalFiles);
 		}
 
 		/// <summary>
@@ -625,19 +634,19 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <param name="totalFiles">Total files that are to be updated</param>
 		protected virtual string GetUpdateIndicatorLabelMessage(string currentFilename, int updatedFiles, int totalFiles)
 		{
-			return $"Verifying file {currentFilename} ({updatedFiles} of {totalFiles})";
+			return LocalizationCatalog.GetString("Updating file {0} ({1} of {2})", currentFilename, updatedFiles, totalFiles);
 		}
 
 		/// <summary>
 		/// Gets the indicator label message to display to the user while installing.
 		/// </summary>
 		/// <returns>The indicator label message.</returns>
-		/// <param name="nFilesDownloaded">N files downloaded.</param>
+		/// <param name="downloadedFiles">N files downloaded.</param>
 		/// <param name="currentFilename">Current filename.</param>
-		/// <param name="totalFilesToDownload">Total files to download.</param>
-		protected virtual string GetDownloadIndicatorLabelMessage(int nFilesDownloaded, string currentFilename, int totalFilesToDownload)
+		/// <param name="totalFiles">Total files to download.</param>
+		protected virtual string GetDownloadIndicatorLabelMessage(string currentFilename, int downloadedFiles, int totalFiles)
 		{
-			return $"Downloading file {currentFilename} ({nFilesDownloaded} of {totalFilesToDownload})";
+			return LocalizationCatalog.GetString("Downloading file {0} ({1} of {2})", currentFilename, downloadedFiles, totalFiles);
 		}
 
 		/// <summary>
@@ -649,7 +658,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <param name="totalBytes">Total bytes.</param>
 		protected virtual string GetDownloadProgressBarMessage(string filename, long downloadedBytes, long totalBytes)
 		{
-			return $"Downloading {filename}: {downloadedBytes} out of {totalBytes} bytes";
+			return LocalizationCatalog.GetString("Downloading {0}: {1} out of {2}", filename, downloadedBytes, totalBytes);
 		}
 	}
 }

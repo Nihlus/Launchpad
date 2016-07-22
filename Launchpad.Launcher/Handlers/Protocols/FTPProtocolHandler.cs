@@ -196,7 +196,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					}
 				}
 
-				// Clean the output from \n and \0, then return
 				return Utilities.SanitizeString(data);
 			}
 			catch (WebException wex)
@@ -325,7 +324,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <param name="ftpDirectoryPath">Ftp directory path.</param>
 		/// <param name="username">Remote FTP username.</param>
 		/// <param name="password">Remote FTP password</param>
-		public static FtpWebRequest CreateFtpWebRequest(string ftpDirectoryPath, string username, string password)
+		private static FtpWebRequest CreateFtpWebRequest(string ftpDirectoryPath, string username, string password)
 		{
 			try
 			{
