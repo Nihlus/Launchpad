@@ -66,7 +66,7 @@
       <Package>gtk-sharp-2.0</Package>
     </Reference>
     <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a">
-      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+      <HintPath>..\packages\log4net.2.0.5\lib\net40-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="NGettext, Version=0.6.1.0, Culture=neutral, PublicKeyToken=08d3d1c89dfd2985">
       <HintPath>..\packages\NGettext.0.6.1\lib\net46\NGettext.dll</HintPath>
