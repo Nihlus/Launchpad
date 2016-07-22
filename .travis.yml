@@ -9,3 +9,4 @@ install:
   - mono .nuget/nuget.exe restore Launchpad.sln -Verbosity detailed
 script:
     - xbuild /p:Configuration=Release Launchpad.Launcher/Launchpad.Launcher.csproj
+    - xbuild /p:Configuration=Release Launchpad.Utilities/Launchpad.Utilities.csproj
