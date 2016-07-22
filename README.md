@@ -14,7 +14,7 @@ Features:
 * Can install, update and verify the game installation
 * Support for a number of widespread protocols (currently FTP and HTTP/HTTPS)
 
-Usage guide: [Launchpad Quickstart]
+Usage guide: [[Game Developer Quickstart|Game-Developer-Quickstart]]
 
 Note for users installing on Unix - you may need to install some additional libraries for Launchpad to run.
 Simply run /Scripts/launchpad-dependencies.sh if your system is Debian or Debian-based, and it'll install them for you.
