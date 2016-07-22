@@ -3,6 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="1edebc49-7aee-4412-b7b2-58bf6a209799" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Launchpad.Launcher/Interface/ChangelogBrowser/WindowsBrowser.cs" afterPath="$PROJECT_DIR$/../Launchpad.Launcher/Interface/ChangelogBrowser/WindowsBrowser.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Launchpad.Utilities/Launchpad.Utilities.csproj" afterPath="$PROJECT_DIR$/../Launchpad.Utilities/Launchpad.Utilities.csproj" />
     </list>
     <ignored path="Launchpad.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -67,7 +69,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Program.cs" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Program.cs" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../Launchpad.Launcher/Program.cs">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="637">
@@ -85,6 +87,60 @@
                 <marker date="1469175213337" expanded="true" signature="2543:2588" ph="{...}" />
                 <marker date="1469175213337" expanded="true" signature="2592:3138" ph="/// ..." />
                 <marker date="1469175213337" expanded="true" signature="3253:4048" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="WindowsBrowser.cs" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/../Launchpad.Launcher/Interface/ChangelogBrowser/WindowsBrowser.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="375">
+              <caret line="55" column="40" selection-start-line="55" selection-start-column="40" selection-end-line="55" selection-end-column="40" />
+              <folding>
+                <marker date="1469180199541" expanded="true" signature="0:780" ph="/* ... */" />
+                <marker date="1469180199541" expanded="true" signature="788:872" ph="..." />
+                <marker date="1469180199541" expanded="true" signature="929:3898" ph="{...}" />
+                <marker date="1469180199541" expanded="true" signature="933:1197" ph="/// ..." />
+                <marker date="1469180199541" expanded="true" signature="1249:3896" ph="{...}" />
+                <marker date="1469180199541" expanded="true" signature="1255:1464" ph="/// ..." />
+                <marker date="1469180199541" expanded="true" signature="1614:1706" ph="/// ..." />
+                <marker date="1469180199541" expanded="true" signature="1768:1909" ph="/// ..." />
+                <marker date="1469180199541" expanded="true" signature="1968:2074" ph="/// ..." />
+                <marker date="1469180199541" expanded="true" signature="2127:2324" ph="/// ..." />
+                <marker date="1469180199541" expanded="true" signature="2375:2635" ph="/// ..." />
+                <marker date="1469180199541" expanded="true" signature="2686:2967" ph="{...}" />
+                <marker date="1469180199541" expanded="true" signature="2971:3108" ph="/// ..." />
+                <marker date="1469180199541" expanded="true" signature="3181:3285" ph="{...}" />
+                <marker date="1469180199541" expanded="true" signature="3289:3453" ph="/// ..." />
+                <marker date="1469180199541" expanded="true" signature="3488:3522" ph="{...}" />
+                <marker date="1469180199541" expanded="true" signature="3526:3723" ph="/// ..." />
+                <marker date="1469180199541" expanded="true" signature="3766:3893" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Changelog.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../Launchpad.Launcher/Interface/ChangelogBrowser/Changelog.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="397">
+              <caret line="49" column="0" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
+              <folding>
+                <marker date="1469180192653" expanded="true" signature="0:782" ph="/* ... */" />
+                <marker date="1469180192653" expanded="true" signature="790:857" ph="..." />
+                <marker date="1469180192653" expanded="true" signature="914:2968" ph="{...}" />
+                <marker date="1469180192653" expanded="true" signature="918:1117" ph="/// ..." />
+                <marker date="1469180192653" expanded="true" signature="1164:2966" ph="{...}" />
+                <marker date="1469180192653" expanded="true" signature="1170:1240" ph="/// ..." />
+                <marker date="1469180192653" expanded="true" signature="1294:1368" ph="/// ..." />
+                <marker date="1469180192653" expanded="true" signature="1412:1602" ph="/// ..." />
+                <marker date="1469180192653" expanded="true" signature="1652:1918" ph="/// ..." />
+                <marker date="1469180192653" expanded="true" signature="1964:2277" ph="{...}" />
+                <marker date="1469180192653" expanded="true" signature="2281:2445" ph="/// ..." />
+                <marker date="1469180192653" expanded="true" signature="2480:2559" ph="{...}" />
+                <marker date="1469180192653" expanded="true" signature="2563:2819" ph="/// ..." />
+                <marker date="1469180192653" expanded="true" signature="2867:2963" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -116,8 +172,6 @@
         <option value="$PROJECT_DIR$/../Launchpad.Launcher/Handlers/UnixHandler.cs" />
         <option value="$PROJECT_DIR$/../Launchpad.Launcher/Handlers/LauncherHandler.cs" />
         <option value="$PROJECT_DIR$/../Launchpad.Launcher/Utility/Utilities.cs" />
-        <option value="$PROJECT_DIR$/../Launchpad.Launcher/Interface/ChangelogBrowser/WindowsBrowser.cs" />
-        <option value="$PROJECT_DIR$/../Launchpad.Launcher/Interface/ChangelogBrowser/Changelog.cs" />
         <option value="$PROJECT_DIR$/../Launchpad.Launcher/Handlers/ManifestHandler.cs" />
         <option value="$PROJECT_DIR$/../Launchpad.Launcher/Handlers/ConfigHandler.cs" />
         <option value="$PROJECT_DIR$/../Launchpad.Launcher/Handlers/ChecksHandler.cs" />
@@ -130,6 +184,8 @@
         <option value="$PROJECT_DIR$/../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs" />
         <option value="$PROJECT_DIR$/../Launchpad.Utilities/Interface/MainWindow.cs" />
         <option value="$PROJECT_DIR$/../Launchpad.Launcher/Program.cs" />
+        <option value="$PROJECT_DIR$/../Launchpad.Launcher/Interface/ChangelogBrowser/Changelog.cs" />
+        <option value="$PROJECT_DIR$/../Launchpad.Launcher/Interface/ChangelogBrowser/WindowsBrowser.cs" />
       </list>
     </option>
   </component>
@@ -297,6 +353,46 @@
               <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Launchpad" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Launchpad.Launcher" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Interface" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Launchpad" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Launchpad.Launcher" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Interface" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ChangelogBrowser" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
         <option name="show-file-system" value="false" />
       </pane>
@@ -385,12 +481,12 @@
       <workItem from="1469174542815" duration="26000" />
       <workItem from="1469174649128" duration="621000" />
       <workItem from="1469179720232" duration="14000" />
-      <workItem from="1469179877145" duration="112000" />
+      <workItem from="1469179877145" duration="663000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="26425000" />
+    <option name="totallyTimeSpent" value="26976000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -665,20 +761,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../Launchpad.Launcher/Interface/ChangelogBrowser/WindowsBrowser.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-323">
-          <caret line="37" column="22" selection-start-line="37" selection-start-column="22" selection-end-line="37" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../Launchpad.Launcher/Interface/ChangelogBrowser/Changelog.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="112">
-          <caret line="51" column="16" selection-start-line="51" selection-start-column="16" selection-end-line="51" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../Launchpad.Launcher/Interface/MainWindow.cs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
@@ -784,6 +866,56 @@
             <marker date="1469175213337" expanded="true" signature="2543:2588" ph="{...}" />
             <marker date="1469175213337" expanded="true" signature="2592:3138" ph="/// ..." />
             <marker date="1469175213337" expanded="true" signature="3253:4048" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../Launchpad.Launcher/Interface/ChangelogBrowser/Changelog.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="397">
+          <caret line="49" column="0" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
+          <folding>
+            <marker date="1469180192653" expanded="true" signature="0:782" ph="/* ... */" />
+            <marker date="1469180192653" expanded="true" signature="790:857" ph="..." />
+            <marker date="1469180192653" expanded="true" signature="914:2968" ph="{...}" />
+            <marker date="1469180192653" expanded="true" signature="918:1117" ph="/// ..." />
+            <marker date="1469180192653" expanded="true" signature="1164:2966" ph="{...}" />
+            <marker date="1469180192653" expanded="true" signature="1170:1240" ph="/// ..." />
+            <marker date="1469180192653" expanded="true" signature="1294:1368" ph="/// ..." />
+            <marker date="1469180192653" expanded="true" signature="1412:1602" ph="/// ..." />
+            <marker date="1469180192653" expanded="true" signature="1652:1918" ph="/// ..." />
+            <marker date="1469180192653" expanded="true" signature="1964:2277" ph="{...}" />
+            <marker date="1469180192653" expanded="true" signature="2281:2445" ph="/// ..." />
+            <marker date="1469180192653" expanded="true" signature="2480:2559" ph="{...}" />
+            <marker date="1469180192653" expanded="true" signature="2563:2819" ph="/// ..." />
+            <marker date="1469180192653" expanded="true" signature="2867:2963" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../Launchpad.Launcher/Interface/ChangelogBrowser/WindowsBrowser.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="55" column="40" selection-start-line="55" selection-start-column="40" selection-end-line="55" selection-end-column="40" />
+          <folding>
+            <marker date="1469180199541" expanded="true" signature="0:780" ph="/* ... */" />
+            <marker date="1469180199541" expanded="true" signature="788:872" ph="..." />
+            <marker date="1469180199541" expanded="true" signature="929:3898" ph="{...}" />
+            <marker date="1469180199541" expanded="true" signature="933:1197" ph="/// ..." />
+            <marker date="1469180199541" expanded="true" signature="1249:3896" ph="{...}" />
+            <marker date="1469180199541" expanded="true" signature="1255:1464" ph="/// ..." />
+            <marker date="1469180199541" expanded="true" signature="1614:1706" ph="/// ..." />
+            <marker date="1469180199541" expanded="true" signature="1768:1909" ph="/// ..." />
+            <marker date="1469180199541" expanded="true" signature="1968:2074" ph="/// ..." />
+            <marker date="1469180199541" expanded="true" signature="2127:2324" ph="/// ..." />
+            <marker date="1469180199541" expanded="true" signature="2375:2635" ph="/// ..." />
+            <marker date="1469180199541" expanded="true" signature="2686:2967" ph="{...}" />
+            <marker date="1469180199541" expanded="true" signature="2971:3108" ph="/// ..." />
+            <marker date="1469180199541" expanded="true" signature="3181:3285" ph="{...}" />
+            <marker date="1469180199541" expanded="true" signature="3289:3453" ph="/// ..." />
+            <marker date="1469180199541" expanded="true" signature="3488:3522" ph="{...}" />
+            <marker date="1469180199541" expanded="true" signature="3526:3723" ph="/// ..." />
+            <marker date="1469180199541" expanded="true" signature="3766:3893" ph="{...}" />
           </folding>
         </state>
       </provider>
