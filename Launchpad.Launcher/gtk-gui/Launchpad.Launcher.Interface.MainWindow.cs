@@ -89,7 +89,16 @@ namespace Launchpad.Launcher.Interface
 			};
 
 			// Container child vbox1.Gtk.Box+BoxChild
-			this.UIManager.AddUiFromString ("<ui><menubar name='menuBar'><menu name='menuAction' action='menuAction'><menuitem name='repairGameAction' action='repairGameAction'/></menu></menubar></ui>");
+			this.UIManager.AddUiFromString
+			(
+				"<ui>" +
+					"<menubar name='menuBar'>" +
+						"<menu name='menuAction' action='menuAction'>" +
+							"<menuitem name='repairGameAction' action='repairGameAction'/>" +
+						"</menu>" +
+					"</menubar>" +
+				"</ui>"
+			);
 			this.menuBar = (MenuBar)this.UIManager.GetWidget ("/menuBar");
 			this.menuBar.Name = "menuBar";
 			this.vbox1.Add (this.menuBar);
