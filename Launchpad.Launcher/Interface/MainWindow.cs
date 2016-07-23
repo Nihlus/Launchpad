@@ -194,26 +194,36 @@ namespace Launchpad.Launcher.Interface
 				// If the launcher does not need an update at this point, we can continue checks for the game
 				if (!Checks.IsLauncherOutdated())
 				{
-					if (!Checks.IsGameInstalled())
+					if (!Checks.IsPlatformAvailable(Config.GetSystemTarget()))
 					{
-						// If the game is not installed, offer to install it
-						Log.Info("The game has not yet been installed.");
-						SetLauncherMode(ELauncherMode.Install, false);
+						Log.Info($"The server does not provide files for platform \"{ConfigHandler.GetCurrentPlatform()}\". " +
+						         "A .provides file must be present in the platforms' root directory.");
+
+						SetLauncherMode(ELauncherMode.Inactive, false);
 					}
 					else
 					{
-						// If the game is installed (which it should be at this point), check if it needs to be updated
-						if (Checks.IsGameOutdated())
+						if (!Checks.IsGameInstalled())
 						{
-							// If it does, offer to update it
-							Log.Info($"The game is outdated. \n\tLocal version: {Config.GetLocalGameVersion()}");
-							SetLauncherMode(ELauncherMode.Update, false);
+							// If the game is not installed, offer to install it
+							Log.Info("The game has not yet been installed.");
+							SetLauncherMode(ELauncherMode.Install, false);
 						}
 						else
 						{
-							// All checks passed, so we can offer to launch the game.
-							Log.Info("All checks passed. Game can be launched.");
-							SetLauncherMode(ELauncherMode.Launch, false);
+							// If the game is installed (which it should be at this point), check if it needs to be updated
+							if (Checks.IsGameOutdated())
+							{
+								// If it does, offer to update it
+								Log.Info($"The game is outdated. \n\tLocal version: {Config.GetLocalGameVersion()}");
+								SetLauncherMode(ELauncherMode.Update, false);
+							}
+							else
+							{
+								// All checks passed, so we can offer to launch the game.
+								Log.Info("All checks passed. Game can be launched.");
+								SetLauncherMode(ELauncherMode.Launch, false);
+							}
 						}
 					}
 				}
@@ -344,79 +354,55 @@ namespace Launchpad.Launcher.Interface
 		/// <param name="e">Empty arguments.</param>
 		private void OnPrimaryButtonClicked(object sender, EventArgs e)
 		{
+			// Drop out if the current platform isn't available on the server
+			if (!Checks.IsPlatformAvailable(Config.GetSystemTarget()))
+			{
+				IndicatorLabel.Text =
+					LocalizationCatalog.GetString("The server does not provide the game for the selected platform.");
+				MainProgressBar.Text = "";
+
+				Log.Info($"The server does not provide files for platform \"{ConfigHandler.GetCurrentPlatform()}\". " +
+				         "A .provides file must be present in the platforms' root directory.");
+
+				SetLauncherMode(ELauncherMode.Inactive, false);
+
+				return;
+			}
+
+			// else, run the relevant function
 			switch (Mode)
 			{
 				case ELauncherMode.Repair:
 				{
-					if (Checks.IsPlatformAvailable(Config.GetSystemTarget()))
-					{
-						// Repair the game asynchronously
-						SetLauncherMode(ELauncherMode.Repair, true);
-						Game.VerifyGame();
-					}
-					else
-					{
-						IndicatorLabel.Text =
-							LocalizationCatalog.GetString("The server does not provide the game for the selected platform.");
-						MainProgressBar.Text = "";
+					// Repair the game asynchronously
+					SetLauncherMode(ELauncherMode.Repair, true);
+					Game.VerifyGame();
 
-						Log.Info($"The server does not provide files for platform \"{ConfigHandler.GetCurrentPlatform()}\". " +
-							"A .provides file must be present in the platforms' root directory.");
-
-						SetLauncherMode(ELauncherMode.Install, false);
-					}
 					break;
 				}
 				case ELauncherMode.Install:
 				{
-					//check for a .provides file in the platform directory on the server
-					//if there is none, the server does not provide a game for that platform
-					if (Checks.IsPlatformAvailable(Config.GetSystemTarget()))
-					{
-						//install the game asynchronously
-						SetLauncherMode(ELauncherMode.Install, true);
-						Game.InstallGame();
-					}
-					else
-					{
-						IndicatorLabel.Text =
-							LocalizationCatalog.GetString("The server does not provide the game for the selected platform.");
-						MainProgressBar.Text = "";
+					// Install the game asynchronously
+					SetLauncherMode(ELauncherMode.Install, true);
+					Game.InstallGame();
 
-						Log.Info($"The server does not provide files for platform \"{ConfigHandler.GetCurrentPlatform()}\". " +
-														"A .provides file must be present in the platforms' root directory.");
-
-						SetLauncherMode(ELauncherMode.Install, false);
-					}
 					break;
 				}
 				case ELauncherMode.Update:
 				{
 					if (Checks.IsLauncherOutdated())
 					{
+						// Update the launcher asynchronously
 						SetLauncherMode(ELauncherMode.Update, true);
 						Launcher.UpdateLauncher();
 					}
 					else
 					{
-						// Uppdate the game asynchronously
-						if (Checks.IsPlatformAvailable(Config.GetSystemTarget()))
-						{
-							// Install the game asynchronously
-							SetLauncherMode(ELauncherMode.Update, true);
-							Game.UpdateGame();
-						}
-						else
-						{
-							IndicatorLabel.Text = LocalizationCatalog.GetString("The server does not provide the game for the selected platform.");
-							MainProgressBar.Text = "";
-
-							Log.Info($"The server does not provide files for platform \"{ConfigHandler.GetCurrentPlatform()}\". " +
-															"A .provides file must be present in the platforms' root directory.");
-
-							SetLauncherMode(ELauncherMode.Install, false);
-						}
+						// Update the game asynchronously
+						SetLauncherMode(ELauncherMode.Update, true);
+						Game.UpdateGame();
 					}
+
 					break;
 				}
 				case ELauncherMode.Launch:
@@ -424,8 +410,6 @@ namespace Launchpad.Launcher.Interface
 					IndicatorLabel.Text = LocalizationCatalog.GetString("Idle");
 					MainProgressBar.Text = "";
 
-					// Events such as LaunchFailed can fire before this has finished
-					// Thus, we set the mode before the actual launching of the game.
 					SetLauncherMode(ELauncherMode.Launch, true);
 					Game.LaunchGame();
 
@@ -448,23 +432,23 @@ namespace Launchpad.Launcher.Interface
 		{
 			//Take the resulting HTML string from the changelog download and send it to the changelog browser
 			Application.Invoke(delegate
-				{
-					Browser.LoadHTML(e.HTML, e.URL);
-				});
+			{
+				Browser.LoadHTML(e.HTML, e.URL);
+			});
 		}
 
 		private static void OnLauncherDownloadFinished(object sender, ModuleInstallationFinishedArgs e)
 		{
 			Application.Invoke(delegate
+			{
+				if (e.Module == EModule.Launcher)
 				{
-					if (e.Module == EModule.Launcher)
-					{
-						ProcessStartInfo script = LauncherHandler.CreateUpdateScript();
+					ProcessStartInfo script = LauncherHandler.CreateUpdateScript();
 
-						Process.Start(script);
-						Application.Quit();
-					}
-				});
+					Process.Start(script);
+					Application.Quit();
+				}
+			});
 		}
 
 		/// <summary>
@@ -520,11 +504,11 @@ namespace Launchpad.Launcher.Interface
 		private void OnModuleInstallationProgressChanged(object sender, ModuleProgressChangedArgs e)
 		{
 			Application.Invoke(delegate
-				{
-					MainProgressBar.Text = e.ProgressBarMessage;
-					IndicatorLabel.Text = e.IndicatorLabelMessage;
-					MainProgressBar.Fraction = e.ProgressFraction;
-				});
+			{
+				MainProgressBar.Text = e.ProgressBarMessage;
+				IndicatorLabel.Text = e.IndicatorLabelMessage;
+				MainProgressBar.Fraction = e.ProgressFraction;
+			});
 		}
 
 		/// <summary>
@@ -535,35 +519,35 @@ namespace Launchpad.Launcher.Interface
 		private void OnGameDownloadFinished(object sender, EventArgs e)
 		{
 			Application.Invoke(delegate
+			{
+				IndicatorLabel.Text = LocalizationCatalog.GetString("Idle");
+
+				switch (Mode)
 				{
-					IndicatorLabel.Text = LocalizationCatalog.GetString("Idle");
-
-					switch (Mode)
+					case ELauncherMode.Install:
 					{
-						case ELauncherMode.Install:
-						{
-							MainProgressBar.Text = LocalizationCatalog.GetString("Installation finished");
-							break;
-						}
-						case ELauncherMode.Update:
-						{
-							MainProgressBar.Text = LocalizationCatalog.GetString("Update finished");
-							break;
-						}
-						case ELauncherMode.Repair:
-						{
-							MainProgressBar.Text = LocalizationCatalog.GetString("Repair finished");
-							break;
-						}
-						default:
-						{
-							MainProgressBar.Text = "";
-							break;
-						}
+						MainProgressBar.Text = LocalizationCatalog.GetString("Installation finished");
+						break;
 					}
+					case ELauncherMode.Update:
+					{
+						MainProgressBar.Text = LocalizationCatalog.GetString("Update finished");
+						break;
+					}
+					case ELauncherMode.Repair:
+					{
+						MainProgressBar.Text = LocalizationCatalog.GetString("Repair finished");
+						break;
+					}
+					default:
+					{
+						MainProgressBar.Text = "";
+						break;
+					}
+				}
 
-					SetLauncherMode(ELauncherMode.Launch, false);
-				});
+				SetLauncherMode(ELauncherMode.Launch, false);
+			});
 		}
 
 		private void OnGameExited(object sender, GameExitEventArgs e)

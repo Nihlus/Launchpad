@@ -46,14 +46,31 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		private static readonly ILog Log = LogManager.GetLogger(typeof(GameHandler));
 
+		/// <summary>
+		/// Event raised whenever the progress of installing or updating the game changes.
+		/// </summary>
 		public event ModuleInstallationProgressChangedEventHandler ProgressChanged;
 
+		/// <summary>
+		/// Event raised whenever the game finishes downloading, regardless of whether or not it's updating
+		/// or installing.
+		/// </summary>
 		public event GameInstallationFinishedEventHandler GameDownloadFinished;
 
+		/// <summary>
+		/// Event raised whenever the game fails to download, regardless of whether or not it's updating
+		/// or installing.
+		/// </summary>
 		public event GameInstallationFailedEventHander GameDownloadFailed;
 
+		/// <summary>
+		/// Event raised whenever the game fails to launch.
+		/// </summary>
 		public event GameLaunchFailedEventHandler GameLaunchFailed;
 
+		/// <summary>
+		/// Event raised whenever the game exits.
+		/// </summary>
 		public event GameExitEventHandler GameExited;
 
 		// ...
@@ -66,6 +83,9 @@ namespace Launchpad.Launcher.Handlers
 
 		private readonly PatchProtocolHandler Patch;
 
+		/// <summary>
+		/// Creates a new instance of the <see cref="GameHandler"/> class.
+		/// </summary>
 		public GameHandler()
 		{
 			Patch = Config.GetPatchProtocol();
@@ -200,6 +220,9 @@ namespace Launchpad.Launcher.Handlers
 			}
 		}
 
+		/// <summary>
+		/// Raises the Game Launch Failed event.
+		/// </summary>
 		private void OnGameLaunchFailed()
 		{
 			if (GameLaunchFailed != null)
@@ -208,6 +231,9 @@ namespace Launchpad.Launcher.Handlers
 			}
 		}
 
+		/// <summary>
+		/// Raises the Game Exited event.
+		/// </summary>
 		private void OnGameExited()
 		{
 			if (GameExited != null)
@@ -218,7 +244,7 @@ namespace Launchpad.Launcher.Handlers
 	}
 
 	/*
-		Game-specific events
+		Game-specific delegates
 	*/
 	public delegate void GameInstallationFinishedEventHandler(object sender,EventArgs e);
 	public delegate void GameInstallationFailedEventHander(object sender,EventArgs e);

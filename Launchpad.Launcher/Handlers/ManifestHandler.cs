@@ -34,7 +34,7 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		private static readonly ILog Log = LogManager.GetLogger(typeof(ManifestHandler));
 
-		public static ManifestHandler Instance = new ManifestHandler();
+		public static readonly ManifestHandler Instance = new ManifestHandler();
 
 		private readonly object GameManifestLock = new object();
 		private readonly object OldGameManifestLock = new object();
@@ -59,7 +59,7 @@ namespace Launchpad.Launcher.Handlers
 		}
 
 		/// <summary>
-		/// Gets the manifest. Call sparsely, as it loads the entire manifest from disk each time
+		/// Gets the game manifest. Call sparsely, as it loads the entire manifest from disk each time
 		/// this property is accessed.
 		/// </summary>
 		/// <value>The manifest.</value>
@@ -75,7 +75,7 @@ namespace Launchpad.Launcher.Handlers
 		private readonly List<ManifestEntry> oldGameManifest = new List<ManifestEntry>();
 
 		/// <summary>
-		/// Gets the old manifest. Call sparsely, as it loads the entire manifest from disk each time
+		/// Gets the old game manifest. Call sparsely, as it loads the entire manifest from disk each time
 		/// this property is accessed.
 		/// </summary>
 		/// <value>The old manifest.</value>
@@ -89,7 +89,6 @@ namespace Launchpad.Launcher.Handlers
 		}
 
 		private readonly List<ManifestEntry> launchpadManifest = new List<ManifestEntry>();
-
 		public List<ManifestEntry> LaunchpadManifest
 		{
 			get
@@ -100,7 +99,6 @@ namespace Launchpad.Launcher.Handlers
 		}
 
 		private readonly List<ManifestEntry> oldLaunchpadManifest = new List<ManifestEntry>();
-
 		public List<ManifestEntry> OldLaunchpadManifest
 		{
 			get
