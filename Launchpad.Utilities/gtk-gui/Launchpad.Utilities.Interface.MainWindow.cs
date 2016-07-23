@@ -50,18 +50,18 @@ namespace Launchpad.Utilities.Interface
 		private void Build ()
 		{
 			Gui.Initialize (this);
-			// Widget Launchpad.Utilities.UnixUI.MainWindow
+			// Widget Launchpad.Utilities.Interface.MainWindow
 			UIManager = new UIManager ();
 			ActionGroup w1 = new ActionGroup ("Default");
 			UIManager.InsertActionGroup (w1, 0);
 			AddAccelGroup (UIManager.AccelGroup);
 			WidthRequest = 640;
 			HeightRequest = 384;
-			Name = "Launchpad.Utilities.UnixUI.MainWindow";
+			Name = "Launchpad.Utilities.Interface.MainWindow";
 			Title = LocalizationCatalog.GetString ("Launchpad Utilities - Manifest");
 			Icon = Pixbuf.LoadFromResource ("Launchpad.Utilities.Resources.Icons8-Android-Industry-Engineering.ico");
 			WindowPosition = ((WindowPosition)(4));
-			// Container child Launchpad.Utilities.UnixUI.MainWindow.Gtk.Container+ContainerChild
+			// Container child Launchpad.Utilities.Interface.MainWindow.Gtk.Container+ContainerChild
 			vbox3 = new VBox
 			{
 				Name = "vbox3",

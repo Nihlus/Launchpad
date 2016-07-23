@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1edebc49-7aee-4412-b7b2-58bf6a209799" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Launchpad.Launcher/Interface/MainWindow.cs" afterPath="$PROJECT_DIR$/../Launchpad.Launcher/Interface/MainWindow.cs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs" afterPath="$PROJECT_DIR$/../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs" afterPath="$PROJECT_DIR$/../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Launchpad.Utilities/gtk-gui/gui.stetic" afterPath="$PROJECT_DIR$/../Launchpad.Utilities/gtk-gui/gui.stetic" />
     </list>
     <ignored path="Launchpad.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -33,10 +33,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="MainWindow.cs" pinned="false" current-in-tab="true">
+      <file leaf-file-name="MainWindow.cs" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../Launchpad.Launcher/Interface/MainWindow.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="322">
+            <state relative-caret-position="2032">
               <caret line="253" column="43" selection-start-line="253" selection-start-column="43" selection-end-line="253" selection-end-column="43" />
               <folding>
                 <marker date="1469232933434" expanded="true" signature="0:783" ph="/* ... */" />
@@ -79,16 +79,16 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Launchpad.Launcher.Interface.MainWindow.cs" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Launchpad.Launcher.Interface.MainWindow.cs" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="690">
-              <caret line="68" column="30" selection-start-line="68" selection-start-column="30" selection-end-line="68" selection-end-column="30" />
+            <state relative-caret-position="213">
+              <caret line="83" column="50" selection-start-line="83" selection-start-column="50" selection-end-line="83" selection-end-column="50" />
               <folding>
-                <marker date="1469232834314" expanded="true" signature="76:130" ph="..." />
-                <marker date="1469232834314" expanded="true" signature="170:6921" ph="{...}" />
-                <marker date="1469232834314" expanded="true" signature="212:6919" ph="{...}" />
-                <marker date="1469232834314" expanded="true" signature="832:6916" ph="{...}" />
+                <marker date="1469233172506" expanded="true" signature="76:130" ph="..." />
+                <marker date="1469233172506" expanded="true" signature="170:6982" ph="{...}" />
+                <marker date="1469233172506" expanded="true" signature="212:6980" ph="{...}" />
+                <marker date="1469233172506" expanded="true" signature="832:6977" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -121,7 +121,6 @@
         <option value="$PROJECT_DIR$/../Launchpad.Launcher/Handlers/LauncherHandler.cs" />
         <option value="$PROJECT_DIR$/../Launchpad.Launcher/Utility/Utilities.cs" />
         <option value="$PROJECT_DIR$/../Launchpad.Launcher/Handlers/ChecksHandler.cs" />
-        <option value="$PROJECT_DIR$/../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs" />
         <option value="$PROJECT_DIR$/../Launchpad.Launcher/Handlers/Protocols/PatchProtocolHandler.cs" />
         <option value="$PROJECT_DIR$/../Launchpad.Launcher/Handlers/Protocols/ManifestBasedProtocolHandler.cs" />
         <option value="$PROJECT_DIR$/../Launchpad.Launcher/Handlers/Protocols/FTPProtocolHandler.cs" />
@@ -133,8 +132,10 @@
         <option value="$PROJECT_DIR$/../Launchpad.Launcher/Handlers/ManifestHandler.cs" />
         <option value="$USER_HOME$/.local/share/JetBrains/Shared/v06/DecompilerCache/decompiler/EA6192EF-DDBB-4A9A-AE90-BD837C1120A0/67/1c72104f/Marshaller.cs" />
         <option value="$PROJECT_DIR$/../Launchpad.Launcher/Handlers/ConfigHandler.cs" />
-        <option value="$PROJECT_DIR$/../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs" />
         <option value="$PROJECT_DIR$/../Launchpad.Launcher/Interface/MainWindow.cs" />
+        <option value="$PROJECT_DIR$/../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs" />
+        <option value="$PROJECT_DIR$/../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs" />
+        <option value="$PROJECT_DIR$/../Launchpad.Utilities/gtk-gui/gui.stetic" />
       </list>
     </option>
   </component>
@@ -344,12 +345,12 @@
       <workItem from="1469174649128" duration="621000" />
       <workItem from="1469179720232" duration="14000" />
       <workItem from="1469179877145" duration="7521000" />
-      <workItem from="1469232158357" duration="840000" />
+      <workItem from="1469232158357" duration="1030000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="34674000" />
+    <option name="totallyTimeSpent" value="34864000" />
   </component>
   <component name="TodoView" selected-index="3">
     <todo-panel id="selected-file">
@@ -430,7 +431,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../Launchpad.Tests/FTPTests.cs" />
     <entry file="file://$PROJECT_DIR$/../Launchpad.Tests/MD5Tests.cs" />
     <entry file="file://$USER_HOME$/.local/share/JetBrains/Shared/v06/DecompilerCache/decompiler/B73C2DBF-7CB3-44DA-893B-4F0C7456A637/ea/59858851/OperatingSystem.cs">
       <provider selected="true" editor-type-id="text-editor">
@@ -600,13 +600,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-128">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="465">
-          <caret line="31" column="38" selection-start-line="31" selection-start-column="38" selection-end-line="31" selection-end-column="38" />
         </state>
       </provider>
     </entry>
@@ -887,22 +880,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="690">
-          <caret line="68" column="30" selection-start-line="68" selection-start-column="30" selection-end-line="68" selection-end-column="30" />
-          <folding>
-            <marker date="1469232834314" expanded="true" signature="76:130" ph="..." />
-            <marker date="1469232834314" expanded="true" signature="170:6921" ph="{...}" />
-            <marker date="1469232834314" expanded="true" signature="212:6919" ph="{...}" />
-            <marker date="1469232834314" expanded="true" signature="832:6916" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../Launchpad.Launcher/Interface/MainWindow.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="322">
+        <state relative-caret-position="2032">
           <caret line="253" column="43" selection-start-line="253" selection-start-column="43" selection-end-line="253" selection-end-column="43" />
           <folding>
             <marker date="1469232933434" expanded="true" signature="0:783" ph="/* ... */" />
@@ -940,6 +920,40 @@
             <marker date="1469232933434" expanded="true" signature="15705:15928" ph="/// ..." />
             <marker date="1469232933434" expanded="true" signature="15994:16687" ph="{...}" />
             <marker date="1469232933434" expanded="true" signature="16752:17393" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../Launchpad.Utilities/gtk-gui/gui.stetic">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="53" selection-start-line="9" selection-start-column="53" selection-end-line="9" selection-end-column="53" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="193">
+          <caret line="63" column="51" selection-start-line="63" selection-start-column="51" selection-end-line="63" selection-end-column="51" />
+          <folding>
+            <marker date="1469233172554" expanded="true" signature="76:105" ph="..." />
+            <marker date="1469233172554" expanded="true" signature="146:6660" ph="{...}" />
+            <marker date="1469233172554" expanded="true" signature="188:6658" ph="{...}" />
+            <marker date="1469233172554" expanded="true" signature="849:6655" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="213">
+          <caret line="83" column="50" selection-start-line="83" selection-start-column="50" selection-end-line="83" selection-end-column="50" />
+          <folding>
+            <marker date="1469233172506" expanded="true" signature="76:130" ph="..." />
+            <marker date="1469233172506" expanded="true" signature="170:6982" ph="{...}" />
+            <marker date="1469233172506" expanded="true" signature="212:6980" ph="{...}" />
+            <marker date="1469233172506" expanded="true" signature="832:6977" ph="{...}" />
           </folding>
         </state>
       </provider>

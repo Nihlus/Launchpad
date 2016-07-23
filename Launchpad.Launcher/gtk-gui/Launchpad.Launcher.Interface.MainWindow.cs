@@ -52,15 +52,15 @@ namespace Launchpad.Launcher.Interface
 		{
 			Gui.Initialize (this);
 
-			// Widget Launchpad.Launcher.UnixUI.MainWindow
+			// Widget Launchpad.Launcher.Interface.MainWindow
 			this.UIManager = new UIManager ();
-			ActionGroup w1 = new ActionGroup ("Default");
+			ActionGroup mainActionGroup = new ActionGroup ("Default");
 
 			this.menuAction = new Action("menuAction", LocalizationCatalog.GetString("Menu"), null, null)
 			{
 				ShortLabel = LocalizationCatalog.GetString("Menu")
 			};
-			w1.Add (this.menuAction, null);
+			mainActionGroup.Add (this.menuAction, null);
 
 			this.repairGameAction = new Action(
 				"repairGameAction",
@@ -70,18 +70,18 @@ namespace Launchpad.Launcher.Interface
 			{
 				ShortLabel = LocalizationCatalog.GetString("Repair Game")
 			};
-			w1.Add (this.repairGameAction, null);
+			mainActionGroup.Add (this.repairGameAction, null);
 
-			this.UIManager.InsertActionGroup (w1, 0);
+			this.UIManager.InsertActionGroup (mainActionGroup, 0);
 			this.AddAccelGroup (this.UIManager.AccelGroup);
-			this.Name = "Launchpad.Launcher.UnixUI.MainWindow";
+			this.Name = "Launchpad.Launcher.Interface.MainWindow";
 			this.Title = LocalizationCatalog.GetString ("Launchpad - <GameName>");
 			this.Icon = Pixbuf.LoadFromResource ("Launchpad.Launcher.Resources.RocketIcon.ico");
 			this.WindowPosition = (WindowPosition)4;
 			this.DefaultWidth = 755;
 			this.DefaultHeight = 412;
 
-			// Container child Launchpad.Launcher.UnixUI.MainWindow.Gtk.Container+ContainerChild
+			// Container child Launchpad.Launcher.Interface.MainWindow.Gtk.Container+ContainerChild
 			this.vbox1 = new VBox
 			{
 				Name = "vbox1",
