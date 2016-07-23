@@ -127,6 +127,7 @@
   <ItemGroup>
     <Folder Include="Handlers\Protocols\" />
     <Folder Include="Interface\ChangelogBrowser" />
+    <Folder Include="Interface\gtk3" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
