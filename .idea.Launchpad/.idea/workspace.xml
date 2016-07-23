@@ -80,13 +80,13 @@
       <file leaf-file-name="Launchpad.Launcher.Interface.MainWindow.cs" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="457">
-              <caret line="89" column="0" selection-start-line="89" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
+            <state relative-caret-position="615">
+              <caret line="47" column="0" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
               <folding>
-                <marker date="1469233544050" expanded="true" signature="76:130" ph="..." />
-                <marker date="1469233544050" expanded="true" signature="170:7057" ph="{...}" />
-                <marker date="1469233544050" expanded="true" signature="212:7055" ph="{...}" />
-                <marker date="1469233544050" expanded="true" signature="832:7052" ph="{...}" />
+                <marker date="1469233608946" expanded="true" signature="76:130" ph="..." />
+                <marker date="1469233608946" expanded="true" signature="170:7050" ph="{...}" />
+                <marker date="1469233608946" expanded="true" signature="212:7048" ph="{...}" />
+                <marker date="1469233608946" expanded="true" signature="832:7045" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -343,12 +343,12 @@
       <workItem from="1469174649128" duration="621000" />
       <workItem from="1469179720232" duration="14000" />
       <workItem from="1469179877145" duration="7521000" />
-      <workItem from="1469232158357" duration="1401000" />
+      <workItem from="1469232158357" duration="1470000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="35235000" />
+    <option name="totallyTimeSpent" value="35304000" />
   </component>
   <component name="TodoView" selected-index="3">
     <todo-panel id="selected-file">
@@ -945,13 +945,13 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="457">
-          <caret line="89" column="0" selection-start-line="89" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
+        <state relative-caret-position="615">
+          <caret line="47" column="0" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
           <folding>
-            <marker date="1469233544050" expanded="true" signature="76:130" ph="..." />
-            <marker date="1469233544050" expanded="true" signature="170:7057" ph="{...}" />
-            <marker date="1469233544050" expanded="true" signature="212:7055" ph="{...}" />
-            <marker date="1469233544050" expanded="true" signature="832:7052" ph="{...}" />
+            <marker date="1469233608946" expanded="true" signature="76:130" ph="..." />
+            <marker date="1469233608946" expanded="true" signature="170:7050" ph="{...}" />
+            <marker date="1469233608946" expanded="true" signature="212:7048" ph="{...}" />
+            <marker date="1469233608946" expanded="true" signature="832:7045" ph="{...}" />
           </folding>
         </state>
       </provider>

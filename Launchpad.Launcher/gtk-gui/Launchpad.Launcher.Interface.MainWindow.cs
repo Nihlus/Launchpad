@@ -75,7 +75,7 @@ namespace Launchpad.Launcher.Interface
 			this.UIManager.InsertActionGroup (mainActionGroup, 0);
 			this.AddAccelGroup (this.UIManager.AccelGroup);
 			this.Name = "Launchpad.Launcher.Interface.MainWindow";
-			this.Title = LocalizationCatalog.GetString ("Launchpad - <GameName>");
+			this.Title = LocalizationCatalog.GetString ("Launchpad - {0}");
 			this.Icon = Pixbuf.LoadFromResource ("Launchpad.Launcher.Resources.RocketIcon.ico");
 			this.WindowPosition = (WindowPosition)4;
 			this.DefaultWidth = 755;
