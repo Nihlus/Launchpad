@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Launchpad\n"
-"POT-Creation-Date: 2016-07-22 09:50+0200\n"
-"PO-Revision-Date: 2016-07-22 09:51+0200\n"
+"POT-Creation-Date: 2016-07-23 02:27+0200\n"
+"PO-Revision-Date: 2016-07-23 02:27+0200\n"
 "Last-Translator: Jarl Gullberg <jarl.gullberg@gmail.com>\n"
 "Language-Team: Launchpad Translation Team <jarl.gullberg@gmail.com>\n"
 "Language: en_GB\n"
@@ -37,92 +37,92 @@ msgstr ""
 msgid "Downloading {0}: {1} out of {2}"
 msgstr ""
 
-#: ../Launchpad.Launcher/Interface/MainWindow.cs:102
-msgid "Launchpad - "
+#: ../Launchpad.Launcher/Interface/MainWindow.cs:101
+#: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:78
+#, csharp-format
+msgid "Launchpad - {0}"
 msgstr ""
 
-#: ../Launchpad.Launcher/Interface/MainWindow.cs:108
-#: ../Launchpad.Launcher/Interface/MainWindow.cs:424
-#: ../Launchpad.Launcher/Interface/MainWindow.cs:539
-#: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:179
-#: ../Launchpad.Utilities/Interface/MainWindow.cs:56
+#: ../Launchpad.Launcher/Interface/MainWindow.cs:107
+#: ../Launchpad.Launcher/Interface/MainWindow.cs:414
+#: ../Launchpad.Launcher/Interface/MainWindow.cs:527
+#: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:191
+#: ../Launchpad.Utilities/Interface/MainWindow.cs:57
 msgid "Idle"
 msgstr ""
 
-#: ../Launchpad.Launcher/Interface/MainWindow.cs:118
+#: ../Launchpad.Launcher/Interface/MainWindow.cs:117
 msgid "Failed to connect to the patch server. Please check your settings."
 msgstr ""
 
-#: ../Launchpad.Launcher/Interface/MainWindow.cs:123
+#: ../Launchpad.Launcher/Interface/MainWindow.cs:122
 msgid "Could not connect to server."
 msgstr ""
 
-#: ../Launchpad.Launcher/Interface/MainWindow.cs:154
+#: ../Launchpad.Launcher/Interface/MainWindow.cs:153
 msgid ""
 "This appears to be the first time you're starting the launcher.\n"
 "Is this the location where you would like to install the game?"
 msgstr ""
 
-#: ../Launchpad.Launcher/Interface/MainWindow.cs:247
+#: ../Launchpad.Launcher/Interface/MainWindow.cs:259
 msgid "Installing..."
 msgstr ""
 
-#: ../Launchpad.Launcher/Interface/MainWindow.cs:252
+#: ../Launchpad.Launcher/Interface/MainWindow.cs:264
 msgid "Install"
 msgstr ""
 
-#: ../Launchpad.Launcher/Interface/MainWindow.cs:261
+#: ../Launchpad.Launcher/Interface/MainWindow.cs:273
 msgid "Updating..."
 msgstr ""
 
-#: ../Launchpad.Launcher/Interface/MainWindow.cs:266
+#: ../Launchpad.Launcher/Interface/MainWindow.cs:278
 msgid "Update"
 msgstr ""
 
-#: ../Launchpad.Launcher/Interface/MainWindow.cs:275
+#: ../Launchpad.Launcher/Interface/MainWindow.cs:287
 msgid "Repairing..."
 msgstr ""
 
-#: ../Launchpad.Launcher/Interface/MainWindow.cs:280
+#: ../Launchpad.Launcher/Interface/MainWindow.cs:292
 msgid "Repair"
 msgstr ""
 
-#: ../Launchpad.Launcher/Interface/MainWindow.cs:289
+#: ../Launchpad.Launcher/Interface/MainWindow.cs:301
 msgid "Launching..."
 msgstr ""
 
-#: ../Launchpad.Launcher/Interface/MainWindow.cs:294
+#: ../Launchpad.Launcher/Interface/MainWindow.cs:306
 msgid "Launch"
 msgstr ""
 
-#: ../Launchpad.Launcher/Interface/MainWindow.cs:301
-#: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:236
+#: ../Launchpad.Launcher/Interface/MainWindow.cs:315
+#: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:248
 msgid "Inactive"
 msgstr ""
 
-#: ../Launchpad.Launcher/Interface/MainWindow.cs:360
-#: ../Launchpad.Launcher/Interface/MainWindow.cs:383
-#: ../Launchpad.Launcher/Interface/MainWindow.cs:411
+#: ../Launchpad.Launcher/Interface/MainWindow.cs:365
 msgid "The server does not provide the game for the selected platform."
 msgstr ""
 
-#: ../Launchpad.Launcher/Interface/MainWindow.cs:477
+#: ../Launchpad.Launcher/Interface/MainWindow.cs:465
 msgid "The game failed to launch. Try repairing the installation."
 msgstr ""
 
-#: ../Launchpad.Launcher/Interface/MainWindow.cs:545
+#: ../Launchpad.Launcher/Interface/MainWindow.cs:533
 msgid "Installation finished"
 msgstr ""
 
-#: ../Launchpad.Launcher/Interface/MainWindow.cs:550
+#: ../Launchpad.Launcher/Interface/MainWindow.cs:538
 msgid "Update finished"
 msgstr ""
 
-#: ../Launchpad.Launcher/Interface/MainWindow.cs:555
+#: ../Launchpad.Launcher/Interface/MainWindow.cs:543
 msgid "Repair finished"
 msgstr ""
 
-#: ../Launchpad.Launcher/Interface/MainWindow.cs:579
+#: ../Launchpad.Launcher/Interface/MainWindow.cs:567
 msgid ""
 "Whoops! The game appears to have crashed.\n"
 "Would you like the launcher to verify the installation?"
@@ -130,31 +130,31 @@ msgstr ""
 
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:59
 #: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:61
-msgid "Actions"
+msgid "Menu"
 msgstr ""
 
-#: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:65
-#: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:68
+#: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:67
+#: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:71
 msgid "Repair Game"
 msgstr ""
 
-#: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:75
-msgid "Launchpad - <GameName>"
+#: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:68
+msgid "Starts a repair process for the installed game."
 msgstr ""
 
-#: ../Launchpad.Utilities/Interface/MainWindow.cs:83
+#: ../Launchpad.Utilities/Interface/MainWindow.cs:84
 msgid ""
 "No GameVersion.txt file could be found in the target directory. This file is "
 "required.\n"
 "Would you like to add one? The version will be \"1.0.0\"."
 msgstr ""
 
-#: ../Launchpad.Utilities/Interface/MainWindow.cs:123
+#: ../Launchpad.Utilities/Interface/MainWindow.cs:124
 #, csharp-format
 msgid "{0} : {1} out of {2}"
 msgstr ""
 
-#: ../Launchpad.Utilities/Interface/MainWindow.cs:139
+#: ../Launchpad.Utilities/Interface/MainWindow.cs:140
 msgid "Finished"
 msgstr ""
 
