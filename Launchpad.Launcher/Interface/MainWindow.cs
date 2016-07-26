@@ -34,6 +34,10 @@ using Launchpad.Launcher.Interface.ChangelogBrowser;
 
 namespace Launchpad.Launcher.Interface
 {
+	/// <summary>
+	/// The main UI class for Launchpad. This class acts as a manager for all threaded
+	/// actions, such as installing, updating or repairing the game.
+	/// </summary>
 	[CLSCompliant(false)]
 	public sealed partial class MainWindow : Gtk.Window
 	{
@@ -77,6 +81,9 @@ namespace Launchpad.Launcher.Interface
 		/// </summary>
 		private static readonly ICatalog LocalizationCatalog = new Catalog("Launchpad", "./locale");
 
+		/// <summary>
+		/// Creates a new instance of the <see cref="MainWindow"/> class.
+		/// </summary>
 		public MainWindow()
 			: base(Gtk.WindowType.Toplevel)
 		{
@@ -85,9 +92,9 @@ namespace Launchpad.Launcher.Interface
 
 			// Bind the handler events
 			Game.ProgressChanged += OnModuleInstallationProgressChanged;
-			Game.GameDownloadFinished += OnGameDownloadFinished;
-			Game.GameDownloadFailed += OnGameDownloadFailed;
-			Game.GameLaunchFailed += OnGameLaunchFailed;
+			Game.DownloadFinished += OnGameDownloadFinished;
+			Game.DownloadFailed += OnGameDownloadFailed;
+			Game.LaunchFailed += OnGameLaunchFailed;
             Game.GameExited += OnGameExited;
 
 			Launcher.LauncherDownloadProgressChanged += OnModuleInstallationProgressChanged;
@@ -441,6 +448,9 @@ namespace Launchpad.Launcher.Interface
 			});
 		}
 
+		/// <summary>
+		/// Starts the launcher update process when its files have finished downloading.
+		/// </summary>
 		private static void OnLauncherDownloadFinished(object sender, ModuleInstallationFinishedArgs e)
 		{
 			Application.Invoke(delegate
@@ -554,6 +564,10 @@ namespace Launchpad.Launcher.Interface
 			});
 		}
 
+		/// <summary>
+		/// Handles offering of repairing the game to the user should the game exit
+		/// with a bad exit code.
+		/// </summary>
 		private void OnGameExited(object sender, GameExitEventArgs e)
 		{
 			if (e.ExitCode != 0)
@@ -571,11 +585,13 @@ namespace Launchpad.Launcher.Interface
 				if (crashDialog.Run() == (int)ResponseType.Yes)
 				{
 					SetLauncherMode(ELauncherMode.Repair, false);
+					OnPrimaryButtonClicked(this, EventArgs.Empty);
 				}
 				else
 				{
 					SetLauncherMode(ELauncherMode.Launch, false);
 				}
+				crashDialog.Destroy();
 			}
 			else
 			{

@@ -1,4 +1,4 @@
-//
+﻿//
 //  GameHandler.cs
 //
 //  Author:
@@ -55,18 +55,18 @@ namespace Launchpad.Launcher.Handlers
 		/// Event raised whenever the game finishes downloading, regardless of whether or not it's updating
 		/// or installing.
 		/// </summary>
-		public event GameInstallationFinishedEventHandler GameDownloadFinished;
+		public event GameInstallationFinishedEventHandler DownloadFinished;
 
 		/// <summary>
 		/// Event raised whenever the game fails to download, regardless of whether or not it's updating
 		/// or installing.
 		/// </summary>
-		public event GameInstallationFailedEventHander GameDownloadFailed;
+		public event GameInstallationFailedEventHander DownloadFailed;
 
 		/// <summary>
 		/// Event raised whenever the game fails to launch.
 		/// </summary>
-		public event GameLaunchFailedEventHandler GameLaunchFailed;
+		public event GameLaunchFailedEventHandler LaunchFailed;
 
 		/// <summary>
 		/// Event raised whenever the game exits.
@@ -200,9 +200,9 @@ namespace Launchpad.Launcher.Handlers
 		/// <param name="e">E.</param>
 		private void OnModuleInstallationFinished(object sender, ModuleInstallationFinishedArgs e)
 		{
-			if (GameDownloadFinished != null)
+			if (DownloadFinished != null)
 			{
-				GameDownloadFinished(sender, e);
+				DownloadFinished(sender, e);
 			}
 		}
 
@@ -214,9 +214,9 @@ namespace Launchpad.Launcher.Handlers
 		/// <param name="e">E.</param>
 		private void OnModuleInstallationFailed(object sender, ModuleInstallationFailedArgs e)
 		{
-			if (GameDownloadFailed != null)
+			if (DownloadFailed != null)
 			{
-				GameDownloadFailed(sender, e);
+				DownloadFailed(sender, e);
 			}
 		}
 
@@ -225,9 +225,9 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		private void OnGameLaunchFailed()
 		{
-			if (GameLaunchFailed != null)
+			if (LaunchFailed != null)
 			{
-				GameLaunchFailed(this, EventArgs.Empty);
+				LaunchFailed(this, EventArgs.Empty);
 			}
 		}
 
