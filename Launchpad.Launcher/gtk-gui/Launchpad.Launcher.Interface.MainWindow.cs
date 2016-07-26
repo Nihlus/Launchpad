@@ -80,6 +80,7 @@ namespace Launchpad.Launcher.Interface
 			this.WindowPosition = (WindowPosition)4;
 			this.DefaultWidth = 755;
 			this.DefaultHeight = 412;
+			this.Resizable = false;
 
 			// Container child Launchpad.Launcher.Interface.MainWindow.Gtk.Container+ContainerChild
 			this.vbox1 = new VBox
@@ -262,7 +263,7 @@ namespace Launchpad.Launcher.Interface
 
 			Box.BoxChild w16 = (Box.BoxChild)this.vbox1 [this.hbox3];
 			w16.Position = 3;
-			w16.Expand = false;
+			w16.Expand = true;
 			w16.Fill = false;
 
 			this.Add (this.vbox1);
