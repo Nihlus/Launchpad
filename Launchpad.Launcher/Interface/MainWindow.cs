@@ -214,12 +214,15 @@ namespace Launchpad.Launcher.Interface
 							// If the game is not installed, offer to install it
 							Log.Info("The game has not yet been installed.");
 							SetLauncherMode(ELauncherMode.Install, false);
+
+							// Since the game has not yet been installed, disallow manual repairs
+							this.repairGameAction.Sensitive = false;
+
+							// and reinstalls
+							this.reinstallGameAction.Sensitive = false;
 						}
 						else
 						{
-							// Since the game has been installed, let the user initiate a manual repair
-							repairGameAction.Sensitive = true;
-
 							// If the game is installed (which it should be at this point), check if it needs to be updated
 							if (Checks.IsGameOutdated())
 							{
@@ -326,6 +329,17 @@ namespace Launchpad.Launcher.Interface
 					{
 						throw new ArgumentOutOfRangeException(nameof(newMode), "Invalid mode was passed to SetLauncherMode");
 					}
+			}
+
+			if (bInProgress)
+			{
+				this.repairGameAction.Sensitive = false;
+				this.reinstallGameAction.Sensitive = false;
+			}
+			else
+			{
+				this.repairGameAction.Sensitive = true;
+				this.reinstallGameAction.Sensitive = true;
 			}
 		}
 
@@ -597,6 +611,29 @@ namespace Launchpad.Launcher.Interface
 			{
 				SetLauncherMode(ELauncherMode.Launch, false);
 			}
+		}
+
+		/// <summary>
+		/// Handles starting of a reinstallation procedure as requested by the user.
+		/// </summary>
+		private void OnReinstallGameActionActivated(object sender, EventArgs e)
+		{
+			MessageDialog reinstallConfirmDialog = new MessageDialog(
+				this,
+				DialogFlags.Modal,
+				MessageType.Question,
+				ButtonsType.YesNo,
+				LocalizationCatalog.GetString(
+					"Reinstalling the game will delete all local files and download the entire game again.\n" +
+					"Are you sure you want to reinstall the game?"
+				));
+
+			if (reinstallConfirmDialog.Run() == (int) ResponseType.Yes)
+			{
+				SetLauncherMode(ELauncherMode.Install, true);
+				this.Game.ReinstallGame();
+			}
+			reinstallConfirmDialog.Destroy();
 		}
 	}
 }

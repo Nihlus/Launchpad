@@ -3,6 +3,7 @@
 
 using Gdk;
 using Gtk;
+using Launchpad.Launcher.Handlers;
 using Stetic;
 using Image = Gtk.Image;
 
@@ -15,6 +16,7 @@ namespace Launchpad.Launcher.Interface
 		private Action menuAction;
 
 		private Action repairGameAction;
+		private Action reinstallGameAction;
 
 		private VBox vbox1;
 
@@ -72,11 +74,30 @@ namespace Launchpad.Launcher.Interface
 			};
 			mainActionGroup.Add (this.repairGameAction, null);
 
+			this.reinstallGameAction = new Action(
+				"reinstallGameAction",
+				LocalizationCatalog.GetString("Reinstall Game"),
+				LocalizationCatalog.GetString("Reinstalls the installed game."),
+				"gtk-refresh")
+			{
+				ShortLabel = LocalizationCatalog.GetString("Reinstall Game")
+			};
+			mainActionGroup.Add(this.reinstallGameAction, null);
+
 			this.UIManager.InsertActionGroup (mainActionGroup, 0);
 			this.AddAccelGroup (this.UIManager.AccelGroup);
 			this.Name = "Launchpad.Launcher.Interface.MainWindow";
 			this.Title = LocalizationCatalog.GetString ("Launchpad - {0}");
-			this.Icon = Pixbuf.LoadFromResource ("Launchpad.Launcher.Resources.RocketIcon.ico");
+
+			if (ChecksHandler.IsRunningOnUnix())
+			{
+				this.Icon = Pixbuf.LoadFromResource("Launchpad.Launcher.Resources.RocketIcon.ico");
+			}
+			else
+			{
+				this.Icon = Pixbuf.LoadFromResource("Launchpad.Launcher.Resources.RocketIcon_Grey.ico");
+			}
+
 			this.WindowPosition = (WindowPosition)4;
 			this.DefaultWidth = 755;
 			this.DefaultHeight = 412;
@@ -96,6 +117,7 @@ namespace Launchpad.Launcher.Interface
 					"<menubar name='menuBar'>" +
 						"<menu name='menuAction' action='menuAction'>" +
 							"<menuitem name='repairGameAction' action='repairGameAction'/>" +
+							"<menuitem name='reinstallGameAction' action='reinstallGameAction'/>" +
 						"</menu>" +
 					"</menubar>" +
 				"</ui>"
@@ -270,10 +292,12 @@ namespace Launchpad.Launcher.Interface
 			if ((this.Child != null)) {
 				this.Child.ShowAll ();
 			}
+
 			this.primaryButton.HasDefault = true;
 			this.Show ();
 			this.DeleteEvent += OnDeleteEvent;
 			this.repairGameAction.Activated += this.OnRepairGameActionActivated;
+			this.reinstallGameAction.Activated += this.OnReinstallGameActionActivated;
 			this.primaryButton.Clicked += this.OnPrimaryButtonClicked;
 		}
 	}

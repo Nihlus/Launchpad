@@ -130,6 +130,25 @@ namespace Launchpad.Launcher.Handlers
 			t.Start();
 		}
 
+		public void ReinstallGame()
+		{
+			Log.Info("Beginning full reinstall of game files.");
+			if (Directory.Exists(Config.GetGamePath()))
+			{
+				Log.Info("Deleting existing game files.");
+				Directory.Delete(Config.GetGamePath(), true);
+			}
+
+			if (File.Exists(ConfigHandler.GetInstallCookiePath()))
+			{
+				Log.Info("Deleting install progress cookie.");
+				File.Delete(ConfigHandler.GetInstallCookiePath());
+			}
+
+			Thread t = new Thread(() => this.Patch.InstallGame());
+			t.Start();
+		}
+
 		/// <summary>
 		/// Launches the game.
 		/// </summary>

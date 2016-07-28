@@ -115,9 +115,10 @@
     <EmbeddedResource Include="gtk-gui\gui.stetic">
       <LogicalName>gui.stetic</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="App.config" />
     <EmbeddedResource Include="app.manifest" />
     <EmbeddedResource Include="Resources\RocketIcon.ico" />
+    <EmbeddedResource Include="Resources\RocketIcon_White.ico" />
+    <EmbeddedResource Include="Resources\RocketIcon_Grey.ico" />
     <EmbeddedResource Include="Resources\launchpad_update.bat" />
     <EmbeddedResource Include="Resources\launchpad_update.sh" />
   </ItemGroup>
@@ -128,6 +129,9 @@
     <Folder Include="Handlers\Protocols\" />
     <Folder Include="Interface\ChangelogBrowser" />
     <Folder Include="Interface\gtk3" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -49,6 +49,8 @@ namespace Launchpad.Launcher
 			// Bind any unhandled exceptions in the main thread so that they are logged.
 			AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
 
+			log4net.Config.XmlConfigurator.Configure();
+
 			Log.Info("----------------");
 			Log.Info($"Launchpad v{Config.GetLocalLauncherVersion()} starting...");
 			Log.Info($"Current platform: {ConfigHandler.GetCurrentPlatform()} ({(Environment.Is64BitOperatingSystem ? "x64" : "x86")})");
