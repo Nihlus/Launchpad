@@ -205,10 +205,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <param name="e">E.</param>
 		private void OnModuleInstallProgressChanged(object sender, ModuleProgressChangedArgs e)
 		{
-			if (ProgressChanged != null)
-			{
-				ProgressChanged(sender, e);
-			}
+			ProgressChanged?.Invoke(sender, e);
 		}
 
 		/// <summary>
@@ -219,10 +216,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <param name="e">E.</param>
 		private void OnModuleInstallationFinished(object sender, ModuleInstallationFinishedArgs e)
 		{
-			if (DownloadFinished != null)
-			{
-				DownloadFinished(sender, e);
-			}
+			DownloadFinished?.Invoke(sender, e);
 		}
 
 		/// <summary>
@@ -233,10 +227,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <param name="e">E.</param>
 		private void OnModuleInstallationFailed(object sender, ModuleInstallationFailedArgs e)
 		{
-			if (DownloadFailed != null)
-			{
-				DownloadFailed(sender, e);
-			}
+			DownloadFailed?.Invoke(sender, e);
 		}
 
 		/// <summary>
@@ -244,10 +235,7 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		private void OnGameLaunchFailed()
 		{
-			if (LaunchFailed != null)
-			{
-				LaunchFailed(this, EventArgs.Empty);
-			}
+			LaunchFailed?.Invoke(this, EventArgs.Empty);
 		}
 
 		/// <summary>
@@ -255,10 +243,7 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		private void OnGameExited()
 		{
-			if (GameExited != null)
-			{
-				GameExited(this, GameExitArgs);
-			}
+			GameExited?.Invoke(this, GameExitArgs);
 		}
 	}
 

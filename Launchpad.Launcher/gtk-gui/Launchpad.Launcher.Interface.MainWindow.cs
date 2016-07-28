@@ -117,6 +117,7 @@ namespace Launchpad.Launcher.Interface
 					"<menubar name='menuBar'>" +
 						"<menu name='menuAction' action='menuAction'>" +
 							"<menuitem name='repairGameAction' action='repairGameAction'/>" +
+							"<separator/>" +
 							"<menuitem name='reinstallGameAction' action='reinstallGameAction'/>" +
 						"</menu>" +
 					"</menubar>" +

@@ -477,7 +477,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				}
 			}
 
-			return Utilities.SanitizeString(checksum);
+			return checksum.RemoveLineSeparatorsAndNulls();
 		}
 
 		/// <summary>

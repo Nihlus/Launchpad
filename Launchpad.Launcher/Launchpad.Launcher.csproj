@@ -24,7 +24,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <ReleaseVersion>0.2.0</ReleaseVersion>
+    <ReleaseVersion>0.3.0</ReleaseVersion>
     <SynchReleaseVersion>false</SynchReleaseVersion>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
@@ -37,7 +37,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>true</RunCodeAnalysis>
-    <CodeAnalysisRuleSet>..\..\User Files\Documents\Visual Studio\Rulesets\Extended-correctness-design-managed-security.ruleset</CodeAnalysisRuleSet>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\launchpad.snk</AssemblyOriginatorKeyFile>
     <AssemblyName>Launchpad</AssemblyName>
@@ -105,7 +104,7 @@
     <Compile Include="Handlers\Protocols\FTPProtocolHandler.cs" />
     <Compile Include="Handlers\Protocols\HTTPProtocolHandler.cs" />
     <Compile Include="Handlers\Protocols\BitTorrentProtocolHandler.cs" />
-    <Compile Include="Utility\Utilities.cs" />
+    <Compile Include="Utility\ExtensionMethods.cs" />
     <Compile Include="Utility\Enums\ESystemTarget.cs" />
     <Compile Include="Utility\Enums\ELauncherMode.cs" />
     <Compile Include="gtk-gui\generated.cs" />

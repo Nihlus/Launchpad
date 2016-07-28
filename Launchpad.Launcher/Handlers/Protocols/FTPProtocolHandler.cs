@@ -196,7 +196,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					}
 				}
 
-				return Utilities.SanitizeString(data);
+				return data.RemoveLineSeparatorsAndNulls();
 			}
 			catch (WebException wex)
 			{

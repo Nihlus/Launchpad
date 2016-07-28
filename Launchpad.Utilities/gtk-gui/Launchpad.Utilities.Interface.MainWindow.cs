@@ -60,7 +60,7 @@ namespace Launchpad.Utilities.Interface
 			Name = "Launchpad.Utilities.Interface.MainWindow";
 			Title = LocalizationCatalog.GetString ("Launchpad Utilities - Manifest");
 			Icon = Pixbuf.LoadFromResource ("Launchpad.Utilities.Resources.Icons8-Android-Industry-Engineering.ico");
-			WindowPosition = ((WindowPosition)(4));
+			WindowPosition = (WindowPosition)4;
 			// Container child Launchpad.Utilities.Interface.MainWindow.Gtk.Container+ContainerChild
 			vbox3 = new VBox
 			{

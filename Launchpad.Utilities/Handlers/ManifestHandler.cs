@@ -25,6 +25,7 @@ using System.Threading;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using Launchpad.Launcher.Utility;
 
 namespace Launchpad.Utilities.Handlers
 {
@@ -205,7 +206,7 @@ namespace Launchpad.Utilities.Handlers
 			{
 				// Remove any and all bad characters from the input string,
 				// such as \0, \n and \r.
-				string cleanInput = SanitizeString(rawInput);
+				string cleanInput = rawInput.RemoveLineSeparatorsAndNulls();
 
 				// Split the string into its three components - file, hash and size
 				string[] entryElements = cleanInput.Split(':');
@@ -240,15 +241,6 @@ namespace Launchpad.Utilities.Handlers
 			}
 
 			return false;
-		}
-
-		/// <summary>
-		/// Clean the specified input from newlines and nulls (\r, \n and \0)
-		/// </summary>
-		/// <param name="input">Input string.</param>
-		private static string SanitizeString(string input)
-		{
-			return input.Replace("\n", string.Empty).Replace("\0", string.Empty).Replace("\r", string.Empty);
 		}
 
 		/// <summary>

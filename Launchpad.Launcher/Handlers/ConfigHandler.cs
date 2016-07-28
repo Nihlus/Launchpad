@@ -25,7 +25,6 @@ using System;
 using System.IO;
 using System.Reflection;
 using Launchpad.Launcher.Utility.Enums;
-using Launchpad.Launcher.Utility;
 using Launchpad.Launcher.Handlers.Protocols;
 using System.Security.Cryptography;
 using System.Text;
@@ -801,18 +800,23 @@ namespace Launchpad.Launcher.Handlers
 					FileIniDataParser parser = new FileIniDataParser();
 					IniData data = parser.ReadFile(GetConfigPath());
 
-					string systemTarget = data[SectionNameLocal][LocalSystemTargetKey];
+					string rawSystemTarget = data[SectionNameLocal][LocalSystemTargetKey];
 
-					return Utilities.ParseSystemTarget(systemTarget);
+					ESystemTarget systemTarget;
+					if (Enum.TryParse(rawSystemTarget, out systemTarget))
+					{
+						return systemTarget;
+					}
+					else
+					{
+						Log.Warn("Could not parse the system target. Installation of games will not be possible.");
+					}
+
+					return ESystemTarget.Unknown;
 				}
 				catch (IOException ioex)
 				{
-					Log.Warn("Could not set the system target (IOException): " + ioex.Message);
-					return ESystemTarget.Unknown;
-				}
-				catch (ArgumentException aex)
-				{
-					Log.Warn("Could not parse the system target (ArgumentException): " + aex.Message);
+					Log.Warn("Could not get the system target (IOException): " + ioex.Message);
 					return ESystemTarget.Unknown;
 				}
 			}

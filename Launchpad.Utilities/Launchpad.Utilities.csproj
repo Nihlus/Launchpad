@@ -91,6 +91,7 @@
     <Compile Include="Utility\Events\Delegates.cs" />
     <Compile Include="gtk-gui\generated.cs" />
     <Compile Include="gtk-gui\Launchpad.Utilities.Interface.MainWindow.cs" />
+    <Compile Include="Utility\ExtensionMethods.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

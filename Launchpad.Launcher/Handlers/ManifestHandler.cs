@@ -412,9 +412,7 @@ namespace Launchpad.Launcher.Handlers
 				return false;
 			}
 
-			// Remove any and all bad characters from the input string,
-			// Such as \0, \n and \r.
-			string cleanInput = Utilities.SanitizeString(rawInput);
+			string cleanInput = rawInput.RemoveLineSeparatorsAndNulls();
 
 			// Split the string into its three components - file, hash and size
 			string[] entryElements = cleanInput.Split(':');

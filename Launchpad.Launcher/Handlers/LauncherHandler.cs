@@ -58,6 +58,11 @@ namespace Launchpad.Launcher.Handlers
 		private readonly ChangelogDownloadFinishedEventArgs ChangelogDownloadFinishedArgs = new ChangelogDownloadFinishedEventArgs();
 		private readonly PatchProtocolHandler Patch;
 
+		// Replace the variables in the script with actual data
+		private const string TempDirectoryVariable = "%temp%";
+		private const string LocalInstallDirectoryVariable = "%localDir%";
+		private const string LocalExecutableName = "%launchpadExecutable%";
+
 		/// <summary>
 		/// The config handler reference.
 		/// </summary>
@@ -188,11 +193,6 @@ namespace Launchpad.Launcher.Handlers
 				}
 			}
 
-			// Replace the variables in the script with actual data
-			const string TempDirectoryVariable = "%temp%";
-			const string LocalInstallDirectoryVariable = "%localDir%";
-			const string LocalExecutableName = "%launchpadExecutable%";
-
 			string transientScriptSource = scriptSource;
 
 			transientScriptSource = transientScriptSource.Replace(TempDirectoryVariable, Path.GetTempPath());
@@ -238,26 +238,17 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		private void OnChangelogDownloadFinished()
 		{
-			if (ChangelogDownloadFinished != null)
-			{
-				ChangelogDownloadFinished(this, ChangelogDownloadFinishedArgs);
-			}
+			ChangelogDownloadFinished?.Invoke(this, ChangelogDownloadFinishedArgs);
 		}
 
 		private void OnLauncherDownloadProgressChanged(object sender, ModuleProgressChangedArgs e)
 		{
-			if (LauncherDownloadProgressChanged != null)
-			{
-				LauncherDownloadProgressChanged(sender, e);
-			}
+			LauncherDownloadProgressChanged?.Invoke(sender, e);
 		}
 
 		private void OnLauncherDownloadFinished(object sender, ModuleInstallationFinishedArgs e)
 		{
-			if (LauncherDownloadFinished != null)
-			{
-				LauncherDownloadFinished(sender, e);
-			}
+			LauncherDownloadFinished?.Invoke(sender, e);
 		}
 	}
 
