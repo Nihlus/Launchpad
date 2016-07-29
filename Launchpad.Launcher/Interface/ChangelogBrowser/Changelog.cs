@@ -45,6 +45,9 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 		/// </summary>
 		private readonly WebView unixBrowser;
 
+		/// <summary>
+		/// Whether or not the changelog is currently navigating to a new page from code.
+		/// </summary>
 		private bool IsNavigatingFromCode;
 
 		/// <summary>
@@ -80,6 +83,10 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 			}
 		}
 
+		/// <summary>
+		/// Handles routing of navigation requests to the users's default browser. Navigation requests from code
+		/// are allowed, but links that the user clicks are routed outside of the launcher
+		/// </summary>
 		private void OnUnixBrowserNavigating(object o, NavigationRequestedArgs args)
 		{
 			if (!IsNavigatingFromCode)
@@ -95,6 +102,10 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 			}
 		}
 
+		/// <summary>
+		/// Handles routing of navigation requests to the users's default browser. Navigation requests from code
+		/// are allowed, but links that the user clicks are routed outside of the launcher
+		/// </summary>
 		private void OnWindowsBrowserNavigating(object sender, WebBrowserNavigatingEventArgs webBrowserNavigatingEventArgs)
 		{
 			if (!IsNavigatingFromCode)
