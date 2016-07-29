@@ -20,6 +20,8 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Diagnostics;
+using System.Windows.Forms;
 using Gtk;
 using Launchpad.Launcher.Handlers;
 using WebKit;
@@ -43,6 +45,8 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 		/// </summary>
 		private readonly WebView unixBrowser;
 
+		private bool IsNavigatingFromCode;
+
 		/// <summary>
 		/// A handle for the underlying widget used. For windows, this will be a <see cref="Viewport"/>. For
 		/// Mac and Linux, it will be a <see cref="WebView"/>.
@@ -63,13 +67,44 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 			{
 				this.windowsBrowser = new WindowsBrowser(parentContainer);
 				this.WidgetHandle = windowsBrowser.WidgetHandle;
+
+				this.windowsBrowser.browser.Navigating += OnWindowsBrowserNavigating;
 			}
 			else
 			{
 				this.unixBrowser = new WebView();
 				this.WidgetHandle = this.unixBrowser;
+				this.unixBrowser.NavigationRequested += OnUnixBrowserNavigating;
 
 				parentContainer.Add(WidgetHandle);
+			}
+		}
+
+		private void OnUnixBrowserNavigating(object o, NavigationRequestedArgs args)
+		{
+			if (!IsNavigatingFromCode)
+			{
+				this.unixBrowser.StopLoading();
+				args.RetVal = false;
+
+				Process.Start(args.Request.Uri);
+			}
+			else
+			{
+				IsNavigatingFromCode = false;
+			}
+		}
+
+		private void OnWindowsBrowserNavigating(object sender, WebBrowserNavigatingEventArgs webBrowserNavigatingEventArgs)
+		{
+			if (!IsNavigatingFromCode)
+			{
+				webBrowserNavigatingEventArgs.Cancel = true;
+				Process.Start(webBrowserNavigatingEventArgs.Url.ToString());
+			}
+			else
+			{
+				IsNavigatingFromCode = false;
 			}
 		}
 
@@ -79,6 +114,8 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 		/// <param name="url">The URL to navigate to.</param>
 		public void Navigate(string url)
 		{
+			this.IsNavigatingFromCode = true;
+
 			this.windowsBrowser?.Navigate(url);
 			this.unixBrowser?.Open(url);
 		}

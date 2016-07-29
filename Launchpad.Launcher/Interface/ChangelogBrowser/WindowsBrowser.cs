@@ -43,7 +43,7 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 		/// <summary>
 		/// The <see cref="WebBrowser"/> we're using for rendering.
 		/// </summary>
-		private readonly WebBrowser browser = new WebBrowser();
+		public readonly WebBrowser browser = new WebBrowser();
 
 		/// <summary>
 		/// The <see cref="Viewport"/> the <see cref="browser"/> is rendered inside, using the <see cref="socket"/>.
