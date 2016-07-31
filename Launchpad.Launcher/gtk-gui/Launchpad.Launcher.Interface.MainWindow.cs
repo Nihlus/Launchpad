@@ -99,8 +99,8 @@ namespace Launchpad.Launcher.Interface
 			}
 
 			this.WindowPosition = (WindowPosition)4;
-			this.DefaultWidth = 755;
-			this.DefaultHeight = 412;
+			this.DefaultWidth = 745;
+			this.DefaultHeight = 415;
 			this.Resizable = false;
 
 			// Container child Launchpad.Launcher.Interface.MainWindow.Gtk.Container+ContainerChild
@@ -150,15 +150,13 @@ namespace Launchpad.Launcher.Interface
 			// Container child browserContainer.Gtk.Box+BoxChild
 			this.alignment2 = new Alignment(0.5F, 0.5F, 1F, 1F)
 			{
-				WidthRequest = 300,
+				WidthRequest = 310,
 				Name = "alignment2"
 			};
 
 			// Container child alignment2.Gtk.Container+ContainerChild
 			this.browserWindow = new ScrolledWindow
 			{
-				WidthRequest = 290,
-				HeightRequest = 300,
 				CanFocus = true,
 				Name = "browserWindow",
 				ShadowType = ShadowType.In

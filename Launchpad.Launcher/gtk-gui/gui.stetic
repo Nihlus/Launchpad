@@ -27,8 +27,6 @@
     <property name="Title" translatable="no">Launchpad - &lt;GameName&gt;</property>
     <property name="Icon">resource:Launchpad.Launcher.Resources.RocketIcon.ico</property>
     <property name="WindowPosition">CenterOnParent</property>
-    <property name="DefaultWidth">755</property>
-    <property name="DefaultHeight">412</property>
     <signal name="DeleteEvent" handler="OnDeleteEvent" />
     <child>
       <widget class="Gtk.VBox" id="vbox1">
@@ -62,12 +60,9 @@
                 <child>
                   <widget class="Gtk.Alignment" id="alignment2">
                     <property name="MemberName" />
-                    <property name="WidthRequest">300</property>
                     <child>
                       <widget class="Gtk.ScrolledWindow" id="ScrolledBrowserWindow">
                         <property name="MemberName" />
-                        <property name="WidthRequest">290</property>
-                        <property name="HeightRequest">300</property>
                         <property name="CanFocus">True</property>
                         <property name="ShadowType">In</property>
                         <child>
