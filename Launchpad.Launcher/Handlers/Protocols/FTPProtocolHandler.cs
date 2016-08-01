@@ -43,6 +43,11 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// </summary>
 		private static readonly ILog Log = LogManager.GetLogger(typeof(FTPProtocolHandler));
 
+		/// <summary>
+		/// Determines whether this instance can provide patches. Checks for an active connection to the
+		/// patch provider (file server, distributed hash tables, hyperspace compression waves etc.)
+		/// </summary>
+		/// <returns><c>true</c> if this instance can provide patches; otherwise, <c>false</c>.</returns>
 		public override bool CanPatch()
 		{
 			Log.Info("Pinging remote patching server to determine if we can connect to it.");
@@ -87,6 +92,10 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			return bCanConnectToServer;
 		}
 
+		/// <summary>
+		/// Determines whether the protocol can provide patches and updates for the provided platform.
+		/// </summary>
+		/// <returns><c>true</c> if the platform is available; otherwise, <c>false</c>.</returns>
 		public override bool IsPlatformAvailable(ESystemTarget platform)
 		{
 			string remote = $"{Config.GetBaseFTPUrl()}/game/{platform}/.provides";
@@ -94,11 +103,19 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			return DoesRemoteFileExist(remote);
 		}
 
+		/// <summary>
+		/// Determines whether this protocol can provide access to a changelog.
+		/// </summary>
+		/// <returns><c>true</c> if this protocol can provide a changelog; otherwise, <c>false</c>.</returns>
 		public override bool CanProvideChangelog()
 		{
 			return true;
 		}
 
+		/// <summary>
+		/// Gets the changelog.
+		/// </summary>
+		/// <returns>The changelog.</returns>
 		public override string GetChangelogSource()
 		{
 			string changelogURL = $"{Config.GetBaseFTPUrl()}/launcher/changelog.html";
@@ -107,6 +124,10 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			return ReadRemoteFile(changelogURL);
 		}
 
+		/// <summary>
+		/// Determines whether this protocol can provide access to a banner for the game.
+		/// </summary>
+		/// <returns><c>true</c> if this instance can provide banner; otherwise, <c>false</c>.</returns>
 		public override bool CanProvideBanner()
 		{
 			string bannerURL = $"{Config.GetBaseFTPUrl()}/launcher/banner.png";
@@ -114,6 +135,10 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			return DoesRemoteFileExist(bannerURL);
 		}
 
+		/// <summary>
+		/// Gets the banner.
+		/// </summary>
+		/// <returns>The banner.</returns>
 		public override Bitmap GetBanner()
 		{
 			string bannerURL = $"{Config.GetBaseFTPUrl()}/launcher/banner.png";

@@ -130,6 +130,9 @@ namespace Launchpad.Launcher.Handlers
 			t.Start();
 		}
 
+		/// <summary>
+		/// Deletes all local data and installs the game again.
+		/// </summary>
 		public void ReinstallGame()
 		{
 			Log.Info("Beginning full reinstall of game files.");
@@ -164,7 +167,6 @@ namespace Launchpad.Launcher.Handlers
 				{
 					UseShellExecute = false,
 					FileName = Config.GetGameExecutable(),
-					//Arguments = gameArguments
 				};
 				gameStartInfo.Arguments = gameArguments;
 
@@ -199,6 +201,14 @@ namespace Launchpad.Launcher.Handlers
 				}
 
 				gameProcess.Start();
+			}
+			catch (FileNotFoundException fex)
+			{
+				Log.Warn($"Game launch failed (FileNotFoundException): {fex.Message}");
+				Log.Warn("If the game executable is there, try overriding the executable name in the configuration file.");
+
+				GameExitArgs.ExitCode = 2;
+				OnGameLaunchFailed();
 			}
 			catch (IOException ioex)
 			{

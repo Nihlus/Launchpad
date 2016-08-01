@@ -44,8 +44,14 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// </summary>
 		private static readonly ILog Log = LogManager.GetLogger(typeof(ManifestBasedProtocolHandler));
 
-		private readonly ManifestHandler Manifest = ManifestHandler.Instance;
+		/// <summary>
+		/// The file manifest handler. This allows access to the launcher and game file lists.
+		/// </summary>
+		private readonly ManifestHandler FileManifestHandler = ManifestHandler.Instance;
 
+		/// <summary>
+		/// Installs the game.
+		/// </summary>
 		public override void InstallGame()
 		{
 			ModuleInstallFinishedArgs.Module = EModule.Game;
@@ -78,6 +84,13 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			// which happens to coincide with the general design.
 		}
 
+		/// <summary>
+		/// Updates the specified module to the latest version.
+		/// </summary>
+		/// <param name="module">The module to update.</param>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// Will be thrown if the <see cref="EModule"/> passed to the function is not a valid value.
+		/// </exception>
 		public override void UpdateModule(EModule module)
 		{
 			List<ManifestEntry> manifest;
@@ -91,8 +104,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 					ModuleInstallFinishedArgs.Module = EModule.Launcher;
 					ModuleInstallFailedArgs.Module = EModule.Launcher;
-					manifest = this.Manifest.LaunchpadManifest;
-					oldManifest = this.Manifest.OldLaunchpadManifest;
+					manifest = this.FileManifestHandler.LaunchpadManifest;
+					oldManifest = this.FileManifestHandler.OldLaunchpadManifest;
 					break;
 				}
 				case EModule.Game:
@@ -102,13 +115,13 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 					ModuleInstallFinishedArgs.Module = EModule.Game;
 					ModuleInstallFailedArgs.Module = EModule.Game;
-					manifest = this.Manifest.GameManifest;
-					oldManifest = this.Manifest.OldGameManifest;
+					manifest = this.FileManifestHandler.GameManifest;
+					oldManifest = this.FileManifestHandler.OldGameManifest;
 					break;
 				}
 				default:
 				{
-					throw new ArgumentOutOfRangeException(nameof(module), module, null);
+					throw new ArgumentOutOfRangeException(nameof(module), module, "An invalid module value was passed to UpdateModule.");
 				}
 			}
 
@@ -145,17 +158,20 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			OnModuleInstallationFinished();
 		}
 
+		/// <summary>
+		/// Verifies and repairs the files of the specified module.
+		/// </summary>
 		public override void VerifyModule(EModule module)
 		{
 			List<ManifestEntry> manifest;
 			List<ManifestEntry> brokenFiles = new List<ManifestEntry>();
 			if (module == EModule.Game)
 			{
-				manifest = this.Manifest.GameManifest;
+				manifest = this.FileManifestHandler.GameManifest;
 			}
 			else
 			{
-				manifest = this.Manifest.LaunchpadManifest;
+				manifest = this.FileManifestHandler.LaunchpadManifest;
 			}
 
 			try
@@ -210,6 +226,12 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			OnModuleInstallationFinished();
 		}
 
+		/// <summary>
+		/// Downloads the latest version of the specified module.
+		/// </summary>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// Will be thrown if the <see cref="EModule"/> passed to the function is not a valid value.
+		/// </exception>
 		protected override void DownloadModule(EModule module)
 		{
 			List<ManifestEntry> moduleManifest;
@@ -222,7 +244,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 					ModuleInstallFinishedArgs.Module = EModule.Launcher;
 					ModuleInstallFailedArgs.Module = EModule.Launcher;
-					moduleManifest = Manifest.LaunchpadManifest;
+					moduleManifest = FileManifestHandler.LaunchpadManifest;
 					break;
 				}
 				case EModule.Game:
@@ -232,12 +254,13 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 					ModuleInstallFinishedArgs.Module = EModule.Game;
 					ModuleInstallFailedArgs.Module = EModule.Game;
-					moduleManifest = Manifest.GameManifest;
+					moduleManifest = FileManifestHandler.GameManifest;
 					break;
 				}
 				default:
 				{
-					throw new ArgumentOutOfRangeException(nameof(module), module, null);
+					throw new ArgumentOutOfRangeException(nameof(module), module,
+						"An invalid module value was passed to DownloadModule.");
 				}
 			}
 
@@ -275,11 +298,24 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 		}
 
+		/// <summary>
+		/// Reads the contents of a remote file as a string.
+		/// </summary>
 		protected abstract string ReadRemoteFile(string url, bool useAnonymousLong = false);
 
+		/// <summary>
+		/// Downloads the contents of the file at the specified url to the specified local path.
+		/// This method supported resuming a partial file.
+		/// </summary>
 		protected abstract void DownloadRemoteFile(string url, string localPath, long totalSize = 0, long contentOffset = 0,
 			bool useAnonymousLogin = false);
 
+		/// <summary>
+		/// Determines whether or not the specified module is outdated.
+		/// </summary>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// Will be thrown if the <see cref="EModule"/> passed to the function is not a valid value.
+		/// </exception>
 		public override bool IsModuleOutdated(EModule module)
 		{
 			try
@@ -303,7 +339,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					}
 					default:
 					{
-						throw new ArgumentOutOfRangeException(nameof(module), module, null);
+						throw new ArgumentOutOfRangeException(nameof(module), module,
+							"An invalid module value was passed to IsModuleOutdated.");
 					}
 				}
 
@@ -316,6 +353,15 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 		}
 
+		/// <summary>
+		/// Downloads the file referred to by the specifed manifest entry.
+		/// </summary>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// Will be thrown if the <see cref="EModule"/> passed to the function is not a valid value.
+		/// </exception>
+		/// <exception cref="ArgumentNullException">
+		/// Will be thrown if the local path set in the <paramref name="fileEntry"/> passed to the function is not a valid value.
+		/// </exception>
 		protected virtual void DownloadManifestEntry(ManifestEntry fileEntry, EModule module)
 		{
 			ModuleDownloadProgressArgs.Module = module;
@@ -327,7 +373,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				case EModule.Launcher:
 				{
 					baseRemoteURL = Config.GetLauncherBinariesURL();
-                 	baseLocalPath = ConfigHandler.GetTempLauncherDownloadPath();
+					baseLocalPath = ConfigHandler.GetTempLauncherDownloadPath();
 					break;
 				}
 				case EModule.Game:
@@ -338,7 +384,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				}
 				default:
 				{
-					throw new ArgumentOutOfRangeException(nameof(module), module, "The module passed to DownloadManifestEntry was invalid.");
+					throw new ArgumentOutOfRangeException(nameof(module), module,
+						"An invalid module value was passed to DownloadManifestEntry.");
 				}
 			}
 
@@ -418,6 +465,9 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <summary>
 		/// Determines whether or not the local copy of the manifest for the specifed module is outdated.
 		/// </summary>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// Will be thrown if the <see cref="EModule"/> passed to the function is not a valid value.
+		/// </exception>
 		protected virtual bool IsModuleManifestOutdated(EModule module)
 		{
 			string manifestPath;
@@ -435,7 +485,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				}
 				default:
 				{
-					throw new ArgumentOutOfRangeException(nameof(module), module, "The module passed to RefreshModuleManifest was invalid.");
+					throw new ArgumentOutOfRangeException(nameof(module), module,
+						"An invalid module value was passed to RefreshModuleManifest.");
 				}
 			}
 
@@ -456,6 +507,9 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <summary>
 		/// Gets the checksum of the manifest for the specified module.
 		/// </summary>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// Will be thrown if the <see cref="EModule"/> passed to the function is not a valid value.
+		/// </exception>
 		protected virtual string GetRemoteModuleManifestChecksum(EModule module)
 		{
 			string checksum;
@@ -468,12 +522,13 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				}
 				case EModule.Game:
 				{
-					checksum = ReadRemoteFile(Manifest.GetGameManifestChecksumURL());
+					checksum = ReadRemoteFile(FileManifestHandler.GetGameManifestChecksumURL());
 					break;
 				}
 				default:
 				{
-					throw new ArgumentOutOfRangeException(nameof(module), module, null);
+					throw new ArgumentOutOfRangeException(nameof(module), module,
+						"An invalid module value was passed to GetRemoteModuleManifestChecksum.");
 				}
 			}
 
@@ -483,6 +538,9 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <summary>
 		/// Refreshes the current manifest by redownloading it, if required;
 		/// </summary>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// Will be thrown if the <see cref="EModule"/> passed to the function is not a valid value.
+		/// </exception>
 		protected virtual void RefreshModuleManifest(EModule module)
 		{
 			bool doesManifestExist;
@@ -500,7 +558,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				}
 				default:
 				{
-					throw new ArgumentOutOfRangeException(nameof(module), module, "The module passed to RefreshModuleManifest was invalid.");
+					throw new ArgumentOutOfRangeException(nameof(module), module,
+						"An invalid module value was passed to RefreshModuleManifest");
 				}
 			}
 
@@ -520,6 +579,9 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <summary>
 		/// Downloads the manifest for the specified module, and backs up the old copy of the manifest.
 		/// </summary>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// Will be thrown if the <see cref="EModule"/> passed to the function is not a valid value.
+		/// </exception>
 		protected virtual void DownloadModuleManifest(EModule module)
 		{
 			string remoteURL;
@@ -537,7 +599,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				}
 				case EModule.Game:
 				{
-					remoteURL = Manifest.GetGameManifestURL();
+					remoteURL = FileManifestHandler.GetGameManifestURL();
 					localPath = ManifestHandler.GetGameManifestPath();
 					oldLocalPath = ManifestHandler.GetOldGameManifestPath();
 
@@ -545,7 +607,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				}
 				default:
 				{
-					throw new ArgumentOutOfRangeException(nameof(module), module, "The module passed to DownloadModuleManifest was invalid.");
+					throw new ArgumentOutOfRangeException(nameof(module), module,
+						"An invalid module value was passed to DownloadModuleManifest");
 				}
 			}
 

@@ -74,6 +74,9 @@ namespace Launchpad.Launcher.Handlers
 		public LauncherHandler()
 		{
 			Patch = Config.GetPatchProtocol();
+
+			Patch.ModuleDownloadProgressChanged += OnLauncherDownloadProgressChanged;
+			Patch.ModuleInstallationFinished += OnLauncherDownloadFinished;
 		}
 
 		/// <summary>
@@ -84,9 +87,6 @@ namespace Launchpad.Launcher.Handlers
 			try
 			{
 				Log.Info($"Starting update of lancher files using protocol \"{this.Patch.GetType().Name}\"");
-
-				Patch.ModuleDownloadProgressChanged += OnLauncherDownloadProgressChanged;
-				Patch.ModuleInstallationFinished += OnLauncherDownloadFinished;
 
 				Thread t = new Thread(() => this.Patch.UpdateModule(EModule.Launcher));
 				t.Start();
@@ -101,7 +101,7 @@ namespace Launchpad.Launcher.Handlers
 		/// Checks if the launcher can access the standard HTTP changelog.
 		/// </summary>
 		/// <returns><c>true</c> if the changelog can be accessed; otherwise, <c>false</c>.</returns>
-		public bool CanAccessStandardChangelog()
+		public static bool CanAccessStandardChangelog()
 		{
 			HttpWebRequest headRequest = (HttpWebRequest)WebRequest.Create(Config.GetChangelogURL());
 			headRequest.Method = "HEAD";

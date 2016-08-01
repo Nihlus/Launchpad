@@ -188,7 +188,7 @@ namespace Launchpad.Launcher.Interface
 
 				// Load the changelog. Try a direct URL first, and a protocol-specific
 				// implementation after.
-				if (Launcher.CanAccessStandardChangelog())
+				if (LauncherHandler.CanAccessStandardChangelog())
 				{
 					Browser.Navigate(Config.GetChangelogURL());
 				}
@@ -253,6 +253,9 @@ namespace Launchpad.Launcher.Interface
 		/// </summary>
 		/// <param name="newMode">New mode.</param>
 		/// <param name="bInProgress">If set to <c>true</c>, the selected mode is in progress.</param>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// Will be thrown if the <see cref="ELauncherMode"/> passed to the function is not a valid value.
+		/// </exception>
 		private void SetLauncherMode(ELauncherMode newMode, bool bInProgress)
 		{
 			// Set the global launcher mode
@@ -262,73 +265,73 @@ namespace Launchpad.Launcher.Interface
 			switch (newMode)
 			{
 				case ELauncherMode.Install:
+				{
+					if (bInProgress)
 					{
-						if (bInProgress)
-						{
-							primaryButton.Sensitive = false;
-							primaryButton.Label = LocalizationCatalog.GetString("Installing...");
-						}
-						else
-						{
-							primaryButton.Sensitive = true;
-							primaryButton.Label = LocalizationCatalog.GetString("Install");
-						}
-						break;
-					}
-				case ELauncherMode.Update:
-					{
-						if (bInProgress)
-						{
-							primaryButton.Sensitive = false;
-							primaryButton.Label = LocalizationCatalog.GetString("Updating...");
-						}
-						else
-						{
-							primaryButton.Sensitive = true;
-							primaryButton.Label = LocalizationCatalog.GetString("Update");
-						}
-						break;
-					}
-				case ELauncherMode.Repair:
-					{
-						if (bInProgress)
-						{
-							primaryButton.Sensitive = false;
-							primaryButton.Label = LocalizationCatalog.GetString("Repairing...");
-						}
-						else
-						{
-							primaryButton.Sensitive = true;
-							primaryButton.Label = LocalizationCatalog.GetString("Repair");
-						}
-						break;
-					}
-				case ELauncherMode.Launch:
-					{
-						if (bInProgress)
-						{
-							primaryButton.Sensitive = false;
-							primaryButton.Label = LocalizationCatalog.GetString("Launching...");
-						}
-						else
-						{
-							primaryButton.Sensitive = true;
-							primaryButton.Label = LocalizationCatalog.GetString("Launch");
-						}
-						break;
-					}
-				case ELauncherMode.Inactive:
-					{
-						repairGameAction.Sensitive = false;
-
 						primaryButton.Sensitive = false;
-						primaryButton.Label = LocalizationCatalog.GetString("Inactive");
-						break;
+						primaryButton.Label = LocalizationCatalog.GetString("Installing...");
 					}
-				default:
+					else
 					{
-						throw new ArgumentOutOfRangeException(nameof(newMode), "Invalid mode was passed to SetLauncherMode");
+						primaryButton.Sensitive = true;
+						primaryButton.Label = LocalizationCatalog.GetString("Install");
 					}
+					break;
+				}
+				case ELauncherMode.Update:
+				{
+					if (bInProgress)
+					{
+						primaryButton.Sensitive = false;
+						primaryButton.Label = LocalizationCatalog.GetString("Updating...");
+					}
+					else
+					{
+						primaryButton.Sensitive = true;
+						primaryButton.Label = LocalizationCatalog.GetString("Update");
+					}
+					break;
+				}
+				case ELauncherMode.Repair:
+				{
+					if (bInProgress)
+					{
+						primaryButton.Sensitive = false;
+						primaryButton.Label = LocalizationCatalog.GetString("Repairing...");
+					}
+					else
+					{
+						primaryButton.Sensitive = true;
+						primaryButton.Label = LocalizationCatalog.GetString("Repair");
+					}
+					break;
+				}
+				case ELauncherMode.Launch:
+				{
+					if (bInProgress)
+					{
+						primaryButton.Sensitive = false;
+						primaryButton.Label = LocalizationCatalog.GetString("Launching...");
+					}
+					else
+					{
+						primaryButton.Sensitive = true;
+						primaryButton.Label = LocalizationCatalog.GetString("Launch");
+					}
+					break;
+				}
+				case ELauncherMode.Inactive:
+				{
+					repairGameAction.Sensitive = false;
+
+					primaryButton.Sensitive = false;
+					primaryButton.Label = LocalizationCatalog.GetString("Inactive");
+					break;
+				}
+				default:
+				{
+					throw new ArgumentOutOfRangeException(nameof(newMode), "An invalid launcher mode was passed to SetLauncherMode.");
+				}
 			}
 
 			if (bInProgress)

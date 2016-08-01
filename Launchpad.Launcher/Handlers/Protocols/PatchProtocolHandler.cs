@@ -44,6 +44,9 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// </summary>
 		private static readonly ILog Log = LogManager.GetLogger(typeof(PatchProtocolHandler));
 
+		/// <summary>
+		/// Creates a new instance of the <see cref="PatchProtocolHandler"/> class.
+		/// </summary>
 		protected PatchProtocolHandler()
 		{
 			ModuleInstallFinishedArgs = new ModuleInstallationFinishedArgs();
@@ -55,11 +58,29 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// </summary>
 		protected readonly ConfigHandler Config = ConfigHandler.Instance;
 
+		/// <summary>
+		/// Raised whenever the download progress of a module changes.
+		/// </summary>
 		public event ModuleDownloadProgressChangedEventHandler ModuleDownloadProgressChanged;
+
+		/// <summary>
+		/// Raised whenever the verification progress of a module changes.
+		/// </summary>
 		public event ModuleVerifyProgressChangedEventHandler ModuleVerifyProgressChanged;
+
+		/// <summary>
+		/// Raised whenever the update progress of a module changes.
+		/// </summary>
 		public event ModuleUpdateProgressChangedEventHandler ModuleUpdateProgressChanged;
 
+		/// <summary>
+		/// Raised whenever the installation of a module finishes.
+		/// </summary>
 		public event ModuleInstallationFinishedEventHandler ModuleInstallationFinished;
+
+		/// <summary>
+		/// Raised whenver the installation of a module fails.
+		/// </summary>
 		public event ModuleInstallationFailedEventHandler ModuleInstallationFailed;
 
 		protected readonly ModuleProgressChangedArgs ModuleDownloadProgressArgs = new ModuleProgressChangedArgs();

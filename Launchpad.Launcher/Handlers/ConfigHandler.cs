@@ -504,6 +504,9 @@ namespace Launchpad.Launcher.Handlers
 		/// Gets the path to the game executable.
 		/// </summary>
 		/// <returns>The game executable.</returns>
+		/// <exception cref="FileNotFoundException">
+		/// A FileNotFoundException will be thrown if no file exists at the searched file paths.
+		/// </exception>
 		public string GetGameExecutable()
 		{
 			string executablePathRootLevel;
@@ -655,7 +658,6 @@ namespace Launchpad.Launcher.Handlers
 					IniData data = parser.ReadFile(GetConfigPath());
 
 					string changelogURL = data[SectionNameRemote][RemoteChangelogURLKey];
-
 					return changelogURL;
 
 				}
@@ -1033,41 +1035,53 @@ namespace Launchpad.Launcher.Handlers
 		/// Gets the base protocol URL.
 		/// </summary>
 		/// <returns>The base protocol URL.</returns>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// Will be thrown if the protocol set in the configuration file is not a valid value.
+		/// </exception>
 		public string GetBaseProtocolURL()
 		{
 			switch (GetPatchProtocolString())
 			{
 				case "FTP":
-					{
-						return GetBaseFTPUrl();
-					}
+				{
+					return GetBaseFTPUrl();
+				}
 				case "HTTP":
-					{
-						return GetBaseHTTPUrl();
-					}
+				{
+					return GetBaseHTTPUrl();
+				}
 				default:
-					{
-						throw new ArgumentOutOfRangeException(nameof(GetPatchProtocolString), null, "Invalid protocol set in the configuration file.");
-					}
+				{
+					throw new ArgumentOutOfRangeException(nameof(GetPatchProtocolString), null,
+						"Invalid protocol set in the configuration file.");
+				}
 			}
 		}
 
+		/// <summary>
+		/// Gets the official Launchpad base protocol URL.
+		/// </summary>
+		/// <returns>The official base protocol url.</returns>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// Will be thrown if the protocol set in the configuration file is not a valid value.
+		/// </exception>
 		private string GetOfficialBaseProtocolURL()
 		{
 			switch (GetPatchProtocolString())
 			{
 				case "FTP":
-					{
-						return "ftp://directorate.asuscomm.com";
-					}
+				{
+					return "ftp://directorate.asuscomm.com";
+				}
 				case "HTTP":
-					{
-						return "http://directorate.asuscomm.com/launchpad";
-					}
+				{
+					return "http://directorate.asuscomm.com/launchpad";
+				}
 				default:
-					{
-						throw new ArgumentOutOfRangeException(nameof(GetPatchProtocolString), null, "Invalid protocol set in the configuration file.");
-					}
+				{
+					throw new ArgumentOutOfRangeException(nameof(GetPatchProtocolString), null,
+						"Invalid protocol set in the configuration file.");
+				}
 			}
 		}
 
