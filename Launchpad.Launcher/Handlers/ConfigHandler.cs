@@ -22,7 +22,9 @@
 using IniParser;
 using IniParser.Model;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Launchpad.Launcher.Utility.Enums;
 using Launchpad.Launcher.Handlers.Protocols;
@@ -72,6 +74,7 @@ namespace Launchpad.Launcher.Handlers
 
 		private const string ConfigurationFolderName = "Config";
 		private const string ConfigurationFileName = "LauncherConfig";
+		private const string GameArgumentsFileName = "GameArguments";
 
 		private const string SectionNameLocal = "Local";
 		private const string SectionNameRemote = "Remote";
@@ -131,6 +134,11 @@ namespace Launchpad.Launcher.Handlers
 			string configPath = $@"{GetConfigDir()}{ConfigurationFileName}.ini";
 
 			return configPath;
+		}
+
+		private static string GetGameArgumentsPath()
+		{
+			return $"{GetConfigDir()}{GameArgumentsFileName}.txt";
 		}
 
 		/// <summary>
@@ -367,6 +375,23 @@ namespace Launchpad.Launcher.Handlers
 					File.WriteAllText(GetInstallGUIDPath(), generatedInstallGUID);
 				}
 			}
+
+			// Initialize the game arguments file, if needed
+			if (!File.Exists(GetGameArgumentsPath()))
+			{
+				using (FileStream fs = File.Create(GetGameArgumentsPath()))
+				{
+					using (StreamWriter sw = new StreamWriter(fs))
+					{
+						sw.WriteLine("# This file contains all the arguments passed to the game executable on startup.");
+						sw.WriteLine("# Lines beginning with a hash character (#) are ignored and considered comments.");
+						sw.WriteLine("# Everything else is passed line-by-line to the game executable on startup.");
+						sw.WriteLine("# Multiple arguments can be on the same line in this file.");
+						sw.WriteLine("# Each line will have a space appended at the end when passed to the game executable.");
+						sw.WriteLine("");
+					}
+				}
+			}
 		}
 
 		/// <summary>
@@ -460,6 +485,19 @@ namespace Launchpad.Launcher.Handlers
 		public string GetGamePath()
 		{
 			return $@"{GetLocalDir()}Game{Path.DirectorySeparatorChar}{GetSystemTarget()}{Path.DirectorySeparatorChar}";
+		}
+
+		public List<string> GetGameArguments()
+		{
+			if (!File.Exists(GetGameArgumentsPath()))
+			{
+				return new List<string>();
+			}
+
+			List<string> gameArguments = new List<string>(File.ReadAllLines(GetGameArgumentsPath()));
+
+			// Return the list of lines in the argument file, except the ones starting with a hash or empty lines
+			return gameArguments.Where(s => !s.StartsWith("#") && !string.IsNullOrEmpty(s)).ToList();
 		}
 
 		/// <summary>

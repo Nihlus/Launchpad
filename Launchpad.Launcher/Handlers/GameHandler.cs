@@ -157,11 +157,17 @@ namespace Launchpad.Launcher.Handlers
 			//start new process of the game executable
 			try
 			{
+				// Do not move the argument assignment inside the gameStartInfo initializer.
+				// It causes a TargetInvocationException crash through black magic.
+				string gameArguments = string.Join(" ", Config.GetGameArguments());
 				ProcessStartInfo gameStartInfo = new ProcessStartInfo
 				{
 					UseShellExecute = false,
-					FileName = Config.GetGameExecutable()
+					FileName = Config.GetGameExecutable(),
+					//Arguments = gameArguments
 				};
+				gameStartInfo.Arguments = gameArguments;
+
 				GameExitArgs.GameName = Config.GetGameName();
 
 				Log.Info($"Launching game. \n\tExecutable path: {gameStartInfo.FileName}");
@@ -169,7 +175,7 @@ namespace Launchpad.Launcher.Handlers
 				Process gameProcess = new Process
 				{
 					StartInfo = gameStartInfo,
-					EnableRaisingEvents = true
+					EnableRaisingEvents = true,
 				};
 
 				gameProcess.Exited += delegate
@@ -185,6 +191,12 @@ namespace Launchpad.Launcher.Handlers
 					// Manual disposing
 					gameProcess.Dispose();
 				};
+
+				// Make sure the game executable is flagged as such on Unix
+				if (ChecksHandler.IsRunningOnUnix())
+				{
+					Process.Start("chmod", $"+x {Config.GetGameExecutable()}");
+				}
 
 				gameProcess.Start();
 			}
