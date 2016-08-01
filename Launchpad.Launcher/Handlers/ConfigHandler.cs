@@ -106,6 +106,9 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		public static readonly ConfigHandler Instance = new ConfigHandler();
 
+		/// <summary>
+		/// Creates a new instance of the <see cref="ConfigHandler"/> class and initalizes it.
+		/// </summary>
 		private ConfigHandler()
 		{
 			Initialize();
@@ -126,7 +129,7 @@ namespace Launchpad.Launcher.Handlers
 		}
 
 		/// <summary>
-		/// Gets the path to the config file on disk.
+		/// Gets the expected path to the config file on disk.
 		/// </summary>
 		/// <returns>The config path.</returns>
 		private static string GetConfigPath()
@@ -136,6 +139,9 @@ namespace Launchpad.Launcher.Handlers
 			return configPath;
 		}
 
+		/// <summary>
+		/// Gets the expected path to the argument file on disk.
+		/// </summary>
 		private static string GetGameArgumentsPath()
 		{
 			return $"{GetConfigDir()}{GameArgumentsFileName}.txt";
@@ -157,7 +163,7 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		private void Initialize()
 		{
-			//Since Initialize will write to the config, we'll create the parser here and load the file later
+			// Since Initialize will write to the config, we'll create the parser here and load the file later
 			FileIniDataParser parser = new FileIniDataParser();
 
 			string configDir = GetConfigDir();
@@ -166,26 +172,29 @@ namespace Launchpad.Launcher.Handlers
 			// Get the launcher version from the assembly.
 			Version defaultLauncherVersion = typeof(ConfigHandler).Assembly.GetName().Version;
 
-			//Check for pre-unix config. If it exists, fix the values and copy it.
-			UpdateOldConfig();
+			// Check for pre-unix config. If it exists, fix the values and move it.
+			UpdateAndMovePreUnixConfig();
 
-			//Check for old cookie file. If it exists, rename it.
-			ReplaceOldUpdateCookie();
+			// Check for old cookie files and update their names and contents.
+			MoveOrUpdateCookieFiles();
 
-			//should be safe to lock the config now for initializing it
+			InitializeInstallationGUID();
+			InitializeGameArgumentsFile();
+
+			// Lock the configuration file to make sure no other threads will try and
+			// read from it during creation or updating of values.
 			lock (ReadLock)
 			{
 				if (!Directory.Exists(configDir))
 				{
 					Directory.CreateDirectory(configDir);
 				}
+
 				if (!File.Exists(configPath))
 				{
-					//here we create a new empty file
 					FileStream configStream = File.Create(configPath);
 					configStream.Close();
 
-					//read the file as an INI file
 					try
 					{
 						IniData data = parser.ReadFile(GetConfigPath());
@@ -344,7 +353,14 @@ namespace Launchpad.Launcher.Handlers
 					WriteConfig(parser, data);
 				}
 			}
+		}
 
+		/// <summary>
+		/// Creates a file with a unique GUID for the computer the launcher has been started on.
+		/// If the file already exists, this method does nothing.
+		///</summary>
+		private static void InitializeInstallationGUID()
+		{
 			// Initialize the unique installation GUID, if needed.
 			if (!File.Exists(GetInstallGUIDPath()))
 			{
@@ -375,7 +391,14 @@ namespace Launchpad.Launcher.Handlers
 					File.WriteAllText(GetInstallGUIDPath(), generatedInstallGUID);
 				}
 			}
+		}
 
+		/// <summary>
+		/// Creates a configuration file where the user or developer can add runtime switches for the installed game.
+		/// If the file already exists, this method does nothing.
+		/// </summary>
+		private static void InitializeGameArgumentsFile()
+		{
 			// Initialize the game arguments file, if needed
 			if (!File.Exists(GetGameArgumentsPath()))
 			{
@@ -416,9 +439,9 @@ namespace Launchpad.Launcher.Handlers
 		/// Gets the path to the update cookie on disk.
 		/// </summary>
 		/// <returns>The update cookie.</returns>
-		public static string GetUpdateCookiePath()
+		public static string GetLauncherCookiePath()
 		{
-			string updateCookie = $@"{GetLocalDir()}.update";
+			string updateCookie = $@"{GetLocalDir()}.launcher";
 			return updateCookie;
 		}
 
@@ -426,12 +449,12 @@ namespace Launchpad.Launcher.Handlers
 		/// Creates the update cookie.
 		/// </summary>
 		/// <returns>The update cookie's path.</returns>
-		public static void CreateUpdateCookie()
+		public static void CreateLauncherCookie()
 		{
-			bool bCookieExists = File.Exists(GetUpdateCookiePath());
+			bool bCookieExists = File.Exists(GetLauncherCookiePath());
 			if (!bCookieExists)
 			{
-				File.Create(GetUpdateCookiePath());
+				File.Create(GetLauncherCookiePath());
 			}
 		}
 
@@ -439,9 +462,9 @@ namespace Launchpad.Launcher.Handlers
 		/// Gets the install cookie.
 		/// </summary>
 		/// <returns>The install cookie.</returns>
-		public static string GetInstallCookiePath()
+		public static string GetGameCookiePath()
 		{
-			string installCookie = $@"{GetLocalDir()}.install";
+			string installCookie = $@"{GetLocalDir()}.game";
 			return installCookie;
 		}
 
@@ -449,13 +472,13 @@ namespace Launchpad.Launcher.Handlers
 		/// Creates the install cookie.
 		/// </summary>
 		/// <returns>The install cookie's path.</returns>
-		public static void CreateInstallCookie()
+		public static void CreateGameCookie()
 		{
-			bool bCookieExists = File.Exists(GetInstallCookiePath());
+			bool bCookieExists = File.Exists(GetGameCookiePath());
 
 			if (!bCookieExists)
 			{
-				File.Create(GetInstallCookiePath()).Close();
+				File.Create(GetGameCookiePath()).Close();
 			}
 		}
 
@@ -487,7 +510,10 @@ namespace Launchpad.Launcher.Handlers
 			return $@"{GetLocalDir()}Game{Path.DirectorySeparatorChar}{GetSystemTarget()}{Path.DirectorySeparatorChar}";
 		}
 
-		public List<string> GetGameArguments()
+		/// <summary>
+		/// Gets a list of command-line arguments that are passed to the game when it starts.
+		/// </summary>
+		public static List<string> GetGameArguments()
 		{
 			if (!File.Exists(GetGameArgumentsPath()))
 			{
@@ -516,23 +542,23 @@ namespace Launchpad.Launcher.Handlers
 			// We strip it out here (if it exists) just to be safe.
 			string executableName = GetMainExecutableName().Replace(".exe", "");
 
-			//unix doesn't need (or have!) the .exe extension.
+			// Unix doesn't need (or have) the .exe extension.
 			if (ChecksHandler.IsRunningOnUnix())
 			{
-				//should return something along the lines of "./Game/<ExecutableName>"
+				// Should return something along the lines of "./Game/<ExecutableName>"
 				executablePathRootLevel = $@"{GetGamePath()}{executableName}";
 
-				//should return something along the lines of "./Game/<GameName>/Binaries/<SystemTarget>/<ExecutableName>"
+				// Should return something along the lines of "./Game/<GameName>/Binaries/<SystemTarget>/<ExecutableName>"
 				executablePathTargetLevel =
 					$@"{GetGamePath()}{GetGameName()}{Path.DirectorySeparatorChar}Binaries" +
 					$"{Path.DirectorySeparatorChar}{GetSystemTarget()}{Path.DirectorySeparatorChar}{executableName}";
 			}
 			else
 			{
-				//should return something along the lines of "./Game/<ExecutableName>.exe"
+				// Should return something along the lines of "./Game/<ExecutableName>.exe"
 				executablePathRootLevel = $@"{GetGamePath()}{executableName}.exe";
 
-				//should return something along the lines of "./Game/<GameName>/Binaries/<SystemTarget>/<ExecutableName>.exe"
+				// Should return something along the lines of "./Game/<GameName>/Binaries/<SystemTarget>/<ExecutableName>.exe"
 				executablePathTargetLevel =
 					$@"{GetGamePath()}{GetGameName()}{Path.DirectorySeparatorChar}Binaries" +
 					$"{Path.DirectorySeparatorChar}{GetSystemTarget()}{Path.DirectorySeparatorChar}{executableName}.exe";
@@ -790,7 +816,7 @@ namespace Launchpad.Launcher.Handlers
 				catch (IOException ioex)
 				{
 					Log.Warn("Could not read the protocol string (IOException): " + ioex.Message);
-					return null;
+					return string.Empty;
 				}
 			}
 		}
@@ -1411,23 +1437,21 @@ namespace Launchpad.Launcher.Handlers
 		/// Gets the install-unique GUID. This is separate from the launcher GUID, which maps to a game.
 		/// </summary>
 		/// <returns>The install GUI.</returns>
-		public string GetInstallGUID()
+		public static string GetInstallGUID()
 		{
 			if (File.Exists(GetInstallGUIDPath()))
 			{
 				return File.ReadAllText(GetInstallGUIDPath());
 			}
-			else
-			{
-				return "";
-			}
+
+			return "";
 		}
 
 		/// <summary>
 		/// Replaces and updates the old pre-unix config.
 		/// </summary>
 		/// <returns><c>true</c>, if an old config was copied over to the new format, <c>false</c> otherwise.</returns>
-		private bool UpdateOldConfig()
+		private void UpdateAndMovePreUnixConfig()
 		{
 			string oldConfigPath = $@"{GetLocalDir()}config{Path.DirectorySeparatorChar}launcherConfig.ini";
 
@@ -1468,11 +1492,9 @@ namespace Launchpad.Launcher.Handlers
 							data[SectionNameLocal].AddKey(LocalSystemTargetKey, systemTarget);
 
 							WriteConfig(parser, data);
-							// We were successful, so return true.
 
 							File.Delete(oldConfigPath);
 							Directory.Delete(oldConfigDir, true);
-							return true;
 						}
 						else
 						{
@@ -1480,13 +1502,8 @@ namespace Launchpad.Launcher.Handlers
 							// Delete the old config
 							File.Delete(oldConfigPath);
 							Directory.Delete(oldConfigDir, true);
-							return false;
 						}
 					}
-				}
-				else
-				{
-					return false;
 				}
 			}
 			else
@@ -1513,33 +1530,44 @@ namespace Launchpad.Launcher.Handlers
 						data[SectionNameLocal].AddKey(LocalSystemTargetKey, systemTarget);
 
 						WriteConfig(parser, data);
-
-						// We were successful, so return true.
-						return true;
 					}
-					else
-					{
-						return false;
-					}
-
 				}
 			}
 
 		}
 
 		/// <summary>
-		/// Replaces the old update cookie.
+		/// Renames or moves the old cookie files as needed.
 		/// </summary>
-		private static void ReplaceOldUpdateCookie()
+		private static void MoveOrUpdateCookieFiles()
 		{
-			string oldUpdateCookiePath = $@"{GetLocalDir()}.updatecookie";
+			// This is the really old path from way back.
+			string veryOldUpdateCookiePath = $@"{GetLocalDir()}.updatecookie";
+			if (File.Exists(veryOldUpdateCookiePath))
+			{
+				string launcherInstallCookiePath = $@"{GetLocalDir()}.launcher";
 
+				File.Move(veryOldUpdateCookiePath, launcherInstallCookiePath);
+			}
+
+			// August 1 - 2016: Renamed update cookie to launcher cookie
+			string oldUpdateCookiePath = $@"{GetLocalDir()}.update";
 			if (File.Exists(oldUpdateCookiePath))
 			{
-				string updateCookiePath = $@"{GetLocalDir()}.update";
+				string launcherInstallCookiePath = $@"{GetLocalDir()}.launcher";
 
-				File.Move(oldUpdateCookiePath, updateCookiePath);
+				File.Move(oldUpdateCookiePath, launcherInstallCookiePath);
 			}
+
+			// August 1 - 2016: Renamed install cookie to game cookie
+			string oldInstallCookiePath = $@"{GetLocalDir()}.install";
+			if (File.Exists(oldInstallCookiePath))
+			{
+				string gameInstallCookiePath = $@"{GetLocalDir()}.game";
+
+				File.Move(oldInstallCookiePath, gameInstallCookiePath);
+			}
+			// End August 1 - 2016
 		}
 
 		/// <summary>
@@ -1562,7 +1590,7 @@ namespace Launchpad.Launcher.Handlers
 					}
 				case "Unix":
 					{
-						//Mac may sometimes be detected as Unix, so do an additional check for some Mac-only directories
+						// Mac may sometimes be detected as Unix, so do an additional check for some Mac-only directories
 						if (Directory.Exists("/Applications") && Directory.Exists("/System") && Directory.Exists("/Users") && Directory.Exists("/Volumes"))
 						{
 							return ESystemTarget.Mac;

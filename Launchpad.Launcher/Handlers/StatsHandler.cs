@@ -53,7 +53,7 @@ namespace Launchpad.Launcher.Handlers
 				                      $"&gameName={Config.GetGameName()}" +
 				                      $"&systemType={Config.GetSystemTarget()}" +
 				                      $"&officialUpdates={Config.GetDoOfficialUpdates()}" +
-									  $"&installguid={Config.GetInstallGUID()}";
+									  $"&installguid={ConfigHandler.GetInstallGUID()}";
 
 
 				WebRequest sendStatsRequest = WebRequest.Create(formattedURL);

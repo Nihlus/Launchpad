@@ -61,7 +61,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			{
 				// Create the .install file to mark that an installation has begun.
 				// If it exists, do nothing.
-				ConfigHandler.CreateInstallCookie();
+				ConfigHandler.CreateGameCookie();
 
 				// Make sure the manifest is up to date
 				RefreshModuleManifest(EModule.Game);
@@ -269,7 +269,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 			// Attempt to parse whatever is inside the install cookie
 			ManifestEntry lastDownloadedFile;
-			if (ManifestEntry.TryParse(File.ReadAllText(ConfigHandler.GetInstallCookiePath()), out lastDownloadedFile))
+			if (ManifestEntry.TryParse(File.ReadAllText(ConfigHandler.GetGameCookiePath()), out lastDownloadedFile))
 			{
 				// Loop through all the entries in the manifest until we encounter
 				// an entry which matches the one in the install cookie
@@ -404,10 +404,10 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 
 			// Reset the cookie
-			File.WriteAllText(ConfigHandler.GetInstallCookiePath(), string.Empty);
+			File.WriteAllText(ConfigHandler.GetGameCookiePath(), string.Empty);
 
 			// Write the current file progress to the install cookie
-			using (TextWriter textWriterProgress = new StreamWriter(ConfigHandler.GetInstallCookiePath()))
+			using (TextWriter textWriterProgress = new StreamWriter(ConfigHandler.GetGameCookiePath()))
 			{
 				textWriterProgress.WriteLine(fileEntry);
 				textWriterProgress.Flush();
@@ -459,7 +459,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 
 			// We've finished the download, so empty the cookie
-			File.WriteAllText(ConfigHandler.GetInstallCookiePath(), string.Empty);
+			File.WriteAllText(ConfigHandler.GetGameCookiePath(), string.Empty);
 		}
 
 		/// <summary>

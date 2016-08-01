@@ -169,7 +169,7 @@ namespace Launchpad.Launcher.Interface
 						// Yes, install here
 						Log.Info("User accepted installation in this directory. Installing in current directory.");
 
-						ConfigHandler.CreateUpdateCookie();
+						ConfigHandler.CreateLauncherCookie();
 					}
 					else
 					{

@@ -62,7 +62,7 @@ namespace Launchpad.Launcher.Handlers
 		public static bool IsInitialStartup()
 		{
 			// We use an empty file to determine if this is the first launch or not
-			return !File.Exists(ConfigHandler.GetUpdateCookiePath());
+			return !File.Exists(ConfigHandler.GetLauncherCookiePath());
 		}
 
 		/// <summary>
@@ -93,7 +93,7 @@ namespace Launchpad.Launcher.Handlers
 			bool bHasGameDirectory = Directory.Exists(Configuration.GetGamePath());
 
 			// Is there an .install file in the directory?
-			bool bHasInstallationCookie = File.Exists(ConfigHandler.GetInstallCookiePath());
+			bool bHasInstallationCookie = File.Exists(ConfigHandler.GetGameCookiePath());
 
 			// Is there a version file?
 			bool bHasGameVersion = File.Exists(Configuration.GetGameVersionPath());
@@ -137,14 +137,14 @@ namespace Launchpad.Launcher.Handlers
 		private static bool IsInstallCookieEmpty()
 		{
 			//Is there an .install file in the directory?
-			bool bHasInstallationCookie = File.Exists(ConfigHandler.GetInstallCookiePath());
+			bool bHasInstallationCookie = File.Exists(ConfigHandler.GetGameCookiePath());
 
 			//Is the .install file empty? Assume false.
 			bool bIsInstallCookieEmpty = false;
 
 			if (bHasInstallationCookie)
 			{
-				bIsInstallCookieEmpty = string.IsNullOrEmpty(File.ReadAllText(ConfigHandler.GetInstallCookiePath()));
+				bIsInstallCookieEmpty = string.IsNullOrEmpty(File.ReadAllText(ConfigHandler.GetGameCookiePath()));
 			}
 
 			return bIsInstallCookieEmpty;

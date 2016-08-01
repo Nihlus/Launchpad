@@ -144,7 +144,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			{
 				//create the .install file to mark that an installation has begun
 				//if it exists, do nothing.
-				ConfigHandler.CreateInstallCookie();
+				ConfigHandler.CreateGameCookie();
 
 				// Download Game
 				DownloadModule(EModule.Game);

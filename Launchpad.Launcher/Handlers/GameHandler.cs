@@ -142,10 +142,10 @@ namespace Launchpad.Launcher.Handlers
 				Directory.Delete(Config.GetGamePath(), true);
 			}
 
-			if (File.Exists(ConfigHandler.GetInstallCookiePath()))
+			if (File.Exists(ConfigHandler.GetGameCookiePath()))
 			{
 				Log.Info("Deleting install progress cookie.");
-				File.Delete(ConfigHandler.GetInstallCookiePath());
+				File.Delete(ConfigHandler.GetGameCookiePath());
 			}
 
 			Thread t = new Thread(() => this.Patch.InstallGame());
@@ -162,7 +162,7 @@ namespace Launchpad.Launcher.Handlers
 			{
 				// Do not move the argument assignment inside the gameStartInfo initializer.
 				// It causes a TargetInvocationException crash through black magic.
-				string gameArguments = string.Join(" ", Config.GetGameArguments());
+				string gameArguments = string.Join(" ", ConfigHandler.GetGameArguments());
 				ProcessStartInfo gameStartInfo = new ProcessStartInfo
 				{
 					UseShellExecute = false,
