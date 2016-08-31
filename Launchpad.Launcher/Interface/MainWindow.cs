@@ -336,13 +336,13 @@ namespace Launchpad.Launcher.Interface
 
 			if (bInProgress)
 			{
-				this.repairGameAction.Sensitive = false;
-				this.reinstallGameAction.Sensitive = false;
+				repairGameAction.Sensitive = false;
+				reinstallGameAction.Sensitive = false;
 			}
 			else
 			{
-				this.repairGameAction.Sensitive = true;
-				this.reinstallGameAction.Sensitive = true;
+				repairGameAction.Sensitive = true;
+				reinstallGameAction.Sensitive = true;
 			}
 		}
 
@@ -495,7 +495,6 @@ namespace Launchpad.Launcher.Interface
 			SetLauncherMode(ELauncherMode.Repair, false);
 		}
 
-		//TODO: Rework
 		/// <summary>
 		/// Provides alternatives when the game fails to download, either through an update or through an installation.
 		/// </summary>

@@ -69,7 +69,7 @@ namespace Launchpad.Utilities.Interface
 			};
 			// Container child vbox3.Gtk.Box+BoxChild
 			UIManager.AddUiFromString ("<ui><menubar name='menubar1'/></ui>");
-			menubar1 = (MenuBar)(UIManager.GetWidget ("/menubar1"));
+			menubar1 = (MenuBar)UIManager.GetWidget ("/menubar1");
 			menubar1.Name = "menubar1";
 			vbox3.Add (menubar1);
 			Box.BoxChild w2 = (Box.BoxChild)vbox3 [menubar1];
@@ -147,7 +147,7 @@ namespace Launchpad.Utilities.Interface
 			};
 			alignment19.Add (progressLabel);
 			hbox4.Add (alignment19);
-			Box.BoxChild w10 = ((Box.BoxChild)(hbox4 [alignment19]));
+			Box.BoxChild w10 = (Box.BoxChild)hbox4 [alignment19];
 			w10.Position = 1;
 			w10.Expand = false;
 			w10.Fill = false;
@@ -219,13 +219,13 @@ namespace Launchpad.Utilities.Interface
 			};
 			alignment1.Add (generateLaunchpadManifestButton);
 			hbox3.Add (alignment1);
-			Box.BoxChild w17 = ((Box.BoxChild)(hbox3 [alignment1]));
-			w17.PackType = ((PackType)(1));
+			Box.BoxChild w17 = (Box.BoxChild)hbox3 [alignment1];
+			w17.PackType = (PackType)1;
 			w17.Position = 1;
 			w17.Expand = false;
 			w17.Fill = false;
 			vbox3.Add (hbox3);
-			Box.BoxChild w18 = ((Box.BoxChild)(vbox3 [hbox3]));
+			Box.BoxChild w18 = (Box.BoxChild)vbox3 [hbox3];
 			w18.Position = 5;
 			w18.Expand = false;
 			w18.Fill = false;

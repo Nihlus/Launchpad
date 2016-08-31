@@ -177,7 +177,7 @@ namespace Launchpad.Launcher.Handlers
 				Process gameProcess = new Process
 				{
 					StartInfo = gameStartInfo,
-					EnableRaisingEvents = true,
+					EnableRaisingEvents = true
 				};
 
 				gameProcess.Exited += delegate
