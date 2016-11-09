@@ -31,7 +31,7 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 	/// sets its parent to a <see cref="Socket"/> which is then bound to an input <see cref="Container"/> in the GTK UI.
 	/// </summary>
 	[CLSCompliant(false)]
-	public class WindowsBrowser
+	public class WindowsBrowser : IDisposable
 	{
 		/// <summary>
 		/// Imported unmanaged function for setting the parent of a window. In our case, it's used for setting the parent
@@ -108,6 +108,16 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 			Navigate("about:blank");
 			this.browser.Document?.Write(string.Empty);
 			this.browser.DocumentText = htmlContent;
+		}
+
+		/// <summary>
+		/// Disposes the object, releasing any unmanaged resources to the system.
+		/// </summary>
+		public void Dispose()
+		{
+			browser?.Dispose();
+			viewport?.Dispose();
+			socket?.Dispose();
 		}
 	}
 }
