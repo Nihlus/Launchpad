@@ -88,15 +88,15 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		public GameHandler()
 		{
-			Patch = Config.GetPatchProtocol();
-			if (Patch != null)
+			this.Patch = Config.GetPatchProtocol();
+			if (this.Patch != null)
 			{
-				Patch.ModuleDownloadProgressChanged += OnModuleInstallProgressChanged;
-				Patch.ModuleVerifyProgressChanged += OnModuleInstallProgressChanged;
-				Patch.ModuleUpdateProgressChanged += OnModuleInstallProgressChanged;
+				this.Patch.ModuleDownloadProgressChanged += OnModuleInstallProgressChanged;
+				this.Patch.ModuleVerifyProgressChanged += OnModuleInstallProgressChanged;
+				this.Patch.ModuleUpdateProgressChanged += OnModuleInstallProgressChanged;
 
-				Patch.ModuleInstallationFinished += OnModuleInstallationFinished;
-				Patch.ModuleInstallationFailed += OnModuleInstallationFailed;
+				this.Patch.ModuleInstallationFinished += OnModuleInstallationFinished;
+				this.Patch.ModuleInstallationFailed += OnModuleInstallationFailed;
 			}
 		}
 
@@ -170,7 +170,7 @@ namespace Launchpad.Launcher.Handlers
 				};
 				gameStartInfo.Arguments = gameArguments;
 
-				GameExitArgs.GameName = Config.GetGameName();
+				this.GameExitArgs.GameName = Config.GetGameName();
 
 				Log.Info($"Launching game. \n\tExecutable path: {gameStartInfo.FileName}");
 
@@ -187,7 +187,7 @@ namespace Launchpad.Launcher.Handlers
 						Log.Info($"The game exited with an exit code of {gameProcess.ExitCode}. " +
 						         "There may have been issues during runtime, or the game may not have started at all.");
 					}
-					GameExitArgs.ExitCode = gameProcess.ExitCode;
+					this.GameExitArgs.ExitCode = gameProcess.ExitCode;
 					OnGameExited();
 
 					// Manual disposing
@@ -207,13 +207,13 @@ namespace Launchpad.Launcher.Handlers
 				Log.Warn($"Game launch failed (FileNotFoundException): {fex.Message}");
 				Log.Warn("If the game executable is there, try overriding the executable name in the configuration file.");
 
-				GameExitArgs.ExitCode = 2;
+				this.GameExitArgs.ExitCode = 2;
 				OnGameLaunchFailed();
 			}
 			catch (IOException ioex)
 			{
 				Log.Warn($"Game launch failed (IOException): {ioex.Message}");
-				GameExitArgs.ExitCode = 1;
+				this.GameExitArgs.ExitCode = 1;
 
 				OnGameLaunchFailed();
 			}
@@ -265,7 +265,7 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		private void OnGameExited()
 		{
-			GameExited?.Invoke(this, GameExitArgs);
+			GameExited?.Invoke(this, this.GameExitArgs);
 		}
 	}
 

@@ -88,33 +88,33 @@ namespace Launchpad.Launcher.Interface
 			: base(Gtk.WindowType.Toplevel)
 		{
 			// Initialize the GTK UI
-			this.Build();
+			Build();
 
 			// Bind the handler events
-			Game.ProgressChanged += OnModuleInstallationProgressChanged;
-			Game.DownloadFinished += OnGameDownloadFinished;
-			Game.DownloadFailed += OnGameDownloadFailed;
-			Game.LaunchFailed += OnGameLaunchFailed;
-            Game.GameExited += OnGameExited;
+			this.Game.ProgressChanged += OnModuleInstallationProgressChanged;
+			this.Game.DownloadFinished += OnGameDownloadFinished;
+			this.Game.DownloadFailed += OnGameDownloadFailed;
+			this.Game.LaunchFailed += OnGameLaunchFailed;
+			this.Game.GameExited += OnGameExited;
 
-			Launcher.LauncherDownloadProgressChanged += OnModuleInstallationProgressChanged;
-			Launcher.LauncherDownloadFinished += OnLauncherDownloadFinished;
-			Launcher.ChangelogDownloadFinished += OnChangelogDownloadFinished;
+			this.Launcher.LauncherDownloadProgressChanged += OnModuleInstallationProgressChanged;
+			this.Launcher.LauncherDownloadFinished += OnLauncherDownloadFinished;
+			this.Launcher.ChangelogDownloadFinished += OnChangelogDownloadFinished;
 
 			// Set the initial launcher mode
 			SetLauncherMode(ELauncherMode.Inactive, false);
 
 			// Set the window title
-			Title = LocalizationCatalog.GetString("Launchpad - {0}", Config.GetGameName());
+			this.Title = LocalizationCatalog.GetString("Launchpad - {0}", this.Config.GetGameName());
 
 			// Create a new changelog widget, and add it to the scrolled window
 			this.Browser = new Changelog(this.browserWindow);
-			browserWindow.ShowAll();
+			this.browserWindow.ShowAll();
 
-			indicatorLabel.Text = LocalizationCatalog.GetString("Idle");
+			this.indicatorLabel.Text = LocalizationCatalog.GetString("Idle");
 
 			// First of all, check if we can connect to the patching service.
-			if (!Checks.CanPatch())
+			if (!this.Checks.CanPatch())
 			{
 				MessageDialog dialog = new MessageDialog(
 					                       null,
@@ -126,19 +126,19 @@ namespace Launchpad.Launcher.Interface
 				dialog.Run();
 
 				dialog.Destroy();
-				indicatorLabel.Text = LocalizationCatalog.GetString("Could not connect to server.");
-				repairGameAction.Sensitive = false;
+				this.indicatorLabel.Text = LocalizationCatalog.GetString("Could not connect to server.");
+				this.repairGameAction.Sensitive = false;
 			}
 			else
 			{
 				// TODO: Load this asynchronously
 				// Load the game banner (if there is one)
-				if (Config.GetPatchProtocol().CanProvideBanner())
+				if (this.Config.GetPatchProtocol().CanProvideBanner())
 				{
 					using (MemoryStream bannerStream = new MemoryStream())
 					{
 						// Fetch the banner from the server
-						Config.GetPatchProtocol().GetBanner().Save(bannerStream, ImageFormat.Png);
+						this.Config.GetPatchProtocol().GetBanner().Save(bannerStream, ImageFormat.Png);
 
 						// Load the image into a pixel buffer
 						bannerStream.Position = 0;
@@ -181,7 +181,7 @@ namespace Launchpad.Launcher.Interface
 					}
 				}
 
-				if (Config.ShouldAllowAnonymousStats())
+				if (this.Config.ShouldAllowAnonymousStats())
 				{
 					StatsHandler.SendUsageStats();
 				}
@@ -190,17 +190,17 @@ namespace Launchpad.Launcher.Interface
 				// implementation after.
 				if (LauncherHandler.CanAccessStandardChangelog())
 				{
-					Browser.Navigate(Config.GetChangelogURL());
+					this.Browser.Navigate(this.Config.GetChangelogURL());
 				}
 				else
 				{
-					Launcher.LoadFallbackChangelog();
+					this.Launcher.LoadFallbackChangelog();
 				}
 
 				// If the launcher does not need an update at this point, we can continue checks for the game
-				if (!Checks.IsLauncherOutdated())
+				if (!this.Checks.IsLauncherOutdated())
 				{
-					if (!Checks.IsPlatformAvailable(Config.GetSystemTarget()))
+					if (!this.Checks.IsPlatformAvailable(this.Config.GetSystemTarget()))
 					{
 						Log.Info($"The server does not provide files for platform \"{ConfigHandler.GetCurrentPlatform()}\". " +
 						         "A .provides file must be present in the platforms' root directory.");
@@ -209,7 +209,7 @@ namespace Launchpad.Launcher.Interface
 					}
 					else
 					{
-						if (!Checks.IsGameInstalled())
+						if (!this.Checks.IsGameInstalled())
 						{
 							// If the game is not installed, offer to install it
 							Log.Info("The game has not yet been installed.");
@@ -224,10 +224,10 @@ namespace Launchpad.Launcher.Interface
 						else
 						{
 							// If the game is installed (which it should be at this point), check if it needs to be updated
-							if (Checks.IsGameOutdated())
+							if (this.Checks.IsGameOutdated())
 							{
 								// If it does, offer to update it
-								Log.Info($"The game is outdated. \n\tLocal version: {Config.GetLocalGameVersion()}");
+								Log.Info($"The game is outdated. \n\tLocal version: {this.Config.GetLocalGameVersion()}");
 								SetLauncherMode(ELauncherMode.Update, false);
 							}
 							else
@@ -242,7 +242,7 @@ namespace Launchpad.Launcher.Interface
 				else
 				{
 					// The launcher was outdated.
-					Log.Info($"The launcher is outdated. \n\tLocal version: {Config.GetLocalLauncherVersion()}");
+					Log.Info($"The launcher is outdated. \n\tLocal version: {this.Config.GetLocalLauncherVersion()}");
 					SetLauncherMode(ELauncherMode.Update, false);
 				}
 			}
@@ -259,7 +259,7 @@ namespace Launchpad.Launcher.Interface
 		private void SetLauncherMode(ELauncherMode newMode, bool bInProgress)
 		{
 			// Set the global launcher mode
-			Mode = newMode;
+			this.Mode = newMode;
 
 			// Set the UI elements to match
 			switch (newMode)
@@ -268,13 +268,13 @@ namespace Launchpad.Launcher.Interface
 				{
 					if (bInProgress)
 					{
-						primaryButton.Sensitive = false;
-						primaryButton.Label = LocalizationCatalog.GetString("Installing...");
+						this.primaryButton.Sensitive = false;
+						this.primaryButton.Label = LocalizationCatalog.GetString("Installing...");
 					}
 					else
 					{
-						primaryButton.Sensitive = true;
-						primaryButton.Label = LocalizationCatalog.GetString("Install");
+						this.primaryButton.Sensitive = true;
+						this.primaryButton.Label = LocalizationCatalog.GetString("Install");
 					}
 					break;
 				}
@@ -282,13 +282,13 @@ namespace Launchpad.Launcher.Interface
 				{
 					if (bInProgress)
 					{
-						primaryButton.Sensitive = false;
-						primaryButton.Label = LocalizationCatalog.GetString("Updating...");
+						this.primaryButton.Sensitive = false;
+						this.primaryButton.Label = LocalizationCatalog.GetString("Updating...");
 					}
 					else
 					{
-						primaryButton.Sensitive = true;
-						primaryButton.Label = LocalizationCatalog.GetString("Update");
+						this.primaryButton.Sensitive = true;
+						this.primaryButton.Label = LocalizationCatalog.GetString("Update");
 					}
 					break;
 				}
@@ -296,13 +296,13 @@ namespace Launchpad.Launcher.Interface
 				{
 					if (bInProgress)
 					{
-						primaryButton.Sensitive = false;
-						primaryButton.Label = LocalizationCatalog.GetString("Repairing...");
+						this.primaryButton.Sensitive = false;
+						this.primaryButton.Label = LocalizationCatalog.GetString("Repairing...");
 					}
 					else
 					{
-						primaryButton.Sensitive = true;
-						primaryButton.Label = LocalizationCatalog.GetString("Repair");
+						this.primaryButton.Sensitive = true;
+						this.primaryButton.Label = LocalizationCatalog.GetString("Repair");
 					}
 					break;
 				}
@@ -310,22 +310,22 @@ namespace Launchpad.Launcher.Interface
 				{
 					if (bInProgress)
 					{
-						primaryButton.Sensitive = false;
-						primaryButton.Label = LocalizationCatalog.GetString("Launching...");
+						this.primaryButton.Sensitive = false;
+						this.primaryButton.Label = LocalizationCatalog.GetString("Launching...");
 					}
 					else
 					{
-						primaryButton.Sensitive = true;
-						primaryButton.Label = LocalizationCatalog.GetString("Launch");
+						this.primaryButton.Sensitive = true;
+						this.primaryButton.Label = LocalizationCatalog.GetString("Launch");
 					}
 					break;
 				}
 				case ELauncherMode.Inactive:
 				{
-					repairGameAction.Sensitive = false;
+					this.repairGameAction.Sensitive = false;
 
-					primaryButton.Sensitive = false;
-					primaryButton.Label = LocalizationCatalog.GetString("Inactive");
+					this.primaryButton.Sensitive = false;
+					this.primaryButton.Label = LocalizationCatalog.GetString("Inactive");
 					break;
 				}
 				default:
@@ -336,13 +336,13 @@ namespace Launchpad.Launcher.Interface
 
 			if (bInProgress)
 			{
-				repairGameAction.Sensitive = false;
-				reinstallGameAction.Sensitive = false;
+				this.repairGameAction.Sensitive = false;
+				this.reinstallGameAction.Sensitive = false;
 			}
 			else
 			{
-				repairGameAction.Sensitive = true;
-				reinstallGameAction.Sensitive = true;
+				this.repairGameAction.Sensitive = true;
+				this.reinstallGameAction.Sensitive = true;
 			}
 		}
 
@@ -383,11 +383,11 @@ namespace Launchpad.Launcher.Interface
 		private void OnPrimaryButtonClicked(object sender, EventArgs e)
 		{
 			// Drop out if the current platform isn't available on the server
-			if (!Checks.IsPlatformAvailable(Config.GetSystemTarget()))
+			if (!this.Checks.IsPlatformAvailable(this.Config.GetSystemTarget()))
 			{
-				indicatorLabel.Text =
+				this.indicatorLabel.Text =
 					LocalizationCatalog.GetString("The server does not provide the game for the selected platform.");
-				mainProgressBar.Text = "";
+				this.mainProgressBar.Text = "";
 
 				Log.Info($"The server does not provide files for platform \"{ConfigHandler.GetCurrentPlatform()}\". " +
 				         "A .provides file must be present in the platforms' root directory.");
@@ -398,13 +398,13 @@ namespace Launchpad.Launcher.Interface
 			}
 
 			// else, run the relevant function
-			switch (Mode)
+			switch (this.Mode)
 			{
 				case ELauncherMode.Repair:
 				{
 					// Repair the game asynchronously
 					SetLauncherMode(ELauncherMode.Repair, true);
-					Game.VerifyGame();
+					this.Game.VerifyGame();
 
 					break;
 				}
@@ -412,34 +412,34 @@ namespace Launchpad.Launcher.Interface
 				{
 					// Install the game asynchronously
 					SetLauncherMode(ELauncherMode.Install, true);
-					Game.InstallGame();
+					this.Game.InstallGame();
 
 					break;
 				}
 				case ELauncherMode.Update:
 				{
-					if (Checks.IsLauncherOutdated())
+					if (this.Checks.IsLauncherOutdated())
 					{
 						// Update the launcher asynchronously
 						SetLauncherMode(ELauncherMode.Update, true);
-						Launcher.UpdateLauncher();
+						this.Launcher.UpdateLauncher();
 					}
 					else
 					{
 						// Update the game asynchronously
 						SetLauncherMode(ELauncherMode.Update, true);
-						Game.UpdateGame();
+						this.Game.UpdateGame();
 					}
 
 					break;
 				}
 				case ELauncherMode.Launch:
 				{
-					indicatorLabel.Text = LocalizationCatalog.GetString("Idle");
-					mainProgressBar.Text = "";
+					this.indicatorLabel.Text = LocalizationCatalog.GetString("Idle");
+					this.mainProgressBar.Text = "";
 
 					SetLauncherMode(ELauncherMode.Launch, true);
-					Game.LaunchGame();
+					this.Game.LaunchGame();
 
 					break;
 				}
@@ -461,7 +461,7 @@ namespace Launchpad.Launcher.Interface
 			//Take the resulting HTML string from the changelog download and send it to the changelog browser
 			Application.Invoke(delegate
 			{
-				Browser.LoadHTML(e.HTML, e.URL);
+				this.Browser.LoadHTML(e.HTML, e.URL);
 			});
 		}
 
@@ -489,8 +489,8 @@ namespace Launchpad.Launcher.Interface
 		/// <param name="e">Empty event args.</param>
 		private void OnGameLaunchFailed(object sender, EventArgs e)
 		{
-			indicatorLabel.Text = LocalizationCatalog.GetString("The game failed to launch. Try repairing the installation.");
-			mainProgressBar.Text = "";
+			this.indicatorLabel.Text = LocalizationCatalog.GetString("The game failed to launch. Try repairing the installation.");
+			this.mainProgressBar.Text = "";
 
 			SetLauncherMode(ELauncherMode.Repair, false);
 		}
@@ -502,7 +502,7 @@ namespace Launchpad.Launcher.Interface
 		/// <param name="e">Contains the type of failure that occurred.</param>
 		private void OnGameDownloadFailed(object sender, EventArgs e)
 		{
-			switch (Mode)
+			switch (this.Mode)
 			{
 				case ELauncherMode.Install:
 					{
@@ -523,7 +523,7 @@ namespace Launchpad.Launcher.Interface
 					}
 			}
 
-			SetLauncherMode(Mode, false);
+			SetLauncherMode(this.Mode, false);
 		}
 
 		/// <summary>
@@ -535,9 +535,9 @@ namespace Launchpad.Launcher.Interface
 		{
 			Application.Invoke(delegate
 			{
-				mainProgressBar.Text = e.ProgressBarMessage;
-				indicatorLabel.Text = e.IndicatorLabelMessage;
-				mainProgressBar.Fraction = e.ProgressFraction;
+				this.mainProgressBar.Text = e.ProgressBarMessage;
+				this.indicatorLabel.Text = e.IndicatorLabelMessage;
+				this.mainProgressBar.Fraction = e.ProgressFraction;
 			});
 		}
 
@@ -550,28 +550,28 @@ namespace Launchpad.Launcher.Interface
 		{
 			Application.Invoke(delegate
 			{
-				indicatorLabel.Text = LocalizationCatalog.GetString("Idle");
+				this.indicatorLabel.Text = LocalizationCatalog.GetString("Idle");
 
-				switch (Mode)
+				switch (this.Mode)
 				{
 					case ELauncherMode.Install:
 					{
-						mainProgressBar.Text = LocalizationCatalog.GetString("Installation finished");
+						this.mainProgressBar.Text = LocalizationCatalog.GetString("Installation finished");
 						break;
 					}
 					case ELauncherMode.Update:
 					{
-						mainProgressBar.Text = LocalizationCatalog.GetString("Update finished");
+						this.mainProgressBar.Text = LocalizationCatalog.GetString("Update finished");
 						break;
 					}
 					case ELauncherMode.Repair:
 					{
-						mainProgressBar.Text = LocalizationCatalog.GetString("Repair finished");
+						this.mainProgressBar.Text = LocalizationCatalog.GetString("Repair finished");
 						break;
 					}
 					default:
 					{
-						mainProgressBar.Text = "";
+						this.mainProgressBar.Text = "";
 						break;
 					}
 				}

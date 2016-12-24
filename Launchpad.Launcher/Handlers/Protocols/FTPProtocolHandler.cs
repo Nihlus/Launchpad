@@ -54,9 +54,9 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 			bool bCanConnectToServer;
 
-			string url = Config.GetBaseFTPUrl();
-			string username = Config.GetRemoteUsername();
-			string password = Config.GetRemotePassword();
+			string url = this.Config.GetBaseFTPUrl();
+			string username = this.Config.GetRemoteUsername();
+			string password = this.Config.GetRemotePassword();
 
 			try
 			{
@@ -98,7 +98,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <returns><c>true</c> if the platform is available; otherwise, <c>false</c>.</returns>
 		public override bool IsPlatformAvailable(ESystemTarget platform)
 		{
-			string remote = $"{Config.GetBaseFTPUrl()}/game/{platform}/.provides";
+			string remote = $"{this.Config.GetBaseFTPUrl()}/game/{platform}/.provides";
 
 			return DoesRemoteFileExist(remote);
 		}
@@ -118,7 +118,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <returns>The changelog.</returns>
 		public override string GetChangelogSource()
 		{
-			string changelogURL = $"{Config.GetBaseFTPUrl()}/launcher/changelog.html";
+			string changelogURL = $"{this.Config.GetBaseFTPUrl()}/launcher/changelog.html";
 
 			// Return simple raw HTML
 			return ReadRemoteFile(changelogURL);
@@ -130,7 +130,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <returns><c>true</c> if this instance can provide banner; otherwise, <c>false</c>.</returns>
 		public override bool CanProvideBanner()
 		{
-			string bannerURL = $"{Config.GetBaseFTPUrl()}/launcher/banner.png";
+			string bannerURL = $"{this.Config.GetBaseFTPUrl()}/launcher/banner.png";
 
 			return DoesRemoteFileExist(bannerURL);
 		}
@@ -141,7 +141,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <returns>The banner.</returns>
 		public override Bitmap GetBanner()
 		{
-			string bannerURL = $"{Config.GetBaseFTPUrl()}/launcher/banner.png";
+			string bannerURL = $"{this.Config.GetBaseFTPUrl()}/launcher/banner.png";
 
 			string localBannerPath = $"{Path.GetTempPath()}/banner.png";
 
@@ -170,8 +170,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			else
 			{
-				username = Config.GetRemoteUsername();
-				password = Config.GetRemotePassword();
+				username = this.Config.GetRemoteUsername();
+				password = this.Config.GetRemotePassword();
 			}
 
 			try
@@ -253,8 +253,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			else
 			{
-				username = Config.GetRemoteUsername();
-				password = Config.GetRemotePassword();
+				username = this.Config.GetRemoteUsername();
+				password = this.Config.GetRemotePassword();
 			}
 
 			try
@@ -300,9 +300,9 @@ namespace Launchpad.Launcher.Handlers.Protocols
 							totalBytesDownloaded += smallBuffer.Length;
 
 							// Report download progress
-							ModuleDownloadProgressArgs.ProgressBarMessage = GetDownloadProgressBarMessage(Path.GetFileName(remoteURL),
+							this.ModuleDownloadProgressArgs.ProgressBarMessage = GetDownloadProgressBarMessage(Path.GetFileName(remoteURL),
 								totalBytesDownloaded, fileSize);
-							ModuleDownloadProgressArgs.ProgressFraction = (double) totalBytesDownloaded / (double) fileSize;
+							this.ModuleDownloadProgressArgs.ProgressFraction = (double) totalBytesDownloaded / (double) fileSize;
 							OnModuleDownloadProgressChanged();
 						}
 						else
@@ -323,9 +323,9 @@ namespace Launchpad.Launcher.Handlers.Protocols
 								totalBytesDownloaded += bytesRead;
 
 								// Report download progress
-								ModuleDownloadProgressArgs.ProgressBarMessage = GetDownloadProgressBarMessage(Path.GetFileName(remoteURL),
+								this.ModuleDownloadProgressArgs.ProgressBarMessage = GetDownloadProgressBarMessage(Path.GetFileName(remoteURL),
 									totalBytesDownloaded, fileSize);
-								ModuleDownloadProgressArgs.ProgressFraction = (double) totalBytesDownloaded / (double) fileSize;
+								this.ModuleDownloadProgressArgs.ProgressFraction = (double) totalBytesDownloaded / (double) fileSize;
 								OnModuleDownloadProgressChanged();
 							}
 						}
@@ -391,9 +391,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <param name="remotePath">Remote path.</param>
 		private bool DoesRemoteFileExist(string remotePath)
 		{
-			FtpWebRequest request = CreateFtpWebRequest(remotePath,
-				                        Config.GetRemoteUsername(),
-				                        Config.GetRemotePassword());
+			FtpWebRequest request = CreateFtpWebRequest(remotePath, this.Config.GetRemoteUsername(), this.Config.GetRemotePassword());
 			FtpWebResponse response = null;
 
 			try

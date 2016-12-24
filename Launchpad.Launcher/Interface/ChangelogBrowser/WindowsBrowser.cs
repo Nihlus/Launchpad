@@ -28,14 +28,14 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 {
 	/// <summary>
 	/// A GTK-supported wrapper around a WinForms <see cref="WebBrowser"/> widget. This class creates a WebBrowser, and
-	/// sets its parent to a <see cref="Socket"/> which is then bound to an input <see cref="Container"/> in the GTK UI.
+	/// sets its parent to a <see cref="Gtk.Socket"/> which is then bound to an input <see cref="Container"/> in the GTK UI.
 	/// </summary>
 	[CLSCompliant(false)]
 	public class WindowsBrowser
 	{
 		/// <summary>
 		/// Imported unmanaged function for setting the parent of a window. In our case, it's used for setting the parent
-		/// of a <see cref="WebBrowser"/> to a <see cref="Socket"/>.
+		/// of a <see cref="WebBrowser"/> to a <see cref="Gtk.Socket"/>.
 		/// </summary>
 		[DllImport("user32.dll", EntryPoint = "SetParent")]
 		private static extern IntPtr SetParent([In] IntPtr hWndChild, [In] IntPtr hWndNewParent);
@@ -43,23 +43,23 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 		/// <summary>
 		/// The <see cref="WebBrowser"/> we're using for rendering.
 		/// </summary>
-		public readonly WebBrowser browser = new WebBrowser();
+		public readonly WebBrowser Browser = new WebBrowser();
 
 		/// <summary>
-		/// The <see cref="Viewport"/> the <see cref="browser"/> is rendered inside, using the <see cref="socket"/>.
+		/// The <see cref="Gtk.Viewport"/> the <see cref="Browser"/> is rendered inside, using the <see cref="Socket"/>.
 		/// </summary>
-		private readonly Viewport viewport = new Viewport();
+		private readonly Viewport Viewport = new Viewport();
 
 		/// <summary>
-		/// The <see cref="Socket"/> which the <see cref="browser"/> is bound to.
+		/// The <see cref="Gtk.Socket"/> which the <see cref="Browser"/> is bound to.
 		/// </summary>
-		private readonly Socket socket = new Socket();
+		private readonly Socket Socket = new Socket();
 
 		/// <summary>
 		/// A public-facing handle that the UI can use to move the browser around, once it's been created. This points
 		/// to the viewport which has the socket inside it.
 		/// </summary>
-		public Widget WidgetHandle => this.viewport;
+		public Widget WidgetHandle => this.Viewport;
 
 		/// <summary>
 		/// Creates a new <see cref="WindowsBrowser"/> object, binding a <see cref="WebBrowser"/> to
@@ -68,26 +68,26 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 		/// <param name="parentContainer">The parent container which will hold the browser.</param>
 		public WindowsBrowser(Container parentContainer)
 		{
-			parentContainer.Add(this.viewport);
+			parentContainer.Add(this.Viewport);
 
-			viewport.SizeAllocated += OnViewportSizeAllocated;
-			viewport.Add(socket);
+			this.Viewport.SizeAllocated += OnViewportSizeAllocated;
+			this.Viewport.Add(this.Socket);
 
-			socket.Realize();
+			this.Socket.Realize();
 
-			IntPtr browserHandle = browser.Handle;
-			IntPtr socketHandle = (IntPtr) socket.Id;
+			IntPtr browserHandle = this.Browser.Handle;
+			IntPtr socketHandle = (IntPtr) this.Socket.Id;
 
 			SetParent(browserHandle, socketHandle);
 		}
 
 		/// <summary>
-		/// Handles resizing the <see cref="browser"/> widget when the viewport gets a new size allocated to it.
+		/// Handles resizing the <see cref="Browser"/> widget when the viewport gets a new size allocated to it.
 		/// </summary>
 		private void OnViewportSizeAllocated(object o, SizeAllocatedArgs args)
 		{
-			this.browser.Width = args.Allocation.Width;
-			this.browser.Height = args.Allocation.Height;
+			this.Browser.Width = args.Allocation.Width;
+			this.Browser.Height = args.Allocation.Height;
 		}
 
 		/// <summary>
@@ -96,7 +96,7 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 		/// <param name="url">The URL to navigate to.</param>
 		public void Navigate(string url)
 		{
-			browser.Navigate(url);
+			this.Browser.Navigate(url);
 		}
 
 		/// <summary>
@@ -106,8 +106,8 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 		public void LoadHTML(string htmlContent)
 		{
 			Navigate("about:blank");
-			this.browser.Document?.Write(string.Empty);
-			this.browser.DocumentText = htmlContent;
+			this.Browser.Document?.Write(string.Empty);
+			this.Browser.DocumentText = htmlContent;
 		}
 	}
 }

@@ -69,9 +69,9 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 			if (!ChecksHandler.IsRunningOnUnix())
 			{
 				this.windowsBrowser = new WindowsBrowser(parentContainer);
-				this.WidgetHandle = windowsBrowser.WidgetHandle;
+				this.WidgetHandle = this.windowsBrowser.WidgetHandle;
 
-				this.windowsBrowser.browser.Navigating += OnWindowsBrowserNavigating;
+				this.windowsBrowser.Browser.Navigating += OnWindowsBrowserNavigating;
 			}
 			else
 			{
@@ -79,17 +79,17 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 				this.WidgetHandle = this.unixBrowser;
 				this.unixBrowser.NavigationRequested += OnUnixBrowserNavigating;
 
-				parentContainer.Add(WidgetHandle);
+				parentContainer.Add(this.WidgetHandle);
 			}
 		}
 
 		/// <summary>
 		/// Handles routing of navigation requests to the users's default browser. Navigation requests from code
-		/// are allowed, but links that the user clicks are routed outside of the launcher
+		/// are allowed, but links that the user clicks are routed outside of the launcher.
 		/// </summary>
 		private void OnUnixBrowserNavigating(object o, NavigationRequestedArgs args)
 		{
-			if (!IsNavigatingFromCode)
+			if (!this.IsNavigatingFromCode)
 			{
 				this.unixBrowser.StopLoading();
 				args.RetVal = false;
@@ -98,24 +98,24 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 			}
 			else
 			{
-				IsNavigatingFromCode = false;
+				this.IsNavigatingFromCode = false;
 			}
 		}
 
 		/// <summary>
 		/// Handles routing of navigation requests to the users's default browser. Navigation requests from code
-		/// are allowed, but links that the user clicks are routed outside of the launcher
+		/// are allowed, but links that the user clicks are routed outside of the launcher.
 		/// </summary>
 		private void OnWindowsBrowserNavigating(object sender, WebBrowserNavigatingEventArgs webBrowserNavigatingEventArgs)
 		{
-			if (!IsNavigatingFromCode)
+			if (!this.IsNavigatingFromCode)
 			{
 				webBrowserNavigatingEventArgs.Cancel = true;
 				Process.Start(webBrowserNavigatingEventArgs.Url.ToString());
 			}
 			else
 			{
-				IsNavigatingFromCode = false;
+				this.IsNavigatingFromCode = false;
 			}
 		}
 

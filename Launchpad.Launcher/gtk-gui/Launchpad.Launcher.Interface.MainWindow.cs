@@ -85,7 +85,7 @@ namespace Launchpad.Launcher.Interface
 			mainActionGroup.Add(this.reinstallGameAction, null);
 
 			this.UIManager.InsertActionGroup (mainActionGroup, 0);
-			this.AddAccelGroup (this.UIManager.AccelGroup);
+			AddAccelGroup (this.UIManager.AccelGroup);
 			this.Name = "Launchpad.Launcher.Interface.MainWindow";
 			this.Title = LocalizationCatalog.GetString ("Launchpad - {0}");
 
@@ -287,17 +287,17 @@ namespace Launchpad.Launcher.Interface
 			w16.Expand = true;
 			w16.Fill = false;
 
-			this.Add (this.vbox1);
+			Add (this.vbox1);
 			if ((this.Child != null)) {
 				this.Child.ShowAll ();
 			}
 
 			this.primaryButton.HasDefault = true;
-			this.Show ();
-			this.DeleteEvent += OnDeleteEvent;
-			this.repairGameAction.Activated += this.OnRepairGameActionActivated;
-			this.reinstallGameAction.Activated += this.OnReinstallGameActionActivated;
-			this.primaryButton.Clicked += this.OnPrimaryButtonClicked;
+			Show ();
+			DeleteEvent += OnDeleteEvent;
+			this.repairGameAction.Activated += OnRepairGameActionActivated;
+			this.reinstallGameAction.Activated += OnReinstallGameActionActivated;
+			this.primaryButton.Clicked += OnPrimaryButtonClicked;
 		}
 	}
 }

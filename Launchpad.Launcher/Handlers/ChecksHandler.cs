@@ -50,7 +50,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns><c>true</c> if this instance can connect to a patching service; otherwise, <c>false</c>.</returns>
 		public bool CanPatch()
 		{
-			PatchProtocolHandler patchService = Configuration.GetPatchProtocol();
+			PatchProtocolHandler patchService = this.Configuration.GetPatchProtocol();
 
 			return patchService != null && patchService.CanPatch();
 		}
@@ -90,13 +90,13 @@ namespace Launchpad.Launcher.Handlers
 		{
 			// Criteria for considering the game 'installed'
 			// Does the game directory exist?
-			bool bHasGameDirectory = Directory.Exists(Configuration.GetGamePath());
+			bool bHasGameDirectory = Directory.Exists(this.Configuration.GetGamePath());
 
 			// Is there an .install file in the directory?
 			bool bHasInstallationCookie = File.Exists(ConfigHandler.GetGameCookiePath());
 
 			// Is there a version file?
-			bool bHasGameVersion = File.Exists(Configuration.GetGameVersionPath());
+			bool bHasGameVersion = File.Exists(this.Configuration.GetGameVersionPath());
 
 			if (!bHasGameVersion && bHasGameDirectory)
 			{
@@ -116,7 +116,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns><c>true</c> if the game is outdated; otherwise, <c>false</c>.</returns>
 		public bool IsGameOutdated()
 		{
-			PatchProtocolHandler patchService = Configuration.GetPatchProtocol();
+			PatchProtocolHandler patchService = this.Configuration.GetPatchProtocol();
 			return patchService.IsModuleOutdated(EModule.Game);
 		}
 
@@ -126,7 +126,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns><c>true</c> if the launcher is outdated; otherwise, <c>false</c>.</returns>
 		public bool IsLauncherOutdated()
 		{
-			PatchProtocolHandler patchService = Configuration.GetPatchProtocol();
+			PatchProtocolHandler patchService = this.Configuration.GetPatchProtocol();
 			return patchService.IsModuleOutdated(EModule.Launcher);
 		}
 
@@ -157,7 +157,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <param name="platform">platform.</param>
 		public bool IsPlatformAvailable(ESystemTarget platform)
 		{
-			PatchProtocolHandler patchService = Configuration.GetPatchProtocol();
+			PatchProtocolHandler patchService = this.Configuration.GetPatchProtocol();
 			return patchService.IsPlatformAvailable(platform);
 		}
 	}

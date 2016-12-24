@@ -50,6 +50,7 @@ namespace Launchpad.Launcher.Handlers
 		/// The config lock object.
 		/// </summary>
 		private readonly object ReadLock = new object();
+
 		/// <summary>
 		/// The write lock object.
 		/// </summary>
@@ -122,7 +123,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <param name="data">The data which should be written to file.</param>
 		private void WriteConfig(FileIniDataParser parser, IniData data)
 		{
-			lock (WriteLock)
+			lock (this.WriteLock)
 			{
 				parser.WriteFile(GetConfigPath(), data);
 			}
@@ -183,7 +184,7 @@ namespace Launchpad.Launcher.Handlers
 
 			// Lock the configuration file to make sure no other threads will try and
 			// read from it during creation or updating of values.
-			lock (ReadLock)
+			lock (this.ReadLock)
 			{
 				if (!Directory.Exists(configDir))
 				{
@@ -676,7 +677,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The changelog URL.</returns>
 		public string GetChangelogURL()
 		{
-			lock (ReadLock)
+			lock (this.ReadLock)
 			{
 				try
 				{
@@ -701,7 +702,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The launcher version.</returns>
 		public Version GetLocalLauncherVersion()
 		{
-			lock (ReadLock)
+			lock (this.ReadLock)
 			{
 				try
 				{
@@ -735,7 +736,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The game name.</returns>
 		public string GetGameName()
 		{
-			lock (ReadLock)
+			lock (this.ReadLock)
 			{
 				try
 				{
@@ -760,7 +761,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The patch protocol.</returns>
 		public PatchProtocolHandler GetPatchProtocol()
 		{
-			lock (ReadLock)
+			lock (this.ReadLock)
 			{
 				try
 				{
@@ -804,7 +805,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The patch protocol.</returns>
 		private string GetPatchProtocolString()
 		{
-			lock (ReadLock)
+			lock (this.ReadLock)
 			{
 				try
 				{
@@ -827,9 +828,9 @@ namespace Launchpad.Launcher.Handlers
 		/// <param name="gameName">Game name.</param>
 		public void SetGameName(string gameName)
 		{
-			lock (ReadLock)
+			lock (this.ReadLock)
 			{
-				lock (WriteLock)
+				lock (this.WriteLock)
 				{
 					try
 					{
@@ -859,7 +860,7 @@ namespace Launchpad.Launcher.Handlers
 			//Win32
 			//Linux
 			//Mac
-			lock (ReadLock)
+			lock (this.ReadLock)
 			{
 				try
 				{
@@ -899,9 +900,9 @@ namespace Launchpad.Launcher.Handlers
 			//Win32
 			//Linux
 			//Mac
-			lock (ReadLock)
+			lock (this.ReadLock)
 			{
-				lock (WriteLock)
+				lock (this.WriteLock)
 				{
 					try
 					{
@@ -926,7 +927,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The remote username.</returns>
 		public string GetRemoteUsername()
 		{
-			lock (ReadLock)
+			lock (this.ReadLock)
 			{
 				try
 				{
@@ -951,9 +952,9 @@ namespace Launchpad.Launcher.Handlers
 		/// <param name="username">The remote username..</param>
 		public void SetRemoteUsername(string username)
 		{
-			lock (ReadLock)
+			lock (this.ReadLock)
 			{
-				lock (WriteLock)
+				lock (this.WriteLock)
 				{
 					try
 					{
@@ -978,7 +979,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The remote password.</returns>
 		public string GetRemotePassword()
 		{
-			lock (ReadLock)
+			lock (this.ReadLock)
 			{
 				try
 				{
@@ -1003,9 +1004,9 @@ namespace Launchpad.Launcher.Handlers
 		/// <param name="password">The remote password.</param>
 		public void SetRemotePassword(string password)
 		{
-			lock (ReadLock)
+			lock (this.ReadLock)
 			{
-				lock (WriteLock)
+				lock (this.WriteLock)
 				{
 					try
 					{
@@ -1030,7 +1031,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The number of file retries.</returns>
 		public int GetFileRetries()
 		{
-			lock (ReadLock)
+			lock (this.ReadLock)
 			{
 				try
 				{
@@ -1117,7 +1118,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The base FTP URL.</returns>
 		public string GetBaseFTPUrl()
 		{
-			lock (ReadLock)
+			lock (this.ReadLock)
 			{
 				try
 				{
@@ -1145,9 +1146,9 @@ namespace Launchpad.Launcher.Handlers
 		/// <param name="url">URL.</param>
 		public void SetBaseFTPUrl(string url)
 		{
-			lock (ReadLock)
+			lock (this.ReadLock)
 			{
-				lock (WriteLock)
+				lock (this.WriteLock)
 				{
 					try
 					{
@@ -1172,7 +1173,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The base HTTP URL.</returns>
 		public string GetBaseHTTPUrl()
 		{
-			lock (ReadLock)
+			lock (this.ReadLock)
 			{
 				try
 				{
@@ -1200,9 +1201,9 @@ namespace Launchpad.Launcher.Handlers
 		/// <param name="url">The new URL.</param>
 		public void SetBaseHTTPUrl(string url)
 		{
-			lock (ReadLock)
+			lock (this.ReadLock)
 			{
-				lock (WriteLock)
+				lock (this.WriteLock)
 				{
 					try
 					{
@@ -1227,7 +1228,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The magnet link.</returns>
 		public string GetBitTorrentMagnet()
 		{
-			lock (ReadLock)
+			lock (this.ReadLock)
 			{
 				try
 				{
@@ -1255,9 +1256,9 @@ namespace Launchpad.Launcher.Handlers
 		/// <param name="magnet">The new magnet link.</param>
 		public void SetBitTorrentMagnet(string magnet)
 		{
-			lock (ReadLock)
+			lock (this.ReadLock)
 			{
-				lock (WriteLock)
+				lock (this.WriteLock)
 				{
 					try
 					{
@@ -1282,7 +1283,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The name of the main executable.</returns>
 		private string GetMainExecutableName()
 		{
-			lock (ReadLock)
+			lock (this.ReadLock)
 			{
 				try
 				{
@@ -1310,9 +1311,9 @@ namespace Launchpad.Launcher.Handlers
 		/// <param name="mainExecutableName">The new main executable name.</param>
 		public void SetMainExecutableName(string mainExecutableName)
 		{
-			lock (ReadLock)
+			lock (this.ReadLock)
 			{
-				lock (WriteLock)
+				lock (this.WriteLock)
 				{
 					try
 					{
@@ -1337,7 +1338,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns><c>true</c>, if the launcher should receive official updates, <c>false</c> otherwise.</returns>
 		public bool GetDoOfficialUpdates()
 		{
-			lock (ReadLock)
+			lock (this.ReadLock)
 			{
 				try
 				{
@@ -1371,7 +1372,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns><c>true</c>, if the launcher is allowed to send usage stats, <c>false</c> otherwise.</returns>
 		public bool ShouldAllowAnonymousStats()
 		{
-			lock (ReadLock)
+			lock (this.ReadLock)
 			{
 				try
 				{
@@ -1405,7 +1406,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The GUID.</returns>
 		public string GetGameGUID()
 		{
-			lock (ReadLock)
+			lock (this.ReadLock)
 			{
 				try
 				{
@@ -1463,7 +1464,7 @@ namespace Launchpad.Launcher.Handlers
 				// Is there an old config file?
 				if (File.Exists(oldConfigPath))
 				{
-					lock (ReadLock)
+					lock (this.ReadLock)
 					{
 						// Have we not already created the new config dir?
 						if (!Directory.Exists(GetConfigDir()))
@@ -1508,7 +1509,7 @@ namespace Launchpad.Launcher.Handlers
 			}
 			else
 			{
-				lock (ReadLock)
+				lock (this.ReadLock)
 				{
 					// Windows is not case sensitive, so we'll use direct access without copying.
 					if (File.Exists(oldConfigPath))

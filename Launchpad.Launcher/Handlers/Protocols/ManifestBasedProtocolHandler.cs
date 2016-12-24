@@ -54,8 +54,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// </summary>
 		public override void InstallGame()
 		{
-			ModuleInstallFinishedArgs.Module = EModule.Game;
-			ModuleInstallFailedArgs.Module = EModule.Game;
+			this.ModuleInstallFinishedArgs.Module = EModule.Game;
+			this.ModuleInstallFailedArgs.Module = EModule.Game;
 
 			try
 			{
@@ -102,8 +102,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					RefreshModuleManifest(EModule.Launcher);
 
 
-					ModuleInstallFinishedArgs.Module = EModule.Launcher;
-					ModuleInstallFailedArgs.Module = EModule.Launcher;
+					this.ModuleInstallFinishedArgs.Module = EModule.Launcher;
+					this.ModuleInstallFailedArgs.Module = EModule.Launcher;
 					manifest = this.FileManifestHandler.LaunchpadManifest;
 					oldManifest = this.FileManifestHandler.OldLaunchpadManifest;
 					break;
@@ -113,8 +113,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					RefreshModuleManifest(EModule.Game);
 
 
-					ModuleInstallFinishedArgs.Module = EModule.Game;
-					ModuleInstallFailedArgs.Module = EModule.Game;
+					this.ModuleInstallFinishedArgs.Module = EModule.Game;
+					this.ModuleInstallFailedArgs.Module = EModule.Game;
 					manifest = this.FileManifestHandler.GameManifest;
 					oldManifest = this.FileManifestHandler.OldGameManifest;
 					break;
@@ -141,7 +141,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				{
 					++updatedFiles;
 
-					ModuleUpdateProgressArgs.IndicatorLabelMessage = GetUpdateIndicatorLabelMessage(Path.GetFileName(fileEntry.RelativePath),
+					this.ModuleUpdateProgressArgs.IndicatorLabelMessage = GetUpdateIndicatorLabelMessage(Path.GetFileName(fileEntry.RelativePath),
 						updatedFiles,
 						filesRequiringUpdate.Count);
 					OnModuleUpdateProgressChanged();
@@ -182,7 +182,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					++verifiedFiles;
 
 					// Prepare the progress event contents
-					ModuleVerifyProgressArgs.IndicatorLabelMessage = GetVerifyIndicatorLabelMessage(Path.GetFileName(fileEntry.RelativePath),
+					this.ModuleVerifyProgressArgs.IndicatorLabelMessage = GetVerifyIndicatorLabelMessage(Path.GetFileName(fileEntry.RelativePath),
 						verifiedFiles, manifest.Count);
 					OnModuleVerifyProgressChanged();
 
@@ -199,11 +199,11 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					++downloadedFiles;
 
 					// Prepare the progress event contents
-					ModuleDownloadProgressArgs.IndicatorLabelMessage = GetDownloadIndicatorLabelMessage(Path.GetFileName(fileEntry.RelativePath),
+					this.ModuleDownloadProgressArgs.IndicatorLabelMessage = GetDownloadIndicatorLabelMessage(Path.GetFileName(fileEntry.RelativePath),
 						downloadedFiles, brokenFiles.Count);
 					OnModuleDownloadProgressChanged();
 
-					for (int i = 0; i < Config.GetFileRetries(); ++i)
+					for (int i = 0; i < this.Config.GetFileRetries(); ++i)
 					{
 						if (!fileEntry.IsFileIntegrityIntact())
 						{
@@ -242,9 +242,9 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					RefreshModuleManifest(EModule.Launcher);
 
 
-					ModuleInstallFinishedArgs.Module = EModule.Launcher;
-					ModuleInstallFailedArgs.Module = EModule.Launcher;
-					moduleManifest = FileManifestHandler.LaunchpadManifest;
+					this.ModuleInstallFinishedArgs.Module = EModule.Launcher;
+					this.ModuleInstallFailedArgs.Module = EModule.Launcher;
+					moduleManifest = this.FileManifestHandler.LaunchpadManifest;
 					break;
 				}
 				case EModule.Game:
@@ -252,9 +252,9 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					RefreshModuleManifest(EModule.Game);
 
 
-					ModuleInstallFinishedArgs.Module = EModule.Game;
-					ModuleInstallFailedArgs.Module = EModule.Game;
-					moduleManifest = FileManifestHandler.GameManifest;
+					this.ModuleInstallFinishedArgs.Module = EModule.Game;
+					this.ModuleInstallFailedArgs.Module = EModule.Game;
+					moduleManifest = this.FileManifestHandler.GameManifest;
 					break;
 				}
 				default:
@@ -290,7 +290,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				++downloadedFiles;
 
 				// Prepare the progress event contents
-				ModuleDownloadProgressArgs.IndicatorLabelMessage = GetDownloadIndicatorLabelMessage(Path.GetFileName(fileEntry.RelativePath),
+				this.ModuleDownloadProgressArgs.IndicatorLabelMessage = GetDownloadIndicatorLabelMessage(Path.GetFileName(fileEntry.RelativePath),
 					downloadedFiles, moduleManifest.Count);
 				OnModuleDownloadProgressChanged();
 
@@ -327,13 +327,13 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				{
 					case EModule.Launcher:
 					{
-						local = Config.GetLocalLauncherVersion();
+						local = this.Config.GetLocalLauncherVersion();
 						remote = GetRemoteLauncherVersion();
 						break;
 					}
 					case EModule.Game:
 					{
-						local = Config.GetLocalGameVersion();
+						local = this.Config.GetLocalGameVersion();
 						remote = GetRemoteGameVersion();
 						break;
 					}
@@ -364,7 +364,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// </exception>
 		protected virtual void DownloadManifestEntry(ManifestEntry fileEntry, EModule module)
 		{
-			ModuleDownloadProgressArgs.Module = module;
+			this.ModuleDownloadProgressArgs.Module = module;
 
 			string baseRemoteURL;
 			string baseLocalPath;
@@ -372,14 +372,14 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			{
 				case EModule.Launcher:
 				{
-					baseRemoteURL = Config.GetLauncherBinariesURL();
+					baseRemoteURL = this.Config.GetLauncherBinariesURL();
 					baseLocalPath = ConfigHandler.GetTempLauncherDownloadPath();
 					break;
 				}
 				case EModule.Game:
 				{
-					baseRemoteURL = Config.GetGameURL();
-					baseLocalPath = Config.GetGamePath();
+					baseRemoteURL = this.Config.GetGameURL();
+					baseLocalPath = this.Config.GetGamePath();
 					break;
 				}
 				default:
@@ -522,7 +522,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				}
 				case EModule.Game:
 				{
-					checksum = ReadRemoteFile(FileManifestHandler.GetGameManifestChecksumURL());
+					checksum = ReadRemoteFile(this.FileManifestHandler.GetGameManifestChecksumURL());
 					break;
 				}
 				default:
@@ -599,7 +599,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				}
 				case EModule.Game:
 				{
-					remoteURL = FileManifestHandler.GetGameManifestURL();
+					remoteURL = this.FileManifestHandler.GetGameManifestURL();
 					localPath = ManifestHandler.GetGameManifestPath();
 					oldLocalPath = ManifestHandler.GetOldGameManifestPath();
 
@@ -638,10 +638,10 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// If the version could not be retrieved from the server, a version of 0.0.0 is returned.</returns>
 		protected virtual Version GetRemoteLauncherVersion()
 		{
-			string remoteVersionPath = Config.GetLauncherVersionURL();
+			string remoteVersionPath = this.Config.GetLauncherVersionURL();
 
 			// Config.GetDoOfficialUpdates is used here since the official update server always allows anonymous logins.
-			string remoteVersion = ReadRemoteFile(remoteVersionPath, Config.GetDoOfficialUpdates());
+			string remoteVersion = ReadRemoteFile(remoteVersionPath, this.Config.GetDoOfficialUpdates());
 
 			Version version;
 			if (Version.TryParse(remoteVersion, out version))
@@ -661,7 +661,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <returns>The remote game version.</returns>
 		protected virtual Version GetRemoteGameVersion()
 		{
-			string remoteVersionPath = $"{Config.GetBaseProtocolURL()}/game/{Config.GetSystemTarget()}/bin/GameVersion.txt";
+			string remoteVersionPath = $"{this.Config.GetBaseProtocolURL()}/game/{this.Config.GetSystemTarget()}/bin/GameVersion.txt";
 			string remoteVersion = ReadRemoteFile(remoteVersionPath);
 
 			Version version;

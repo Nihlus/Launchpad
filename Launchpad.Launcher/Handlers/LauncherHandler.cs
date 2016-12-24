@@ -73,10 +73,10 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		public LauncherHandler()
 		{
-			Patch = Config.GetPatchProtocol();
+			this.Patch = Config.GetPatchProtocol();
 
-			Patch.ModuleDownloadProgressChanged += OnLauncherDownloadProgressChanged;
-			Patch.ModuleInstallationFinished += OnLauncherDownloadFinished;
+			this.Patch.ModuleDownloadProgressChanged += OnLauncherDownloadProgressChanged;
+			this.Patch.ModuleInstallationFinished += OnLauncherDownloadFinished;
 		}
 
 		/// <summary>
@@ -131,10 +131,10 @@ namespace Launchpad.Launcher.Handlers
 
 		private void LoadFallbackChangelog_Implementation()
 		{
-			if (Patch.CanProvideChangelog())
+			if (this.Patch.CanProvideChangelog())
 			{
-				ChangelogDownloadFinishedArgs.HTML = Patch.GetChangelogSource();
-				ChangelogDownloadFinishedArgs.URL = Config.GetChangelogURL();
+				this.ChangelogDownloadFinishedArgs.HTML = this.Patch.GetChangelogSource();
+				this.ChangelogDownloadFinishedArgs.URL = Config.GetChangelogURL();
 			}
 
 			OnChangelogDownloadFinished();
@@ -238,7 +238,7 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		private void OnChangelogDownloadFinished()
 		{
-			ChangelogDownloadFinished?.Invoke(this, ChangelogDownloadFinishedArgs);
+			ChangelogDownloadFinished?.Invoke(this, this.ChangelogDownloadFinishedArgs);
 		}
 
 		private void OnLauncherDownloadProgressChanged(object sender, ModuleProgressChangedArgs e)

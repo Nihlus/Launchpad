@@ -68,7 +68,7 @@ namespace Launchpad.Launcher.Handlers
 			get
 			{
 				LoadGameManifest();
-				return gameManifest;
+				return this.gameManifest;
 			}
 		}
 
@@ -84,7 +84,7 @@ namespace Launchpad.Launcher.Handlers
 			get
 			{
 				LoadOldGameManifest();
-				return oldGameManifest;
+				return this.oldGameManifest;
 			}
 		}
 
@@ -94,7 +94,7 @@ namespace Launchpad.Launcher.Handlers
 			get
 			{
 				LoadLaunchpadManifest();
-				return launchpadManifest;
+				return this.launchpadManifest;
 			}
 		}
 
@@ -104,7 +104,7 @@ namespace Launchpad.Launcher.Handlers
 			get
 			{
 				LoadOldLaunchpadManifest();
-				return oldLaunchpadManifest;
+				return this.oldLaunchpadManifest;
 			}
 		}
 
@@ -115,11 +115,11 @@ namespace Launchpad.Launcher.Handlers
 		{
 			try
 			{
-				lock (GameManifestLock)
+				lock (this.GameManifestLock)
 				{
 					if (File.Exists(GetGameManifestPath()))
 					{
-						gameManifest.Clear();
+						this.gameManifest.Clear();
 
 						string[] rawGameManifest = File.ReadAllLines(GetGameManifestPath());
 						foreach (string rawEntry in rawGameManifest)
@@ -127,7 +127,7 @@ namespace Launchpad.Launcher.Handlers
 							ManifestEntry newEntry;
 							if (ManifestEntry.TryParse(rawEntry, out newEntry))
 							{
-								gameManifest.Add(newEntry);
+								this.gameManifest.Add(newEntry);
 							}
 						}
 					}
@@ -146,11 +146,11 @@ namespace Launchpad.Launcher.Handlers
 		{
 			try
 			{
-				lock (OldGameManifestLock)
+				lock (this.OldGameManifestLock)
 				{
 					if (File.Exists(GetOldGameManifestPath()))
 					{
-						oldGameManifest.Clear();
+						this.oldGameManifest.Clear();
 
 						string[] rawOldGameManifest = File.ReadAllLines(GetOldGameManifestPath());
 						foreach (string rawEntry in rawOldGameManifest)
@@ -158,7 +158,7 @@ namespace Launchpad.Launcher.Handlers
 							ManifestEntry newEntry;
 							if (ManifestEntry.TryParse(rawEntry, out newEntry))
 							{
-								oldGameManifest.Add(newEntry);
+								this.oldGameManifest.Add(newEntry);
 							}
 						}
 					}
@@ -178,11 +178,11 @@ namespace Launchpad.Launcher.Handlers
 		{
 			try
 			{
-				lock (LaunchpadManifestLock)
+				lock (this.LaunchpadManifestLock)
 				{
 					if (File.Exists(GetLaunchpadManifestPath()))
 					{
-						launchpadManifest.Clear();
+						this.launchpadManifest.Clear();
 
 						string[] rawLaunchpadManifest = File.ReadAllLines(GetLaunchpadManifestPath());
 						foreach (string rawEntry in rawLaunchpadManifest)
@@ -190,7 +190,7 @@ namespace Launchpad.Launcher.Handlers
 							ManifestEntry newEntry;
 							if (ManifestEntry.TryParse(rawEntry, out newEntry))
 							{
-								launchpadManifest.Add(newEntry);
+								this.launchpadManifest.Add(newEntry);
 							}
 						}
 					}
@@ -209,11 +209,11 @@ namespace Launchpad.Launcher.Handlers
 		{
 			try
 			{
-				lock (OldLaunchpadManifestLock)
+				lock (this.OldLaunchpadManifestLock)
 				{
 					if (File.Exists(GetOldGameManifestPath()))
 					{
-						oldLaunchpadManifest.Clear();
+						this.oldLaunchpadManifest.Clear();
 
 						string[] rawOldLaunchpadManifest = File.ReadAllLines(GetOldGameManifestPath());
 						foreach (string rawEntry in rawOldLaunchpadManifest)
@@ -221,7 +221,7 @@ namespace Launchpad.Launcher.Handlers
 							ManifestEntry newEntry;
 							if (ManifestEntry.TryParse(rawEntry, out newEntry))
 							{
-								oldLaunchpadManifest.Add(newEntry);
+								this.oldLaunchpadManifest.Add(newEntry);
 							}
 						}
 					}
@@ -346,7 +346,7 @@ namespace Launchpad.Launcher.Handlers
 			if (File.Exists(GetDeprecatedGameManifestPath()))
 			{
 				Log.Info("Found deprecated game manifest in install folder. Moving to new filename.");
-				lock (GameManifestLock)
+				lock (this.GameManifestLock)
 				{
 					File.Move(GetDeprecatedGameManifestPath(), GetGameManifestPath());
 				}
@@ -355,7 +355,7 @@ namespace Launchpad.Launcher.Handlers
 			if (File.Exists(GetDeprecatedOldGameManifestPath()))
 			{
 				Log.Info("Found deprecated old game manifest in install folder. Moving to new filename.");
-				lock (OldGameManifestLock)
+				lock (this.OldGameManifestLock)
 				{
 					File.Move(GetDeprecatedOldGameManifestPath(), GetOldGameManifestPath());
 				}
@@ -390,9 +390,9 @@ namespace Launchpad.Launcher.Handlers
 
 		public ManifestEntry()
 		{
-			RelativePath = string.Empty;
-			Hash = string.Empty;
-			Size = 0;
+			this.RelativePath = string.Empty;
+			this.Hash = string.Empty;
+			this.Size = 0;
 		}
 
 		/// <summary>
@@ -456,7 +456,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>A <see cref="System.String"/> that represents the current <see cref="Launchpad.Launcher.Handlers.ManifestEntry"/>.</returns>
 		public override string ToString()
 		{
-			return RelativePath + ":" + Hash + ":" + Size;
+			return this.RelativePath + ":" + this.Hash + ":" + this.Size;
 		}
 
 		/// <summary>
@@ -478,7 +478,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>A hash code for this instance that is suitable for use in hashing algorithms and data structures such as a hash table.</returns>
 		public override int GetHashCode()
 		{
-			return this.ToString().GetHashCode();
+			return ToString().GetHashCode();
 		}
 
 		/// <summary>
@@ -487,14 +487,14 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns><c>true</c>, if file was complete and undamaged, <c>false</c> otherwise.</returns>
 		public bool IsFileIntegrityIntact()
 		{
-			string localPath = $"{ConfigHandler.Instance.GetGamePath()}{RelativePath}";
+			string localPath = $"{ConfigHandler.Instance.GetGamePath()}{this.RelativePath}";
 			if (!File.Exists(localPath))
 			{
 				return false;
 			}
 
 			FileInfo fileInfo = new FileInfo(localPath);
-			if (fileInfo.Length != Size)
+			if (fileInfo.Length != this.Size)
 			{
 				return false;
 			}
@@ -502,7 +502,7 @@ namespace Launchpad.Launcher.Handlers
 			using (Stream file = File.OpenRead(localPath))
 			{
 				string localHash = MD5Handler.GetStreamHash(file);
-				if (localHash != Hash)
+				if (localHash != this.Hash)
 				{
 					return false;
 				}

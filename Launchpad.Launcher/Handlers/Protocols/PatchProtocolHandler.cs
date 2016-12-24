@@ -49,8 +49,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// </summary>
 		protected PatchProtocolHandler()
 		{
-			ModuleInstallFinishedArgs = new ModuleInstallationFinishedArgs();
-			ModuleInstallFailedArgs = new ModuleInstallationFailedArgs();
+			this.ModuleInstallFinishedArgs = new ModuleInstallationFinishedArgs();
+			this.ModuleInstallFailedArgs = new ModuleInstallationFailedArgs();
 		}
 
 		/// <summary>
@@ -137,8 +137,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// </summary>
 		public virtual void InstallGame()
 		{
-			ModuleInstallFinishedArgs.Module = EModule.Game;
-			ModuleInstallFailedArgs.Module = EModule.Game;
+			this.ModuleInstallFinishedArgs.Module = EModule.Game;
+			this.ModuleInstallFailedArgs.Module = EModule.Game;
 
 			try
 			{
@@ -182,27 +182,27 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 		protected void OnModuleDownloadProgressChanged()
 		{
-			ModuleDownloadProgressChanged?.Invoke(this, ModuleDownloadProgressArgs);
+			ModuleDownloadProgressChanged?.Invoke(this, this.ModuleDownloadProgressArgs);
 		}
 
 		protected void OnModuleVerifyProgressChanged()
 		{
-			ModuleVerifyProgressChanged?.Invoke(this, ModuleVerifyProgressArgs);
+			ModuleVerifyProgressChanged?.Invoke(this, this.ModuleVerifyProgressArgs);
 		}
 
 		protected void OnModuleUpdateProgressChanged()
 		{
-			ModuleUpdateProgressChanged?.Invoke(this, ModuleUpdateProgressArgs);
+			ModuleUpdateProgressChanged?.Invoke(this, this.ModuleUpdateProgressArgs);
 		}
 
 		protected void OnModuleInstallationFinished()
 		{
-			ModuleInstallationFinished?.Invoke(this, ModuleInstallFinishedArgs);
+			ModuleInstallationFinished?.Invoke(this, this.ModuleInstallFinishedArgs);
 		}
 
 		protected void OnModuleInstallationFailed()
 		{
-			ModuleInstallationFailed?.Invoke(this, ModuleInstallFailedArgs);
+			ModuleInstallationFailed?.Invoke(this, this.ModuleInstallFailedArgs);
 		}
 	}
 

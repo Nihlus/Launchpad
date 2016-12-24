@@ -54,8 +54,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 			try
 			{
-				HttpWebRequest plainRequest = CreateHttpWebRequest(Config.GetBaseHTTPUrl(),
-					                              Config.GetRemoteUsername(), Config.GetRemotePassword());
+				HttpWebRequest plainRequest = CreateHttpWebRequest(this.Config.GetBaseHTTPUrl(), this.Config.GetRemoteUsername(), this.Config.GetRemotePassword());
 
 				if (plainRequest == null)
 				{
@@ -93,7 +92,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <returns><c>true</c> if the platform is available; otherwise, <c>false</c>.</returns>
 		public override bool IsPlatformAvailable(ESystemTarget platform)
 		{
-			string remote = $"{Config.GetBaseHTTPUrl()}/game/{platform}/.provides";
+			string remote = $"{this.Config.GetBaseHTTPUrl()}/game/{platform}/.provides";
 
 			return DoesRemoteDirectoryOrFileExist(remote);
 		}
@@ -122,7 +121,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <returns><c>true</c> if this instance can provide banner; otherwise, <c>false</c>.</returns>
 		public override bool CanProvideBanner()
 		{
-			string bannerURL = $"{Config.GetBaseHTTPUrl()}/launcher/banner.png";
+			string bannerURL = $"{this.Config.GetBaseHTTPUrl()}/launcher/banner.png";
 
 			return DoesRemoteDirectoryOrFileExist(bannerURL);
 		}
@@ -133,7 +132,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <returns>The banner.</returns>
 		public override Bitmap GetBanner()
 		{
-			string bannerURL = $"{Config.GetBaseHTTPUrl()}/launcher/banner.png";
+			string bannerURL = $"{this.Config.GetBaseHTTPUrl()}/launcher/banner.png";
 			string localBannerPath = $"{Path.GetTempPath()}/banner.png";
 
 			DownloadRemoteFile(bannerURL, localBannerPath);
@@ -162,8 +161,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			else
 			{
-				username = Config.GetRemoteUsername();
-				password = Config.GetRemotePassword();
+				username = this.Config.GetRemoteUsername();
+				password = this.Config.GetRemotePassword();
 			}
 
 			try
@@ -215,9 +214,9 @@ namespace Launchpad.Launcher.Handlers.Protocols
 							totalBytesDownloaded += bytesRead;
 
 							// Report download progress
-							ModuleDownloadProgressArgs.ProgressBarMessage = GetDownloadProgressBarMessage(Path.GetFileName(remoteURL),
+							this.ModuleDownloadProgressArgs.ProgressBarMessage = GetDownloadProgressBarMessage(Path.GetFileName(remoteURL),
 								totalBytesDownloaded, totalFileSize);
-							ModuleDownloadProgressArgs.ProgressFraction = (double)totalBytesDownloaded / (double)totalFileSize;
+							this.ModuleDownloadProgressArgs.ProgressFraction = (double)totalBytesDownloaded / (double)totalFileSize;
 							OnModuleDownloadProgressChanged();
 						}
 
@@ -256,8 +255,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			}
 			else
 			{
-				username = Config.GetRemoteUsername();
-				password = Config.GetRemotePassword();
+				username = this.Config.GetRemoteUsername();
+				password = this.Config.GetRemotePassword();
 			}
 
 			try
@@ -351,8 +350,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		private bool DoesRemoteDirectoryOrFileExist(string url)
 		{
 			string cleanURL = url.Replace(Path.DirectorySeparatorChar, '/');
-			HttpWebRequest request = CreateHttpWebRequest(cleanURL,
-										 Config.GetRemoteUsername(), Config.GetRemotePassword());
+			HttpWebRequest request = CreateHttpWebRequest(cleanURL, this.Config.GetRemoteUsername(), this.Config.GetRemotePassword());
 
 			request.Method = WebRequestMethods.Http.Head;
 			HttpWebResponse response = null;
