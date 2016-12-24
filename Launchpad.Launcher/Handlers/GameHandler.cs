@@ -187,8 +187,8 @@ namespace Launchpad.Launcher.Handlers
 				{
 					UseShellExecute = false,
 					FileName = Config.GetGameExecutable(),
+					Arguments = gameArguments
 				};
-				gameStartInfo.Arguments = gameArguments;
 
 				this.GameExitArgs.GameName = Config.GetGameName();
 
