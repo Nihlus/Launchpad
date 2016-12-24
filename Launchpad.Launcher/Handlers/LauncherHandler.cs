@@ -88,7 +88,12 @@ namespace Launchpad.Launcher.Handlers
 			{
 				Log.Info($"Starting update of lancher files using protocol \"{this.Patch.GetType().Name}\"");
 
-				Thread t = new Thread(() => this.Patch.UpdateModule(EModule.Launcher));
+				Thread t = new Thread(() => this.Patch.UpdateModule(EModule.Launcher))
+				{
+					Name = "UpdateLauncher",
+					IsBackground = true
+				};
+
 				t.Start();
 			}
 			catch (IOException ioex)
@@ -125,7 +130,12 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		public void LoadFallbackChangelog()
 		{
-			Thread t = new Thread(LoadFallbackChangelog_Implementation);
+			Thread t = new Thread(LoadFallbackChangelog_Implementation)
+			{
+				Name = "LoadFallbackChangelog",
+				IsBackground = true
+			};
+
 			t.Start();
 		}
 

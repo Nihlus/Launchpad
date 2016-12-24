@@ -147,8 +147,8 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 		/// </summary>
 		public void Dispose()
 		{
-			windowsBrowser?.Dispose();
-			unixBrowser?.Dispose();
+			this.windowsBrowser?.Dispose();
+			this.unixBrowser?.Dispose();
 		}
 	}
 }

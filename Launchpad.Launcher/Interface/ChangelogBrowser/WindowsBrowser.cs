@@ -115,9 +115,9 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 		/// </summary>
 		public void Dispose()
 		{
-			browser?.Dispose();
-			viewport?.Dispose();
-			socket?.Dispose();
+			this.Browser?.Dispose();
+			this.Viewport?.Dispose();
+			this.Socket?.Dispose();
 		}
 	}
 }

@@ -44,7 +44,12 @@ namespace Launchpad.Utilities.Handlers
 		/// <param name="manifestType">The type of manifest that should be generated.</param>
 		public void GenerateManifest(string targetPath, EManifestType manifestType)
 		{
-			Thread t = new Thread(() => GenerateManifest_Implementation(targetPath, manifestType));
+			Thread t = new Thread(() => GenerateManifest_Implementation(targetPath, manifestType))
+			{
+				Name = "GenerateManifest",
+				IsBackground = true
+			};
+
 			t.Start();
 		}
 

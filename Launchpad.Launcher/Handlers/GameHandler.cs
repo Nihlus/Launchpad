@@ -106,7 +106,12 @@ namespace Launchpad.Launcher.Handlers
 		public void InstallGame()
 		{
 			Log.Info($"Starting installation of game files using protocol \"{this.Patch.GetType().Name}\"");
-			Thread t = new Thread(this.Patch.InstallGame);
+			Thread t = new Thread(this.Patch.InstallGame)
+			{
+				Name = "InstallGame",
+				IsBackground = true
+			};
+
 			t.Start();
 		}
 
@@ -116,7 +121,12 @@ namespace Launchpad.Launcher.Handlers
 		public void UpdateGame()
 		{
 			Log.Info($"Starting update of game files using protocol \"{this.Patch.GetType().Name}\"");
-			Thread t = new Thread(() => this.Patch.UpdateModule(EModule.Game));
+			Thread t = new Thread(() => this.Patch.UpdateModule(EModule.Game))
+			{
+				Name = "UpdateGame",
+				IsBackground = true
+			};
+
 			t.Start();
 		}
 
@@ -126,7 +136,12 @@ namespace Launchpad.Launcher.Handlers
 		public void VerifyGame()
 		{
 			Log.Info("Beginning verification of game files.");
-			Thread t = new Thread(() => this.Patch.VerifyModule(EModule.Game));
+			Thread t = new Thread(() => this.Patch.VerifyModule(EModule.Game))
+			{
+				Name = "VerifyGame",
+				IsBackground = true
+			};
+
 			t.Start();
 		}
 
@@ -148,7 +163,12 @@ namespace Launchpad.Launcher.Handlers
 				File.Delete(ConfigHandler.GetGameCookiePath());
 			}
 
-			Thread t = new Thread(() => this.Patch.InstallGame());
+			Thread t = new Thread(() => this.Patch.InstallGame())
+			{
+				Name = "ReinstallGame",
+				IsBackground = true
+			};
+
 			t.Start();
 		}
 
