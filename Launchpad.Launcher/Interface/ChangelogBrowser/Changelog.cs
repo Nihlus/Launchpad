@@ -33,7 +33,7 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 	/// and a Webkit implementation (for Mac and Linux).
 	/// </summary>
 	[CLSCompliant(false)]
-	public class Changelog
+	public class Changelog : IDisposable
 	{
 		/// <summary>
 		/// The WinForms browser for Windows.
@@ -140,6 +140,15 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 		{
 			this.windowsBrowser?.LoadHTML(html);
 			this.unixBrowser?.LoadHtmlString(html, url);
+		}
+
+		/// <summary>
+		/// Disposes the object, releasing any unmanaged resources to the system.
+		/// </summary>
+		public void Dispose()
+		{
+			windowsBrowser?.Dispose();
+			unixBrowser?.Dispose();
 		}
 	}
 }
