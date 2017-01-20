@@ -196,7 +196,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 						fileSize = sizeResponse.ContentLength;
 					}
 
-					if (fileSize < 4096)
+					if (fileSize < this.Config.GetDownloadBufferSize())
 					{
 						byte[] smallBuffer = new byte[fileSize];
 						remoteStream.Read(smallBuffer, 0, smallBuffer.Length);
@@ -205,7 +205,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 					}
 					else
 					{
-						byte[] buffer = new byte[4096];
+						byte[] buffer = new byte[this.Config.GetDownloadBufferSize()];
 
 						while (true)
 						{
@@ -290,7 +290,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 						fileStream.Position = contentOffset;
 						long totalBytesDownloaded = contentOffset;
 
-						if (fileSize < 4096)
+						if (fileSize < this.Config.GetDownloadBufferSize())
 						{
 							byte[] smallBuffer = new byte[fileSize];
 							contentStream.Read(smallBuffer, 0, smallBuffer.Length);
@@ -307,7 +307,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 						}
 						else
 						{
-							byte[] buffer = new byte[4096];
+							byte[] buffer = new byte[this.Config.GetDownloadBufferSize()];
 
 							while (true)
 							{

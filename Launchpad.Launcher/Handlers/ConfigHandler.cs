@@ -72,6 +72,7 @@ namespace Launchpad.Launcher.Handlers
 		private const string DefaultHTTPAddress = "http://directorate.asuscomm.com/launchpad";
 		private const string DefaultUseOfficialUpdates = "true";
 		private const string DefaultAllowAnonymousStatus = "true";
+		private const string DefaultBufferSize = "8192";
 
 		private const string ConfigurationFolderName = "Config";
 		private const string ConfigurationFileName = "LauncherConfig";
@@ -95,6 +96,7 @@ namespace Launchpad.Launcher.Handlers
 		private const string RemoteFileRetriesKey = "FileRetries";
 		private const string RemoteUsernameKey = "Username";
 		private const string RemotePasswordKey = "Password";
+		private const string RemoteBufferSizeKey = "BufferSize";
 
 		private const string FTPAddressKey = "URL";
 		private const string HTTPAddressKey = "URL";
@@ -218,6 +220,8 @@ namespace Launchpad.Launcher.Handlers
 						data[SectionNameRemote].AddKey(RemoteFileRetriesKey, DefaultFileRetries);
 						data[SectionNameRemote].AddKey(RemoteUsernameKey, DefaultUsername);
 						data[SectionNameRemote].AddKey(RemotePasswordKey, DefaultPassword);
+						data[SectionNameRemote].AddKey(RemoteBufferSizeKey, DefaultBufferSize);
+
 
 						data[SectionNameFTP].AddKey(FTPAddressKey, DefaultFTPAddress);
 
@@ -349,6 +353,14 @@ namespace Launchpad.Launcher.Handlers
 						string gameName = data[SectionNameLocal][LocalGameNameKey];
 						data[SectionNameLocal].AddKey(LocalMainExecutableNameKey, gameName);
 					}
+					//End June 2
+
+					// January 20 - 2017
+					if (!data[SectionNameRemote].ContainsKey(RemoteBufferSizeKey))
+					{
+						data[SectionNameRemote].AddKey(RemoteBufferSizeKey, DefaultBufferSize);
+					}
+					// End January 20
 
 					// ...
 					WriteConfig(parser, data);
@@ -1054,6 +1066,39 @@ namespace Launchpad.Launcher.Handlers
 				{
 					Log.Warn("Could not get the maximum file retries (IOException): " + ioex.Message);
 					return 0;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the size of the download buffer that should be allocated for remote files.
+		/// </summary>
+		/// <returns>The buffer size.</returns>
+		public int GetDownloadBufferSize()
+		{
+			lock (this.ReadLock)
+			{
+				try
+				{
+					FileIniDataParser parser = new FileIniDataParser();
+					IniData data = parser.ReadFile(GetConfigPath());
+
+					string fileRetries = data[SectionNameRemote][RemoteBufferSizeKey];
+
+					int retries;
+					if (int.TryParse(fileRetries, out retries))
+					{
+						return retries;
+					}
+					else
+					{
+						return int.Parse(DefaultBufferSize);
+					}
+				}
+				catch (IOException ioex)
+				{
+					Log.Warn("Could not get the download bufferr size (IOException): " + ioex.Message);
+					return int.Parse(DefaultBufferSize);
 				}
 			}
 		}
