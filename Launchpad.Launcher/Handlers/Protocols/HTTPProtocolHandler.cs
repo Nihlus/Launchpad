@@ -198,7 +198,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 							totalFileSize = totalSize;
 						}
 
-						byte[] buffer = new byte[this.Config.GetDownloadBufferSize()];
+						int bufferSize = this.Config.GetDownloadBufferSize();
+						byte[] buffer = new byte[bufferSize];
 
 						while (true)
 						{
@@ -278,7 +279,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 						return string.Empty;
 					}
 
-					byte[] buffer = new byte[this.Config.GetDownloadBufferSize()];
+					int bufferSize = this.Config.GetDownloadBufferSize();
+					byte[] buffer = new byte[bufferSize];
 
 					while (true)
 					{
