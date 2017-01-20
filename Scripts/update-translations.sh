@@ -22,8 +22,8 @@ do
 	then
 		cp "$D/messages.po" "../$LOCALE_NAME.po"
 		
-		mkdir -p "../../Extras/locale/$LOCALE_NAME/LC_MESSAGES/"
-		cp "$D/messages.po" "../../Extras/locale/$LOCALE_NAME/LC_MESSAGES/messages.po"
+		mkdir -p "../../Launchpad.Launcher/Content/locale/$LOCALE_NAME/LC_MESSAGES/"
+		cp "$D/messages.po" "../../Launchpad.Launcher/Content/locale/$LOCALE_NAME/LC_MESSAGES/messages.po"
 	fi	
 done
 

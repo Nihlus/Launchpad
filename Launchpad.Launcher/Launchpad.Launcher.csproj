@@ -133,6 +133,15 @@
     <Folder Include="Interface\gtk3" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Linux\webkit-sharp.dll.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>webkit-sharp.dll.config</Link>
+      <InProject>false</InProject>
+    </Content>
+    <Content Include="Content\locale\**\*.po">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <InProject>false</InProject>
+	</Content>
     <Content Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

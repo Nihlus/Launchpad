@@ -37,7 +37,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <summary>
 		/// The localization catalog.
 		/// </summary>
-		private static readonly ICatalog LocalizationCatalog = new Catalog("Launchpad", "./locale");
+		private static readonly ICatalog LocalizationCatalog = new Catalog("Launchpad", "./Content/locale");
 
 		/// <summary>
 		/// Logger instance for this class.

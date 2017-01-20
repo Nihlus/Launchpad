@@ -41,7 +41,7 @@ namespace Launchpad.Utilities.Interface
 		/// <summary>
 		/// The localization catalog.
 		/// </summary>
-		private readonly ICatalog LocalizationCatalog = new Catalog("Launchpad", "./locale");
+		private readonly ICatalog LocalizationCatalog = new Catalog("Launchpad", "./Content/locale");
 
 		public MainWindow()
 			: base(WindowType.Toplevel)

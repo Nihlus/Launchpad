@@ -181,9 +181,6 @@ namespace Launchpad.Launcher.Handlers
 			// Check for old cookie files and update their names and contents.
 			MoveOrUpdateCookieFiles();
 
-			InitializeInstallationGUID();
-			InitializeGameArgumentsFile();
-
 			// Lock the configuration file to make sure no other threads will try and
 			// read from it during creation or updating of values.
 			lock (this.ReadLock)
@@ -192,6 +189,9 @@ namespace Launchpad.Launcher.Handlers
 				{
 					Directory.CreateDirectory(configDir);
 				}
+
+				InitializeInstallationGUID();
+				InitializeGameArgumentsFile();
 
 				if (!File.Exists(configPath))
 				{

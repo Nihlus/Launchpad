@@ -79,7 +79,7 @@ namespace Launchpad.Launcher.Interface
 		/// <summary>
 		/// The localization catalog.
 		/// </summary>
-		private static readonly ICatalog LocalizationCatalog = new Catalog("Launchpad", "./locale");
+		private static readonly ICatalog LocalizationCatalog = new Catalog("Launchpad", "./Content/locale");
 
 		/// <summary>
 		/// Creates a new instance of the <see cref="MainWindow"/> class.

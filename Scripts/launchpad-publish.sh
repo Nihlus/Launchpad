@@ -44,7 +44,6 @@ bash "$LAUNCHPAD_ROOT/Scripts/update-translations.sh"
 cp -r "$LAUNCHPAD_ROOT/Extras/locale" "$OUTPUT_ROOT/launchpad-$LAUNCHPAD_ASSEMBLY_VERSION/bin"
 
 cp -r "$LAUNCHPAD_ROOT/Launchpad.Launcher/bin/Release/." "$OUTPUT_ROOT/launchpad-$LAUNCHPAD_ASSEMBLY_VERSION/bin"
-cp -r "$LAUNCHPAD_ROOT/Extras/Linux/." "$OUTPUT_ROOT/launchpad-$LAUNCHPAD_ASSEMBLY_VERSION/bin"
 
 # Generate launcher binary manifest
 echo ""
