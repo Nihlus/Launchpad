@@ -128,6 +128,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			List<ManifestEntry> filesRequiringUpdate = new List<ManifestEntry>();
 			foreach (ManifestEntry fileEntry in manifest)
 			{
+				// TODO: It is likely that a file which grows in size after an update may be mislabelled as an interrupted file.
+				// TODO: Implement checking against the existence of an old but valid file which maps to the new one.
 				if (!oldManifest.Contains(fileEntry))
 				{
 					filesRequiringUpdate.Add(fileEntry);
