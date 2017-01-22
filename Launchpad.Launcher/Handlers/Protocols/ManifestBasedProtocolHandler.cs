@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using log4net;
 using Launchpad.Launcher.Utility;
@@ -125,14 +126,24 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				}
 			}
 
+			// This dictionary holds a list of new entries and their equivalents from the old manifest. It is used
+			// to determine whether or not a file is partial, or merely old yet smaller.
+			Dictionary<ManifestEntry, ManifestEntry> oldEntriesBeingReplaced = new Dictionary<ManifestEntry, ManifestEntry>();
 			List<ManifestEntry> filesRequiringUpdate = new List<ManifestEntry>();
 			foreach (ManifestEntry fileEntry in manifest)
 			{
-				// TODO: It is likely that a file which grows in size after an update may be mislabelled as an interrupted file.
-				// TODO: Implement checking against the existence of an old but valid file which maps to the new one.
 				if (!oldManifest.Contains(fileEntry))
 				{
 					filesRequiringUpdate.Add(fileEntry);
+
+					// See if there is an old entry which matches the new one.
+					ManifestEntry matchingOldEntry =
+						oldManifest.FirstOrDefault(oldEntry => oldEntry.RelativePath == fileEntry.RelativePath);
+
+					if (matchingOldEntry != null)
+					{
+						oldEntriesBeingReplaced.Add(fileEntry, matchingOldEntry);
+					}
 				}
 			}
 
@@ -148,7 +159,15 @@ namespace Launchpad.Launcher.Handlers.Protocols
 						filesRequiringUpdate.Count);
 					OnModuleUpdateProgressChanged();
 
-					DownloadManifestEntry(fileEntry, module);
+					// If we're updating an existing file, make sure to let the downloader know
+					if (oldEntriesBeingReplaced.ContainsKey(fileEntry))
+					{
+						DownloadManifestEntry(fileEntry, module, oldEntriesBeingReplaced[fileEntry]);
+					}
+					else
+					{
+						DownloadManifestEntry(fileEntry, module);
+					}
 				}
 			}
 			catch (IOException ioex)
@@ -358,13 +377,16 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <summary>
 		/// Downloads the file referred to by the specifed manifest entry.
 		/// </summary>
+		/// <param name="fileEntry">The entry to download.</param>
+		/// <param name="module">The module that the entry belongs to.</param>
+		/// <param name="oldFileEntry">The old entry, if one exists.</param>
 		/// <exception cref="ArgumentOutOfRangeException">
 		/// Will be thrown if the <see cref="EModule"/> passed to the function is not a valid value.
 		/// </exception>
 		/// <exception cref="ArgumentNullException">
 		/// Will be thrown if the local path set in the <paramref name="fileEntry"/> passed to the function is not a valid value.
 		/// </exception>
-		protected virtual void DownloadManifestEntry(ManifestEntry fileEntry, EModule module)
+		protected virtual void DownloadManifestEntry(ManifestEntry fileEntry, EModule module, ManifestEntry oldFileEntry = null)
 		{
 			this.ModuleDownloadProgressArgs.Module = module;
 
@@ -413,6 +435,17 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			{
 				textWriterProgress.WriteLine(fileEntry);
 				textWriterProgress.Flush();
+			}
+
+			// First, let's see if an old file exists, and is valid.
+			if (oldFileEntry != null)
+			{
+				// Check if the file is present, the correct size, and the correct hash
+				if (oldFileEntry.IsFileIntegrityIntact())
+				{
+					// If it is, delete it.
+					File.Delete(localPath);
+				}
 			}
 
 			if (File.Exists(localPath))
