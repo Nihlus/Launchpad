@@ -117,18 +117,20 @@ namespace Launchpad.Launcher.Handlers
 			{
 				lock (this.GameManifestLock)
 				{
-					if (File.Exists(GetGameManifestPath()))
+					if (!File.Exists(GetGameManifestPath()))
 					{
-						this.gameManifest.Clear();
+						return;
+					}
 
-						string[] rawGameManifest = File.ReadAllLines(GetGameManifestPath());
-						foreach (string rawEntry in rawGameManifest)
+					this.gameManifest.Clear();
+
+					string[] rawGameManifest = File.ReadAllLines(GetGameManifestPath());
+					foreach (string rawEntry in rawGameManifest)
+					{
+						ManifestEntry newEntry;
+						if (ManifestEntry.TryParse(rawEntry, out newEntry))
 						{
-							ManifestEntry newEntry;
-							if (ManifestEntry.TryParse(rawEntry, out newEntry))
-							{
-								this.gameManifest.Add(newEntry);
-							}
+							this.gameManifest.Add(newEntry);
 						}
 					}
 				}
@@ -148,18 +150,20 @@ namespace Launchpad.Launcher.Handlers
 			{
 				lock (this.OldGameManifestLock)
 				{
-					if (File.Exists(GetOldGameManifestPath()))
+					if (!File.Exists(GetOldGameManifestPath()))
 					{
-						this.oldGameManifest.Clear();
+						return;
+					}
 
-						string[] rawOldGameManifest = File.ReadAllLines(GetOldGameManifestPath());
-						foreach (string rawEntry in rawOldGameManifest)
+					this.oldGameManifest.Clear();
+
+					string[] rawOldGameManifest = File.ReadAllLines(GetOldGameManifestPath());
+					foreach (string rawEntry in rawOldGameManifest)
+					{
+						ManifestEntry newEntry;
+						if (ManifestEntry.TryParse(rawEntry, out newEntry))
 						{
-							ManifestEntry newEntry;
-							if (ManifestEntry.TryParse(rawEntry, out newEntry))
-							{
-								this.oldGameManifest.Add(newEntry);
-							}
+							this.oldGameManifest.Add(newEntry);
 						}
 					}
 				}
@@ -180,18 +184,20 @@ namespace Launchpad.Launcher.Handlers
 			{
 				lock (this.LaunchpadManifestLock)
 				{
-					if (File.Exists(GetLaunchpadManifestPath()))
+					if (!File.Exists(GetLaunchpadManifestPath()))
 					{
-						this.launchpadManifest.Clear();
+						return;
+					}
 
-						string[] rawLaunchpadManifest = File.ReadAllLines(GetLaunchpadManifestPath());
-						foreach (string rawEntry in rawLaunchpadManifest)
+					this.launchpadManifest.Clear();
+
+					string[] rawLaunchpadManifest = File.ReadAllLines(GetLaunchpadManifestPath());
+					foreach (string rawEntry in rawLaunchpadManifest)
+					{
+						ManifestEntry newEntry;
+						if (ManifestEntry.TryParse(rawEntry, out newEntry))
 						{
-							ManifestEntry newEntry;
-							if (ManifestEntry.TryParse(rawEntry, out newEntry))
-							{
-								this.launchpadManifest.Add(newEntry);
-							}
+							this.launchpadManifest.Add(newEntry);
 						}
 					}
 				}
@@ -211,18 +217,20 @@ namespace Launchpad.Launcher.Handlers
 			{
 				lock (this.OldLaunchpadManifestLock)
 				{
-					if (File.Exists(GetOldGameManifestPath()))
+					if (!File.Exists(GetOldGameManifestPath()))
 					{
-						this.oldLaunchpadManifest.Clear();
+						return;
+					}
 
-						string[] rawOldLaunchpadManifest = File.ReadAllLines(GetOldGameManifestPath());
-						foreach (string rawEntry in rawOldLaunchpadManifest)
+					this.oldLaunchpadManifest.Clear();
+
+					string[] rawOldLaunchpadManifest = File.ReadAllLines(GetOldGameManifestPath());
+					foreach (string rawEntry in rawOldLaunchpadManifest)
+					{
+						ManifestEntry newEntry;
+						if (ManifestEntry.TryParse(rawEntry, out newEntry))
 						{
-							ManifestEntry newEntry;
-							if (ManifestEntry.TryParse(rawEntry, out newEntry))
-							{
-								this.oldLaunchpadManifest.Add(newEntry);
-							}
+							this.oldLaunchpadManifest.Add(newEntry);
 						}
 					}
 				}
@@ -297,7 +305,7 @@ namespace Launchpad.Launcher.Handlers
 		/// Gets the game manifest URL.
 		/// </summary>
 		/// <returns>The game manifest URL.</returns>
-		public string GetGameManifestURL()
+		public static string GetGameManifestURL()
 		{
 			string manifestURL = $"{Config.GetBaseProtocolURL()}/game/{Config.GetSystemTarget()}/GameManifest.txt";
 
@@ -308,7 +316,7 @@ namespace Launchpad.Launcher.Handlers
 		/// Gets the game manifest checksum URL.
 		/// </summary>
 		/// <returns>The game manifest checksum URL.</returns>
-		public string GetGameManifestChecksumURL()
+		public static string GetGameManifestChecksumURL()
 		{
 			string manifestChecksumURL = $"{Config.GetBaseProtocolURL()}/game/{Config.GetSystemTarget()}/GameManifest.checksum";
 
@@ -467,6 +475,11 @@ namespace Launchpad.Launcher.Handlers
 		/// <see cref="Launchpad.Launcher.Handlers.ManifestEntry"/>; otherwise, <c>false</c>.</returns>
 		public bool Equals(ManifestEntry other)
 		{
+			if (other == null)
+			{
+				return false;
+			}
+
 			return this.RelativePath == other.RelativePath &&
 			this.Hash == other.Hash &&
 			this.Size == other.Size;

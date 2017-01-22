@@ -557,7 +557,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				}
 				case EModule.Game:
 				{
-					checksum = ReadRemoteFile(this.FileManifestHandler.GetGameManifestChecksumURL());
+					checksum = ReadRemoteFile(ManifestHandler.GetGameManifestChecksumURL());
 					break;
 				}
 				default:
@@ -634,7 +634,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 				}
 				case EModule.Game:
 				{
-					remoteURL = this.FileManifestHandler.GetGameManifestURL();
+					remoteURL = ManifestHandler.GetGameManifestURL();
 					localPath = ManifestHandler.GetGameManifestPath();
 					oldLocalPath = ManifestHandler.GetOldGameManifestPath();
 
