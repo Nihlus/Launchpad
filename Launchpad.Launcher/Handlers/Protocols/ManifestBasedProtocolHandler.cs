@@ -418,7 +418,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			string localPath = $"{baseLocalPath}{Path.DirectorySeparatorChar}{fileEntry.RelativePath}";
 
 			// Make sure we have a directory to put the file in
-			if (!string.IsNullOrEmpty(localPath) &&  Path.GetDirectoryName(localPath) != null)
+			if (!string.IsNullOrEmpty(localPath) && !Directory.Exists(Path.GetDirectoryName(localPath)))
 			{
 				Directory.CreateDirectory(Path.GetDirectoryName(localPath));
 			}
