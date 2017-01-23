@@ -20,15 +20,15 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Drawing;
 using System.IO;
 using System.Net;
 using System.Text;
+using log4net;
 using Launchpad.Launcher.Utility;
 using Launchpad.Launcher.Utility.Enums;
-using System.Drawing;
-using log4net;
 
-namespace Launchpad.Launcher.Handlers.Protocols
+namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 {
 	/// <summary>
 	/// FTP handler. Handles downloading and reading files on a remote FTP server.

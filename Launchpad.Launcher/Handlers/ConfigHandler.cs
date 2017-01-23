@@ -31,6 +31,7 @@ using Launchpad.Launcher.Handlers.Protocols;
 using System.Security.Cryptography;
 using System.Text;
 using log4net;
+using Launchpad.Launcher.Handlers.Protocols.Manifest;
 
 namespace Launchpad.Launcher.Handlers
 {
@@ -526,7 +527,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// Gets a list of command-line arguments that are passed to the game when it starts.
 		/// </summary>
-		public static List<string> GetGameArguments()
+		public static IEnumerable<string> GetGameArguments()
 		{
 			if (!File.Exists(GetGameArgumentsPath()))
 			{

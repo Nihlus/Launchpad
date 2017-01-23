@@ -19,16 +19,16 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using Launchpad.Launcher.Utility.Enums;
 using System;
-using System.Net;
-using System.IO;
-using System.Text;
-using Launchpad.Launcher.Utility;
 using System.Drawing;
+using System.IO;
+using System.Net;
+using System.Text;
 using log4net;
+using Launchpad.Launcher.Utility;
+using Launchpad.Launcher.Utility.Enums;
 
-namespace Launchpad.Launcher.Handlers.Protocols
+namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 {
 	/// <summary>
 	/// HTTP protocol handler. Patches the launcher and game using the

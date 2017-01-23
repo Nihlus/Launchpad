@@ -28,7 +28,7 @@ using log4net;
 using Launchpad.Launcher.Utility;
 using NGettext;
 
-namespace Launchpad.Launcher.Handlers.Protocols
+namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 {
 	/// <summary>
 	/// Base underlying class for protocols using a manifest.

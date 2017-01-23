@@ -29,8 +29,6 @@ namespace Launchpad.Launcher.Handlers
 {
 	/// <summary>
 	/// This class handles all the launcher's checks, returning bools for each function.
-	/// Since this class is meant to be used in both the Forms UI and the GTK UI,
-	/// there must be no useage of UI code in this class. Keep it clean!
 	/// </summary>
 	internal sealed class ChecksHandler
 	{

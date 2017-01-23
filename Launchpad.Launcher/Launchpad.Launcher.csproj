@@ -90,6 +90,11 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Handlers\Protocols\Manifest\FTPProtocolHandler.cs" />
+    <Compile Include="Handlers\Protocols\Manifest\HTTPProtocolHandler.cs" />
+    <Compile Include="Handlers\Protocols\Manifest\ManifestBasedProtocolHandler.cs" />
+    <Compile Include="Handlers\Protocols\Manifest\ManifestEntry.cs" />
+    <Compile Include="Handlers\Protocols\Manifest\ManifestHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Interface\MainWindow.cs" />
     <Compile Include="Interface\ChangelogBrowser\Changelog.cs" />
@@ -101,11 +106,7 @@
     <Compile Include="Handlers\StatsHandler.cs" />
     <Compile Include="Handlers\GameHandler.cs" />
     <Compile Include="Handlers\LauncherHandler.cs" />
-    <Compile Include="Handlers\ManifestHandler.cs" />
     <Compile Include="Handlers\Protocols\PatchProtocolHandler.cs" />
-    <Compile Include="Handlers\Protocols\ManifestBasedProtocolHandler.cs" />
-    <Compile Include="Handlers\Protocols\FTPProtocolHandler.cs" />
-    <Compile Include="Handlers\Protocols\HTTPProtocolHandler.cs" />
     <Compile Include="Handlers\Protocols\BitTorrentProtocolHandler.cs" />
     <Compile Include="Utility\ExtensionMethods.cs" />
     <Compile Include="Utility\Enums\ESystemTarget.cs" />
@@ -141,7 +142,7 @@
     <Content Include="Content\locale\**\*.po">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <InProject>false</InProject>
-	</Content>
+    </Content>
     <Content Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
