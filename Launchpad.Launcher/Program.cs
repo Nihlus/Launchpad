@@ -98,7 +98,7 @@ namespace Launchpad.Launcher
 			Exception unhandledException = unhandledExceptionEventArgs.ExceptionObject as Exception;
 			if (unhandledException != null)
 			{
-				if (unhandledException.GetType() == typeof(DllNotFoundException))
+				if (unhandledException is DllNotFoundException)
 				{
 					Log.Fatal("This exception is typical of instances where the GTK# runtime has not been installed.\n" +
 					          "If you haven't installed it, download it at \'http://www.mono-project.com/download/#download-win\'.\n" +
