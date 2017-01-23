@@ -21,7 +21,7 @@
 
 namespace Launchpad.Launcher.Utility
 {
-	internal static class ExtensionMethods
+	public static class ExtensionMethods
 	{
 		/// <summary>
 		/// Sanitizes the input string, removing any \n, \r, or \0 characters.

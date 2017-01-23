@@ -28,7 +28,7 @@ using log4net;
 [assembly: CLSCompliant(true)]
 namespace Launchpad.Launcher
 {
-	internal class Program
+	public static class Program
 	{
 		/// <summary>
 		/// The config handler reference.

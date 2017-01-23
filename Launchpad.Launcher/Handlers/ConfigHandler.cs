@@ -369,6 +369,21 @@ namespace Launchpad.Launcher.Handlers
 			}
 		}
 
+		public void RenameConfigurationOption(string oldName, string newName)
+		{
+
+		}
+
+		public void AddNewConfigurationOption(string section, KeyValuePair<string, string> newOption)
+		{
+
+		}
+
+		public void MoveConfigurationOption(string oldSection, string newSection, string optionKey)
+		{
+
+		}
+
 		/// <summary>
 		/// Creates a file with a unique GUID for the computer the launcher has been started on.
 		/// If the file already exists, this method does nothing.

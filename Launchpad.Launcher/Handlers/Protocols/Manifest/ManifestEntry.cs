@@ -59,7 +59,8 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
 		/// <summary>
 		/// Attempts to parse an entry from a raw input.
-		/// The input is expected to be in [path]:[hash]:[size] format.
+		/// The input is expected to be in [path]:[hash]:[size] format. Note that the file path is case sensitive,
+		/// but the hash is not.
 		/// </summary>
 		/// <returns><c>true</c>, if the input was successfully parse, <c>false</c> otherwise.</returns>
 		/// <param name="rawInput">Raw input.</param>
@@ -95,6 +96,12 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				inEntry.RelativePath = entryElements[0].Replace("/", "\\");
 			}
 
+			// Hashes must be exactly 32 characters
+			if (entryElements[1].Length != 32)
+			{
+				return false;
+			}
+
 			// Set the hash to the second element
 			inEntry.Hash = entryElements[1];
 
@@ -103,6 +110,12 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			if (!long.TryParse(entryElements[2], out parsedSize))
 			{
 				// Oops. The parsing failed, so this entry is invalid.
+				return false;
+			}
+
+			// Negative sizes are not allowed
+			if (parsedSize < 0)
+			{
 				return false;
 			}
 
@@ -135,7 +148,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			}
 
 			return this.RelativePath == other.RelativePath &&
-			       this.Hash == other.Hash &&
+			       string.Equals(this.Hash, other.Hash, StringComparison.InvariantCultureIgnoreCase) &&
 			       this.Size == other.Size;
 		}
 
