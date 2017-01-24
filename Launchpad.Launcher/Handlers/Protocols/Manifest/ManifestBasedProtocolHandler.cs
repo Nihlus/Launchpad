@@ -415,16 +415,20 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
 			// Build the access strings
 			string remoteURL = $"{baseRemoteURL}{fileEntry.RelativePath}";
-			string localPath = $"{baseLocalPath}{Path.DirectorySeparatorChar}{fileEntry.RelativePath}";
+			string localPath = $"{baseLocalPath}{fileEntry.RelativePath}";
 
 			// Make sure we have a directory to put the file in
-			if (!string.IsNullOrEmpty(localPath) && !Directory.Exists(Path.GetDirectoryName(localPath)))
+			if (!string.IsNullOrEmpty(localPath))
 			{
-				Directory.CreateDirectory(Path.GetDirectoryName(localPath));
+				string localPathParentDir = Path.GetDirectoryName(localPath);
+				if (!Directory.Exists(localPathParentDir))
+				{
+					Directory.CreateDirectory(Path.GetDirectoryName(localPath));
+				}
 			}
 			else
 			{
-				throw new ArgumentNullException(nameof(localPath), "The local path was null.");
+				throw new ArgumentNullException(nameof(localPath), "The local path was null or empty.");
 			}
 
 			// Reset the cookie
