@@ -82,6 +82,11 @@ namespace Launchpad.Launcher.Interface
 		private static readonly ICatalog LocalizationCatalog = new Catalog("Launchpad", "./Content/locale");
 
 		/// <summary>
+		/// Whether or not the launcher UI has been initialized.
+		/// </summary>
+		private bool IsInitialized;
+
+		/// <summary>
 		/// Creates a new instance of the <see cref="MainWindow"/> class.
 		/// </summary>
 		public MainWindow()
@@ -113,15 +118,28 @@ namespace Launchpad.Launcher.Interface
 
 			this.indicatorLabel.Text = LocalizationCatalog.GetString("Idle");
 
+			Initialize();
+		}
+
+		/// <summary>
+		/// Initializes the UI of the launcher, performing varying checks against the patching server.
+		/// </summary>
+		public void Initialize()
+		{
+			if (this.IsInitialized)
+			{
+				return;
+			}
+
 			// First of all, check if we can connect to the patching service.
 			if (!this.Checks.CanPatch())
 			{
 				MessageDialog dialog = new MessageDialog(
-					                       null,
-					                       DialogFlags.Modal,
-					                       MessageType.Warning,
-					                       ButtonsType.Ok,
-					                       LocalizationCatalog.GetString("Failed to connect to the patch server. Please check your settings."));
+					this,
+					DialogFlags.Modal,
+					MessageType.Warning,
+					ButtonsType.Ok,
+					LocalizationCatalog.GetString("Failed to connect to the patch server. Please check your settings."));
 
 				dialog.Run();
 
@@ -152,17 +170,17 @@ namespace Launchpad.Launcher.Interface
 					Log.Info("This instance is the first start of the application in this folder.");
 
 					MessageDialog shouldInstallHereDialog = new MessageDialog(
-						                                        null,
-						                                        DialogFlags.Modal,
-						                                        MessageType.Question,
-						                                        ButtonsType.OkCancel,
-						                                        LocalizationCatalog.GetString(
-								                                        "This appears to be the first time you're starting the launcher.\n" +
-								                                        "Is this the location where you would like to install the game?") +
-								                                        $"\n\n{ConfigHandler.GetLocalDir()}"
-						                                        );
+						this,
+						DialogFlags.Modal,
+						MessageType.Question,
+						ButtonsType.OkCancel,
+						LocalizationCatalog.GetString(
+							"This appears to be the first time you're starting the launcher.\n" +
+							"Is this the location where you would like to install the game?") +
+						$"\n\n{ConfigHandler.GetLocalDir()}"
+					);
 
-					if (shouldInstallHereDialog.Run() == (int)ResponseType.Ok)
+					if (shouldInstallHereDialog.Run() == (int) ResponseType.Ok)
 					{
 						shouldInstallHereDialog.Destroy();
 
@@ -246,6 +264,8 @@ namespace Launchpad.Launcher.Interface
 					SetLauncherMode(ELauncherMode.Update, false);
 				}
 			}
+
+			this.IsInitialized = true;
 		}
 
 		/// <summary>
@@ -589,14 +609,14 @@ namespace Launchpad.Launcher.Interface
 			if (e.ExitCode != 0)
 			{
 				MessageDialog crashDialog = new MessageDialog(
-										this,
-										DialogFlags.Modal,
-										MessageType.Question,
-										ButtonsType.YesNo,
-										LocalizationCatalog.GetString(
-												"Whoops! The game appears to have crashed.\n" +
-												"Would you like the launcher to verify the installation?"
-											));
+					this,
+					DialogFlags.Modal,
+					MessageType.Question,
+					ButtonsType.YesNo,
+					LocalizationCatalog.GetString(
+							"Whoops! The game appears to have crashed.\n" +
+							"Would you like the launcher to verify the installation?"
+						));
 
 				if (crashDialog.Run() == (int)ResponseType.Yes)
 				{
