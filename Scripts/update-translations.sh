@@ -9,7 +9,7 @@ cd $LAUNCHPAD_TRANSLATIONS_ROOT
 mkdir "translations_update"
 cd "translations_update"
 
-wget https://crowdin.com/download/project/launchpad.zip launchpad.zip
+wget https://crowdin.com/download/project/launchpad.zip
 unzip launchpad.zip
 
 for D in `find . -type d`
@@ -28,7 +28,6 @@ do
 done
 
 rm launchpad.zip
-rm index.html
 
 for D in `find . -type d`
 do

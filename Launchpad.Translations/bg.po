@@ -1,236 +1,194 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: launchpad\n"
-"POT-Creation-Date: 2016-03-29 15:14:24+0200\n"
-"PO-Revision-Date: 2016-05-31 07:57-0400\n"
+"POT-Creation-Date: 2016-07-28 21:06+0200\n"
+"PO-Revision-Date: 2017-01-25 12:49-0500\n"
 "Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
 "Language-Team: Bulgarian\n"
+"Language: bg_BG\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: crowdin.com\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Language: bg_BG\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: GetString\n"
-"X-Poedit-Basepath: .\n"
-"X-Poedit-SearchPath-0: ../Launchpad.Launcher\n"
-"X-Poedit-SearchPath-1: ../Launchpad.Utilities\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-SearchPath-0: Launchpad.Launcher\n"
+"X-Poedit-SearchPath-1: Launchpad.Utilities\n"
+"X-Poedit-SearchPathExcluded-0: Launchpad.Launcher/Interface/gtk3/Launchpad.glade\n"
 "X-Crowdin-Project: launchpad\n"
 "X-Crowdin-Language: bg\n"
 "X-Crowdin-File: messages.po\n"
 
-#: ../Launchpad.Launcher/Windows-UI/AboutBox.cs:3
-msgid "About {0}"
+#: Launchpad.Launcher/Handlers/Protocols/ManifestBasedProtocolHandler.cs:625
+#, csharp-format
+msgid "Verifying file {0} ({1} of {2})"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/AboutBox.cs:3
-msgid "Version {0}"
+#: Launchpad.Launcher/Handlers/Protocols/ManifestBasedProtocolHandler.cs:637
+#, csharp-format
+msgid "Updating file {0} ({1} of {2})"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/AboutBox.Designer.cs:3
-msgid "Product Name"
+#: Launchpad.Launcher/Handlers/Protocols/ManifestBasedProtocolHandler.cs:649
+#, csharp-format
+msgid "Downloading file {0} ({1} of {2})"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/AboutBox.Designer.cs:3
-msgid "Version"
+#: Launchpad.Launcher/Handlers/Protocols/ManifestBasedProtocolHandler.cs:661
+#, csharp-format
+msgid "Downloading {0}: {1} out of {2}"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/AboutBox.Designer.cs:3
-msgid "Copyright"
+#: Launchpad.Launcher/Interface/MainWindow.cs:108
+#: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:90
+#, csharp-format
+msgid "Launchpad - {0}"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/AboutBox.Designer.cs:3
-msgid "Company Name"
-msgstr ""
-
-#: ../Launchpad.Launcher/Windows-UI/AboutBox.Designer.cs:3
-msgid "Description"
-msgstr ""
-
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:11
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:48
-#: ../Launchpad.Launcher/Windows-UI/MainForm.Designer.cs:3
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:15
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:42
-#: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs:2
-#: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:6
+#: Launchpad.Launcher/Interface/MainWindow.cs:114
+#: Launchpad.Launcher/Interface/MainWindow.cs:435
+#: Launchpad.Launcher/Interface/MainWindow.cs:551
+#: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:215
+#: Launchpad.Utilities/Interface/MainWindow.cs:57
 msgid "Idle"
 msgstr "Свободен"
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:14
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:16
+#: Launchpad.Launcher/Interface/MainWindow.cs:124
 msgid "Failed to connect to the patch server. Please check your settings."
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:14
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:15
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:17
+#: Launchpad.Launcher/Interface/MainWindow.cs:129
 msgid "Could not connect to server."
 msgstr "Няма връзка със сървъра."
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:15
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:17
+#: Launchpad.Launcher/Interface/MainWindow.cs:160
 msgid "This appears to be the first time you're starting the launcher.\n"
-"Is this the location where you would like to install the game?\n\n"
-"{0}"
-msgstr "Вие стартирате launcher-а за първи път.\n"
-"\n"
-"Това ли е директорията, в която искате да инсталирате играта?\n\n"
-"{0}"
-
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:15
-msgid "Initial startup"
+"Is this the location where you would like to install the game?"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:22
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:25
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:30
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:28
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:29
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:31
-msgid "Launchpad - Platform not provided!"
-msgstr "Launchpad - Не е предоставена платформа!"
-
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:22
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:25
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:30
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:28
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:29
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:31
-msgid "The server does not provide the game for the selected platform."
-msgstr "Сървърът не предоставя играта за избраната платформа."
-
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:24
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:27
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:32
-msgid "The server does not provide files for the selected platform."
-msgstr ""
-
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:36
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
+#: Launchpad.Launcher/Interface/MainWindow.cs:269
 msgid "Installing..."
 msgstr "Инсталиране..."
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:36
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
+#: Launchpad.Launcher/Interface/MainWindow.cs:274
 msgid "Install"
 msgstr "Инсталиране"
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:36
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
+#: Launchpad.Launcher/Interface/MainWindow.cs:283
 msgid "Updating..."
 msgstr "Обновяване..."
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:36
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
+#: Launchpad.Launcher/Interface/MainWindow.cs:288
 msgid "Update"
 msgstr "Обновяване"
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:36
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
+#: Launchpad.Launcher/Interface/MainWindow.cs:297
 msgid "Repairing..."
 msgstr "Поправяне..."
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:36
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
+#: Launchpad.Launcher/Interface/MainWindow.cs:302
 msgid "Repair"
 msgstr "Поправяне"
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:36
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
+#: Launchpad.Launcher/Interface/MainWindow.cs:311
 msgid "Launching..."
 msgstr "Стартира се..."
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:36
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
+#: Launchpad.Launcher/Interface/MainWindow.cs:316
 msgid "Launch"
 msgstr "Стартиране"
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:36
-#: ../Launchpad.Launcher/Windows-UI/MainForm.Designer.cs:3
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:22
-#: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs:2
+#: Launchpad.Launcher/Interface/MainWindow.cs:325
+#: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:272
 msgid "Inactive"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:39
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:37
-msgid "Launchpad - Failed to launch the game."
-msgstr ""
+#: Launchpad.Launcher/Interface/MainWindow.cs:386
+msgid "The server does not provide the game for the selected platform."
+msgstr "Сървърът не предоставя играта за избраната платформа."
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:39
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:37
+#: Launchpad.Launcher/Interface/MainWindow.cs:489
 msgid "The game failed to launch. Try repairing the installation."
 msgstr "Играта не можа да стартира. Опитайте да поправите инсталацията."
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:51
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:44
-msgid "Launchpad - Info"
-msgstr "Launchpad - Информация"
+#: Launchpad.Launcher/Interface/MainWindow.cs:557
+msgid "Installation finished"
+msgstr "Инсталирането завърши"
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:51
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:44
-msgid "Game download finished. Play away!"
-msgstr "Играта е свалена. Приятна игра!"
-
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:51
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:44
-msgid "Launchpad has finished repairing the game installation. Play away!"
-msgstr "Launchpad приключи с ремонта на играта. Приятна игра!"
-
-#: ../Launchpad.Launcher/Windows-UI/MainForm.cs:51
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:44
-msgid "Game update finished. Play away!"
+#: Launchpad.Launcher/Interface/MainWindow.cs:562
+msgid "Update finished"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.Designer.cs:3
-msgid "About"
+#: Launchpad.Launcher/Interface/MainWindow.cs:567
+msgid "Repair finished"
 msgstr ""
 
-#: ../Launchpad.Launcher/Windows-UI/MainForm.Designer.cs:3
-#: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs:2
-msgid "Launchpad - <GameName>"
-msgstr "Launchpad - <GameName>"
-
-#: ../Launchpad.Launcher/Unix-UI/MainWindow.cs:46
+#: Launchpad.Launcher/Interface/MainWindow.cs:595
 msgid "Whoops! The game appears to have crashed.\n"
 "Would you like the launcher to verify the installation?"
 msgstr ""
 
-#: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs:2
-msgid "Actions"
+#: Launchpad.Launcher/Interface/MainWindow.cs:627
+msgid "Reinstalling the game will delete all local files and download the entire game again.\n"
+"Are you sure you want to reinstall the game?"
 msgstr ""
 
-#: ../Launchpad.Launcher/gtk-gui/Launchpad.Launcher.UnixUI.MainWindow.cs:2
+#: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:61
+#: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:63
+msgid "Menu"
+msgstr "Меню"
+
+#: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:69
+#: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:73
 msgid "Repair Game"
 msgstr ""
 
-#: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:18
+#: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:70
+msgid "Starts a repair process for the installed game."
+msgstr ""
+
+#: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:79
+#: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:83
+msgid "Reinstall Game"
+msgstr ""
+
+#: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:80
+msgid "Reinstalls the installed game."
+msgstr ""
+
+#: Launchpad.Utilities/Interface/MainWindow.cs:84
+msgid "No GameVersion.txt file could be found in the target directory. This file is required.\n"
+"Would you like to add one? The version will be \"1.0.0\"."
+msgstr ""
+
+#: Launchpad.Utilities/Interface/MainWindow.cs:124
+#, csharp-format
 msgid "{0} : {1} out of {2}"
 msgstr ""
 
-#: ../Launchpad.Utilities/Unix-UI/MainWindow.cs:20
+#: Launchpad.Utilities/Interface/MainWindow.cs:140
 msgid "Finished"
 msgstr ""
 
-#: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UnixUI.MainWindow.cs:2
+#: Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs:61
 msgid "Launchpad Utilities - Manifest"
 msgstr ""
 
-#: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UnixUI.MainWindow.cs:2
+#: Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs:128
 msgid "Progress: "
-msgstr ""
+msgstr "Напредък: "
 
-#: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UnixUI.MainWindow.cs:2
+#: Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs:146
 msgid "/some/file/path : 1 out of 100"
 msgstr ""
 
-#: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UnixUI.MainWindow.cs:2
+#: Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs:196
 msgid "Generate Game Manifest"
 msgstr ""
 
-#: ../Launchpad.Utilities/gtk-gui/Launchpad.Utilities.UnixUI.MainWindow.cs:2
+#: Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs:218
 msgid "Generate Launchpad Manifest"
 msgstr ""
 

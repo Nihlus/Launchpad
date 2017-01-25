@@ -31,7 +31,7 @@ namespace Launchpad.Tests.Launcher
 		/// <summary>
 		/// Holds the string "placeholder".
 		/// </summary>
-		private MemoryStream DataStream = new MemoryStream(new byte[]
+		private readonly MemoryStream DataStream = new MemoryStream(new byte[]
 		{
 			112, 108, 97, 99, 101, 104, 111, 108, 100, 101, 114
 		});
