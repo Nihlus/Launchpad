@@ -46,8 +46,7 @@ namespace Launchpad.Utilities.Handlers
 		{
 			Thread t = new Thread(() => GenerateManifest_Implementation(targetPath, manifestType))
 			{
-				Name = "GenerateManifest",
-				IsBackground = true
+				Name = "GenerateManifest"
 			};
 
 			t.Start();
@@ -80,11 +79,11 @@ namespace Launchpad.Utilities.Handlers
 
 					completedFiles++;
 
-					GenerationProgressArgs.TotalFiles = manifestFilePaths.Count;
-					GenerationProgressArgs.CompletedFiles = completedFiles;
-					GenerationProgressArgs.Filepath = newEntry.RelativePath;
-					GenerationProgressArgs.Hash = newEntry.Hash;
-					GenerationProgressArgs.Filesize = newEntry.Size;
+					this.GenerationProgressArgs.TotalFiles = manifestFilePaths.Count;
+					this.GenerationProgressArgs.CompletedFiles = completedFiles;
+					this.GenerationProgressArgs.Filepath = newEntry.RelativePath;
+					this.GenerationProgressArgs.Hash = newEntry.Hash;
+					this.GenerationProgressArgs.Filesize = newEntry.Size;
 					OnManifestGenerationProgressChanged();
 				}
 			}
@@ -144,7 +143,7 @@ namespace Launchpad.Utilities.Handlers
 
 		private void OnManifestGenerationProgressChanged()
 		{
-			ManifestGenerationProgressChanged?.Invoke(this, GenerationProgressArgs);
+			ManifestGenerationProgressChanged?.Invoke(this, this.GenerationProgressArgs);
 		}
 
 		private void OnManifestGenerationFinished()
@@ -190,9 +189,9 @@ namespace Launchpad.Utilities.Handlers
 
 		public ManifestEntry()
 		{
-			RelativePath = string.Empty;
-			Hash = string.Empty;
-			Size = 0;
+			this.RelativePath = string.Empty;
+			this.Hash = string.Empty;
+			this.Size = 0;
 		}
 
 		/// <summary>
@@ -256,7 +255,7 @@ namespace Launchpad.Utilities.Handlers
 		/// <returns>A <see cref="System.String"/> that represents the current <see cref="Launchpad.Utilities.Handlers.ManifestEntry"/>.</returns>
 		public override string ToString()
 		{
-			return RelativePath + ":" + Hash + ":" + Size;
+			return this.RelativePath + ":" + this.Hash + ":" + this.Size;
 		}
 
 		public bool Equals(ManifestEntry other)
