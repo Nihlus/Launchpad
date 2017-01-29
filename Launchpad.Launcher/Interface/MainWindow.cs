@@ -134,12 +134,14 @@ namespace Launchpad.Launcher.Interface
 			// First of all, check if we can connect to the patching service.
 			if (!this.Checks.CanPatch())
 			{
-				MessageDialog dialog = new MessageDialog(
+				MessageDialog dialog = new MessageDialog
+				(
 					this,
 					DialogFlags.Modal,
 					MessageType.Warning,
 					ButtonsType.Ok,
-					LocalizationCatalog.GetString("Failed to connect to the patch server. Please check your settings."));
+					LocalizationCatalog.GetString("Failed to connect to the patch server. Please check your settings.")
+				);
 
 				dialog.Run();
 
@@ -169,15 +171,17 @@ namespace Launchpad.Launcher.Interface
 				{
 					Log.Info("This instance is the first start of the application in this folder.");
 
-					MessageDialog shouldInstallHereDialog = new MessageDialog(
+					MessageDialog shouldInstallHereDialog = new MessageDialog
+					(
 						this,
 						DialogFlags.Modal,
 						MessageType.Question,
 						ButtonsType.OkCancel,
-						LocalizationCatalog.GetString(
+						LocalizationCatalog.GetString
+						(
 							"This appears to be the first time you're starting the launcher.\n" +
-							"Is this the location where you would like to install the game?") +
-						$"\n\n{ConfigHandler.GetLocalDir()}"
+							"Is this the location where you would like to install the game?"
+						) + $"\n\n{ConfigHandler.GetLocalDir()}"
 					);
 
 					if (shouldInstallHereDialog.Run() == (int) ResponseType.Ok)
@@ -605,15 +609,18 @@ namespace Launchpad.Launcher.Interface
 		{
 			if (e.ExitCode != 0)
 			{
-				MessageDialog crashDialog = new MessageDialog(
+				MessageDialog crashDialog = new MessageDialog
+				(
 					this,
 					DialogFlags.Modal,
 					MessageType.Question,
 					ButtonsType.YesNo,
-					LocalizationCatalog.GetString(
-							"Whoops! The game appears to have crashed.\n" +
-							"Would you like the launcher to verify the installation?"
-						));
+					LocalizationCatalog.GetString
+					(
+						"Whoops! The game appears to have crashed.\n" +
+						"Would you like the launcher to verify the installation?"
+					)
+				);
 
 				if (crashDialog.Run() == (int)ResponseType.Yes)
 				{
@@ -637,15 +644,18 @@ namespace Launchpad.Launcher.Interface
 		/// </summary>
 		private void OnReinstallGameActionActivated(object sender, EventArgs e)
 		{
-			MessageDialog reinstallConfirmDialog = new MessageDialog(
+			MessageDialog reinstallConfirmDialog = new MessageDialog
+			(
 				this,
 				DialogFlags.Modal,
 				MessageType.Question,
 				ButtonsType.YesNo,
-				LocalizationCatalog.GetString(
+				LocalizationCatalog.GetString
+				(
 					"Reinstalling the game will delete all local files and download the entire game again.\n" +
 					"Are you sure you want to reinstall the game?"
-				));
+				)
+			);
 
 			if (reinstallConfirmDialog.Run() == (int) ResponseType.Yes)
 			{
