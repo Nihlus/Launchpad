@@ -24,6 +24,7 @@ using System.IO;
 using System.Linq;
 using Gtk;
 using Launchpad.Utilities.Handlers;
+using Launchpad.Utilities.Utility;
 using Launchpad.Utilities.Utility.Events;
 using NGettext;
 using SysPath = System.IO.Path;
@@ -36,7 +37,7 @@ namespace Launchpad.Utilities.Interface
 		/// <summary>
 		/// The manifest generation handler.
 		/// </summary>
-		private readonly ManifestHandler Manifest = new ManifestHandler();
+		private readonly ManifestGenerationHandler Manifest = new ManifestGenerationHandler();
 
 		/// <summary>
 		/// The localization catalog.

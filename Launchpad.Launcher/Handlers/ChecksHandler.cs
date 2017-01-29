@@ -22,7 +22,7 @@
 using System;
 using System.IO;
 using log4net;
-using Launchpad.Launcher.Utility.Enums;
+using Launchpad.Common.Enums;
 using Launchpad.Launcher.Handlers.Protocols;
 
 namespace Launchpad.Launcher.Handlers
@@ -61,23 +61,6 @@ namespace Launchpad.Launcher.Handlers
 		{
 			// We use an empty file to determine if this is the first launch or not
 			return !File.Exists(ConfigHandler.GetLauncherCookiePath());
-		}
-
-		/// <summary>
-		/// Determines whether this instance is running on Unix.
-		/// </summary>
-		/// <returns><c>true</c> if this instance is running on unix; otherwise, <c>false</c>.</returns>
-		public static bool IsRunningOnUnix()
-		{
-			int platform = (int)Environment.OSVersion.Platform;
-			if ((platform == 4) || (platform == 6) || (platform == 128))
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
 		}
 
 		/// <summary>

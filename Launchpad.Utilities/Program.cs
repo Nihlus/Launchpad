@@ -23,6 +23,7 @@ using System;
 using System.IO;
 using Gtk;
 using Launchpad.Utilities.Handlers;
+using Launchpad.Utilities.Utility;
 using Launchpad.Utilities.Utility.Events;
 using Launchpad.Utilities.Interface;
 using Launchpad.Utilities.Options;
@@ -59,12 +60,12 @@ namespace Launchpad.Utilities
 					{
 						Log.Info("Generating manifest...");
 
-						ManifestHandler manifestHandler = new ManifestHandler();
+						ManifestGenerationHandler manifestGenerationHandler = new ManifestGenerationHandler();
 
-						manifestHandler.ManifestGenerationProgressChanged += OnProgressChanged;
-						manifestHandler.ManifestGenerationFinished += OnGenerationFinished;
+						manifestGenerationHandler.ManifestGenerationProgressChanged += OnProgressChanged;
+						manifestGenerationHandler.ManifestGenerationFinished += OnGenerationFinished;
 
-						manifestHandler.GenerateManifest(options.TargetDirectory, options.ManifestType);
+						manifestGenerationHandler.GenerateManifest(options.TargetDirectory, options.ManifestType);
 					}
 					else
 					{

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Launchpad.Utilities", "Laun
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Launchpad.Tests", "Launchpad.Tests\Launchpad.Tests.csproj", "{3DCD158D-7903-47AE-8FCC-3292128DE213}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Launchpad.Common", "Launchpad.Common\Launchpad.Common.csproj", "{DDC53837-BA5A-41F3-8258-6224F3526A52}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -34,6 +36,12 @@ Global
 		{3DCD158D-7903-47AE-8FCC-3292128DE213}.Release|x86.Build.0 = Release|x86
 		{3DCD158D-7903-47AE-8FCC-3292128DE213}.Default|x86.ActiveCfg = Default|x86
 		{3DCD158D-7903-47AE-8FCC-3292128DE213}.Default|x86.Build.0 = Default|x86
+		{DDC53837-BA5A-41F3-8258-6224F3526A52}.Debug|x86.ActiveCfg = Debug|x86
+		{DDC53837-BA5A-41F3-8258-6224F3526A52}.Debug|x86.Build.0 = Debug|x86
+		{DDC53837-BA5A-41F3-8258-6224F3526A52}.Release|x86.ActiveCfg = Release|x86
+		{DDC53837-BA5A-41F3-8258-6224F3526A52}.Release|x86.Build.0 = Release|x86
+		{DDC53837-BA5A-41F3-8258-6224F3526A52}.Default|x86.ActiveCfg = Default|x86
+		{DDC53837-BA5A-41F3-8258-6224F3526A52}.Default|x86.Build.0 = Default|x86
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0

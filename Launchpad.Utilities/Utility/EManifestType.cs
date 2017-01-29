@@ -1,10 +1,10 @@
-//
-//  ESystemTarget.cs
+﻿//
+//  EManifestType.cs
 //
 //  Author:
 //       Jarl Gullberg <jarl.gullberg@gmail.com>
 //
-//  Copyright (c) 2016 Jarl Gullberg
+//  Copyright (c) 2017 Jarl Gullberg
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -19,16 +19,26 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-namespace Launchpad.Launcher.Utility.Enums
+namespace Launchpad.Utilities.Utility
 {
-	public enum ESystemTarget
+	/// <summary>
+	/// Enum defining the type of manifest.
+	/// </summary>
+	public enum EManifestType : byte
 	{
-		Linux,
-		Mac,
-		Win64,
-		Win32,
-		Unknown
+		/// <summary>
+		/// An unknown manifest.
+		/// </summary>
+		Unknown,
+
+		/// <summary>
+		/// A launcher manifest.
+		/// </summary>
+		Launchpad,
+
+		/// <summary>
+		/// A game manifest.
+		/// </summary>
+		Game
 	}
 }
-

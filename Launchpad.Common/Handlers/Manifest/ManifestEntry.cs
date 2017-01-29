@@ -21,9 +21,8 @@
 
 using System;
 using System.IO;
-using Launchpad.Launcher.Utility;
 
-namespace Launchpad.Launcher.Handlers.Protocols.Manifest
+namespace Launchpad.Common.Handlers.Manifest
 {
 	/// <summary>
 	/// A manifest entry derived from the raw unformatted string.
@@ -87,7 +86,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			}
 
 			// Sanitize the manifest path, converting \ to / on unix and / to \ on Windows.
-			if (ChecksHandler.IsRunningOnUnix())
+			if (SystemInformation.IsRunningOnUnix())
 			{
 				inEntry.RelativePath = entryElements[0].Replace("\\", "/");
 			}
@@ -159,36 +158,6 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		public override int GetHashCode()
 		{
 			return ToString().GetHashCode();
-		}
-
-		/// <summary>
-		/// Verifies the integrity of the file in the manifest entry.
-		/// </summary>
-		/// <returns><c>true</c>, if file was complete and undamaged, <c>false</c> otherwise.</returns>
-		public bool IsFileIntegrityIntact()
-		{
-			string localPath = $"{ConfigHandler.Instance.GetGamePath()}{this.RelativePath}";
-			if (!File.Exists(localPath))
-			{
-				return false;
-			}
-
-			FileInfo fileInfo = new FileInfo(localPath);
-			if (fileInfo.Length != this.Size)
-			{
-				return false;
-			}
-
-			using (Stream file = File.OpenRead(localPath))
-			{
-				string localHash = MD5Handler.GetStreamHash(file);
-				if (localHash != this.Hash)
-				{
-					return false;
-				}
-			}
-
-			return true;
 		}
 	}
 }

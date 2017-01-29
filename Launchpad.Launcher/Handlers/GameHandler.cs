@@ -24,6 +24,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using log4net;
+using Launchpad.Common;
 using Launchpad.Launcher.Handlers.Protocols;
 
 namespace Launchpad.Launcher.Handlers
@@ -215,7 +216,7 @@ namespace Launchpad.Launcher.Handlers
 				};
 
 				// Make sure the game executable is flagged as such on Unix
-				if (ChecksHandler.IsRunningOnUnix())
+				if (SystemInformation.IsRunningOnUnix())
 				{
 					Process.Start("chmod", $"+x {Config.GetGameExecutable()}");
 				}

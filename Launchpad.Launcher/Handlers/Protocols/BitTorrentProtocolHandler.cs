@@ -20,9 +20,9 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // TODO: Look into MonoTorrent
-using Launchpad.Launcher.Utility.Enums;
 using System;
 using System.Drawing;
+using Launchpad.Common.Enums;
 
 
 namespace Launchpad.Launcher.Handlers.Protocols

@@ -1,5 +1,5 @@
 ﻿//
-//  ManifestHandler.cs
+//  ManifestGenerationHandler.cs
 //
 //  Author:
 //       Jarl Gullberg <jarl.gullberg@gmail.com>
@@ -25,11 +25,13 @@ using System.Threading;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using Launchpad.Common.Handlers;
+using Launchpad.Common.Handlers.Manifest;
 using Launchpad.Utilities.Utility;
 
 namespace Launchpad.Utilities.Handlers
 {
-	public class ManifestHandler
+	public class ManifestGenerationHandler
 	{
 		public event ManifestGenerationProgressChangedEventHandler ManifestGenerationProgressChanged;
 		public event ManifestGenerationFinishedEventHandler ManifestGenerationFinished;
@@ -133,6 +135,11 @@ namespace Launchpad.Utilities.Handlers
 			return newEntry;
 		}
 
+		/// <summary>
+		/// Determines whether or not the specified path is blacklisted and should not be included in the manifest.
+		/// </summary>
+		/// <param name="filePath">The path to test.</param>
+		/// <returns><value>true</value> if the path is blackliste; otherwise, <value>false</value>.</returns>
 		private static bool IsPathABlacklistedFile(string filePath)
 		{
 			return 	filePath.EndsWith(".install") ||
@@ -149,120 +156,6 @@ namespace Launchpad.Utilities.Handlers
 		private void OnManifestGenerationFinished()
 		{
 			ManifestGenerationFinished?.Invoke(this, EventArgs.Empty);
-		}
-	}
-
-	/// <summary>
-	/// Enum defining the type of manifest.
-	/// </summary>
-	public enum EManifestType : byte
-	{
-		Unknown,
-		Launchpad,
-		Game
-	}
-
-	/// <summary>
-	/// A manifest entry derived from the raw unformatted string.
-	/// Contains the relative path of the referenced file, as well as
-	/// its MD5 hash and size in bytes.
-	/// </summary>
-	internal sealed class ManifestEntry : IEquatable<ManifestEntry>
-	{
-		public string RelativePath
-		{
-			get;
-			set;
-		}
-
-		public string Hash
-		{
-			get;
-			set;
-		}
-
-		public long Size
-		{
-			get;
-			set;
-		}
-
-		public ManifestEntry()
-		{
-			this.RelativePath = string.Empty;
-			this.Hash = string.Empty;
-			this.Size = 0;
-		}
-
-		/// <summary>
-		/// Attempts to parse an entry from a raw input.
-		/// The input is expected to be in [path]:[hash]:[size] format.
-		/// </summary>
-		/// <returns><c>true</c>, if the input was successfully parse, <c>false</c> otherwise.</returns>
-		/// <param name="rawInput">Raw input.</param>
-		/// <param name="inEntry">The resulting entry.</param>
-		public static bool TryParse(string rawInput, out ManifestEntry inEntry)
-		{
-			// Clear out the entry for the new data
-			inEntry = new ManifestEntry();
-
-			if (!string.IsNullOrEmpty(rawInput))
-			{
-				// Remove any and all bad characters from the input string,
-				// such as \0, \n and \r.
-				string cleanInput = rawInput.RemoveLineSeparatorsAndNulls();
-
-				// Split the string into its three components - file, hash and size
-				string[] entryElements = cleanInput.Split(':');
-
-				// If we have three elements (which we should always have), set them in the provided entry
-				if (entryElements.Length == 3)
-				{
-					// Normalize the manifest path, converting \ to / on unix and / to \ on Windows.
-					if (ChecksHandler.IsRunningOnUnix())
-					{
-						inEntry.RelativePath = entryElements[0].Replace("\\", "/");
-					}
-					else
-					{
-						inEntry.RelativePath = entryElements[0].Replace("/", "\\");
-					}
-
-					// Set the hash to the second element
-					inEntry.Hash = entryElements[1];
-
-					// Attempt to parse the final element as a long-type byte count.
-					long parsedSize;
-					if (!long.TryParse(entryElements[2], out parsedSize))
-					{
-						// Oops. The parsing failed, so this entry is invalid.
-						return false;
-					}
-
-					inEntry.Size = parsedSize;
-					return true;
-				}
-			}
-
-			return false;
-		}
-
-		/// <summary>
-		/// Returns a <see cref="System.String"/> that represents the current <see cref="Launchpad.Utilities.Handlers.ManifestEntry"/>.
-		/// The returned value matches a raw in-manifest representation of the entry, in the form of
-		/// [path]:[hash]:[size]
-		/// </summary>
-		/// <returns>A <see cref="System.String"/> that represents the current <see cref="Launchpad.Utilities.Handlers.ManifestEntry"/>.</returns>
-		public override string ToString()
-		{
-			return this.RelativePath + ":" + this.Hash + ":" + this.Size;
-		}
-
-		public bool Equals(ManifestEntry other)
-		{
-			return this.RelativePath == other.RelativePath &&
-			this.Hash == other.Hash &&
-			this.Size == other.Size;
 		}
 	}
 }

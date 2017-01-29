@@ -20,10 +20,10 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.IO;
-using Launchpad.Launcher.Handlers;
+using Launchpad.Common.Handlers;
 using NUnit.Framework;
 
-namespace Launchpad.Tests.Launcher
+namespace Launchpad.Tests.Common
 {
 	[TestFixture]
 	public class MD5HandlerTests

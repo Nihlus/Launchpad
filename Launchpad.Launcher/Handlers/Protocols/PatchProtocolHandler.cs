@@ -20,10 +20,10 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using Launchpad.Launcher.Utility.Enums;
 using System.Drawing;
 using System.IO;
 using log4net;
+using Launchpad.Common.Enums;
 
 namespace Launchpad.Launcher.Handlers.Protocols
 {

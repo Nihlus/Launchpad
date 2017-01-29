@@ -25,8 +25,8 @@ using System.IO;
 using System.Net;
 using System.Text;
 using log4net;
-using Launchpad.Launcher.Utility;
-using Launchpad.Launcher.Utility.Enums;
+using Launchpad.Common;
+using Launchpad.Common.Enums;
 
 namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 {

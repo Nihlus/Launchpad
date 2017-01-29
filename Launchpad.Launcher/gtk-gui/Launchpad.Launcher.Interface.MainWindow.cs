@@ -3,6 +3,7 @@
 
 using Gdk;
 using Gtk;
+using Launchpad.Common;
 using Launchpad.Launcher.Handlers;
 using Stetic;
 using Image = Gtk.Image;
@@ -89,7 +90,7 @@ namespace Launchpad.Launcher.Interface
 			this.Name = "Launchpad.Launcher.Interface.MainWindow";
 			this.Title = LocalizationCatalog.GetString ("Launchpad - {0}");
 
-			if (ChecksHandler.IsRunningOnUnix())
+			if (SystemInformation.IsRunningOnUnix())
 			{
 				this.Icon = Pixbuf.LoadFromResource("Launchpad.Launcher.Resources.RocketIcon.ico");
 			}

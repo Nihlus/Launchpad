@@ -19,10 +19,10 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using Launchpad.Launcher.Utility;
+using Launchpad.Common;
 using NUnit.Framework;
 
-namespace Launchpad.Tests.Launcher
+namespace Launchpad.Tests.Common
 {
 	[TestFixture]
 	public class ExtensionMethodTests

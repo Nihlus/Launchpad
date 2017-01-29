@@ -26,11 +26,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Launchpad.Launcher.Utility.Enums;
 using Launchpad.Launcher.Handlers.Protocols;
 using System.Security.Cryptography;
 using System.Text;
 using log4net;
+using Launchpad.Common;
+using Launchpad.Common.Enums;
 using Launchpad.Launcher.Handlers.Protocols.Manifest;
 
 namespace Launchpad.Launcher.Handlers
@@ -557,7 +558,7 @@ namespace Launchpad.Launcher.Handlers
 			string executableName = GetMainExecutableName().Replace(".exe", "");
 
 			// Unix doesn't need (or have) the .exe extension.
-			if (ChecksHandler.IsRunningOnUnix())
+			if (SystemInformation.IsRunningOnUnix())
 			{
 				// Should return something along the lines of "./Game/<ExecutableName>"
 				executablePathRootLevel = $@"{GetGamePath()}{executableName}";
@@ -1502,7 +1503,7 @@ namespace Launchpad.Launcher.Handlers
 
 			string oldConfigDir = $@"{GetLocalDir()}config";
 
-			if (ChecksHandler.IsRunningOnUnix())
+			if (SystemInformation.IsRunningOnUnix())
 			{
 				// Case sensitive
 				// Is there an old config file?

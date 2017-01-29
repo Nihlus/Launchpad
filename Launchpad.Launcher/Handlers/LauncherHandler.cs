@@ -35,6 +35,7 @@ using System.Threading;
 using Launchpad.Launcher.Handlers.Protocols;
 using System.Net;
 using log4net;
+using Launchpad.Common;
 
 namespace Launchpad.Launcher.Handlers
 {
@@ -217,7 +218,7 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		private static string GetUpdateScriptResourceName()
 		{
-			if (ChecksHandler.IsRunningOnUnix())
+			if (SystemInformation.IsRunningOnUnix())
 			{
 				return "Launchpad.Launcher.Resources.launchpad_update.sh";
 			}
@@ -232,7 +233,7 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		private static string GetUpdateScriptPath()
 		{
-			if (ChecksHandler.IsRunningOnUnix())
+			if (SystemInformation.IsRunningOnUnix())
 			{
 				return $@"{Path.GetTempPath()}launchpad_update.sh";
 			}

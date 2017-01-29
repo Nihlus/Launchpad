@@ -1,10 +1,10 @@
-//
-//  ChecksHandler.cs
+﻿//
+//  ExtensionMethods.cs
 //
 //  Author:
 //       Jarl Gullberg <jarl.gullberg@gmail.com>
 //
-//  Copyright (c) 2016 Jarl Gullberg
+//  Copyright (c) 2017 Jarl Gullberg
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -21,29 +21,17 @@
 
 using System;
 
-namespace Launchpad.Utilities.Handlers
+namespace Launchpad.Common
 {
-	/// <summary>
-	/// This class handles all the launcher's checks, returning bools for each function.
-	/// Since this class is meant to be used in both the Forms UI and the GTK UI,
-	/// there must be no useage of UI code in this class. Keep it clean!
-	/// </summary>
-	internal static class ChecksHandler
+	public static class ExtensionMethods
 	{
 		/// <summary>
-		/// Determines whether this instance is running on Unix.
+		/// Sanitizes the input string, removing any \n, \r, or \0 characters.
 		/// </summary>
-		/// <returns><c>true</c> if this instance is running on unix; otherwise, <c>false</c>.</returns>
-		public static bool IsRunningOnUnix()
+		/// <param name="input">Input string.</param>
+		public static string RemoveLineSeparatorsAndNulls(this string input)
 		{
-			int p = (int)Environment.OSVersion.Platform;
-			if ((p == 4) || (p == 6) || (p == 128))
-			{
-				return true;
-			}
-
-			return false;
+			return input.Replace("\n", string.Empty).Replace("\0", string.Empty).Replace("\r", string.Empty);
 		}
 	}
 }
-

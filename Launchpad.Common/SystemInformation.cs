@@ -1,5 +1,5 @@
-﻿//
-//  MD5Handler.cs
+//
+//  SystemInformation.cs
 //
 //  Author:
 //       Jarl Gullberg <jarl.gullberg@gmail.com>
@@ -20,30 +20,30 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.IO;
-using System.Security.Cryptography;
 
-namespace Launchpad.Launcher.Handlers
+namespace Launchpad.Common
 {
 	/// <summary>
-	/// MD5 hashing handler. Used to ensure file integrity.
+	/// This class handles all the launcher's checks, returning bools for each function.
+	/// Since this class is meant to be used in both the Forms UI and the GTK UI,
+	/// there must be no useage of UI code in this class. Keep it clean!
 	/// </summary>
-	public static class MD5Handler
+	public static class SystemInformation
 	{
 		/// <summary>
-		/// Gets the file hash from a data stream.
+		/// Determines whether this instance is running on Unix.
 		/// </summary>
-		/// <returns>The hash.</returns>
-		/// <param name="dataStream">File stream.</param>
-		public static string GetStreamHash(Stream dataStream)
+		/// <returns><c>true</c> if this instance is running on unix; otherwise, <c>false</c>.</returns>
+		public static bool IsRunningOnUnix()
 		{
-			using (MD5 md5 = MD5.Create())
+			int p = (int)Environment.OSVersion.Platform;
+			if ((p == 4) || (p == 6) || (p == 128))
 			{
-				//calculate the hash of the stream.
-				string resultString = BitConverter.ToString(md5.ComputeHash(dataStream)).Replace("-", "");
-
-				return resultString;
+				return true;
 			}
+
+			return false;
 		}
 	}
 }
+

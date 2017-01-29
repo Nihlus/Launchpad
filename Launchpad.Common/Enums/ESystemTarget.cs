@@ -1,5 +1,5 @@
-﻿//
-//  ExtensionMethods.cs
+//
+//  ESystemTarget.cs
 //
 //  Author:
 //       Jarl Gullberg <jarl.gullberg@gmail.com>
@@ -19,18 +19,16 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace Launchpad.Launcher.Utility
+
+namespace Launchpad.Common.Enums
 {
-	public static class ExtensionMethods
+	public enum ESystemTarget
 	{
-		/// <summary>
-		/// Sanitizes the input string, removing any \n, \r, or \0 characters.
-		/// </summary>
-		/// <param name="input">Input string.</param>
-		public static string RemoveLineSeparatorsAndNulls(this string input)
-		{
-			return input.Replace("\n", string.Empty).Replace("\0", string.Empty).Replace("\r", string.Empty);
-		}
+		Linux,
+		Mac,
+		Win64,
+		Win32,
+		Unknown
 	}
 }
 

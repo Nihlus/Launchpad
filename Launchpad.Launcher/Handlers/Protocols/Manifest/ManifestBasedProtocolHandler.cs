@@ -24,7 +24,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Policy;
 using log4net;
+using Launchpad.Common;
+using Launchpad.Common.Handlers;
+using Launchpad.Common.Handlers.Manifest;
 using Launchpad.Launcher.Utility;
 using NGettext;
 
@@ -48,7 +52,20 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <summary>
 		/// The file manifest handler. This allows access to the launcher and game file lists.
 		/// </summary>
-		private readonly ManifestHandler FileManifestHandler = ManifestHandler.Instance;
+		private readonly ManifestHandler FileManifestHandler;
+
+		/// <summary>
+		/// Creates a new instance of the <see cref="ManifestBasedProtocolHandler"/> class.
+		/// </summary>
+		protected ManifestBasedProtocolHandler()
+		{
+			this.FileManifestHandler = new ManifestHandler
+			(
+				ConfigHandler.GetLocalDir(),
+				new Url(this.Config.GetBaseProtocolURL()),
+				this.Config.GetSystemTarget()
+			);
+		}
 
 		/// <summary>
 		/// Installs the game.
@@ -514,12 +531,12 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			{
 				case EModule.Launcher:
 				{
-					manifestPath = ManifestHandler.GetLaunchpadManifestPath();
+					manifestPath = this.FileManifestHandler.GetLaunchpadManifestPath();
 					break;
 				}
 				case EModule.Game:
 				{
-					manifestPath = ManifestHandler.GetGameManifestPath();
+					manifestPath = this.FileManifestHandler.GetGameManifestPath();
 					break;
 				}
 				default:
@@ -556,12 +573,12 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			{
 				case EModule.Launcher:
 				{
-					checksum = ReadRemoteFile(ManifestHandler.GetLaunchpadManifestChecksumURL());
+					checksum = ReadRemoteFile(this.FileManifestHandler.GetLaunchpadManifestChecksumURL());
 					break;
 				}
 				case EModule.Game:
 				{
-					checksum = ReadRemoteFile(ManifestHandler.GetGameManifestChecksumURL());
+					checksum = ReadRemoteFile(this.FileManifestHandler.GetGameManifestChecksumURL());
 					break;
 				}
 				default:
@@ -587,12 +604,12 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			{
 				case EModule.Launcher:
 				{
-					doesManifestExist = File.Exists(ManifestHandler.GetLaunchpadManifestPath());
+					doesManifestExist = File.Exists(this.FileManifestHandler.GetLaunchpadManifestPath());
 					break;
 				}
 				case EModule.Game:
 				{
-					doesManifestExist = File.Exists(ManifestHandler.GetGameManifestPath());
+					doesManifestExist = File.Exists(this.FileManifestHandler.GetGameManifestPath());
 					break;
 				}
 				default:
@@ -630,17 +647,17 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			{
 				case EModule.Launcher:
 				{
-					remoteURL = ManifestHandler.GetLaunchpadManifestURL();
-					localPath = ManifestHandler.GetLaunchpadManifestPath();
-					oldLocalPath = ManifestHandler.GetOldLaunchpadManifestPath();
+					remoteURL = this.FileManifestHandler.GetLaunchpadManifestURL();
+					localPath = this.FileManifestHandler.GetLaunchpadManifestPath();
+					oldLocalPath = this.FileManifestHandler.GetOldLaunchpadManifestPath();
 
 					break;
 				}
 				case EModule.Game:
 				{
-					remoteURL = ManifestHandler.GetGameManifestURL();
-					localPath = ManifestHandler.GetGameManifestPath();
-					oldLocalPath = ManifestHandler.GetOldGameManifestPath();
+					remoteURL = this.FileManifestHandler.GetGameManifestURL();
+					localPath = this.FileManifestHandler.GetGameManifestPath();
+					oldLocalPath = this.FileManifestHandler.GetOldGameManifestPath();
 
 					break;
 				}

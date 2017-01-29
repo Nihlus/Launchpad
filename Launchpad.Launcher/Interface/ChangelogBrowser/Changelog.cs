@@ -22,8 +22,8 @@
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
+using SystemInformation = Launchpad.Common.SystemInformation;
 using Gtk;
-using Launchpad.Launcher.Handlers;
 using WebKit;
 
 namespace Launchpad.Launcher.Interface.ChangelogBrowser
@@ -66,7 +66,7 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 		/// <param name="parentContainer">The parent GTK container where the changelog should be added.</param>
 		public Changelog(Container parentContainer)
 		{
-			if (!ChecksHandler.IsRunningOnUnix())
+			if (!SystemInformation.IsRunningOnUnix())
 			{
 				this.windowsBrowser = new WindowsBrowser(parentContainer);
 				this.WidgetHandle = this.windowsBrowser.WidgetHandle;
