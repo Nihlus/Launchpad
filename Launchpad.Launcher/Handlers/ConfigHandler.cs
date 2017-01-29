@@ -590,8 +590,8 @@ namespace Launchpad.Launcher.Handlers
 			}
 
 			Log.Warn("Could not find the game executable. " +
-				"\n\tSearched at : " + executablePathRootLevel +
-				"\n\t Searched at: " + executablePathTargetLevel);
+				"\n\tSearched at: " + executablePathRootLevel +
+				"\n\tSearched at: " + executablePathTargetLevel);
 
 			throw new FileNotFoundException("The game executable could not be found.");
 
@@ -612,11 +612,9 @@ namespace Launchpad.Launcher.Handlers
 				{
 					return gameVersion;
 				}
-				else
-				{
-					Log.Warn("Could not parse local game version. Contents: " + rawGameVersion);
-					return new Version("0.0.0");
-				}
+
+				Log.Warn("Could not parse local game version. Contents: " + rawGameVersion);
+				return new Version("0.0.0");
 			}
 			catch (IOException ioex)
 			{
@@ -786,22 +784,22 @@ namespace Launchpad.Launcher.Handlers
 					switch (patchProtocol)
 					{
 						case "FTP":
-							{
-								return new FTPProtocolHandler();
-							}
+						{
+							return new FTPProtocolHandler();
+						}
 						case "HTTP":
-							{
-								return new HTTPProtocolHandler();
-							}
+						{
+							return new HTTPProtocolHandler();
+						}
 						case "BitTorrent":
-							{
-								return new BitTorrentProtocolHandler();
-							}
+						{
+							return new BitTorrentProtocolHandler();
+						}
 						default:
-							{
-								Log.Error($"Failed to load protocol handler: Protocol \"{patchProtocol}\" was not recognized or implemented.");
-                                return null;
-							}
+						{
+							Log.Error($"Failed to load protocol handler: Protocol \"{patchProtocol}\" was not recognized or implemented.");
+                            return null;
+						}
 					}
 				}
 				catch (IOException ioex)
