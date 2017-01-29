@@ -271,7 +271,7 @@ namespace Launchpad.Launcher.Interface
 		/// <summary>
 		/// Sets the launcher mode and updates UI elements to match
 		/// </summary>
-		/// <param name="newMode">New mode.</param>
+		/// <param name="newMode">The new mode.</param>
 		/// <param name="bInProgress">If set to <c>true</c>, the selected mode is in progress.</param>
 		/// <exception cref="ArgumentOutOfRangeException">
 		/// Will be thrown if the <see cref="ELauncherMode"/> passed to the function is not a valid value.
@@ -525,25 +525,22 @@ namespace Launchpad.Launcher.Interface
 			switch (this.Mode)
 			{
 				case ELauncherMode.Install:
-					{
-						break;
-					}
 				case ELauncherMode.Update:
-					{
-						break;
-					}
 				case ELauncherMode.Repair:
-					{
-						break;
-					}
+				{
+					// Set the mode to the same as it was, but no longer in progress.
+					// The modes which fall to this case are all capable of repairing an incomplete or
+					// broken install on their own.
+					SetLauncherMode(this.Mode, false);
+					break;
+				}
 				default:
-					{
-						SetLauncherMode(ELauncherMode.Repair, false);
-						break;
-					}
+				{
+					// Other cases (such as Launch) will go to the default mode of Repair.
+					SetLauncherMode(ELauncherMode.Repair, false);
+					break;
+				}
 			}
-
-			SetLauncherMode(this.Mode, false);
 		}
 
 		/// <summary>
@@ -659,4 +656,3 @@ namespace Launchpad.Launcher.Interface
 		}
 	}
 }
-
