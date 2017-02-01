@@ -21,6 +21,7 @@
 
 using CommandLine;
 using CommandLine.Text;
+using Launchpad.Common.Enums;
 using Launchpad.Utilities.Utility;
 
 namespace Launchpad.Utilities.Options

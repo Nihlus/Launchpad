@@ -19,6 +19,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Policy;
@@ -40,6 +41,8 @@ namespace Launchpad.Common.Handlers.Manifest
 		private readonly object LaunchpadManifestLock = new object();
 		private readonly object OldLaunchpadManifestLock = new object();
 
+		private readonly object ManifestsLock = new object();
+
 		/// <summary>
 		/// The local base directory of the running assembly. Used to produce relative paths for manifest-related
 		/// files and folders.
@@ -55,6 +58,9 @@ namespace Launchpad.Common.Handlers.Manifest
 		/// The target system for which the handler should retrieve files.
 		/// </summary>
 		private readonly ESystemTarget SystemTarget;
+
+		private readonly Dictionary<EManifestType, List<ManifestEntry>> Manifests = new Dictionary<EManifestType, List<ManifestEntry>>();
+		private readonly Dictionary<EManifestType, List<ManifestEntry>> OldManifests = new Dictionary<EManifestType, List<ManifestEntry>>();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ManifestHandler"/> class.
@@ -72,237 +78,202 @@ namespace Launchpad.Common.Handlers.Manifest
 			ReplaceDeprecatedManifest();
 		}
 
-		private readonly List<ManifestEntry> gameManifest = new List<ManifestEntry>();
 		/// <summary>
-		/// Gets the game manifest. Call sparsely, as it loads the entire manifest from disk each time
-		/// this property is accessed.
+		/// Gets the specifed manifest currently held by the launcher.
 		/// </summary>
-		/// <value>The manifest.</value>
-		public List<ManifestEntry> GameManifest
+		/// <param name="manifestType">The type of manifest to retrieve, that is, the manifest for a specific component.</param>
+		/// <param name="getOldManifest">Whether or not the old manifest or the new manifest should be retrieved.</param>
+		/// <returns>A list of <see cref="ManifestEntry"/> objects.</returns>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="manifestType"/> is not a known value.</exception>
+		public List<ManifestEntry> GetManifest(EManifestType manifestType, bool getOldManifest)
 		{
-			get
+			switch (manifestType)
 			{
-				LoadGameManifest();
-				return this.gameManifest;
-			}
-		}
-
-		private readonly List<ManifestEntry> oldGameManifest = new List<ManifestEntry>();
-		/// <summary>
-		/// Gets the old game manifest. Call sparsely, as it loads the entire manifest from disk each time
-		/// this property is accessed.
-		/// </summary>
-		/// <value>The old manifest.</value>
-		public List<ManifestEntry> OldGameManifest
-		{
-			get
-			{
-				LoadOldGameManifest();
-				return this.oldGameManifest;
-			}
-		}
-
-		private readonly List<ManifestEntry> launchpadManifest = new List<ManifestEntry>();
-		/// <summary>
-		/// Gets the launcher manifest. Call sparsely, as it loads the entire manifest from disk each time
-		/// this property is accessed.
-		/// </summary>
-		/// <value>The manifest.</value>
-		public List<ManifestEntry> LaunchpadManifest
-		{
-			get
-			{
-				LoadLaunchpadManifest();
-				return this.launchpadManifest;
-			}
-		}
-
-		private readonly List<ManifestEntry> oldLaunchpadManifest = new List<ManifestEntry>();
-		/// <summary>
-		/// Gets the old launcher manifest. Call sparsely, as it loads the entire manifest from disk each time
-		/// this property is accessed.
-		/// </summary>
-		/// <value>The old manifest.</value>
-		public List<ManifestEntry> OldLaunchpadManifest
-		{
-			get
-			{
-				LoadOldLaunchpadManifest();
-				return this.oldLaunchpadManifest;
-			}
-		}
-
-		/// <summary>
-		/// Loads the game manifest from disk.
-		/// </summary>
-		private void LoadGameManifest()
-		{
-			try
-			{
-				lock (this.GameManifestLock)
+				case EManifestType.Game:
+				case EManifestType.Launchpad:
 				{
-					if (!File.Exists(GetGameManifestPath()))
+					lock (this.ManifestsLock)
 					{
-						return;
-					}
-
-					this.gameManifest.Clear();
-
-					string[] rawGameManifest = File.ReadAllLines(GetGameManifestPath());
-					foreach (string rawEntry in rawGameManifest)
-					{
-						ManifestEntry newEntry;
-						if (ManifestEntry.TryParse(rawEntry, out newEntry))
+						if (getOldManifest)
 						{
-							this.gameManifest.Add(newEntry);
+							if (this.OldManifests.ContainsKey(manifestType))
+							{
+								return this.OldManifests[manifestType];
+							}
+						}
+						else
+						{
+							if (this.Manifests.ContainsKey(manifestType))
+							{
+								return this.Manifests[manifestType];
+							}
 						}
 					}
+
+					return new List<ManifestEntry>();
 				}
-			}
-			catch (IOException ioex)
-			{
-				Log.Warn("Could not load game manifest (IOException): " + ioex.Message);
+				default:
+				{
+					throw new ArgumentOutOfRangeException(nameof(manifestType), "An unknown manifest type was requested.");
+				}
 			}
 		}
 
 		/// <summary>
-		/// Loads the old game manifest from disk.
+		/// Gets the old specifed manifest currently held by the launcher.
 		/// </summary>
-		private void LoadOldGameManifest()
+		/// <param name="manifestType">The type of manifest to retrieve, that is, the manifest for a specific component.</param>
+		/// <returns>A list of <see cref="ManifestEntry"/> objects.</returns>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="manifestType"/> is not a known value.</exception>
+		public List<ManifestEntry> GetOldManifest(EManifestType manifestType)
 		{
-			try
+			switch (manifestType)
 			{
-				lock (this.OldGameManifestLock)
+				case EManifestType.Game:
+				case EManifestType.Launchpad:
 				{
-					if (!File.Exists(GetOldGameManifestPath()))
+					lock (this.ManifestsLock)
 					{
-						return;
-					}
-
-					this.oldGameManifest.Clear();
-
-					string[] rawOldGameManifest = File.ReadAllLines(GetOldGameManifestPath());
-					foreach (string rawEntry in rawOldGameManifest)
-					{
-						ManifestEntry newEntry;
-						if (ManifestEntry.TryParse(rawEntry, out newEntry))
+						if (this.OldManifests.ContainsKey(manifestType))
 						{
-							this.oldGameManifest.Add(newEntry);
+							return this.OldManifests[manifestType];
 						}
 					}
+
+					return new List<ManifestEntry>();
 				}
-			}
-			catch (IOException ioex)
-			{
-				Log.Warn("Could not load old game manifest (IOException): " + ioex.Message);
-			}
-		}
-
-
-		/// <summary>
-		/// Loads the launchpad manifest from disk.
-		/// </summary>
-		private void LoadLaunchpadManifest()
-		{
-			try
-			{
-				lock (this.LaunchpadManifestLock)
+				default:
 				{
-					if (!File.Exists(GetLaunchpadManifestPath()))
-					{
-						return;
-					}
-
-					this.launchpadManifest.Clear();
-
-					string[] rawLaunchpadManifest = File.ReadAllLines(GetLaunchpadManifestPath());
-					foreach (string rawEntry in rawLaunchpadManifest)
-					{
-						ManifestEntry newEntry;
-						if (ManifestEntry.TryParse(rawEntry, out newEntry))
-						{
-							this.launchpadManifest.Add(newEntry);
-						}
-					}
+					throw new ArgumentOutOfRangeException(nameof(manifestType), "An unknown manifest type was requested.");
 				}
-			}
-			catch (IOException ioex)
-			{
-				Log.Warn("Could not load launcher manifest (IOException): " + ioex.Message);
 			}
 		}
 
 		/// <summary>
-		/// Loads the old launchpad manifest from disk.
+		/// Reloads all manifests of the specifed type from disk.
 		/// </summary>
-		private void LoadOldLaunchpadManifest()
+		/// <param name="manifestType">The type of manifest to reload.</param>
+		public void ReloadManifests(EManifestType manifestType)
 		{
-			try
+			lock (this.ManifestsLock)
 			{
-				lock (this.OldLaunchpadManifestLock)
+				string newManifestPath = GetManifestPath(manifestType, false);
+				string oldManifestPath = GetManifestPath(manifestType, true);
+
+				// Reload new manifests
+				try
 				{
-					if (!File.Exists(GetOldGameManifestPath()))
+					if (!File.Exists(newManifestPath))
 					{
-						return;
+						this.Manifests.AddOrUpdate(manifestType, null);
 					}
 
-					this.oldLaunchpadManifest.Clear();
-
-					string[] rawOldLaunchpadManifest = File.ReadAllLines(GetOldGameManifestPath());
-					foreach (string rawEntry in rawOldLaunchpadManifest)
-					{
-						ManifestEntry newEntry;
-						if (ManifestEntry.TryParse(rawEntry, out newEntry))
-						{
-							this.oldLaunchpadManifest.Add(newEntry);
-						}
-					}
+					this.Manifests.AddOrUpdate(manifestType, LoadManifest(newManifestPath));
 				}
-			}
-			catch (IOException ioex)
-			{
-				Log.Warn("Could not load old launcher manifest (IOException): " + ioex.Message);
+				catch (IOException ioex)
+				{
+					Log.Warn($"Could not load manifest of type {manifestType} (IOException): " + ioex.Message);
+				}
+
+				// Reload old manifests
+				try
+				{
+					if (!File.Exists(oldManifestPath))
+					{
+						this.OldManifests.AddOrUpdate(manifestType, null);
+					}
+
+					this.OldManifests.AddOrUpdate(manifestType, LoadManifest(oldManifestPath));
+				}
+				catch (IOException ioex)
+				{
+					Log.Warn($"Could not load old manifest of type {manifestType} (IOException): " + ioex.Message);
+				}
 			}
 		}
 
 		/// <summary>
-		/// Gets the game manifests' path on disk.
+		/// Loads a manifest from a file on disk.
 		/// </summary>
-		/// <returns>The game manifest path.</returns>
-		public string GetGameManifestPath()
+		/// <param name="manifestPath">The path to a manifest file.</param>
+		/// <returns>A list of <see cref="ManifestEntry"/> objects.</returns>
+		private static List<ManifestEntry> LoadManifest(string manifestPath)
 		{
-			string manifestPath = $@"{this.LocalBaseDirectory}GameManifest.txt";
+			using (Stream fileStream = File.OpenRead(manifestPath))
+			{
+				return LoadManifest(fileStream);
+			}
+		}
+
+		/// <summary>
+		/// Loads a manifest from a <see cref="Stream"/>.
+		/// </summary>
+		/// <param name="manifestStream">A stream containing a manifest."/></param>
+		/// <returns>A list of <see cref="ManifestEntry"/> objects.</returns>
+		private static List<ManifestEntry> LoadManifest(Stream manifestStream)
+		{
+			List<string> rawManifest = new List<string>();
+			using (StreamReader sr = new StreamReader(manifestStream))
+			{
+				while (sr.BaseStream.Position < sr.BaseStream.Length)
+				{
+					rawManifest.Add(sr.ReadLine());
+				}
+			}
+
+			List<ManifestEntry> manifest = new List<ManifestEntry>();
+			foreach (string rawEntry in rawManifest)
+			{
+				ManifestEntry newEntry;
+				if (ManifestEntry.TryParse(rawEntry, out newEntry))
+				{
+					manifest.Add(newEntry);
+				}
+			}
+
+			return manifest;
+		}
+
+
+		/// <summary>
+		/// Gets the specified manifest's path on disk. The presence of the manifest is not guaranteed at
+		/// this point.
+		/// </summary>
+		/// <param name="manifestType">The type of manifest to get the path to.</param>
+		/// <param name="getOldManifestPath">Whether or not the path should specify an old manifest.</param>
+		/// <returns>A fully qualified path to where a manifest should be.</returns>
+		public string GetManifestPath(EManifestType manifestType, bool getOldManifestPath)
+		{
+			string manifestPath = $@"{this.LocalBaseDirectory}{manifestType}Manifest.txt";
+
+			if (getOldManifestPath)
+			{
+				manifestPath += ".old";
+			}
+
 			return manifestPath;
 		}
 
 		/// <summary>
-		/// Gets the old game manifests' path on disk.
+		/// Gets the manifest URL for the specified manifest type.
 		/// </summary>
-		/// <returns>The old game manifest's path.</returns>
-		public string GetOldGameManifestPath()
+		/// <returns>The game manifest URL.</returns>
+		public string GetManifestURL(EManifestType manifestType)
 		{
-			string oldManifestPath = $@"{this.LocalBaseDirectory}GameManifest.txt.old";
-			return oldManifestPath;
+			string manifestURL = $"{this.RemoteURL}/game/{this.SystemTarget}/{manifestType}Manifest.txt";
+
+			return manifestURL;
 		}
 
 		/// <summary>
-		/// Gets the launchpad manifests' path on disk.
+		/// Gets the manifest URL for the specified manifest type.
 		/// </summary>
-		/// <returns>The launchpad manifest path.</returns>
-		public string GetLaunchpadManifestPath()
+		/// <returns>The game manifest URL.</returns>
+		public string GetManifestChecksumURL(EManifestType manifestType)
 		{
-			string manifestPath = $@"{this.LocalBaseDirectory}LaunchpadManifest.txt";
-			return manifestPath;
-		}
+			string manifestURL = $"{this.RemoteURL}/game/{this.SystemTarget}/{manifestType}Manifest.checksum";
 
-		/// <summary>
-		/// Gets the old launchpad manifests' path on disk.
-		/// </summary>
-		/// <returns>The old launchpad manifest's path.</returns>
-		public string GetOldLaunchpadManifestPath()
-		{
-			string oldManifestPath = $@"{this.LocalBaseDirectory}LaunchpadManifest.txt.old";
-			return oldManifestPath;
+			return manifestURL;
 		}
 
 		/// <summary>
@@ -326,50 +297,6 @@ namespace Launchpad.Common.Handlers.Manifest
 		}
 
 		/// <summary>
-		/// Gets the game manifest URL.
-		/// </summary>
-		/// <returns>The game manifest URL.</returns>
-		public string GetGameManifestURL()
-		{
-			string manifestURL = $"{this.RemoteURL}/game/{this.SystemTarget}/GameManifest.txt";
-
-			return manifestURL;
-		}
-
-		/// <summary>
-		/// Gets the game manifest checksum URL.
-		/// </summary>
-		/// <returns>The game manifest checksum URL.</returns>
-		public string GetGameManifestChecksumURL()
-		{
-			string manifestChecksumURL = $"{this.RemoteURL}/game/{this.SystemTarget}/GameManifest.checksum";
-
-			return manifestChecksumURL;
-		}
-
-		/// <summary>
-		/// Gets the launchpad manifest URL.
-		/// </summary>
-		/// <returns>The launchpad manifest URL.</returns>
-		public string GetLaunchpadManifestURL()
-		{
-			string manifestURL = $"{this.RemoteURL}/launcher/LaunchpadManifest.txt";
-
-			return manifestURL;
-		}
-
-		/// <summary>
-		/// Gets the launchpad manifest checksum URL.
-		/// </summary>
-		/// <returns>The launchpad manifest checksum URL.</returns>
-		public string GetLaunchpadManifestChecksumURL()
-		{
-			string manifestChecksumURL = $"{this.RemoteURL}/launcher/LaunchpadManifest.checksum";
-
-			return manifestChecksumURL;
-		}
-
-		/// <summary>
 		/// Replaces the deprecated manifest, moving LauncherManifest to GameManifest (if present).
 		/// This function should only be called once per launcher start.
 		/// </summary>
@@ -380,7 +307,7 @@ namespace Launchpad.Common.Handlers.Manifest
 				Log.Info("Found deprecated game manifest in install folder. Moving to new filename.");
 				lock (this.GameManifestLock)
 				{
-					File.Move(GetDeprecatedGameManifestPath(), GetGameManifestPath());
+					File.Move(GetDeprecatedGameManifestPath(), GetManifestPath(EManifestType.Game, false));
 				}
 			}
 
@@ -389,7 +316,7 @@ namespace Launchpad.Common.Handlers.Manifest
 				Log.Info("Found deprecated old game manifest in install folder. Moving to new filename.");
 				lock (this.OldGameManifestLock)
 				{
-					File.Move(GetDeprecatedOldGameManifestPath(), GetOldGameManifestPath());
+					File.Move(GetDeprecatedOldGameManifestPath(), GetManifestPath(EManifestType.Game, true));
 				}
 			}
 		}

@@ -19,7 +19,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace Launchpad.Utilities.Utility
+namespace Launchpad.Common.Enums
 {
 	/// <summary>
 	/// Enum defining the type of manifest.
@@ -29,16 +29,16 @@ namespace Launchpad.Utilities.Utility
 		/// <summary>
 		/// An unknown manifest.
 		/// </summary>
-		Unknown,
+		Unknown 			= 0,
 
 		/// <summary>
 		/// A launcher manifest.
 		/// </summary>
-		Launchpad,
+		Launchpad 			= 1,
 
 		/// <summary>
 		/// A game manifest.
 		/// </summary>
-		Game
+		Game 				= 2
 	}
 }

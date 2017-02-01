@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\EManifestType.cs" />
     <Compile Include="Enums\ESystemTarget.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Handlers\Manifest\ManifestEntry.cs" />

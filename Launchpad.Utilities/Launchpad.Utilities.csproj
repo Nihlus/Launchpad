@@ -92,7 +92,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Interface\MainWindow.cs" />
     <Compile Include="Handlers\ManifestGenerationHandler.cs" />
-    <Compile Include="Utility\EManifestType.cs" />
     <Compile Include="Utility\Events\Arguments.cs" />
     <Compile Include="Utility\Events\Delegates.cs" />
     <Compile Include="gtk-gui\generated.cs" />

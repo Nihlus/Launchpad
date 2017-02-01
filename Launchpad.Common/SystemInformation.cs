@@ -4,7 +4,7 @@
 //  Author:
 //       Jarl Gullberg <jarl.gullberg@gmail.com>
 //
-//  Copyright (c) 2016 Jarl Gullberg
+//  Copyright (c) 2017 Jarl Gullberg
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -24,9 +24,7 @@ using System;
 namespace Launchpad.Common
 {
 	/// <summary>
-	/// This class handles all the launcher's checks, returning bools for each function.
-	/// Since this class is meant to be used in both the Forms UI and the GTK UI,
-	/// there must be no useage of UI code in this class. Keep it clean!
+	/// This class handles any system-related runtime checks.
 	/// </summary>
 	public static class SystemInformation
 	{
