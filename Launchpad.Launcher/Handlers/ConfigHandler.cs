@@ -37,6 +37,8 @@ using Launchpad.Launcher.Handlers.Protocols.Manifest;
 namespace Launchpad.Launcher.Handlers
 {
 	/// <summary>
+	/// TODO: Change to read-once config initialization instead of rereading the whole config each method call
+	/// TODO: Allow for creation with a provided config data block
 	/// Config handler. This class handles reading and writing to the launcher's configuration.
 	/// Read and write operations are synchronized by locks, so it should be threadsafe.
 	/// This is a singleton class, and it should always be accessed through <see cref="Instance"/>.

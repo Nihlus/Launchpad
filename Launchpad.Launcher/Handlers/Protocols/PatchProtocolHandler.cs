@@ -54,6 +54,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		}
 
 		/// <summary>
+		/// TODO: Move to constructor
 		/// The config handler reference.
 		/// </summary>
 		protected readonly ConfigHandler Config = ConfigHandler.Instance;
