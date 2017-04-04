@@ -196,7 +196,7 @@ namespace Launchpad.Tests.Common
 		public void TestLoadManifestUnixStyle()
 		{
 			List<ManifestEntry> loadedEntries;
-			using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(SampleManifestWindowsStyle)))
+			using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(SampleManifestUnixStyle)))
 			{
 				loadedEntries = ManifestHandler.LoadManifest(ms);
 			}
