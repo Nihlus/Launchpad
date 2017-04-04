@@ -19,6 +19,9 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using Launchpad.Common.Handlers.Manifest;
 using NUnit.Framework;
 
@@ -64,6 +67,39 @@ namespace Launchpad.Tests.Common
 		};
 
 		private const string ExpectedOutputString = ValidInput;
+
+		private const string SampleManifestWindowsStyle =
+			"\\GameVersion.txt:7D23FF901039AEF6293954D33D23C066:5\r\n" +
+			"\\MyGame.exe:D41D8CD98F00B204E9800998ECF8427E:0\r\n" +
+			"\\MyGame.txt:170606695BC36CDC3455E29ADBEE0D40:28\r\n";
+
+		private const string SampleManifestUnixStyle =
+			"/GameVersion.txt:7D23FF901039AEF6293954D33D23C066:5\n" +
+			"/MyGame.exe:D41D8CD98F00B204E9800998ECF8427E:0\n" +
+			"/MyGame.txt:170606695BC36CDC3455E29ADBEE0D40:28\n";
+
+		private static readonly List<ManifestEntry> SampleManifestEntries = new List<ManifestEntry>
+		{
+			new ManifestEntry
+			{
+				Hash = "7D23FF901039AEF6293954D33D23C066",
+				RelativePath = "/GameVersion.txt",
+				Size = 5
+			},
+			new ManifestEntry
+			{
+				Hash = "D41D8CD98F00B204E9800998ECF8427E",
+				RelativePath = "/MyGame.exe",
+				Size = 0
+			},
+			new ManifestEntry
+			{
+				Hash = "170606695BC36CDC3455E29ADBEE0D40",
+				RelativePath = "/MyGame.txt",
+				Size = 28
+			}
+		};
+
 
 		[Test]
 		public void TestCreateFromValidInput()
@@ -142,6 +178,30 @@ namespace Launchpad.Tests.Common
 		public void TestObjectsNotEqual()
 		{
 			Assert.That(!this.ValidObject1.Equals(this.ValidObject2));
+		}
+
+		[Test]
+		public void TestLoadManifestWindowsStyle()
+		{
+			List<ManifestEntry> loadedEntries;
+			using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(SampleManifestWindowsStyle)))
+			{
+				loadedEntries = ManifestHandler.LoadManifest(ms);
+			}
+
+			Assert.That(loadedEntries, Is.EquivalentTo(SampleManifestEntries));
+		}
+
+		[Test]
+		public void TestLoadManifestUnixStyle()
+		{
+			List<ManifestEntry> loadedEntries;
+			using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(SampleManifestWindowsStyle)))
+			{
+				loadedEntries = ManifestHandler.LoadManifest(ms);
+			}
+
+			Assert.That(loadedEntries, Is.EquivalentTo(SampleManifestEntries));
 		}
 	}
 }

@@ -197,7 +197,7 @@ namespace Launchpad.Common.Handlers.Manifest
 		/// </summary>
 		/// <param name="manifestPath">The path to a manifest file.</param>
 		/// <returns>A list of <see cref="ManifestEntry"/> objects.</returns>
-		private static List<ManifestEntry> LoadManifest(string manifestPath)
+		public static List<ManifestEntry> LoadManifest(string manifestPath)
 		{
 			using (Stream fileStream = File.OpenRead(manifestPath))
 			{
@@ -210,14 +210,15 @@ namespace Launchpad.Common.Handlers.Manifest
 		/// </summary>
 		/// <param name="manifestStream">A stream containing a manifest."/></param>
 		/// <returns>A list of <see cref="ManifestEntry"/> objects.</returns>
-		private static List<ManifestEntry> LoadManifest(Stream manifestStream)
+		public static List<ManifestEntry> LoadManifest(Stream manifestStream)
 		{
 			List<string> rawManifest = new List<string>();
 			using (StreamReader sr = new StreamReader(manifestStream))
 			{
-				while (sr.BaseStream.Position < sr.BaseStream.Length)
+				string line;
+				while ((line = sr.ReadLine()) != null)
 				{
-					rawManifest.Add(sr.ReadLine());
+					rawManifest.Add(line);
 				}
 			}
 
