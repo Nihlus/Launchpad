@@ -261,7 +261,7 @@ namespace Launchpad.Common.Handlers.Manifest
 		/// <returns>The game manifest URL.</returns>
 		public string GetManifestURL(EManifestType manifestType)
 		{
-			string manifestURL = $"{this.RemoteURL}/game/{this.SystemTarget}/{manifestType}Manifest.txt";
+			string manifestURL = $"{this.RemoteURL.Value}/game/{this.SystemTarget}/{manifestType}Manifest.txt";
 
 			return manifestURL;
 		}
@@ -272,7 +272,7 @@ namespace Launchpad.Common.Handlers.Manifest
 		/// <returns>The game manifest URL.</returns>
 		public string GetManifestChecksumURL(EManifestType manifestType)
 		{
-			string manifestURL = $"{this.RemoteURL}/game/{this.SystemTarget}/{manifestType}Manifest.checksum";
+			string manifestURL = $"{this.RemoteURL.Value}/game/{this.SystemTarget}/{manifestType}Manifest.checksum";
 
 			return manifestURL;
 		}
