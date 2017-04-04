@@ -183,27 +183,27 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 		protected void OnModuleDownloadProgressChanged()
 		{
-			ModuleDownloadProgressChanged?.Invoke(this, this.ModuleDownloadProgressArgs);
+			this.ModuleDownloadProgressChanged?.Invoke(this, this.ModuleDownloadProgressArgs);
 		}
 
 		protected void OnModuleVerifyProgressChanged()
 		{
-			ModuleVerifyProgressChanged?.Invoke(this, this.ModuleVerifyProgressArgs);
+			this.ModuleVerifyProgressChanged?.Invoke(this, this.ModuleVerifyProgressArgs);
 		}
 
 		protected void OnModuleUpdateProgressChanged()
 		{
-			ModuleUpdateProgressChanged?.Invoke(this, this.ModuleUpdateProgressArgs);
+			this.ModuleUpdateProgressChanged?.Invoke(this, this.ModuleUpdateProgressArgs);
 		}
 
 		protected void OnModuleInstallationFinished()
 		{
-			ModuleInstallationFinished?.Invoke(this, this.ModuleInstallFinishedArgs);
+			this.ModuleInstallationFinished?.Invoke(this, this.ModuleInstallFinishedArgs);
 		}
 
 		protected void OnModuleInstallationFailed()
 		{
-			ModuleInstallationFailed?.Invoke(this, this.ModuleInstallFailedArgs);
+			this.ModuleInstallationFailed?.Invoke(this, this.ModuleInstallFailedArgs);
 		}
 	}
 

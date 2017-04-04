@@ -25,7 +25,6 @@ using System.Linq;
 using Gtk;
 using Launchpad.Common.Enums;
 using Launchpad.Utilities.Handlers;
-using Launchpad.Utilities.Utility;
 using Launchpad.Utilities.Utility.Events;
 using NGettext;
 using SysPath = System.IO.Path;

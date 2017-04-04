@@ -23,7 +23,6 @@ using System;
 using System.IO;
 using Gtk;
 using Launchpad.Utilities.Handlers;
-using Launchpad.Utilities.Utility;
 using Launchpad.Utilities.Utility.Events;
 using Launchpad.Utilities.Interface;
 using Launchpad.Utilities.Options;

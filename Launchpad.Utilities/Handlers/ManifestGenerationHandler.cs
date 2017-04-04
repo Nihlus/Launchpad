@@ -28,7 +28,6 @@ using System.Linq;
 using Launchpad.Common.Enums;
 using Launchpad.Common.Handlers;
 using Launchpad.Common.Handlers.Manifest;
-using Launchpad.Utilities.Utility;
 
 namespace Launchpad.Utilities.Handlers
 {
@@ -151,12 +150,12 @@ namespace Launchpad.Utilities.Handlers
 
 		private void OnManifestGenerationProgressChanged()
 		{
-			ManifestGenerationProgressChanged?.Invoke(this, this.GenerationProgressArgs);
+			this.ManifestGenerationProgressChanged?.Invoke(this, this.GenerationProgressArgs);
 		}
 
 		private void OnManifestGenerationFinished()
 		{
-			ManifestGenerationFinished?.Invoke(this, EventArgs.Empty);
+			this.ManifestGenerationFinished?.Invoke(this, EventArgs.Empty);
 		}
 	}
 }

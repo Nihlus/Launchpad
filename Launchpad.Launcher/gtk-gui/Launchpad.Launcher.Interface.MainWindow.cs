@@ -4,7 +4,6 @@
 using Gdk;
 using Gtk;
 using Launchpad.Common;
-using Launchpad.Launcher.Handlers;
 using Stetic;
 using Image = Gtk.Image;
 
@@ -295,7 +294,7 @@ namespace Launchpad.Launcher.Interface
 
 			this.primaryButton.HasDefault = true;
 			Show ();
-			DeleteEvent += OnDeleteEvent;
+			this.DeleteEvent += OnDeleteEvent;
 			this.repairGameAction.Activated += OnRepairGameActionActivated;
 			this.reinstallGameAction.Activated += OnReinstallGameActionActivated;
 			this.primaryButton.Clicked += OnPrimaryButtonClicked;

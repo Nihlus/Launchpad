@@ -249,17 +249,17 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		private void OnChangelogDownloadFinished()
 		{
-			ChangelogDownloadFinished?.Invoke(this, this.ChangelogDownloadFinishedArgs);
+			this.ChangelogDownloadFinished?.Invoke(this, this.ChangelogDownloadFinishedArgs);
 		}
 
 		private void OnLauncherDownloadProgressChanged(object sender, ModuleProgressChangedArgs e)
 		{
-			LauncherDownloadProgressChanged?.Invoke(sender, e);
+			this.LauncherDownloadProgressChanged?.Invoke(sender, e);
 		}
 
 		private void OnLauncherDownloadFinished(object sender, ModuleInstallationFinishedArgs e)
 		{
-			LauncherDownloadFinished?.Invoke(sender, e);
+			this.LauncherDownloadFinished?.Invoke(sender, e);
 		}
 	}
 

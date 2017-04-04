@@ -239,7 +239,7 @@ namespace Launchpad.Utilities.Interface
 
 			Show ();
 
-			DeleteEvent += OnDeleteEvent;
+			this.DeleteEvent += OnDeleteEvent;
 			this.generateLaunchpadManifestButton.Clicked += OnGenerateLaunchpadManifestButtonClicked;
 			this.generateGameManifestButton.Clicked += OnGenerateGameManifestButtonClicked;
 		}
