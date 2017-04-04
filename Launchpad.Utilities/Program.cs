@@ -28,6 +28,7 @@ using Launchpad.Utilities.Utility.Events;
 using Launchpad.Utilities.Interface;
 using Launchpad.Utilities.Options;
 using log4net;
+using Launchpad.Common.Enums;
 
 [assembly: CLSCompliant(true)]
 namespace Launchpad.Utilities

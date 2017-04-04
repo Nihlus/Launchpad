@@ -23,6 +23,7 @@ using System;
 using System.IO;
 using System.Linq;
 using Gtk;
+using Launchpad.Common.Enums;
 using Launchpad.Utilities.Handlers;
 using Launchpad.Utilities.Utility;
 using Launchpad.Utilities.Utility.Events;

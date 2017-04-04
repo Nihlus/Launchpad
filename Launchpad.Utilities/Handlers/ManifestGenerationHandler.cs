@@ -25,6 +25,7 @@ using System.Threading;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using Launchpad.Common.Enums;
 using Launchpad.Common.Handlers;
 using Launchpad.Common.Handlers.Manifest;
 using Launchpad.Utilities.Utility;
