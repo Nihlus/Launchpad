@@ -110,7 +110,7 @@ namespace Launchpad.Common.Handlers.Manifest
 						}
 					}
 
-					return new List<ManifestEntry>();
+					return null;
 				}
 				default:
 				{

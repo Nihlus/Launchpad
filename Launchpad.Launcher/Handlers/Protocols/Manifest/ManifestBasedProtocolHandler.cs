@@ -142,23 +142,33 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				}
 			}
 
+			// Check to see if we have valid manifests
+			if (manifest == null)
+			{
+				Log.Error($"No manifest was found when updating the module \"{module}\". The server files may be inaccessible or missing.");
+				OnModuleInstallationFailed();
+				return;
+			}
+
 			// This dictionary holds a list of new entries and their equivalents from the old manifest. It is used
 			// to determine whether or not a file is partial, or merely old yet smaller.
 			Dictionary<ManifestEntry, ManifestEntry> oldEntriesBeingReplaced = new Dictionary<ManifestEntry, ManifestEntry>();
 			List<ManifestEntry> filesRequiringUpdate = new List<ManifestEntry>();
 			foreach (ManifestEntry fileEntry in manifest)
 			{
-				if (!oldManifest.Contains(fileEntry))
+				filesRequiringUpdate.Add(fileEntry);
+				if (oldManifest != null)
 				{
-					filesRequiringUpdate.Add(fileEntry);
-
-					// See if there is an old entry which matches the new one.
-					ManifestEntry matchingOldEntry =
-						oldManifest.FirstOrDefault(oldEntry => oldEntry.RelativePath == fileEntry.RelativePath);
-
-					if (matchingOldEntry != null)
+					if (!oldManifest.Contains(fileEntry))
 					{
-						oldEntriesBeingReplaced.Add(fileEntry, matchingOldEntry);
+						// See if there is an old entry which matches the new one.
+						ManifestEntry matchingOldEntry =
+							oldManifest.FirstOrDefault(oldEntry => oldEntry.RelativePath == fileEntry.RelativePath);
+
+						if (matchingOldEntry != null)
+						{
+							oldEntriesBeingReplaced.Add(fileEntry, matchingOldEntry);
+						}
 					}
 				}
 			}
@@ -190,6 +200,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			{
 				Log.Warn($"Updating of {module} files failed (IOException): " + ioex.Message);
 				OnModuleInstallationFailed();
+				return;
 			}
 
 			OnModuleInstallationFinished();
@@ -202,6 +213,13 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		{
 			List<ManifestEntry> manifest = this.FileManifestHandler.GetManifest((EManifestType) module, false);
 			List<ManifestEntry> brokenFiles = new List<ManifestEntry>();
+
+			if (manifest == null)
+			{
+				Log.Error($"No manifest was found when verifying the module \"{module}\". The server files may be inaccessible or missing.");
+				OnModuleInstallationFailed();
+				return;
+			}
 
 			try
 			{
@@ -289,6 +307,13 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 					throw new ArgumentOutOfRangeException(nameof(module), module,
 						"An invalid module value was passed to DownloadModule.");
 				}
+			}
+
+			if (moduleManifest == null)
+			{
+				Log.Error($"No manifest was found when installing the module \"{module}\". The server files may be inaccessible or missing.");
+				OnModuleInstallationFailed();
+				return;
 			}
 
 			// In order to be able to resume downloading, we check if there is an entry
