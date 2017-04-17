@@ -21,6 +21,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Security.Policy;
 using log4net;
@@ -79,7 +80,8 @@ namespace Launchpad.Common.Handlers.Manifest
 		}
 
 		/// <summary>
-		/// Gets the specifed manifest currently held by the launcher.
+		/// Gets the specifed manifest currently held by the launcher. The return value of this method may be null if no
+		/// manifest could be retrieved.
 		/// </summary>
 		/// <param name="manifestType">The type of manifest to retrieve, that is, the manifest for a specific component.</param>
 		/// <param name="getOldManifest">Whether or not the old manifest or the new manifest should be retrieved.</param>
@@ -261,9 +263,12 @@ namespace Launchpad.Common.Handlers.Manifest
 		/// <returns>The game manifest URL.</returns>
 		public string GetManifestURL(EManifestType manifestType)
 		{
-			string manifestURL = $"{this.RemoteURL.Value}/game/{this.SystemTarget}/{manifestType}Manifest.txt";
+			if (manifestType == EManifestType.Launchpad)
+			{
+				return $"{this.RemoteURL.Value}/launcher/{manifestType}Manifest.txt";
+			}
 
-			return manifestURL;
+			return $"{this.RemoteURL.Value}/game/{this.SystemTarget}/{manifestType}Manifest.txt";
 		}
 
 		/// <summary>
@@ -272,9 +277,12 @@ namespace Launchpad.Common.Handlers.Manifest
 		/// <returns>The game manifest URL.</returns>
 		public string GetManifestChecksumURL(EManifestType manifestType)
 		{
-			string manifestURL = $"{this.RemoteURL.Value}/game/{this.SystemTarget}/{manifestType}Manifest.checksum";
+			if (manifestType == EManifestType.Launchpad)
+			{
+				return $"{this.RemoteURL.Value}/launcher/{manifestType}Manifest.checksum";
+			}
 
-			return manifestURL;
+			return $"{this.RemoteURL.Value}/game/{this.SystemTarget}/{manifestType}Manifest.checksum";
 		}
 
 		/// <summary>
