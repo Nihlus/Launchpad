@@ -21,7 +21,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.IO;
 using System.Security.Policy;
 using log4net;
@@ -38,9 +37,6 @@ namespace Launchpad.Common.Handlers.Manifest
 
 		private readonly object GameManifestLock = new object();
 		private readonly object OldGameManifestLock = new object();
-
-		private readonly object LaunchpadManifestLock = new object();
-		private readonly object OldLaunchpadManifestLock = new object();
 
 		private readonly object ManifestsLock = new object();
 
@@ -113,36 +109,6 @@ namespace Launchpad.Common.Handlers.Manifest
 					}
 
 					return null;
-				}
-				default:
-				{
-					throw new ArgumentOutOfRangeException(nameof(manifestType), "An unknown manifest type was requested.");
-				}
-			}
-		}
-
-		/// <summary>
-		/// Gets the old specifed manifest currently held by the launcher.
-		/// </summary>
-		/// <param name="manifestType">The type of manifest to retrieve, that is, the manifest for a specific component.</param>
-		/// <returns>A list of <see cref="ManifestEntry"/> objects.</returns>
-		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="manifestType"/> is not a known value.</exception>
-		public List<ManifestEntry> GetOldManifest(EManifestType manifestType)
-		{
-			switch (manifestType)
-			{
-				case EManifestType.Game:
-				case EManifestType.Launchpad:
-				{
-					lock (this.ManifestsLock)
-					{
-						if (this.OldManifests.ContainsKey(manifestType))
-						{
-							return this.OldManifests[manifestType];
-						}
-					}
-
-					return new List<ManifestEntry>();
 				}
 				default:
 				{
