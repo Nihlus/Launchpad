@@ -38,12 +38,12 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 		/// <summary>
 		/// The WinForms browser for Windows.
 		/// </summary>
-		private readonly WindowsBrowser windowsBrowser;
+		private readonly WindowsBrowser WindowsBrowser;
 
 		/// <summary>
 		/// The webkit browser for Mac and Linux.
 		/// </summary>
-		private readonly WebView unixBrowser;
+		private readonly WebView UnixBrowser;
 
 		/// <summary>
 		/// Whether or not the changelog is currently navigating to a new page from code.
@@ -68,16 +68,16 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 		{
 			if (!SystemInformation.IsRunningOnUnix())
 			{
-				this.windowsBrowser = new WindowsBrowser(parentContainer);
-				this.WidgetHandle = this.windowsBrowser.WidgetHandle;
+				this.WindowsBrowser = new WindowsBrowser(parentContainer);
+				this.WidgetHandle = this.WindowsBrowser.WidgetHandle;
 
-				this.windowsBrowser.Browser.Navigating += OnWindowsBrowserNavigating;
+				this.WindowsBrowser.Browser.Navigating += OnWindowsBrowserNavigating;
 			}
 			else
 			{
-				this.unixBrowser = new WebView();
-				this.WidgetHandle = this.unixBrowser;
-				this.unixBrowser.NavigationRequested += OnUnixBrowserNavigating;
+				this.UnixBrowser = new WebView();
+				this.WidgetHandle = this.UnixBrowser;
+				this.UnixBrowser.NavigationRequested += OnUnixBrowserNavigating;
 
 				parentContainer.Add(this.WidgetHandle);
 			}
@@ -91,7 +91,7 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 		{
 			if (!this.IsNavigatingFromCode)
 			{
-				this.unixBrowser.StopLoading();
+				this.UnixBrowser.StopLoading();
 				args.RetVal = false;
 
 				Process.Start(args.Request.Uri);
@@ -127,8 +127,8 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 		{
 			this.IsNavigatingFromCode = true;
 
-			this.windowsBrowser?.Navigate(url);
-			this.unixBrowser?.Open(url);
+			this.WindowsBrowser?.Navigate(url);
+			this.UnixBrowser?.Open(url);
 		}
 
 		/// <summary>
@@ -138,8 +138,8 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 		/// <param name="url">The base URL for the page source.</param>
 		public void LoadHTML(string html, string url)
 		{
-			this.windowsBrowser?.LoadHTML(html);
-			this.unixBrowser?.LoadHtmlString(html, url);
+			this.WindowsBrowser?.LoadHTML(html);
+			this.UnixBrowser?.LoadHtmlString(html, url);
 		}
 
 		/// <summary>
@@ -147,8 +147,8 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 		/// </summary>
 		public void Dispose()
 		{
-			this.windowsBrowser?.Dispose();
-			this.unixBrowser?.Dispose();
+			this.WindowsBrowser?.Dispose();
+			this.UnixBrowser?.Dispose();
 		}
 	}
 }
