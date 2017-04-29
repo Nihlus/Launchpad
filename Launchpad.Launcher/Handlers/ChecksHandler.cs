@@ -81,7 +81,7 @@ namespace Launchpad.Launcher.Handlers
 			if (!bHasGameVersion && bHasGameDirectory)
 			{
 				Log.Warn("No GameVersion.txt file was found in the installation directory.\n" +
-				         "This may be due to a download error, or the develop may not have included one.\n" +
+				         "This may be due to a download error, or the developer may not have included one.\n" +
 				         "Without it, the game cannot be considered fully installed.\n" +
 				         "If you are the developer of this game, add one to your game files with your desired version in it.");
 			}

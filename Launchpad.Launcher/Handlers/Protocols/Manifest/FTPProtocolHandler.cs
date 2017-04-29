@@ -52,7 +52,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		{
 			Log.Info("Pinging remote patching server to determine if we can connect to it.");
 
-			bool bCanConnectToServer;
+			bool bCanConnectToServer = false;
 
 			string url = this.Config.GetBaseFTPUrl();
 			string username = this.Config.GetRemoteUsername();
@@ -67,14 +67,17 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 					return false;
 				}
 
-				plainRequest.Method = WebRequestMethods.Ftp.ListDirectory;
+				plainRequest.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
 				plainRequest.Timeout = 4000;
 
 				try
 				{
-					using (WebResponse response = plainRequest.GetResponse())
+					using (FtpWebResponse response = (FtpWebResponse) plainRequest.GetResponse())
 					{
-						bCanConnectToServer = true;
+						if (response.StatusCode == FtpStatusCode.OpeningData)
+						{
+							bCanConnectToServer = true;
+						}
 					}
 				}
 				catch (WebException wex)

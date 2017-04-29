@@ -50,7 +50,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		{
 			Log.Info("Pinging remote patching server to determine if we can connect to it.");
 
-			bool bCanConnectToServer;
+			bool bCanConnectToServer = false;
 
 			try
 			{
@@ -66,9 +66,12 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
 				try
 				{
-					using (WebResponse response = plainRequest.GetResponse())
+					using (HttpWebResponse response = (HttpWebResponse) plainRequest.GetResponse())
 					{
-						bCanConnectToServer = true;
+						if (response.StatusCode == HttpStatusCode.OK)
+						{
+							bCanConnectToServer = true;
+						}
 					}
 				}
 				catch (WebException wex)

@@ -857,7 +857,7 @@ namespace Launchpad.Launcher.Handlers
 					}
 					catch (IOException ioex)
 					{
-						Log.Warn("Could not setthe game name (IOException): " + ioex.Message);
+						Log.Warn("Could not set the game name (IOException): " + ioex.Message);
 					}
 				}
 			}
@@ -963,7 +963,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// Sets the username for the remote service.
 		/// </summary>
-		/// <param name="username">The remote username..</param>
+		/// <param name="username">The remote username.</param>
 		public void SetRemoteUsername(string username)
 		{
 			lock (this.ReadLock)
