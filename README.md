@@ -1,7 +1,7 @@
 Launchpad
 =========
 
-An open-souce launcher for your games.
+An open-source launcher for your games.
 Launchpad was originally made for Unreal Engine 4, but supports arbitrary software and games. 
 
 [![Build Status](https://travis-ci.org/Nihlus/Launchpad.svg?branch=master)](https://travis-ci.org/Nihlus/Launchpad)
