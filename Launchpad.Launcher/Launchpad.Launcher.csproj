@@ -29,6 +29,7 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <LangVersion>6</LangVersion>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -83,11 +84,15 @@
     <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
       <Package>glib-sharp-2.0</Package>
     </Reference>
+    <Reference Include="gio-sharp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <Package>gio-sharp</Package>
+    </Reference>
     <Reference Include="NGettext, Version=0.6.1.0, Culture=neutral, PublicKeyToken=08d3d1c89dfd2985">
       <HintPath>..\packages\NGettext.0.6.2\lib\net45\NGettext.dll</HintPath>
     </Reference>
-    <Reference Include="webkit-sharp">
-      <HintPath>External Assemblies\webkit-sharp-1.1\webkit-sharp.dll</HintPath>
+    <Reference Include="webkitgtk-sharp, Version=2.0.0.0, Culture=neutral, PublicKeyToken=e1f0fd21e79c8b0f">
+      <Package>webkitgtk-sharp</Package>
+      <HintPath>External Assemblies\webkitgtk-sharp\2.0.0.0__e1f0fd21e79c8b0f\webkitgtk-sharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
@@ -134,11 +139,6 @@
     <Folder Include="Interface\gtk3" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Linux\webkit-sharp.dll.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>webkit-sharp.dll.config</Link>
-      <InProject>false</InProject>
-    </Content>
     <Content Include="Content\locale\**\*.po">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <InProject>false</InProject>
@@ -148,9 +148,19 @@
       <InProject>false</InProject>
     </Content>
     <Content Include="App.config" />
+    <Content Include="External Assemblies\webkitgtk-sharp\2.0.0.0__e1f0fd21e79c8b0f\webkitgtk-sharp.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>webkitgtk-sharp.dll</Link>
+      <InProject>false</InProject>
+    </Content>
+    <Content Include="External Assemblies\webkitgtk-sharp\2.0.0.0__e1f0fd21e79c8b0f\webkitgtk-sharp.dll.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>webkitgtk-sharp.dll.config</Link>
+      <InProject>false</InProject>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
