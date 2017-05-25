@@ -7,8 +7,8 @@ install:
 script:
   - msbuild /p:Configuration=Release Launchpad.Launcher/Launchpad.Launcher.csproj
   - msbuild /p:Configuration=Release Launchpad.Utilities/Launchpad.Utilities.csproj
-  - msbuild /p:Configuration=Release Launchpad.Tests/Launchpad.Tests.csproj
+  - msbuild /p:Configuration=Debug Launchpad.Tests/Launchpad.Tests.csproj
 after_success:
-  - mprof-report --reports=coverage --coverage-out=coverage.xml output.mlpd
   - mono --debug --profile=log:coverage,covfilter=+Launchpad.Tests Launchpad.Tests/bin/Debug/Launchpad.Tests.exe --noresult
+  - mprof-report --reports=coverage --coverage-out=coverage.xml output.mlpd
   - bash <(curl -s https://codecov.io/bash)
