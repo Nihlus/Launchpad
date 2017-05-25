@@ -78,9 +78,6 @@
     <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
       <Package>glib-sharp-2.0</Package>
     </Reference>
-    <Reference Include="gio-sharp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <Package>gio-sharp</Package>
-    </Reference>
     <Reference Include="INIFileParser, Version=2.4.0.0, Culture=neutral, PublicKeyToken=79af7b307b65cf3c">
       <HintPath>..\packages\ini-parser.2.4.0\lib\net20\INIFileParser.dll</HintPath>
     </Reference>
@@ -147,16 +144,6 @@
       <InProject>false</InProject>
     </Content>
     <Content Include="App.config" />
-    <Content Include="External Assemblies\webkitgtk-sharp\2.0.0.0__e1f0fd21e79c8b0f\webkitgtk-sharp.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>webkitgtk-sharp.dll</Link>
-      <InProject>false</InProject>
-    </Content>
-    <Content Include="External Assemblies\webkitgtk-sharp\2.0.0.0__e1f0fd21e79c8b0f\webkitgtk-sharp.dll.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>webkitgtk-sharp.dll.config</Link>
-      <InProject>false</InProject>
-    </Content>
     <Content Include="External Assemblies\webkit-sharp-1.1\webkit-sharp.dll.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Link>webkit-sharp.dll.config</Link>

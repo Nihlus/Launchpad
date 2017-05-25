@@ -5,6 +5,7 @@ An open-source launcher for your games.
 Launchpad was originally made for Unreal Engine 4, but supports arbitrary software and games. 
 
 [![Build Status](https://travis-ci.org/Nihlus/Launchpad.svg?branch=master)](https://travis-ci.org/Nihlus/Launchpad)
+[![codecov](https://codecov.io/gh/Nihlus/Launchpad/branch/master/graph/badge.svg)](https://codecov.io/gh/Nihlus/Launchpad)
 
 ![Launchpad (GTK# on Linux)](https://i.imgur.com/Xq1mtRl.png "Launchpad (GTK# on Linux)")
 
