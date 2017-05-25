@@ -1,15 +1,11 @@
 language: csharp
 solution: Launchpad.sln
 dist: trusty
-before_install:
-  - mkdir -p .nuget
-  - wget -O .nuget/nuget.exe https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
-  - mono .nuget/nuget.exe # Output NuGet's version number
 install:
   - sudo apt-get install -y gtk-sharp2 libwebkit-cil-dev libwebkit1.1-cil nuget
-  - mono .nuget/nuget.exe restore Launchpad.sln -Verbosity detailed
+  - nuget restore Launchpad.sln -Verbosity detailed
 script:
-  - xbuild /p:Configuration=Release Launchpad.Launcher/Launchpad.Launcher.csproj
-  - xbuild /p:Configuration=Release Launchpad.Utilities/Launchpad.Utilities.csproj
+  - msbuild /p:Configuration=Release Launchpad.Launcher/Launchpad.Launcher.csproj
+  - msbuild /p:Configuration=Release Launchpad.Utilities/Launchpad.Utilities.csproj
 after_success:
   - bash <(curl -s https://codecov.io/bash) -t f4f7c1f5-9d21-4a08-8d40-6cc03d112378
