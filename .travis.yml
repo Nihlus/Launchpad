@@ -8,4 +8,4 @@ script:
   - msbuild /p:Configuration=Release Launchpad.Launcher/Launchpad.Launcher.csproj
   - msbuild /p:Configuration=Release Launchpad.Utilities/Launchpad.Utilities.csproj
 after_success:
-  - bash <(curl -s https://codecov.io/bash) -t f4f7c1f5-9d21-4a08-8d40-6cc03d112378
+  - bash <(curl -s https://codecov.io/bash)
