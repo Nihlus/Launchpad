@@ -9,7 +9,6 @@ script:
   - msbuild /p:Configuration=Release Launchpad.Launcher/Launchpad.Launcher.csproj
   - msbuild /p:Configuration=Release Launchpad.Utilities/Launchpad.Utilities.csproj
   - msbuild /p:Configuration=Release Launchpad.Tests/Launchpad.Tests.csproj
-after_script:
-  - mono --profile=monocov:+[Launchpad.Tests] ./NUnit.ConsoleRunner.3.6.1/tools/nunit3-console.exe Launchpad.Tests/bin/Release/Launchpad.Tests.dll
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+  - mono --profile=monocov:+[Launchpad.Tests] ./NUnit.ConsoleRunner.3.6.1/tools/nunit3-console.exe Launchpad.Tests/bin/Release/Launchpad.Tests.dll
