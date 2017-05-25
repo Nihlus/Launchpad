@@ -2,13 +2,13 @@ language: csharp
 solution: Launchpad.sln
 dist: trusty
 install:
-  - sudo apt-get install -y gtk-sharp2 libwebkit-cil-dev libwebkit1.1-cil nuget
+  - sudo apt-get install -y gtk-sharp2 libwebkit-cil-dev libwebkit1.1-cil nuget libmono-cecil-cil-dev libglade2.0-cil-dev
   - nuget restore Launchpad.sln -Verbosity detailed
-  - nuget install NUnit.Runners
 script:
   - msbuild /p:Configuration=Release Launchpad.Launcher/Launchpad.Launcher.csproj
   - msbuild /p:Configuration=Release Launchpad.Utilities/Launchpad.Utilities.csproj
   - msbuild /p:Configuration=Release Launchpad.Tests/Launchpad.Tests.csproj
 after_success:
+  - mprof-report --reports=coverage --coverage-out=coverage.xml output.mlpd
+  - mono --debug --profile=log:coverage,covfilter=+Launchpad.Tests Launchpad.Tests/bin/Debug/Launchpad.Tests.exe --noresult
   - bash <(curl -s https://codecov.io/bash)
-  - mono --profile=monocov:+[Launchpad.Tests] ./NUnit.ConsoleRunner.3.6.1/tools/nunit3-console.exe Launchpad.Tests/bin/Release/Launchpad.Tests.dll
