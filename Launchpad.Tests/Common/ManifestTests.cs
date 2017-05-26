@@ -112,6 +112,20 @@ namespace Launchpad.Tests.Common
 		}
 
 		[Test]
+		public void TestInvalidEmptyString()
+		{
+			bool parsingSucceeded = ManifestEntry.TryParse(string.Empty, out ManifestEntry _);
+			Assert.That(!parsingSucceeded);
+		}
+
+		[Test]
+		public void TestInvalidNullInput()
+		{
+			bool parsingSucceeded = ManifestEntry.TryParse(null, out ManifestEntry _);
+			Assert.That(!parsingSucceeded);
+		}
+		
+		[Test]
 		public void TestInvalidNegativeSize()
 		{
 			ManifestEntry createdEntry;
@@ -160,6 +174,18 @@ namespace Launchpad.Tests.Common
 		public void TestToString()
 		{
 			Assert.AreEqual(ExpectedOutputString, this.ExpectedObject.ToString());
+		}
+
+		[Test]
+		public void TestObjectsNotEqualNull()
+		{
+			Assert.That(this.ValidObject1.Equals(null));
+		}
+
+		[Test]
+		public void TestObjectsNotEqualOtherType()
+		{
+			Assert.That(this.ValidObject1.Equals(new object()));
 		}
 
 		[Test]
