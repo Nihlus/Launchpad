@@ -5,9 +5,9 @@ install:
   - sudo apt-get install -y gtk-sharp2 libwebkit-cil-dev libwebkit1.1-cil nuget libmono-cecil-cil-dev libglade2.0-cil-dev
   - nuget restore Launchpad.sln -Verbosity detailed
 script:
-  - msbuild /p:Configuration=Release Launchpad.Launcher/Launchpad.Launcher.csproj
-  - msbuild /p:Configuration=Release Launchpad.Utilities/Launchpad.Utilities.csproj
-  - msbuild /p:Configuration=Debug Launchpad.Tests/Launchpad.Tests.csproj
+  - xbuild /p:Configuration=Release Launchpad.Launcher/Launchpad.Launcher.csproj
+  - xbuild /p:Configuration=Release Launchpad.Utilities/Launchpad.Utilities.csproj
+  - xbuild /p:Configuration=Debug Launchpad.Tests/Launchpad.Tests.csproj
 after_success:
   - mono --debug --profile=log:coverage,covfilter=+Launchpad,covfilter=-Launchpad.Tests Launchpad.Tests/bin/Debug/Launchpad.Tests.exe --noresult
   - mprof-report --reports=coverage --coverage-out=coverage.xml output.mlpd
