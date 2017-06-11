@@ -29,7 +29,6 @@ using Launchpad.Utilities.Options;
 using log4net;
 using Launchpad.Common.Enums;
 
-[assembly: CLSCompliant(true)]
 namespace Launchpad.Utilities
 {
 	internal static class Program

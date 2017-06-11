@@ -25,7 +25,6 @@ using Launchpad.Launcher.Handlers;
 using System.IO;
 using log4net;
 
-[assembly: CLSCompliant(true)]
 namespace Launchpad.Launcher
 {
 	public static class Program

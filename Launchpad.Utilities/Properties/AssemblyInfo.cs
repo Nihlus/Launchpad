@@ -20,6 +20,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Resources;
@@ -60,3 +61,6 @@ using System.Resources;
 
 // Log4Net XML activation
 [assembly: log4net.Config.XmlConfigurator(Watch = true)]
+
+// CLS compliance
+[assembly: CLSCompliant(true)]
