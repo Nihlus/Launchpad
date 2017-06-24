@@ -19,6 +19,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using System.Collections.Generic;
 
 namespace Launchpad.Common
@@ -31,7 +32,7 @@ namespace Launchpad.Common
 		/// <param name="input">Input string.</param>
 		public static string RemoveLineSeparatorsAndNulls(this string input)
 		{
-			return input.Replace("\n", string.Empty).Replace("\0", string.Empty).Replace("\r", string.Empty);
+			return input?.Replace("\n", string.Empty).Replace("\0", string.Empty).Replace("\r", string.Empty);
 		}
 
 		/// <summary>
@@ -45,6 +46,11 @@ namespace Launchpad.Common
 		/// <typeparam name="TValue">The type of the value.</typeparam>
 		public static void AddOrUpdate<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue value)
 		{
+			if (dictionary == null)
+			{
+				throw new ArgumentNullException(nameof(dictionary));
+			}
+
 			if (dictionary.ContainsKey(key))
 			{
 				dictionary[key] = value;

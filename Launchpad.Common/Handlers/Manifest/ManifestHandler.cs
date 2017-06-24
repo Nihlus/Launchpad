@@ -56,8 +56,8 @@ namespace Launchpad.Common.Handlers.Manifest
 		/// </summary>
 		private readonly ESystemTarget SystemTarget;
 
-		private readonly Dictionary<EManifestType, List<ManifestEntry>> Manifests = new Dictionary<EManifestType, List<ManifestEntry>>();
-		private readonly Dictionary<EManifestType, List<ManifestEntry>> OldManifests = new Dictionary<EManifestType, List<ManifestEntry>>();
+		private readonly Dictionary<EManifestType, IReadOnlyList<ManifestEntry>> Manifests = new Dictionary<EManifestType, IReadOnlyList<ManifestEntry>>();
+		private readonly Dictionary<EManifestType, IReadOnlyList<ManifestEntry>> OldManifests = new Dictionary<EManifestType, IReadOnlyList<ManifestEntry>>();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ManifestHandler"/> class.
@@ -83,7 +83,7 @@ namespace Launchpad.Common.Handlers.Manifest
 		/// <param name="getOldManifest">Whether or not the old manifest or the new manifest should be retrieved.</param>
 		/// <returns>A list of <see cref="ManifestEntry"/> objects.</returns>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="manifestType"/> is not a known value.</exception>
-		public List<ManifestEntry> GetManifest(EManifestType manifestType, bool getOldManifest)
+		public IReadOnlyList<ManifestEntry> GetManifest(EManifestType manifestType, bool getOldManifest)
 		{
 			switch (manifestType)
 			{
@@ -165,7 +165,7 @@ namespace Launchpad.Common.Handlers.Manifest
 		/// </summary>
 		/// <param name="manifestPath">The path to a manifest file.</param>
 		/// <returns>A list of <see cref="ManifestEntry"/> objects.</returns>
-		public static List<ManifestEntry> LoadManifest(string manifestPath)
+		public static IReadOnlyList<ManifestEntry> LoadManifest(string manifestPath)
 		{
 			using (Stream fileStream = File.OpenRead(manifestPath))
 			{
@@ -177,8 +177,8 @@ namespace Launchpad.Common.Handlers.Manifest
 		/// Loads a manifest from a <see cref="Stream"/>.
 		/// </summary>
 		/// <param name="manifestStream">A stream containing a manifest."/></param>
-		/// <returns>A list of <see cref="ManifestEntry"/> objects.</returns>
-		public static List<ManifestEntry> LoadManifest(Stream manifestStream)
+		/// <returns>A read-only list of <see cref="ManifestEntry"/> objects.</returns>
+		public static IReadOnlyList<ManifestEntry> LoadManifest(Stream manifestStream)
 		{
 			List<string> rawManifest = new List<string>();
 			using (StreamReader sr = new StreamReader(manifestStream))

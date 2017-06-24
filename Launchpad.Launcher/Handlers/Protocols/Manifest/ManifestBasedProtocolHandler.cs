@@ -112,8 +112,8 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// </exception>
 		public override void UpdateModule(EModule module)
 		{
-			List<ManifestEntry> manifest;
-			List<ManifestEntry> oldManifest;
+			IReadOnlyList<ManifestEntry> manifest;
+			IReadOnlyList<ManifestEntry> oldManifest;
 			switch (module)
 			{
 				case EModule.Launcher:
@@ -211,7 +211,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// </summary>
 		public override void VerifyModule(EModule module)
 		{
-			List<ManifestEntry> manifest = this.FileManifestHandler.GetManifest((EManifestType) module, false);
+			IReadOnlyList<ManifestEntry> manifest = this.FileManifestHandler.GetManifest((EManifestType) module, false);
 			List<ManifestEntry> brokenFiles = new List<ManifestEntry>();
 
 			if (manifest == null)
@@ -281,7 +281,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// </exception>
 		protected override void DownloadModule(EModule module)
 		{
-			List<ManifestEntry> moduleManifest;
+			IReadOnlyList<ManifestEntry> moduleManifest;
 			switch (module)
 			{
 				case EModule.Launcher:
@@ -328,10 +328,10 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
 				foreach (ManifestEntry fileEntry in moduleManifest)
 				{
-					if (lastDownloadedFile == fileEntry)
+					if (lastDownloadedFile.Equals(fileEntry))
 					{
-						// Remove all entries before the one we were last at.
-						moduleManifest.RemoveRange(0, moduleManifest.IndexOf(fileEntry));
+						// Skip all entries before the one we were last at.
+						moduleManifest = moduleManifest.Skip(moduleManifest.ToList().IndexOf(fileEntry)).ToList();
 					}
 				}
 			}

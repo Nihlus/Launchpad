@@ -24,7 +24,7 @@ namespace Launchpad.Common.Enums
 	/// <summary>
 	/// Enum defining the type of manifest.
 	/// </summary>
-	public enum EManifestType : byte
+	public enum EManifestType
 	{
 		/// <summary>
 		/// An unknown manifest.

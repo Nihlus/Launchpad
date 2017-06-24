@@ -40,7 +40,7 @@ namespace Launchpad.Common.Handlers
 			using (MD5 md5 = MD5.Create())
 			{
 				//calculate the hash of the stream.
-				string resultString = BitConverter.ToString(md5.ComputeHash(dataStream)).Replace("-", "");
+				string resultString = BitConverter.ToString(md5.ComputeHash(dataStream)).Replace("-", string.Empty);
 
 				return resultString;
 			}

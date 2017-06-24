@@ -87,11 +87,11 @@ namespace Launchpad.Common.Handlers.Manifest
 			// Sanitize the manifest path, converting \ to / on unix and / to \ on Windows.
 			if (SystemInformation.IsRunningOnUnix())
 			{
-				inEntry.RelativePath = entryElements[0].Replace("\\", "/");
+				inEntry.RelativePath = entryElements[0].Replace('\\', '/');
 			}
 			else
 			{
-				inEntry.RelativePath = entryElements[0].Replace("/", "\\");
+				inEntry.RelativePath = entryElements[0].Replace('/', '\\');
 			}
 
 			// Hashes must be exactly 32 characters
@@ -129,7 +129,18 @@ namespace Launchpad.Common.Handlers.Manifest
 		/// <returns>A <see cref="System.String"/> that represents the current <see cref="ManifestEntry"/>.</returns>
 		public override string ToString()
 		{
-			return this.RelativePath + ":" + this.Hash + ":" + this.Size;
+			return $"{this.RelativePath}:{this.Hash}:{this.Size}";
+		}
+
+		/// <summary>
+		/// Determines whether the specified <see cref="object"/> is equal to the current <see cref="ManifestEntry"/>.
+		/// </summary>
+		/// <param name="obj">The <see cref="object"/> to compare with the current <see cref="ManifestEntry"/>.</param>
+		/// <returns><c>true</c> if the specified <see cref="object"/> is equal to the current
+		/// <see cref="ManifestEntry"/>; otherwise, <c>false</c>.</returns>
+		public override bool Equals(object obj)
+		{
+			return Equals(obj as ManifestEntry);
 		}
 
 		/// <summary>

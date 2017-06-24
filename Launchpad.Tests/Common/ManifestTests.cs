@@ -124,7 +124,7 @@ namespace Launchpad.Tests.Common
 			bool parsingSucceeded = ManifestEntry.TryParse(null, out ManifestEntry _);
 			Assert.That(!parsingSucceeded);
 		}
-		
+
 		[Test]
 		public void TestInvalidNegativeSize()
 		{
@@ -179,13 +179,13 @@ namespace Launchpad.Tests.Common
 		[Test]
 		public void TestObjectsNotEqualNull()
 		{
-			Assert.That(this.ValidObject1.Equals(null));
+			Assert.That(!this.ValidObject1.Equals(null));
 		}
 
 		[Test]
 		public void TestObjectsNotEqualOtherType()
 		{
-			Assert.That(this.ValidObject1.Equals(new object()));
+			Assert.That(!this.ValidObject1.Equals(new object()));
 		}
 
 		[Test]
@@ -209,7 +209,7 @@ namespace Launchpad.Tests.Common
 		[Test]
 		public void TestLoadManifestWindowsStyle()
 		{
-			List<ManifestEntry> loadedEntries;
+			IReadOnlyList<ManifestEntry> loadedEntries;
 			using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(SampleManifestWindowsStyle)))
 			{
 				loadedEntries = ManifestHandler.LoadManifest(ms);
@@ -221,7 +221,7 @@ namespace Launchpad.Tests.Common
 		[Test]
 		public void TestLoadManifestUnixStyle()
 		{
-			List<ManifestEntry> loadedEntries;
+			IReadOnlyList<ManifestEntry> loadedEntries;
 			using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(SampleManifestUnixStyle)))
 			{
 				loadedEntries = ManifestHandler.LoadManifest(ms);
