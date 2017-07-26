@@ -46,6 +46,7 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		public static void SendUsageStats()
 		{
+			WebResponse sendStatsResponse = null;
 			try
 			{
 				string formattedURL = $"{BaseURL}guid={Config.GetGameGUID()}" +
@@ -53,15 +54,19 @@ namespace Launchpad.Launcher.Handlers
 				                      $"&gameName={Config.GetGameName()}" +
 				                      $"&systemType={Config.GetSystemTarget()}" +
 				                      $"&officialUpdates={Config.GetDoOfficialUpdates()}" +
-									  $"&installguid={ConfigHandler.GetInstallGUID()}";
+				                      $"&installguid={ConfigHandler.GetInstallGUID()}";
 
 
 				WebRequest sendStatsRequest = WebRequest.Create(formattedURL);
-				sendStatsRequest.GetResponse();
+				sendStatsResponse = sendStatsRequest.GetResponse();
 			}
 			catch (WebException wex)
 			{
 				Log.Warn("Could not send usage stats (WebException): " + wex.Message);
+			}
+			finally
+			{
+				sendStatsResponse?.Dispose();
 			}
 		}
 	}

@@ -66,7 +66,6 @@ namespace Launchpad.Launcher
 			Gtk.Application.Init();
 			MainWindow win = new MainWindow();
 			win.Show();
-			win.Initialize();
 			Gtk.Application.Run();
 		}
 
