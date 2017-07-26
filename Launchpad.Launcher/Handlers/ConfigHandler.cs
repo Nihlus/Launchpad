@@ -67,13 +67,13 @@ namespace Launchpad.Launcher.Handlers
 		*/
 
 		private const string DefaultGameName = "LaunchpadExample";
-		private const string DefaultChangelogURL = "http://directorate.asuscomm.com/launchpad/changelog/changelog.html";
+		private const string DefaultChangelogURL = "http://sharkman.asuscomm.com/launchpad/changelog/changelog.html";
 		private const string DefaultProtocol = "FTP";
 		private const string DefaultFileRetries = "2";
 		private const string DefaultUsername = "anonymous";
 		private const string DefaultPassword = "anonymous";
-		private const string DefaultFTPAddress = "ftp://directorate.asuscomm.com";
-		private const string DefaultHTTPAddress = "http://directorate.asuscomm.com/launchpad";
+		private const string DefaultFTPAddress = "ftp://sharkman.asuscomm.com";
+		private const string DefaultHTTPAddress = "http://sharkman.asuscomm.com/launchpad";
 		private const string DefaultUseOfficialUpdates = "true";
 		private const string DefaultAllowAnonymousStatus = "true";
 		private const string DefaultBufferSize = "8192";
@@ -327,7 +327,7 @@ namespace Launchpad.Launcher.Handlers
 
 					if (!data[SectionNameHTTP].ContainsKey(HTTPAddressKey))
 					{
-						data[SectionNameHTTP].AddKey(HTTPAddressKey, "http://directorate.asuscomm.com/launchpad");
+						data[SectionNameHTTP].AddKey(HTTPAddressKey, "http://sharkman.asuscomm.com/launchpad");
 					}
 
 					if (!data.Sections.ContainsSection(SectionNameBitTorrent))
@@ -1145,11 +1145,11 @@ namespace Launchpad.Launcher.Handlers
 			{
 				case "FTP":
 				{
-					return "ftp://directorate.asuscomm.com";
+					return "ftp://sharkman.asuscomm.com";
 				}
 				case "HTTP":
 				{
-					return "http://directorate.asuscomm.com/launchpad";
+					return "http://sharkman.asuscomm.com/launchpad";
 				}
 				default:
 				{

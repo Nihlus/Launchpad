@@ -39,7 +39,7 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		private static readonly ConfigHandler Config = ConfigHandler.Instance;
 
-		private const string BaseURL = "http://directorate.asuscomm.com/launchpad/stats.php?";
+		private const string BaseURL = "http://sharkman.asuscomm.com/launchpad/stats.php?";
 
 		/// <summary>
 		/// Sends the usage stats to the official launchpad server.
