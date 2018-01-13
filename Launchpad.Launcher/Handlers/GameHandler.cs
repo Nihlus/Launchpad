@@ -181,14 +181,18 @@ namespace Launchpad.Launcher.Handlers
 			//start new process of the game executable
 			try
 			{
+				string executable = Config.GetGameExecutable();
+				string executableDir = Path.GetDirectoryName(executable) ?? ConfigHandler.GetLocalDir();
+
 				// Do not move the argument assignment inside the gameStartInfo initializer.
 				// It causes a TargetInvocationException crash through black magic.
 				string gameArguments = string.Join(" ", ConfigHandler.GetGameArguments());
 				ProcessStartInfo gameStartInfo = new ProcessStartInfo
 				{
 					UseShellExecute = false,
-					FileName = Config.GetGameExecutable(),
-					Arguments = gameArguments
+					FileName = executable,
+					Arguments = gameArguments,
+					WorkingDirectory = executableDir
 				};
 
 				this.GameExitArgs.GameName = Config.GetGameName();
