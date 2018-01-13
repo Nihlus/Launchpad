@@ -32,7 +32,6 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 	/// A GTK-supported changelog browser widget, capable of switching between a WinForms implementation (for Windows)
 	/// and a Webkit implementation (for Mac and Linux).
 	/// </summary>
-	[CLSCompliant(false)]
 	public class Changelog : IDisposable
 	{
 		/// <summary>

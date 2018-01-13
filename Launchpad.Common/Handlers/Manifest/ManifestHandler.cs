@@ -22,7 +22,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Security.Policy;
 using log4net;
 using Launchpad.Common.Enums;
 
@@ -47,9 +46,9 @@ namespace Launchpad.Common.Handlers.Manifest
 		private readonly string LocalBaseDirectory;
 
 		/// <summary>
-		/// The remote <see cref="Url"/> where the manifest files are expected to be.
+		/// The remote <see cref="Uri"/> where the manifest files are expected to be.
 		/// </summary>
-		private readonly Url RemoteURL;
+		private readonly Uri RemoteURL;
 
 		/// <summary>
 		/// The target system for which the handler should retrieve files.
@@ -63,10 +62,10 @@ namespace Launchpad.Common.Handlers.Manifest
 		/// Initializes a new instance of the <see cref="ManifestHandler"/> class.
 		/// This constructor also serves to updated outdated file paths for the manifests.
 		/// <param name="localBaseDirectory">The local base directory of the launcher installation.</param>
-		/// <param name="remoteURL">The remote <see cref="Url"/> where the manifest files are expected to be..</param>
+		/// <param name="remoteURL">The remote <see cref="Uri"/> where the manifest files are expected to be..</param>
 		/// <param name="systemTarget">The target system for which the handler should retrieve files.</param>
 		/// </summary>
-		public ManifestHandler(string localBaseDirectory, Url remoteURL, ESystemTarget systemTarget)
+		public ManifestHandler(string localBaseDirectory, Uri remoteURL, ESystemTarget systemTarget)
 		{
 			this.LocalBaseDirectory = localBaseDirectory;
 			this.RemoteURL = remoteURL;
@@ -231,10 +230,10 @@ namespace Launchpad.Common.Handlers.Manifest
 		{
 			if (manifestType == EManifestType.Launchpad)
 			{
-				return $"{this.RemoteURL.Value}/launcher/{manifestType}Manifest.txt";
+				return $"{this.RemoteURL.LocalPath}/launcher/{manifestType}Manifest.txt";
 			}
 
-			return $"{this.RemoteURL.Value}/game/{this.SystemTarget}/{manifestType}Manifest.txt";
+			return $"{this.RemoteURL.LocalPath}/game/{this.SystemTarget}/{manifestType}Manifest.txt";
 		}
 
 		/// <summary>
@@ -245,10 +244,10 @@ namespace Launchpad.Common.Handlers.Manifest
 		{
 			if (manifestType == EManifestType.Launchpad)
 			{
-				return $"{this.RemoteURL.Value}/launcher/{manifestType}Manifest.checksum";
+				return $"{this.RemoteURL.LocalPath}/launcher/{manifestType}Manifest.checksum";
 			}
 
-			return $"{this.RemoteURL.Value}/game/{this.SystemTarget}/{manifestType}Manifest.checksum";
+			return $"{this.RemoteURL.LocalPath}/game/{this.SystemTarget}/{manifestType}Manifest.checksum";
 		}
 
 		/// <summary>

@@ -38,7 +38,6 @@ namespace Launchpad.Launcher.Interface
 	/// The main UI class for Launchpad. This class acts as a manager for all threaded
 	/// actions, such as installing, updating or repairing the game.
 	/// </summary>
-	[CLSCompliant(false)]
 	public sealed partial class MainWindow : Gtk.Window
 	{
 		/// <summary>

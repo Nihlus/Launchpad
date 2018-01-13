@@ -63,7 +63,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			this.FileManifestHandler = new ManifestHandler
 			(
 				ConfigHandler.GetLocalDir(),
-				new Url(this.Config.GetBaseProtocolURL()),
+				new Uri(this.Config.GetBaseProtocolURL()),
 				this.Config.GetSystemTarget()
 			);
 		}

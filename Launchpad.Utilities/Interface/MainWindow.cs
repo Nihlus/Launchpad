@@ -31,7 +31,6 @@ using SysPath = System.IO.Path;
 
 namespace Launchpad.Utilities.Interface
 {
-	[CLSCompliant(false)]
 	public partial class MainWindow : Window
 	{
 		/// <summary>

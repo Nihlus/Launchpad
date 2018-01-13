@@ -52,22 +52,5 @@ namespace Launchpad.Utilities.Options
 			get;
 			set;
 		}
-
-		[ParserState]
-		public IParserState LastParserState
-		{
-			get;
-			set;
-		}
-
-		/// <summary>
-		/// Gets the generated help text.
-		/// </summary>
-		/// <returns>The usage.</returns>
-		[HelpOption]
-		public string GetUsage()
-		{
-			return HelpText.AutoBuild(this, current => HelpText.DefaultParsingErrorsHandler(this, current));
-		}
 	}
 }

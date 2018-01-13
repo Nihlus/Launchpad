@@ -21,6 +21,8 @@
 
 using System;
 using System.IO;
+using CommandLine;
+using CommandLine.Text;
 using Gtk;
 using Launchpad.Utilities.Handlers;
 using Launchpad.Utilities.Utility.Events;
@@ -44,46 +46,43 @@ namespace Launchpad.Utilities
 		[STAThread]
 		private static void Main(string[] args)
 		{
-			CLIOptions options = new CLIOptions();
-			if (CommandLine.Parser.Default.ParseArguments(args, options))
+			var options = new CLIOptions();
+			Parser.Default.ParseArguments<CLIOptions>(args)
+				.WithParsed(r => options = r);
+
+			if (options.RunBatchProcessing)
 			{
-				if (options.RunBatchProcessing)
+				if (string.IsNullOrEmpty(options.TargetDirectory) || options.ManifestType == EManifestType.Unknown)
 				{
-					if (string.IsNullOrEmpty(options.TargetDirectory) || options.ManifestType == EManifestType.Unknown)
-					{
-						Console.Write(options.GetUsage());
-					}
-
-					// At this point, the options should be valid. Run batch processing.
-					if (Directory.Exists(options.TargetDirectory))
-					{
-						Log.Info("Generating manifest...");
-
-						ManifestGenerationHandler manifestGenerationHandler = new ManifestGenerationHandler();
-
-						manifestGenerationHandler.ManifestGenerationProgressChanged += OnProgressChanged;
-						manifestGenerationHandler.ManifestGenerationFinished += OnGenerationFinished;
-
-						manifestGenerationHandler.GenerateManifest(options.TargetDirectory, options.ManifestType);
-					}
-					else
-					{
-						Log.Error("The selected directory did not exist.");
-					}
+					Log.Error("Target directory not set, or manifest type not set.");
+					return;
 				}
-				else if (string.IsNullOrEmpty(options.TargetDirectory) && options.ManifestType == EManifestType.Unknown)
-				{
-					// Run a GTK UI instead of batch processing
-					Application.Init();
 
-					MainWindow win = new MainWindow();
-					win.Show();
-					Application.Run();
+				// At this point, the options should be valid. Run batch processing.
+				if (Directory.Exists(options.TargetDirectory))
+				{
+					Log.Info("Generating manifest...");
+
+					ManifestGenerationHandler manifestGenerationHandler = new ManifestGenerationHandler();
+
+					manifestGenerationHandler.ManifestGenerationProgressChanged += OnProgressChanged;
+					manifestGenerationHandler.ManifestGenerationFinished += OnGenerationFinished;
+
+					manifestGenerationHandler.GenerateManifest(options.TargetDirectory, options.ManifestType);
 				}
 				else
 				{
-					Console.Write(options.GetUsage());
+					Log.Error("The selected directory did not exist.");
 				}
+			}
+			else if (string.IsNullOrEmpty(options.TargetDirectory) && options.ManifestType == EManifestType.Unknown)
+			{
+				// Run a GTK UI instead of batch processing
+				Application.Init();
+
+				MainWindow win = new MainWindow();
+				win.Show();
+				Application.Run();
 			}
 		}
 

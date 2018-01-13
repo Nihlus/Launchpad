@@ -30,7 +30,6 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 	/// A GTK-supported wrapper around a WinForms <see cref="WebBrowser"/> widget. This class creates a WebBrowser, and
 	/// sets its parent to a <see cref="Gtk.Socket"/> which is then bound to an input <see cref="Container"/> in the GTK UI.
 	/// </summary>
-	[CLSCompliant(false)]
 	public class WindowsBrowser : IDisposable
 	{
 		/// <summary>

@@ -18,13 +18,17 @@
           </e>
         </e>
         <e p="Launchpad.Common.csproj" t="IncludeRecursive" />
-        <e p="Properties" t="Include">
-          <e p="AssemblyInfo.cs" t="Include" />
-        </e>
         <e p="SystemInformation.cs" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
-        <e p="obj" t="ExcludeRecursive" />
-        <e p="packages.config" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="x86" t="Include">
+            <e p="Debug" t="Include">
+              <e p="netstandard2.0" t="Include">
+                <e p="Launchpad.Common.AssemblyInfo.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+        </e>
       </e>
       <e p="Launchpad.Launcher" t="IncludeRecursive">
         <e p="App.config" t="Include" />
@@ -187,7 +191,13 @@
             </e>
           </e>
         </e>
-        <e p="External Assemblies/webkit-sharp-1.1/webkit-sharp.dll.config" t="Include" />
+        <e p="External Assemblies" t="Include">
+          <e p="readme.txt" t="Include" />
+          <e p="webkit-sharp-1.1" t="Include">
+            <e p="webkit-sharp.dll" t="Include" />
+            <e p="webkit-sharp.dll.config" t="Include" />
+          </e>
+        </e>
         <e p="Handlers" t="Include">
           <e p="ChecksHandler.cs" t="Include" />
           <e p="ConfigHandler.cs" t="Include" />
@@ -213,13 +223,12 @@
             <e p="WindowsBrowser.cs" t="Include" />
           </e>
           <e p="MainWindow.cs" t="Include" />
-          <e p="gtk3" t="Include" />
+          <e p="gtk3" t="Include">
+            <e p="Launchpad.glade" t="Include" />
+          </e>
         </e>
         <e p="Launchpad.Launcher.csproj" t="IncludeRecursive" />
         <e p="Program.cs" t="Include" />
-        <e p="Properties" t="Include">
-          <e p="AssemblyInfo.cs" t="Include" />
-        </e>
         <e p="Resources" t="Include">
           <e p="RocketIcon.ico" t="Include" />
           <e p="RocketIcon_Grey.ico" t="Include" />
@@ -240,7 +249,15 @@
           <e p="generated.cs" t="Include" />
           <e p="gui.stetic" t="Include" />
         </e>
-        <e p="obj" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="x86" t="Include">
+            <e p="Debug" t="Include">
+              <e p="net462" t="Include">
+                <e p="Launchpad.Launcher.AssemblyInfo.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+        </e>
         <e p="packages.config" t="Include" />
       </e>
       <e p="Launchpad.Tests" t="IncludeRecursive">
@@ -249,15 +266,18 @@
           <e p="MD5HandlerTests.cs" t="Include" />
           <e p="ManifestTests.cs" t="Include" />
         </e>
-        <e p="Launcher" t="Include" />
         <e p="Launchpad.Tests.csproj" t="IncludeRecursive" />
         <e p="Program.cs" t="Include" />
-        <e p="Properties" t="Include">
-          <e p="AssemblyInfo.cs" t="Include" />
-        </e>
-        <e p="Utilities" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
-        <e p="obj" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="x86" t="Include">
+            <e p="Debug" t="Include">
+              <e p="net462" t="Include">
+                <e p="Launchpad.Tests.AssemblyInfo.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+        </e>
         <e p="packages.config" t="Include" />
       </e>
       <e p="Launchpad.Utilities" t="IncludeRecursive">
@@ -273,9 +293,6 @@
           <e p="CLIOptions.cs" t="Include" />
         </e>
         <e p="Program.cs" t="Include" />
-        <e p="Properties" t="Include">
-          <e p="AssemblyInfo.cs" t="Include" />
-        </e>
         <e p="Resources" t="Include">
           <e p="Icons8-Android-Industry-Engineering.ico" t="Include" />
         </e>
@@ -291,8 +308,15 @@
           <e p="generated.cs" t="Include" />
           <e p="gui.stetic" t="Include" />
         </e>
-        <e p="obj" t="ExcludeRecursive" />
-        <e p="packages.config" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="x86" t="Include">
+            <e p="Debug" t="Include">
+              <e p="net462" t="Include">
+                <e p="Launchpad.Utilities.AssemblyInfo.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+        </e>
       </e>
       <e p="Launchpad.sln" t="IncludeFlat" />
       <e p="packages" t="ExcludeRecursive" />

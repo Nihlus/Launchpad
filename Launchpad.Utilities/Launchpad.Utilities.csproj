@@ -1,139 +1,54 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{BA9D77D3-1767-4D9C-80F3-409C52B03861}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Launchpad.Utilities</RootNamespace>
-    <FileAlignment>512</FileAlignment>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
-    <AssemblyName>Launchpad.Utilities</AssemblyName>
-    <LangVersion>7</LangVersion>
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net462</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\launchpad.snk</AssemblyOriginatorKeyFile>
-    <PlatformTarget>x86</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\launchpad.snk</AssemblyOriginatorKeyFile>
-    <PlatformTarget>x86</PlatformTarget>
-    <DebugType>none</DebugType>
-  </PropertyGroup>
+  <!-- Workaround for https://github.com/dotnet/roslyn-project-system/issues/1739 -->
   <PropertyGroup>
-    <ApplicationIcon>Resources\Icons8-Android-Industry-Engineering.ico</ApplicationIcon>
+    <AssemblySearchPaths>$(AssemblySearchPaths);{GAC}</AssemblySearchPaths>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject>Launchpad.Utilities.Program</StartupObject>
-  </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Launchpad.Common\Launchpad.Common.csproj">
-      <Project>{DDC53837-BA5A-41F3-8258-6224F3526A52}</Project>
-      <Name>Launchpad.Common</Name>
-    </ProjectReference>
-    <Reference Include="CommandLine, Version=1.9.71.2, Culture=neutral, PublicKeyToken=de6f01bd326f8c32">
-      <HintPath>..\packages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
-    </Reference>
-    <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <Package>gtk-sharp-2.0</Package>
-      <SpecificVersion>True</SpecificVersion>
-    </Reference>
-    <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <Package>gtk-sharp-2.0</Package>
-      <SpecificVersion>True</SpecificVersion>
-    </Reference>
-    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a">
-      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="NGettext, Version=0.6.1.0, Culture=neutral, PublicKeyToken=08d3d1c89dfd2985">
-      <HintPath>..\packages\NGettext.0.6.2\lib\net40\NGettext.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <Package>glib-sharp-2.0</Package>
-      <SpecificVersion>True</SpecificVersion>
-    </Reference>
-    <Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <Package>gtk-sharp-2.0</Package>
-      <SpecificVersion>True</SpecificVersion>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Program.cs" />
-    <Compile Include="Options\CLIOptions.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Interface\MainWindow.cs" />
-    <Compile Include="Handlers\ManifestGenerationHandler.cs" />
-    <Compile Include="Utility\Events\Arguments.cs" />
-    <Compile Include="Utility\Events\Delegates.cs" />
-    <Compile Include="gtk-gui\generated.cs" />
-    <Compile Include="gtk-gui\Launchpad.Utilities.Interface.MainWindow.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-    <None Include="App.config" />
-  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="gtk-gui\gui.stetic">
       <LogicalName>gui.stetic</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Icons8-Android-Industry-Engineering.ico">
-      <DeployService-UseProjectRelativePath>True</DeployService-UseProjectRelativePath>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Resources/Icons8-Android-Industry-Engineering.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Handlers\" />
-    <Folder Include="Options" />
-    <Folder Include="Utility\" />
-    <Folder Include="Utility\Events\" />
+    <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <HintPath>/usr/lib/mono/gac/gtk-sharp/2.12.0.0__35e10195dab3c99f/gdk-sharp.dll</HintPath>
+      <SpecificVersion>true</SpecificVersion>
+    </Reference>
+    <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <HintPath>/usr/lib/mono/gac/gdk-sharp/2.12.0.0__35e10195dab3c99f/gdk-sharp.dll</HintPath>
+      <SpecificVersion>true</SpecificVersion>
+    </Reference>
+    <Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <HintPath>/usr/lib/mono/gac/atk-sharp/2.12.0.0__35e10195dab3c99f/gdk-sharp.dll</HintPath>
+      <SpecificVersion>true</SpecificVersion>
+    </Reference>
+    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <HintPath>/usr/lib/mono/gac/glib-sharp/2.12.0.0__35e10195dab3c99f/gdk-sharp.dll</HintPath>
+      <SpecificVersion>true</SpecificVersion>
+    </Reference>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
-  <ProjectExtensions>
-    <MonoDevelop>
-      <Properties>
-        <GtkDesignInfo generateGettext="False" />
-      </Properties>
-    </MonoDevelop>
-  </ProjectExtensions>
+  <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.2.1" />
+    <PackageReference Include="NGettext" Version="0.6.3" />
+    <PackageReference Include="log4net" Version="2.0.8" />
+    <PackageReference Include="ini-parser" Version="2.4.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\locale\**\*.po">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <InProject>false</InProject>
+    </Content>
+    <Content Include="../LICENSE">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <InProject>false</InProject>
+    </Content>
+    <Content Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Launchpad.Common\Launchpad.Common.csproj" />
+  </ItemGroup>
 </Project>
