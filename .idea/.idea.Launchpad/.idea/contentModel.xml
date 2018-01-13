@@ -3,6 +3,8 @@
   <component name="ContentModelStore">
     <e p="$USER_HOME$/.Rider2017.3/system/resharper-host/local/Transient/ReSharperHost/v11/SolutionCaches/_Launchpad.-586682344.00" t="ExcludeRecursive" />
     <e p="$PROJECT_DIR$" t="IncludeFlat">
+      <e p=".gitignore" t="Include" />
+      <e p=".travis.yml" t="Include" />
       <e p="LICENSE" t="Include" />
       <e p="Launchpad.Common" t="IncludeRecursive">
         <e p="Enums" t="Include">
@@ -319,6 +321,8 @@
         </e>
       </e>
       <e p="Launchpad.sln" t="IncludeFlat" />
+      <e p="README.md" t="Include" />
+      <e p="appveyor.yml" t="Include" />
       <e p="packages" t="ExcludeRecursive" />
     </e>
   </component>
