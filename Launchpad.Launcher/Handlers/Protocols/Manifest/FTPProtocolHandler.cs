@@ -381,8 +381,8 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			{
 				FtpWebRequest request = (FtpWebRequest)WebRequest.Create(new Uri(ftpDirectoryPath));
 
-				//Set proxy to null. Under current configuration if this option is not set then the proxy
-				//that is used will get an html response from the web content gateway (firewall monitoring system)
+				// Set proxy to null. Under current configuration if this option is not set then the proxy
+				// that is used will get an html response from the web content gateway (firewall monitoring system)
 				request.Proxy = null;
 
 				request.UsePassive = true;

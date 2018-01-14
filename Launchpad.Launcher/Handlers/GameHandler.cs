@@ -180,7 +180,6 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		public void LaunchGame()
 		{
-			//start new process of the game executable
 			try
 			{
 				string executable = Config.GetGameExecutable();

@@ -343,7 +343,6 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			{
 				// Loop through all the entries in the manifest until we encounter
 				// an entry which matches the one in the install cookie
-
 				foreach (ManifestEntry fileEntry in moduleManifest)
 				{
 					if (lastDownloadedFile.Equals(fileEntry))

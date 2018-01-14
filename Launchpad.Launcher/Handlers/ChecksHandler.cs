@@ -117,7 +117,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns><c>true</c> if the install cookie is empty, otherwise, <c>false</c>.</returns>
 		private static bool IsInstallCookieEmpty()
 		{
-			//Is there an .install file in the directory?
+			// Is there an .install file in the directory?
 			bool hasInstallCookie = File.Exists(ConfigHandler.GetGameCookiePath());
 			bool isInstallCookieEmpty = false;
 

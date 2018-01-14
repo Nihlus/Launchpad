@@ -155,7 +155,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <param name="useAnonymousLogin">If set to <c>true</c> use anonymous login.</param>
 		protected override void DownloadRemoteFile(string url, string localPath, long totalSize = 0, long contentOffset = 0, bool useAnonymousLogin = false)
 		{
-			//clean the url string
+			// Clean the url string
 			string remoteURL = url.Replace(Path.DirectorySeparatorChar, '/');
 
 			string username;

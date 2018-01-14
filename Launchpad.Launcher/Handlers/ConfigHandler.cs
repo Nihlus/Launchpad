@@ -356,7 +356,7 @@ namespace Launchpad.Launcher.Handlers
 						string gameName = data[SectionNameLocal][LocalGameNameKey];
 						data[SectionNameLocal].AddKey(LocalMainExecutableNameKey, gameName);
 					}
-					//End June 2
+					// End June 2
 
 					// January 20 - 2017
 					if (!data[SectionNameRemote].ContainsKey(RemoteBufferSizeKey))
@@ -863,11 +863,6 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The system target.</returns>
 		public ESystemTarget GetSystemTarget()
 		{
-			//possible values are:
-			//Win64
-			//Win32
-			//Linux
-			//Mac
 			lock (this.ReadLock)
 			{
 				try
@@ -900,11 +895,6 @@ namespace Launchpad.Launcher.Handlers
 		/// <param name="systemTarget">System target.</param>
 		public void SetSystemTarget(ESystemTarget systemTarget)
 		{
-			//possible values are:
-			//Win64
-			//Win32
-			//Linux
-			//Mac
 			lock (this.ReadLock)
 			{
 				lock (this.WriteLock)

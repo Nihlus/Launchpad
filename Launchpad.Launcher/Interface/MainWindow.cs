@@ -492,7 +492,7 @@ namespace Launchpad.Launcher.Interface
 		/// <param name="e">The arguments containing the HTML from the server.</param>
 		private void OnChangelogDownloadFinished(object sender, ChangelogDownloadFinishedEventArgs e)
 		{
-			//Take the resulting HTML string from the changelog download and send it to the changelog browser
+			// Take the resulting HTML string from the changelog download and send it to the changelog browser
 			Application.Invoke(delegate
 			{
 				this.Browser.LoadHTML(e.HTML, e.URL);
