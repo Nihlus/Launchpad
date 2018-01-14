@@ -27,7 +27,6 @@ using System.Net;
 using System.Reflection;
 using System.Threading;
 
-
 using Launchpad.Common;
 using Launchpad.Launcher.Handlers.Protocols;
 using log4net;
@@ -48,7 +47,9 @@ namespace Launchpad.Launcher.Handlers
 		private static readonly ILog Log = LogManager.GetLogger(typeof(LauncherHandler));
 
 		public event ChangelogDownloadFinishedEventHandler ChangelogDownloadFinished;
+
 		public event LauncherDownloadFinishedEventHandler LauncherDownloadFinished;
+
 		public event LauncherDownloadProgressChangedEventHandler LauncherDownloadProgressChanged;
 
 		private readonly ChangelogDownloadFinishedEventArgs ChangelogDownloadFinishedArgs = new ChangelogDownloadFinishedEventArgs();
@@ -277,9 +278,11 @@ namespace Launchpad.Launcher.Handlers
 	/*
 		Launcher-specific events
 	*/
-	public delegate void ChangelogDownloadFinishedEventHandler(object sender,ChangelogDownloadFinishedEventArgs e);
-	public delegate void LauncherDownloadProgressChangedEventHandler(object sender,ModuleProgressChangedArgs e);
-	public delegate void LauncherDownloadFinishedEventHandler(object sendre,ModuleInstallationFinishedArgs e);
+	public delegate void ChangelogDownloadFinishedEventHandler(object sender, ChangelogDownloadFinishedEventArgs e);
+
+	public delegate void LauncherDownloadProgressChangedEventHandler(object sender, ModuleProgressChangedArgs e);
+
+	public delegate void LauncherDownloadFinishedEventHandler(object sendre, ModuleInstallationFinishedArgs e);
 
 	/*
 		Launcher-specific event arguments

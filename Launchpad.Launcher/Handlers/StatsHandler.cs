@@ -58,7 +58,6 @@ namespace Launchpad.Launcher.Handlers
 					$"&officialUpdates={Config.GetDoOfficialUpdates()}" +
 					$"&installguid={ConfigHandler.GetInstallGUID()}";
 
-
 				WebRequest sendStatsRequest = WebRequest.Create(formattedURL);
 				sendStatsResponse = sendStatsRequest.GetResponse();
 			}

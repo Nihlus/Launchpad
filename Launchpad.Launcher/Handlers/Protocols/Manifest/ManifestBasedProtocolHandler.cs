@@ -213,7 +213,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// </summary>
 		public override void VerifyModule(EModule module)
 		{
-			IReadOnlyList<ManifestEntry> manifest = this.FileManifestHandler.GetManifest((EManifestType) module, false);
+			IReadOnlyList<ManifestEntry> manifest = this.FileManifestHandler.GetManifest((EManifestType)module, false);
 			List<ManifestEntry> brokenFiles = new List<ManifestEntry>();
 
 			if (manifest == null)
@@ -529,7 +529,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			else
 			{
 				// No file, download it
-				DownloadRemoteFile(remoteURL, localPath,fileEntry.Size);
+				DownloadRemoteFile(remoteURL, localPath, fileEntry.Size);
 			}
 
 			// We've finished the download, so empty the cookie
@@ -550,7 +550,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				case EModule.Launcher:
 				case EModule.Game:
 				{
-					manifestPath = this.FileManifestHandler.GetManifestPath((EManifestType) module, false);
+					manifestPath = this.FileManifestHandler.GetManifestPath((EManifestType)module, false);
 					break;
 				}
 				default:
@@ -658,8 +658,8 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				case EModule.Game:
 				{
 					remoteURL = this.FileManifestHandler.GetManifestURL((EManifestType)module);
-					localPath = this.FileManifestHandler.GetManifestPath((EManifestType) module, false);
-					oldLocalPath = this.FileManifestHandler.GetManifestPath((EManifestType) module, true);
+					localPath = this.FileManifestHandler.GetManifestPath((EManifestType)module, false);
+					oldLocalPath = this.FileManifestHandler.GetManifestPath((EManifestType)module, true);
 
 					break;
 				}

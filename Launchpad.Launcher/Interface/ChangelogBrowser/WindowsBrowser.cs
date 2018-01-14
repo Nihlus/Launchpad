@@ -76,7 +76,7 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 			this.Socket.Realize();
 
 			IntPtr browserHandle = this.Browser.Handle;
-			IntPtr socketHandle = (IntPtr) this.Socket.Id;
+			IntPtr socketHandle = (IntPtr)this.Socket.Id;
 
 			SetParent(browserHandle, socketHandle);
 		}

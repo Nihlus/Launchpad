@@ -25,7 +25,6 @@ using System;
 using System.Drawing;
 using Launchpad.Common.Enums;
 
-
 namespace Launchpad.Launcher.Handlers.Protocols
 {
 	/// <summary>

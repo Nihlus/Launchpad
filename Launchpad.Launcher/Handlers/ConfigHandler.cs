@@ -63,7 +63,6 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		private readonly object WriteLock = new object();
 
-
 		/*
 			Constants for different default configuration options. Changing one option here should be reflected with
 			a corresponding update block in the initialization.
@@ -229,7 +228,6 @@ namespace Launchpad.Launcher.Handlers
 						data[SectionNameRemote].AddKey(RemotePasswordKey, DefaultPassword);
 						data[SectionNameRemote].AddKey(RemoteBufferSizeKey, DefaultBufferSize);
 
-
 						data[SectionNameFTP].AddKey(FTPAddressKey, DefaultFTPAddress);
 
 						data[SectionNameHTTP].AddKey(HTTPAddressKey, DefaultHTTPAddress);
@@ -245,7 +243,6 @@ namespace Launchpad.Launcher.Handlers
 					{
 						Log.Warn("Failed to create configuration file (IOException): " + ioex.Message);
 					}
-
 				}
 				else
 				{
@@ -300,7 +297,6 @@ namespace Launchpad.Launcher.Handlers
 						data[SectionNameRemote].RemoveKey("FTPUsername");
 
 						data[SectionNameRemote].AddKey(RemoteUsernameKey, username);
-
 					}
 					if (data[SectionNameRemote].ContainsKey("FTPPassword"))
 					{
@@ -378,7 +374,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// Creates a file with a unique GUID for the computer the launcher has been started on.
 		/// If the file already exists, this method does nothing.
-		///</summary>
+		/// </summary>
 		private static void InitializeInstallationGUID()
 		{
 			// Initialize the unique installation GUID, if needed.
@@ -587,7 +583,6 @@ namespace Launchpad.Launcher.Handlers
 					$"{Path.DirectorySeparatorChar}{GetSystemTarget()}{Path.DirectorySeparatorChar}{executableName}.exe";
 			}
 
-
 			if (File.Exists(executablePathRootLevel))
 			{
 				return executablePathRootLevel;
@@ -603,7 +598,6 @@ namespace Launchpad.Launcher.Handlers
 				"\n\tSearched at: " + executablePathTargetLevel);
 
 			throw new FileNotFoundException("The game executable could not be found.");
-
 		}
 
 		/// <summary>
@@ -705,7 +699,6 @@ namespace Launchpad.Launcher.Handlers
 
 					string changelogURL = data[SectionNameRemote][RemoteChangelogURLKey];
 					return changelogURL;
-
 				}
 				catch (IOException ioex)
 				{
@@ -1179,7 +1172,6 @@ namespace Launchpad.Launcher.Handlers
 			}
 		}
 
-
 		/// <summary>
 		/// Sets the base FTP URL.
 		/// </summary>
@@ -1233,7 +1225,6 @@ namespace Launchpad.Launcher.Handlers
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Sets the base HTTP URL.
@@ -1289,7 +1280,6 @@ namespace Launchpad.Launcher.Handlers
 			}
 		}
 
-
 		/// <summary>
 		/// Sets the BitTorrent magnet link.
 		/// </summary>
@@ -1343,7 +1333,6 @@ namespace Launchpad.Launcher.Handlers
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Sets the name of the main executable.
@@ -1568,7 +1557,6 @@ namespace Launchpad.Launcher.Handlers
 					}
 				}
 			}
-
 		}
 
 		/// <summary>

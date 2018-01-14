@@ -221,13 +221,17 @@ namespace Launchpad.Launcher.Handlers.Protocols
 	/*
 		Common events for all patching protocols
 	*/
-	public delegate void ModuleInstallationProgressChangedEventHandler(object sender,ModuleProgressChangedArgs e);
-	public delegate void ModuleDownloadProgressChangedEventHandler(object sender,ModuleProgressChangedArgs e);
-	public delegate void ModuleVerifyProgressChangedEventHandler(object sender,ModuleProgressChangedArgs e);
-	public delegate void ModuleUpdateProgressChangedEventHandler(object sender,ModuleProgressChangedArgs e);
+	public delegate void ModuleInstallationProgressChangedEventHandler(object sender, ModuleProgressChangedArgs e);
 
-	public delegate void ModuleInstallationFinishedEventHandler(object sender,ModuleInstallationFinishedArgs e);
-	public delegate void ModuleInstallationFailedEventHandler(object sender,ModuleInstallationFailedArgs e);
+	public delegate void ModuleDownloadProgressChangedEventHandler(object sender, ModuleProgressChangedArgs e);
+
+	public delegate void ModuleVerifyProgressChangedEventHandler(object sender, ModuleProgressChangedArgs e);
+
+	public delegate void ModuleUpdateProgressChangedEventHandler(object sender, ModuleProgressChangedArgs e);
+
+	public delegate void ModuleInstallationFinishedEventHandler(object sender, ModuleInstallationFinishedArgs e);
+
+	public delegate void ModuleInstallationFailedEventHandler(object sender, ModuleInstallationFailedArgs e);
 
 	/*
 		Common arguments for all patching protocols

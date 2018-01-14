@@ -20,7 +20,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-
 using System;
 using System.Diagnostics;
 using System.Drawing.Imaging;
@@ -188,7 +187,7 @@ namespace Launchpad.Launcher.Interface
 						) + $"\n\n{ConfigHandler.GetLocalDir()}"
 					);
 
-					if (shouldInstallHereDialog.Run() == (int) ResponseType.Ok)
+					if (shouldInstallHereDialog.Run() == (int)ResponseType.Ok)
 					{
 						shouldInstallHereDialog.Destroy();
 
@@ -399,7 +398,6 @@ namespace Launchpad.Launcher.Interface
 
 			// Simulate a button press from the user.
 			OnPrimaryButtonClicked(this, EventArgs.Empty);
-
 		}
 
 		/// <summary>
@@ -667,7 +665,7 @@ namespace Launchpad.Launcher.Interface
 				)
 			);
 
-			if (reinstallConfirmDialog.Run() == (int) ResponseType.Yes)
+			if (reinstallConfirmDialog.Run() == (int)ResponseType.Yes)
 			{
 				SetLauncherMode(ELauncherMode.Install, true);
 				this.Game.ReinstallGame();

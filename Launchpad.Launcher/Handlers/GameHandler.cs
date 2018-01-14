@@ -302,10 +302,13 @@ namespace Launchpad.Launcher.Handlers
 	/*
 		Game-specific delegates
 	*/
-	public delegate void GameInstallationFinishedEventHandler(object sender,EventArgs e);
-	public delegate void GameInstallationFailedEventHander(object sender,EventArgs e);
-	public delegate void GameLaunchFailedEventHandler(object sender,EventArgs e);
-	public delegate void GameExitEventHandler(object sender,GameExitEventArgs e);
+	public delegate void GameInstallationFinishedEventHandler(object sender, EventArgs e);
+
+	public delegate void GameInstallationFailedEventHander(object sender, EventArgs e);
+
+	public delegate void GameLaunchFailedEventHandler(object sender, EventArgs e);
+
+	public delegate void GameExitEventHandler(object sender, GameExitEventArgs e);
 
 	/*
 		Game-specific event arguments

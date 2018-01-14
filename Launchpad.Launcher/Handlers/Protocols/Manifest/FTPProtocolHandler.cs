@@ -74,7 +74,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
 				try
 				{
-					using (FtpWebResponse response = (FtpWebResponse) plainRequest.GetResponse())
+					using (FtpWebResponse response = (FtpWebResponse)plainRequest.GetResponse())
 					{
 						if (response.StatusCode == FtpStatusCode.OpeningData)
 						{
@@ -171,7 +171,6 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			{
 				username = "anonymous";
 				password = "anonymous";
-
 			}
 			else
 			{
@@ -287,7 +286,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 					}
 
 					long fileSize = contentOffset;
-					using (FtpWebResponse sizereader = (FtpWebResponse) sizerequest.GetResponse())
+					using (FtpWebResponse sizereader = (FtpWebResponse)sizerequest.GetResponse())
 					{
 						fileSize += sizereader.ContentLength;
 					}
@@ -315,7 +314,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 							// Report download progress
 							this.ModuleDownloadProgressArgs.ProgressBarMessage = GetDownloadProgressBarMessage(Path.GetFileName(remoteURL),
 								totalBytesDownloaded, fileSize);
-							this.ModuleDownloadProgressArgs.ProgressFraction = (double) totalBytesDownloaded / (double) fileSize;
+							this.ModuleDownloadProgressArgs.ProgressFraction = (double)totalBytesDownloaded / (double)fileSize;
 							OnModuleDownloadProgressChanged();
 						}
 						else
@@ -338,7 +337,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 								// Report download progress
 								this.ModuleDownloadProgressArgs.ProgressBarMessage = GetDownloadProgressBarMessage(Path.GetFileName(remoteURL),
 									totalBytesDownloaded, fileSize);
-								this.ModuleDownloadProgressArgs.ProgressFraction = (double) totalBytesDownloaded / (double) fileSize;
+								this.ModuleDownloadProgressArgs.ProgressFraction = (double)totalBytesDownloaded / (double)fileSize;
 								OnModuleDownloadProgressChanged();
 							}
 						}
@@ -371,7 +370,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
 			try
 			{
-				FtpWebRequest request = (FtpWebRequest) WebRequest.Create(new Uri(ftpDirectoryPath));
+				FtpWebRequest request = (FtpWebRequest)WebRequest.Create(new Uri(ftpDirectoryPath));
 
 				//Set proxy to null. Under current configuration if this option is not set then the proxy
 				//that is used will get an html response from the web content gateway (firewall monitoring system)

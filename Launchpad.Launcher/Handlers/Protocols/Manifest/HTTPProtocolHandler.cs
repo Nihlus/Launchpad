@@ -68,7 +68,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
 				try
 				{
-					using (HttpWebResponse response = (HttpWebResponse) plainRequest.GetResponse())
+					using (HttpWebResponse response = (HttpWebResponse)plainRequest.GetResponse())
 					{
 						if (response.StatusCode == HttpStatusCode.OK)
 						{
@@ -257,7 +257,6 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			{
 				username = "anonymous";
 				password = "anonymous";
-
 			}
 			else
 			{

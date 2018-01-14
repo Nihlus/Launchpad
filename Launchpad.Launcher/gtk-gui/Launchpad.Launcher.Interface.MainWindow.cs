@@ -71,19 +71,19 @@ namespace Launchpad.Launcher.Interface
 
 		private Button PrimaryButton;
 
-		private void Build ()
+		private void Build()
 		{
-			Gui.Initialize (this);
+			Gui.Initialize(this);
 
 			// Widget Launchpad.Launcher.Interface.MainWindow
-			this.UIManager = new UIManager ();
-			ActionGroup mainActionGroup = new ActionGroup ("Default");
+			this.UIManager = new UIManager();
+			var mainActionGroup = new ActionGroup("Default");
 
 			this.MenuAction = new Action("MenuAction", LocalizationCatalog.GetString("Menu"), null, null)
 			{
 				ShortLabel = LocalizationCatalog.GetString("Menu")
 			};
-			mainActionGroup.Add (this.MenuAction, null);
+			mainActionGroup.Add(this.MenuAction, null);
 
 			this.RepairGameAction = new Action(
 				"repairGameAction",
@@ -93,7 +93,7 @@ namespace Launchpad.Launcher.Interface
 			{
 				ShortLabel = LocalizationCatalog.GetString("Repair Game")
 			};
-			mainActionGroup.Add (this.RepairGameAction, null);
+			mainActionGroup.Add(this.RepairGameAction, null);
 
 			this.ReinstallGameAction = new Action(
 				"reinstallGameAction",
@@ -105,10 +105,10 @@ namespace Launchpad.Launcher.Interface
 			};
 			mainActionGroup.Add(this.ReinstallGameAction, null);
 
-			this.UIManager.InsertActionGroup (mainActionGroup, 0);
-			AddAccelGroup (this.UIManager.AccelGroup);
+			this.UIManager.InsertActionGroup(mainActionGroup, 0);
+			AddAccelGroup(this.UIManager.AccelGroup);
 			this.Name = "Launchpad.Launcher.Interface.MainWindow";
-			this.Title = LocalizationCatalog.GetString ("Launchpad - {0}");
+			this.Title = LocalizationCatalog.GetString("Launchpad - {0}");
 
 			if (SystemInformation.IsRunningOnUnix())
 			{
@@ -135,20 +135,20 @@ namespace Launchpad.Launcher.Interface
 			this.UIManager.AddUiFromString
 			(
 				"<ui>" +
-					"<menubar name='MainMenuBar'>" +
-						"<menu name='MenuAction' action='MenuAction'>" +
-							"<menuitem name='repairGameAction' action='repairGameAction'/>" +
-							"<separator/>" +
-							"<menuitem name='reinstallGameAction' action='reinstallGameAction'/>" +
-						"</menu>" +
-					"</menubar>" +
+				"<menubar name='MainMenuBar'>" +
+				"<menu name='MenuAction' action='MenuAction'>" +
+				"<menuitem name='repairGameAction' action='repairGameAction'/>" +
+				"<separator/>" +
+				"<menuitem name='reinstallGameAction' action='reinstallGameAction'/>" +
+				"</menu>" +
+				"</menubar>" +
 				"</ui>"
 			);
-			this.MainMenuBar = (MenuBar)this.UIManager.GetWidget ("/MainMenuBar");
+			this.MainMenuBar = (MenuBar)this.UIManager.GetWidget("/MainMenuBar");
 			this.MainMenuBar.Name = "MainMenuBar";
-			this.VBox1.Add (this.MainMenuBar);
+			this.VBox1.Add(this.MainMenuBar);
 
-			Box.BoxChild w2 = (Box.BoxChild)this.VBox1 [this.MainMenuBar];
+			var w2 = (Box.BoxChild)this.VBox1[this.MainMenuBar];
 			w2.Position = 0;
 			w2.Expand = false;
 			w2.Fill = false;
@@ -182,14 +182,14 @@ namespace Launchpad.Launcher.Interface
 				Name = "browserWindow",
 				ShadowType = ShadowType.In
 			};
-			this.Alignment2.Add (this.BrowserWindow);
-			this.BrowserContainer.Add (this.Alignment2);
+			this.Alignment2.Add(this.BrowserWindow);
+			this.BrowserContainer.Add(this.Alignment2);
 
-			Box.BoxChild w4 = (Box.BoxChild)this.BrowserContainer [this.Alignment2];
+			var w4 = (Box.BoxChild)this.BrowserContainer[this.Alignment2];
 			w4.Position = 0;
-			this.HBox2.Add (this.BrowserContainer);
+			this.HBox2.Add(this.BrowserContainer);
 
-			Box.BoxChild w5 = (Box.BoxChild)this.HBox2 [this.BrowserContainer];
+			var w5 = (Box.BoxChild)this.HBox2[this.BrowserContainer];
 			w5.Position = 0;
 			w5.Expand = false;
 
@@ -207,14 +207,14 @@ namespace Launchpad.Launcher.Interface
 				Name = "gameBanner",
 				Pixbuf = Pixbuf.LoadFromResource("Launchpad.Launcher.Resources.RocketIcon.ico")
 			};
-			this.Alignment5.Add (this.GameBanner);
-			this.HBox2.Add (this.Alignment5);
+			this.Alignment5.Add(this.GameBanner);
+			this.HBox2.Add(this.Alignment5);
 
-			Box.BoxChild w7 = (Box.BoxChild)this.HBox2 [this.Alignment5];
+			var w7 = (Box.BoxChild)this.HBox2[this.Alignment5];
 			w7.Position = 1;
-			this.VBox1.Add (this.HBox2);
+			this.VBox1.Add(this.HBox2);
 
-			Box.BoxChild w8 = (Box.BoxChild)this.VBox1 [this.HBox2];
+			var w8 = (Box.BoxChild)this.VBox1[this.HBox2];
 			w8.Position = 1;
 			w8.Expand = false;
 			w8.Fill = false;
@@ -233,10 +233,10 @@ namespace Launchpad.Launcher.Interface
 				Xalign = 0F,
 				LabelProp = LocalizationCatalog.GetString("Idle")
 			};
-			this.Alignment1.Add (this.IndicatorLabel);
-			this.VBox1.Add (this.Alignment1);
+			this.Alignment1.Add(this.IndicatorLabel);
+			this.VBox1.Add(this.Alignment1);
 
-			Box.BoxChild w10 = (Box.BoxChild)this.VBox1 [this.Alignment1];
+			var w10 = (Box.BoxChild)this.VBox1[this.Alignment1];
 			w10.Position = 2;
 			w10.Expand = false;
 			w10.Fill = false;
@@ -260,10 +260,10 @@ namespace Launchpad.Launcher.Interface
 			{
 				Name = "mainProgressBar"
 			};
-			this.Alignment4.Add (this.MainProgressBar);
-			this.HBox3.Add (this.Alignment4);
+			this.Alignment4.Add(this.MainProgressBar);
+			this.HBox3.Add(this.Alignment4);
 
-			Box.BoxChild w12 = (Box.BoxChild)this.HBox3 [this.Alignment4];
+			var w12 = (Box.BoxChild)this.HBox3[this.Alignment4];
 			w12.Position = 0;
 
 			// Container child HBox3.Gtk.Box+BoxChild
@@ -290,31 +290,29 @@ namespace Launchpad.Launcher.Interface
 				UseUnderline = true,
 				Label = LocalizationCatalog.GetString("Inactive")
 			};
-			this.Alignment3.Add (this.PrimaryButton);
-			this.HBox4.Add (this.Alignment3);
+			this.Alignment3.Add(this.PrimaryButton);
+			this.HBox4.Add(this.Alignment3);
 
-			Box.BoxChild w14 = (Box.BoxChild)this.HBox4 [this.Alignment3];
+			var w14 = (Box.BoxChild)this.HBox4[this.Alignment3];
 			w14.Position = 0;
-			this.HBox3.Add (this.HBox4);
+			this.HBox3.Add(this.HBox4);
 
-			Box.BoxChild w15 = (Box.BoxChild)this.HBox3 [this.HBox4];
+			var w15 = (Box.BoxChild)this.HBox3[this.HBox4];
 			w15.Position = 1;
 			w15.Expand = false;
 			w15.Fill = false;
-			this.VBox1.Add (this.HBox3);
+			this.VBox1.Add(this.HBox3);
 
-			Box.BoxChild w16 = (Box.BoxChild)this.VBox1 [this.HBox3];
+			var w16 = (Box.BoxChild)this.VBox1[this.HBox3];
 			w16.Position = 3;
 			w16.Expand = true;
 			w16.Fill = false;
 
-			Add (this.VBox1);
-			if ((this.Child != null)) {
-				this.Child.ShowAll ();
-			}
+			Add(this.VBox1);
+			this.Child?.ShowAll();
 
 			this.PrimaryButton.HasDefault = true;
-			Show ();
+			Show();
 			this.DeleteEvent += OnDeleteEvent;
 			this.RepairGameAction.Activated += OnRepairGameActionActivated;
 			this.ReinstallGameAction.Activated += OnReinstallGameActionActivated;
