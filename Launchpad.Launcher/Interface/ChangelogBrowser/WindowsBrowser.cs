@@ -56,14 +56,13 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 		private readonly Socket Socket = new Socket();
 
 		/// <summary>
-		/// A public-facing handle that the UI can use to move the browser around, once it's been created. This points
-		/// to the viewport which has the socket inside it.
+		/// Gets a public-facing handle that the UI can use to move the browser around, once it's been created. This
+		/// points to the viewport which has the socket inside it.
 		/// </summary>
 		public Widget WidgetHandle => this.Viewport;
 
 		/// <summary>
-		/// Creates a new <see cref="WindowsBrowser"/> object, binding a <see cref="WebBrowser"/> to
-		/// the input <see cref="Container"/>.
+		/// Initializes a new instance of the <see cref="WindowsBrowser"/> class.
 		/// </summary>
 		/// <param name="parentContainer">The parent container which will hold the browser.</param>
 		public WindowsBrowser(Container parentContainer)

@@ -87,7 +87,7 @@ namespace Launchpad.Launcher.Handlers
 		private readonly PatchProtocolHandler Patch;
 
 		/// <summary>
-		/// Creates a new instance of the <see cref="GameHandler"/> class.
+		/// Initializes a new instance of the <see cref="GameHandler"/> class.
 		/// </summary>
 		public GameHandler()
 		{

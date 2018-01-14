@@ -238,7 +238,6 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <summary>
 		/// Downloads an FTP file.
 		/// </summary>
-		/// <returns>The FTP file's location on disk, or the exception message.</returns>
 		/// <param name="url">Ftp source file path.</param>
 		/// <param name="localPath">Local destination.</param>
 		/// <param name="totalSize">The total expected size of the file.</param>

@@ -53,7 +53,7 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 		private bool IsNavigatingFromCode;
 
 		/// <summary>
-		/// A handle for the underlying widget used. For windows, this will be a <see cref="Viewport"/>. For
+		/// Gets a handle for the underlying widget used. For windows, this will be a <see cref="Viewport"/>. For
 		/// Mac and Linux, it will be a <see cref="WebView"/>.
 		/// </summary>
 		private Widget WidgetHandle
@@ -62,8 +62,7 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 		}
 
 		/// <summary>
-		/// Creates a new <see cref="Changelog"/> object, and adds the visible changelog widget to the provided
-		/// parent container.
+		/// Initializes a new instance of the <see cref="Changelog"/> class.
 		/// </summary>
 		/// <param name="parentContainer">The parent GTK container where the changelog should be added.</param>
 		public Changelog(Container parentContainer)

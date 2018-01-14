@@ -116,7 +116,7 @@ namespace Launchpad.Launcher.Handlers
 		public static readonly ConfigHandler Instance = new ConfigHandler();
 
 		/// <summary>
-		/// Creates a new instance of the <see cref="ConfigHandler"/> class and initalizes it.
+		/// Initializes a new instance of the <see cref="ConfigHandler"/> class and initalizes it.
 		/// </summary>
 		private ConfigHandler()
 		{

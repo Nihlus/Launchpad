@@ -47,7 +47,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		private static readonly ILog Log = LogManager.GetLogger(typeof(PatchProtocolHandler));
 
 		/// <summary>
-		/// Creates a new instance of the <see cref="PatchProtocolHandler"/> class.
+		/// Initializes a new instance of the <see cref="PatchProtocolHandler"/> class.
 		/// </summary>
 		protected PatchProtocolHandler()
 		{

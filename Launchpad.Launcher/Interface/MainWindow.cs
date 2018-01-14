@@ -90,7 +90,7 @@ namespace Launchpad.Launcher.Interface
 		private bool IsInitialized;
 
 		/// <summary>
-		/// Creates a new instance of the <see cref="MainWindow"/> class.
+		/// Initializes a new instance of the <see cref="MainWindow"/> class.
 		/// </summary>
 		public MainWindow()
 			: base(Gtk.WindowType.Toplevel)

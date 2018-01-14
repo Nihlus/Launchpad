@@ -58,7 +58,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		private readonly ManifestHandler FileManifestHandler;
 
 		/// <summary>
-		/// Creates a new instance of the <see cref="ManifestBasedProtocolHandler"/> class.
+		/// Initializes a new instance of the <see cref="ManifestBasedProtocolHandler"/> class.
 		/// </summary>
 		protected ManifestBasedProtocolHandler()
 		{
