@@ -34,9 +34,9 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.2.1" />
+    <PackageReference Include="ini-parser" Version="2.5.2" />
     <PackageReference Include="NGettext" Version="0.6.3" />
     <PackageReference Include="log4net" Version="2.0.8" />
-    <PackageReference Include="ini-parser" Version="2.4.0" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\locale\**\*.po">

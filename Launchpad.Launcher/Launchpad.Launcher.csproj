@@ -43,10 +43,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="ini-parser" Version="2.5.2" />
     <PackageReference Include="System.Net.Http" Version="4.3.3" />
     <PackageReference Include="NGettext" Version="0.6.3" />
     <PackageReference Include="log4net" Version="2.0.8" />
-    <PackageReference Include="ini-parser" Version="2.4.0" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\locale\**\*.po">
