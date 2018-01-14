@@ -998,7 +998,7 @@ namespace Launchpad.Launcher.Handlers
 				catch (IOException ioex)
 				{
 					Log.Warn("Could not get the remote password (IOException): " + ioex.Message);
-					return String.Empty;
+					return string.Empty;
 				}
 			}
 		}
