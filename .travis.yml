@@ -5,7 +5,7 @@ mono: latest
 dotnet: 2.1.3
 install:
   - sudo apt-get install -y gtk-sharp2 libwebkit-cil-dev libwebkit1.1-cil nuget libmono-cecil-cil-dev libglade2.0-cil-dev
-  - nuget restore Launchpad.sln -Verbosity detailed
+  - dotnet restore
 script:
   - msbuild /p:Configuration=Release Launchpad.sln
 after_success:
