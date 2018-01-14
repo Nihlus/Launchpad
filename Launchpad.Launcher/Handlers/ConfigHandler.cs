@@ -1111,8 +1111,12 @@ namespace Launchpad.Launcher.Handlers
 				}
 				default:
 				{
-					throw new ArgumentOutOfRangeException(nameof(GetPatchProtocolString), null,
-						"Invalid protocol set in the configuration file.");
+					throw new ArgumentOutOfRangeException
+					(
+						nameof(GetPatchProtocolString),
+						null,
+						"Invalid protocol set in the configuration file."
+					);
 				}
 			}
 		}
@@ -1138,8 +1142,12 @@ namespace Launchpad.Launcher.Handlers
 				}
 				default:
 				{
-					throw new ArgumentOutOfRangeException(nameof(GetPatchProtocolString), null,
-						"Invalid protocol set in the configuration file.");
+					throw new ArgumentOutOfRangeException
+					(
+						nameof(GetPatchProtocolString),
+						null,
+						"Invalid protocol set in the configuration file."
+					);
 				}
 			}
 		}

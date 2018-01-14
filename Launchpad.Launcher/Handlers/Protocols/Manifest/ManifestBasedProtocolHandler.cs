@@ -182,9 +182,12 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				{
 					++updatedFiles;
 
-					this.ModuleUpdateProgressArgs.IndicatorLabelMessage = GetUpdateIndicatorLabelMessage(Path.GetFileName(fileEntry.RelativePath),
+					this.ModuleUpdateProgressArgs.IndicatorLabelMessage = GetUpdateIndicatorLabelMessage
+					(
+						Path.GetFileName(fileEntry.RelativePath),
 						updatedFiles,
-						filesRequiringUpdate.Count);
+						filesRequiringUpdate.Count
+					);
 					OnModuleUpdateProgressChanged();
 
 					// If we're updating an existing file, make sure to let the downloader know
@@ -232,8 +235,12 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 					++verifiedFiles;
 
 					// Prepare the progress event contents
-					this.ModuleVerifyProgressArgs.IndicatorLabelMessage = GetVerifyIndicatorLabelMessage(Path.GetFileName(fileEntry.RelativePath),
-						verifiedFiles, manifest.Count);
+					this.ModuleVerifyProgressArgs.IndicatorLabelMessage = GetVerifyIndicatorLabelMessage
+					(
+						Path.GetFileName(fileEntry.RelativePath),
+						verifiedFiles,
+						manifest.Count
+					);
 					OnModuleVerifyProgressChanged();
 
 					if (!fileEntry.IsFileIntegrityIntact())
@@ -249,8 +256,12 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 					++downloadedFiles;
 
 					// Prepare the progress event contents
-					this.ModuleDownloadProgressArgs.IndicatorLabelMessage = GetDownloadIndicatorLabelMessage(Path.GetFileName(fileEntry.RelativePath),
-						downloadedFiles, brokenFiles.Count);
+					this.ModuleDownloadProgressArgs.IndicatorLabelMessage = GetDownloadIndicatorLabelMessage
+					(
+						Path.GetFileName(fileEntry.RelativePath),
+						downloadedFiles,
+						brokenFiles.Count
+					);
 					OnModuleDownloadProgressChanged();
 
 					for (int i = 0; i < this.Config.GetFileRetries(); ++i)
@@ -308,8 +319,12 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				}
 				default:
 				{
-					throw new ArgumentOutOfRangeException(nameof(module), module,
-						"An invalid module value was passed to DownloadModule.");
+					throw new ArgumentOutOfRangeException
+					(
+						nameof(module),
+						module,
+						"An invalid module value was passed to DownloadModule."
+					);
 				}
 			}
 
@@ -345,8 +360,12 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				++downloadedFiles;
 
 				// Prepare the progress event contents
-				this.ModuleDownloadProgressArgs.IndicatorLabelMessage = GetDownloadIndicatorLabelMessage(Path.GetFileName(fileEntry.RelativePath),
-					downloadedFiles, moduleManifest.Count);
+				this.ModuleDownloadProgressArgs.IndicatorLabelMessage = GetDownloadIndicatorLabelMessage
+				(
+					Path.GetFileName(fileEntry.RelativePath),
+					downloadedFiles,
+					moduleManifest.Count
+				);
 				OnModuleDownloadProgressChanged();
 
 				DownloadManifestEntry(fileEntry, module);
@@ -370,8 +389,14 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <param name="totalSize">The expected total size of the file.</param>
 		/// <param name="contentOffset">The offset into the file where reading and writing should start.</param>
 		/// <param name="useAnonymousLogin">Whether or not to use anonymous credentials.</param>
-		protected abstract void DownloadRemoteFile(string url, string localPath, long totalSize = 0, long contentOffset = 0,
-			bool useAnonymousLogin = false);
+		protected abstract void DownloadRemoteFile
+		(
+			string url,
+			string localPath,
+			long totalSize = 0,
+			long contentOffset = 0,
+			bool useAnonymousLogin = false
+		);
 
 		/// <summary>
 		/// Determines whether or not the specified module is outdated.
@@ -404,8 +429,12 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 					}
 					default:
 					{
-						throw new ArgumentOutOfRangeException(nameof(module), module,
-							"An invalid module value was passed to IsModuleOutdated.");
+						throw new ArgumentOutOfRangeException
+						(
+							nameof(module),
+							module,
+							"An invalid module value was passed to IsModuleOutdated."
+						);
 					}
 				}
 
@@ -452,8 +481,12 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				}
 				default:
 				{
-					throw new ArgumentOutOfRangeException(nameof(module), module,
-						"An invalid module value was passed to DownloadManifestEntry.");
+					throw new ArgumentOutOfRangeException
+					(
+						nameof(module),
+						module,
+						"An invalid module value was passed to DownloadManifestEntry."
+					);
 				}
 			}
 
@@ -569,8 +602,12 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				}
 				default:
 				{
-					throw new ArgumentOutOfRangeException(nameof(module), module,
-						"An invalid module value was passed to RefreshModuleManifest.");
+					throw new ArgumentOutOfRangeException
+					(
+						nameof(module),
+						module,
+						"An invalid module value was passed to RefreshModuleManifest."
+					);
 				}
 			}
 
@@ -609,8 +646,12 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				}
 				default:
 				{
-					throw new ArgumentOutOfRangeException(nameof(module), module,
-						"An invalid module value was passed to GetRemoteModuleManifestChecksum.");
+					throw new ArgumentOutOfRangeException
+					(
+						nameof(module),
+						module,
+						"An invalid module value was passed to GetRemoteModuleManifestChecksum."
+					);
 				}
 			}
 
@@ -637,8 +678,12 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				}
 				default:
 				{
-					throw new ArgumentOutOfRangeException(nameof(module), module,
-						"An invalid module value was passed to RefreshModuleManifest");
+					throw new ArgumentOutOfRangeException
+					(
+						nameof(module),
+						module,
+						"An invalid module value was passed to RefreshModuleManifest"
+					);
 				}
 			}
 
@@ -683,8 +728,12 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				}
 				default:
 				{
-					throw new ArgumentOutOfRangeException(nameof(module), module,
-						"An invalid module value was passed to DownloadModuleManifest");
+					throw new ArgumentOutOfRangeException
+					(
+						nameof(module),
+						module,
+						"An invalid module value was passed to DownloadModuleManifest"
+					);
 				}
 			}
 
