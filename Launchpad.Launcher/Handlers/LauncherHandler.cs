@@ -106,7 +106,18 @@ namespace Launchpad.Launcher.Handlers
 				return false;
 			}
 
-			HttpWebRequest headRequest = (HttpWebRequest)WebRequest.Create(Config.GetChangelogURL());
+			if (!Uri.TryCreate(Config.GetChangelogURL(), UriKind.RelativeOrAbsolute, out var result))
+			{
+				return false;
+			}
+
+			// Only allow HTTP URIs
+			if (!(result.Scheme == "http" || result.Scheme == "https"))
+			{
+				return false;
+			}
+
+			HttpWebRequest headRequest = (HttpWebRequest)WebRequest.Create(result);
 			headRequest.Method = "HEAD";
 
 			try
