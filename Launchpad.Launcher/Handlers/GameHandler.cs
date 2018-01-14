@@ -298,32 +298,4 @@ namespace Launchpad.Launcher.Handlers
 			this.GameExited?.Invoke(this, this.GameExitArgs);
 		}
 	}
-
-	/*
-		Game-specific event arguments
-	*/
-
-	/// <summary>
-	/// Game exit event arguments.
-	/// </summary>
-	public class GameExitEventArgs : EventArgs
-	{
-		/// <summary>
-		/// Gets or sets the name of the game.
-		/// </summary>
-		public string GameName
-		{
-			get;
-			set;
-		}
-
-		/// <summary>
-		/// Gets or sets the exit code of the game.
-		/// </summary>
-		public int ExitCode
-		{
-			get;
-			set;
-		}
-	}
 }

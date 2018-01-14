@@ -274,22 +274,4 @@ namespace Launchpad.Launcher.Handlers
 			this.LauncherDownloadFinished?.Invoke(sender, e);
 		}
 	}
-
-	/*
-		Launcher-specific event arguments
-	*/
-	public class ChangelogDownloadFinishedEventArgs : EventArgs
-	{
-		public string HTML
-		{
-			get;
-			set;
-		}
-
-		public string URL
-		{
-			get;
-			set;
-		}
-	}
 }
