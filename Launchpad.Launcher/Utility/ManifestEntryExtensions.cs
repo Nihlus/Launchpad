@@ -27,6 +27,9 @@ using Launchpad.Launcher.Handlers;
 
 namespace Launchpad.Launcher.Utility
 {
+	/// <summary>
+	/// Extension methods for the <see cref="ManifestEntry"/> class.
+	/// </summary>
 	public static class ManifestEntryExtensions
 	{
 		/// <summary>

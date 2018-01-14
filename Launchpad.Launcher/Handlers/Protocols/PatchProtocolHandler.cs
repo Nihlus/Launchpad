@@ -64,27 +64,27 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <summary>
 		/// Raised whenever the download progress of a module changes.
 		/// </summary>
-		public event ModuleDownloadProgressChangedEventHandler ModuleDownloadProgressChanged;
+		public event EventHandler<ModuleProgressChangedArgs> ModuleDownloadProgressChanged;
 
 		/// <summary>
 		/// Raised whenever the verification progress of a module changes.
 		/// </summary>
-		public event ModuleVerifyProgressChangedEventHandler ModuleVerifyProgressChanged;
+		public event EventHandler<ModuleProgressChangedArgs> ModuleVerifyProgressChanged;
 
 		/// <summary>
 		/// Raised whenever the update progress of a module changes.
 		/// </summary>
-		public event ModuleUpdateProgressChangedEventHandler ModuleUpdateProgressChanged;
+		public event EventHandler<ModuleProgressChangedArgs> ModuleUpdateProgressChanged;
 
 		/// <summary>
 		/// Raised whenever the installation of a module finishes.
 		/// </summary>
-		public event ModuleInstallationFinishedEventHandler ModuleInstallationFinished;
+		public event EventHandler<ModuleInstallationFinishedArgs> ModuleInstallationFinished;
 
 		/// <summary>
 		/// Raised whenver the installation of a module fails.
 		/// </summary>
-		public event ModuleInstallationFailedEventHandler ModuleInstallationFailed;
+		public event EventHandler<ModuleInstallationFailedArgs> ModuleInstallationFailed;
 
 		protected readonly ModuleProgressChangedArgs ModuleDownloadProgressArgs = new ModuleProgressChangedArgs();
 		protected readonly ModuleProgressChangedArgs ModuleVerifyProgressArgs = new ModuleProgressChangedArgs();
@@ -183,26 +183,41 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// </summary>
 		public abstract void VerifyModule(EModule module);
 
+		/// <summary>
+		/// Invoke the <see cref="ModuleDownloadProgressChanged"/> event.
+		/// </summary>
 		protected void OnModuleDownloadProgressChanged()
 		{
 			this.ModuleDownloadProgressChanged?.Invoke(this, this.ModuleDownloadProgressArgs);
 		}
 
+		/// <summary>
+		/// Invoke the <see cref="ModuleVerifyProgressChanged"/> event.
+		/// </summary>
 		protected void OnModuleVerifyProgressChanged()
 		{
 			this.ModuleVerifyProgressChanged?.Invoke(this, this.ModuleVerifyProgressArgs);
 		}
 
+		/// <summary>
+		/// Invoke the <see cref="ModuleUpdateProgressChanged"/> event.
+		/// </summary>
 		protected void OnModuleUpdateProgressChanged()
 		{
 			this.ModuleUpdateProgressChanged?.Invoke(this, this.ModuleUpdateProgressArgs);
 		}
 
+		/// <summary>
+		/// Invoke the <see cref="ModuleInstallationFinished"/> event.
+		/// </summary>
 		protected void OnModuleInstallationFinished()
 		{
 			this.ModuleInstallationFinished?.Invoke(this, this.ModuleInstallFinishedArgs);
 		}
 
+		/// <summary>
+		/// Invoke the <see cref="ModuleInstallationFailed"/> event.
+		/// </summary>
 		protected void OnModuleInstallationFailed()
 		{
 			this.ModuleInstallationFailed?.Invoke(this, this.ModuleInstallFailedArgs);
@@ -214,48 +229,55 @@ namespace Launchpad.Launcher.Handlers.Protocols
 	/// </summary>
 	public enum EModule : byte
 	{
+		/// <summary>
+		/// The launcher itself.
+		/// </summary>
 		Launcher = 1,
+
+		/// <summary>
+		/// The managed game.
+		/// </summary>
 		Game = 2
 	}
 
 	/*
-		Common events for all patching protocols
-	*/
-	public delegate void ModuleInstallationProgressChangedEventHandler(object sender, ModuleProgressChangedArgs e);
-
-	public delegate void ModuleDownloadProgressChangedEventHandler(object sender, ModuleProgressChangedArgs e);
-
-	public delegate void ModuleVerifyProgressChangedEventHandler(object sender, ModuleProgressChangedArgs e);
-
-	public delegate void ModuleUpdateProgressChangedEventHandler(object sender, ModuleProgressChangedArgs e);
-
-	public delegate void ModuleInstallationFinishedEventHandler(object sender, ModuleInstallationFinishedArgs e);
-
-	public delegate void ModuleInstallationFailedEventHandler(object sender, ModuleInstallationFailedArgs e);
-
-	/*
 		Common arguments for all patching protocols
 	*/
+	/// <summary>
+	/// Event arguments for changing modules.
+	/// </summary>
 	public sealed class ModuleProgressChangedArgs : EventArgs
 	{
+		/// <summary>
+		/// Gets or sets the module that is being changed.
+		/// </summary>
 		public EModule Module
 		{
 			get;
 			set;
 		}
 
+		/// <summary>
+		/// Gets or sets the message that should be displayed on the progress bar.
+		/// </summary>
 		public string ProgressBarMessage
 		{
 			get;
 			set;
 		}
 
+		/// <summary>
+		/// Gets or sets the message that should be displayed on the indicator label.
+		/// </summary>
 		public string IndicatorLabelMessage
 		{
 			get;
 			set;
 		}
 
+		/// <summary>
+		/// Gets or sets the fractional progress (in the range 0 to 1).
+		/// </summary>
 		public double ProgressFraction
 		{
 			get;
@@ -263,8 +285,14 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		}
 	}
 
+	/// <summary>
+	/// Event arguments for a module installation success.
+	/// </summary>
 	public sealed class ModuleInstallationFinishedArgs : EventArgs
 	{
+		/// <summary>
+		/// Gets or sets the module that was installed.
+		/// </summary>
 		public EModule Module
 		{
 			get;
@@ -272,8 +300,14 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		}
 	}
 
+	/// <summary>
+	/// Event arguments for a module installation failure.
+	/// </summary>
 	public sealed class ModuleInstallationFailedArgs : EventArgs
 	{
+		/// <summary>
+		/// Gets or sets the module that failed to install.
+		/// </summary>
 		public EModule Module
 		{
 			get;

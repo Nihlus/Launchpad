@@ -52,29 +52,29 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// Event raised whenever the progress of installing or updating the game changes.
 		/// </summary>
-		public event ModuleInstallationProgressChangedEventHandler ProgressChanged;
+		public event EventHandler<ModuleProgressChangedArgs> ProgressChanged;
 
 		/// <summary>
 		/// Event raised whenever the game finishes downloading, regardless of whether or not it's updating
 		/// or installing.
 		/// </summary>
-		public event GameInstallationFinishedEventHandler DownloadFinished;
+		public event EventHandler DownloadFinished;
 
 		/// <summary>
 		/// Event raised whenever the game fails to download, regardless of whether or not it's updating
 		/// or installing.
 		/// </summary>
-		public event GameInstallationFailedEventHander DownloadFailed;
+		public event EventHandler DownloadFailed;
 
 		/// <summary>
 		/// Event raised whenever the game fails to launch.
 		/// </summary>
-		public event GameLaunchFailedEventHandler LaunchFailed;
+		public event EventHandler LaunchFailed;
 
 		/// <summary>
 		/// Event raised whenever the game exits.
 		/// </summary>
-		public event GameExitEventHandler GameExited;
+		public event EventHandler<GameExitEventArgs> GameExited;
 
 		// ...
 		private readonly GameExitEventArgs GameExitArgs = new GameExitEventArgs();
@@ -300,27 +300,26 @@ namespace Launchpad.Launcher.Handlers
 	}
 
 	/*
-		Game-specific delegates
-	*/
-	public delegate void GameInstallationFinishedEventHandler(object sender, EventArgs e);
-
-	public delegate void GameInstallationFailedEventHander(object sender, EventArgs e);
-
-	public delegate void GameLaunchFailedEventHandler(object sender, EventArgs e);
-
-	public delegate void GameExitEventHandler(object sender, GameExitEventArgs e);
-
-	/*
 		Game-specific event arguments
 	*/
+
+	/// <summary>
+	/// Game exit event arguments.
+	/// </summary>
 	public class GameExitEventArgs : EventArgs
 	{
+		/// <summary>
+		/// Gets or sets the name of the game.
+		/// </summary>
 		public string GameName
 		{
 			get;
 			set;
 		}
 
+		/// <summary>
+		/// Gets or sets the exit code of the game.
+		/// </summary>
 		public int ExitCode
 		{
 			get;

@@ -29,6 +29,9 @@ using log4net;
 
 namespace Launchpad.Launcher
 {
+	/// <summary>
+	/// The main program class.
+	/// </summary>
 	public static class Program
 	{
 		/// <summary>

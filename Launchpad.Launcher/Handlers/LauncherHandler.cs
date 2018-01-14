@@ -51,11 +51,11 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		private static readonly ILog Log = LogManager.GetLogger(typeof(LauncherHandler));
 
-		public event ChangelogDownloadFinishedEventHandler ChangelogDownloadFinished;
+		public event EventHandler<ChangelogDownloadFinishedEventArgs> ChangelogDownloadFinished;
 
-		public event LauncherDownloadFinishedEventHandler LauncherDownloadFinished;
+		public event EventHandler<ModuleInstallationFinishedArgs> LauncherDownloadFinished;
 
-		public event LauncherDownloadProgressChangedEventHandler LauncherDownloadProgressChanged;
+		public event EventHandler<ModuleProgressChangedArgs> LauncherDownloadProgressChanged;
 
 		private readonly ChangelogDownloadFinishedEventArgs ChangelogDownloadFinishedArgs = new ChangelogDownloadFinishedEventArgs();
 		private readonly PatchProtocolHandler Patch;
@@ -274,15 +274,6 @@ namespace Launchpad.Launcher.Handlers
 			this.LauncherDownloadFinished?.Invoke(sender, e);
 		}
 	}
-
-	/*
-		Launcher-specific events
-	*/
-	public delegate void ChangelogDownloadFinishedEventHandler(object sender, ChangelogDownloadFinishedEventArgs e);
-
-	public delegate void LauncherDownloadProgressChangedEventHandler(object sender, ModuleProgressChangedArgs e);
-
-	public delegate void LauncherDownloadFinishedEventHandler(object sendre, ModuleInstallationFinishedArgs e);
 
 	/*
 		Launcher-specific event arguments

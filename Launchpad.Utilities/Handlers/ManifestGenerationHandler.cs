@@ -33,8 +33,8 @@ namespace Launchpad.Utilities.Handlers
 {
 	public class ManifestGenerationHandler
 	{
-		public event ManifestGenerationProgressChangedEventHandler ManifestGenerationProgressChanged;
-		public event ManifestGenerationFinishedEventHandler ManifestGenerationFinished;
+		public event EventHandler<ManifestGenerationProgressChangedEventArgs> ManifestGenerationProgressChanged;
+		public event EventHandler ManifestGenerationFinished;
 
 		private readonly ManifestGenerationProgressChangedEventArgs GenerationProgressArgs = new ManifestGenerationProgressChangedEventArgs();
 

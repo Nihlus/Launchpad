@@ -467,7 +467,6 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// Creates the update cookie.
 		/// </summary>
-		/// <returns>The update cookie's path.</returns>
 		public static void CreateLauncherCookie()
 		{
 			bool bCookieExists = File.Exists(GetLauncherCookiePath());
@@ -490,7 +489,6 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// Creates the install cookie.
 		/// </summary>
-		/// <returns>The install cookie's path.</returns>
 		public static void CreateGameCookie()
 		{
 			bool bCookieExists = File.Exists(GetGameCookiePath());
@@ -1474,7 +1472,6 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// Replaces and updates the old pre-unix config.
 		/// </summary>
-		/// <returns><c>true</c>, if an old config was copied over to the new format, <c>false</c> otherwise.</returns>
 		private void UpdateAndMovePreUnixConfig()
 		{
 			string oldConfigPath = $@"{GetLocalDir()}config{Path.DirectorySeparatorChar}launcherConfig.ini";
