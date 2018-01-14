@@ -2,6 +2,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net462</TargetFramework>
+    <Platform>x86</Platform>
   </PropertyGroup>
   <!-- Workaround for https://github.com/dotnet/roslyn-project-system/issues/1739 -->
   <PropertyGroup>
