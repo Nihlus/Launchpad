@@ -157,8 +157,8 @@ namespace Launchpad.Common.Handlers.Manifest
 			}
 
 			return this.RelativePath == other.RelativePath &&
-			       string.Equals(this.Hash, other.Hash, StringComparison.InvariantCultureIgnoreCase) &&
-			       this.Size == other.Size;
+				string.Equals(this.Hash, other.Hash, StringComparison.InvariantCultureIgnoreCase) &&
+				this.Size == other.Size;
 		}
 
 		/// <summary>

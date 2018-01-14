@@ -30,16 +30,16 @@ namespace Launchpad.Common.Enums
 		/// <summary>
 		/// An unknown manifest.
 		/// </summary>
-		Unknown 			= 0,
+		Unknown = 0,
 
 		/// <summary>
 		/// A launcher manifest.
 		/// </summary>
-		Launchpad 			= 1,
+		Launchpad = 1,
 
 		/// <summary>
 		/// A game manifest.
 		/// </summary>
-		Game 				= 2
+		Game = 2
 	}
 }
