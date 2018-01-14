@@ -32,4 +32,3 @@ namespace Launchpad.Common.Enums
 		Unknown
 	}
 }
-

@@ -296,4 +296,3 @@ namespace Launchpad.Common.Handlers.Manifest
 		}
 	}
 }
-
