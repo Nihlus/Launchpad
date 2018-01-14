@@ -41,6 +41,11 @@ namespace Launchpad.Launcher.Handlers
 	/// </summary>
 	internal sealed class LauncherHandler
 	{
+		// Replace the variables in the script with actual data
+		private const string TempDirectoryVariable = "%temp%";
+		private const string LocalInstallDirectoryVariable = "%localDir%";
+		private const string LocalExecutableName = "%launchpadExecutable%";
+
 		/// <summary>
 		/// Logger instance for this class.
 		/// </summary>
@@ -54,11 +59,6 @@ namespace Launchpad.Launcher.Handlers
 
 		private readonly ChangelogDownloadFinishedEventArgs ChangelogDownloadFinishedArgs = new ChangelogDownloadFinishedEventArgs();
 		private readonly PatchProtocolHandler Patch;
-
-		// Replace the variables in the script with actual data
-		private const string TempDirectoryVariable = "%temp%";
-		private const string LocalInstallDirectoryVariable = "%localDir%";
-		private const string LocalExecutableName = "%launchpadExecutable%";
 
 		/// <summary>
 		/// The config handler reference.

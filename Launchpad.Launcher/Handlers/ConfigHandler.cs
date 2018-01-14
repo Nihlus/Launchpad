@@ -48,21 +48,6 @@ namespace Launchpad.Launcher.Handlers
 	/// </summary>
 	public sealed class ConfigHandler
 	{
-		/// <summary>
-		/// Logger instance for this class.
-		/// </summary>
-		private static readonly ILog Log = LogManager.GetLogger(typeof(ConfigHandler));
-
-		/// <summary>
-		/// The config lock object.
-		/// </summary>
-		private readonly object ReadLock = new object();
-
-		/// <summary>
-		/// The write lock object.
-		/// </summary>
-		private readonly object WriteLock = new object();
-
 		/*
 			Constants for different default configuration options. Changing one option here should be reflected with
 			a corresponding update block in the initialization.
@@ -109,6 +94,21 @@ namespace Launchpad.Launcher.Handlers
 
 		private const string LaunchpadOfficialUpdatesKey = "bOfficialUpdates";
 		private const string LaunchpadAnonymousStatsKey = "bAllowAnonymousStats";
+
+		/// <summary>
+		/// Logger instance for this class.
+		/// </summary>
+		private static readonly ILog Log = LogManager.GetLogger(typeof(ConfigHandler));
+
+		/// <summary>
+		/// The config lock object.
+		/// </summary>
+		private readonly object ReadLock = new object();
+
+		/// <summary>
+		/// The write lock object.
+		/// </summary>
+		private readonly object WriteLock = new object();
 
 		/// <summary>
 		/// The singleton Instance. Will always point to one shared object.

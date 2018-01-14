@@ -30,6 +30,8 @@ namespace Launchpad.Launcher.Handlers
 	/// </summary>
 	internal static class StatsHandler
 	{
+		private const string BaseURL = "http://sharkman.asuscomm.com/launchpad/stats.php?";
+
 		/// <summary>
 		/// Logger instance for this class.
 		/// </summary>
@@ -39,8 +41,6 @@ namespace Launchpad.Launcher.Handlers
 		/// The config handler reference.
 		/// </summary>
 		private static readonly ConfigHandler Config = ConfigHandler.Instance;
-
-		private const string BaseURL = "http://sharkman.asuscomm.com/launchpad/stats.php?";
 
 		/// <summary>
 		/// Sends the usage stats to the official launchpad server.
