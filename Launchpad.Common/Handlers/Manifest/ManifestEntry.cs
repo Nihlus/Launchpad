@@ -122,11 +122,11 @@ namespace Launchpad.Common.Handlers.Manifest
 		}
 
 		/// <summary>
-		/// Returns a <see cref="System.String"/> that represents the current <see cref="ManifestEntry"/>.
+		/// Returns a <see cref="string"/> that represents the current <see cref="ManifestEntry"/>.
 		/// The returned value matches a raw in-manifest representation of the entry, in the form of
 		/// [path]:[hash]:[size]
 		/// </summary>
-		/// <returns>A <see cref="System.String"/> that represents the current <see cref="ManifestEntry"/>.</returns>
+		/// <returns>A <see cref="string"/> that represents the current <see cref="ManifestEntry"/>.</returns>
 		public override string ToString()
 		{
 			return $"{this.RelativePath}:{this.Hash}:{this.Size}";
