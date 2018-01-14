@@ -101,6 +101,11 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns><c>true</c> if the changelog can be accessed; otherwise, <c>false</c>.</returns>
 		public static bool CanAccessStandardChangelog()
 		{
+			if (string.IsNullOrEmpty(Config.GetChangelogURL()))
+			{
+				return false;
+			}
+
 			HttpWebRequest headRequest = (HttpWebRequest)WebRequest.Create(Config.GetChangelogURL());
 			headRequest.Method = "HEAD";
 
