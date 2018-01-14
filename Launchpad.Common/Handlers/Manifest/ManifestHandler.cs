@@ -202,7 +202,6 @@ namespace Launchpad.Common.Handlers.Manifest
 			return manifest;
 		}
 
-
 		/// <summary>
 		/// Gets the specified manifest's path on disk. The presence of the manifest is not guaranteed at
 		/// this point.
