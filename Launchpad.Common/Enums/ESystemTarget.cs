@@ -20,6 +20,8 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#pragma warning disable CS1591, SA1600, SA1602 // Elements should be documented, enumeration items should be documented
+
 namespace Launchpad.Common.Enums
 {
 	public enum ESystemTarget

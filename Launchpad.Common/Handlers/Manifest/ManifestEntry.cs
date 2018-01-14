@@ -31,24 +31,36 @@ namespace Launchpad.Common.Handlers.Manifest
 	/// </summary>
 	public sealed class ManifestEntry : IEquatable<ManifestEntry>
 	{
+		/// <summary>
+		/// Gets or sets the path of the file, relative to the game directory.
+		/// </summary>
 		public string RelativePath
 		{
 			get;
 			set;
 		}
 
+		/// <summary>
+		/// Gets or sets the MD5 hash of the file.
+		/// </summary>
 		public string Hash
 		{
 			get;
 			set;
 		}
 
+		/// <summary>
+		/// Gets or sets the size in bytes of the file.
+		/// </summary>
 		public long Size
 		{
 			get;
 			set;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ManifestEntry"/> class.
+		/// </summary>
 		public ManifestEntry()
 		{
 			this.RelativePath = string.Empty;

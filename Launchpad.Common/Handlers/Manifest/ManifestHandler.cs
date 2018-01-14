@@ -28,6 +28,9 @@ using Launchpad.Common.Enums;
 
 namespace Launchpad.Common.Handlers.Manifest
 {
+	/// <summary>
+	/// Handler class for the game manifest.
+	/// </summary>
 	public sealed class ManifestHandler
 	{
 		/// <summary>
@@ -62,10 +65,10 @@ namespace Launchpad.Common.Handlers.Manifest
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ManifestHandler"/> class.
 		/// This constructor also serves to updated outdated file paths for the manifests.
-		/// <param name="localBaseDirectory">The local base directory of the launcher installation.</param>
-		/// <param name="remoteURL">The remote <see cref="Uri"/> where the manifest files are expected to be..</param>
-		/// <param name="systemTarget">The target system for which the handler should retrieve files.</param>
 		/// </summary>
+		/// <param name="localBaseDirectory">The local base directory of the launcher installation.</param>
+		/// <param name="remoteURL">The remote <see cref="Uri"/> where the manifest files are expected to be.</param>
+		/// <param name="systemTarget">The target system for which the handler should retrieve files.</param>
 		public ManifestHandler(string localBaseDirectory, Uri remoteURL, ESystemTarget systemTarget)
 		{
 			this.LocalBaseDirectory = localBaseDirectory;
@@ -224,6 +227,7 @@ namespace Launchpad.Common.Handlers.Manifest
 		/// <summary>
 		/// Gets the manifest URL for the specified manifest type.
 		/// </summary>
+		/// <param name="manifestType">The type of manifest to get the URL of.</param>
 		/// <returns>The game manifest URL.</returns>
 		public string GetManifestURL(EManifestType manifestType)
 		{
@@ -238,6 +242,7 @@ namespace Launchpad.Common.Handlers.Manifest
 		/// <summary>
 		/// Gets the manifest URL for the specified manifest type.
 		/// </summary>
+		/// <param name="manifestType">The type of manifest to get the URL of.</param>
 		/// <returns>The game manifest URL.</returns>
 		public string GetManifestChecksumURL(EManifestType manifestType)
 		{
