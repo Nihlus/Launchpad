@@ -416,7 +416,7 @@ namespace Launchpad.Launcher.Interface
 			{
 				this.IndicatorLabel.Text =
 					LocalizationCatalog.GetString("The server does not provide the game for the selected platform.");
-				this.MainProgressBar.Text = "";
+				this.MainProgressBar.Text = string.Empty;
 
 				Log.Info
 				(
@@ -468,7 +468,7 @@ namespace Launchpad.Launcher.Interface
 				case ELauncherMode.Launch:
 				{
 					this.IndicatorLabel.Text = LocalizationCatalog.GetString("Idle");
-					this.MainProgressBar.Text = "";
+					this.MainProgressBar.Text = string.Empty;
 
 					SetLauncherMode(ELauncherMode.Launch, true);
 					this.Game.LaunchGame();
@@ -522,7 +522,7 @@ namespace Launchpad.Launcher.Interface
 		private void OnGameLaunchFailed(object sender, EventArgs e)
 		{
 			this.IndicatorLabel.Text = LocalizationCatalog.GetString("The game failed to launch. Try repairing the installation.");
-			this.MainProgressBar.Text = "";
+			this.MainProgressBar.Text = string.Empty;
 
 			SetLauncherMode(ELauncherMode.Repair, false);
 		}
@@ -600,7 +600,7 @@ namespace Launchpad.Launcher.Interface
 					}
 					default:
 					{
-						this.MainProgressBar.Text = "";
+						this.MainProgressBar.Text = string.Empty;
 						break;
 					}
 				}

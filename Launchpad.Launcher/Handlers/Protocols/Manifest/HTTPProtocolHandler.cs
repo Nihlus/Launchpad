@@ -270,7 +270,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
 				request.Method = WebRequestMethods.Http.Get;
 
-				string data = "";
+				string data = string.Empty;
 				using (Stream remoteStream = request.GetResponse().GetResponseStream())
 				{
 					// Drop out early if the stream wasn't present

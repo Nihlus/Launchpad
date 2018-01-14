@@ -232,7 +232,7 @@ namespace Launchpad.Launcher.Handlers
 
 						data[SectionNameHTTP].AddKey(HTTPAddressKey, DefaultHTTPAddress);
 
-						data[SectionNameBitTorrent].AddKey("Magnet", "");
+						data[SectionNameBitTorrent].AddKey("Magnet", string.Empty);
 
 						data[SectionNameLaunchpad].AddKey(LaunchpadOfficialUpdatesKey, DefaultUseOfficialUpdates);
 						data[SectionNameLaunchpad].AddKey(LaunchpadAnonymousStatsKey, DefaultAllowAnonymousStatus);
@@ -336,7 +336,7 @@ namespace Launchpad.Launcher.Handlers
 
 					if (!data[SectionNameBitTorrent].ContainsKey("Magnet"))
 					{
-						data[SectionNameBitTorrent].AddKey("Magnet", "");
+						data[SectionNameBitTorrent].AddKey("Magnet", string.Empty);
 					}
 
 					if (!data[SectionNameLaunchpad].ContainsKey("bAllowAnonymousStats"))
@@ -430,7 +430,7 @@ namespace Launchpad.Launcher.Handlers
 						sw.WriteLine("# Everything else is passed line-by-line to the game executable on startup.");
 						sw.WriteLine("# Multiple arguments can be on the same line in this file.");
 						sw.WriteLine("# Each line will have a space appended at the end when passed to the game executable.");
-						sw.WriteLine("");
+						sw.WriteLine(string.Empty);
 					}
 				}
 			}
@@ -559,7 +559,7 @@ namespace Launchpad.Launcher.Handlers
 
 			// While not recommended nor supported, the user may add an executable extension to the executable name.
 			// We strip it out here (if it exists) just to be safe.
-			string executableName = GetMainExecutableName().Replace(".exe", "");
+			string executableName = GetMainExecutableName().Replace(".exe", string.Empty);
 
 			// Unix doesn't need (or have) the .exe extension.
 			if (SystemInformation.IsRunningOnUnix())
@@ -1468,7 +1468,7 @@ namespace Launchpad.Launcher.Handlers
 				return File.ReadAllText(GetInstallGUIDPath());
 			}
 
-			return "";
+			return string.Empty;
 		}
 
 		/// <summary>

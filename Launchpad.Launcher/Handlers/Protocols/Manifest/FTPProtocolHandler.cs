@@ -186,7 +186,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				request.Method = WebRequestMethods.Ftp.DownloadFile;
 				sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
 
-				string data = "";
+				string data = string.Empty;
 				using (Stream remoteStream = request.GetResponse().GetResponseStream())
 				{
 					if (remoteStream == null)

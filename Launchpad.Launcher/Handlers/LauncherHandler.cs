@@ -203,7 +203,7 @@ namespace Launchpad.Launcher.Handlers
 			// Load the script from the embedded resources
 			Assembly localAssembly = Assembly.GetExecutingAssembly();
 
-			string scriptSource = "";
+			string scriptSource = string.Empty;
 			string resourceName = GetUpdateScriptResourceName();
 			using (Stream resourceStream = localAssembly.GetManifestResourceStream(resourceName))
 			{
