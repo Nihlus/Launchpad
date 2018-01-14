@@ -700,11 +700,9 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			{
 				return version;
 			}
-			else
-			{
-				Log.Warn("Failed to parse the remote launcher version. Using the default of 0.0.0 instead.");
-				return new Version("0.0.0");
-			}
+
+			Log.Warn("Failed to parse the remote launcher version. Using the default of 0.0.0 instead.");
+			return new Version("0.0.0");
 		}
 
 		/// <summary>
@@ -720,11 +718,9 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			{
 				return version;
 			}
-			else
-			{
-				Log.Warn("Failed to parse the remote game version. Using the default of 0.0.0 instead.");
-				return new Version("0.0.0");
-			}
+
+			Log.Warn("Failed to parse the remote game version. Using the default of 0.0.0 instead.");
+			return new Version("0.0.0");
 		}
 
 		/// <summary>

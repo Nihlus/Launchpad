@@ -728,11 +728,9 @@ namespace Launchpad.Launcher.Handlers
 					{
 						return localLauncherVersion;
 					}
-					else
-					{
-						Log.Warn("Failed to parse local launcher version. Returning default version of 0.0.0.");
-						return new Version("0.0.0");
-					}
+
+					Log.Warn("Failed to parse local launcher version. Returning default version of 0.0.0.");
+					return new Version("0.0.0");
 				}
 				catch (IOException ioex)
 				{
@@ -885,10 +883,8 @@ namespace Launchpad.Launcher.Handlers
 					{
 						return systemTarget;
 					}
-					else
-					{
-						Log.Warn("Could not parse the system target. Installation of games will not be possible.");
-					}
+
+					Log.Warn("Could not parse the system target. Installation of games will not be possible.");
 
 					return ESystemTarget.Unknown;
 				}
@@ -1055,10 +1051,8 @@ namespace Launchpad.Launcher.Handlers
 					{
 						return retries;
 					}
-					else
-					{
-						return 0;
-					}
+
+					return 0;
 				}
 				catch (IOException ioex)
 				{
@@ -1087,10 +1081,8 @@ namespace Launchpad.Launcher.Handlers
 					{
 						return retries;
 					}
-					else
-					{
-						return int.Parse(DefaultBufferSize);
-					}
+
+					return int.Parse(DefaultBufferSize);
 				}
 				catch (IOException ioex)
 				{
@@ -1393,11 +1385,9 @@ namespace Launchpad.Launcher.Handlers
 					{
 						return doOfficialUpdates;
 					}
-					else
-					{
-						Log.Warn("Could not parse if we should use official updates. Allowing by default.");
-						return true;
-					}
+
+					Log.Warn("Could not parse if we should use official updates. Allowing by default.");
+					return true;
 				}
 				catch (IOException ioex)
 				{
@@ -1426,11 +1416,9 @@ namespace Launchpad.Launcher.Handlers
 					{
 						return allowAnonymousStats;
 					}
-					else
-					{
-						Log.Warn("Could not parse if we were allowed to send anonymous stats. Allowing by default.");
-						return true;
-					}
+
+					Log.Warn("Could not parse if we were allowed to send anonymous stats. Allowing by default.");
+					return true;
 				}
 				catch (IOException ioex)
 				{
