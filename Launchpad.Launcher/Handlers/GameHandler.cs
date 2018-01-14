@@ -207,7 +207,7 @@ namespace Launchpad.Launcher.Handlers
 					EnableRaisingEvents = true
 				};
 
-				gameProcess.Exited += delegate
+				gameProcess.Exited += (sender, args) =>
 				{
 					if (gameProcess.ExitCode != 0)
 					{
@@ -217,6 +217,7 @@ namespace Launchpad.Launcher.Handlers
 							"There may have been issues during runtime, or the game may not have started at all."
 						);
 					}
+
 					this.GameExitArgs.ExitCode = gameProcess.ExitCode;
 					OnGameExited();
 
