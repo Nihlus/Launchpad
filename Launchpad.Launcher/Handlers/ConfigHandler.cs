@@ -530,6 +530,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// Gets a list of command-line arguments that are passed to the game when it starts.
 		/// </summary>
+		/// <returns>The arguments.</returns>
 		public static IEnumerable<string> GetGameArguments()
 		{
 			if (!File.Exists(GetGameArgumentsPath()))

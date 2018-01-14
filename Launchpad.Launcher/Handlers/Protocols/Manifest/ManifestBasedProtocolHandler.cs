@@ -211,6 +211,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <summary>
 		/// Verifies and repairs the files of the specified module.
 		/// </summary>
+		/// <param name="module">The module.</param>
 		public override void VerifyModule(EModule module)
 		{
 			IReadOnlyList<ManifestEntry> manifest = this.FileManifestHandler.GetManifest((EManifestType)module, false);
@@ -278,6 +279,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <summary>
 		/// Downloads the latest version of the specified module.
 		/// </summary>
+		/// <param name="module">The module.</param>
 		/// <exception cref="ArgumentOutOfRangeException">
 		/// Will be thrown if the <see cref="EModule"/> passed to the function is not a valid value.
 		/// </exception>
@@ -354,18 +356,28 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <summary>
 		/// Reads the contents of a remote file as a string.
 		/// </summary>
-		protected abstract string ReadRemoteFile(string url, bool useAnonymousLong = false);
+		/// <param name="url">The URL to read.</param>
+		/// <param name="useAnonymousLogin">Whether or not to use anonymous credentials.</param>
+		/// <returns>The contents of the file.</returns>
+		protected abstract string ReadRemoteFile(string url, bool useAnonymousLogin = false);
 
 		/// <summary>
 		/// Downloads the contents of the file at the specified url to the specified local path.
 		/// This method supported resuming a partial file.
 		/// </summary>
+		/// <param name="url">The URL to download.</param>
+		/// <param name="localPath">The local path where the file should be saved.</param>
+		/// <param name="totalSize">The expected total size of the file.</param>
+		/// <param name="contentOffset">The offset into the file where reading and writing should start.</param>
+		/// <param name="useAnonymousLogin">Whether or not to use anonymous credentials.</param>
 		protected abstract void DownloadRemoteFile(string url, string localPath, long totalSize = 0, long contentOffset = 0,
 			bool useAnonymousLogin = false);
 
 		/// <summary>
 		/// Determines whether or not the specified module is outdated.
 		/// </summary>
+		/// <param name="module">The module.</param>
+		/// <returns>true if the module is outdated; otherwise, false.</returns>
 		/// <exception cref="ArgumentOutOfRangeException">
 		/// Will be thrown if the <see cref="EModule"/> passed to the function is not a valid value.
 		/// </exception>
@@ -539,6 +551,8 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <summary>
 		/// Determines whether or not the local copy of the manifest for the specifed module is outdated.
 		/// </summary>
+		/// <param name="module">The module.</param>
+		/// <returns>true if the manifest is outdated; otherwise, false.</returns>
 		/// <exception cref="ArgumentOutOfRangeException">
 		/// Will be thrown if the <see cref="EModule"/> passed to the function is not a valid value.
 		/// </exception>
@@ -577,6 +591,8 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <summary>
 		/// Gets the checksum of the manifest for the specified module.
 		/// </summary>
+		/// <param name="module">The module.</param>
+		/// <returns>The checksum.</returns>
 		/// <exception cref="ArgumentOutOfRangeException">
 		/// Will be thrown if the <see cref="EModule"/> passed to the function is not a valid value.
 		/// </exception>
@@ -604,6 +620,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <summary>
 		/// Refreshes the current manifest by redownloading it, if required;
 		/// </summary>
+		/// <param name="module">The module.</param>
 		/// <exception cref="ArgumentOutOfRangeException">
 		/// Will be thrown if the <see cref="EModule"/> passed to the function is not a valid value.
 		/// </exception>
@@ -644,6 +661,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <summary>
 		/// Downloads the manifest for the specified module, and backs up the old copy of the manifest.
 		/// </summary>
+		/// <param name="module">The module.</param>
 		/// <exception cref="ArgumentOutOfRangeException">
 		/// Will be thrown if the <see cref="EModule"/> passed to the function is not a valid value.
 		/// </exception>
@@ -732,8 +750,8 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// Gets the indicator label message to display to the user while repairing.
 		/// </summary>
 		/// <returns>The indicator label message.</returns>
-		/// <param name="verifiedFiles">N files downloaded.</param>
 		/// <param name="currentFilename">Current filename.</param>
+		/// <param name="verifiedFiles">N files downloaded.</param>
 		/// <param name="totalFiles">Total files to download.</param>
 		protected virtual string GetVerifyIndicatorLabelMessage(string currentFilename, int verifiedFiles, int totalFiles)
 		{

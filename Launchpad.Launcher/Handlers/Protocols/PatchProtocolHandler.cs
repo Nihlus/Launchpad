@@ -86,11 +86,29 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// </summary>
 		public event EventHandler<ModuleInstallationFailedArgs> ModuleInstallationFailed;
 
+		/// <summary>
+		/// The download progress arguments.
+		/// </summary>
 		protected readonly ModuleProgressChangedArgs ModuleDownloadProgressArgs = new ModuleProgressChangedArgs();
+
+		/// <summary>
+		/// The verification progress arguments.
+		/// </summary>
 		protected readonly ModuleProgressChangedArgs ModuleVerifyProgressArgs = new ModuleProgressChangedArgs();
+
+		/// <summary>
+		/// The update progress arguments.
+		/// </summary>
 		protected readonly ModuleProgressChangedArgs ModuleUpdateProgressArgs = new ModuleProgressChangedArgs();
 
+		/// <summary>
+		/// The installation finished arguments.
+		/// </summary>
 		protected readonly ModuleInstallationFinishedArgs ModuleInstallFinishedArgs;
+
+		/// <summary>
+		/// The installation failed arguments.
+		/// </summary>
 		protected readonly ModuleInstallationFailedArgs ModuleInstallFailedArgs;
 
 		/// <summary>
@@ -103,6 +121,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <summary>
 		/// Determines whether the protocol can provide patches and updates for the provided platform.
 		/// </summary>
+		/// <param name="platform">The platform to check.</param>
 		/// <returns><c>true</c> if the platform is available; otherwise, <c>false</c>.</returns>
 		public abstract bool IsPlatformAvailable(ESystemTarget platform);
 
@@ -133,6 +152,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <summary>
 		/// Determines whether or not the specified module is outdated.
 		/// </summary>
+		/// <param name="module">The module.</param>
+		/// <returns>true if the module is outdated; otherwise, false.</returns>
 		public abstract bool IsModuleOutdated(EModule module);
 
 		/// <summary>
@@ -170,6 +191,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <summary>
 		/// Downloads the latest version of the specified module.
 		/// </summary>
+		/// <param name="module">The module.</param>
 		protected abstract void DownloadModule(EModule module);
 
 		/// <summary>
@@ -181,6 +203,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <summary>
 		/// Verifies and repairs the files of the specified module.
 		/// </summary>
+		/// <param name="module">The module.</param>
 		public abstract void VerifyModule(EModule module);
 
 		/// <summary>

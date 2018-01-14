@@ -51,10 +51,19 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		private static readonly ILog Log = LogManager.GetLogger(typeof(LauncherHandler));
 
+		/// <summary>
+		/// Raised whenever the changelog finishes downloading.
+		/// </summary>
 		public event EventHandler<ChangelogDownloadFinishedEventArgs> ChangelogDownloadFinished;
 
+		/// <summary>
+		/// Raised whenever the launcher finishes downloading.
+		/// </summary>
 		public event EventHandler<ModuleInstallationFinishedArgs> LauncherDownloadFinished;
 
+		/// <summary>
+		/// Raised whenever the launcher download progress changes.
+		/// </summary>
 		public event EventHandler<ModuleProgressChangedArgs> LauncherDownloadProgressChanged;
 
 		private readonly ChangelogDownloadFinishedEventArgs ChangelogDownloadFinishedArgs = new ChangelogDownloadFinishedEventArgs();

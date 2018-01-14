@@ -100,6 +100,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <summary>
 		/// Determines whether the protocol can provide patches and updates for the provided platform.
 		/// </summary>
+		/// <param name="platform">The platform to check.</param>
 		/// <returns><c>true</c> if the platform is available; otherwise, <c>false</c>.</returns>
 		public override bool IsPlatformAvailable(ESystemTarget platform)
 		{

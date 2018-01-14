@@ -35,56 +35,67 @@ namespace Launchpad.Launcher.Handlers.Protocols
 	/// </summary>
 	internal sealed class BitTorrentProtocolHandler : PatchProtocolHandler
 	{
+		/// <inheritdoc />
 		public override bool CanPatch()
 		{
 			return false;
 		}
 
+		/// <inheritdoc />
 		public override bool IsPlatformAvailable(ESystemTarget platform)
 		{
 			return false;
 		}
 
+		/// <inheritdoc />
 		public override bool CanProvideChangelog()
 		{
 			return false;
 		}
 
+		/// <inheritdoc />
 		public override string GetChangelogSource()
 		{
 			return string.Empty;
 		}
 
+		/// <inheritdoc />
 		public override bool CanProvideBanner()
 		{
 			return false;
 		}
 
+		/// <inheritdoc />
 		public override Bitmap GetBanner()
 		{
 			return null;
 		}
 
+		/// <inheritdoc />
 		public override bool IsModuleOutdated(EModule module)
 		{
 			throw new NotImplementedException();
 		}
 
+		/// <inheritdoc />
 		public override void InstallGame()
 		{
 			throw new NotImplementedException();
 		}
 
+		/// <inheritdoc />
 		protected override void DownloadModule(EModule module)
 		{
 			throw new NotImplementedException();
 		}
 
+		/// <inheritdoc />
 		public override void UpdateModule(EModule module)
 		{
 			throw new NotImplementedException();
 		}
 
+		/// <inheritdoc />
 		public override void VerifyModule(EModule module)
 		{
 			throw new NotImplementedException();

@@ -24,14 +24,23 @@ using System;
 
 namespace Launchpad.Launcher.Handlers
 {
+	/// <summary>
+	/// Event arguments for a finished changelog download.
+	/// </summary>
 	public class ChangelogDownloadFinishedEventArgs : EventArgs
 	{
+		/// <summary>
+		/// Gets or sets the raw HTML that was downloaded.
+		/// </summary>
 		public string HTML
 		{
 			get;
 			set;
 		}
 
+		/// <summary>
+		/// Gets or sets the URL where the changelog was downloaded from.
+		/// </summary>
 		public string URL
 		{
 			get;
