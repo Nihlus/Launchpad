@@ -174,17 +174,19 @@ namespace Launchpad.Launcher.Interface
 				{
 					Log.Info("This instance is the first start of the application in this folder.");
 
+					var text = LocalizationCatalog.GetString
+					(
+						"This appears to be the first time you're starting the launcher.\n" +
+						"Is this the location where you would like to install the game?"
+					) + $"\n\n{ConfigHandler.GetLocalDir()}";
+
 					MessageDialog shouldInstallHereDialog = new MessageDialog
 					(
 						this,
 						DialogFlags.Modal,
 						MessageType.Question,
 						ButtonsType.OkCancel,
-						LocalizationCatalog.GetString
-						(
-							"This appears to be the first time you're starting the launcher.\n" +
-							"Is this the location where you would like to install the game?"
-						) + $"\n\n{ConfigHandler.GetLocalDir()}"
+						text
 					);
 
 					if (shouldInstallHereDialog.Run() == (int)ResponseType.Ok)
