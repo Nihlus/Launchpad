@@ -31,15 +31,15 @@ using Launchpad.Launcher.Handlers.Protocols;
 namespace Launchpad.Launcher.Handlers
 {
 	/// <summary>
-	///  This class has a lot of async stuff going on. It handles installing the game
-	///  and updating it when it needs to.
+	/// This class has a lot of async stuff going on. It handles installing the game
+	/// and updating it when it needs to.
 	///
-	///  The download protocol is selected based on the configuration each time this is
-	///  instantiated, and control is then handed over to whatever the protocol needs
-	///  to do.
+	/// The download protocol is selected based on the configuration each time this is
+	/// instantiated, and control is then handed over to whatever the protocol needs
+	/// to do.
 	///
-	///	 Since this class starts new threads in which it does the larger computations,
-	///	 there must be no useage of UI code in this class. Keep it clean!
+	/// Since this class starts new threads in which it does the larger computations,
+	/// there must be no useage of UI code in this class. Keep it clean!
 	/// </summary>
 	internal sealed class GameHandler
 	{
@@ -210,8 +210,11 @@ namespace Launchpad.Launcher.Handlers
 				{
 					if (gameProcess.ExitCode != 0)
 					{
-						Log.Info($"The game exited with an exit code of {gameProcess.ExitCode}. " +
-						         "There may have been issues during runtime, or the game may not have started at all.");
+						Log.Info
+						(
+							$"The game exited with an exit code of {gameProcess.ExitCode}. " +
+							"There may have been issues during runtime, or the game may not have started at all."
+						);
 					}
 					this.GameExitArgs.ExitCode = gameProcess.ExitCode;
 					OnGameExited();

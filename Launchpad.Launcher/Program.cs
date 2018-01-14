@@ -80,7 +80,7 @@ namespace Launchpad.Launcher
 		}
 
 		/// <summary>
-		///	Event handler for all unhandled exceptions that may be encountered during runtime. While there should never
+		/// Event handler for all unhandled exceptions that may be encountered during runtime. While there should never
 		/// be any unhandled exceptions in an ideal program, unexpected issues can and will arise. This handler logs
 		/// the exception and all relevant information to a logfile and prints it to the console for debugging purposes.
 		/// </summary>
@@ -92,17 +92,23 @@ namespace Launchpad.Launcher
 			Log.Fatal("FATAL UNHANDLED EXCEPTION!");
 			Log.Fatal("Something has gone terribly, terribly wrong during runtime.");
 			Log.Fatal("The following is what information could be gathered by the program before crashing.");
-			Log.Fatal("Please report this to <jarl.gullberg@gmail.com> or via GitHub. Include the full log and a " +
-			          "description of what you were doing when it happened.");
+			Log.Fatal
+			(
+				"Please report this to <jarl.gullberg@gmail.com> or via GitHub. Include the full log and a " +
+				"description of what you were doing when it happened."
+			);
 
 			Exception unhandledException = unhandledExceptionEventArgs.ExceptionObject as Exception;
 			if (unhandledException != null)
 			{
 				if (unhandledException is DllNotFoundException)
 				{
-					Log.Fatal("This exception is typical of instances where the GTK# runtime has not been installed.\n" +
-					          "If you haven't installed it, download it at \'http://www.mono-project.com/download/#download-win\'.\n" +
-					          "If you have installed it, reboot your computer and try again.");
+					Log.Fatal
+					(
+						"This exception is typical of instances where the GTK# runtime has not been installed.\n" +
+						"If you haven't installed it, download it at \'http://www.mono-project.com/download/#download-win\'.\n" +
+						"If you have installed it, reboot your computer and try again."
+					);
 
 					// Send the user to the common problems page.
 					System.Diagnostics.Process.Start("https://github.com/Nihlus/Launchpad/wiki/Common-problems");

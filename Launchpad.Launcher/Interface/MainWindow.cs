@@ -224,8 +224,11 @@ namespace Launchpad.Launcher.Interface
 				{
 					if (!this.Checks.IsPlatformAvailable(this.Config.GetSystemTarget()))
 					{
-						Log.Info($"The server does not provide files for platform \"{ConfigHandler.GetCurrentPlatform()}\". " +
-						         "A .provides file must be present in the platforms' root directory.");
+						Log.Info
+						(
+							$"The server does not provide files for platform \"{ConfigHandler.GetCurrentPlatform()}\". " +
+							"A .provides file must be present in the platforms' root directory."
+						);
 
 						SetLauncherMode(ELauncherMode.Inactive, false);
 					}
@@ -413,8 +416,11 @@ namespace Launchpad.Launcher.Interface
 					LocalizationCatalog.GetString("The server does not provide the game for the selected platform.");
 				this.MainProgressBar.Text = "";
 
-				Log.Info($"The server does not provide files for platform \"{ConfigHandler.GetCurrentPlatform()}\". " +
-				         "A .provides file must be present in the platforms' root directory.");
+				Log.Info
+				(
+					$"The server does not provide files for platform \"{ConfigHandler.GetCurrentPlatform()}\". " +
+					"A .provides file must be present in the platforms' root directory."
+				);
 
 				SetLauncherMode(ELauncherMode.Inactive, false);
 

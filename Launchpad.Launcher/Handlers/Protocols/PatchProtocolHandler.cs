@@ -213,8 +213,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 	/// </summary>
 	public enum EModule : byte
 	{
-		Launcher 	= 1,
-		Game 		= 2
+		Launcher = 1,
+		Game = 2
 	}
 
 	/*

@@ -514,8 +514,11 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 					if (localHash != fileEntry.Hash)
 					{
 						// If the hash doesn't match, toss it in the bin and try again.
-						Log.Info($"Redownloading file \"{Path.GetFileNameWithoutExtension(fileEntry.RelativePath)}\": " +
-						         $"Hash sum mismatch. Local: {localHash}, Expected: {fileEntry.Hash}");
+						Log.Info
+						(
+							$"Redownloading file \"{Path.GetFileNameWithoutExtension(fileEntry.RelativePath)}\": " +
+							$"Hash sum mismatch. Local: {localHash}, Expected: {fileEntry.Hash}"
+						);
 
 						File.Delete(localPath);
 						DownloadRemoteFile(remoteURL, localPath, fileEntry.Size);

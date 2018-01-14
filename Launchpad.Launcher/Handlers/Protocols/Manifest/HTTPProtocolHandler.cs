@@ -276,9 +276,12 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 					// Drop out early if the stream wasn't present
 					if (remoteStream == null)
 					{
-						Log.Error($"Failed to read the contents of remote file \"{remoteURL}\": " +
-						          "Remote stream was null. This could be due to a network interruption " +
-						          "or issues with the remote file.");
+						Log.Error
+						(
+							$"Failed to read the contents of remote file \"{remoteURL}\": " +
+							"Remote stream was null. This could be due to a network interruption " +
+							"or issues with the remote file."
+						);
 
 						return string.Empty;
 					}

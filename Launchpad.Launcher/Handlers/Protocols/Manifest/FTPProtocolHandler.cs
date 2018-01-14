@@ -276,8 +276,11 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				{
 					if (contentStream == null)
 					{
-						Log.Error($"Failed to download the remote file at \"{remoteURL}\" (NullReferenceException from the content stream). " +
-						          "Check your internet connection.");
+						Log.Error
+						(
+							$"Failed to download the remote file at \"{remoteURL}\" (NullReferenceException from the content stream). " +
+							"Check your internet connection."
+						);
 
 						return;
 					}
@@ -288,9 +291,12 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 						fileSize += sizereader.ContentLength;
 					}
 
-					using (FileStream fileStream = contentOffset > 0
-						                               ? new FileStream(localPath, FileMode.Append)
-						                               : new FileStream(localPath, FileMode.Create))
+					using
+					(
+						FileStream fileStream = contentOffset > 0
+							? new FileStream(localPath, FileMode.Append)
+							: new FileStream(localPath, FileMode.Create)
+					)
 					{
 						fileStream.Position = contentOffset;
 						long totalBytesDownloaded = contentOffset;
@@ -389,9 +395,12 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			}
 			catch (UriFormatException uex)
 			{
-				Log.Warn("Unable to create a WebRequest for the specified file (UriFormatException): " + uex.Message + "\n" +
-                         "You may need to add \"ftp://\" before the url in the config.");
-                return null;
+				Log.Warn
+				(
+					"Unable to create a WebRequest for the specified file (UriFormatException): " + uex.Message + "\n" +
+					"You may need to add \"ftp://\" before the url in the config."
+				);
+				return null;
 			}
 		}
 

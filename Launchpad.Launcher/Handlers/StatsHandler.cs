@@ -50,12 +50,13 @@ namespace Launchpad.Launcher.Handlers
 			WebResponse sendStatsResponse = null;
 			try
 			{
-				string formattedURL = $"{BaseURL}guid={Config.GetGameGUID()}" +
-				                      $"&launcherVersion={Config.GetLocalLauncherVersion()}" +
-				                      $"&gameName={Config.GetGameName()}" +
-				                      $"&systemType={Config.GetSystemTarget()}" +
-				                      $"&officialUpdates={Config.GetDoOfficialUpdates()}" +
-				                      $"&installguid={ConfigHandler.GetInstallGUID()}";
+				string formattedURL =
+					$"{BaseURL}guid={Config.GetGameGUID()}" +
+					$"&launcherVersion={Config.GetLocalLauncherVersion()}" +
+					$"&gameName={Config.GetGameName()}" +
+					$"&systemType={Config.GetSystemTarget()}" +
+					$"&officialUpdates={Config.GetDoOfficialUpdates()}" +
+					$"&installguid={ConfigHandler.GetInstallGUID()}";
 
 
 				WebRequest sendStatsRequest = WebRequest.Create(formattedURL);

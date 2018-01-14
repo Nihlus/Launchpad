@@ -386,8 +386,11 @@ namespace Launchpad.Launcher.Handlers
 				string installGUIDDirectoryPath = Path.GetDirectoryName(GetInstallGUIDPath());
 				if (string.IsNullOrEmpty(installGUIDDirectoryPath))
 				{
-					Log.Error("Could not get a valid path for the creation of the install GUID folder.\n" +
-					          "This is most likely due to a fault in the operating system.");
+					Log.Error
+					(
+						"Could not get a valid path for the creation of the install GUID folder.\n" +
+						"This is most likely due to a fault in the operating system."
+					);
 				}
 				else
 				{
@@ -798,7 +801,7 @@ namespace Launchpad.Launcher.Handlers
 						default:
 						{
 							Log.Error($"Failed to load protocol handler: Protocol \"{patchProtocol}\" was not recognized or implemented.");
-                            return null;
+							return null;
 						}
 					}
 				}
