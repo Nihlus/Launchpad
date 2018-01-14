@@ -354,8 +354,13 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <param name="ftpDirectoryPath">Ftp directory path.</param>
 		/// <param name="username">Remote FTP username.</param>
 		/// <param name="password">Remote FTP password</param>
-		private static FtpWebRequest CreateFtpWebRequest(string ftpDirectoryPath, string username, string password)
+		private FtpWebRequest CreateFtpWebRequest(string ftpDirectoryPath, string username, string password)
 		{
+			if (!ftpDirectoryPath.StartsWith(this.Config.GetBaseFTPUrl()))
+			{
+				ftpDirectoryPath = $"{this.Config.GetBaseFTPUrl()}{ftpDirectoryPath}";
+			}
+
 			try
 			{
 				FtpWebRequest request = (FtpWebRequest) WebRequest.Create(new Uri(ftpDirectoryPath));
