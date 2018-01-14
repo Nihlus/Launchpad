@@ -823,8 +823,8 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// Gets the indicator label message to display to the user while installing.
 		/// </summary>
 		/// <returns>The indicator label message.</returns>
-		/// <param name="downloadedFiles">N files downloaded.</param>
 		/// <param name="currentFilename">Current filename.</param>
+		/// <param name="downloadedFiles">N files downloaded.</param>
 		/// <param name="totalFiles">Total files to download.</param>
 		protected virtual string GetDownloadIndicatorLabelMessage(string currentFilename, int downloadedFiles, int totalFiles)
 		{
