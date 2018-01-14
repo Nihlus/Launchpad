@@ -20,18 +20,22 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Gtk;
+
 using System;
-using NGettext;
-using Launchpad.Launcher.Handlers;
-using Launchpad.Launcher.Utility.Enums;
-using Launchpad.Launcher.Handlers.Protocols;
 using System.Diagnostics;
-using System.IO;
-using Gdk;
 using System.Drawing.Imaging;
-using log4net;
+using System.IO;
+
+using Gdk;
+using Gtk;
+
+using Launchpad.Launcher.Handlers;
+using Launchpad.Launcher.Handlers.Protocols;
 using Launchpad.Launcher.Interface.ChangelogBrowser;
+using Launchpad.Launcher.Utility.Enums;
+using log4net;
+
+using NGettext;
 
 namespace Launchpad.Launcher.Interface
 {

@@ -23,9 +23,11 @@
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
-using SystemInformation = Launchpad.Common.SystemInformation;
+
 using Gtk;
 using WebKit;
+
+using SystemInformation = Launchpad.Common.SystemInformation;
 
 namespace Launchpad.Launcher.Interface.ChangelogBrowser
 {

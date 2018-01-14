@@ -20,20 +20,22 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using IniParser;
-using IniParser.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Launchpad.Launcher.Handlers.Protocols;
 using System.Security.Cryptography;
 using System.Text;
-using log4net;
+
+using IniParser;
+using IniParser.Model;
+
 using Launchpad.Common;
 using Launchpad.Common.Enums;
+using Launchpad.Launcher.Handlers.Protocols;
 using Launchpad.Launcher.Handlers.Protocols.Manifest;
+using log4net;
 
 namespace Launchpad.Launcher.Handlers
 {

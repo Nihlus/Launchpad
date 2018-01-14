@@ -25,9 +25,10 @@ using System.Drawing;
 using System.IO;
 using System.Net;
 using System.Text;
-using log4net;
+
 using Launchpad.Common;
 using Launchpad.Common.Enums;
+using log4net;
 
 namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 {

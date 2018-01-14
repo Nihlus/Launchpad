@@ -21,9 +21,10 @@
 //
 
 using System;
-using Launchpad.Launcher.Interface;
-using Launchpad.Launcher.Handlers;
 using System.IO;
+
+using Launchpad.Launcher.Handlers;
+using Launchpad.Launcher.Interface;
 using log4net;
 
 namespace Launchpad.Launcher

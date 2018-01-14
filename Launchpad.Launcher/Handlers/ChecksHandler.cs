@@ -21,9 +21,11 @@
 //
 
 using System.IO;
-using log4net;
+
 using Launchpad.Common.Enums;
 using Launchpad.Launcher.Handlers.Protocols;
+
+using log4net;
 
 namespace Launchpad.Launcher.Handlers
 {
