@@ -469,8 +469,8 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		public static void CreateLauncherCookie()
 		{
-			bool bCookieExists = File.Exists(GetLauncherCookiePath());
-			if (!bCookieExists)
+			bool doesCookieExist = File.Exists(GetLauncherCookiePath());
+			if (!doesCookieExist)
 			{
 				File.Create(GetLauncherCookiePath());
 			}
@@ -491,9 +491,9 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		public static void CreateGameCookie()
 		{
-			bool bCookieExists = File.Exists(GetGameCookiePath());
+			bool doesCookieExist = File.Exists(GetGameCookiePath());
 
-			if (!bCookieExists)
+			if (!doesCookieExist)
 			{
 				File.Create(GetGameCookiePath()).Close();
 			}

@@ -284,11 +284,11 @@ namespace Launchpad.Launcher.Interface
 		/// Sets the launcher mode and updates UI elements to match
 		/// </summary>
 		/// <param name="newMode">The new mode.</param>
-		/// <param name="bInProgress">If set to <c>true</c>, the selected mode is in progress.</param>
+		/// <param name="isInProgress">If set to <c>true</c>, the selected mode is in progress.</param>
 		/// <exception cref="ArgumentOutOfRangeException">
 		/// Will be thrown if the <see cref="ELauncherMode"/> passed to the function is not a valid value.
 		/// </exception>
-		private void SetLauncherMode(ELauncherMode newMode, bool bInProgress)
+		private void SetLauncherMode(ELauncherMode newMode, bool isInProgress)
 		{
 			// Set the global launcher mode
 			this.Mode = newMode;
@@ -298,7 +298,7 @@ namespace Launchpad.Launcher.Interface
 			{
 				case ELauncherMode.Install:
 				{
-					if (bInProgress)
+					if (isInProgress)
 					{
 						this.PrimaryButton.Sensitive = false;
 						this.PrimaryButton.Label = LocalizationCatalog.GetString("Installing...");
@@ -312,7 +312,7 @@ namespace Launchpad.Launcher.Interface
 				}
 				case ELauncherMode.Update:
 				{
-					if (bInProgress)
+					if (isInProgress)
 					{
 						this.PrimaryButton.Sensitive = false;
 						this.PrimaryButton.Label = LocalizationCatalog.GetString("Updating...");
@@ -326,7 +326,7 @@ namespace Launchpad.Launcher.Interface
 				}
 				case ELauncherMode.Repair:
 				{
-					if (bInProgress)
+					if (isInProgress)
 					{
 						this.PrimaryButton.Sensitive = false;
 						this.PrimaryButton.Label = LocalizationCatalog.GetString("Repairing...");
@@ -340,7 +340,7 @@ namespace Launchpad.Launcher.Interface
 				}
 				case ELauncherMode.Launch:
 				{
-					if (bInProgress)
+					if (isInProgress)
 					{
 						this.PrimaryButton.Sensitive = false;
 						this.PrimaryButton.Label = LocalizationCatalog.GetString("Launching...");
@@ -366,7 +366,7 @@ namespace Launchpad.Launcher.Interface
 				}
 			}
 
-			if (bInProgress)
+			if (isInProgress)
 			{
 				this.RepairGameAction.Sensitive = false;
 				this.ReinstallGameAction.Sensitive = false;

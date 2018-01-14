@@ -72,16 +72,11 @@ namespace Launchpad.Launcher.Handlers
 		public bool IsGameInstalled()
 		{
 			// Criteria for considering the game 'installed'
-			// Does the game directory exist?
-			bool bHasGameDirectory = Directory.Exists(this.Configuration.GetGamePath());
+			bool hasGameDirectory = Directory.Exists(this.Configuration.GetGamePath());
+			bool hasInstallCookie = File.Exists(ConfigHandler.GetGameCookiePath());
+			bool hasGameVersionFile = File.Exists(this.Configuration.GetGameVersionPath());
 
-			// Is there an .install file in the directory?
-			bool bHasInstallationCookie = File.Exists(ConfigHandler.GetGameCookiePath());
-
-			// Is there a version file?
-			bool bHasGameVersion = File.Exists(this.Configuration.GetGameVersionPath());
-
-			if (!bHasGameVersion && bHasGameDirectory)
+			if (!hasGameVersionFile && hasGameDirectory)
 			{
 				Log.Warn
 				(
@@ -93,7 +88,7 @@ namespace Launchpad.Launcher.Handlers
 			}
 
 			// If any of these criteria are false, the game is not considered fully installed.
-			return bHasGameDirectory && bHasInstallationCookie && IsInstallCookieEmpty() && bHasGameVersion;
+			return hasGameDirectory && hasInstallCookie && IsInstallCookieEmpty() && hasGameVersionFile;
 		}
 
 		/// <summary>
@@ -123,17 +118,15 @@ namespace Launchpad.Launcher.Handlers
 		private static bool IsInstallCookieEmpty()
 		{
 			//Is there an .install file in the directory?
-			bool bHasInstallationCookie = File.Exists(ConfigHandler.GetGameCookiePath());
+			bool hasInstallCookie = File.Exists(ConfigHandler.GetGameCookiePath());
+			bool isInstallCookieEmpty = false;
 
-			//Is the .install file empty? Assume false.
-			bool bIsInstallCookieEmpty = false;
-
-			if (bHasInstallationCookie)
+			if (hasInstallCookie)
 			{
-				bIsInstallCookieEmpty = string.IsNullOrEmpty(File.ReadAllText(ConfigHandler.GetGameCookiePath()));
+				isInstallCookieEmpty = string.IsNullOrEmpty(File.ReadAllText(ConfigHandler.GetGameCookiePath()));
 			}
 
-			return bIsInstallCookieEmpty;
+			return isInstallCookieEmpty;
 		}
 
 		/// <summary>

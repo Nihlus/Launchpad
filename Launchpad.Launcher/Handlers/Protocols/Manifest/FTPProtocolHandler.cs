@@ -54,7 +54,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		{
 			Log.Info("Pinging remote patching server to determine if we can connect to it.");
 
-			bool bCanConnectToServer = false;
+			bool canConnect = false;
 
 			string url = this.Config.GetBaseFTPUrl();
 			string username = this.Config.GetRemoteUsername();
@@ -78,23 +78,23 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 					{
 						if (response.StatusCode == FtpStatusCode.OpeningData)
 						{
-							bCanConnectToServer = true;
+							canConnect = true;
 						}
 					}
 				}
 				catch (WebException wex)
 				{
 					Log.Warn("Unable to connect to remote patch server (WebException): " + wex.Message);
-					bCanConnectToServer = false;
+					canConnect = false;
 				}
 			}
 			catch (WebException wex)
 			{
 				Log.Warn("Unable to connect due a malformed url in the configuration (WebException): " + wex.Message);
-				bCanConnectToServer = false;
+				canConnect = false;
 			}
 
-			return bCanConnectToServer;
+			return canConnect;
 		}
 
 		/// <summary>

@@ -25,6 +25,8 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Gtk;
 
+#pragma warning disable SA1305 // Should not use hungarian notation
+
 namespace Launchpad.Launcher.Interface.ChangelogBrowser
 {
 	/// <summary>
