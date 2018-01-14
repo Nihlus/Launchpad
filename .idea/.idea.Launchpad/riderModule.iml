@@ -1,18 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="RIDER_MODULE" version="4">
   <component name="NewModuleRootManager">
-    <content url="file://$MODULE_DIR$/../..">
-      <sourceFolder url="file://$MODULE_DIR$/../.." isTestSource="false" />
-      <excludeFolder url="file://$MODULE_DIR$/../../Launchpad.Common/bin" />
-      <excludeFolder url="file://$MODULE_DIR$/../../Launchpad.Common/obj" />
-      <excludeFolder url="file://$MODULE_DIR$/../../Launchpad.Launcher/bin" />
-      <excludeFolder url="file://$MODULE_DIR$/../../Launchpad.Launcher/obj" />
-      <excludeFolder url="file://$MODULE_DIR$/../../Launchpad.Tests/bin" />
-      <excludeFolder url="file://$MODULE_DIR$/../../Launchpad.Tests/obj" />
-      <excludeFolder url="file://$MODULE_DIR$/../../Launchpad.Utilities/bin" />
-      <excludeFolder url="file://$MODULE_DIR$/../../Launchpad.Utilities/obj" />
-      <excludeFolder url="file://$MODULE_DIR$/../../packages" />
-    </content>
+    <content url="file://$MODULE_DIR$/../.." />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

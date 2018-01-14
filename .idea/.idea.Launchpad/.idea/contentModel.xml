@@ -206,11 +206,8 @@
           <e p="GameHandler.cs" t="Include" />
           <e p="LauncherHandler.cs" t="Include" />
           <e p="Protocols" t="Include">
-            <e p="AsyncPatchProtocolHandler.cs" t="Include" />
             <e p="BitTorrentProtocolHandler.cs" t="Include" />
             <e p="Manifest" t="Include">
-              <e p="AsyncHTTPProtocolHandler.cs" t="Include" />
-              <e p="AsyncManifestBasedProtocolHandler.cs" t="Include" />
               <e p="FTPProtocolHandler.cs" t="Include" />
               <e p="HTTPProtocolHandler.cs" t="Include" />
               <e p="ManifestBasedProtocolHandler.cs" t="Include" />
