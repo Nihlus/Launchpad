@@ -23,8 +23,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using log4net;
+
 using Launchpad.Common.Enums;
+using log4net;
 
 namespace Launchpad.Common.Handlers.Manifest
 {
