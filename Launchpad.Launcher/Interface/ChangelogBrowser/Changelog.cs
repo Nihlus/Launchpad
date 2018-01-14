@@ -91,7 +91,6 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 			if (!this.IsNavigatingFromCode)
 			{
 				this.UnixBrowser.StopLoading();
-				args.RetVal = false;
 
 				Process.Start(args.Request.Uri);
 			}
@@ -137,6 +136,8 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 		/// <param name="url">The base URL for the page source.</param>
 		public void LoadHTML(string html, string url)
 		{
+			this.IsNavigatingFromCode = true;
+
 			this.WindowsBrowser?.LoadHTML(html);
 			this.UnixBrowser?.LoadHtmlString(html, url);
 		}
