@@ -276,4 +276,3 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		}
 	}
 }
-

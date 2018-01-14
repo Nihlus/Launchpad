@@ -388,4 +388,3 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		}
 	}
 }
-

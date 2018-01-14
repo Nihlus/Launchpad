@@ -324,4 +324,3 @@ namespace Launchpad.Launcher.Handlers
 		}
 	}
 }
-

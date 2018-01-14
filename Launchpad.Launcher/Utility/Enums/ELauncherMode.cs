@@ -32,4 +32,3 @@ namespace Launchpad.Launcher.Utility.Enums
 		Inactive
 	}
 }
-
