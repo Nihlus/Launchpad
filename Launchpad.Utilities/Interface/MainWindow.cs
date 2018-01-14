@@ -118,13 +118,13 @@ namespace Launchpad.Utilities.Interface
 		/// <param name="e">Arguments containing information about the entered file.</param>
 		private void OnGenerateManifestProgressChanged(object sender, ManifestGenerationProgressChangedEventArgs e)
 		{
-			Application.Invoke(delegate
-				{
-					string progressString = this.LocalizationCatalog.GetString("{0} : {1} out of {2}");
-					this.progressLabel.Text = string.Format(progressString, e.Filepath, e.CompletedFiles, e.TotalFiles);
+			Application.Invoke((o, args) =>
+			{
+				string progressString = this.LocalizationCatalog.GetString("{0} : {1} out of {2}");
+				this.progressLabel.Text = string.Format(progressString, e.Filepath, e.CompletedFiles, e.TotalFiles);
 
-					this.progressbar.Fraction = e.CompletedFiles / (double)e.TotalFiles;
-				});
+				this.progressbar.Fraction = e.CompletedFiles / (double)e.TotalFiles;
+			});
 		}
 
 		/// <summary>
@@ -134,12 +134,12 @@ namespace Launchpad.Utilities.Interface
 		/// <param name="e">Empty arguments</param>
 		private void OnGenerateManifestFinished(object sender, EventArgs e)
 		{
-			Application.Invoke(delegate
-				{
-					this.progressLabel.Text = this.LocalizationCatalog.GetString("Finished");
-					this.generateGameManifestButton.Sensitive = true;
-					this.generateLaunchpadManifestButton.Sensitive = true;
-				});
+			Application.Invoke((o, args) =>
+			{
+				this.progressLabel.Text = this.LocalizationCatalog.GetString("Finished");
+				this.generateGameManifestButton.Sensitive = true;
+				this.generateLaunchpadManifestButton.Sensitive = true;
+			});
 		}
 	}
 }

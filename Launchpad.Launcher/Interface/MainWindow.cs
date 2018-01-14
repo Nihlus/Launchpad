@@ -493,10 +493,7 @@ namespace Launchpad.Launcher.Interface
 		private void OnChangelogDownloadFinished(object sender, ChangelogDownloadFinishedEventArgs e)
 		{
 			// Take the resulting HTML string from the changelog download and send it to the changelog browser
-			Application.Invoke(delegate
-			{
-				this.Browser.LoadHTML(e.HTML, e.URL);
-			});
+			Application.Invoke((o, args) => this.Browser.LoadHTML(e.HTML, e.URL));
 		}
 
 		/// <summary>
@@ -564,7 +561,7 @@ namespace Launchpad.Launcher.Interface
 		/// <param name="e">Contains the progress values and current filename.</param>
 		private void OnModuleInstallationProgressChanged(object sender, ModuleProgressChangedArgs e)
 		{
-			Application.Invoke(delegate
+			Application.Invoke((o, args) =>
 			{
 				this.MainProgressBar.Text = e.ProgressBarMessage;
 				this.IndicatorLabel.Text = e.IndicatorLabelMessage;
@@ -579,7 +576,7 @@ namespace Launchpad.Launcher.Interface
 		/// <param name="e">Contains the result of the download.</param>
 		private void OnGameDownloadFinished(object sender, EventArgs e)
 		{
-			Application.Invoke(delegate
+			Application.Invoke((o, args) =>
 			{
 				this.IndicatorLabel.Text = LocalizationCatalog.GetString("Idle");
 
