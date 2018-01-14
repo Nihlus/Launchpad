@@ -328,6 +328,8 @@
       <e p="README.md" t="Include" />
       <e p="appveyor.yml" t="Include" />
       <e p="packages" t="ExcludeRecursive" />
+      <e p="stylecop.json" t="Include" />
+      <e p="stylecop.ruleset" t="Include" />
     </e>
   </component>
   <component name="RiderRiderContentModelStore">

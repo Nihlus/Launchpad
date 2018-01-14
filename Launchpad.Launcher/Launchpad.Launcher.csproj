@@ -4,6 +4,7 @@
     <AssemblyName>Launchpad</AssemblyName>
     <TargetFramework>net462</TargetFramework>
     <Platform>x86</Platform>
+      <CodeAnalysisRuleSet>..\stylecop.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <!-- Workaround for https://github.com/dotnet/roslyn-project-system/issues/1739 -->
   <PropertyGroup>
@@ -43,6 +44,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta004" PrivateAssets="all" />
     <PackageReference Include="ini-parser" Version="2.5.2" />
     <PackageReference Include="System.Net.Http" Version="4.3.3" />
     <PackageReference Include="NGettext" Version="0.6.3" />
@@ -63,6 +65,16 @@
       <Link>webkit-sharp.dll.config</Link>
       <InProject>false</InProject>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="$(ProjectDir)\..\stylecop.json">
+      <Link>stylecop.json</Link>
+      <InProject>false</InProject>
+    </AdditionalFiles>
+    <AdditionalFiles Include="$(ProjectDir)\..\stylecop.ruleset">
+      <Link>stylecop.ruleset</Link>
+      <InProject>false</InProject>
+    </AdditionalFiles>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Launchpad.Common\Launchpad.Common.csproj" />
