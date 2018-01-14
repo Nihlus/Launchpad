@@ -137,7 +137,7 @@ namespace Launchpad.Launcher.Handlers
 			{
 				using (HttpWebResponse headResponse = (HttpWebResponse)headRequest.GetResponse())
 				{
-					return (headResponse.StatusCode == HttpStatusCode.OK);
+					return headResponse.StatusCode == HttpStatusCode.OK;
 				}
 			}
 			catch (WebException wex)
