@@ -104,8 +104,7 @@ namespace Launchpad.Tests.Common
 		[Test]
 		public void TestCreateFromValidInput()
 		{
-			ManifestEntry createdEntry;
-			bool parsingSucceded = ManifestEntry.TryParse(ValidInput, out createdEntry);
+			bool parsingSucceded = ManifestEntry.TryParse(ValidInput, out var createdEntry);
 
 			Assert.That(parsingSucceded);
 			Assert.AreEqual(this.ExpectedObject, createdEntry);
@@ -128,8 +127,7 @@ namespace Launchpad.Tests.Common
 		[Test]
 		public void TestInvalidNegativeSize()
 		{
-			ManifestEntry createdEntry;
-			bool parsingSucceded = ManifestEntry.TryParse(InvalidInputNegativeSize, out createdEntry);
+			bool parsingSucceded = ManifestEntry.TryParse(InvalidInputNegativeSize, out _);
 
 			Assert.That(!parsingSucceded);
 		}
@@ -137,8 +135,7 @@ namespace Launchpad.Tests.Common
 		[Test]
 		public void TestInvalidHashTooShort()
 		{
-			ManifestEntry createdEntry;
-			bool parsingSucceded = ManifestEntry.TryParse(InvalidInputHashTooShort, out createdEntry);
+			bool parsingSucceded = ManifestEntry.TryParse(InvalidInputHashTooShort, out _);
 
 			Assert.That(!parsingSucceded);
 		}
@@ -146,8 +143,7 @@ namespace Launchpad.Tests.Common
 		[Test]
 		public void TestInvalidTooManyElements()
 		{
-			ManifestEntry createdEntry;
-			bool parsingSucceded = ManifestEntry.TryParse(InvalidInputTooManyElements, out createdEntry);
+			bool parsingSucceded = ManifestEntry.TryParse(InvalidInputTooManyElements, out _);
 
 			Assert.That(!parsingSucceded);
 		}
@@ -155,8 +151,7 @@ namespace Launchpad.Tests.Common
 		[Test]
 		public void TestInvalidInvalidNumber()
 		{
-			ManifestEntry createdEntry;
-			bool parsingSucceded = ManifestEntry.TryParse(InvalidInputInvalidNumber, out createdEntry);
+			bool parsingSucceded = ManifestEntry.TryParse(InvalidInputInvalidNumber, out _);
 
 			Assert.That(!parsingSucceded);
 		}
@@ -164,8 +159,7 @@ namespace Launchpad.Tests.Common
 		[Test]
 		public void TestInvalidMissingHash()
 		{
-			ManifestEntry createdEntry;
-			bool parsingSucceded = ManifestEntry.TryParse(InvalidInputMissingHash, out createdEntry);
+			bool parsingSucceded = ManifestEntry.TryParse(InvalidInputMissingHash, out _);
 
 			Assert.That(!parsingSucceded);
 		}

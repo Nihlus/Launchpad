@@ -104,8 +104,7 @@ namespace Launchpad.Common.Handlers.Manifest
 			inEntry.Hash = entryElements[1];
 
 			// Attempt to parse the final element as a long-type byte count.
-			long parsedSize;
-			if (!long.TryParse(entryElements[2], out parsedSize))
+			if (!long.TryParse(entryElements[2], out var parsedSize))
 			{
 				// Oops. The parsing failed, so this entry is invalid.
 				return false;

@@ -192,8 +192,7 @@ namespace Launchpad.Common.Handlers.Manifest
 			List<ManifestEntry> manifest = new List<ManifestEntry>();
 			foreach (string rawEntry in rawManifest)
 			{
-				ManifestEntry newEntry;
-				if (ManifestEntry.TryParse(rawEntry, out newEntry))
+				if (ManifestEntry.TryParse(rawEntry, out var newEntry))
 				{
 					manifest.Add(newEntry);
 				}

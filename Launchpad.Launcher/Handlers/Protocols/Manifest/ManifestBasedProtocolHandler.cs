@@ -320,8 +320,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			// stored in the install cookie.
 
 			// Attempt to parse whatever is inside the install cookie
-			ManifestEntry lastDownloadedFile;
-			if (ManifestEntry.TryParse(File.ReadAllText(ConfigHandler.GetGameCookiePath()), out lastDownloadedFile))
+			if (ManifestEntry.TryParse(File.ReadAllText(ConfigHandler.GetGameCookiePath()), out var lastDownloadedFile))
 			{
 				// Loop through all the entries in the manifest until we encounter
 				// an entry which matches the one in the install cookie
@@ -697,8 +696,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			// Config.GetDoOfficialUpdates is used here since the official update server always allows anonymous logins.
 			string remoteVersion = ReadRemoteFile(remoteVersionPath, this.Config.GetDoOfficialUpdates());
 
-			Version version;
-			if (Version.TryParse(remoteVersion, out version))
+			if (Version.TryParse(remoteVersion, out var version))
 			{
 				return version;
 			}
@@ -718,8 +716,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			string remoteVersionPath = $"{this.Config.GetBaseProtocolURL()}/game/{this.Config.GetSystemTarget()}/bin/GameVersion.txt";
 			string remoteVersion = ReadRemoteFile(remoteVersionPath);
 
-			Version version;
-			if (Version.TryParse(remoteVersion, out version))
+			if (Version.TryParse(remoteVersion, out var version))
 			{
 				return version;
 			}

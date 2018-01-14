@@ -608,10 +608,9 @@ namespace Launchpad.Launcher.Handlers
 		{
 			try
 			{
-				Version gameVersion;
 				string rawGameVersion = File.ReadAllText(GetGameVersionPath());
 
-				if (Version.TryParse(rawGameVersion, out gameVersion))
+				if (Version.TryParse(rawGameVersion, out var gameVersion))
 				{
 					return gameVersion;
 				}
@@ -725,8 +724,7 @@ namespace Launchpad.Launcher.Handlers
 
 					string launcherVersion = data[SectionNameLocal][LocalVersionKey];
 
-					Version localLauncherVersion;
-					if (Version.TryParse(launcherVersion, out localLauncherVersion))
+					if (Version.TryParse(launcherVersion, out var localLauncherVersion))
 					{
 						return localLauncherVersion;
 					}
@@ -883,8 +881,7 @@ namespace Launchpad.Launcher.Handlers
 
 					string rawSystemTarget = data[SectionNameLocal][LocalSystemTargetKey];
 
-					ESystemTarget systemTarget;
-					if (Enum.TryParse(rawSystemTarget, out systemTarget))
+					if (Enum.TryParse(rawSystemTarget, out ESystemTarget systemTarget))
 					{
 						return systemTarget;
 					}
@@ -1054,8 +1051,7 @@ namespace Launchpad.Launcher.Handlers
 
 					string fileRetries = data[SectionNameRemote][RemoteFileRetriesKey];
 
-					int retries;
-					if (int.TryParse(fileRetries, out retries))
+					if (int.TryParse(fileRetries, out var retries))
 					{
 						return retries;
 					}
@@ -1087,8 +1083,7 @@ namespace Launchpad.Launcher.Handlers
 
 					string fileRetries = data[SectionNameRemote][RemoteBufferSizeKey];
 
-					int retries;
-					if (int.TryParse(fileRetries, out retries))
+					if (int.TryParse(fileRetries, out var retries))
 					{
 						return retries;
 					}
@@ -1394,8 +1389,7 @@ namespace Launchpad.Launcher.Handlers
 
 					string rawDoOfficialUpdates = data[SectionNameLaunchpad]["bOfficialUpdates"];
 
-					bool doOfficialUpdates;
-					if (bool.TryParse(rawDoOfficialUpdates, out doOfficialUpdates))
+					if (bool.TryParse(rawDoOfficialUpdates, out var doOfficialUpdates))
 					{
 						return doOfficialUpdates;
 					}
@@ -1428,8 +1422,7 @@ namespace Launchpad.Launcher.Handlers
 
 					string rawAllowAnonymousStats = data[SectionNameLaunchpad]["bAllowAnonymousStats"];
 
-					bool allowAnonymousStats;
-					if (bool.TryParse(rawAllowAnonymousStats, out allowAnonymousStats))
+					if (bool.TryParse(rawAllowAnonymousStats, out var allowAnonymousStats))
 					{
 						return allowAnonymousStats;
 					}
