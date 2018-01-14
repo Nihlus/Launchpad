@@ -47,19 +47,9 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		private static readonly ILog Log = LogManager.GetLogger(typeof(PatchProtocolHandler));
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PatchProtocolHandler"/> class.
+		/// Gets the config handler reference.
 		/// </summary>
-		protected PatchProtocolHandler()
-		{
-			this.ModuleInstallFinishedArgs = new ModuleInstallationFinishedArgs();
-			this.ModuleInstallFailedArgs = new ModuleInstallationFailedArgs();
-		}
-
-		/// <summary>
-		/// TODO: Move to constructor
-		/// The config handler reference.
-		/// </summary>
-		protected readonly ConfigHandler Config = ConfigHandler.Instance;
+		protected ConfigHandler Config { get; }
 
 		/// <summary>
 		/// Raised whenever the download progress of a module changes.
@@ -87,29 +77,44 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		public event EventHandler<ModuleInstallationFailedArgs> ModuleInstallationFailed;
 
 		/// <summary>
-		/// The download progress arguments.
+		/// Gets the download progress arguments.
 		/// </summary>
-		protected readonly ModuleProgressChangedArgs ModuleDownloadProgressArgs = new ModuleProgressChangedArgs();
+		protected ModuleProgressChangedArgs ModuleDownloadProgressArgs { get; }
 
 		/// <summary>
-		/// The verification progress arguments.
+		/// Gets the verification progress arguments.
 		/// </summary>
-		protected readonly ModuleProgressChangedArgs ModuleVerifyProgressArgs = new ModuleProgressChangedArgs();
+		protected ModuleProgressChangedArgs ModuleVerifyProgressArgs { get; }
 
 		/// <summary>
-		/// The update progress arguments.
+		/// Gets the update progress arguments.
 		/// </summary>
-		protected readonly ModuleProgressChangedArgs ModuleUpdateProgressArgs = new ModuleProgressChangedArgs();
+		protected ModuleProgressChangedArgs ModuleUpdateProgressArgs { get; }
 
 		/// <summary>
-		/// The installation finished arguments.
+		/// Gets the installation finished arguments.
 		/// </summary>
-		protected readonly ModuleInstallationFinishedArgs ModuleInstallFinishedArgs;
+		protected ModuleInstallationFinishedArgs ModuleInstallFinishedArgs { get; }
 
 		/// <summary>
-		/// The installation failed arguments.
+		/// Gets the installation failed arguments.
 		/// </summary>
-		protected readonly ModuleInstallationFailedArgs ModuleInstallFailedArgs;
+		protected ModuleInstallationFailedArgs ModuleInstallFailedArgs { get; }
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="PatchProtocolHandler"/> class.
+		/// </summary>
+		protected PatchProtocolHandler()
+		{
+			this.ModuleDownloadProgressArgs = new ModuleProgressChangedArgs();
+			this.ModuleVerifyProgressArgs = new ModuleProgressChangedArgs();
+			this.ModuleUpdateProgressArgs = new ModuleProgressChangedArgs();
+
+			this.ModuleInstallFinishedArgs = new ModuleInstallationFinishedArgs();
+			this.ModuleInstallFailedArgs = new ModuleInstallationFailedArgs();
+
+			this.Config = ConfigHandler.Instance;
+		}
 
 		/// <summary>
 		/// Determines whether this instance can provide patches. Checks for an active connection to the

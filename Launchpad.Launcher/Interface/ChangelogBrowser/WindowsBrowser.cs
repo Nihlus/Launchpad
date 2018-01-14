@@ -41,9 +41,9 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 		private static extern IntPtr SetParent([In] IntPtr hWndChild, [In] IntPtr hWndNewParent);
 
 		/// <summary>
-		/// The <see cref="WebBrowser"/> we're using for rendering.
+		/// Gets the <see cref="WebBrowser"/> we're using for rendering.
 		/// </summary>
-		public readonly WebBrowser Browser = new WebBrowser();
+		public WebBrowser Browser { get; }
 
 		/// <summary>
 		/// The <see cref="Gtk.Viewport"/> the <see cref="Browser"/> is rendered inside, using the <see cref="Socket"/>.
@@ -67,6 +67,8 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 		/// <param name="parentContainer">The parent container which will hold the browser.</param>
 		public WindowsBrowser(Container parentContainer)
 		{
+			this.Browser = new WebBrowser();
+
 			parentContainer.Add(this.Viewport);
 
 			this.Viewport.SizeAllocated += OnViewportSizeAllocated;
