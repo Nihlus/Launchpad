@@ -20,7 +20,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using CommandLine;
-using CommandLine.Text;
 using Launchpad.Common.Enums;
 
 namespace Launchpad.Utilities.Options

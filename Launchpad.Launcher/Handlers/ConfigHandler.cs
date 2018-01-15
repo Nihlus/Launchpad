@@ -73,7 +73,6 @@ namespace Launchpad.Launcher.Handlers
 		private const string SectionNameRemote = "Remote";
 		private const string SectionNameFTP = "FTP";
 		private const string SectionNameHTTP = "HTTP";
-		private const string SectionNameBitTorrent = "BitTorrent";
 		private const string SectionNameLaunchpad = "Launchpad";
 
 		private const string LocalVersionKey = "LauncherVersion";
@@ -93,7 +92,6 @@ namespace Launchpad.Launcher.Handlers
 		private const string HTTPAddressKey = "URL";
 
 		private const string LaunchpadOfficialUpdatesKey = "bOfficialUpdates";
-		private const string LaunchpadAnonymousStatsKey = "bAllowAnonymousStats";
 
 		/// <summary>
 		/// Logger instance for this class.
@@ -181,12 +179,6 @@ namespace Launchpad.Launcher.Handlers
 			// Get the launcher version from the assembly.
 			Version defaultLauncherVersion = typeof(ConfigHandler).Assembly.GetName().Version;
 
-			// Check for pre-unix config. If it exists, fix the values and move it.
-			UpdateAndMovePreUnixConfig();
-
-			// Check for old cookie files and update their names and contents.
-			MoveOrUpdateCookieFiles();
-
 			// Lock the configuration file to make sure no other threads will try and
 			// read from it during creation or updating of values.
 			lock (this.ReadLock)
@@ -212,7 +204,6 @@ namespace Launchpad.Launcher.Handlers
 						data.Sections.AddSection(SectionNameRemote);
 						data.Sections.AddSection(SectionNameFTP);
 						data.Sections.AddSection(SectionNameHTTP);
-						data.Sections.AddSection(SectionNameBitTorrent);
 						data.Sections.AddSection(SectionNameLaunchpad);
 
 						data[SectionNameLocal].AddKey(LocalVersionKey, defaultLauncherVersion.ToString());
@@ -232,10 +223,7 @@ namespace Launchpad.Launcher.Handlers
 
 						data[SectionNameHTTP].AddKey(HTTPAddressKey, DefaultHTTPAddress);
 
-						data[SectionNameBitTorrent].AddKey("Magnet", string.Empty);
-
 						data[SectionNameLaunchpad].AddKey(LaunchpadOfficialUpdatesKey, DefaultUseOfficialUpdates);
-						data[SectionNameLaunchpad].AddKey(LaunchpadAnonymousStatsKey, DefaultAllowAnonymousStatus);
 
 						WriteConfig(parser, data);
 					}
@@ -260,110 +248,6 @@ namespace Launchpad.Launcher.Handlers
 					data[SectionNameLocal][LocalVersionKey] = defaultLauncherVersion.ToString();
 
 					// ...
-
-					// March 22 - 2016: Changed GUID generation to create a unique GUID for each game name
-					// Update config files without GUID keys
-					string seededGUID = GenerateSeededGUID(data[SectionNameLocal].GetKeyData(LocalGameNameKey).Value);
-					if (!data[SectionNameLocal].ContainsKey(LocalGameGUIDKey))
-					{
-						data[SectionNameLocal].AddKey(LocalGameGUIDKey, seededGUID);
-					}
-					else
-					{
-						// Update the game GUID
-						data[SectionNameLocal][LocalGameGUIDKey] = seededGUID;
-					}
-					// End March 22 - 2016
-
-					// Update config files without protocol keys
-					if (!data[SectionNameRemote].ContainsKey(RemoteProtocolKey))
-					{
-						data[SectionNameRemote].AddKey(RemoteProtocolKey, DefaultProtocol);
-					}
-
-					// Update config files without changelog keys
-					if (!data[SectionNameRemote].ContainsKey(RemoteChangelogURLKey))
-					{
-						data[SectionNameRemote].AddKey(RemoteChangelogURLKey, DefaultChangelogURL);
-					}
-
-					// March 21 - 2016: Moves FTP url to its own section
-					// March 21 - 2016: Renames FTP credential keys
-					// March 21 - 2016: Adds sections for FTP, HTTP and BitTorrent.
-					// March 21 - 2016: Adds configuration option for number of times to retry broken files
-					if (data[SectionNameRemote].ContainsKey("FTPUsername"))
-					{
-						string username = data[SectionNameRemote].GetKeyData("FTPUsername").Value;
-						data[SectionNameRemote].RemoveKey("FTPUsername");
-
-						data[SectionNameRemote].AddKey(RemoteUsernameKey, username);
-					}
-					if (data[SectionNameRemote].ContainsKey("FTPPassword"))
-					{
-						string password = data[SectionNameRemote].GetKeyData("FTPPassword").Value;
-						data[SectionNameRemote].RemoveKey("FTPPassword");
-
-						data[SectionNameRemote].AddKey(RemotePasswordKey, password);
-					}
-
-					if (!data.Sections.ContainsSection(SectionNameFTP))
-					{
-						data.Sections.AddSection(SectionNameFTP);
-					}
-
-					if (data[SectionNameRemote].ContainsKey("FTPUrl"))
-					{
-						string ftpurl = data[SectionNameRemote].GetKeyData("FTPUrl").Value;
-						data[SectionNameRemote].RemoveKey("FTPUrl");
-
-						data[SectionNameFTP].AddKey(FTPAddressKey, ftpurl);
-					}
-
-					if (!data.Sections.ContainsSection(SectionNameHTTP))
-					{
-						data.Sections.AddSection(SectionNameHTTP);
-					}
-
-					if (!data[SectionNameHTTP].ContainsKey(HTTPAddressKey))
-					{
-						data[SectionNameHTTP].AddKey(HTTPAddressKey, "http://sharkman.asuscomm.com/launchpad");
-					}
-
-					if (!data.Sections.ContainsSection(SectionNameBitTorrent))
-					{
-						data.Sections.AddSection(SectionNameBitTorrent);
-					}
-
-					if (!data[SectionNameBitTorrent].ContainsKey("Magnet"))
-					{
-						data[SectionNameBitTorrent].AddKey("Magnet", string.Empty);
-					}
-
-					if (!data[SectionNameLaunchpad].ContainsKey("bAllowAnonymousStats"))
-					{
-						data[SectionNameLaunchpad].AddKey("bAllowAnonymousStats", "true");
-					}
-
-					if (!data[SectionNameRemote].ContainsKey(RemoteFileRetriesKey))
-					{
-						data[SectionNameRemote].AddKey(RemoteFileRetriesKey, "2");
-					}
-					// End March 21 - 2016
-
-					// June 2 - 2016: Adds main executable redirection option
-					if (!data[SectionNameLocal].ContainsKey("MainExecutuableName"))
-					{
-						string gameName = data[SectionNameLocal][LocalGameNameKey];
-						data[SectionNameLocal].AddKey(LocalMainExecutableNameKey, gameName);
-					}
-					// End June 2
-
-					// January 20 - 2017
-					if (!data[SectionNameRemote].ContainsKey(RemoteBufferSizeKey))
-					{
-						data[SectionNameRemote].AddKey(RemoteBufferSizeKey, DefaultBufferSize);
-					}
-					// End January 20
 
 					// ...
 					WriteConfig(parser, data);
@@ -787,10 +671,6 @@ namespace Launchpad.Launcher.Handlers
 						case "HTTP":
 						{
 							return new HTTPProtocolHandler();
-						}
-						case "BitTorrent":
-						{
-							return new BitTorrentProtocolHandler();
 						}
 						default:
 						{
@@ -1251,60 +1131,6 @@ namespace Launchpad.Launcher.Handlers
 		}
 
 		/// <summary>
-		/// Gets the BitTorrent magnet link.
-		/// </summary>
-		/// <returns>The magnet link.</returns>
-		public string GetBitTorrentMagnet()
-		{
-			lock (this.ReadLock)
-			{
-				try
-				{
-					FileIniDataParser parser = new FileIniDataParser();
-
-					string configPath = GetConfigPath();
-					IniData data = parser.ReadFile(configPath);
-
-					string magnetLink = data[SectionNameBitTorrent]["Magnet"];
-
-					return magnetLink;
-				}
-				catch (IOException ioex)
-				{
-					Log.Warn("Could not get the BitTorrent magnet link (IOException): " + ioex.Message);
-					return string.Empty;
-				}
-			}
-		}
-
-		/// <summary>
-		/// Sets the BitTorrent magnet link.
-		/// </summary>
-		/// <param name="magnet">The new magnet link.</param>
-		public void SetBitTorrentMagnet(string magnet)
-		{
-			lock (this.ReadLock)
-			{
-				lock (this.WriteLock)
-				{
-					try
-					{
-						FileIniDataParser parser = new FileIniDataParser();
-						IniData data = parser.ReadFile(GetConfigPath());
-
-						data[SectionNameBitTorrent]["Magnet"] = magnet;
-
-						WriteConfig(parser, data);
-					}
-					catch (IOException ioex)
-					{
-						Log.Warn("Could not set the BitTorrent magnet link (IOException): " + ioex.Message);
-					}
-				}
-			}
-		}
-
-		/// <summary>
 		/// Gets the name of the main executable.
 		/// </summary>
 		/// <returns>The name of the main executable.</returns>
@@ -1390,37 +1216,6 @@ namespace Launchpad.Launcher.Handlers
 		}
 
 		/// <summary>
-		/// Gets if the launcher is allowed to send usage stats.
-		/// </summary>
-		/// <returns><c>true</c>, if the launcher is allowed to send usage stats, <c>false</c> otherwise.</returns>
-		public bool ShouldAllowAnonymousStats()
-		{
-			lock (this.ReadLock)
-			{
-				try
-				{
-					FileIniDataParser parser = new FileIniDataParser();
-					IniData data = parser.ReadFile(GetConfigPath());
-
-					string rawAllowAnonymousStats = data[SectionNameLaunchpad]["bAllowAnonymousStats"];
-
-					if (bool.TryParse(rawAllowAnonymousStats, out var allowAnonymousStats))
-					{
-						return allowAnonymousStats;
-					}
-
-					Log.Warn("Could not parse if we were allowed to send anonymous stats. Allowing by default.");
-					return true;
-				}
-				catch (IOException ioex)
-				{
-					Log.Warn("Could not determine if we were allowed to send anonymous stats (IOException): " + ioex.Message);
-					return true;
-				}
-			}
-		}
-
-		/// <summary>
 		/// Gets the launcher's unique GUID. This GUID maps to a game and not a user.
 		/// </summary>
 		/// <returns>The GUID.</returns>
@@ -1469,127 +1264,6 @@ namespace Launchpad.Launcher.Handlers
 		}
 
 		/// <summary>
-		/// Replaces and updates the old pre-unix config.
-		/// </summary>
-		private void UpdateAndMovePreUnixConfig()
-		{
-			string oldConfigPath = $@"{GetLocalDir()}config{Path.DirectorySeparatorChar}launcherConfig.ini";
-
-			string oldConfigDir = $@"{GetLocalDir()}config";
-
-			if (SystemInformation.IsRunningOnUnix())
-			{
-				// Case sensitive
-				// Is there an old config file?
-				if (File.Exists(oldConfigPath))
-				{
-					lock (this.ReadLock)
-					{
-						// Have we not already created the new config dir?
-						if (!Directory.Exists(GetConfigDir()))
-						{
-							// If not, create it.
-							Directory.CreateDirectory(GetConfigDir());
-
-							// Copy the old config file to the new location.
-							File.Copy(oldConfigPath, GetConfigPath());
-
-							// Read our new file.
-							FileIniDataParser parser = new FileIniDataParser();
-							IniData data = parser.ReadFile(GetConfigPath());
-
-							// Replace the old invalid keys with new, updated keys.
-							string launcherVersion = data[SectionNameLocal]["launcherVersion"];
-							string gameName = data[SectionNameLocal]["gameName"];
-							string systemTarget = data[SectionNameLocal]["systemTarget"];
-
-							data[SectionNameLocal].RemoveKey("launcherVersion");
-							data[SectionNameLocal].RemoveKey("gameName");
-							data[SectionNameLocal].RemoveKey("systemTarget");
-
-							data[SectionNameLocal].AddKey(LocalVersionKey, launcherVersion);
-							data[SectionNameLocal].AddKey(LocalGameNameKey, gameName);
-							data[SectionNameLocal].AddKey(LocalSystemTargetKey, systemTarget);
-
-							WriteConfig(parser, data);
-
-							File.Delete(oldConfigPath);
-							Directory.Delete(oldConfigDir, true);
-						}
-						else
-						{
-							// The new config dir already exists, so we'll just toss out the old one.
-							// Delete the old config
-							File.Delete(oldConfigPath);
-							Directory.Delete(oldConfigDir, true);
-						}
-					}
-				}
-			}
-			else
-			{
-				lock (this.ReadLock)
-				{
-					// Windows is not case sensitive, so we'll use direct access without copying.
-					if (File.Exists(oldConfigPath))
-					{
-						FileIniDataParser parser = new FileIniDataParser();
-						IniData data = parser.ReadFile(GetConfigPath());
-
-						// Replace the old invalid keys with new, updated keys.
-						string launcherVersion = data[SectionNameLocal]["launcherVersion"];
-						string gameName = data[SectionNameLocal]["gameName"];
-						string systemTarget = data[SectionNameLocal]["systemTarget"];
-
-						data[SectionNameLocal].RemoveKey("launcherVersion");
-						data[SectionNameLocal].RemoveKey("gameName");
-						data[SectionNameLocal].RemoveKey("systemTarget");
-
-						data[SectionNameLocal].AddKey(LocalVersionKey, launcherVersion);
-						data[SectionNameLocal].AddKey(LocalGameNameKey, gameName);
-						data[SectionNameLocal].AddKey(LocalSystemTargetKey, systemTarget);
-
-						WriteConfig(parser, data);
-					}
-				}
-			}
-		}
-
-		/// <summary>
-		/// Renames or moves the old cookie files as needed.
-		/// </summary>
-		private static void MoveOrUpdateCookieFiles()
-		{
-			// This is the really old path from way back.
-			string veryOldUpdateCookiePath = $@"{GetLocalDir()}.updatecookie";
-			if (File.Exists(veryOldUpdateCookiePath))
-			{
-				string launcherInstallCookiePath = $@"{GetLocalDir()}.launcher";
-
-				File.Move(veryOldUpdateCookiePath, launcherInstallCookiePath);
-			}
-
-			// August 1 - 2016: Renamed update cookie to launcher cookie
-			string oldUpdateCookiePath = $@"{GetLocalDir()}.update";
-			if (File.Exists(oldUpdateCookiePath))
-			{
-				string launcherInstallCookiePath = $@"{GetLocalDir()}.launcher";
-
-				File.Move(oldUpdateCookiePath, launcherInstallCookiePath);
-			}
-
-			// August 1 - 2016: Renamed install cookie to game cookie
-			string oldInstallCookiePath = $@"{GetLocalDir()}.install";
-			if (File.Exists(oldInstallCookiePath))
-			{
-				string gameInstallCookiePath = $@"{GetLocalDir()}.game";
-
-				File.Move(oldInstallCookiePath, gameInstallCookiePath);
-			}
-			// End August 1 - 2016
-		}
-
-		/// <summary>
 		/// Gets the current platform the launcher is running on.
 		/// </summary>
 		/// <returns>The current platform.</returns>
@@ -1604,36 +1278,27 @@ namespace Launchpad.Launcher.Handlers
 			switch (platformID)
 			{
 				case "MacOSX":
+				{
+					return ESystemTarget.Mac;
+				}
+				case "Unix":
+				{
+					// Mac may sometimes be detected as Unix, so do an additional check for some Mac-only directories
+					if (Directory.Exists("/Applications") && Directory.Exists("/System") && Directory.Exists("/Users") && Directory.Exists("/Volumes"))
 					{
 						return ESystemTarget.Mac;
 					}
-				case "Unix":
-					{
-						// Mac may sometimes be detected as Unix, so do an additional check for some Mac-only directories
-						if (Directory.Exists("/Applications") && Directory.Exists("/System") && Directory.Exists("/Users") && Directory.Exists("/Volumes"))
-						{
-							return ESystemTarget.Mac;
-						}
-						else
-						{
-							return ESystemTarget.Linux;
-						}
-					}
+
+					return ESystemTarget.Linux;
+				}
 				case "Windows":
-					{
-						if (Environment.Is64BitOperatingSystem)
-						{
-							return ESystemTarget.Win64;
-						}
-						else
-						{
-							return ESystemTarget.Win32;
-						}
-					}
+				{
+					return Environment.Is64BitOperatingSystem ? ESystemTarget.Win64 : ESystemTarget.Win32;
+				}
 				default:
-					{
-						return ESystemTarget.Unknown;
-					}
+				{
+					return ESystemTarget.Unknown;
+				}
 			}
 		}
 	}

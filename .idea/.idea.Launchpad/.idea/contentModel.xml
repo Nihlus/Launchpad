@@ -215,7 +215,6 @@
           <e p="GameHandler.cs" t="Include" />
           <e p="LauncherHandler.cs" t="Include" />
           <e p="Protocols" t="Include">
-            <e p="BitTorrentProtocolHandler.cs" t="Include" />
             <e p="EModule.cs" t="Include" />
             <e p="Manifest" t="Include">
               <e p="FTPProtocolHandler.cs" t="Include" />
@@ -227,7 +226,6 @@
             <e p="ModuleProgressChangedArgs.cs" t="Include" />
             <e p="PatchProtocolHandler.cs" t="Include" />
           </e>
-          <e p="StatsHandler.cs" t="Include" />
         </e>
         <e p="Interface" t="Include">
           <e p="ChangelogBrowser" t="Include">

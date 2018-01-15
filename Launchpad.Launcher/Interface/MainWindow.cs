@@ -208,11 +208,6 @@ namespace Launchpad.Launcher.Interface
 					}
 				}
 
-				if (this.Config.ShouldAllowAnonymousStats())
-				{
-					StatsHandler.SendUsageStats();
-				}
-
 				// Load the changelog. Try a direct URL first, and a protocol-specific
 				// implementation after.
 				if (LauncherHandler.CanAccessStandardChangelog())

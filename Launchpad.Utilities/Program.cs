@@ -22,7 +22,6 @@
 using System;
 using System.IO;
 using CommandLine;
-using CommandLine.Text;
 using Gtk;
 using Launchpad.Utilities.Handlers;
 using Launchpad.Utilities.Utility.Events;
