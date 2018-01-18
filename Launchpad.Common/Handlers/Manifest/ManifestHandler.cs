@@ -124,8 +124,8 @@ namespace Launchpad.Common.Handlers.Manifest
 		{
 			lock (this.ManifestsLock)
 			{
-				string newManifestPath = GetManifestPath(manifestType, false);
-				string oldManifestPath = GetManifestPath(manifestType, true);
+				var newManifestPath = GetManifestPath(manifestType, false);
+				var oldManifestPath = GetManifestPath(manifestType, true);
 
 				// Reload new manifests
 				try
@@ -166,7 +166,7 @@ namespace Launchpad.Common.Handlers.Manifest
 		/// <returns>A list of <see cref="ManifestEntry"/> objects.</returns>
 		public static IReadOnlyList<ManifestEntry> LoadManifest(string manifestPath)
 		{
-			using (Stream fileStream = File.OpenRead(manifestPath))
+			using (var fileStream = File.OpenRead(manifestPath))
 			{
 				return LoadManifest(fileStream);
 			}
@@ -179,8 +179,8 @@ namespace Launchpad.Common.Handlers.Manifest
 		/// <returns>A read-only list of <see cref="ManifestEntry"/> objects.</returns>
 		public static IReadOnlyList<ManifestEntry> LoadManifest(Stream manifestStream)
 		{
-			List<string> rawManifest = new List<string>();
-			using (StreamReader sr = new StreamReader(manifestStream))
+			var rawManifest = new List<string>();
+			using (var sr = new StreamReader(manifestStream))
 			{
 				string line;
 				while ((line = sr.ReadLine()) != null)
@@ -189,8 +189,8 @@ namespace Launchpad.Common.Handlers.Manifest
 				}
 			}
 
-			List<ManifestEntry> manifest = new List<ManifestEntry>();
-			foreach (string rawEntry in rawManifest)
+			var manifest = new List<ManifestEntry>();
+			foreach (var rawEntry in rawManifest)
 			{
 				if (ManifestEntry.TryParse(rawEntry, out var newEntry))
 				{
@@ -210,7 +210,7 @@ namespace Launchpad.Common.Handlers.Manifest
 		/// <returns>A fully qualified path to where a manifest should be.</returns>
 		public string GetManifestPath(EManifestType manifestType, bool getOldManifestPath)
 		{
-			string manifestPath = $@"{this.LocalBaseDirectory}{manifestType}Manifest.txt";
+			var manifestPath = $@"{this.LocalBaseDirectory}{manifestType}Manifest.txt";
 
 			if (getOldManifestPath)
 			{

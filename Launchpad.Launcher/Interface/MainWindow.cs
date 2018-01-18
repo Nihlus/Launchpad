@@ -137,7 +137,7 @@ namespace Launchpad.Launcher.Interface
 			// First of all, check if we can connect to the patching service.
 			if (!this.Checks.CanPatch())
 			{
-				MessageDialog dialog = new MessageDialog
+				var dialog = new MessageDialog
 				(
 					this,
 					DialogFlags.Modal,
@@ -158,7 +158,7 @@ namespace Launchpad.Launcher.Interface
 				// Load the game banner (if there is one)
 				if (this.Config.GetPatchProtocol().CanProvideBanner())
 				{
-					using (MemoryStream bannerStream = new MemoryStream())
+					using (var bannerStream = new MemoryStream())
 					{
 						// Fetch the banner from the server
 						this.Config.GetPatchProtocol().GetBanner().Save(bannerStream, ImageFormat.Png);
@@ -180,7 +180,7 @@ namespace Launchpad.Launcher.Interface
 						"Is this the location where you would like to install the game?"
 					) + $"\n\n{ConfigHandler.GetLocalDir()}";
 
-					MessageDialog shouldInstallHereDialog = new MessageDialog
+					var shouldInstallHereDialog = new MessageDialog
 					(
 						this,
 						DialogFlags.Modal,
@@ -613,7 +613,7 @@ namespace Launchpad.Launcher.Interface
 		{
 			if (e.ExitCode != 0)
 			{
-				MessageDialog crashDialog = new MessageDialog
+				var crashDialog = new MessageDialog
 				(
 					this,
 					DialogFlags.Modal,
@@ -648,7 +648,7 @@ namespace Launchpad.Launcher.Interface
 		/// </summary>
 		private void OnReinstallGameActionActivated(object sender, EventArgs e)
 		{
-			MessageDialog reinstallConfirmDialog = new MessageDialog
+			var reinstallConfirmDialog = new MessageDialog
 			(
 				this,
 				DialogFlags.Modal,

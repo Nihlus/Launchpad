@@ -62,7 +62,7 @@ namespace Launchpad.Utilities
 				{
 					Log.Info("Generating manifest...");
 
-					ManifestGenerationHandler manifestGenerationHandler = new ManifestGenerationHandler();
+					var manifestGenerationHandler = new ManifestGenerationHandler();
 
 					manifestGenerationHandler.ManifestGenerationProgressChanged += OnProgressChanged;
 					manifestGenerationHandler.ManifestGenerationFinished += OnGenerationFinished;
@@ -79,7 +79,7 @@ namespace Launchpad.Utilities
 				// Run a GTK UI instead of batch processing
 				Application.Init();
 
-				MainWindow win = new MainWindow();
+				var win = new MainWindow();
 				win.Show();
 				Application.Run();
 			}

@@ -73,11 +73,11 @@ namespace Launchpad.Utilities.Interface
 			this.generateGameManifestButton.Sensitive = false;
 			this.generateLaunchpadManifestButton.Sensitive = false;
 
-			string targetDirectory = this.fileChooser.Filename;
+			var targetDirectory = this.fileChooser.Filename;
 
 			if (!Directory.GetFiles(targetDirectory).Any(s => s.Contains("GameVersion.txt")))
 			{
-				MessageDialog dialog = new MessageDialog(this,
+				var dialog = new MessageDialog(this,
 					DialogFlags.Modal,
 					MessageType.Question,
 					ButtonsType.YesNo, this.LocalizationCatalog.GetString("No GameVersion.txt file could be found in the target directory. This file is required.\n" +
@@ -85,7 +85,7 @@ namespace Launchpad.Utilities.Interface
 
 				if (dialog.Run() == (int) ResponseType.Yes)
 				{
-					string gameVersionPath = $"{targetDirectory}{SysPath.DirectorySeparatorChar}GameVersion.txt";
+					var gameVersionPath = $"{targetDirectory}{SysPath.DirectorySeparatorChar}GameVersion.txt";
 					File.WriteAllText(gameVersionPath, new Version("1.0.0").ToString());
 
 					dialog.Destroy();
@@ -105,7 +105,7 @@ namespace Launchpad.Utilities.Interface
 			this.generateGameManifestButton.Sensitive = false;
 			this.generateLaunchpadManifestButton.Sensitive = false;
 
-			string targetDirectory = this.fileChooser.Filename;
+			var targetDirectory = this.fileChooser.Filename;
 
 			this.Manifest.GenerateManifest(targetDirectory, EManifestType.Launchpad);
 
@@ -120,7 +120,7 @@ namespace Launchpad.Utilities.Interface
 		{
 			Application.Invoke((o, args) =>
 			{
-				string progressString = this.LocalizationCatalog.GetString("{0} : {1} out of {2}");
+				var progressString = this.LocalizationCatalog.GetString("{0} : {1} out of {2}");
 				this.progressLabel.Text = string.Format(progressString, e.Filepath, e.CompletedFiles, e.TotalFiles);
 
 				this.progressbar.Fraction = e.CompletedFiles / (double)e.TotalFiles;

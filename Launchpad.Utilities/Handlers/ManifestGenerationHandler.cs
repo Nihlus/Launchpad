@@ -46,7 +46,7 @@ namespace Launchpad.Utilities.Handlers
 		/// <param name="manifestType">The type of manifest that should be generated.</param>
 		public void GenerateManifest(string targetPath, EManifestType manifestType)
 		{
-			Thread t = new Thread(() => GenerateManifest_Implementation(targetPath, manifestType))
+			var t = new Thread(() => GenerateManifest_Implementation(targetPath, manifestType))
 			{
 				Name = "GenerateManifest"
 			};
@@ -61,20 +61,20 @@ namespace Launchpad.Utilities.Handlers
         /// <param name="manifestType">The type of manifest that should be generated.</param>
 		private void GenerateManifest_Implementation(string targetPath, EManifestType manifestType)
 		{
-			string parentDirectory = Directory.GetParent(targetPath).ToString();
-			string manifestPath = $@"{parentDirectory}{Path.DirectorySeparatorChar}{manifestType}Manifest.txt";
-			string manifestChecksumPath = $@"{parentDirectory}{Path.DirectorySeparatorChar}{manifestType}Manifest.checksum";
+			var parentDirectory = Directory.GetParent(targetPath).ToString();
+			var manifestPath = $@"{parentDirectory}{Path.DirectorySeparatorChar}{manifestType}Manifest.txt";
+			var manifestChecksumPath = $@"{parentDirectory}{Path.DirectorySeparatorChar}{manifestType}Manifest.checksum";
 
-			List<string> manifestFilePaths = new List<string>(Directory
+			var manifestFilePaths = new List<string>(Directory
 				.EnumerateFiles(targetPath, "*", SearchOption.AllDirectories)
 				.Where(s => !IsPathABlacklistedFile(s)));
 
-			using (TextWriter tw = new StreamWriter(File.Create(manifestPath)))
+			using (var tw = new StreamWriter(File.Create(manifestPath)))
 			{
-				int completedFiles = 0;
-				foreach (string filePath in manifestFilePaths)
+				var completedFiles = 0;
+				foreach (var filePath in manifestFilePaths)
 				{
-					ManifestEntry newEntry = CreateEntryForFile(targetPath, filePath);
+					var newEntry = CreateEntryForFile(targetPath, filePath);
 
 					tw.WriteLine(newEntry);
 					tw.Flush();
@@ -91,13 +91,13 @@ namespace Launchpad.Utilities.Handlers
 			}
 
 			// Create a checksum file for the manifest.
-			using (Stream manifestStream = File.OpenRead(manifestPath))
+			using (var manifestStream = File.OpenRead(manifestPath))
 			{
-				string manifestHash = MD5Handler.GetStreamHash(manifestStream);
+				var manifestHash = MD5Handler.GetStreamHash(manifestStream);
 
-				using (FileStream checksumStream = File.Create(manifestChecksumPath))
+				using (var checksumStream = File.Create(manifestChecksumPath))
 				{
-					using (TextWriter tw = new StreamWriter(checksumStream))
+					using (var tw = new StreamWriter(checksumStream))
 					{
 						tw.WriteLine(manifestHash);
 						tw.Close();
@@ -112,7 +112,7 @@ namespace Launchpad.Utilities.Handlers
 		{
 			string hash;
 			long fileSize;
-			using (FileStream fileStream = File.OpenRead(filePath))
+			using (var fileStream = File.OpenRead(filePath))
 			{
 				// Calculate the hash of the file
 				hash = MD5Handler.GetStreamHash(fileStream);
@@ -122,10 +122,10 @@ namespace Launchpad.Utilities.Handlers
 			}
 
 			// Get the relative path of the file
-			string relativeFilePath = filePath.Substring(parentDirectory.Length);
+			var relativeFilePath = filePath.Substring(parentDirectory.Length);
 
 			// Write the entry to the manifest
-			ManifestEntry newEntry = new ManifestEntry
+			var newEntry = new ManifestEntry
 			{
 				RelativePath = relativeFilePath,
 				Hash = hash,

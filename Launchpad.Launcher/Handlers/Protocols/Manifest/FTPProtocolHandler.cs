@@ -54,15 +54,15 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		{
 			Log.Info("Pinging remote patching server to determine if we can connect to it.");
 
-			bool canConnect = false;
+			var canConnect = false;
 
-			string url = this.Config.GetBaseFTPUrl();
-			string username = this.Config.GetRemoteUsername();
-			string password = this.Config.GetRemotePassword();
+			var url = this.Config.GetBaseFTPUrl();
+			var username = this.Config.GetRemoteUsername();
+			var password = this.Config.GetRemotePassword();
 
 			try
 			{
-				FtpWebRequest plainRequest = CreateFtpWebRequest(url, username, password);
+				var plainRequest = CreateFtpWebRequest(url, username, password);
 
 				if (plainRequest == null)
 				{
@@ -74,7 +74,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
 				try
 				{
-					using (FtpWebResponse response = (FtpWebResponse)plainRequest.GetResponse())
+					using (var response = (FtpWebResponse)plainRequest.GetResponse())
 					{
 						if (response.StatusCode == FtpStatusCode.OpeningData)
 						{
@@ -104,7 +104,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <returns><c>true</c> if the platform is available; otherwise, <c>false</c>.</returns>
 		public override bool IsPlatformAvailable(ESystemTarget platform)
 		{
-			string remote = $"{this.Config.GetBaseFTPUrl()}/game/{platform}/.provides";
+			var remote = $"{this.Config.GetBaseFTPUrl()}/game/{platform}/.provides";
 
 			return DoesRemoteFileExist(remote);
 		}
@@ -124,7 +124,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <returns>The changelog.</returns>
 		public override string GetChangelogSource()
 		{
-			string changelogURL = $"{this.Config.GetBaseFTPUrl()}/launcher/changelog.html";
+			var changelogURL = $"{this.Config.GetBaseFTPUrl()}/launcher/changelog.html";
 
 			// Return simple raw HTML
 			return ReadRemoteFile(changelogURL);
@@ -136,7 +136,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <returns><c>true</c> if this instance can provide banner; otherwise, <c>false</c>.</returns>
 		public override bool CanProvideBanner()
 		{
-			string bannerURL = $"{this.Config.GetBaseFTPUrl()}/launcher/banner.png";
+			var bannerURL = $"{this.Config.GetBaseFTPUrl()}/launcher/banner.png";
 
 			return DoesRemoteFileExist(bannerURL);
 		}
@@ -147,9 +147,9 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <returns>The banner.</returns>
 		public override Bitmap GetBanner()
 		{
-			string bannerURL = $"{this.Config.GetBaseFTPUrl()}/launcher/banner.png";
+			var bannerURL = $"{this.Config.GetBaseFTPUrl()}/launcher/banner.png";
 
-			string localBannerPath = $"{Path.GetTempPath()}/banner.png";
+			var localBannerPath = $"{Path.GetTempPath()}/banner.png";
 
 			DownloadRemoteFile(bannerURL, localBannerPath);
 			return new Bitmap(localBannerPath);
@@ -164,7 +164,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		protected override string ReadRemoteFile(string url, bool useAnonymousLogin = false)
 		{
 			// Clean the input url first
-			string remoteURL = url.Replace(Path.DirectorySeparatorChar, '/');
+			var remoteURL = url.Replace(Path.DirectorySeparatorChar, '/');
 
 			string username;
 			string password;
@@ -181,14 +181,14 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
 			try
 			{
-				FtpWebRequest request = CreateFtpWebRequest(remoteURL, username, password);
-				FtpWebRequest sizerequest = CreateFtpWebRequest(remoteURL, username, password);
+				var request = CreateFtpWebRequest(remoteURL, username, password);
+				var sizerequest = CreateFtpWebRequest(remoteURL, username, password);
 
 				request.Method = WebRequestMethods.Ftp.DownloadFile;
 				sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
 
-				string data = string.Empty;
-				using (Stream remoteStream = request.GetResponse().GetResponseStream())
+				var data = string.Empty;
+				using (var remoteStream = request.GetResponse().GetResponseStream())
 				{
 					if (remoteStream == null)
 					{
@@ -196,22 +196,22 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 					}
 
 					long fileSize;
-					using (FtpWebResponse sizeResponse = (FtpWebResponse)sizerequest.GetResponse())
+					using (var sizeResponse = (FtpWebResponse)sizerequest.GetResponse())
 					{
 						fileSize = sizeResponse.ContentLength;
 					}
 
-					int bufferSize = this.Config.GetDownloadBufferSize();
+					var bufferSize = this.Config.GetDownloadBufferSize();
 					if (fileSize < bufferSize)
 					{
-						byte[] smallBuffer = new byte[fileSize];
+						var smallBuffer = new byte[fileSize];
 						remoteStream.Read(smallBuffer, 0, smallBuffer.Length);
 
 						data = Encoding.UTF8.GetString(smallBuffer, 0, smallBuffer.Length);
 					}
 					else
 					{
-						byte[] buffer = new byte[bufferSize];
+						var buffer = new byte[bufferSize];
 
 						while (true)
 						{
@@ -247,7 +247,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		protected override void DownloadRemoteFile(string url, string localPath, long totalSize = 0, long contentOffset = 0, bool useAnonymousLogin = false)
 		{
 			// Make sure we're not passing in any backslashes in the url
-			string remoteURL = url.Replace(Path.DirectorySeparatorChar, '/');
+			var remoteURL = url.Replace(Path.DirectorySeparatorChar, '/');
 
 			string username;
 			string password;
@@ -264,15 +264,15 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
 			try
 			{
-				FtpWebRequest request = CreateFtpWebRequest(remoteURL, username, password);
-				FtpWebRequest sizerequest = CreateFtpWebRequest(remoteURL, username, password);
+				var request = CreateFtpWebRequest(remoteURL, username, password);
+				var sizerequest = CreateFtpWebRequest(remoteURL, username, password);
 
 				request.Method = WebRequestMethods.Ftp.DownloadFile;
 				request.ContentOffset = contentOffset;
 
 				sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
 
-				using (Stream contentStream = request.GetResponse().GetResponseStream())
+				using (var contentStream = request.GetResponse().GetResponseStream())
 				{
 					if (contentStream == null)
 					{
@@ -285,26 +285,26 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 						return;
 					}
 
-					long fileSize = contentOffset;
-					using (FtpWebResponse sizereader = (FtpWebResponse)sizerequest.GetResponse())
+					var fileSize = contentOffset;
+					using (var sizereader = (FtpWebResponse)sizerequest.GetResponse())
 					{
 						fileSize += sizereader.ContentLength;
 					}
 
 					using
 					(
-						FileStream fileStream = contentOffset > 0
+						var fileStream = contentOffset > 0
 							? new FileStream(localPath, FileMode.Append)
 							: new FileStream(localPath, FileMode.Create)
 					)
 					{
 						fileStream.Position = contentOffset;
-						long totalBytesDownloaded = contentOffset;
+						var totalBytesDownloaded = contentOffset;
 
-						int bufferSize = this.Config.GetDownloadBufferSize();
+						var bufferSize = this.Config.GetDownloadBufferSize();
 						if (fileSize < bufferSize)
 						{
-							byte[] smallBuffer = new byte[fileSize];
+							var smallBuffer = new byte[fileSize];
 							contentStream.Read(smallBuffer, 0, smallBuffer.Length);
 
 							fileStream.Write(smallBuffer, 0, smallBuffer.Length);
@@ -324,11 +324,11 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 						}
 						else
 						{
-							byte[] buffer = new byte[bufferSize];
+							var buffer = new byte[bufferSize];
 
 							while (true)
 							{
-								int bytesRead = contentStream.Read(buffer, 0, buffer.Length);
+								var bytesRead = contentStream.Read(buffer, 0, buffer.Length);
 
 								if (bytesRead == 0)
 								{
@@ -379,7 +379,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
 			try
 			{
-				FtpWebRequest request = (FtpWebRequest)WebRequest.Create(new Uri(ftpDirectoryPath));
+				var request = (FtpWebRequest)WebRequest.Create(new Uri(ftpDirectoryPath));
 
 				// Set proxy to null. Under current configuration if this option is not set then the proxy
 				// that is used will get an html response from the web content gateway (firewall monitoring system)
@@ -420,7 +420,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <param name="remotePath">Remote path.</param>
 		private bool DoesRemoteFileExist(string remotePath)
 		{
-			FtpWebRequest request = CreateFtpWebRequest(remotePath, this.Config.GetRemoteUsername(), this.Config.GetRemotePassword());
+			var request = CreateFtpWebRequest(remotePath, this.Config.GetRemoteUsername(), this.Config.GetRemotePassword());
 			FtpWebResponse response = null;
 
 			try

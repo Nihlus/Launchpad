@@ -62,7 +62,6 @@ namespace Launchpad.Launcher.Handlers
 		private const string DefaultFTPAddress = "ftp://sharkman.asuscomm.com";
 		private const string DefaultHTTPAddress = "http://sharkman.asuscomm.com/launchpad";
 		private const string DefaultUseOfficialUpdates = "true";
-		private const string DefaultAllowAnonymousStatus = "true";
 		private const string DefaultBufferSize = "8192";
 
 		private const string ConfigurationFolderName = "Config";
@@ -141,7 +140,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The config path.</returns>
 		private static string GetConfigPath()
 		{
-			string configPath = $@"{GetConfigDir()}{ConfigurationFileName}.ini";
+			var configPath = $@"{GetConfigDir()}{ConfigurationFileName}.ini";
 
 			return configPath;
 		}
@@ -160,7 +159,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The config dir, terminated with a directory separator.</returns>
 		private static string GetConfigDir()
 		{
-			string configDir = $@"{GetLocalDir()}{ConfigurationFolderName}{Path.DirectorySeparatorChar}";
+			var configDir = $@"{GetLocalDir()}{ConfigurationFolderName}{Path.DirectorySeparatorChar}";
 			return configDir;
 		}
 
@@ -171,13 +170,13 @@ namespace Launchpad.Launcher.Handlers
 		private void Initialize()
 		{
 			// Since Initialize will write to the config, we'll create the parser here and load the file later
-			FileIniDataParser parser = new FileIniDataParser();
+			var parser = new FileIniDataParser();
 
-			string configDir = GetConfigDir();
-			string configPath = GetConfigPath();
+			var configDir = GetConfigDir();
+			var configPath = GetConfigPath();
 
 			// Get the launcher version from the assembly.
-			Version defaultLauncherVersion = typeof(ConfigHandler).Assembly.GetName().Version;
+			var defaultLauncherVersion = typeof(ConfigHandler).Assembly.GetName().Version;
 
 			// Lock the configuration file to make sure no other threads will try and
 			// read from it during creation or updating of values.
@@ -193,12 +192,12 @@ namespace Launchpad.Launcher.Handlers
 
 				if (!File.Exists(configPath))
 				{
-					FileStream configStream = File.Create(configPath);
+					var configStream = File.Create(configPath);
 					configStream.Close();
 
 					try
 					{
-						IniData data = parser.ReadFile(GetConfigPath());
+						var data = parser.ReadFile(GetConfigPath());
 
 						data.Sections.AddSection(SectionNameLocal);
 						data.Sections.AddSection(SectionNameRemote);
@@ -242,7 +241,7 @@ namespace Launchpad.Launcher.Handlers
 						small informational header with the date and change.
 					*/
 
-					IniData data = parser.ReadFile(GetConfigPath());
+					var data = parser.ReadFile(GetConfigPath());
 
 					// Update the user-visible version of the launcher
 					data[SectionNameLocal][LocalVersionKey] = defaultLauncherVersion.ToString();
@@ -265,7 +264,7 @@ namespace Launchpad.Launcher.Handlers
 			if (!File.Exists(GetInstallGUIDPath()))
 			{
 				// Make sure all the folders needed exist.
-				string installGUIDDirectoryPath = Path.GetDirectoryName(GetInstallGUIDPath());
+				var installGUIDDirectoryPath = Path.GetDirectoryName(GetInstallGUIDPath());
 				if (string.IsNullOrEmpty(installGUIDDirectoryPath))
 				{
 					Log.Error
@@ -280,20 +279,20 @@ namespace Launchpad.Launcher.Handlers
 				}
 
 				// Generate and store a GUID.
-				string generatedInstallGUID = Guid.NewGuid().ToString();
+				var generatedInstallGUID = Guid.NewGuid().ToString();
 				File.WriteAllText(GetInstallGUIDPath(), generatedInstallGUID);
 			}
 			else
 			{
 				// Make sure the GUID file has been populated
-				FileInfo guidInfo = new FileInfo(GetInstallGUIDPath());
+				var guidInfo = new FileInfo(GetInstallGUIDPath());
 				if (guidInfo.Length > 0)
 				{
 					return;
 				}
 
 				// Generate and store a GUID.
-				string generatedInstallGUID = Guid.NewGuid().ToString();
+				var generatedInstallGUID = Guid.NewGuid().ToString();
 				File.WriteAllText(GetInstallGUIDPath(), generatedInstallGUID);
 			}
 		}
@@ -310,9 +309,9 @@ namespace Launchpad.Launcher.Handlers
 				return;
 			}
 
-			using (FileStream fs = File.Create(GetGameArgumentsPath()))
+			using (var fs = File.Create(GetGameArgumentsPath()))
 			{
-				using (StreamWriter sw = new StreamWriter(fs))
+				using (var sw = new StreamWriter(fs))
 				{
 					sw.WriteLine("# This file contains all the arguments passed to the game executable on startup.");
 					sw.WriteLine("# Lines beginning with a hash character (#) are ignored and considered comments.");
@@ -335,9 +334,9 @@ namespace Launchpad.Launcher.Handlers
 		/// <param name="seed">Seed.</param>
 		private static string GenerateSeededGUID(string seed)
 		{
-			using (MD5 md5 = MD5.Create())
+			using (var md5 = MD5.Create())
 			{
-				byte[] hash = md5.ComputeHash(Encoding.Default.GetBytes(seed));
+				var hash = md5.ComputeHash(Encoding.Default.GetBytes(seed));
 				return new Guid(hash).ToString();
 			}
 		}
@@ -348,7 +347,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The update cookie.</returns>
 		public static string GetLauncherCookiePath()
 		{
-			string updateCookie = $@"{GetLocalDir()}.launcher";
+			var updateCookie = $@"{GetLocalDir()}.launcher";
 			return updateCookie;
 		}
 
@@ -357,7 +356,7 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		public static void CreateLauncherCookie()
 		{
-			bool doesCookieExist = File.Exists(GetLauncherCookiePath());
+			var doesCookieExist = File.Exists(GetLauncherCookiePath());
 			if (!doesCookieExist)
 			{
 				File.Create(GetLauncherCookiePath());
@@ -370,7 +369,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The install cookie.</returns>
 		public static string GetGameCookiePath()
 		{
-			string installCookie = $@"{GetLocalDir()}.game";
+			var installCookie = $@"{GetLocalDir()}.game";
 			return installCookie;
 		}
 
@@ -379,8 +378,7 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		public static void CreateGameCookie()
 		{
-			bool doesCookieExist = File.Exists(GetGameCookiePath());
-
+			var doesCookieExist = File.Exists(GetGameCookiePath());
 			if (!doesCookieExist)
 			{
 				File.Create(GetGameCookiePath()).Close();
@@ -393,7 +391,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The local dir, terminated by a directory separator.</returns>
 		public static string GetLocalDir()
 		{
-			Uri codeBaseURI = new UriBuilder(Assembly.GetExecutingAssembly().Location).Uri;
+			var codeBaseURI = new UriBuilder(Assembly.GetExecutingAssembly().Location).Uri;
 			return Path.GetDirectoryName(Uri.UnescapeDataString(codeBaseURI.AbsolutePath)) + Path.DirectorySeparatorChar;
 		}
 
@@ -426,7 +424,7 @@ namespace Launchpad.Launcher.Handlers
 				return new List<string>();
 			}
 
-			List<string> gameArguments = new List<string>(File.ReadAllLines(GetGameArgumentsPath()));
+			var gameArguments = new List<string>(File.ReadAllLines(GetGameArgumentsPath()));
 
 			// Return the list of lines in the argument file, except the ones starting with a hash or empty lines
 			return gameArguments.Where(s => !s.StartsWith("#") && !string.IsNullOrEmpty(s)).ToList();
@@ -446,7 +444,7 @@ namespace Launchpad.Launcher.Handlers
 
 			// While not recommended nor supported, the user may add an executable extension to the executable name.
 			// We strip it out here (if it exists) just to be safe.
-			string executableName = GetMainExecutableName().Replace(".exe", string.Empty);
+			var executableName = GetMainExecutableName().Replace(".exe", string.Empty);
 
 			// Unix doesn't need (or have) the .exe extension.
 			if (SystemInformation.IsRunningOnUnix())
@@ -495,7 +493,7 @@ namespace Launchpad.Launcher.Handlers
 		{
 			try
 			{
-				string rawGameVersion = File.ReadAllText(GetGameVersionPath());
+				var rawGameVersion = File.ReadAllText(GetGameVersionPath());
 
 				if (Version.TryParse(rawGameVersion, out var gameVersion))
 				{
@@ -605,10 +603,10 @@ namespace Launchpad.Launcher.Handlers
 			{
 				try
 				{
-					FileIniDataParser parser = new FileIniDataParser();
-					IniData data = parser.ReadFile(GetConfigPath());
+					var parser = new FileIniDataParser();
+					var data = parser.ReadFile(GetConfigPath());
 
-					string launcherVersion = data[SectionNameLocal][LocalVersionKey];
+					var launcherVersion = data[SectionNameLocal][LocalVersionKey];
 
 					if (Version.TryParse(launcherVersion, out var localLauncherVersion))
 					{
@@ -661,10 +659,10 @@ namespace Launchpad.Launcher.Handlers
 			{
 				try
 				{
-					FileIniDataParser parser = new FileIniDataParser();
-					IniData data = parser.ReadFile(GetConfigPath());
+					var parser = new FileIniDataParser();
+					var data = parser.ReadFile(GetConfigPath());
 
-					string patchProtocol = data[SectionNameRemote][RemoteProtocolKey];
+					var patchProtocol = data[SectionNameRemote][RemoteProtocolKey];
 
 					switch (patchProtocol)
 					{
@@ -701,8 +699,8 @@ namespace Launchpad.Launcher.Handlers
 			{
 				try
 				{
-					FileIniDataParser parser = new FileIniDataParser();
-					IniData data = parser.ReadFile(GetConfigPath());
+					var parser = new FileIniDataParser();
+					var data = parser.ReadFile(GetConfigPath());
 
 					return data[SectionNameRemote][RemoteProtocolKey];
 				}
@@ -726,8 +724,8 @@ namespace Launchpad.Launcher.Handlers
 				{
 					try
 					{
-						FileIniDataParser parser = new FileIniDataParser();
-						IniData data = parser.ReadFile(GetConfigPath());
+						var parser = new FileIniDataParser();
+						var data = parser.ReadFile(GetConfigPath());
 
 						data[SectionNameLocal][LocalGameNameKey] = gameName;
 
@@ -751,10 +749,10 @@ namespace Launchpad.Launcher.Handlers
 			{
 				try
 				{
-					FileIniDataParser parser = new FileIniDataParser();
-					IniData data = parser.ReadFile(GetConfigPath());
+					var parser = new FileIniDataParser();
+					var data = parser.ReadFile(GetConfigPath());
 
-					string rawSystemTarget = data[SectionNameLocal][LocalSystemTargetKey];
+					var rawSystemTarget = data[SectionNameLocal][LocalSystemTargetKey];
 
 					if (Enum.TryParse(rawSystemTarget, out ESystemTarget systemTarget))
 					{
@@ -785,8 +783,8 @@ namespace Launchpad.Launcher.Handlers
 				{
 					try
 					{
-						FileIniDataParser parser = new FileIniDataParser();
-						IniData data = parser.ReadFile(GetConfigPath());
+						var parser = new FileIniDataParser();
+						var data = parser.ReadFile(GetConfigPath());
 
 						data[SectionNameLocal][LocalSystemTargetKey] = systemTarget.ToString();
 
@@ -810,8 +808,8 @@ namespace Launchpad.Launcher.Handlers
 			{
 				try
 				{
-					FileIniDataParser parser = new FileIniDataParser();
-					IniData data = parser.ReadFile(GetConfigPath());
+					var parser = new FileIniDataParser();
+					var data = parser.ReadFile(GetConfigPath());
 
 					string remoteUsername = data[SectionNameRemote][RemoteUsernameKey];
 
@@ -837,8 +835,8 @@ namespace Launchpad.Launcher.Handlers
 				{
 					try
 					{
-						FileIniDataParser parser = new FileIniDataParser();
-						IniData data = parser.ReadFile(GetConfigPath());
+						var parser = new FileIniDataParser();
+						var data = parser.ReadFile(GetConfigPath());
 
 						data[SectionNameRemote][RemoteUsernameKey] = username;
 
@@ -862,8 +860,8 @@ namespace Launchpad.Launcher.Handlers
 			{
 				try
 				{
-					FileIniDataParser parser = new FileIniDataParser();
-					IniData data = parser.ReadFile(GetConfigPath());
+					var parser = new FileIniDataParser();
+					var data = parser.ReadFile(GetConfigPath());
 
 					string remotePassword = data[SectionNameRemote][RemotePasswordKey];
 
@@ -889,8 +887,8 @@ namespace Launchpad.Launcher.Handlers
 				{
 					try
 					{
-						FileIniDataParser parser = new FileIniDataParser();
-						IniData data = parser.ReadFile(GetConfigPath());
+						var parser = new FileIniDataParser();
+						var data = parser.ReadFile(GetConfigPath());
 
 						data[SectionNameRemote][RemotePasswordKey] = password;
 
@@ -914,8 +912,8 @@ namespace Launchpad.Launcher.Handlers
 			{
 				try
 				{
-					FileIniDataParser parser = new FileIniDataParser();
-					IniData data = parser.ReadFile(GetConfigPath());
+					var parser = new FileIniDataParser();
+					var data = parser.ReadFile(GetConfigPath());
 
 					string fileRetries = data[SectionNameRemote][RemoteFileRetriesKey];
 
@@ -944,10 +942,10 @@ namespace Launchpad.Launcher.Handlers
 			{
 				try
 				{
-					FileIniDataParser parser = new FileIniDataParser();
-					IniData data = parser.ReadFile(GetConfigPath());
+					var parser = new FileIniDataParser();
+					var data = parser.ReadFile(GetConfigPath());
 
-					string fileRetries = data[SectionNameRemote][RemoteBufferSizeKey];
+					var fileRetries = data[SectionNameRemote][RemoteBufferSizeKey];
 
 					if (int.TryParse(fileRetries, out var retries))
 					{
@@ -1036,12 +1034,12 @@ namespace Launchpad.Launcher.Handlers
 			{
 				try
 				{
-					FileIniDataParser parser = new FileIniDataParser();
+					var parser = new FileIniDataParser();
 
-					string configPath = GetConfigPath();
-					IniData data = parser.ReadFile(configPath);
+					var configPath = GetConfigPath();
+					var data = parser.ReadFile(configPath);
 
-					string url = data[SectionNameFTP][FTPAddressKey];
+					var url = data[SectionNameFTP][FTPAddressKey];
 
 					return url;
 				}
@@ -1065,8 +1063,8 @@ namespace Launchpad.Launcher.Handlers
 				{
 					try
 					{
-						FileIniDataParser parser = new FileIniDataParser();
-						IniData data = parser.ReadFile(GetConfigPath());
+						var parser = new FileIniDataParser();
+						var data = parser.ReadFile(GetConfigPath());
 
 						data[SectionNameFTP][FTPAddressKey] = url;
 
@@ -1090,12 +1088,12 @@ namespace Launchpad.Launcher.Handlers
 			{
 				try
 				{
-					FileIniDataParser parser = new FileIniDataParser();
+					var parser = new FileIniDataParser();
 
-					string configPath = GetConfigPath();
-					IniData data = parser.ReadFile(configPath);
+					var configPath = GetConfigPath();
+					var data = parser.ReadFile(configPath);
 
-					string url = data[SectionNameHTTP][HTTPAddressKey];
+					var url = data[SectionNameHTTP][HTTPAddressKey];
 
 					return url;
 				}
@@ -1119,8 +1117,8 @@ namespace Launchpad.Launcher.Handlers
 				{
 					try
 					{
-						FileIniDataParser parser = new FileIniDataParser();
-						IniData data = parser.ReadFile(GetConfigPath());
+						var parser = new FileIniDataParser();
+						var data = parser.ReadFile(GetConfigPath());
 
 						data[SectionNameHTTP][HTTPAddressKey] = url;
 
@@ -1144,12 +1142,12 @@ namespace Launchpad.Launcher.Handlers
 			{
 				try
 				{
-					FileIniDataParser parser = new FileIniDataParser();
+					var parser = new FileIniDataParser();
 
-					string configPath = GetConfigPath();
-					IniData data = parser.ReadFile(configPath);
+					var configPath = GetConfigPath();
+					var data = parser.ReadFile(configPath);
 
-					string mainExecutableName = data[SectionNameLocal][LocalMainExecutableNameKey];
+					var mainExecutableName = data[SectionNameLocal][LocalMainExecutableNameKey];
 
 					return mainExecutableName;
 				}
@@ -1173,8 +1171,8 @@ namespace Launchpad.Launcher.Handlers
 				{
 					try
 					{
-						FileIniDataParser parser = new FileIniDataParser();
-						IniData data = parser.ReadFile(GetConfigPath());
+						var parser = new FileIniDataParser();
+						var data = parser.ReadFile(GetConfigPath());
 
 						data[SectionNameLocal][LocalMainExecutableNameKey] = mainExecutableName;
 
@@ -1198,10 +1196,10 @@ namespace Launchpad.Launcher.Handlers
 			{
 				try
 				{
-					FileIniDataParser parser = new FileIniDataParser();
-					IniData data = parser.ReadFile(GetConfigPath());
+					var parser = new FileIniDataParser();
+					var data = parser.ReadFile(GetConfigPath());
 
-					string rawDoOfficialUpdates = data[SectionNameLaunchpad]["bOfficialUpdates"];
+					var rawDoOfficialUpdates = data[SectionNameLaunchpad]["bOfficialUpdates"];
 
 					if (bool.TryParse(rawDoOfficialUpdates, out var doOfficialUpdates))
 					{
@@ -1229,10 +1227,10 @@ namespace Launchpad.Launcher.Handlers
 			{
 				try
 				{
-					FileIniDataParser parser = new FileIniDataParser();
-					IniData data = parser.ReadFile(GetConfigPath());
+					var parser = new FileIniDataParser();
+					var data = parser.ReadFile(GetConfigPath());
 
-					string guid = data[SectionNameLocal][LocalGameGUIDKey];
+					var guid = data[SectionNameLocal][LocalGameGUIDKey];
 
 					return guid;
 				}
@@ -1273,7 +1271,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns>The current platform.</returns>
 		public static ESystemTarget GetCurrentPlatform()
 		{
-			string platformID = Environment.OSVersion.Platform.ToString();
+			var platformID = Environment.OSVersion.Platform.ToString();
 			if (platformID.Contains("Win"))
 			{
 				platformID = "Windows";

@@ -69,7 +69,7 @@ namespace Launchpad.Launcher
 
 			// Run the GTK UI
 			Gtk.Application.Init();
-			MainWindow win = new MainWindow();
+			var win = new MainWindow();
 			win.Show();
 			Gtk.Application.Run();
 		}
@@ -102,8 +102,7 @@ namespace Launchpad.Launcher
 				"description of what you were doing when it happened."
 			);
 
-			Exception unhandledException = unhandledExceptionEventArgs.ExceptionObject as Exception;
-			if (unhandledException == null)
+			if (!(unhandledExceptionEventArgs.ExceptionObject is Exception unhandledException))
 			{
 				return;
 			}

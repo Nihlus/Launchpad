@@ -50,7 +50,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns><c>true</c> if this instance can connect to a patching service; otherwise, <c>false</c>.</returns>
 		public bool CanPatch()
 		{
-			PatchProtocolHandler patchService = this.Configuration.GetPatchProtocol();
+			var patchService = this.Configuration.GetPatchProtocol();
 
 			return patchService != null && patchService.CanPatch();
 		}
@@ -72,9 +72,9 @@ namespace Launchpad.Launcher.Handlers
 		public bool IsGameInstalled()
 		{
 			// Criteria for considering the game 'installed'
-			bool hasGameDirectory = Directory.Exists(this.Configuration.GetGamePath());
-			bool hasInstallCookie = File.Exists(ConfigHandler.GetGameCookiePath());
-			bool hasGameVersionFile = File.Exists(this.Configuration.GetGameVersionPath());
+			var hasGameDirectory = Directory.Exists(this.Configuration.GetGamePath());
+			var hasInstallCookie = File.Exists(ConfigHandler.GetGameCookiePath());
+			var hasGameVersionFile = File.Exists(this.Configuration.GetGameVersionPath());
 
 			if (!hasGameVersionFile && hasGameDirectory)
 			{
@@ -97,7 +97,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns><c>true</c> if the game is outdated; otherwise, <c>false</c>.</returns>
 		public bool IsGameOutdated()
 		{
-			PatchProtocolHandler patchService = this.Configuration.GetPatchProtocol();
+			var patchService = this.Configuration.GetPatchProtocol();
 			return patchService.IsModuleOutdated(EModule.Game);
 		}
 
@@ -107,7 +107,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns><c>true</c> if the launcher is outdated; otherwise, <c>false</c>.</returns>
 		public bool IsLauncherOutdated()
 		{
-			PatchProtocolHandler patchService = this.Configuration.GetPatchProtocol();
+			var patchService = this.Configuration.GetPatchProtocol();
 			return patchService.IsModuleOutdated(EModule.Launcher);
 		}
 
@@ -118,8 +118,8 @@ namespace Launchpad.Launcher.Handlers
 		private static bool IsInstallCookieEmpty()
 		{
 			// Is there an .install file in the directory?
-			bool hasInstallCookie = File.Exists(ConfigHandler.GetGameCookiePath());
-			bool isInstallCookieEmpty = false;
+			var hasInstallCookie = File.Exists(ConfigHandler.GetGameCookiePath());
+			var isInstallCookieEmpty = false;
 
 			if (hasInstallCookie)
 			{
@@ -136,7 +136,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <param name="platform">platform.</param>
 		public bool IsPlatformAvailable(ESystemTarget platform)
 		{
-			PatchProtocolHandler patchService = this.Configuration.GetPatchProtocol();
+			var patchService = this.Configuration.GetPatchProtocol();
 			return patchService.IsPlatformAvailable(platform);
 		}
 	}

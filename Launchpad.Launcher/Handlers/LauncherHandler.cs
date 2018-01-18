@@ -94,7 +94,7 @@ namespace Launchpad.Launcher.Handlers
 			{
 				Log.Info($"Starting update of lancher files using protocol \"{this.Patch.GetType().Name}\"");
 
-				Thread t = new Thread(() => this.Patch.UpdateModule(EModule.Launcher))
+				var t = new Thread(() => this.Patch.UpdateModule(EModule.Launcher))
 				{
 					Name = "UpdateLauncher",
 					IsBackground = true
@@ -130,12 +130,12 @@ namespace Launchpad.Launcher.Handlers
 				return false;
 			}
 
-			HttpWebRequest headRequest = (HttpWebRequest)WebRequest.Create(result);
+			var headRequest = (HttpWebRequest)WebRequest.Create(result);
 			headRequest.Method = "HEAD";
 
 			try
 			{
-				using (HttpWebResponse headResponse = (HttpWebResponse)headRequest.GetResponse())
+				using (var headResponse = (HttpWebResponse)headRequest.GetResponse())
 				{
 					return headResponse.StatusCode == HttpStatusCode.OK;
 				}
@@ -152,7 +152,7 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		public void LoadFallbackChangelog()
 		{
-			Thread t = new Thread(LoadFallbackChangelog_Implementation)
+			var t = new Thread(LoadFallbackChangelog_Implementation)
 			{
 				Name = "LoadFallbackChangelog",
 				IsBackground = true
@@ -180,12 +180,12 @@ namespace Launchpad.Launcher.Handlers
 		{
 			try
 			{
-				string updateScriptPath = GetUpdateScriptPath();
-				string updateScriptSource = GetUpdateScriptSource();
+				var updateScriptPath = GetUpdateScriptPath();
+				var updateScriptSource = GetUpdateScriptSource();
 
 				File.WriteAllText(updateScriptPath, updateScriptSource);
 
-				ProcessStartInfo updateShellProcess = new ProcessStartInfo
+				var updateShellProcess = new ProcessStartInfo
 				{
 					FileName = updateScriptPath,
 					UseShellExecute = false,
@@ -210,22 +210,22 @@ namespace Launchpad.Launcher.Handlers
 		private static string GetUpdateScriptSource()
 		{
 			// Load the script from the embedded resources
-			Assembly localAssembly = Assembly.GetExecutingAssembly();
+			var localAssembly = Assembly.GetExecutingAssembly();
 
-			string scriptSource = string.Empty;
-			string resourceName = GetUpdateScriptResourceName();
-			using (Stream resourceStream = localAssembly.GetManifestResourceStream(resourceName))
+			var scriptSource = string.Empty;
+			var resourceName = GetUpdateScriptResourceName();
+			using (var resourceStream = localAssembly.GetManifestResourceStream(resourceName))
 			{
 				if (resourceStream != null)
 				{
-					using (StreamReader reader = new StreamReader(resourceStream))
+					using (var reader = new StreamReader(resourceStream))
 					{
 						scriptSource = reader.ReadToEnd();
 					}
 				}
 			}
 
-			string transientScriptSource = scriptSource;
+			var transientScriptSource = scriptSource;
 
 			transientScriptSource = transientScriptSource.Replace(TempDirectoryVariable, Path.GetTempPath());
 			transientScriptSource = transientScriptSource.Replace(LocalInstallDirectoryVariable, ConfigHandler.GetLocalDir());

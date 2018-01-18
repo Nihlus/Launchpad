@@ -86,10 +86,10 @@ namespace Launchpad.Common.Handlers.Manifest
 				return false;
 			}
 
-			string cleanInput = rawInput.RemoveLineSeparatorsAndNulls();
+			var cleanInput = rawInput.RemoveLineSeparatorsAndNulls();
 
 			// Split the string into its three components - file, hash and size
-			string[] entryElements = cleanInput.Split(':');
+			var entryElements = cleanInput.Split(':');
 
 			// If we have three elements (which we should always have), set them in the provided entry
 			if (entryElements.Length != 3)

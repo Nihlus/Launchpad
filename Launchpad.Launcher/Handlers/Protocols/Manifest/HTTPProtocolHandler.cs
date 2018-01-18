@@ -52,11 +52,11 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		{
 			Log.Info("Pinging remote patching server to determine if we can connect to it.");
 
-			bool canConnect = false;
+			var canConnect = false;
 
 			try
 			{
-				HttpWebRequest plainRequest = CreateHttpWebRequest(this.Config.GetBaseHTTPUrl(), this.Config.GetRemoteUsername(), this.Config.GetRemotePassword());
+				var plainRequest = CreateHttpWebRequest(this.Config.GetBaseHTTPUrl(), this.Config.GetRemoteUsername(), this.Config.GetRemotePassword());
 
 				if (plainRequest == null)
 				{
@@ -68,7 +68,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
 				try
 				{
-					using (HttpWebResponse response = (HttpWebResponse)plainRequest.GetResponse())
+					using (var response = (HttpWebResponse)plainRequest.GetResponse())
 					{
 						if (response.StatusCode == HttpStatusCode.OK)
 						{
@@ -98,7 +98,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <returns><c>true</c> if the platform is available; otherwise, <c>false</c>.</returns>
 		public override bool IsPlatformAvailable(ESystemTarget platform)
 		{
-			string remote = $"{this.Config.GetBaseHTTPUrl()}/game/{platform}/.provides";
+			var remote = $"{this.Config.GetBaseHTTPUrl()}/game/{platform}/.provides";
 
 			return DoesRemoteDirectoryOrFileExist(remote);
 		}
@@ -127,7 +127,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <returns><c>true</c> if this instance can provide banner; otherwise, <c>false</c>.</returns>
 		public override bool CanProvideBanner()
 		{
-			string bannerURL = $"{this.Config.GetBaseHTTPUrl()}/launcher/banner.png";
+			var bannerURL = $"{this.Config.GetBaseHTTPUrl()}/launcher/banner.png";
 
 			return DoesRemoteDirectoryOrFileExist(bannerURL);
 		}
@@ -138,8 +138,8 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <returns>The banner.</returns>
 		public override Bitmap GetBanner()
 		{
-			string bannerURL = $"{this.Config.GetBaseHTTPUrl()}/launcher/banner.png";
-			string localBannerPath = $"{Path.GetTempPath()}/banner.png";
+			var bannerURL = $"{this.Config.GetBaseHTTPUrl()}/launcher/banner.png";
+			var localBannerPath = $"{Path.GetTempPath()}/banner.png";
 
 			DownloadRemoteFile(bannerURL, localBannerPath);
 			return new Bitmap(localBannerPath);
@@ -156,7 +156,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		protected override void DownloadRemoteFile(string url, string localPath, long totalSize = 0, long contentOffset = 0, bool useAnonymousLogin = false)
 		{
 			// Clean the url string
-			string remoteURL = url.Replace(Path.DirectorySeparatorChar, '/');
+			var remoteURL = url.Replace(Path.DirectorySeparatorChar, '/');
 
 			string username;
 			string password;
@@ -173,12 +173,12 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
 			try
 			{
-				HttpWebRequest request = CreateHttpWebRequest(remoteURL, username, password);
+				var request = CreateHttpWebRequest(remoteURL, username, password);
 
 				request.Method = WebRequestMethods.Http.Get;
 				request.AddRange(contentOffset);
 
-				using (Stream contentStream = request.GetResponse().GetResponseStream())
+				using (var contentStream = request.GetResponse().GetResponseStream())
 				{
 					if (contentStream == null)
 					{
@@ -188,11 +188,11 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 						return;
 					}
 
-					using (FileStream fileStream = contentOffset > 0 ? new FileStream(localPath, FileMode.Append) :
+					using (var fileStream = contentOffset > 0 ? new FileStream(localPath, FileMode.Append) :
 																		new FileStream(localPath, FileMode.Create))
 					{
 						fileStream.Position = contentOffset;
-						long totalBytesDownloaded = contentOffset;
+						var totalBytesDownloaded = contentOffset;
 
 						long totalFileSize;
 						if (contentStream.CanSeek)
@@ -204,12 +204,12 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 							totalFileSize = totalSize;
 						}
 
-						int bufferSize = this.Config.GetDownloadBufferSize();
-						byte[] buffer = new byte[bufferSize];
+						var bufferSize = this.Config.GetDownloadBufferSize();
+						var buffer = new byte[bufferSize];
 
 						while (true)
 						{
-							int bytesRead = contentStream.Read(buffer, 0, buffer.Length);
+							var bytesRead = contentStream.Read(buffer, 0, buffer.Length);
 
 							if (bytesRead == 0)
 							{
@@ -254,7 +254,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <param name="useAnonymousLogin">If set to <c>true</c> use anonymous login.</param>
 		protected override string ReadRemoteFile(string url, bool useAnonymousLogin = false)
 		{
-			string remoteURL = url.Replace(Path.DirectorySeparatorChar, '/');
+			var remoteURL = url.Replace(Path.DirectorySeparatorChar, '/');
 
 			string username;
 			string password;
@@ -271,12 +271,12 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
 			try
 			{
-				HttpWebRequest request = CreateHttpWebRequest(remoteURL, username, password);
+				var request = CreateHttpWebRequest(remoteURL, username, password);
 
 				request.Method = WebRequestMethods.Http.Get;
 
-				string data = string.Empty;
-				using (Stream remoteStream = request.GetResponse().GetResponseStream())
+				var data = string.Empty;
+				using (var remoteStream = request.GetResponse().GetResponseStream())
 				{
 					// Drop out early if the stream wasn't present
 					if (remoteStream == null)
@@ -291,12 +291,12 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 						return string.Empty;
 					}
 
-					int bufferSize = this.Config.GetDownloadBufferSize();
-					byte[] buffer = new byte[bufferSize];
+					var bufferSize = this.Config.GetDownloadBufferSize();
+					var buffer = new byte[bufferSize];
 
 					while (true)
 					{
-						int bytesRead = remoteStream.Read(buffer, 0, buffer.Length);
+						var bytesRead = remoteStream.Read(buffer, 0, buffer.Length);
 
 						if (bytesRead == 0)
 						{
@@ -332,7 +332,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		{
 			try
 			{
-				HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri(url));
+				var request = (HttpWebRequest)WebRequest.Create(new Uri(url));
 				request.Credentials = new NetworkCredential(username, password);
 
 				return request;
@@ -362,8 +362,8 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <param name="url">The remote url of the directory or file.</param>
 		private bool DoesRemoteDirectoryOrFileExist(string url)
 		{
-			string cleanURL = url.Replace(Path.DirectorySeparatorChar, '/');
-			HttpWebRequest request = CreateHttpWebRequest(cleanURL, this.Config.GetRemoteUsername(), this.Config.GetRemotePassword());
+			var cleanURL = url.Replace(Path.DirectorySeparatorChar, '/');
+			var request = CreateHttpWebRequest(cleanURL, this.Config.GetRemoteUsername(), this.Config.GetRemotePassword());
 
 			request.Method = WebRequestMethods.Http.Head;
 			HttpWebResponse response = null;

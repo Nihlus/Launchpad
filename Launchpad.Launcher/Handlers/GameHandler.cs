@@ -111,7 +111,7 @@ namespace Launchpad.Launcher.Handlers
 		public void InstallGame()
 		{
 			Log.Info($"Starting installation of game files using protocol \"{this.Patch.GetType().Name}\"");
-			Thread t = new Thread(this.Patch.InstallGame)
+			var t = new Thread(this.Patch.InstallGame)
 			{
 				Name = "InstallGame",
 				IsBackground = true
@@ -126,7 +126,7 @@ namespace Launchpad.Launcher.Handlers
 		public void UpdateGame()
 		{
 			Log.Info($"Starting update of game files using protocol \"{this.Patch.GetType().Name}\"");
-			Thread t = new Thread(() => this.Patch.UpdateModule(EModule.Game))
+			var t = new Thread(() => this.Patch.UpdateModule(EModule.Game))
 			{
 				Name = "UpdateGame",
 				IsBackground = true
@@ -141,7 +141,7 @@ namespace Launchpad.Launcher.Handlers
 		public void VerifyGame()
 		{
 			Log.Info("Beginning verification of game files.");
-			Thread t = new Thread(() => this.Patch.VerifyModule(EModule.Game))
+			var t = new Thread(() => this.Patch.VerifyModule(EModule.Game))
 			{
 				Name = "VerifyGame",
 				IsBackground = true
@@ -168,7 +168,7 @@ namespace Launchpad.Launcher.Handlers
 				File.Delete(ConfigHandler.GetGameCookiePath());
 			}
 
-			Thread t = new Thread(() => this.Patch.InstallGame())
+			var t = new Thread(() => this.Patch.InstallGame())
 			{
 				Name = "ReinstallGame",
 				IsBackground = true
@@ -184,13 +184,13 @@ namespace Launchpad.Launcher.Handlers
 		{
 			try
 			{
-				string executable = Config.GetGameExecutable();
-				string executableDir = Path.GetDirectoryName(executable) ?? ConfigHandler.GetLocalDir();
+				var executable = Config.GetGameExecutable();
+				var executableDir = Path.GetDirectoryName(executable) ?? ConfigHandler.GetLocalDir();
 
 				// Do not move the argument assignment inside the gameStartInfo initializer.
 				// It causes a TargetInvocationException crash through black magic.
-				string gameArguments = string.Join(" ", ConfigHandler.GetGameArguments());
-				ProcessStartInfo gameStartInfo = new ProcessStartInfo
+				var gameArguments = string.Join(" ", ConfigHandler.GetGameArguments());
+				var gameStartInfo = new ProcessStartInfo
 				{
 					UseShellExecute = false,
 					FileName = executable,
@@ -202,7 +202,7 @@ namespace Launchpad.Launcher.Handlers
 
 				Log.Info($"Launching game. \n\tExecutable path: {gameStartInfo.FileName}");
 
-				Process gameProcess = new Process
+				var gameProcess = new Process
 				{
 					StartInfo = gameStartInfo,
 					EnableRaisingEvents = true

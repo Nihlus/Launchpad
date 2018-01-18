@@ -152,9 +152,9 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
 			// This dictionary holds a list of new entries and their equivalents from the old manifest. It is used
 			// to determine whether or not a file is partial, or merely old yet smaller.
-			Dictionary<ManifestEntry, ManifestEntry> oldEntriesBeingReplaced = new Dictionary<ManifestEntry, ManifestEntry>();
-			List<ManifestEntry> filesRequiringUpdate = new List<ManifestEntry>();
-			foreach (ManifestEntry fileEntry in manifest)
+			var oldEntriesBeingReplaced = new Dictionary<ManifestEntry, ManifestEntry>();
+			var filesRequiringUpdate = new List<ManifestEntry>();
+			foreach (var fileEntry in manifest)
 			{
 				filesRequiringUpdate.Add(fileEntry);
 				if (oldManifest == null)
@@ -168,7 +168,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				}
 
 				// See if there is an old entry which matches the new one.
-				ManifestEntry matchingOldEntry =
+				var matchingOldEntry =
 					oldManifest.FirstOrDefault(oldEntry => oldEntry.RelativePath == fileEntry.RelativePath);
 
 				if (matchingOldEntry != null)
@@ -179,8 +179,8 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
 			try
 			{
-				int updatedFiles = 0;
-				foreach (ManifestEntry fileEntry in filesRequiringUpdate)
+				var updatedFiles = 0;
+				foreach (var fileEntry in filesRequiringUpdate)
 				{
 					++updatedFiles;
 
@@ -219,8 +219,8 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <param name="module">The module.</param>
 		public override void VerifyModule(EModule module)
 		{
-			IReadOnlyList<ManifestEntry> manifest = this.FileManifestHandler.GetManifest((EManifestType)module, false);
-			List<ManifestEntry> brokenFiles = new List<ManifestEntry>();
+			var manifest = this.FileManifestHandler.GetManifest((EManifestType)module, false);
+			var brokenFiles = new List<ManifestEntry>();
 
 			if (manifest == null)
 			{
@@ -231,8 +231,8 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
 			try
 			{
-				int verifiedFiles = 0;
-				foreach (ManifestEntry fileEntry in manifest)
+				var verifiedFiles = 0;
+				foreach (var fileEntry in manifest)
 				{
 					++verifiedFiles;
 
@@ -254,8 +254,8 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 					Log.Info($"File \"{Path.GetFileName(fileEntry.RelativePath)}\" failed its integrity check and was queued for redownload.");
 				}
 
-				int downloadedFiles = 0;
-				foreach (ManifestEntry fileEntry in brokenFiles)
+				var downloadedFiles = 0;
+				foreach (var fileEntry in brokenFiles)
 				{
 					++downloadedFiles;
 
@@ -347,7 +347,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			{
 				// Loop through all the entries in the manifest until we encounter
 				// an entry which matches the one in the install cookie
-				foreach (ManifestEntry fileEntry in moduleManifest)
+				foreach (var fileEntry in moduleManifest)
 				{
 					if (lastDownloadedFile.Equals(fileEntry))
 					{
@@ -357,8 +357,8 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				}
 			}
 
-			int downloadedFiles = 0;
-			foreach (ManifestEntry fileEntry in moduleManifest)
+			var downloadedFiles = 0;
+			foreach (var fileEntry in moduleManifest)
 			{
 				++downloadedFiles;
 
@@ -494,13 +494,13 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			}
 
 			// Build the access strings
-			string remoteURL = $"{baseRemoteURL}{fileEntry.RelativePath}";
-			string localPath = $"{baseLocalPath}{fileEntry.RelativePath}";
+			var remoteURL = $"{baseRemoteURL}{fileEntry.RelativePath}";
+			var localPath = $"{baseLocalPath}{fileEntry.RelativePath}";
 
 			// Make sure we have a directory to put the file in
 			if (!string.IsNullOrEmpty(localPath))
 			{
-				string localPathParentDir = Path.GetDirectoryName(localPath);
+				var localPathParentDir = Path.GetDirectoryName(localPath);
 				if (!Directory.Exists(localPathParentDir))
 				{
 					Directory.CreateDirectory(Path.GetDirectoryName(localPath));
@@ -534,7 +534,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
 			if (File.Exists(localPath))
 			{
-				FileInfo fileInfo = new FileInfo(localPath);
+				var fileInfo = new FileInfo(localPath);
 				if (fileInfo.Length != fileEntry.Size)
 				{
 					// If the file is partial, resume the download.
@@ -555,7 +555,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				else
 				{
 					string localHash;
-					using (FileStream fs = File.OpenRead(localPath))
+					using (var fs = File.OpenRead(localPath))
 					{
 						localHash = MD5Handler.GetStreamHash(fs);
 					}
@@ -619,10 +619,10 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				return true;
 			}
 
-			string remoteHash = GetRemoteModuleManifestChecksum(module);
-			using (Stream file = File.OpenRead(manifestPath))
+			var remoteHash = GetRemoteModuleManifestChecksum(module);
+			using (var file = File.OpenRead(manifestPath))
 			{
-				string localHash = MD5Handler.GetStreamHash(file);
+				var localHash = MD5Handler.GetStreamHash(file);
 
 				return remoteHash != localHash;
 			}
@@ -767,10 +767,10 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// If the version could not be retrieved from the server, a version of 0.0.0 is returned.</returns>
 		protected virtual Version GetRemoteLauncherVersion()
 		{
-			string remoteVersionPath = this.Config.GetLauncherVersionURL();
+			var remoteVersionPath = this.Config.GetLauncherVersionURL();
 
 			// Config.GetDoOfficialUpdates is used here since the official update server always allows anonymous logins.
-			string remoteVersion = ReadRemoteFile(remoteVersionPath, this.Config.GetDoOfficialUpdates());
+			var remoteVersion = ReadRemoteFile(remoteVersionPath, this.Config.GetDoOfficialUpdates());
 
 			if (Version.TryParse(remoteVersion, out var version))
 			{
@@ -787,8 +787,8 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <returns>The remote game version.</returns>
 		protected virtual Version GetRemoteGameVersion()
 		{
-			string remoteVersionPath = $"{this.Config.GetBaseProtocolURL()}/game/{this.Config.GetSystemTarget()}/bin/GameVersion.txt";
-			string remoteVersion = ReadRemoteFile(remoteVersionPath);
+			var remoteVersionPath = $"{this.Config.GetBaseProtocolURL()}/game/{this.Config.GetSystemTarget()}/bin/GameVersion.txt";
+			var remoteVersion = ReadRemoteFile(remoteVersionPath);
 
 			if (Version.TryParse(remoteVersion, out var version))
 			{
