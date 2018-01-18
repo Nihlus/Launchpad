@@ -50,6 +50,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Config.Net" Version="4.6.1.82" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta004" PrivateAssets="all" />
     <PackageReference Include="ini-parser" Version="2.5.2" />
     <PackageReference Include="System.Net.Http" Version="4.3.3" />

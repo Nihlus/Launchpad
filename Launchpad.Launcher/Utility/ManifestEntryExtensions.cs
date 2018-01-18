@@ -39,7 +39,7 @@ namespace Launchpad.Launcher.Utility
 		/// <returns><c>true</c>, if file was complete and undamaged, <c>false</c> otherwise.</returns>
 		public static bool IsFileIntegrityIntact(this ManifestEntry entry)
 		{
-			var localPath = $"{ConfigHandler.Instance.GetGamePath()}{entry.RelativePath}";
+			var localPath = $"{ConfigHandler.Instance.GetLocalGamePath()}{entry.RelativePath}";
 			if (!File.Exists(localPath))
 			{
 				return false;

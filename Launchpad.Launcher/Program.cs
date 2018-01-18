@@ -56,11 +56,11 @@ namespace Launchpad.Launcher
 			log4net.Config.XmlConfigurator.Configure();
 
 			Log.Info("----------------");
-			Log.Info($"Launchpad v{Config.GetLocalLauncherVersion()} starting...");
+			Log.Info($"Launchpad v{ConfigHandler.GetLocalLauncherVersion()} starting...");
 			Log.Info($"Current platform: {ConfigHandler.GetCurrentPlatform()} ({(Environment.Is64BitOperatingSystem ? "x64" : "x86")})");
 
 			// Set correct working directory for compatibility with double-clicking
-			Directory.SetCurrentDirectory(ConfigHandler.GetLocalDir());
+			Directory.SetCurrentDirectory(ConfigHandler.GetLocalLauncherDirectory());
 
 			Log.Info("Initializing UI...");
 

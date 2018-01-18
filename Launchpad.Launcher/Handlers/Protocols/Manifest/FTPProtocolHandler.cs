@@ -52,9 +52,9 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
 			var canConnect = false;
 
-			var url = this.Config.GetBaseFTPUrl();
-			var username = this.Config.GetRemoteUsername();
-			var password = this.Config.GetRemotePassword();
+			var url = this.Configuration.RemoteAddress.AbsoluteUri;
+			var username = this.Configuration.RemoteUsername;
+			var password = this.Configuration.RemotePassword;
 
 			try
 			{
@@ -96,7 +96,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <inheritdoc />
 		public override bool IsPlatformAvailable(ESystemTarget platform)
 		{
-			var remote = $"{this.Config.GetBaseFTPUrl()}/game/{platform}/.provides";
+			var remote = $"{this.Configuration.RemoteAddress}/game/{platform}/.provides";
 
 			return DoesRemoteFileExist(remote);
 		}
@@ -110,7 +110,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <inheritdoc />
 		public override string GetChangelogSource()
 		{
-			var changelogURL = $"{this.Config.GetBaseFTPUrl()}/launcher/changelog.html";
+			var changelogURL = $"{this.Configuration.RemoteAddress}/launcher/changelog.html";
 
 			// Return simple raw HTML
 			return ReadRemoteFile(changelogURL);
@@ -119,7 +119,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <inheritdoc />
 		public override bool CanProvideBanner()
 		{
-			var bannerURL = $"{this.Config.GetBaseFTPUrl()}/launcher/banner.png";
+			var bannerURL = $"{this.Configuration.RemoteAddress}/launcher/banner.png";
 
 			return DoesRemoteFileExist(bannerURL);
 		}
@@ -127,7 +127,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <inheritdoc />
 		public override Bitmap GetBanner()
 		{
-			var bannerURL = $"{this.Config.GetBaseFTPUrl()}/launcher/banner.png";
+			var bannerURL = $"{this.Configuration.RemoteAddress}/launcher/banner.png";
 
 			var localBannerPath = $"{Path.GetTempPath()}/banner.png";
 
@@ -150,8 +150,8 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			}
 			else
 			{
-				username = this.Config.GetRemoteUsername();
-				password = this.Config.GetRemotePassword();
+				username = this.Configuration.RemoteUsername;
+				password = this.Configuration.RemotePassword;
 			}
 
 			try
@@ -176,7 +176,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 						fileSize = sizeResponse.ContentLength;
 					}
 
-					var bufferSize = this.Config.GetDownloadBufferSize();
+					var bufferSize = this.Configuration.RemoteFileDownloadBufferSize;
 					if (fileSize < bufferSize)
 					{
 						var smallBuffer = new byte[fileSize];
@@ -226,8 +226,8 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			}
 			else
 			{
-				username = this.Config.GetRemoteUsername();
-				password = this.Config.GetRemotePassword();
+				username = this.Configuration.RemoteUsername;
+				password = this.Configuration.RemotePassword;
 			}
 
 			try
@@ -269,7 +269,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 						fileStream.Position = contentOffset;
 						var totalBytesDownloaded = contentOffset;
 
-						var bufferSize = this.Config.GetDownloadBufferSize();
+						var bufferSize = this.Configuration.RemoteFileDownloadBufferSize;
 						if (fileSize < bufferSize)
 						{
 							var smallBuffer = new byte[fileSize];
@@ -335,19 +335,19 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// Creates an ftp web request.
 		/// </summary>
 		/// <returns>The ftp web request.</returns>
-		/// <param name="ftpDirectoryPath">Ftp directory path.</param>
+		/// <param name="remotePath">Ftp directory path.</param>
 		/// <param name="username">Remote FTP username.</param>
 		/// <param name="password">Remote FTP password</param>
-		private FtpWebRequest CreateFtpWebRequest(string ftpDirectoryPath, string username, string password)
+		private FtpWebRequest CreateFtpWebRequest(string remotePath, string username, string password)
 		{
-			if (!ftpDirectoryPath.StartsWith(this.Config.GetBaseFTPUrl()))
+			if (!remotePath.StartsWith(this.Configuration.RemoteAddress.AbsoluteUri))
 			{
-				ftpDirectoryPath = $"{this.Config.GetBaseFTPUrl()}{ftpDirectoryPath}";
+				remotePath = $"{this.Configuration.RemoteAddress}/{remotePath}";
 			}
 
 			try
 			{
-				var request = (FtpWebRequest)WebRequest.Create(new Uri(ftpDirectoryPath));
+				var request = (FtpWebRequest)WebRequest.Create(new Uri(remotePath));
 
 				// Set proxy to null. Under current configuration if this option is not set then the proxy
 				// that is used will get an html response from the web content gateway (firewall monitoring system)
@@ -388,7 +388,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <param name="remotePath">Remote path.</param>
 		private bool DoesRemoteFileExist(string remotePath)
 		{
-			var request = CreateFtpWebRequest(remotePath, this.Config.GetRemoteUsername(), this.Config.GetRemotePassword());
+			var request = CreateFtpWebRequest(remotePath, this.Configuration.RemoteUsername, this.Configuration.RemotePassword);
 			FtpWebResponse response = null;
 
 			try

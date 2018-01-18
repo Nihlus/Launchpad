@@ -52,7 +52,12 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
 			try
 			{
-				var plainRequest = CreateHttpWebRequest(this.Config.GetBaseHTTPUrl(), this.Config.GetRemoteUsername(), this.Config.GetRemotePassword());
+				var plainRequest = CreateHttpWebRequest
+				(
+					this.Configuration.RemoteAddress.AbsoluteUri,
+					this.Configuration.RemoteUsername,
+					this.Configuration.RemotePassword
+				);
 
 				if (plainRequest == null)
 				{
@@ -90,7 +95,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <inheritdoc />
 		public override bool IsPlatformAvailable(ESystemTarget platform)
 		{
-			var remote = $"{this.Config.GetBaseHTTPUrl()}/game/{platform}/.provides";
+			var remote = $"{this.Configuration.RemoteAddress}/game/{platform}/.provides";
 
 			return DoesRemoteDirectoryOrFileExist(remote);
 		}
@@ -110,7 +115,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <inheritdoc />
 		public override bool CanProvideBanner()
 		{
-			var bannerURL = $"{this.Config.GetBaseHTTPUrl()}/launcher/banner.png";
+			var bannerURL = $"{this.Configuration.RemoteAddress}/launcher/banner.png";
 
 			return DoesRemoteDirectoryOrFileExist(bannerURL);
 		}
@@ -118,7 +123,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <inheritdoc />
 		public override Bitmap GetBanner()
 		{
-			var bannerURL = $"{this.Config.GetBaseHTTPUrl()}/launcher/banner.png";
+			var bannerURL = $"{this.Configuration.RemoteAddress}/launcher/banner.png";
 			var localBannerPath = $"{Path.GetTempPath()}/banner.png";
 
 			DownloadRemoteFile(bannerURL, localBannerPath);
@@ -140,8 +145,8 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			}
 			else
 			{
-				username = this.Config.GetRemoteUsername();
-				password = this.Config.GetRemotePassword();
+				username = this.Configuration.RemoteUsername;
+				password = this.Configuration.RemotePassword;
 			}
 
 			try
@@ -177,7 +182,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 							totalFileSize = totalSize;
 						}
 
-						var bufferSize = this.Config.GetDownloadBufferSize();
+						var bufferSize = this.Configuration.RemoteFileDownloadBufferSize;
 						var buffer = new byte[bufferSize];
 
 						while (true)
@@ -232,8 +237,8 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			}
 			else
 			{
-				username = this.Config.GetRemoteUsername();
-				password = this.Config.GetRemotePassword();
+				username = this.Configuration.RemoteUsername;
+				password = this.Configuration.RemotePassword;
 			}
 
 			try
@@ -258,7 +263,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 						return string.Empty;
 					}
 
-					var bufferSize = this.Config.GetDownloadBufferSize();
+					var bufferSize = this.Configuration.RemoteFileDownloadBufferSize;
 					var buffer = new byte[bufferSize];
 
 					while (true)
@@ -292,14 +297,19 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// Creates a HTTP web request.
 		/// </summary>
 		/// <returns>The HTTP web request.</returns>
-		/// <param name="url">url of the desired remote object.</param>
+		/// <param name="remotePath">url of the desired remote object.</param>
 		/// <param name="username">The username used for authentication.</param>
 		/// <param name="password">The password used for authentication.</param>
-		private static HttpWebRequest CreateHttpWebRequest(string url, string username, string password)
+		private HttpWebRequest CreateHttpWebRequest(string remotePath, string username, string password)
 		{
+			if (!remotePath.StartsWith(this.Configuration.RemoteAddress.AbsoluteUri))
+			{
+				remotePath = $"{this.Configuration.RemoteAddress}/{remotePath}";
+			}
+
 			try
 			{
-				var request = (HttpWebRequest)WebRequest.Create(new Uri(url));
+				var request = (HttpWebRequest)WebRequest.Create(new Uri(remotePath));
 				request.Credentials = new NetworkCredential(username, password);
 
 				return request;
@@ -330,7 +340,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		private bool DoesRemoteDirectoryOrFileExist(string url)
 		{
 			var cleanURL = url.Replace(Path.DirectorySeparatorChar, '/');
-			var request = CreateHttpWebRequest(cleanURL, this.Config.GetRemoteUsername(), this.Config.GetRemotePassword());
+			var request = CreateHttpWebRequest(cleanURL, this.Configuration.RemoteUsername, this.Configuration.RemotePassword);
 
 			request.Method = WebRequestMethods.Http.Head;
 			HttpWebResponse response = null;

@@ -28,12 +28,13 @@ using System.IO;
 using Gdk;
 using Gtk;
 
+using Launchpad.Launcher.Configuration;
 using Launchpad.Launcher.Handlers;
 using Launchpad.Launcher.Handlers.Protocols;
 using Launchpad.Launcher.Interface.ChangelogBrowser;
+using Launchpad.Launcher.Utility;
 using Launchpad.Launcher.Utility.Enums;
 using log4net;
-
 using NGettext;
 
 namespace Launchpad.Launcher.Interface
@@ -50,9 +51,9 @@ namespace Launchpad.Launcher.Interface
 		private static readonly ILog Log = LogManager.GetLogger(typeof(MainWindow));
 
 		/// <summary>
-		/// The config handler reference.
+		/// The configuration instance reference.
 		/// </summary>
-		private readonly ConfigHandler Config = ConfigHandler.Instance;
+		private readonly ILaunchpadConfiguration Configuration = ConfigHandler.Instance.Configuration;
 
 		/// <summary>
 		/// The checks handler reference.
@@ -113,7 +114,7 @@ namespace Launchpad.Launcher.Interface
 			SetLauncherMode(ELauncherMode.Inactive, false);
 
 			// Set the window title
-			this.Title = LocalizationCatalog.GetString("Launchpad - {0}", this.Config.GetGameName());
+			this.Title = LocalizationCatalog.GetString("Launchpad - {0}", this.Configuration.GameName);
 
 			// Create a new changelog widget, and add it to the scrolled window
 			this.Browser = new Changelog(this.BrowserWindow);
@@ -154,14 +155,16 @@ namespace Launchpad.Launcher.Interface
 			}
 			else
 			{
+				var patchHandler = PatchProtocolProvider.GetHandler();
+
 				// TODO: Load this asynchronously
 				// Load the game banner (if there is one)
-				if (this.Config.GetPatchProtocol().CanProvideBanner())
+				if (patchHandler.CanProvideBanner())
 				{
 					using (var bannerStream = new MemoryStream())
 					{
 						// Fetch the banner from the server
-						this.Config.GetPatchProtocol().GetBanner().Save(bannerStream, ImageFormat.Png);
+						patchHandler.GetBanner().Save(bannerStream, ImageFormat.Png);
 
 						// Load the image into a pixel buffer
 						bannerStream.Position = 0;
@@ -178,7 +181,7 @@ namespace Launchpad.Launcher.Interface
 					(
 						"This appears to be the first time you're starting the launcher.\n" +
 						"Is this the location where you would like to install the game?"
-					) + $"\n\n{ConfigHandler.GetLocalDir()}";
+					) + $"\n\n{ConfigHandler.GetLocalLauncherDirectory()}";
 
 					var shouldInstallHereDialog = new MessageDialog
 					(
@@ -212,7 +215,7 @@ namespace Launchpad.Launcher.Interface
 				// implementation after.
 				if (LauncherHandler.CanAccessStandardChangelog())
 				{
-					this.Browser.Navigate(this.Config.GetChangelogURL());
+					this.Browser.Navigate(this.Configuration.ChangelogAddress.AbsoluteUri);
 				}
 				else
 				{
@@ -222,7 +225,7 @@ namespace Launchpad.Launcher.Interface
 				// If the launcher does not need an update at this point, we can continue checks for the game
 				if (!this.Checks.IsLauncherOutdated())
 				{
-					if (!this.Checks.IsPlatformAvailable(this.Config.GetSystemTarget()))
+					if (!this.Checks.IsPlatformAvailable(this.Configuration.SystemTarget))
 					{
 						Log.Info
 						(
@@ -252,7 +255,7 @@ namespace Launchpad.Launcher.Interface
 							if (this.Checks.IsGameOutdated())
 							{
 								// If it does, offer to update it
-								Log.Info($"The game is outdated. \n\tLocal version: {this.Config.GetLocalGameVersion()}");
+								Log.Info($"The game is outdated.");
 								SetLauncherMode(ELauncherMode.Update, false);
 							}
 							else
@@ -267,7 +270,7 @@ namespace Launchpad.Launcher.Interface
 				else
 				{
 					// The launcher was outdated.
-					Log.Info($"The launcher is outdated. \n\tLocal version: {this.Config.GetLocalLauncherVersion()}");
+					Log.Info($"The launcher is outdated. \n\tLocal version: {ConfigHandler.GetLocalLauncherVersion()}");
 					SetLauncherMode(ELauncherMode.Update, false);
 				}
 			}
@@ -409,7 +412,7 @@ namespace Launchpad.Launcher.Interface
 		private void OnPrimaryButtonClicked(object sender, EventArgs e)
 		{
 			// Drop out if the current platform isn't available on the server
-			if (!this.Checks.IsPlatformAvailable(this.Config.GetSystemTarget()))
+			if (!this.Checks.IsPlatformAvailable(this.Configuration.SystemTarget))
 			{
 				this.IndicatorLabel.Text =
 					LocalizationCatalog.GetString("The server does not provide the game for the selected platform.");

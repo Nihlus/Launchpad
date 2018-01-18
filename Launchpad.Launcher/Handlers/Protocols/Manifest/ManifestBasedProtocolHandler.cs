@@ -62,9 +62,9 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		{
 			this.FileManifestHandler = new ManifestHandler
 			(
-				ConfigHandler.GetLocalDir(),
-				new Uri(this.Config.GetBaseProtocolURL()),
-				this.Config.GetSystemTarget()
+				ConfigHandler.GetLocalLauncherDirectory(),
+				this.Configuration.RemoteAddress,
+				this.Configuration.SystemTarget
 			);
 		}
 
@@ -257,7 +257,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 					);
 					OnModuleDownloadProgressChanged();
 
-					for (int i = 0; i < this.Config.GetFileRetries(); ++i)
+					for (int i = 0; i < this.Configuration.RemoteFileDownloadRetries; ++i)
 					{
 						if (!fileEntry.IsFileIntegrityIntact())
 						{
@@ -396,7 +396,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				{
 					case EModule.Launcher:
 					{
-						local = this.Config.GetLocalLauncherVersion();
+						local = ConfigHandler.GetLocalLauncherVersion();
 						remote = GetRemoteLauncherVersion();
 						break;
 					}
@@ -448,14 +448,14 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			{
 				case EModule.Launcher:
 				{
-					baseRemoteURL = this.Config.GetLauncherBinariesURL();
+					baseRemoteURL = this.Config.GetRemoteLauncherBinariesPath();
 					baseLocalPath = ConfigHandler.GetTempLauncherDownloadPath();
 					break;
 				}
 				case EModule.Game:
 				{
-					baseRemoteURL = this.Config.GetGameURL();
-					baseLocalPath = this.Config.GetGamePath();
+					baseRemoteURL = this.Config.GetRemoteGamePath();
+					baseLocalPath = this.Config.GetLocalGamePath();
 					break;
 				}
 				default:
@@ -602,7 +602,6 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
 				return remoteHash != localHash;
 			}
-
 		}
 
 		/// <summary>
@@ -743,10 +742,10 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// If the version could not be retrieved from the server, a version of 0.0.0 is returned.</returns>
 		protected virtual Version GetRemoteLauncherVersion()
 		{
-			var remoteVersionPath = this.Config.GetLauncherVersionURL();
+			var remoteVersionPath = this.Config.GetRemoteLauncherVersionPath();
 
 			// Config.GetDoOfficialUpdates is used here since the official update server always allows anonymous logins.
-			var remoteVersion = ReadRemoteFile(remoteVersionPath, this.Config.GetDoOfficialUpdates());
+			var remoteVersion = ReadRemoteFile(remoteVersionPath, this.Configuration.UseOfficialUpdates);
 
 			if (Version.TryParse(remoteVersion, out var version))
 			{
@@ -763,7 +762,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <returns>The remote game version.</returns>
 		protected virtual Version GetRemoteGameVersion()
 		{
-			var remoteVersionPath = $"{this.Config.GetBaseProtocolURL()}/game/{this.Config.GetSystemTarget()}/bin/GameVersion.txt";
+			var remoteVersionPath = $"{this.Configuration.RemoteAddress}/game/{this.Configuration.SystemTarget}/bin/GameVersion.txt";
 			var remoteVersion = ReadRemoteFile(remoteVersionPath);
 
 			if (Version.TryParse(remoteVersion, out var version))

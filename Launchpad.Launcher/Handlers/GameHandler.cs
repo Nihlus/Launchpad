@@ -26,7 +26,9 @@ using System.IO;
 using System.Threading;
 
 using Launchpad.Common;
+using Launchpad.Launcher.Configuration;
 using Launchpad.Launcher.Handlers.Protocols;
+using Launchpad.Launcher.Utility;
 using log4net;
 
 namespace Launchpad.Launcher.Handlers
@@ -79,9 +81,8 @@ namespace Launchpad.Launcher.Handlers
 		// ...
 		private readonly GameExitEventArgs GameExitArgs = new GameExitEventArgs();
 
-		/// <summary>
-		/// The config handler reference.
-		/// </summary>
+		private static readonly ILaunchpadConfiguration Configuration = ConfigHandler.Instance.Configuration;
+
 		private static readonly ConfigHandler Config = ConfigHandler.Instance;
 
 		private readonly PatchProtocolHandler Patch;
@@ -91,7 +92,7 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		public GameHandler()
 		{
-			this.Patch = Config.GetPatchProtocol();
+			this.Patch = PatchProtocolProvider.GetHandler();
 			if (this.Patch == null)
 			{
 				return;
@@ -156,10 +157,10 @@ namespace Launchpad.Launcher.Handlers
 		public void ReinstallGame()
 		{
 			Log.Info("Beginning full reinstall of game files.");
-			if (Directory.Exists(Config.GetGamePath()))
+			if (Directory.Exists(Config.GetLocalGamePath()))
 			{
 				Log.Info("Deleting existing game files.");
-				Directory.Delete(Config.GetGamePath(), true);
+				Directory.Delete(Config.GetLocalGamePath(), true);
 			}
 
 			if (File.Exists(ConfigHandler.GetGameCookiePath()))
@@ -184,8 +185,8 @@ namespace Launchpad.Launcher.Handlers
 		{
 			try
 			{
-				var executable = Config.GetGameExecutable();
-				var executableDir = Path.GetDirectoryName(executable) ?? ConfigHandler.GetLocalDir();
+				var executable = Configuration.ExecutablePath;
+				var executableDir = Path.GetDirectoryName(executable) ?? ConfigHandler.GetLocalLauncherDirectory();
 
 				// Do not move the argument assignment inside the gameStartInfo initializer.
 				// It causes a TargetInvocationException crash through black magic.
@@ -198,7 +199,7 @@ namespace Launchpad.Launcher.Handlers
 					WorkingDirectory = executableDir
 				};
 
-				this.GameExitArgs.GameName = Config.GetGameName();
+				this.GameExitArgs.GameName = Configuration.GameName;
 
 				Log.Info($"Launching game. \n\tExecutable path: {gameStartInfo.FileName}");
 
@@ -229,7 +230,7 @@ namespace Launchpad.Launcher.Handlers
 				// Make sure the game executable is flagged as such on Unix
 				if (SystemInformation.IsRunningOnUnix())
 				{
-					Process.Start("chmod", $"+x {Config.GetGameExecutable()}");
+					Process.Start("chmod", $"+x {Configuration.ExecutablePath}");
 				}
 
 				gameProcess.Start();

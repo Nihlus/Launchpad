@@ -25,6 +25,7 @@ using System.IO;
 using Launchpad.Common.Enums;
 using Launchpad.Launcher.Handlers.Protocols;
 
+using Launchpad.Launcher.Utility;
 using log4net;
 
 namespace Launchpad.Launcher.Handlers
@@ -44,15 +45,23 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		private static readonly ILog Log = LogManager.GetLogger(typeof(ChecksHandler));
 
+		private readonly PatchProtocolHandler Patch;
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ChecksHandler"/> class.
+		/// </summary>
+		public ChecksHandler()
+		{
+			this.Patch = PatchProtocolProvider.GetHandler();
+		}
+
 		/// <summary>
 		/// Determines whether this instance can connect to a patching service.
 		/// </summary>
 		/// <returns><c>true</c> if this instance can connect to a patching service; otherwise, <c>false</c>.</returns>
 		public bool CanPatch()
 		{
-			var patchService = this.Configuration.GetPatchProtocol();
-
-			return patchService != null && patchService.CanPatch();
+			return this.Patch != null && this.Patch.CanPatch();
 		}
 
 		/// <summary>
@@ -72,9 +81,9 @@ namespace Launchpad.Launcher.Handlers
 		public bool IsGameInstalled()
 		{
 			// Criteria for considering the game 'installed'
-			var hasGameDirectory = Directory.Exists(this.Configuration.GetGamePath());
+			var hasGameDirectory = Directory.Exists(this.Configuration.GetLocalGamePath());
 			var hasInstallCookie = File.Exists(ConfigHandler.GetGameCookiePath());
-			var hasGameVersionFile = File.Exists(this.Configuration.GetGameVersionPath());
+			var hasGameVersionFile = File.Exists(this.Configuration.GetLocalGameVersionPath());
 
 			if (!hasGameVersionFile && hasGameDirectory)
 			{
@@ -97,8 +106,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns><c>true</c> if the game is outdated; otherwise, <c>false</c>.</returns>
 		public bool IsGameOutdated()
 		{
-			var patchService = this.Configuration.GetPatchProtocol();
-			return patchService.IsModuleOutdated(EModule.Game);
+			return this.Patch.IsModuleOutdated(EModule.Game);
 		}
 
 		/// <summary>
@@ -107,8 +115,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns><c>true</c> if the launcher is outdated; otherwise, <c>false</c>.</returns>
 		public bool IsLauncherOutdated()
 		{
-			var patchService = this.Configuration.GetPatchProtocol();
-			return patchService.IsModuleOutdated(EModule.Launcher);
+			return this.Patch.IsModuleOutdated(EModule.Launcher);
 		}
 
 		/// <summary>
@@ -136,8 +143,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <param name="platform">platform.</param>
 		public bool IsPlatformAvailable(ESystemTarget platform)
 		{
-			var patchService = this.Configuration.GetPatchProtocol();
-			return patchService.IsPlatformAvailable(platform);
+			return this.Patch.IsPlatformAvailable(platform);
 		}
 	}
 }

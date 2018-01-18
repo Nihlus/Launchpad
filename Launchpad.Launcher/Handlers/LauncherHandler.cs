@@ -28,7 +28,9 @@ using System.Reflection;
 using System.Threading;
 
 using Launchpad.Common;
+using Launchpad.Launcher.Configuration;
 using Launchpad.Launcher.Handlers.Protocols;
+using Launchpad.Launcher.Utility;
 using log4net;
 
 namespace Launchpad.Launcher.Handlers
@@ -72,14 +74,14 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// The config handler reference.
 		/// </summary>
-		private static readonly ConfigHandler Config = ConfigHandler.Instance;
+		private static readonly ILaunchpadConfiguration Configuration = ConfigHandler.Instance.Configuration;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Launchpad.Launcher.Handlers.LauncherHandler"/> class.
 		/// </summary>
 		public LauncherHandler()
 		{
-			this.Patch = Config.GetPatchProtocol();
+			this.Patch = PatchProtocolProvider.GetHandler();
 
 			this.Patch.ModuleDownloadProgressChanged += OnLauncherDownloadProgressChanged;
 			this.Patch.ModuleInstallationFinished += OnLauncherDownloadFinished;
@@ -114,23 +116,20 @@ namespace Launchpad.Launcher.Handlers
 		/// <returns><c>true</c> if the changelog can be accessed; otherwise, <c>false</c>.</returns>
 		public static bool CanAccessStandardChangelog()
 		{
-			if (string.IsNullOrEmpty(Config.GetChangelogURL()))
+			if (string.IsNullOrEmpty(Configuration.ChangelogAddress.AbsoluteUri))
 			{
 				return false;
 			}
 
-			if (!Uri.TryCreate(Config.GetChangelogURL(), UriKind.RelativeOrAbsolute, out var result))
-			{
-				return false;
-			}
+			var address = Configuration.ChangelogAddress;
 
 			// Only allow HTTP URIs
-			if (!(result.Scheme == "http" || result.Scheme == "https"))
+			if (!(address.Scheme == "http" || address.Scheme == "https"))
 			{
 				return false;
 			}
 
-			var headRequest = (HttpWebRequest)WebRequest.Create(result);
+			var headRequest = (HttpWebRequest)WebRequest.Create(address);
 			headRequest.Method = "HEAD";
 
 			try
@@ -166,7 +165,7 @@ namespace Launchpad.Launcher.Handlers
 			if (this.Patch.CanProvideChangelog())
 			{
 				this.ChangelogDownloadFinishedArgs.HTML = this.Patch.GetChangelogSource();
-				this.ChangelogDownloadFinishedArgs.URL = Config.GetChangelogURL();
+				this.ChangelogDownloadFinishedArgs.URL = Configuration.ChangelogAddress.AbsoluteUri;
 			}
 
 			OnChangelogDownloadFinished();
@@ -228,7 +227,7 @@ namespace Launchpad.Launcher.Handlers
 			var transientScriptSource = scriptSource;
 
 			transientScriptSource = transientScriptSource.Replace(TempDirectoryVariable, Path.GetTempPath());
-			transientScriptSource = transientScriptSource.Replace(LocalInstallDirectoryVariable, ConfigHandler.GetLocalDir());
+			transientScriptSource = transientScriptSource.Replace(LocalInstallDirectoryVariable, ConfigHandler.GetLocalLauncherDirectory());
 			transientScriptSource = transientScriptSource.Replace(LocalExecutableName, Path.GetFileName(localAssembly.Location));
 
 			return transientScriptSource;

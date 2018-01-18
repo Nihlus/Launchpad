@@ -25,6 +25,7 @@ using System.Drawing;
 using System.IO;
 
 using Launchpad.Common.Enums;
+using Launchpad.Launcher.Configuration;
 using log4net;
 
 namespace Launchpad.Launcher.Handlers.Protocols
@@ -49,7 +50,12 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <summary>
 		/// Gets the config handler reference.
 		/// </summary>
-		protected ConfigHandler Config { get; }
+		protected ConfigHandler Config { get; } = ConfigHandler.Instance;
+
+		/// <summary>
+		/// Gets the configuration instance.
+		/// </summary>
+		protected ILaunchpadConfiguration Configuration { get; } = ConfigHandler.Instance.Configuration;
 
 		/// <summary>
 		/// Raised whenever the download progress of a module changes.
@@ -112,8 +118,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 			this.ModuleInstallFinishedArgs = new ModuleInstallationFinishedArgs();
 			this.ModuleInstallFailedArgs = new ModuleInstallationFailedArgs();
-
-			this.Config = ConfigHandler.Instance;
 		}
 
 		/// <summary>

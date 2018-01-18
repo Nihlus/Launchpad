@@ -41,6 +41,9 @@
       </e>
       <e p="Launchpad.Launcher" t="IncludeRecursive">
         <e p="App.config" t="Include" />
+        <e p="Configuration" t="Include">
+          <e p="ILaunchpadConfiguration.cs" t="Include" />
+        </e>
         <e p="Content" t="Include">
           <e p="locale" t="Include">
             <e p="af" t="Include">
@@ -251,6 +254,7 @@
             <e p="ELauncherMode.cs" t="Include" />
           </e>
           <e p="ManifestEntryExtensions.cs" t="Include" />
+          <e p="PatchProtocolProvider.cs" t="Include" />
         </e>
         <e p="app.manifest" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
