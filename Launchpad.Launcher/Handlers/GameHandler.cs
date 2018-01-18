@@ -92,15 +92,17 @@ namespace Launchpad.Launcher.Handlers
 		public GameHandler()
 		{
 			this.Patch = Config.GetPatchProtocol();
-			if (this.Patch != null)
+			if (this.Patch == null)
 			{
-				this.Patch.ModuleDownloadProgressChanged += OnModuleInstallProgressChanged;
-				this.Patch.ModuleVerifyProgressChanged += OnModuleInstallProgressChanged;
-				this.Patch.ModuleUpdateProgressChanged += OnModuleInstallProgressChanged;
-
-				this.Patch.ModuleInstallationFinished += OnModuleInstallationFinished;
-				this.Patch.ModuleInstallationFailed += OnModuleInstallationFailed;
+				return;
 			}
+
+			this.Patch.ModuleDownloadProgressChanged += OnModuleInstallProgressChanged;
+			this.Patch.ModuleVerifyProgressChanged += OnModuleInstallProgressChanged;
+			this.Patch.ModuleUpdateProgressChanged += OnModuleInstallProgressChanged;
+
+			this.Patch.ModuleInstallationFinished += OnModuleInstallationFinished;
+			this.Patch.ModuleInstallationFailed += OnModuleInstallationFailed;
 		}
 
 		/// <summary>

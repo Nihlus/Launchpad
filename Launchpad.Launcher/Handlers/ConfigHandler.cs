@@ -287,12 +287,14 @@ namespace Launchpad.Launcher.Handlers
 			{
 				// Make sure the GUID file has been populated
 				FileInfo guidInfo = new FileInfo(GetInstallGUIDPath());
-				if (guidInfo.Length <= 0)
+				if (guidInfo.Length > 0)
 				{
-					// Generate and store a GUID.
-					string generatedInstallGUID = Guid.NewGuid().ToString();
-					File.WriteAllText(GetInstallGUIDPath(), generatedInstallGUID);
+					return;
 				}
+
+				// Generate and store a GUID.
+				string generatedInstallGUID = Guid.NewGuid().ToString();
+				File.WriteAllText(GetInstallGUIDPath(), generatedInstallGUID);
 			}
 		}
 
@@ -303,19 +305,21 @@ namespace Launchpad.Launcher.Handlers
 		private static void InitializeGameArgumentsFile()
 		{
 			// Initialize the game arguments file, if needed
-			if (!File.Exists(GetGameArgumentsPath()))
+			if (File.Exists(GetGameArgumentsPath()))
 			{
-				using (FileStream fs = File.Create(GetGameArgumentsPath()))
+				return;
+			}
+
+			using (FileStream fs = File.Create(GetGameArgumentsPath()))
+			{
+				using (StreamWriter sw = new StreamWriter(fs))
 				{
-					using (StreamWriter sw = new StreamWriter(fs))
-					{
-						sw.WriteLine("# This file contains all the arguments passed to the game executable on startup.");
-						sw.WriteLine("# Lines beginning with a hash character (#) are ignored and considered comments.");
-						sw.WriteLine("# Everything else is passed line-by-line to the game executable on startup.");
-						sw.WriteLine("# Multiple arguments can be on the same line in this file.");
-						sw.WriteLine("# Each line will have a space appended at the end when passed to the game executable.");
-						sw.WriteLine(string.Empty);
-					}
+					sw.WriteLine("# This file contains all the arguments passed to the game executable on startup.");
+					sw.WriteLine("# Lines beginning with a hash character (#) are ignored and considered comments.");
+					sw.WriteLine("# Everything else is passed line-by-line to the game executable on startup.");
+					sw.WriteLine("# Multiple arguments can be on the same line in this file.");
+					sw.WriteLine("# Each line will have a space appended at the end when passed to the game executable.");
+					sw.WriteLine(string.Empty);
 				}
 			}
 		}

@@ -157,19 +157,23 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			foreach (ManifestEntry fileEntry in manifest)
 			{
 				filesRequiringUpdate.Add(fileEntry);
-				if (oldManifest != null)
+				if (oldManifest == null)
 				{
-					if (!oldManifest.Contains(fileEntry))
-					{
-						// See if there is an old entry which matches the new one.
-						ManifestEntry matchingOldEntry =
-							oldManifest.FirstOrDefault(oldEntry => oldEntry.RelativePath == fileEntry.RelativePath);
+					continue;
+				}
 
-						if (matchingOldEntry != null)
-						{
-							oldEntriesBeingReplaced.Add(fileEntry, matchingOldEntry);
-						}
-					}
+				if (oldManifest.Contains(fileEntry))
+				{
+					continue;
+				}
+
+				// See if there is an old entry which matches the new one.
+				ManifestEntry matchingOldEntry =
+					oldManifest.FirstOrDefault(oldEntry => oldEntry.RelativePath == fileEntry.RelativePath);
+
+				if (matchingOldEntry != null)
+				{
+					oldEntriesBeingReplaced.Add(fileEntry, matchingOldEntry);
 				}
 			}
 
@@ -241,11 +245,13 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 					);
 					OnModuleVerifyProgressChanged();
 
-					if (!fileEntry.IsFileIntegrityIntact())
+					if (fileEntry.IsFileIntegrityIntact())
 					{
-						brokenFiles.Add(fileEntry);
-						Log.Info($"File \"{Path.GetFileName(fileEntry.RelativePath)}\" failed its integrity check and was queued for redownload.");
+						continue;
 					}
+
+					brokenFiles.Add(fileEntry);
+					Log.Info($"File \"{Path.GetFileName(fileEntry.RelativePath)}\" failed its integrity check and was queued for redownload.");
 				}
 
 				int downloadedFiles = 0;
@@ -608,18 +614,19 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				}
 			}
 
-			if (File.Exists(manifestPath))
+			if (!File.Exists(manifestPath))
 			{
-				string remoteHash = GetRemoteModuleManifestChecksum(module);
-				using (Stream file = File.OpenRead(manifestPath))
-				{
-					string localHash = MD5Handler.GetStreamHash(file);
-
-					return remoteHash != localHash;
-				}
+				return true;
 			}
 
-			return true;
+			string remoteHash = GetRemoteModuleManifestChecksum(module);
+			using (Stream file = File.OpenRead(manifestPath))
+			{
+				string localHash = MD5Handler.GetStreamHash(file);
+
+				return remoteHash != localHash;
+			}
+
 		}
 
 		/// <summary>

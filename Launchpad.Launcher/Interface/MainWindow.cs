@@ -498,13 +498,15 @@ namespace Launchpad.Launcher.Interface
 		{
 			Application.Invoke(delegate
 			{
-				if (e.Module == EModule.Launcher)
+				if (e.Module != EModule.Launcher)
 				{
-					ProcessStartInfo script = LauncherHandler.CreateUpdateScript();
-
-					Process.Start(script);
-					Application.Quit();
+					return;
 				}
+
+				ProcessStartInfo script = LauncherHandler.CreateUpdateScript();
+
+				Process.Start(script);
+				Application.Quit();
 			});
 		}
 

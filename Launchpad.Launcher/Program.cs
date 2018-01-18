@@ -103,25 +103,27 @@ namespace Launchpad.Launcher
 			);
 
 			Exception unhandledException = unhandledExceptionEventArgs.ExceptionObject as Exception;
-			if (unhandledException != null)
+			if (unhandledException == null)
 			{
-				if (unhandledException is DllNotFoundException)
-				{
-					Log.Fatal
-					(
-						"This exception is typical of instances where the GTK# runtime has not been installed.\n" +
-						"If you haven't installed it, download it at \'http://www.mono-project.com/download/#download-win\'.\n" +
-						"If you have installed it, reboot your computer and try again."
-					);
-
-					// Send the user to the common problems page.
-					System.Diagnostics.Process.Start("https://github.com/Nihlus/Launchpad/wiki/Common-problems");
-				}
-
-				Log.Fatal("Exception type: " + unhandledException.GetType().FullName);
-				Log.Fatal("Exception Message: " + unhandledException.Message);
-				Log.Fatal("Exception Stacktrace: " + unhandledException.StackTrace);
+				return;
 			}
+
+			if (unhandledException is DllNotFoundException)
+			{
+				Log.Fatal
+				(
+					"This exception is typical of instances where the GTK# runtime has not been installed.\n" +
+					"If you haven't installed it, download it at \'http://www.mono-project.com/download/#download-win\'.\n" +
+					"If you have installed it, reboot your computer and try again."
+				);
+
+				// Send the user to the common problems page.
+				System.Diagnostics.Process.Start("https://github.com/Nihlus/Launchpad/wiki/Common-problems");
+			}
+
+			Log.Fatal("Exception type: " + unhandledException.GetType().FullName);
+			Log.Fatal("Exception Message: " + unhandledException.Message);
+			Log.Fatal("Exception Stacktrace: " + unhandledException.StackTrace);
 		}
 	}
 }
