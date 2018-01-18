@@ -496,7 +496,7 @@ namespace Launchpad.Launcher.Interface
 		/// </summary>
 		private static void OnLauncherDownloadFinished(object sender, ModuleInstallationFinishedArgs e)
 		{
-			Application.Invoke(delegate
+			Application.Invoke((o, args) =>
 			{
 				if (e.Module != EModule.Launcher)
 				{
