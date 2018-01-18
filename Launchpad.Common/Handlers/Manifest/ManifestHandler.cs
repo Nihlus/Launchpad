@@ -39,9 +39,6 @@ namespace Launchpad.Common.Handlers.Manifest
 		/// </summary>
 		private static readonly ILog Log = LogManager.GetLogger(typeof(ManifestHandler));
 
-		private readonly object GameManifestLock = new object();
-		private readonly object OldGameManifestLock = new object();
-
 		private readonly object ManifestsLock = new object();
 
 		/// <summary>
@@ -75,8 +72,6 @@ namespace Launchpad.Common.Handlers.Manifest
 			this.LocalBaseDirectory = localBaseDirectory;
 			this.RemoteURL = remoteURL;
 			this.SystemTarget = systemTarget;
-
-			ReplaceDeprecatedManifest();
 		}
 
 		/// <summary>
@@ -253,51 +248,6 @@ namespace Launchpad.Common.Handlers.Manifest
 			}
 
 			return $"{this.RemoteURL.LocalPath}/game/{this.SystemTarget}/{manifestType}Manifest.checksum";
-		}
-
-		/// <summary>
-		/// Gets the deprecated manifests' path on disk.
-		/// </summary>
-		/// <returns>The deprecated manifest path.</returns>
-		private string GetDeprecatedGameManifestPath()
-		{
-			string manifestPath = $@"{this.LocalBaseDirectory}LauncherManifest.txt";
-			return manifestPath;
-		}
-
-		/// <summary>
-		/// Gets the deprecated old manifests' path on disk.
-		/// </summary>
-		/// <returns>The deprecated old manifest's path.</returns>
-		private string GetDeprecatedOldGameManifestPath()
-		{
-			string oldManifestPath = $@"{this.LocalBaseDirectory}LauncherManifest.txt.old";
-			return oldManifestPath;
-		}
-
-		/// <summary>
-		/// Replaces the deprecated manifest, moving LauncherManifest to GameManifest (if present).
-		/// This function should only be called once per launcher start.
-		/// </summary>
-		private void ReplaceDeprecatedManifest()
-		{
-			if (File.Exists(GetDeprecatedGameManifestPath()))
-			{
-				Log.Info("Found deprecated game manifest in install folder. Moving to new filename.");
-				lock (this.GameManifestLock)
-				{
-					File.Move(GetDeprecatedGameManifestPath(), GetManifestPath(EManifestType.Game, false));
-				}
-			}
-
-			if (File.Exists(GetDeprecatedOldGameManifestPath()))
-			{
-				Log.Info("Found deprecated old game manifest in install folder. Moving to new filename.");
-				lock (this.OldGameManifestLock)
-				{
-					File.Move(GetDeprecatedOldGameManifestPath(), GetManifestPath(EManifestType.Game, true));
-				}
-			}
 		}
 	}
 }
