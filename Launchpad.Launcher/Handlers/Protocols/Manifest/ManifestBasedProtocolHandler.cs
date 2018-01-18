@@ -68,9 +68,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			);
 		}
 
-		/// <summary>
-		/// Installs the game.
-		/// </summary>
+		/// <inheritdoc />
 		public override void InstallGame()
 		{
 			this.ModuleInstallFinishedArgs.Module = EModule.Game;
@@ -103,13 +101,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			// which happens to coincide with the general design.
 		}
 
-		/// <summary>
-		/// Updates the specified module to the latest version.
-		/// </summary>
-		/// <param name="module">The module to update.</param>
-		/// <exception cref="ArgumentOutOfRangeException">
-		/// Will be thrown if the <see cref="EModule"/> passed to the function is not a valid value.
-		/// </exception>
+		/// <inheritdoc />
 		public override void UpdateModule(EModule module)
 		{
 			IReadOnlyList<ManifestEntry> manifest;
@@ -213,10 +205,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			OnModuleInstallationFinished();
 		}
 
-		/// <summary>
-		/// Verifies and repairs the files of the specified module.
-		/// </summary>
-		/// <param name="module">The module.</param>
+		/// <inheritdoc />
 		public override void VerifyModule(EModule module)
 		{
 			var manifest = this.FileManifestHandler.GetManifest((EManifestType)module, false);
@@ -291,13 +280,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			OnModuleInstallationFinished();
 		}
 
-		/// <summary>
-		/// Downloads the latest version of the specified module.
-		/// </summary>
-		/// <param name="module">The module.</param>
-		/// <exception cref="ArgumentOutOfRangeException">
-		/// Will be thrown if the <see cref="EModule"/> passed to the function is not a valid value.
-		/// </exception>
+		/// <inheritdoc />
 		protected override void DownloadModule(EModule module)
 		{
 			IReadOnlyList<ManifestEntry> moduleManifest;
@@ -401,14 +384,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			bool useAnonymousLogin = false
 		);
 
-		/// <summary>
-		/// Determines whether or not the specified module is outdated.
-		/// </summary>
-		/// <param name="module">The module.</param>
-		/// <returns>true if the module is outdated; otherwise, false.</returns>
-		/// <exception cref="ArgumentOutOfRangeException">
-		/// Will be thrown if the <see cref="EModule"/> passed to the function is not a valid value.
-		/// </exception>
+		/// <inheritdoc />
 		public override bool IsModuleOutdated(EModule module)
 		{
 			try

@@ -155,12 +155,7 @@ namespace Launchpad.Common.Handlers.Manifest
 			return Equals(obj as ManifestEntry);
 		}
 
-		/// <summary>
-		/// Determines whether the specified <see cref="ManifestEntry"/> is equal to the current <see cref="ManifestEntry"/>.
-		/// </summary>
-		/// <param name="other">The <see cref="ManifestEntry"/> to compare with the current <see cref="ManifestEntry"/>.</param>
-		/// <returns><c>true</c> if the specified <see cref="ManifestEntry"/> is equal to the current
-		/// <see cref="ManifestEntry"/>; otherwise, <c>false</c>.</returns>
+		/// <inheritdoc />
 		public bool Equals(ManifestEntry other)
 		{
 			if (other == null)

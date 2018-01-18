@@ -45,11 +45,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// </summary>
 		private static readonly ILog Log = LogManager.GetLogger(typeof(FTPProtocolHandler));
 
-		/// <summary>
-		/// Determines whether this instance can provide patches. Checks for an active connection to the
-		/// patch provider (file server, distributed hash tables, hyperspace compression waves etc.)
-		/// </summary>
-		/// <returns><c>true</c> if this instance can provide patches; otherwise, <c>false</c>.</returns>
+		/// <inheritdoc />
 		public override bool CanPatch()
 		{
 			Log.Info("Pinging remote patching server to determine if we can connect to it.");
@@ -97,11 +93,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			return canConnect;
 		}
 
-		/// <summary>
-		/// Determines whether the protocol can provide patches and updates for the provided platform.
-		/// </summary>
-		/// <param name="platform">The platform to check.</param>
-		/// <returns><c>true</c> if the platform is available; otherwise, <c>false</c>.</returns>
+		/// <inheritdoc />
 		public override bool IsPlatformAvailable(ESystemTarget platform)
 		{
 			var remote = $"{this.Config.GetBaseFTPUrl()}/game/{platform}/.provides";
@@ -109,19 +101,13 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			return DoesRemoteFileExist(remote);
 		}
 
-		/// <summary>
-		/// Determines whether this protocol can provide access to a changelog.
-		/// </summary>
-		/// <returns><c>true</c> if this protocol can provide a changelog; otherwise, <c>false</c>.</returns>
+		/// <inheritdoc />
 		public override bool CanProvideChangelog()
 		{
 			return true;
 		}
 
-		/// <summary>
-		/// Gets the changelog.
-		/// </summary>
-		/// <returns>The changelog.</returns>
+		/// <inheritdoc />
 		public override string GetChangelogSource()
 		{
 			var changelogURL = $"{this.Config.GetBaseFTPUrl()}/launcher/changelog.html";
@@ -130,10 +116,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			return ReadRemoteFile(changelogURL);
 		}
 
-		/// <summary>
-		/// Determines whether this protocol can provide access to a banner for the game.
-		/// </summary>
-		/// <returns><c>true</c> if this instance can provide banner; otherwise, <c>false</c>.</returns>
+		/// <inheritdoc />
 		public override bool CanProvideBanner()
 		{
 			var bannerURL = $"{this.Config.GetBaseFTPUrl()}/launcher/banner.png";
@@ -141,10 +124,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			return DoesRemoteFileExist(bannerURL);
 		}
 
-		/// <summary>
-		/// Gets the banner.
-		/// </summary>
-		/// <returns>The banner.</returns>
+		/// <inheritdoc />
 		public override Bitmap GetBanner()
 		{
 			var bannerURL = $"{this.Config.GetBaseFTPUrl()}/launcher/banner.png";
@@ -155,12 +135,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			return new Bitmap(localBannerPath);
 		}
 
-		/// <summary>
-		/// Reads a text file from a remote FTP server.
-		/// </summary>
-		/// <returns>The FTP file contents.</returns>
-		/// <param name="url">FTP file path.</param>
-		/// <param name="useAnonymousLogin">Force anonymous credentials for the connection.</param>
+		/// <inheritdoc />
 		protected override string ReadRemoteFile(string url, bool useAnonymousLogin = false)
 		{
 			// Clean the input url first
@@ -236,14 +211,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			}
 		}
 
-		/// <summary>
-		/// Downloads an FTP file.
-		/// </summary>
-		/// <param name="url">Ftp source file path.</param>
-		/// <param name="localPath">Local destination.</param>
-		/// <param name="totalSize">The total expected size of the file.</param>
-		/// <param name="contentOffset">Offset into the remote file where downloading should start</param>
-		/// <param name="useAnonymousLogin">If set to <c>true</c> b use anonymous.</param>
+		/// <inheritdoc />
 		protected override void DownloadRemoteFile(string url, string localPath, long totalSize = 0, long contentOffset = 0, bool useAnonymousLogin = false)
 		{
 			// Make sure we're not passing in any backslashes in the url

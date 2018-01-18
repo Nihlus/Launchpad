@@ -43,11 +43,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// </summary>
 		private static readonly ILog Log = LogManager.GetLogger(typeof(HTTPProtocolHandler));
 
-		/// <summary>
-		/// Determines whether this instance can provide patches. Checks for an active connection to the
-		/// patch provider (file server, distributed hash tables, hyperspace compression waves etc.)
-		/// </summary>
-		/// <returns><c>true</c> if this instance can provide patches; otherwise, <c>false</c>.</returns>
+		/// <inheritdoc />
 		public override bool CanPatch()
 		{
 			Log.Info("Pinging remote patching server to determine if we can connect to it.");
@@ -91,11 +87,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			return canConnect;
 		}
 
-		/// <summary>
-		/// Determines whether the protocol can provide patches and updates for the provided platform.
-		/// </summary>
-		/// <param name="platform">The platform to check.</param>
-		/// <returns><c>true</c> if the platform is available; otherwise, <c>false</c>.</returns>
+		/// <inheritdoc />
 		public override bool IsPlatformAvailable(ESystemTarget platform)
 		{
 			var remote = $"{this.Config.GetBaseHTTPUrl()}/game/{platform}/.provides";
@@ -103,28 +95,19 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			return DoesRemoteDirectoryOrFileExist(remote);
 		}
 
-		/// <summary>
-		/// Determines whether this protocol can provide access to a changelog.
-		/// </summary>
-		/// <returns><c>true</c> if this protocol can provide a changelog; otherwise, <c>false</c>.</returns>
+		/// <inheritdoc />
 		public override bool CanProvideChangelog()
 		{
 			return false;
 		}
 
-		/// <summary>
-		/// Gets the changelog.
-		/// </summary>
-		/// <returns>The changelog.</returns>
+		/// <inheritdoc />
 		public override string GetChangelogSource()
 		{
 			return string.Empty;
 		}
 
-		/// <summary>
-		/// Determines whether this protocol can provide access to a banner for the game.
-		/// </summary>
-		/// <returns><c>true</c> if this instance can provide banner; otherwise, <c>false</c>.</returns>
+		/// <inheritdoc />
 		public override bool CanProvideBanner()
 		{
 			var bannerURL = $"{this.Config.GetBaseHTTPUrl()}/launcher/banner.png";
@@ -132,10 +115,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			return DoesRemoteDirectoryOrFileExist(bannerURL);
 		}
 
-		/// <summary>
-		/// Gets the banner.
-		/// </summary>
-		/// <returns>The banner.</returns>
+		/// <inheritdoc />
 		public override Bitmap GetBanner()
 		{
 			var bannerURL = $"{this.Config.GetBaseHTTPUrl()}/launcher/banner.png";
@@ -145,14 +125,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			return new Bitmap(localBannerPath);
 		}
 
-		/// <summary>
-		/// Downloads a remote file to a local file path.
-		/// </summary>
-		/// <param name="url">The remote url of the file..</param>
-		/// <param name="localPath">Local path where the file is to be stored.</param>
-		/// <param name="totalSize">Total size of the file as stated in the manifest.</param>
-		/// <param name="contentOffset">Content offset. If nonzero, appends data to an existing file.</param>
-		/// <param name="useAnonymousLogin">If set to <c>true</c> use anonymous login.</param>
+		/// <inheritdoc />
 		protected override void DownloadRemoteFile(string url, string localPath, long totalSize = 0, long contentOffset = 0, bool useAnonymousLogin = false)
 		{
 			// Clean the url string
@@ -245,13 +218,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			}
 		}
 
-		/// <summary>
-		/// Reads the string content of a remote file. The output is scrubbed
-		/// of all \r, \n and \0 characters before it is returned.
-		/// </summary>
-		/// <returns>The contents of the remote file.</returns>
-		/// <param name="url">The remote url of the file.</param>
-		/// <param name="useAnonymousLogin">If set to <c>true</c> use anonymous login.</param>
+		/// <inheritdoc />
 		protected override string ReadRemoteFile(string url, bool useAnonymousLogin = false)
 		{
 			var remoteURL = url.Replace(Path.DirectorySeparatorChar, '/');
