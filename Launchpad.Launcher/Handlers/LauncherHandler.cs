@@ -227,7 +227,7 @@ namespace Launchpad.Launcher.Handlers
 			var transientScriptSource = scriptSource;
 
 			transientScriptSource = transientScriptSource.Replace(TempDirectoryVariable, Path.GetTempPath());
-			transientScriptSource = transientScriptSource.Replace(LocalInstallDirectoryVariable, ConfigHandler.GetLocalLauncherDirectory());
+			transientScriptSource = transientScriptSource.Replace(LocalInstallDirectoryVariable, DirectoryHelpers.GetLocalLauncherDirectory());
 			transientScriptSource = transientScriptSource.Replace(LocalExecutableName, Path.GetFileName(localAssembly.Location));
 
 			return transientScriptSource;

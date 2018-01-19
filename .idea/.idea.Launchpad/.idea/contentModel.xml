@@ -249,12 +249,19 @@
           <e p="launchpad_update.bat" t="Include" />
           <e p="launchpad_update.sh" t="Include" />
         </e>
+        <e p="Services" t="Include">
+          <e p="GameArgumentService.cs" t="Include" />
+          <e p="LocalVersionService.cs" t="Include" />
+          <e p="TagfileService.cs" t="Include" />
+        </e>
         <e p="Utility" t="Include">
+          <e p="DirectoryHelpers.cs" t="Include" />
           <e p="Enums" t="Include">
             <e p="ELauncherMode.cs" t="Include" />
           </e>
           <e p="ManifestEntryExtensions.cs" t="Include" />
           <e p="PatchProtocolProvider.cs" t="Include" />
+          <e p="PlatformHelpers.cs" t="Include" />
         </e>
         <e p="app.manifest" t="Include" />
         <e p="bin" t="ExcludeRecursive" />

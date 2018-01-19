@@ -32,6 +32,7 @@ using Launchpad.Launcher.Configuration;
 using Launchpad.Launcher.Handlers;
 using Launchpad.Launcher.Handlers.Protocols;
 using Launchpad.Launcher.Interface.ChangelogBrowser;
+using Launchpad.Launcher.Services;
 using Launchpad.Launcher.Utility;
 using Launchpad.Launcher.Utility.Enums;
 using log4net;
@@ -49,6 +50,8 @@ namespace Launchpad.Launcher.Interface
 		/// Logger instance for this class.
 		/// </summary>
 		private static readonly ILog Log = LogManager.GetLogger(typeof(MainWindow));
+
+		private readonly LocalVersionService LocalVersionService = new LocalVersionService();
 
 		/// <summary>
 		/// The configuration instance reference.
@@ -69,6 +72,8 @@ namespace Launchpad.Launcher.Interface
 		/// The game handler. Allows updating, installing and repairing the game.
 		/// </summary>
 		private readonly GameHandler Game = new GameHandler();
+
+		private readonly TagfileService TagfileService = new TagfileService();
 
 		/// <summary>
 		/// The changelog browser.
@@ -181,7 +186,7 @@ namespace Launchpad.Launcher.Interface
 					(
 						"This appears to be the first time you're starting the launcher.\n" +
 						"Is this the location where you would like to install the game?"
-					) + $"\n\n{ConfigHandler.GetLocalLauncherDirectory()}";
+					) + $"\n\n{DirectoryHelpers.GetLocalLauncherDirectory()}";
 
 					var shouldInstallHereDialog = new MessageDialog
 					(
@@ -199,7 +204,7 @@ namespace Launchpad.Launcher.Interface
 						// Yes, install here
 						Log.Info("User accepted installation in this directory. Installing in current directory.");
 
-						ConfigHandler.CreateLauncherCookie();
+						this.TagfileService.CreateLauncherTagfile();
 					}
 					else
 					{
@@ -229,7 +234,7 @@ namespace Launchpad.Launcher.Interface
 					{
 						Log.Info
 						(
-							$"The server does not provide files for platform \"{ConfigHandler.GetCurrentPlatform()}\". " +
+							$"The server does not provide files for platform \"{PlatformHelpers.GetCurrentPlatform()}\". " +
 							"A .provides file must be present in the platforms' root directory."
 						);
 
@@ -270,7 +275,7 @@ namespace Launchpad.Launcher.Interface
 				else
 				{
 					// The launcher was outdated.
-					Log.Info($"The launcher is outdated. \n\tLocal version: {ConfigHandler.GetLocalLauncherVersion()}");
+					Log.Info($"The launcher is outdated. \n\tLocal version: {this.LocalVersionService.GetLocalLauncherVersion()}");
 					SetLauncherMode(ELauncherMode.Update, false);
 				}
 			}
@@ -420,7 +425,7 @@ namespace Launchpad.Launcher.Interface
 
 				Log.Info
 				(
-					$"The server does not provide files for platform \"{ConfigHandler.GetCurrentPlatform()}\". " +
+					$"The server does not provide files for platform \"{PlatformHelpers.GetCurrentPlatform()}\". " +
 					"A .provides file must be present in the platforms' root directory."
 				);
 

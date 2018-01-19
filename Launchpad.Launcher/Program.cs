@@ -22,9 +22,9 @@
 
 using System;
 using System.IO;
-
-using Launchpad.Launcher.Handlers;
 using Launchpad.Launcher.Interface;
+using Launchpad.Launcher.Services;
+using Launchpad.Launcher.Utility;
 using log4net;
 
 namespace Launchpad.Launcher
@@ -35,14 +35,11 @@ namespace Launchpad.Launcher
 	public static class Program
 	{
 		/// <summary>
-		/// The config handler reference.
-		/// </summary>
-		private static readonly ConfigHandler Config = ConfigHandler.Instance;
-
-		/// <summary>
 		/// Logger instance for this class.
 		/// </summary>
 		private static readonly ILog Log = LogManager.GetLogger(typeof(Program));
+
+		private static readonly LocalVersionService LocalVersionService = new LocalVersionService();
 
 		/// <summary>
 		/// The main entry point for the application.
@@ -56,11 +53,11 @@ namespace Launchpad.Launcher
 			log4net.Config.XmlConfigurator.Configure();
 
 			Log.Info("----------------");
-			Log.Info($"Launchpad v{ConfigHandler.GetLocalLauncherVersion()} starting...");
-			Log.Info($"Current platform: {ConfigHandler.GetCurrentPlatform()} ({(Environment.Is64BitOperatingSystem ? "x64" : "x86")})");
+			Log.Info($"Launchpad v{LocalVersionService.GetLocalLauncherVersion()} starting...");
+			Log.Info($"Current platform: {PlatformHelpers.GetCurrentPlatform()} ({(Environment.Is64BitOperatingSystem ? "x64" : "x86")})");
 
 			// Set correct working directory for compatibility with double-clicking
-			Directory.SetCurrentDirectory(ConfigHandler.GetLocalLauncherDirectory());
+			Directory.SetCurrentDirectory(DirectoryHelpers.GetLocalLauncherDirectory());
 
 			Log.Info("Initializing UI...");
 

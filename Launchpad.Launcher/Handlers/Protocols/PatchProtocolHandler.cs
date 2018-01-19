@@ -26,6 +26,7 @@ using System.IO;
 
 using Launchpad.Common.Enums;
 using Launchpad.Launcher.Configuration;
+using Launchpad.Launcher.Services;
 using log4net;
 
 namespace Launchpad.Launcher.Handlers.Protocols
@@ -108,6 +109,11 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		protected ModuleInstallationFailedArgs ModuleInstallFailedArgs { get; }
 
 		/// <summary>
+		/// Gets the tagfile service.
+		/// </summary>
+		protected TagfileService TagfileService { get; }
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="PatchProtocolHandler"/> class.
 		/// </summary>
 		protected PatchProtocolHandler()
@@ -118,6 +124,8 @@ namespace Launchpad.Launcher.Handlers.Protocols
 
 			this.ModuleInstallFinishedArgs = new ModuleInstallationFinishedArgs();
 			this.ModuleInstallFailedArgs = new ModuleInstallationFailedArgs();
+
+			this.TagfileService = new TagfileService();
 		}
 
 		/// <summary>
@@ -177,7 +185,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			{
 				// Create the .install file to mark that an installation has begun.
 				// If it exists, do nothing.
-				ConfigHandler.CreateGameCookie();
+				TagfileService.CreateGameTagfile();
 
 				// Download Game
 				DownloadModule(EModule.Game);

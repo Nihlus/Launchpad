@@ -23,7 +23,6 @@
 using System.IO;
 using Launchpad.Common.Handlers;
 using Launchpad.Common.Handlers.Manifest;
-using Launchpad.Launcher.Handlers;
 
 namespace Launchpad.Launcher.Utility
 {
@@ -39,7 +38,7 @@ namespace Launchpad.Launcher.Utility
 		/// <returns><c>true</c>, if file was complete and undamaged, <c>false</c> otherwise.</returns>
 		public static bool IsFileIntegrityIntact(this ManifestEntry entry)
 		{
-			var localPath = $"{ConfigHandler.Instance.GetLocalGamePath()}{entry.RelativePath}";
+			var localPath = $"{DirectoryHelpers.GetLocalGameDirectory()}{entry.RelativePath}";
 			if (!File.Exists(localPath))
 			{
 				return false;

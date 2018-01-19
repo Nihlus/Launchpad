@@ -28,6 +28,7 @@
     <EmbeddedResource Include="Resources\launchpad_update.sh" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="webkit-sharp">
       <HintPath>External Assemblies\webkit-sharp-1.1\webkit-sharp.dll</HintPath>

@@ -29,6 +29,7 @@ using Launchpad.Common;
 using Launchpad.Common.Enums;
 using Launchpad.Common.Handlers;
 using Launchpad.Common.Handlers.Manifest;
+using Launchpad.Launcher.Services;
 using Launchpad.Launcher.Utility;
 using log4net;
 using NGettext;
@@ -50,6 +51,8 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// </summary>
 		private static readonly ILog Log = LogManager.GetLogger(typeof(ManifestBasedProtocolHandler));
 
+		private readonly LocalVersionService LocalVersionService = new LocalVersionService();
+
 		/// <summary>
 		/// The file manifest handler. This allows access to the launcher and game file lists.
 		/// </summary>
@@ -62,7 +65,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		{
 			this.FileManifestHandler = new ManifestHandler
 			(
-				ConfigHandler.GetLocalLauncherDirectory(),
+				DirectoryHelpers.GetLocalLauncherDirectory(),
 				this.Configuration.RemoteAddress,
 				this.Configuration.SystemTarget
 			);
@@ -78,7 +81,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			{
 				// Create the .install file to mark that an installation has begun.
 				// If it exists, do nothing.
-				ConfigHandler.CreateGameCookie();
+				this.TagfileService.CreateGameTagfile();
 
 				// Make sure the manifest is up to date
 				RefreshModuleManifest(EModule.Game);
@@ -326,7 +329,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			// stored in the install cookie.
 
 			// Attempt to parse whatever is inside the install cookie
-			if (ManifestEntry.TryParse(File.ReadAllText(ConfigHandler.GetGameCookiePath()), out var lastDownloadedFile))
+			if (ManifestEntry.TryParse(File.ReadAllText(DirectoryHelpers.GetGameTagfilePath()), out var lastDownloadedFile))
 			{
 				// Loop through all the entries in the manifest until we encounter
 				// an entry which matches the one in the install cookie
@@ -396,13 +399,13 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				{
 					case EModule.Launcher:
 					{
-						local = ConfigHandler.GetLocalLauncherVersion();
+						local = this.LocalVersionService.GetLocalLauncherVersion();
 						remote = GetRemoteLauncherVersion();
 						break;
 					}
 					case EModule.Game:
 					{
-						local = this.Config.GetLocalGameVersion();
+						local = this.LocalVersionService.GetLocalGameVersion();
 						remote = GetRemoteGameVersion();
 						break;
 					}
@@ -448,14 +451,14 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			{
 				case EModule.Launcher:
 				{
-					baseRemoteURL = this.Config.GetRemoteLauncherBinariesPath();
-					baseLocalPath = ConfigHandler.GetTempLauncherDownloadPath();
+					baseRemoteURL = DirectoryHelpers.GetRemoteLauncherBinariesPath();
+					baseLocalPath = DirectoryHelpers.GetTempLauncherDownloadPath();
 					break;
 				}
 				case EModule.Game:
 				{
-					baseRemoteURL = this.Config.GetRemoteGamePath();
-					baseLocalPath = this.Config.GetLocalGamePath();
+					baseRemoteURL = DirectoryHelpers.GetRemoteGamePath();
+					baseLocalPath = DirectoryHelpers.GetLocalGameDirectory();
 					break;
 				}
 				default:
@@ -488,10 +491,10 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			}
 
 			// Reset the cookie
-			File.WriteAllText(ConfigHandler.GetGameCookiePath(), string.Empty);
+			File.WriteAllText(DirectoryHelpers.GetGameTagfilePath(), string.Empty);
 
 			// Write the current file progress to the install cookie
-			using (TextWriter textWriterProgress = new StreamWriter(ConfigHandler.GetGameCookiePath()))
+			using (TextWriter textWriterProgress = new StreamWriter(DirectoryHelpers.GetGameTagfilePath()))
 			{
 				textWriterProgress.WriteLine(fileEntry);
 				textWriterProgress.Flush();
@@ -557,7 +560,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			}
 
 			// We've finished the download, so empty the cookie
-			File.WriteAllText(ConfigHandler.GetGameCookiePath(), string.Empty);
+			File.WriteAllText(DirectoryHelpers.GetGameTagfilePath(), string.Empty);
 		}
 
 		/// <summary>
@@ -742,7 +745,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// If the version could not be retrieved from the server, a version of 0.0.0 is returned.</returns>
 		protected virtual Version GetRemoteLauncherVersion()
 		{
-			var remoteVersionPath = this.Config.GetRemoteLauncherVersionPath();
+			var remoteVersionPath = DirectoryHelpers.GetRemoteLauncherVersionPath();
 
 			// Config.GetDoOfficialUpdates is used here since the official update server always allows anonymous logins.
 			var remoteVersion = ReadRemoteFile(remoteVersionPath, this.Configuration.UseOfficialUpdates);

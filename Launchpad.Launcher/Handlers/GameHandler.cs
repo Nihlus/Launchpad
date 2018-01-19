@@ -28,6 +28,7 @@ using System.Threading;
 using Launchpad.Common;
 using Launchpad.Launcher.Configuration;
 using Launchpad.Launcher.Handlers.Protocols;
+using Launchpad.Launcher.Services;
 using Launchpad.Launcher.Utility;
 using log4net;
 
@@ -83,9 +84,9 @@ namespace Launchpad.Launcher.Handlers
 
 		private static readonly ILaunchpadConfiguration Configuration = ConfigHandler.Instance.Configuration;
 
-		private static readonly ConfigHandler Config = ConfigHandler.Instance;
-
 		private readonly PatchProtocolHandler Patch;
+
+		private readonly GameArgumentService GameArgumentService = new GameArgumentService();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="GameHandler"/> class.
@@ -157,16 +158,16 @@ namespace Launchpad.Launcher.Handlers
 		public void ReinstallGame()
 		{
 			Log.Info("Beginning full reinstall of game files.");
-			if (Directory.Exists(Config.GetLocalGamePath()))
+			if (Directory.Exists(DirectoryHelpers.GetLocalGameDirectory()))
 			{
 				Log.Info("Deleting existing game files.");
-				Directory.Delete(Config.GetLocalGamePath(), true);
+				Directory.Delete(DirectoryHelpers.GetLocalGameDirectory(), true);
 			}
 
-			if (File.Exists(ConfigHandler.GetGameCookiePath()))
+			if (File.Exists(DirectoryHelpers.GetGameTagfilePath()))
 			{
 				Log.Info("Deleting install progress cookie.");
-				File.Delete(ConfigHandler.GetGameCookiePath());
+				File.Delete(DirectoryHelpers.GetGameTagfilePath());
 			}
 
 			var t = new Thread(() => this.Patch.InstallGame())
@@ -186,11 +187,11 @@ namespace Launchpad.Launcher.Handlers
 			try
 			{
 				var executable = Configuration.ExecutablePath;
-				var executableDir = Path.GetDirectoryName(executable) ?? ConfigHandler.GetLocalLauncherDirectory();
+				var executableDir = Path.GetDirectoryName(executable) ?? DirectoryHelpers.GetLocalLauncherDirectory();
 
 				// Do not move the argument assignment inside the gameStartInfo initializer.
 				// It causes a TargetInvocationException crash through black magic.
-				var gameArguments = string.Join(" ", ConfigHandler.GetGameArguments());
+				var gameArguments = string.Join(" ", this.GameArgumentService.GetGameArguments());
 				var gameStartInfo = new ProcessStartInfo
 				{
 					UseShellExecute = false,

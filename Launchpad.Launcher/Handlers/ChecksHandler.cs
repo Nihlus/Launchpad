@@ -36,11 +36,6 @@ namespace Launchpad.Launcher.Handlers
 	internal sealed class ChecksHandler
 	{
 		/// <summary>
-		/// The config handler reference.
-		/// </summary>
-		private readonly ConfigHandler Configuration = ConfigHandler.Instance;
-
-		/// <summary>
 		/// Logger instance for this class.
 		/// </summary>
 		private static readonly ILog Log = LogManager.GetLogger(typeof(ChecksHandler));
@@ -71,7 +66,7 @@ namespace Launchpad.Launcher.Handlers
 		public static bool IsInitialStartup()
 		{
 			// We use an empty file to determine if this is the first launch or not
-			return !File.Exists(ConfigHandler.GetLauncherCookiePath());
+			return !File.Exists(DirectoryHelpers.GetLauncherTagfilePath());
 		}
 
 		/// <summary>
@@ -81,9 +76,9 @@ namespace Launchpad.Launcher.Handlers
 		public bool IsGameInstalled()
 		{
 			// Criteria for considering the game 'installed'
-			var hasGameDirectory = Directory.Exists(this.Configuration.GetLocalGamePath());
-			var hasInstallCookie = File.Exists(ConfigHandler.GetGameCookiePath());
-			var hasGameVersionFile = File.Exists(this.Configuration.GetLocalGameVersionPath());
+			var hasGameDirectory = Directory.Exists(DirectoryHelpers.GetLocalGameDirectory());
+			var hasInstallCookie = File.Exists(DirectoryHelpers.GetGameTagfilePath());
+			var hasGameVersionFile = File.Exists(DirectoryHelpers.GetLocalGameVersionPath());
 
 			if (!hasGameVersionFile && hasGameDirectory)
 			{
@@ -125,12 +120,12 @@ namespace Launchpad.Launcher.Handlers
 		private static bool IsInstallCookieEmpty()
 		{
 			// Is there an .install file in the directory?
-			var hasInstallCookie = File.Exists(ConfigHandler.GetGameCookiePath());
+			var hasInstallCookie = File.Exists(DirectoryHelpers.GetGameTagfilePath());
 			var isInstallCookieEmpty = false;
 
 			if (hasInstallCookie)
 			{
-				isInstallCookieEmpty = string.IsNullOrEmpty(File.ReadAllText(ConfigHandler.GetGameCookiePath()));
+				isInstallCookieEmpty = string.IsNullOrEmpty(File.ReadAllText(DirectoryHelpers.GetGameTagfilePath()));
 			}
 
 			return isInstallCookieEmpty;
