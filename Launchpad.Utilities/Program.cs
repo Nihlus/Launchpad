@@ -68,7 +68,7 @@ namespace Launchpad.Utilities
 
 					var progressReporter = new Progress<ManifestGenerationProgressChangedEventArgs>
 					(
-						progressArgs => OnProgressChanged(manifestGenerationHandler, progressArgs)
+						e => Log.Info($"Processed file {e.Filepath} : {e.Hash} : {e.Filesize}")
 					);
 
 					await manifestGenerationHandler.GenerateManifestAsync
@@ -96,11 +96,6 @@ namespace Launchpad.Utilities
 				win.Show();
 				Application.Run();
 			}
-		}
-
-		private static void OnProgressChanged(object sender, ManifestGenerationProgressChangedEventArgs e)
-		{
-			Log.Info($"Processed file {e.Filepath} : {e.Hash} : {e.Filesize}");
 		}
 	}
 }
