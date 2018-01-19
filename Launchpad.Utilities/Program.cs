@@ -21,6 +21,8 @@
 
 using System;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using CommandLine;
 using Gtk;
 using Launchpad.Utilities.Handlers;
@@ -42,8 +44,7 @@ namespace Launchpad.Utilities
 		/// <summary>
 		/// The main entry point for the application.
 		/// </summary>
-		[STAThread]
-		private static void Main(string[] args)
+		private static async Task Main(string[] args)
 		{
 			var options = new CLIOptions();
 			Parser.Default.ParseArguments<CLIOptions>(args)
@@ -64,10 +65,20 @@ namespace Launchpad.Utilities
 
 					var manifestGenerationHandler = new ManifestGenerationHandler();
 
-					manifestGenerationHandler.ManifestGenerationProgressChanged += OnProgressChanged;
-					manifestGenerationHandler.ManifestGenerationFinished += OnGenerationFinished;
+					var progressReporter = new Progress<ManifestGenerationProgressChangedEventArgs>
+					(
+						progressArgs => OnProgressChanged(manifestGenerationHandler, progressArgs)
+					);
 
-					manifestGenerationHandler.GenerateManifest(options.TargetDirectory, options.ManifestType);
+					await manifestGenerationHandler.GenerateManifestAsync
+					(
+						options.TargetDirectory,
+						options.ManifestType,
+						progressReporter,
+						CancellationToken.None
+					);
+
+					Log.Info("Generation finished.");
 				}
 				else
 				{
@@ -88,11 +99,6 @@ namespace Launchpad.Utilities
 		private static void OnProgressChanged(object sender, ManifestGenerationProgressChangedEventArgs e)
 		{
 			Log.Info($"Processed file {e.Filepath} : {e.Hash} : {e.Filesize}");
-		}
-
-		private static void OnGenerationFinished(object sender, EventArgs e)
-		{
-			Log.Info("Generation finished.");
 		}
 	}
 }

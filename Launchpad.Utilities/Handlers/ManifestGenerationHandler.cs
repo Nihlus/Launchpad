@@ -25,6 +25,7 @@ using System.Threading;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Launchpad.Common.Enums;
 using Launchpad.Common.Handlers;
 using Launchpad.Common.Handlers.Manifest;
@@ -33,9 +34,6 @@ namespace Launchpad.Utilities.Handlers
 {
 	public class ManifestGenerationHandler
 	{
-		public event EventHandler<ManifestGenerationProgressChangedEventArgs> ManifestGenerationProgressChanged;
-		public event EventHandler ManifestGenerationFinished;
-
 		private readonly ManifestGenerationProgressChangedEventArgs GenerationProgressArgs = new ManifestGenerationProgressChangedEventArgs();
 
 		/// <summary>
@@ -44,87 +42,88 @@ namespace Launchpad.Utilities.Handlers
 		/// </summary>
 		/// <param name="targetPath">The root path of the directory the manifest should represent.</param>
 		/// <param name="manifestType">The type of manifest that should be generated.</param>
-		public void GenerateManifest(string targetPath, EManifestType manifestType)
-		{
-			var t = new Thread(() => GenerateManifest_Implementation(targetPath, manifestType))
-			{
-				Name = "GenerateManifest"
-			};
-
-			t.Start();
-		}
-
-		/// <summary>
-		/// The asynchronous implementation of the GenerateManifest function.
-		/// </summary>
-		/// <param name="targetPath">The root path of the directory the manifest should represent.</param>
-        /// <param name="manifestType">The type of manifest that should be generated.</param>
-		private void GenerateManifest_Implementation(string targetPath, EManifestType manifestType)
+		/// <param name="progressReporter">The progress reporter to use.</param>
+		/// <param name="ct">The cancellation token to use.</param>
+		public Task GenerateManifestAsync
+		(
+			string targetPath,
+			EManifestType manifestType,
+			IProgress<ManifestGenerationProgressChangedEventArgs> progressReporter,
+			CancellationToken ct
+		)
 		{
 			var parentDirectory = Directory.GetParent(targetPath).ToString();
 			var manifestPath = $@"{parentDirectory}{Path.DirectorySeparatorChar}{manifestType}Manifest.txt";
 			var manifestChecksumPath = $@"{parentDirectory}{Path.DirectorySeparatorChar}{manifestType}Manifest.checksum";
 
-			var manifestFilePaths = new List<string>(Directory
-				.EnumerateFiles(targetPath, "*", SearchOption.AllDirectories)
-				.Where(s => !IsPathABlacklistedFile(s)));
-
-			using (var tw = new StreamWriter(File.Create(manifestPath)))
-			{
-				var completedFiles = 0;
-				foreach (var filePath in manifestFilePaths)
+			return Task.Run
+			(
+				async () =>
 				{
-					var newEntry = CreateEntryForFile(targetPath, filePath);
+					var manifestFilePaths = new List<string>(Directory
+						.EnumerateFiles(targetPath, "*", SearchOption.AllDirectories)
+						.Where(s => !IsPathABlacklistedFile(s)));
 
-					tw.WriteLine(newEntry);
-					tw.Flush();
+					using (var tw = new StreamWriter(File.Create(manifestPath, 4096, FileOptions.Asynchronous)))
+					{
+						var completedFiles = 0;
+						foreach (var filePath in manifestFilePaths)
+						{
+							ct.ThrowIfCancellationRequested();
 
-					completedFiles++;
+							var newEntry = CreateEntryForFile(targetPath, filePath);
 
-					this.GenerationProgressArgs.TotalFiles = manifestFilePaths.Count;
-					this.GenerationProgressArgs.CompletedFiles = completedFiles;
-					this.GenerationProgressArgs.Filepath = newEntry.RelativePath;
-					this.GenerationProgressArgs.Hash = newEntry.Hash;
-					this.GenerationProgressArgs.Filesize = newEntry.Size;
-					OnManifestGenerationProgressChanged();
-				}
-			}
+							await tw.WriteLineAsync(newEntry.ToString());
+							await tw.FlushAsync();
 
+							completedFiles++;
+
+							this.GenerationProgressArgs.TotalFiles = manifestFilePaths.Count;
+							this.GenerationProgressArgs.CompletedFiles = completedFiles;
+							this.GenerationProgressArgs.Filepath = newEntry.RelativePath;
+							this.GenerationProgressArgs.Hash = newEntry.Hash;
+							this.GenerationProgressArgs.Filesize = newEntry.Size;
+
+							progressReporter.Report(this.GenerationProgressArgs);
+						}
+					}
+
+					await CreateManifestChecksumAsync(manifestPath, manifestChecksumPath);
+				},
+				ct
+			);
+		}
+
+		private async Task CreateManifestChecksumAsync(string manifestPath, string manifestChecksumPath)
+		{
 			// Create a checksum file for the manifest.
 			using (var manifestStream = File.OpenRead(manifestPath))
 			{
 				var manifestHash = MD5Handler.GetStreamHash(manifestStream);
 
-				using (var checksumStream = File.Create(manifestChecksumPath))
+				using (var checksumStream = File.Create(manifestChecksumPath, 4096, FileOptions.Asynchronous))
 				{
 					using (var tw = new StreamWriter(checksumStream))
 					{
-						tw.WriteLine(manifestHash);
+						await tw.WriteLineAsync(manifestHash);
+						await tw.FlushAsync();
 						tw.Close();
 					}
 				}
 			}
-
-			OnManifestGenerationFinished();
 		}
 
-		private static ManifestEntry CreateEntryForFile(string parentDirectory, string filePath)
+		private ManifestEntry CreateEntryForFile(string parentDirectory, string filePath)
 		{
 			string hash;
 			long fileSize;
 			using (var fileStream = File.OpenRead(filePath))
 			{
-				// Calculate the hash of the file
 				hash = MD5Handler.GetStreamHash(fileStream);
-
-				// Get the disk size of the file
 				fileSize = fileStream.Length;
 			}
 
-			// Get the relative path of the file
 			var relativeFilePath = filePath.Substring(parentDirectory.Length);
-
-			// Write the entry to the manifest
 			var newEntry = new ManifestEntry
 			{
 				RelativePath = relativeFilePath,
@@ -140,22 +139,13 @@ namespace Launchpad.Utilities.Handlers
 		/// </summary>
 		/// <param name="filePath">The path to test.</param>
 		/// <returns><value>true</value> if the path is blackliste; otherwise, <value>false</value>.</returns>
-		private static bool IsPathABlacklistedFile(string filePath)
+		private bool IsPathABlacklistedFile(string filePath)
 		{
-			return 	filePath.EndsWith(".install") ||
-			       	filePath.EndsWith(".update") ||
-			       	filePath.EndsWith("GameManifest.txt") ||
-					filePath.EndsWith("GameManifest.checksum");
-		}
-
-		private void OnManifestGenerationProgressChanged()
-		{
-			this.ManifestGenerationProgressChanged?.Invoke(this, this.GenerationProgressArgs);
-		}
-
-		private void OnManifestGenerationFinished()
-		{
-			this.ManifestGenerationFinished?.Invoke(this, EventArgs.Empty);
+			return
+				filePath.EndsWith(".install") ||
+		        filePath.EndsWith(".update") ||
+		        filePath.EndsWith("GameManifest.txt") ||
+				filePath.EndsWith("GameManifest.checksum");
 		}
 	}
 }

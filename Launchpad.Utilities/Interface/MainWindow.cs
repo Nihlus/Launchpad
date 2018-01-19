@@ -22,6 +22,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using Gtk;
 using Launchpad.Common.Enums;
 using Launchpad.Utilities.Handlers;
@@ -43,13 +44,17 @@ namespace Launchpad.Utilities.Interface
 		/// </summary>
 		private readonly ICatalog LocalizationCatalog = new Catalog("Launchpad", "./Content/locale");
 
+		private readonly IProgress<ManifestGenerationProgressChangedEventArgs> ProgressReporter;
+
 		public MainWindow()
 			: base(WindowType.Toplevel)
 		{
 			Build();
 
-			this.Manifest.ManifestGenerationProgressChanged += OnGenerateManifestProgressChanged;
-			this.Manifest.ManifestGenerationFinished += OnGenerateManifestFinished;
+			this.ProgressReporter = new Progress<ManifestGenerationProgressChangedEventArgs>
+			(
+				args => OnGenerateManifestProgressChanged(this.Manifest, args)
+			);
 
 			this.fileChooser.SetCurrentFolder(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory));
 			this.fileChooser.SelectMultiple = false;
@@ -68,7 +73,7 @@ namespace Launchpad.Utilities.Interface
 			a.RetVal = true;
 		}
 
-		private void OnGenerateGameManifestButtonClicked(object sender, EventArgs e)
+		private async void OnGenerateGameManifestButtonClicked(object sender, EventArgs e)
 		{
 			this.generateGameManifestButton.Sensitive = false;
 			this.generateLaunchpadManifestButton.Sensitive = false;
@@ -97,18 +102,37 @@ namespace Launchpad.Utilities.Interface
 				}
 			}
 
-			this.Manifest.GenerateManifest(targetDirectory, EManifestType.Game);
+			await this.Manifest.GenerateManifestAsync
+			(
+				targetDirectory,
+				EManifestType.Game,
+				this.ProgressReporter,
+				CancellationToken.None
+			);
+
+			this.progressLabel.Text = this.LocalizationCatalog.GetString("Finished");
+			this.generateGameManifestButton.Sensitive = true;
+			this.generateLaunchpadManifestButton.Sensitive = true;
 		}
 
-		private void OnGenerateLaunchpadManifestButtonClicked(object sender, EventArgs e)
+		private async void OnGenerateLaunchpadManifestButtonClicked(object sender, EventArgs e)
 		{
 			this.generateGameManifestButton.Sensitive = false;
 			this.generateLaunchpadManifestButton.Sensitive = false;
 
 			var targetDirectory = this.fileChooser.Filename;
 
-			this.Manifest.GenerateManifest(targetDirectory, EManifestType.Launchpad);
+			await this.Manifest.GenerateManifestAsync
+			(
+				targetDirectory,
+				EManifestType.Launchpad,
+				this.ProgressReporter,
+				CancellationToken.None
+			);
 
+			this.progressLabel.Text = this.LocalizationCatalog.GetString("Finished");
+			this.generateGameManifestButton.Sensitive = true;
+			this.generateLaunchpadManifestButton.Sensitive = true;
 		}
 
 		/// <summary>
@@ -126,21 +150,5 @@ namespace Launchpad.Utilities.Interface
 				this.progressbar.Fraction = e.CompletedFiles / (double)e.TotalFiles;
 			});
 		}
-
-		/// <summary>
-		/// Updates the UI when the manifest is complete.
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="e">Empty arguments</param>
-		private void OnGenerateManifestFinished(object sender, EventArgs e)
-		{
-			Application.Invoke((o, args) =>
-			{
-				this.progressLabel.Text = this.LocalizationCatalog.GetString("Finished");
-				this.generateGameManifestButton.Sensitive = true;
-				this.generateLaunchpadManifestButton.Sensitive = true;
-			});
-		}
 	}
 }
-
