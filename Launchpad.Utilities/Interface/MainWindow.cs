@@ -90,11 +90,18 @@ namespace Launchpad.Utilities.Interface
 
 			if (!Directory.GetFiles(targetDirectory).Any(s => s.Contains("GameVersion.txt")))
 			{
-				var dialog = new MessageDialog(this,
+				var dialog = new MessageDialog
+				(
+					this,
 					DialogFlags.Modal,
 					MessageType.Question,
-					ButtonsType.YesNo, this.LocalizationCatalog.GetString("No GameVersion.txt file could be found in the target directory. This file is required.\n" +
-												  "Would you like to add one? The version will be \"1.0.0\"."));
+					ButtonsType.YesNo,
+					this.LocalizationCatalog.GetString
+					(
+						"No GameVersion.txt file could be found in the target directory. This file is required.\n" +
+						"Would you like to add one? The version will be \"1.0.0\"."
+					)
+				);
 
 				if (dialog.Run() == (int) ResponseType.Yes)
 				{
