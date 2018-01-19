@@ -28,6 +28,7 @@ using System.IO;
 using Gdk;
 using Gtk;
 
+using Launchpad.Common;
 using Launchpad.Launcher.Configuration;
 using Launchpad.Launcher.Handlers;
 using Launchpad.Launcher.Handlers.Protocols;
@@ -36,7 +37,7 @@ using Launchpad.Launcher.Services;
 using Launchpad.Launcher.Utility;
 using Launchpad.Launcher.Utility.Enums;
 using log4net;
-using Launchpad.Common;
+
 using NGettext;
 
 namespace Launchpad.Launcher.Interface

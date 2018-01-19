@@ -65,6 +65,8 @@ namespace Launchpad.Utilities.Handlers
 						.EnumerateFiles(targetPath, "*", SearchOption.AllDirectories)
 						.Where(s => !IsPathABlacklistedFile(s)));
 
+					this.GenerationProgressArgs.TotalFiles = manifestFilePaths.Count;
+
 					using (var tw = new StreamWriter(File.Create(manifestPath, 4096, FileOptions.Asynchronous)))
 					{
 						var completedFiles = 0;
@@ -79,7 +81,6 @@ namespace Launchpad.Utilities.Handlers
 
 							completedFiles++;
 
-							this.GenerationProgressArgs.TotalFiles = manifestFilePaths.Count;
 							this.GenerationProgressArgs.CompletedFiles = completedFiles;
 							this.GenerationProgressArgs.Filepath = newEntry.RelativePath;
 							this.GenerationProgressArgs.Hash = newEntry.Hash;

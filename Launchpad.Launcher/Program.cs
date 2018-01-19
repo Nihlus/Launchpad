@@ -22,11 +22,11 @@
 
 using System;
 using System.IO;
+using Launchpad.Common;
 using Launchpad.Launcher.Interface;
 using Launchpad.Launcher.Services;
 using Launchpad.Launcher.Utility;
 using log4net;
-using Launchpad.Common;
 
 namespace Launchpad.Launcher
 {
