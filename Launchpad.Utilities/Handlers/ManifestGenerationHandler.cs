@@ -53,8 +53,9 @@ namespace Launchpad.Utilities.Handlers
 		)
 		{
 			var parentDirectory = Directory.GetParent(targetPath).ToString();
-			var manifestPath = $@"{parentDirectory}{Path.DirectorySeparatorChar}{manifestType}Manifest.txt";
-			var manifestChecksumPath = $@"{parentDirectory}{Path.DirectorySeparatorChar}{manifestType}Manifest.checksum";
+
+			var manifestPath = Path.Combine(parentDirectory, $"{manifestType}Manifest.txt");
+			var manifestChecksumPath = Path.Combine(parentDirectory, $"{manifestType}Manifest.checksum");
 
 			return Task.Run
 			(
