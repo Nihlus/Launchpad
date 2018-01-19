@@ -24,6 +24,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
+using GLib;
 using Gtk;
 using Launchpad.Utilities.Handlers;
 using Launchpad.Utilities.Utility.Events;
@@ -89,6 +90,7 @@ namespace Launchpad.Utilities
 			{
 				// Run a GTK UI instead of batch processing
 				Application.Init();
+				SynchronizationContext.SetSynchronizationContext(new GLibSynchronizationContext());
 
 				var win = new MainWindow();
 				win.Show();

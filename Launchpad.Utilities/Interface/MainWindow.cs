@@ -56,6 +56,7 @@ namespace Launchpad.Utilities.Interface
 				args => OnGenerateManifestProgressChanged(this.Manifest, args)
 			);
 
+
 			this.fileChooser.SetCurrentFolder(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory));
 			this.fileChooser.SelectMultiple = false;
 
@@ -142,13 +143,10 @@ namespace Launchpad.Utilities.Interface
 		/// <param name="e">Arguments containing information about the entered file.</param>
 		private void OnGenerateManifestProgressChanged(object sender, ManifestGenerationProgressChangedEventArgs e)
 		{
-			Application.Invoke((o, args) =>
-			{
-				var progressString = this.LocalizationCatalog.GetString("{0} : {1} out of {2}");
-				this.progressLabel.Text = string.Format(progressString, e.Filepath, e.CompletedFiles, e.TotalFiles);
+			var progressString = this.LocalizationCatalog.GetString("{0} : {1} out of {2}");
+			this.progressLabel.Text = string.Format(progressString, e.Filepath, e.CompletedFiles, e.TotalFiles);
 
-				this.progressbar.Fraction = e.CompletedFiles / (double)e.TotalFiles;
-			});
+			this.progressbar.Fraction = e.CompletedFiles / (double)e.TotalFiles;
 		}
 	}
 }
