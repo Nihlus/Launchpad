@@ -321,7 +321,7 @@
         </e>
         <e p="Utility" t="Include">
           <e p="Events" t="Include">
-            <e p="Arguments.cs" t="Include" />
+            <e p="ManifestGenerationProgressChangedEventArgs.cs" t="Include" />
           </e>
         </e>
         <e p="bin" t="ExcludeRecursive" />
