@@ -22,6 +22,8 @@
 
 using System;
 using System.IO;
+using System.Threading;
+using GLib;
 using Launchpad.Common;
 using Launchpad.Launcher.Interface;
 using Launchpad.Launcher.Services;
@@ -63,10 +65,12 @@ namespace Launchpad.Launcher
 			Log.Info("Initializing UI...");
 
 			// Bind any unhandled exceptions in the GTK UI so that they are logged.
-			GLib.ExceptionManager.UnhandledException += OnGLibUnhandledException;
+			ExceptionManager.UnhandledException += OnGLibUnhandledException;
 
 			// Run the GTK UI
 			Gtk.Application.Init();
+			SynchronizationContext.SetSynchronizationContext(new GLibSynchronizationContext());
+
 			var win = new MainWindow();
 			win.Show();
 			Gtk.Application.Run();
@@ -76,7 +80,7 @@ namespace Launchpad.Launcher
 		/// Passes any unhandled exceptions from the GTK UI to the generic handler.
 		/// </summary>
 		/// <param name="args">The event object containing the information about the exception.</param>
-		private static void OnGLibUnhandledException(GLib.UnhandledExceptionArgs args)
+		private static void OnGLibUnhandledException(UnhandledExceptionArgs args)
 		{
 			OnUnhandledException(null, args);
 		}

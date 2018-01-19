@@ -210,6 +210,9 @@
             <e p="webkit-sharp.dll.config" t="Include" />
           </e>
         </e>
+        <e p="GLib" t="Include">
+          <e p="GLibSynchronizationContext.cs" t="Include" />
+        </e>
         <e p="Handlers" t="Include">
           <e p="ChangelogDownloadFinishedEventArgs.cs" t="Include" />
           <e p="ChecksHandler.cs" t="Include" />
