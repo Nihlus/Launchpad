@@ -47,6 +47,8 @@ namespace Launchpad.Utilities.Interface
 
 		private readonly IProgress<ManifestGenerationProgressChangedEventArgs> ProgressReporter;
 
+		private CancellationTokenSource TokenSource;
+
 		public MainWindow()
 			: base(WindowType.Toplevel)
 		{
@@ -74,8 +76,10 @@ namespace Launchpad.Utilities.Interface
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="a">The alpha component.</param>
-		private static void OnDeleteEvent(object sender, DeleteEventArgs a)
+		private void OnDeleteEvent(object sender, DeleteEventArgs a)
 		{
+			this.TokenSource?.Cancel();
+
 			Application.Quit();
 			a.RetVal = true;
 		}
@@ -116,20 +120,31 @@ namespace Launchpad.Utilities.Interface
 
 		private async Task GenerateManifestAsync(EManifestType manifestType)
 		{
+			this.TokenSource = new CancellationTokenSource();
+
 			this.generateGameManifestButton.Sensitive = false;
 			this.generateLaunchpadManifestButton.Sensitive = false;
 
 			var targetDirectory = this.fileChooser.Filename;
 
-			await this.Manifest.GenerateManifestAsync
-			(
-				targetDirectory,
-				manifestType,
-				this.ProgressReporter,
-				CancellationToken.None
-			);
+			try
+			{
+				await this.Manifest.GenerateManifestAsync
+				(
+					targetDirectory,
+					manifestType,
+					this.ProgressReporter,
+					this.TokenSource.Token
+				);
 
-			this.progressLabel.Text = this.LocalizationCatalog.GetString("Finished");
+				this.progressLabel.Text = this.LocalizationCatalog.GetString("Finished");
+			}
+			catch (TaskCanceledException)
+			{
+				this.progressLabel.Text = this.LocalizationCatalog.GetString("Cancelled");
+				this.progressbar.Fraction = 0;
+			}
+
 			this.generateGameManifestButton.Sensitive = true;
 			this.generateLaunchpadManifestButton.Sensitive = true;
 		}
