@@ -108,7 +108,7 @@ namespace Launchpad.Launcher.Interface
 			this.Name = "Launchpad.Launcher.Interface.MainWindow";
 			this.Title = LocalizationCatalog.GetString("Launchpad - {0}");
 
-			if (SystemInformation.IsRunningOnUnix())
+			if (PlatformHelpers.IsRunningOnUnix())
 			{
 				this.Icon = Pixbuf.LoadFromResource("Launchpad.Launcher.Resources.RocketIcon.ico");
 			}

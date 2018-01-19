@@ -229,7 +229,7 @@ namespace Launchpad.Launcher.Handlers
 				};
 
 				// Make sure the game executable is flagged as such on Unix
-				if (SystemInformation.IsRunningOnUnix())
+				if (PlatformHelpers.IsRunningOnUnix())
 				{
 					Process.Start("chmod", $"+x {Configuration.ExecutablePath}");
 				}

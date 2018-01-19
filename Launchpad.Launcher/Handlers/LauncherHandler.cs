@@ -238,7 +238,7 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		private static string GetUpdateScriptResourceName()
 		{
-			if (SystemInformation.IsRunningOnUnix())
+			if (PlatformHelpers.IsRunningOnUnix())
 			{
 				return "Launchpad.Launcher.Resources.launchpad_update.sh";
 			}
@@ -253,7 +253,7 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		private static string GetUpdateScriptPath()
 		{
-			if (SystemInformation.IsRunningOnUnix())
+			if (PlatformHelpers.IsRunningOnUnix())
 			{
 				return $@"{Path.GetTempPath()}launchpad_update.sh";
 			}

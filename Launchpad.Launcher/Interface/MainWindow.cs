@@ -36,6 +36,7 @@ using Launchpad.Launcher.Services;
 using Launchpad.Launcher.Utility;
 using Launchpad.Launcher.Utility.Enums;
 using log4net;
+using Launchpad.Common;
 using NGettext;
 
 namespace Launchpad.Launcher.Interface

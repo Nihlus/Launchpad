@@ -1,5 +1,5 @@
-//
-//  SystemInformation.cs
+﻿//
+//  PlatformHelpers.cs
 //
 //  Author:
 //       Jarl Gullberg <jarl.gullberg@gmail.com>
@@ -21,13 +21,15 @@
 //
 
 using System;
+using System.Runtime.InteropServices;
+using Launchpad.Common.Enums;
 
 namespace Launchpad.Common
 {
 	/// <summary>
-	/// This class handles any system-related runtime checks.
+	/// Helper methods for determining the current platform.
 	/// </summary>
-	public static class SystemInformation
+	public static class PlatformHelpers
 	{
 		/// <summary>
 		/// Determines whether this instance is running on Unix.
@@ -35,13 +37,32 @@ namespace Launchpad.Common
 		/// <returns><c>true</c> if this instance is running on unix; otherwise, <c>false</c>.</returns>
 		public static bool IsRunningOnUnix()
 		{
-			int p = (int)Environment.OSVersion.Platform;
-			if ((p == 4) || (p == 6) || (p == 128))
+			var currentPlatform = GetCurrentPlatform();
+			return currentPlatform == ESystemTarget.Linux || currentPlatform == ESystemTarget.Mac;
+		}
+
+		/// <summary>
+		/// Gets the current platform the launcher is running on.
+		/// </summary>
+		/// <returns>The current platform.</returns>
+		public static ESystemTarget GetCurrentPlatform()
+		{
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
 			{
-				return true;
+				return ESystemTarget.Linux;
 			}
 
-			return false;
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+			{
+				return ESystemTarget.Mac;
+			}
+
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			{
+				return Environment.Is64BitOperatingSystem ? ESystemTarget.Win64 : ESystemTarget.Win32;
+			}
+
+			throw new PlatformNotSupportedException();
 		}
 	}
 }

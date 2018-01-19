@@ -27,7 +27,7 @@
           </e>
         </e>
         <e p="Launchpad.Common.csproj" t="IncludeRecursive" />
-        <e p="SystemInformation.cs" t="Include" />
+        <e p="PlatformHelpers.cs" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
         <e p="obj" t="ExcludeRecursive">
           <e p="x86" t="Include">
@@ -261,7 +261,6 @@
           </e>
           <e p="ManifestEntryExtensions.cs" t="Include" />
           <e p="PatchProtocolProvider.cs" t="Include" />
-          <e p="PlatformHelpers.cs" t="Include" />
         </e>
         <e p="app.manifest" t="Include" />
         <e p="bin" t="ExcludeRecursive" />

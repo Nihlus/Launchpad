@@ -98,7 +98,7 @@ namespace Launchpad.Common.Handlers.Manifest
 			}
 
 			// Sanitize the manifest path, converting \ to / on unix and / to \ on Windows.
-			if (SystemInformation.IsRunningOnUnix())
+			if (PlatformHelpers.IsRunningOnUnix())
 			{
 				inEntry.RelativePath = entryElements[0].Replace('\\', '/');
 			}
