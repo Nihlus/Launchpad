@@ -22,6 +22,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using Gtk;
@@ -126,8 +127,8 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 		{
 			this.IsNavigatingFromCode = true;
 
-			this.WindowsBrowser?.Navigate(url);
-			this.UnixBrowser?.Open(url);
+			Task.Factory.StartNew(() => this.WindowsBrowser?.Navigate(url));
+			Task.Factory.StartNew(() => this.UnixBrowser?.Open(url));
 		}
 
 		/// <summary>

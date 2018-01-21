@@ -161,71 +161,14 @@ namespace Launchpad.Launcher.Interface
 			}
 			else
 			{
-				var patchHandler = PatchProtocolProvider.GetHandler();
+				LoadChangelog();
 
-				// TODO: Load this asynchronously
-				// Load the game banner (if there is one)
-				if (patchHandler.CanProvideBanner())
-				{
-					using (var bannerStream = new MemoryStream())
-					{
-						// Fetch the banner from the server
-						patchHandler.GetBanner().Save(bannerStream, ImageFormat.Png);
-
-						// Load the image into a pixel buffer
-						bannerStream.Position = 0;
-						this.GameBanner.Pixbuf = new Pixbuf(bannerStream);
-					}
-				}
+				LoadBanner();
 
 				// If we can connect, proceed with the rest of our checks.
 				if (ChecksHandler.IsInitialStartup())
 				{
-					Log.Info("This instance is the first start of the application in this folder.");
-
-					var text = LocalizationCatalog.GetString
-					(
-						"This appears to be the first time you're starting the launcher.\n" +
-						"Is this the location where you would like to install the game?"
-					) + $"\n\n{DirectoryHelpers.GetLocalLauncherDirectory()}";
-
-					var shouldInstallHereDialog = new MessageDialog
-					(
-						this,
-						DialogFlags.Modal,
-						MessageType.Question,
-						ButtonsType.OkCancel,
-						text
-					);
-
-					if (shouldInstallHereDialog.Run() == (int)ResponseType.Ok)
-					{
-						shouldInstallHereDialog.Destroy();
-
-						// Yes, install here
-						Log.Info("User accepted installation in this directory. Installing in current directory.");
-
-						this.TagfileService.CreateLauncherTagfile();
-					}
-					else
-					{
-						shouldInstallHereDialog.Destroy();
-
-						// No, don't install here
-						Log.Info("User declined installation in this directory. Exiting...");
-						Environment.Exit(2);
-					}
-				}
-
-				// Load the changelog. Try a direct URL first, and a protocol-specific
-				// implementation after.
-				if (LauncherHandler.CanAccessStandardChangelog())
-				{
-					this.Browser.Navigate(this.Configuration.ChangelogAddress.AbsoluteUri);
-				}
-				else
-				{
-					this.Launcher.LoadFallbackChangelog();
+					DisplayInitialStartupDialog();
 				}
 
 				// If the launcher does not need an update at this point, we can continue checks for the game
@@ -282,6 +225,89 @@ namespace Launchpad.Launcher.Interface
 			}
 
 			this.IsInitialized = true;
+		}
+
+		private void DisplayInitialStartupDialog()
+		{
+			Log.Info("This instance is the first start of the application in this folder.");
+
+			var text = LocalizationCatalog.GetString
+			(
+				"This appears to be the first time you're starting the launcher.\n" +
+				"Is this the location where you would like to install the game?"
+			) + $"\n\n{DirectoryHelpers.GetLocalLauncherDirectory()}";
+
+			var shouldInstallHereDialog = new MessageDialog
+			(
+				this,
+				DialogFlags.Modal,
+				MessageType.Question,
+				ButtonsType.OkCancel,
+				text
+			);
+
+			if (shouldInstallHereDialog.Run() == (int)ResponseType.Ok)
+			{
+				shouldInstallHereDialog.Destroy();
+
+				// Yes, install here
+				Log.Info("User accepted installation in this directory. Installing in current directory.");
+
+				this.TagfileService.CreateLauncherTagfile();
+			}
+			else
+			{
+				shouldInstallHereDialog.Destroy();
+
+				// No, don't install here
+				Log.Info("User declined installation in this directory. Exiting...");
+				Environment.Exit(2);
+			}
+		}
+
+		private void LoadBanner()
+		{
+			var patchHandler = PatchProtocolProvider.GetHandler();
+
+			// Load the game banner (if there is one)
+			if (!patchHandler.CanProvideBanner())
+			{
+				return;
+			}
+
+			Task.Factory.StartNew
+			(
+				() =>
+				{
+					using (var bannerStream = new MemoryStream())
+					{
+						// Fetch the banner from the server
+						patchHandler.GetBanner().Save(bannerStream, ImageFormat.Png);
+
+						// Load the image into a pixel buffer
+						bannerStream.Position = 0;
+						return new Pixbuf(bannerStream);
+					}
+				}
+			)
+			.ContinueWith
+			(
+				async bannerTask => this.GameBanner.Pixbuf = await bannerTask
+			);
+		}
+
+		private void LoadChangelog()
+		{
+			// Load the changelog. Try a direct URL first, and a protocol-specific
+			// implementation after.
+			if (LauncherHandler.CanAccessStandardChangelog())
+			{
+				this.Browser.Navigate(this.Configuration.ChangelogAddress.AbsoluteUri);
+			}
+			else
+			{
+				this.Launcher.LoadFallbackChangelog();
+			}
 		}
 
 		/// <summary>
