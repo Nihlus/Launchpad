@@ -195,6 +195,7 @@ namespace Launchpad.Launcher.Handlers
 					FileName = updateScriptPath,
 					UseShellExecute = false,
 					RedirectStandardOutput = false,
+					CreateNoWindow = true,
 					WindowStyle = ProcessWindowStyle.Normal
 				};
 
