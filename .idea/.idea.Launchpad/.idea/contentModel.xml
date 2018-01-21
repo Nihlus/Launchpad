@@ -203,6 +203,9 @@
             </e>
           </e>
         </e>
+        <e p="Extensions" t="Include">
+          <e p="ManifestEntryExtensions.cs" t="Include" />
+        </e>
         <e p="External Assemblies" t="Include">
           <e p="readme.txt" t="Include" />
           <e p="webkit-sharp-1.1" t="Include">
@@ -241,6 +244,7 @@
           <e p="MainWindow.cs" t="Include" />
         </e>
         <e p="Launchpad.Launcher.csproj" t="IncludeRecursive" />
+        <e p="Launchpad.Launcher.csproj.DotSettings" t="Include" />
         <e p="Program.cs" t="Include" />
         <e p="Resources" t="Include">
           <e p="Icon.ico" t="Include" />
@@ -257,7 +261,6 @@
           <e p="Enums" t="Include">
             <e p="ELauncherMode.cs" t="Include" />
           </e>
-          <e p="ManifestEntryExtensions.cs" t="Include" />
           <e p="PatchProtocolProvider.cs" t="Include" />
         </e>
         <e p="app.manifest" t="Include" />

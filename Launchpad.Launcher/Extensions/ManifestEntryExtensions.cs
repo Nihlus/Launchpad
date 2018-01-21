@@ -23,8 +23,9 @@
 using System.IO;
 using Launchpad.Common.Handlers;
 using Launchpad.Common.Handlers.Manifest;
+using Launchpad.Launcher.Utility;
 
-namespace Launchpad.Launcher.Utility
+namespace Launchpad.Launcher
 {
 	/// <summary>
 	/// Extension methods for the <see cref="ManifestEntry"/> class.
