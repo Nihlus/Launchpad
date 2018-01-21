@@ -287,14 +287,7 @@ namespace Launchpad.Launcher.Interface
 			this.Name = "Launchpad.Launcher.Interface.MainWindow";
 			this.Title = LocalizationCatalog.GetString("Launchpad - {0}");
 
-			if (PlatformHelpers.IsRunningOnUnix())
-			{
-				this.Icon = Pixbuf.LoadFromResource("Launchpad.Launcher.Resources.RocketIcon.ico");
-			}
-			else
-			{
-				this.Icon = Pixbuf.LoadFromResource("Launchpad.Launcher.Resources.RocketIcon_Grey.ico");
-			}
+			this.Icon = Pixbuf.LoadFromResource("Launchpad.Launcher.Resources.RocketIcon.ico");
 
 			this.WindowPosition = (WindowPosition)4;
 			this.DefaultWidth = 745;
