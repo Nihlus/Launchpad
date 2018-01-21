@@ -23,12 +23,14 @@
 using System;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using GLib;
 using Launchpad.Common;
 using Launchpad.Launcher.Interface;
 using Launchpad.Launcher.Services;
 using Launchpad.Launcher.Utility;
 using log4net;
+using Timeout = GLib.Timeout;
 
 namespace Launchpad.Launcher
 {
@@ -48,7 +50,7 @@ namespace Launchpad.Launcher
 		/// The main entry point for the application.
 		/// </summary>
 		[STAThread]
-		private static void Main()
+		private static async Task Main()
 		{
 			// Bind any unhandled exceptions in the main thread so that they are logged.
 			AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
@@ -73,6 +75,17 @@ namespace Launchpad.Launcher
 
 			var win = new MainWindow();
 			win.Show();
+
+			Timeout.Add
+			(
+				50,
+				() =>
+				{
+					win.InitializeAsync();
+					return false;
+				}
+			);
+
 			Gtk.Application.Run();
 		}
 

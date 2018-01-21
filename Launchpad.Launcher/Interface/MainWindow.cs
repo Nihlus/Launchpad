@@ -24,7 +24,7 @@ using System;
 using System.Diagnostics;
 using System.Drawing.Imaging;
 using System.IO;
-
+using System.Threading.Tasks;
 using Gdk;
 using Gtk;
 
@@ -128,14 +128,13 @@ namespace Launchpad.Launcher.Interface
 			this.BrowserWindow.ShowAll();
 
 			this.IndicatorLabel.Text = LocalizationCatalog.GetString("Idle");
-
-			Initialize();
 		}
 
 		/// <summary>
 		/// Initializes the UI of the launcher, performing varying checks against the patching server.
 		/// </summary>
-		public void Initialize()
+		/// <returns>A task that must be awaited.</returns>
+		public async Task InitializeAsync()
 		{
 			if (this.IsInitialized)
 			{

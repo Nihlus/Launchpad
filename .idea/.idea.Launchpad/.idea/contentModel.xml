@@ -239,9 +239,6 @@
             <e p="WindowsBrowser.cs" t="Include" />
           </e>
           <e p="MainWindow.cs" t="Include" />
-          <e p="gtk3" t="Include">
-            <e p="Launchpad.glade" t="Include" />
-          </e>
         </e>
         <e p="Launchpad.Launcher.csproj" t="IncludeRecursive" />
         <e p="Program.cs" t="Include" />
