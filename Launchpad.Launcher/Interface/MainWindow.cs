@@ -292,7 +292,7 @@ namespace Launchpad.Launcher.Interface
 			)
 			.ContinueWith
 			(
-				async bannerTask => this.GameBanner.Pixbuf = await bannerTask
+				async bannerTask => this.Banner.Pixbuf = await bannerTask
 			);
 		}
 
@@ -330,13 +330,13 @@ namespace Launchpad.Launcher.Interface
 				{
 					if (isInProgress)
 					{
-						this.PrimaryButton.Sensitive = false;
-						this.PrimaryButton.Label = LocalizationCatalog.GetString("Installing...");
+						this.MainButton.Sensitive = false;
+						this.MainButton.Label = LocalizationCatalog.GetString("Installing...");
 					}
 					else
 					{
-						this.PrimaryButton.Sensitive = true;
-						this.PrimaryButton.Label = LocalizationCatalog.GetString("Install");
+						this.MainButton.Sensitive = true;
+						this.MainButton.Label = LocalizationCatalog.GetString("Install");
 					}
 					break;
 				}
@@ -344,13 +344,13 @@ namespace Launchpad.Launcher.Interface
 				{
 					if (isInProgress)
 					{
-						this.PrimaryButton.Sensitive = false;
-						this.PrimaryButton.Label = LocalizationCatalog.GetString("Updating...");
+						this.MainButton.Sensitive = false;
+						this.MainButton.Label = LocalizationCatalog.GetString("Updating...");
 					}
 					else
 					{
-						this.PrimaryButton.Sensitive = true;
-						this.PrimaryButton.Label = LocalizationCatalog.GetString("Update");
+						this.MainButton.Sensitive = true;
+						this.MainButton.Label = LocalizationCatalog.GetString("Update");
 					}
 					break;
 				}
@@ -358,13 +358,13 @@ namespace Launchpad.Launcher.Interface
 				{
 					if (isInProgress)
 					{
-						this.PrimaryButton.Sensitive = false;
-						this.PrimaryButton.Label = LocalizationCatalog.GetString("Repairing...");
+						this.MainButton.Sensitive = false;
+						this.MainButton.Label = LocalizationCatalog.GetString("Repairing...");
 					}
 					else
 					{
-						this.PrimaryButton.Sensitive = true;
-						this.PrimaryButton.Label = LocalizationCatalog.GetString("Repair");
+						this.MainButton.Sensitive = true;
+						this.MainButton.Label = LocalizationCatalog.GetString("Repair");
 					}
 					break;
 				}
@@ -372,13 +372,13 @@ namespace Launchpad.Launcher.Interface
 				{
 					if (isInProgress)
 					{
-						this.PrimaryButton.Sensitive = false;
-						this.PrimaryButton.Label = LocalizationCatalog.GetString("Launching...");
+						this.MainButton.Sensitive = false;
+						this.MainButton.Label = LocalizationCatalog.GetString("Launching...");
 					}
 					else
 					{
-						this.PrimaryButton.Sensitive = true;
-						this.PrimaryButton.Label = LocalizationCatalog.GetString("Launch");
+						this.MainButton.Sensitive = true;
+						this.MainButton.Label = LocalizationCatalog.GetString("Launch");
 					}
 					break;
 				}
@@ -386,8 +386,8 @@ namespace Launchpad.Launcher.Interface
 				{
 					this.RepairGameAction.Sensitive = false;
 
-					this.PrimaryButton.Sensitive = false;
-					this.PrimaryButton.Label = LocalizationCatalog.GetString("Inactive");
+					this.MainButton.Sensitive = false;
+					this.MainButton.Label = LocalizationCatalog.GetString("Inactive");
 					break;
 				}
 				default:
@@ -429,7 +429,7 @@ namespace Launchpad.Launcher.Interface
 			SetLauncherMode(ELauncherMode.Repair, false);
 
 			// Simulate a button press from the user.
-			OnPrimaryButtonClicked(this, EventArgs.Empty);
+			OnMainButtonClicked(this, EventArgs.Empty);
 		}
 
 		/// <summary>
@@ -441,7 +441,7 @@ namespace Launchpad.Launcher.Interface
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">Empty arguments.</param>
-		private void OnPrimaryButtonClicked(object sender, EventArgs e)
+		private void OnMainButtonClicked(object sender, EventArgs e)
 		{
 			// Drop out if the current platform isn't available on the server
 			if (!this.Checks.IsPlatformAvailable(this.Configuration.SystemTarget))
@@ -664,7 +664,7 @@ namespace Launchpad.Launcher.Interface
 				if (crashDialog.Run() == (int)ResponseType.Yes)
 				{
 					SetLauncherMode(ELauncherMode.Repair, false);
-					OnPrimaryButtonClicked(this, EventArgs.Empty);
+					OnMainButtonClicked(this, EventArgs.Empty);
 				}
 				else
 				{

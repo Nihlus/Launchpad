@@ -39,37 +39,35 @@ namespace Launchpad.Launcher.Interface
 		private Action RepairGameAction;
 		private Action ReinstallGameAction;
 
-		private VBox VBox1;
+		private VBox MainVerticalBox;
 
 		private MenuBar MainMenuBar;
 
-		private HBox HBox2;
+		private HBox MainHorizontalBox;
 
 		private VBox BrowserContainer;
 
-		private Alignment Alignment2;
+		private Alignment BrowserAlignment;
 
 		private ScrolledWindow BrowserWindow;
 
-		private Alignment Alignment5;
+		private Alignment BannerAlignment;
 
-		private Image GameBanner;
+		private Image Banner;
 
-		private Alignment Alignment1;
+		private Alignment IndicatorLabelAlignment;
 
 		private Label IndicatorLabel;
 
-		private HBox HBox3;
+		private HBox BottomHorizontalBox;
 
-		private Alignment Alignment4;
+		private Alignment MainProgressBarAlignment;
 
 		private ProgressBar MainProgressBar;
 
-		private HBox HBox4;
+		private Alignment MainButtonAlignment;
 
-		private Alignment Alignment3;
-
-		private Button PrimaryButton;
+		private Button MainButton;
 
 		private void Build()
 		{
@@ -119,9 +117,9 @@ namespace Launchpad.Launcher.Interface
 			};
 
 			// Container child Launchpad.Launcher.Interface.MainWindow.Gtk.Container+ContainerChild
-			this.VBox1 = new VBox
+			this.MainVerticalBox = new VBox
 			{
-				Name = "VBox1",
+				Name = "MainVerticalBox",
 				Spacing = 6
 			};
 
@@ -139,15 +137,15 @@ namespace Launchpad.Launcher.Interface
 			);
 			this.MainMenuBar = (MenuBar)this.UIManager.GetWidget("/MainMenuBar");
 
-			// Container child VBox1.Gtk.Box+BoxChild
-			this.HBox2 = new HBox
+			// Container child MainVerticalBox.Gtk.Box+BoxChild
+			this.MainHorizontalBox = new HBox
 			{
-				Name = "HBox2",
+				Name = "MainHorizontalBox",
 				Spacing = 6,
 				BorderWidth = 4
 			};
 
-			// Container child HBox2.Gtk.Box+BoxChild
+			// Container child MainHorizontalBox.Gtk.Box+BoxChild
 			this.BrowserContainer = new VBox
 			{
 				Name = "browserContainer",
@@ -155,7 +153,7 @@ namespace Launchpad.Launcher.Interface
 			};
 
 			// Container child browserContainer.Gtk.Box+BoxChild
-			this.Alignment2 = new Alignment(0.5F, 0.5F, 1F, 1F)
+			this.BrowserAlignment = new Alignment(0.5F, 0.5F, 1F, 1F)
 			{
 				WidthRequest = 310,
 				Name = "alignment2"
@@ -169,36 +167,29 @@ namespace Launchpad.Launcher.Interface
 				ShadowType = ShadowType.In
 			};
 
-			// Container child HBox2.Gtk.Box+BoxChild
-			this.Alignment5 = new Alignment(0.5F, 0.5F, 1F, 1F)
+			// Container child MainHorizontalBox.Gtk.Box+BoxChild
+			this.BannerAlignment = new Alignment(0.5F, 0.5F, 1F, 1F)
 			{
 				Name = "alignment5"
 			};
 
 			// Container child alignment5.Gtk.Container+ContainerChild
-			this.GameBanner = new Image
+			this.Banner = new Image
 			{
 				WidthRequest = 450,
 				HeightRequest = 300,
 				Name = "gameBanner",
 			};
 
-			// Container child HBox3.Gtk.Box+BoxChild
-			this.HBox4 = new HBox
-			{
-				Name = "HBox4",
-				Spacing = 6
-			};
-
 			// Container child HBox4.Gtk.Box+BoxChild
-			this.Alignment3 = new Alignment(0.5F, 0.5F, 1F, 1F)
+			this.MainButtonAlignment = new Alignment(0.5F, 0.5F, 1F, 1F)
 			{
 				WidthRequest = 100,
 				Name = "alignment3"
 			};
 
 			// Container child alignment3.Gtk.Container+ContainerChild
-			this.PrimaryButton = new Button
+			this.MainButton = new Button
 			{
 				Sensitive = false,
 				CanDefault = true,
@@ -208,8 +199,8 @@ namespace Launchpad.Launcher.Interface
 				Label = LocalizationCatalog.GetString("Inactive")
 			};
 
-			// Container child VBox1.Gtk.Box+BoxChild
-			this.Alignment1 = new Alignment(0.5F, 0.5F, 1F, 1F)
+			// Container child MainVerticalBox.Gtk.Box+BoxChild
+			this.IndicatorLabelAlignment = new Alignment(0.5F, 0.5F, 1F, 1F)
 			{
 				Name = "alignment1",
 				LeftPadding = 6
@@ -223,16 +214,16 @@ namespace Launchpad.Launcher.Interface
 				LabelProp = LocalizationCatalog.GetString("Idle")
 			};
 
-			// Container child VBox1.Gtk.Box+BoxChild
-			this.HBox3 = new HBox
+			// Container child MainVerticalBox.Gtk.Box+BoxChild
+			this.BottomHorizontalBox = new HBox
 			{
-				Name = "HBox3",
+				Name = "BottomHorizontalBox",
 				Spacing = 6,
 				BorderWidth = 4
 			};
 
-			// Container child HBox3.Gtk.Box+BoxChild
-			this.Alignment4 = new Alignment(0.5F, 0.5F, 1F, 1F)
+			// Container child BottomHorizontalBox.Gtk.Box+BoxChild
+			this.MainProgressBarAlignment = new Alignment(0.5F, 0.5F, 1F, 1F)
 			{
 				Name = "alignment4"
 			};
@@ -253,32 +244,30 @@ namespace Launchpad.Launcher.Interface
 			this.UIManager.InsertActionGroup(this.MainActionGroup, 0);
 			AddAccelGroup(this.UIManager.AccelGroup);
 
-			this.VBox1.Add(this.MainMenuBar);
+			this.MainVerticalBox.Add(this.MainMenuBar);
 
-			this.Alignment2.Add(this.BrowserWindow);
-			this.BrowserContainer.Add(this.Alignment2);
+			this.BrowserAlignment.Add(this.BrowserWindow);
+			this.BrowserContainer.Add(this.BrowserAlignment);
 
-			this.HBox2.Add(this.BrowserContainer);
+			this.MainHorizontalBox.Add(this.BrowserContainer);
 
-			this.Alignment5.Add(this.GameBanner);
-			this.HBox2.Add(this.Alignment5);
+			this.BannerAlignment.Add(this.Banner);
+			this.MainHorizontalBox.Add(this.BannerAlignment);
 
-			this.VBox1.Add(this.HBox2);
+			this.MainVerticalBox.Add(this.MainHorizontalBox);
 
-			this.Alignment1.Add(this.IndicatorLabel);
-			this.VBox1.Add(this.Alignment1);
+			this.IndicatorLabelAlignment.Add(this.IndicatorLabel);
+			this.MainVerticalBox.Add(this.IndicatorLabelAlignment);
 
-			this.Alignment4.Add(this.MainProgressBar);
-			this.HBox3.Add(this.Alignment4);
+			this.MainProgressBarAlignment.Add(this.MainProgressBar);
+			this.BottomHorizontalBox.Add(this.MainProgressBarAlignment);
 
-			this.Alignment3.Add(this.PrimaryButton);
-			this.HBox4.Add(this.Alignment3);
+			this.MainButtonAlignment.Add(this.MainButton);
+			this.BottomHorizontalBox.Add(this.MainButtonAlignment);
 
-			this.HBox3.Add(this.HBox4);
+			this.MainVerticalBox.Add(this.BottomHorizontalBox);
 
-			this.VBox1.Add(this.HBox3);
-
-			Add(this.VBox1);
+			Add(this.MainVerticalBox);
 		}
 
 		private void InitializeWidgets()
@@ -295,48 +284,44 @@ namespace Launchpad.Launcher.Interface
 
 			this.MainMenuBar.Name = "MainMenuBar";
 
-			var w2 = (Box.BoxChild)this.VBox1[this.MainMenuBar];
+			var w2 = (Box.BoxChild)this.MainVerticalBox[this.MainMenuBar];
 			w2.Position = 0;
 			w2.Expand = false;
 			w2.Fill = false;
 
-			var w4 = (Box.BoxChild)this.BrowserContainer[this.Alignment2];
+			var w4 = (Box.BoxChild)this.BrowserContainer[this.BrowserAlignment];
 			w4.Position = 0;
 
-			var w5 = (Box.BoxChild)this.HBox2[this.BrowserContainer];
+			var w5 = (Box.BoxChild)this.MainHorizontalBox[this.BrowserContainer];
 			w5.Position = 0;
 			w5.Expand = false;
 
-			var w7 = (Box.BoxChild)this.HBox2[this.Alignment5];
+			var w7 = (Box.BoxChild)this.MainHorizontalBox[this.BannerAlignment];
 			w7.Position = 1;
 
-			var w8 = (Box.BoxChild)this.VBox1[this.HBox2];
+			var w8 = (Box.BoxChild)this.MainVerticalBox[this.MainHorizontalBox];
 			w8.Position = 1;
 			w8.Expand = false;
 			w8.Fill = false;
 
-			var w10 = (Box.BoxChild)this.VBox1[this.Alignment1];
+			var w10 = (Box.BoxChild)this.MainVerticalBox[this.IndicatorLabelAlignment];
 			w10.Position = 2;
 			w10.Expand = false;
 			w10.Fill = false;
 
-			var w12 = (Box.BoxChild)this.HBox3[this.Alignment4];
-			w12.Position = 0;
-
-			var w14 = (Box.BoxChild)this.HBox4[this.Alignment3];
-			w14.Position = 0;
-
-			var w15 = (Box.BoxChild)this.HBox3[this.HBox4];
-			w15.Position = 1;
-			w15.Expand = false;
-			w15.Fill = false;
-
-			var w16 = (Box.BoxChild)this.VBox1[this.HBox3];
+			var w16 = (Box.BoxChild)this.MainVerticalBox[this.BottomHorizontalBox];
 			w16.Position = 3;
 			w16.Expand = true;
 			w16.Fill = false;
 
-			this.PrimaryButton.HasDefault = true;
+			var w12 = (Box.BoxChild)this.BottomHorizontalBox[this.MainProgressBarAlignment];
+			w12.Position = 0;
+			w12.Expand = true;
+
+			var w17 = (Box.BoxChild)this.BottomHorizontalBox[this.MainButtonAlignment];
+			w17.Expand = false;
+
+			this.MainButton.HasDefault = true;
 		}
 
 		private void BindEvents()
@@ -344,7 +329,7 @@ namespace Launchpad.Launcher.Interface
 			this.DeleteEvent += OnDeleteEvent;
 			this.RepairGameAction.Activated += OnRepairGameActionActivated;
 			this.ReinstallGameAction.Activated += OnReinstallGameActionActivated;
-			this.PrimaryButton.Clicked += OnPrimaryButtonClicked;
+			this.MainButton.Clicked += OnMainButtonClicked;
 		}
 	}
 }
