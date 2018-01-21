@@ -31,6 +31,7 @@ namespace Launchpad.Launcher.Interface
 	{
 		private UIManager UIManager;
 
+		private MenuBar MainMenuBar;
 		private ActionGroup MainActionGroup;
 
 		private Action MenuAction;
@@ -39,33 +40,25 @@ namespace Launchpad.Launcher.Interface
 		private Action ReinstallGameAction;
 
 		private VBox MainVerticalBox;
-
-		private MenuBar MainMenuBar;
-
 		private HBox MainHorizontalBox;
 
 		private VBox BrowserVerticalBox;
 
 		private Alignment BrowserAlignment;
-
 		private ScrolledWindow BrowserWindow;
 
 		private Alignment BannerAlignment;
-
 		private Image Banner;
 
 		private Alignment IndicatorLabelAlignment;
-
 		private Label IndicatorLabel;
 
 		private HBox BottomHorizontalBox;
 
 		private Alignment MainProgressBarAlignment;
-
 		private ProgressBar MainProgressBar;
 
 		private Alignment MainButtonAlignment;
-
 		private Button MainButton;
 
 		private void Build()
@@ -94,7 +87,7 @@ namespace Launchpad.Launcher.Interface
 
 			this.RepairGameAction = new Action
 			(
-				"repairGameAction",
+				"RepairGameAction",
 				LocalizationCatalog.GetString("Repair Game"),
 				LocalizationCatalog.GetString("Starts a repair process for the installed game."),
 				"gtk-refresh"
@@ -105,7 +98,7 @@ namespace Launchpad.Launcher.Interface
 
 			this.ReinstallGameAction = new Action
 			(
-				"reinstallGameAction",
+				"ReinstallGameAction",
 				LocalizationCatalog.GetString("Reinstall Game"),
 				LocalizationCatalog.GetString("Reinstalls the installed game."),
 				"gtk-refresh"
@@ -125,9 +118,9 @@ namespace Launchpad.Launcher.Interface
 				"<ui>" +
 				"<menubar name='MainMenuBar'>" +
 				"<menu name='MenuAction' action='MenuAction'>" +
-				"<menuitem name='repairGameAction' action='repairGameAction'/>" +
+				"<menuitem name='RepairGameAction' action='RepairGameAction'/>" +
 				"<separator/>" +
-				"<menuitem name='reinstallGameAction' action='reinstallGameAction'/>" +
+				"<menuitem name='ReinstallGameAction' action='ReinstallGameAction'/>" +
 				"</menu>" +
 				"</menubar>" +
 				"</ui>"
@@ -143,39 +136,39 @@ namespace Launchpad.Launcher.Interface
 
 			this.BrowserVerticalBox = new VBox
 			{
-				Name = "browserContainer",
+				Name = "BrowserVerticalBox",
 				Spacing = 6
 			};
 
 			this.BrowserAlignment = new Alignment(0.5F, 0.5F, 1F, 1F)
 			{
 				WidthRequest = 310,
-				Name = "alignment2"
+				Name = "BrowserAlignment"
 			};
 
 			this.BrowserWindow = new ScrolledWindow
 			{
 				CanFocus = true,
-				Name = "browserWindow",
+				Name = "BrowserWindow",
 				ShadowType = ShadowType.In
 			};
 
 			this.BannerAlignment = new Alignment(0.5F, 0.5F, 1F, 1F)
 			{
-				Name = "alignment5"
+				Name = "BannerAlignment"
 			};
 
 			this.Banner = new Image
 			{
 				WidthRequest = 450,
 				HeightRequest = 300,
-				Name = "gameBanner",
+				Name = "Banner",
 			};
 
 			this.MainButtonAlignment = new Alignment(0.5F, 0.5F, 1F, 1F)
 			{
 				WidthRequest = 100,
-				Name = "alignment3"
+				Name = "MainButtonAlignment"
 			};
 
 			this.MainButton = new Button
@@ -183,14 +176,14 @@ namespace Launchpad.Launcher.Interface
 				Sensitive = false,
 				CanDefault = true,
 				CanFocus = true,
-				Name = "primaryButton",
+				Name = "MainButton",
 				UseUnderline = true,
 				Label = LocalizationCatalog.GetString("Inactive")
 			};
 
 			this.IndicatorLabelAlignment = new Alignment(0.5F, 0.5F, 1F, 1F)
 			{
-				Name = "alignment1",
+				Name = "IndicatorLabelAlignment",
 				LeftPadding = 6
 			};
 
@@ -210,12 +203,12 @@ namespace Launchpad.Launcher.Interface
 
 			this.MainProgressBarAlignment = new Alignment(0.5F, 0.5F, 1F, 1F)
 			{
-				Name = "alignment4"
+				Name = "MainProgressBarAlignment"
 			};
 
 			this.MainProgressBar = new ProgressBar
 			{
-				Name = "mainProgressBar"
+				Name = "MainProgressBar"
 			};
 		}
 

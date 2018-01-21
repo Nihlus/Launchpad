@@ -210,7 +210,7 @@ namespace Launchpad.Common.Handlers.Manifest
 		/// <returns>A fully qualified path to where a manifest should be.</returns>
 		public string GetManifestPath(EManifestType manifestType, bool getOldManifestPath)
 		{
-			var manifestPath = $@"{this.LocalBaseDirectory}{manifestType}Manifest.txt";
+			var manifestPath = Path.Combine(this.LocalBaseDirectory, $"{manifestType}Manifest.txt");
 
 			if (getOldManifestPath)
 			{

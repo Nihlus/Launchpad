@@ -184,12 +184,18 @@ namespace Launchpad.Launcher.Handlers
 
 				File.WriteAllText(updateScriptPath, updateScriptSource);
 
+				if (PlatformHelpers.IsRunningOnUnix())
+				{
+					var chmod = Process.Start("chmod", $"+x {updateScriptPath}");
+					chmod?.WaitForExit();
+				}
+
 				var updateShellProcess = new ProcessStartInfo
 				{
 					FileName = updateScriptPath,
 					UseShellExecute = false,
 					RedirectStandardOutput = false,
-					WindowStyle = ProcessWindowStyle.Hidden
+					WindowStyle = ProcessWindowStyle.Normal
 				};
 
 				return updateShellProcess;
