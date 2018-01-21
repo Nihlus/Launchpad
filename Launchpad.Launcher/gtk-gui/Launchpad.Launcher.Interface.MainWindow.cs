@@ -181,7 +181,6 @@ namespace Launchpad.Launcher.Interface
 				WidthRequest = 450,
 				HeightRequest = 300,
 				Name = "gameBanner",
-				Pixbuf = Pixbuf.LoadFromResource("Launchpad.Launcher.Resources.RocketIcon.ico")
 			};
 
 			// Container child HBox3.Gtk.Box+BoxChild
@@ -287,7 +286,7 @@ namespace Launchpad.Launcher.Interface
 			this.Name = "Launchpad.Launcher.Interface.MainWindow";
 			this.Title = LocalizationCatalog.GetString("Launchpad - {0}");
 
-			this.Icon = Pixbuf.LoadFromResource("Launchpad.Launcher.Resources.RocketIcon.ico");
+			this.Icon = Pixbuf.LoadFromResource("Launchpad.Launcher.Resources.Icon.ico");
 
 			this.WindowPosition = (WindowPosition)4;
 			this.DefaultWidth = 745;

@@ -22,11 +22,7 @@
       <LogicalName>gui.stetic</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="app.manifest" />
-    <EmbeddedResource Include="Resources\RocketIcon.ico" />
-    <EmbeddedResource Include="Resources\RocketIcon_White.ico" />
-    <EmbeddedResource Include="Resources\RocketIcon_Grey.ico" />
-    <EmbeddedResource Include="Resources\launchpad_update.bat" />
-    <EmbeddedResource Include="Resources\launchpad_update.sh" />
+    <EmbeddedResource Include="Resources\*" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation" />

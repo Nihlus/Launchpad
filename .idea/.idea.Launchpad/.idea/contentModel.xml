@@ -243,9 +243,7 @@
         <e p="Launchpad.Launcher.csproj" t="IncludeRecursive" />
         <e p="Program.cs" t="Include" />
         <e p="Resources" t="Include">
-          <e p="RocketIcon.ico" t="Include" />
-          <e p="RocketIcon_Grey.ico" t="Include" />
-          <e p="RocketIcon_White.ico" t="Include" />
+          <e p="Icon.ico" t="Include" />
           <e p="launchpad_update.bat" t="Include" />
           <e p="launchpad_update.sh" t="Include" />
         </e>
