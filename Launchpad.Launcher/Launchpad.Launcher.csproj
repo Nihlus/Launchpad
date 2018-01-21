@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <AssemblyName>Launchpad</AssemblyName>
     <TargetFramework>net462</TargetFramework>
     <Platform>x86</Platform>
