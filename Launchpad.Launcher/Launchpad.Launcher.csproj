@@ -37,33 +37,17 @@
   <ItemGroup>
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="webkit-sharp">
-      <HintPath>External Assemblies\webkit-sharp-1.1\webkit-sharp.dll</HintPath>
-    </Reference>
-    <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <HintPath>/usr/lib/mono/gac/gtk-sharp/2.12.0.0__35e10195dab3c99f/gdk-sharp.dll</HintPath>
-      <SpecificVersion>true</SpecificVersion>
-    </Reference>
-    <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <HintPath>/usr/lib/mono/gac/gdk-sharp/2.12.0.0__35e10195dab3c99f/gdk-sharp.dll</HintPath>
-      <SpecificVersion>true</SpecificVersion>
-    </Reference>
-    <Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <HintPath>/usr/lib/mono/gac/atk-sharp/2.12.0.0__35e10195dab3c99f/gdk-sharp.dll</HintPath>
-      <SpecificVersion>true</SpecificVersion>
-    </Reference>
-    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <HintPath>/usr/lib/mono/gac/glib-sharp/2.12.0.0__35e10195dab3c99f/gdk-sharp.dll</HintPath>
-      <SpecificVersion>true</SpecificVersion>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Config.Net" Version="4.6.1.82" />
+    <PackageReference Include="GtkSharp" Version="3.22.24.29" />
+    <PackageReference Include="GtkSharp.Win32" Version="3.1.2" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta004" PrivateAssets="all" />
-    <PackageReference Include="ini-parser" Version="2.5.2" />
-    <PackageReference Include="System.Net.Http" Version="4.3.3" />
     <PackageReference Include="NGettext" Version="0.6.3" />
     <PackageReference Include="log4net" Version="2.0.8" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Interface\Launchpad.glade" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\locale\**\*.po">
@@ -75,11 +59,6 @@
       <InProject>false</InProject>
     </Content>
     <Content Include="App.config" />
-    <Content Include="External Assemblies\webkit-sharp-1.1\webkit-sharp.dll.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>webkit-sharp.dll.config</Link>
-      <InProject>false</InProject>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="$(ProjectDir)\..\stylecop.json">
@@ -94,6 +73,12 @@
   <ItemGroup>
     <ProjectReference Include="..\Launchpad.Common\Launchpad.Common.csproj" />
   </ItemGroup>
+  <Target Name="CopyBundledLibraries" AfterTargets="AfterBuild">
+    <ItemGroup>
+      <BundledLibraries Include="$(ProjectDir)lib\**\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="$(BundledLibraries)"/>
+  </Target>
   <Target Name="DeleteRuntimeInfoMono" AfterTargets="AfterBuild">
     <Delete Files="$(OutputPath)\System.Runtime.InteropServices.RuntimeInformation.dll" Condition="'$(OS)' == 'Unix'" />
   </Target>

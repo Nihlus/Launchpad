@@ -80,7 +80,7 @@ namespace Launchpad.Launcher.Interface
 		/// <summary>
 		/// The changelog browser.
 		/// </summary>
-		private readonly Changelog Browser;
+		//private readonly Changelog Browser;
 
 		/// <summary>
 		/// The current mode that the launcher is in. Determines what the primary button does when pressed.
@@ -100,11 +100,16 @@ namespace Launchpad.Launcher.Interface
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MainWindow"/> class.
 		/// </summary>
-		public MainWindow()
-			: base(Gtk.WindowType.Toplevel)
+		/// <param name="builder">The UI builder.</param>
+		/// <param name="handle">The native handle of the window.</param>
+		public MainWindow(Builder builder, IntPtr handle)
+			: base(handle)
 		{
-			// Initialize the GTK UI
-			Build();
+			builder.Autoconnect(this);
+
+			this.DeleteEvent += OnDeleteEvent;
+			this.MenuReinstallItem.Activated += OnReinstallGameActionActivated;
+			this.MenuRepairItem.Activated += OnMenuRepairItemActivated;
 
 			// Bind the handler events
 			this.Game.ProgressChanged += OnModuleInstallationProgressChanged;
@@ -124,10 +129,10 @@ namespace Launchpad.Launcher.Interface
 			this.Title = LocalizationCatalog.GetString("Launchpad - {0}", this.Configuration.GameName);
 
 			// Create a new changelog widget, and add it to the scrolled window
-			this.Browser = new Changelog(this.BrowserWindow);
-			this.BrowserWindow.ShowAll();
+			//this.Browser = new Changelog(this.ChangelogScrolledWindow);
+			//this.ChangelogScrolledWindow.ShowAll();
 
-			this.IndicatorLabel.Text = LocalizationCatalog.GetString("Idle");
+			this.StatusLabel.Text = LocalizationCatalog.GetString("Idle");
 		}
 
 		/// <summary>
@@ -156,8 +161,8 @@ namespace Launchpad.Launcher.Interface
 				dialog.Run();
 
 				dialog.Destroy();
-				this.IndicatorLabel.Text = LocalizationCatalog.GetString("Could not connect to server.");
-				this.RepairGameAction.Sensitive = false;
+				this.StatusLabel.Text = LocalizationCatalog.GetString("Could not connect to server.");
+				this.MenuRepairItem.Sensitive = false;
 			}
 			else
 			{
@@ -193,10 +198,10 @@ namespace Launchpad.Launcher.Interface
 							SetLauncherMode(ELauncherMode.Install, false);
 
 							// Since the game has not yet been installed, disallow manual repairs
-							this.RepairGameAction.Sensitive = false;
+							this.MenuRepairItem.Sensitive = false;
 
 							// and reinstalls
-							this.ReinstallGameAction.Sensitive = false;
+							this.MenuReinstallItem.Sensitive = false;
 						}
 						else
 						{
@@ -292,7 +297,7 @@ namespace Launchpad.Launcher.Interface
 			)
 			.ContinueWith
 			(
-				async bannerTask => this.Banner.Pixbuf = await bannerTask
+				async bannerTask => this.BannerImage.Pixbuf = await bannerTask
 			);
 		}
 
@@ -302,7 +307,7 @@ namespace Launchpad.Launcher.Interface
 			// implementation after.
 			if (LauncherHandler.CanAccessStandardChangelog())
 			{
-				this.Browser.Navigate(this.Configuration.ChangelogAddress.AbsoluteUri);
+				//this.Browser.Navigate(this.Configuration.ChangelogAddress.AbsoluteUri);
 			}
 			else
 			{
@@ -384,7 +389,7 @@ namespace Launchpad.Launcher.Interface
 				}
 				case ELauncherMode.Inactive:
 				{
-					this.RepairGameAction.Sensitive = false;
+					this.MenuRepairItem.Sensitive = false;
 
 					this.MainButton.Sensitive = false;
 					this.MainButton.Label = LocalizationCatalog.GetString("Inactive");
@@ -398,13 +403,13 @@ namespace Launchpad.Launcher.Interface
 
 			if (isInProgress)
 			{
-				this.RepairGameAction.Sensitive = false;
-				this.ReinstallGameAction.Sensitive = false;
+				this.MenuRepairItem.Sensitive = false;
+				this.MenuReinstallItem.Sensitive = false;
 			}
 			else
 			{
-				this.RepairGameAction.Sensitive = true;
-				this.ReinstallGameAction.Sensitive = true;
+				this.MenuRepairItem.Sensitive = true;
+				this.MenuReinstallItem.Sensitive = true;
 			}
 		}
 
@@ -424,7 +429,7 @@ namespace Launchpad.Launcher.Interface
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		private void OnRepairGameActionActivated(object sender, EventArgs e)
+		private void OnMenuRepairItemActivated(object sender, EventArgs e)
 		{
 			SetLauncherMode(ELauncherMode.Repair, false);
 
@@ -446,7 +451,7 @@ namespace Launchpad.Launcher.Interface
 			// Drop out if the current platform isn't available on the server
 			if (!this.Checks.IsPlatformAvailable(this.Configuration.SystemTarget))
 			{
-				this.IndicatorLabel.Text =
+				this.StatusLabel.Text =
 					LocalizationCatalog.GetString("The server does not provide the game for the selected platform.");
 				this.MainProgressBar.Text = string.Empty;
 
@@ -499,7 +504,7 @@ namespace Launchpad.Launcher.Interface
 				}
 				case ELauncherMode.Launch:
 				{
-					this.IndicatorLabel.Text = LocalizationCatalog.GetString("Idle");
+					this.StatusLabel.Text = LocalizationCatalog.GetString("Idle");
 					this.MainProgressBar.Text = string.Empty;
 
 					SetLauncherMode(ELauncherMode.Launch, true);
@@ -523,7 +528,7 @@ namespace Launchpad.Launcher.Interface
 		private void OnChangelogDownloadFinished(object sender, ChangelogDownloadFinishedEventArgs e)
 		{
 			// Take the resulting HTML string from the changelog download and send it to the changelog browser
-			Application.Invoke((o, args) => this.Browser.LoadHTML(e.HTML, e.URL));
+			//Application.Invoke((o, args) => this.Browser.LoadHTML(e.HTML, e.URL));
 		}
 
 		/// <summary>
@@ -552,7 +557,7 @@ namespace Launchpad.Launcher.Interface
 		/// <param name="e">Empty event args.</param>
 		private void OnGameLaunchFailed(object sender, EventArgs e)
 		{
-			this.IndicatorLabel.Text = LocalizationCatalog.GetString("The game failed to launch. Try repairing the installation.");
+			this.StatusLabel.Text = LocalizationCatalog.GetString("The game failed to launch. Try repairing the installation.");
 			this.MainProgressBar.Text = string.Empty;
 
 			SetLauncherMode(ELauncherMode.Repair, false);
@@ -596,7 +601,7 @@ namespace Launchpad.Launcher.Interface
 			Application.Invoke((o, args) =>
 			{
 				this.MainProgressBar.Text = e.ProgressBarMessage;
-				this.IndicatorLabel.Text = e.IndicatorLabelMessage;
+				this.StatusLabel.Text = e.IndicatorLabelMessage;
 				this.MainProgressBar.Fraction = e.ProgressFraction;
 			});
 		}
@@ -610,7 +615,7 @@ namespace Launchpad.Launcher.Interface
 		{
 			Application.Invoke((o, args) =>
 			{
-				this.IndicatorLabel.Text = LocalizationCatalog.GetString("Idle");
+				this.StatusLabel.Text = LocalizationCatalog.GetString("Idle");
 
 				switch (this.Mode)
 				{

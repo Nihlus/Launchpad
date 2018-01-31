@@ -30,6 +30,7 @@ using Launchpad.Launcher.Interface;
 using Launchpad.Launcher.Services;
 using Launchpad.Launcher.Utility;
 using log4net;
+using Task = System.Threading.Tasks.Task;
 using Timeout = GLib.Timeout;
 
 namespace Launchpad.Launcher
@@ -74,9 +75,8 @@ namespace Launchpad.Launcher
 
 			// Run the GTK UI
 			Gtk.Application.Init();
-			SynchronizationContext.SetSynchronizationContext(new GLibSynchronizationContext());
 
-			var win = new MainWindow();
+			var win = MainWindow.Create();
 			win.Show();
 
 			Timeout.Add
@@ -84,7 +84,13 @@ namespace Launchpad.Launcher
 				50,
 				() =>
 				{
-					Task.Run(() => win.InitializeAsync());
+					Task.Factory.StartNew
+					(
+						() => win.InitializeAsync(),
+						CancellationToken.None,
+						TaskCreationOptions.DenyChildAttach,
+						TaskScheduler.FromCurrentSynchronizationContext()
+					);
 					return false;
 				}
 			);

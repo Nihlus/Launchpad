@@ -206,16 +206,6 @@
         <e p="Extensions" t="Include">
           <e p="ManifestEntryExtensions.cs" t="Include" />
         </e>
-        <e p="External Assemblies" t="Include">
-          <e p="readme.txt" t="Include" />
-          <e p="webkit-sharp-1.1" t="Include">
-            <e p="webkit-sharp.dll" t="Include" />
-            <e p="webkit-sharp.dll.config" t="Include" />
-          </e>
-        </e>
-        <e p="GLib" t="Include">
-          <e p="GLibSynchronizationContext.cs" t="Include" />
-        </e>
         <e p="Handlers" t="Include">
           <e p="ChangelogDownloadFinishedEventArgs.cs" t="Include" />
           <e p="ChecksHandler.cs" t="Include" />
@@ -241,6 +231,9 @@
             <e p="Changelog.cs" t="Include" />
             <e p="WindowsBrowser.cs" t="Include" />
           </e>
+          <e p="Launchpad.glade" t="Include" />
+          <e p="Launchpad.glade~" t="Include" />
+          <e p="MainWindow.UI.cs" t="Include" />
           <e p="MainWindow.cs" t="Include" />
         </e>
         <e p="Launchpad.Launcher.csproj" t="IncludeRecursive" />
@@ -265,9 +258,6 @@
         </e>
         <e p="app.manifest" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
-        <e p="gtk-gui" t="Include">
-          <e p="Launchpad.Launcher.Interface.MainWindow.cs" t="Include" />
-        </e>
         <e p="obj" t="ExcludeRecursive">
           <e p="x86" t="Include">
             <e p="Debug" t="Include">

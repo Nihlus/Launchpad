@@ -27,7 +27,7 @@ using System.Windows.Forms;
 
 using Gtk;
 using Launchpad.Common;
-using WebKit;
+//using WebKit;
 
 namespace Launchpad.Launcher.Interface.ChangelogBrowser
 {
@@ -45,7 +45,7 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 		/// <summary>
 		/// The webkit browser for Mac and Linux.
 		/// </summary>
-		private readonly WebView UnixBrowser;
+		//private readonly WebView UnixBrowser;
 
 		/// <summary>
 		/// Whether or not the changelog is currently navigating to a new page from code.
@@ -76,15 +76,15 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 			}
 			else
 			{
-				this.UnixBrowser = new WebView();
-				this.WidgetHandle = this.UnixBrowser;
-				this.UnixBrowser.NavigationRequested += OnUnixBrowserNavigating;
+				//this.UnixBrowser = new WebView();
+				//this.WidgetHandle = this.UnixBrowser;
+				//this.UnixBrowser.NavigationRequested += OnUnixBrowserNavigating;
 
 				parentContainer.Add(this.WidgetHandle);
 			}
 		}
 
-		/// <summary>
+		/*/// <summary>
 		/// Handles routing of navigation requests to the users's default browser. Navigation requests from code
 		/// are allowed, but links that the user clicks are routed outside of the launcher.
 		/// </summary>
@@ -100,7 +100,7 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 			{
 				this.IsNavigatingFromCode = false;
 			}
-		}
+		}*/
 
 		/// <summary>
 		/// Handles routing of navigation requests to the users's default browser. Navigation requests from code
@@ -128,7 +128,7 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 			this.IsNavigatingFromCode = true;
 
 			Task.Factory.StartNew(() => this.WindowsBrowser?.Navigate(url));
-			Task.Factory.StartNew(() => this.UnixBrowser?.Open(url));
+			//Task.Factory.StartNew(() => this.UnixBrowser?.Open(url));
 		}
 
 		/// <summary>
@@ -141,7 +141,7 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 			this.IsNavigatingFromCode = true;
 
 			this.WindowsBrowser?.LoadHTML(html);
-			this.UnixBrowser?.LoadHtmlString(html, url);
+			//this.UnixBrowser?.LoadHtmlString(html, url);
 		}
 
 		/// <summary>
@@ -150,7 +150,7 @@ namespace Launchpad.Launcher.Interface.ChangelogBrowser
 		public void Dispose()
 		{
 			this.WindowsBrowser?.Dispose();
-			this.UnixBrowser?.Dispose();
+			//this.UnixBrowser?.Dispose();
 		}
 	}
 }
