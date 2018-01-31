@@ -84,7 +84,7 @@ namespace Launchpad.Launcher
 				50,
 				() =>
 				{
-					win.InitializeAsync();
+					Task.Run(() => win.InitializeAsync());
 					return false;
 				}
 			);
