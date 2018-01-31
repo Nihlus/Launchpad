@@ -22,7 +22,6 @@
 
 using Gdk;
 using Gtk;
-using Stetic;
 using Image = Gtk.Image;
 
 namespace Launchpad.Launcher.Interface
@@ -63,8 +62,6 @@ namespace Launchpad.Launcher.Interface
 
 		private void Build()
 		{
-			Gui.Initialize(this);
-
 			CreateWidgets();
 			BuildHierarchy();
 			InitializeWidgets();

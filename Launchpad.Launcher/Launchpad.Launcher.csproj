@@ -18,9 +18,6 @@
     <Authors>Jarl Gullberg;jax</Authors>
   </PropertyGroup>
   <ItemGroup>
-    <EmbeddedResource Include="gtk-gui\gui.stetic">
-      <LogicalName>gui.stetic</LogicalName>
-    </EmbeddedResource>
     <EmbeddedResource Include="app.manifest" />
     <EmbeddedResource Include="Resources\*" />
   </ItemGroup>

@@ -267,8 +267,6 @@
         <e p="bin" t="ExcludeRecursive" />
         <e p="gtk-gui" t="Include">
           <e p="Launchpad.Launcher.Interface.MainWindow.cs" t="Include" />
-          <e p="generated.cs" t="Include" />
-          <e p="gui.stetic" t="Include" />
         </e>
         <e p="obj" t="ExcludeRecursive">
           <e p="x86" t="Include">
