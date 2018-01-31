@@ -59,7 +59,10 @@ namespace Launchpad.Launcher
 
 			Log.Info("----------------");
 			Log.Info($"Launchpad v{LocalVersionService.GetLocalLauncherVersion()} starting...");
-			Log.Info($"Current platform: {PlatformHelpers.GetCurrentPlatform()} ({(Environment.Is64BitOperatingSystem ? "x64" : "x86")})");
+
+			var systemBitness = Environment.Is64BitOperatingSystem ? "x64" : "x86";
+			var processBitness = Environment.Is64BitProcess ? "64-bit" : "32-bit";
+			Log.Info($"Current platform: {PlatformHelpers.GetCurrentPlatform()} ({systemBitness} platform, {processBitness} process)");
 
 			// Set correct working directory for compatibility with double-clicking
 			Directory.SetCurrentDirectory(DirectoryHelpers.GetLocalLauncherDirectory());
