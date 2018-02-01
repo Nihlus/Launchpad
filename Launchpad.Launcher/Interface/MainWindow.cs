@@ -22,7 +22,6 @@
 
 using System;
 using System.Diagnostics;
-using System.IO;
 using Gdk;
 using GLib;
 using Gtk;
@@ -38,7 +37,6 @@ using log4net;
 
 using NGettext;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Png;
 using Application = Gtk.Application;
 using Process = System.Diagnostics.Process;
 using Task = System.Threading.Tasks.Task;

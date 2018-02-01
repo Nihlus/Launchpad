@@ -21,13 +21,10 @@
 
 using System;
 using System.IO;
-using System.Net.Mime;
 using System.Reflection;
 using System.Threading;
-using System.Threading.Tasks;
 using CommandLine;
 using GLib;
-using Gtk;
 using Launchpad.Utilities.Handlers;
 using Launchpad.Utilities.Utility.Events;
 using Launchpad.Utilities.Interface;
