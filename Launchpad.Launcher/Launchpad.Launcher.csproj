@@ -48,6 +48,9 @@
     <EmbeddedResource Include="Interface\Launchpad.glade" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="log4net.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\locale\**\*.po">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <InProject>false</InProject>
