@@ -49,7 +49,7 @@ namespace Launchpad.Launcher.Configuration
 		/// <summary>
 		/// Gets or sets a value indicating whether or not to use the official update source.
 		/// </summary>
-		[Option(Alias = "Local.UseOfficialUpdates", DefaultValue = true)]
+		[Option(Alias = "Launcher.UseOfficialUpdates", DefaultValue = true)]
 		bool UseOfficialUpdates { get; set; }
 
 		// Game section
