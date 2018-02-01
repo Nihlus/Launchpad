@@ -23,6 +23,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using GLib;
@@ -57,6 +58,14 @@ namespace Launchpad.Launcher
 			// Bind any unhandled exceptions in the main thread so that they are logged.
 			AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
 
+			// Set correct working directory for compatibility with double-clicking
+			Directory.SetCurrentDirectory(DirectoryHelpers.GetLocalLauncherDirectory());
+
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			{
+				Environment.SetEnvironmentVariable("GSETTINGS_SCHEMA_DIR", "share\\glib-2.0\\schemas\\");
+			}
+
 			var logRepo = LogManager.GetRepository(Assembly.GetEntryAssembly());
 			var fileInfo = new FileInfo("log4net.config");
 			log4net.Config.XmlConfigurator.Configure(logRepo, fileInfo);
@@ -67,9 +76,6 @@ namespace Launchpad.Launcher
 			var systemBitness = Environment.Is64BitOperatingSystem ? "x64" : "x86";
 			var processBitness = Environment.Is64BitProcess ? "64-bit" : "32-bit";
 			Log.Info($"Current platform: {PlatformHelpers.GetCurrentPlatform()} ({systemBitness} platform, {processBitness} process)");
-
-			// Set correct working directory for compatibility with double-clicking
-			Directory.SetCurrentDirectory(DirectoryHelpers.GetLocalLauncherDirectory());
 
 			Log.Info("Initializing UI...");
 
