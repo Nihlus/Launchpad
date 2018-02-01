@@ -21,11 +21,19 @@ Launchpad was originally made for Unreal Engine 4, but supports arbitrary softwa
 Note for users installing on Unix - you may need to install some additional libraries for Launchpad to run.
 Simply run /Scripts/launchpad-dependencies.sh if your system is Debian or Debian-based, and it'll install them for you.
 
-If you are not on a Debian-based system, you have to install these packages:
-* libwebkitgtk-dev
+## Requirements
+### Building
+#### Every OS
+* .NET Core SDK (>=2.0.0)
+* JetBrains Rider (or any IDE supporting the modern C# tooling)
 
-If you are on Windows, you'll also need the GTK# runtime.
-http://www.mono-project.com/docs/gui/gtksharp/installer-for-net-framework/
+### Running
+#### Linux & Mac
+* Mono (or 32-bit .NET Core)
+* libgtk-3-0
+
+#### Windows
+* .NET 4.6.2
 
 ## Contributing
 If you want to contribute code back to the project, great! Open a pull request with your changes based on the `master` branch and I'll gladly take a look.
@@ -38,5 +46,3 @@ If you're not a developer, but want to contribute anyway, or if you just want to
 
 ## Code contributors
 * Jarl Gullberg
-* Mentos
-* Neur0t1c

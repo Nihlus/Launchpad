@@ -20,8 +20,12 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using System;
 using System.Reflection;
+using Gdk;
 using Gtk;
+using Launchpad.Launcher.Utility;
+using Pango;
 using UIElement = Gtk.Builder.ObjectAttribute;
 
 // ReSharper disable UnassignedReadonlyField
@@ -58,7 +62,12 @@ namespace Launchpad.Launcher.Interface
 		{
 			using (var builder = new Builder(Assembly.GetExecutingAssembly(), "Launchpad.Launcher.Interface.Launchpad.glade", null))
 			{
-				return new MainWindow(builder, builder.GetObject(nameof(MainWindow)).Handle);
+				var window = new MainWindow(builder, builder.GetObject(nameof(MainWindow)).Handle)
+				{
+					Icon = ResourceManager.ApplicationIcon
+				};
+
+				return window;
 			}
 		}
 
@@ -70,7 +79,28 @@ namespace Launchpad.Launcher.Interface
 			this.DeleteEvent += OnDeleteEvent;
 			this.MenuReinstallItem.Activated += OnReinstallGameActionActivated;
 			this.MenuRepairItem.Activated += OnMenuRepairItemActivated;
+			this.MenuAboutItem.Activated += OnMenuAboutItemActivated;
+
 			this.MainButton.Clicked += OnMainButtonClicked;
+		}
+
+		/// <summary>
+		/// Displays the about window to the user.
+		/// </summary>
+		/// <param name="sender">The sending object.</param>
+		/// <param name="e">The event args.</param>
+		private void OnMenuAboutItemActivated(object sender, EventArgs e)
+		{
+			using (var builder = new Builder(Assembly.GetExecutingAssembly(), "Launchpad.Launcher.Interface.Launchpad.glade", null))
+			{
+				using (var dialog = new AboutDialog(builder.GetObject("MainAboutDialog").Handle))
+				{
+					dialog.Icon = ResourceManager.ApplicationIcon;
+					dialog.Logo = ResourceManager.ApplicationIcon;
+					dialog.Run();
+					dialog.Destroy();
+				}
+			}
 		}
 
 		/// <summary>

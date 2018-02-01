@@ -147,31 +147,6 @@ namespace Launchpad.Launcher.Handlers
 		}
 
 		/// <summary>
-		/// Gets the changelog from the server asynchronously.
-		/// </summary>
-		public void LoadFallbackChangelog()
-		{
-			var t = new Thread(LoadFallbackChangelog_Implementation)
-			{
-				Name = "LoadFallbackChangelog",
-				IsBackground = true
-			};
-
-			t.Start();
-		}
-
-		private void LoadFallbackChangelog_Implementation()
-		{
-			if (this.Patch.CanProvideChangelog())
-			{
-				this.ChangelogDownloadFinishedArgs.HTML = this.Patch.GetChangelogSource();
-				this.ChangelogDownloadFinishedArgs.URL = Configuration.ChangelogAddress.AbsoluteUri;
-			}
-
-			OnChangelogDownloadFinished();
-		}
-
-		/// <summary>
 		/// Creates the update script on disk.
 		/// </summary>
 		/// <returns>ProcessStartInfo for the update script.</returns>

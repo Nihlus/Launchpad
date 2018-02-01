@@ -31,10 +31,6 @@
     <Prefer32bit>true</Prefer32bit>
   </PropertyGroup>
   <ItemGroup>
-    <EmbeddedResource Include="app.manifest" />
-    <EmbeddedResource Include="Resources\*" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation" />
   </ItemGroup>
   <ItemGroup>
@@ -47,6 +43,8 @@
     <PackageReference Include="log4net" Version="2.0.8" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="app.manifest" />
+    <EmbeddedResource Include="Resources\**\*.*" />
     <EmbeddedResource Include="Interface\Launchpad.glade" />
   </ItemGroup>
   <ItemGroup>
@@ -72,11 +70,16 @@
   <ItemGroup>
     <ProjectReference Include="..\Launchpad.Common\Launchpad.Common.csproj" />
   </ItemGroup>
-  <Target Name="CopyBundledLibraries" AfterTargets="AfterBuild">
+  <Target Name="CopyGTK" AfterTargets="Build">
     <ItemGroup>
-      <BundledLibraries Include="$(ProjectDir)lib\**\*.*" />
+      <GTKetc Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\etc\**\*.*" />
+      <GTKlib Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\lib\**\*.*" />
+      <GTKshare Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\share\**\*.*" />
     </ItemGroup>
-    <Copy SourceFiles="$(BundledLibraries)" />
+    <Message Text="Copying GTK+ libraries..." />
+    <Copy SourceFiles="@(GTKetc)" DestinationFolder="$(OutputPath)\etc\%(RecursiveDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(GTKlib)" DestinationFolder="$(OutputPath)\lib\%(RecursiveDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(GTKshare)" DestinationFolder="$(OutputPath)\share\%(RecursiveDir)" SkipUnchangedFiles="true" />
   </Target>
   <Target Name="DeleteRuntimeInfoMono" AfterTargets="AfterBuild">
     <Delete Files="$(OutputPath)\System.Runtime.InteropServices.RuntimeInformation.dll" Condition="'$(OS)' == 'Unix'" />

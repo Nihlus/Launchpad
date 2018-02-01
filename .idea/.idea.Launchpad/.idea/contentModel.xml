@@ -236,6 +236,7 @@
         <e p="Program.cs" t="Include" />
         <e p="Resources" t="Include">
           <e p="Icon.ico" t="Include" />
+          <e p="Icon.png" t="Include" />
           <e p="launchpad_update.bat" t="Include" />
           <e p="launchpad_update.sh" t="Include" />
         </e>
@@ -250,6 +251,7 @@
             <e p="ELauncherMode.cs" t="Include" />
           </e>
           <e p="PatchProtocolProvider.cs" t="Include" />
+          <e p="ResourceManager.cs" t="Include" />
         </e>
         <e p="app.manifest" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
@@ -325,6 +327,12 @@
       </e>
       <e p="Launchpad.sln" t="IncludeFlat" />
       <e p="README.md" t="Include" />
+      <e p="Scripts" t="Include">
+        <e p="launchpad-dependencies.sh" t="Include" />
+        <e p="launchpad-publish.sh" t="Include" />
+        <e p="launchpad-server-setup.sh" t="Include" />
+        <e p="update-translations.sh" t="Include" />
+      </e>
       <e p="appveyor.yml" t="Include" />
       <e p="packages" t="ExcludeRecursive" />
       <e p="stylecop.json" t="Include" />

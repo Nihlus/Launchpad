@@ -22,6 +22,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 using Gdk;
 using GLib;
 using Gtk;
@@ -157,6 +158,8 @@ namespace Launchpad.Launcher.Interface
 			{
 				LoadBanner();
 
+				LoadChangelog();
+
 				// If we can connect, proceed with the rest of our checks.
 				if (ChecksHandler.IsInitialStartup())
 				{
@@ -218,6 +221,23 @@ namespace Launchpad.Launcher.Interface
 
 			this.IsInitialized = true;
 			return Task.CompletedTask;
+		}
+
+		private void LoadChangelog()
+		{
+			var protocol = PatchProtocolProvider.GetHandler();
+			var markup = protocol.GetChangelogMarkup();
+
+			// Preprocess dot lists
+			var dotRegex = new Regex("(?<=^\\s+)\\*", RegexOptions.Multiline);
+			markup = dotRegex.Replace(markup, "•");
+
+			// Preprocess line breaks
+			var regex = new Regex("(?<!\n)\n(?!\n)(?!  )");
+			markup = regex.Replace(markup, string.Empty);
+
+			var startIter = this.ChangelogTextView.Buffer.StartIter;
+			this.ChangelogTextView.Buffer.InsertMarkup(ref startIter, markup);
 		}
 
 		private void DisplayInitialStartupDialog()

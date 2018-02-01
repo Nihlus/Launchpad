@@ -13,6 +13,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "metadata", ".\", "{F1A57014
 	EndProjectSection
 EndProject
 
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", ".\Scripts", "{F1A57014-71CE-4032-A652-01B7E35E14DB}"
+	ProjectSection(SolutionItems) = preProject
+		Scripts\launchpad-dependencies.sh = Scripts\launchpad-dependencies.sh
+		Scripts\launchpad-publis.sh = Scripts\launchpad-publish.sh
+		Scripts\launchpad-server-setup.sh = Scripts\launchpad-server-setup.sh
+		Scripts\update-translations.sh = Scripts\update-translations.sh
+	EndProjectSection
+EndProject
+
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Launchpad.Launcher", "Launchpad.Launcher\Launchpad.Launcher.csproj", "{676312FB-AF67-4340-B86F-9CCEB22D802F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Launchpad.Utilities", "Launchpad.Utilities\Launchpad.Utilities.csproj", "{BA9D77D3-1767-4D9C-80F3-409C52B03861}"

@@ -143,12 +143,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		public abstract bool IsPlatformAvailable(ESystemTarget platform);
 
 		/// <summary>
-		/// Determines whether this protocol can provide access to a changelog.
-		/// </summary>
-		/// <returns><c>true</c> if this protocol can provide a changelog; otherwise, <c>false</c>.</returns>
-		public abstract bool CanProvideChangelog();
-
-		/// <summary>
 		/// Determines whether this protocol can provide access to a banner for the game.
 		/// </summary>
 		/// <returns><c>true</c> if this instance can provide banner; otherwise, <c>false</c>.</returns>
@@ -158,7 +152,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// Gets the changelog.
 		/// </summary>
 		/// <returns>The changelog.</returns>
-		public abstract string GetChangelogSource();
+		public abstract string GetChangelogMarkup();
 
 		/// <summary>
 		/// Gets the banner.

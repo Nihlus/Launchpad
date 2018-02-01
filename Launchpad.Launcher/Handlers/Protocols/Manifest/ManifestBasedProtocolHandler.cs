@@ -627,7 +627,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				case EModule.Launcher:
 				case EModule.Game:
 				{
-					checksum = ReadRemoteFile(this.FileManifestHandler.GetManifestChecksumURL((EManifestType)module));
+					checksum = ReadRemoteFile(this.FileManifestHandler.GetManifestChecksumURL((EManifestType)module)).RemoveLineSeparatorsAndNulls();
 					break;
 				}
 				default:
@@ -752,7 +752,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			var remoteVersionPath = DirectoryHelpers.GetRemoteLauncherVersionPath();
 
 			// Config.GetDoOfficialUpdates is used here since the official update server always allows anonymous logins.
-			var remoteVersion = ReadRemoteFile(remoteVersionPath, this.Configuration.UseOfficialUpdates);
+			var remoteVersion = ReadRemoteFile(remoteVersionPath, this.Configuration.UseOfficialUpdates).RemoveLineSeparatorsAndNulls();
 
 			if (Version.TryParse(remoteVersion, out var version))
 			{
@@ -770,7 +770,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		protected virtual Version GetRemoteGameVersion()
 		{
 			var remoteVersionPath = $"{this.Configuration.RemoteAddress}/game/{this.Configuration.SystemTarget}/bin/GameVersion.txt";
-			var remoteVersion = ReadRemoteFile(remoteVersionPath);
+			var remoteVersion = ReadRemoteFile(remoteVersionPath).RemoveLineSeparatorsAndNulls();
 
 			if (Version.TryParse(remoteVersion, out var version))
 			{

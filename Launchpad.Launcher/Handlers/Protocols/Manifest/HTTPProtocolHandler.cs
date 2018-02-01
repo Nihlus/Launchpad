@@ -102,15 +102,10 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		}
 
 		/// <inheritdoc />
-		public override bool CanProvideChangelog()
+		public override string GetChangelogMarkup()
 		{
-			return false;
-		}
-
-		/// <inheritdoc />
-		public override string GetChangelogSource()
-		{
-			return string.Empty;
+			var changelogURL = $"{this.Configuration.RemoteAddress}/launcher/changelog.pango";
+			return ReadRemoteFile(changelogURL);
 		}
 
 		/// <inheritdoc />
@@ -280,7 +275,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 					}
 				}
 
-				return data.RemoveLineSeparatorsAndNulls();
+				return data;
 			}
 			catch (WebException wex)
 			{
