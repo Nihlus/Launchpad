@@ -186,7 +186,12 @@ namespace Launchpad.Launcher.Handlers
 		{
 			try
 			{
-				var executable = Configuration.ExecutablePath;
+				var executable = Path.Combine(DirectoryHelpers.GetLocalGameDirectory(), Configuration.ExecutablePath);
+				if (!File.Exists(executable))
+				{
+					throw new FileNotFoundException($"Game executable at path (\"{executable}\") not found.");
+				}
+
 				var executableDir = Path.GetDirectoryName(executable) ?? DirectoryHelpers.GetLocalLauncherDirectory();
 
 				// Do not move the argument assignment inside the gameStartInfo initializer.
@@ -194,7 +199,6 @@ namespace Launchpad.Launcher.Handlers
 				var gameArguments = string.Join(" ", this.GameArgumentService.GetGameArguments());
 				var gameStartInfo = new ProcessStartInfo
 				{
-					UseShellExecute = false,
 					FileName = executable,
 					Arguments = gameArguments,
 					WorkingDirectory = executableDir
@@ -231,7 +235,7 @@ namespace Launchpad.Launcher.Handlers
 				// Make sure the game executable is flagged as such on Unix
 				if (PlatformHelpers.IsRunningOnUnix())
 				{
-					Process.Start("chmod", $"+x {Configuration.ExecutablePath}");
+					Process.Start("chmod", $"+x {gameStartInfo.FileName}");
 				}
 
 				gameProcess.Start();

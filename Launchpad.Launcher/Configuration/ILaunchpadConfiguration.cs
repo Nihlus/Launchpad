@@ -64,7 +64,7 @@ namespace Launchpad.Launcher.Configuration
 		/// <summary>
 		/// Gets or sets the path to the game's executable, relative to the launcher.
 		/// </summary>
-		[Option(Alias = "Game.ExecutablePath", DefaultValue = "LaunchpadExample")]
+		[Option(Alias = "Game.ExecutablePath", DefaultValue = "LaunchpadExample/Binaries/Linux/LaunchpadExample")]
 		string ExecutablePath { get; set; }
 
 		// Remote section
