@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "metadata", ".\", "{F1A57014
 	EndProjectSection
 EndProject
 
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", ".\Scripts", "{F1A57014-71CE-4032-A652-01B7E35E14DB}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", ".\Scripts", "{C9B78442-415D-4F02-93B1-C377F6A9A053}"
 	ProjectSection(SolutionItems) = preProject
 		Scripts\launchpad-dependencies.sh = Scripts\launchpad-dependencies.sh
 		Scripts\launchpad-publis.sh = Scripts\launchpad-publish.sh
