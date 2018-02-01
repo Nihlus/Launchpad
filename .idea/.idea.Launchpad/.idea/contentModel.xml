@@ -266,7 +266,6 @@
             </e>
           </e>
         </e>
-        <e p="packages.config" t="Include" />
       </e>
       <e p="Launchpad.Tests" t="IncludeRecursive">
         <e p="Common" t="Include">
@@ -289,14 +288,14 @@
         <e p="packages.config" t="Include" />
       </e>
       <e p="Launchpad.Utilities" t="IncludeRecursive">
-        <e p="App.config" t="Include" />
-        <e p="GLib" t="Include">
-          <e p="GLibSynchronizationContext.cs" t="Include" />
-        </e>
         <e p="Handlers" t="Include">
           <e p="ManifestGenerationHandler.cs" t="Include" />
         </e>
         <e p="Interface" t="Include">
+          <e p="Launchpad.Utilities.glade" t="Include" />
+          <e p="Launchpad.Utilities.glade~" t="Include" />
+          <e p="LaunchpadUtilities.glade~" t="Include" />
+          <e p="MainWindow.UI.cs" t="Include" />
           <e p="MainWindow.cs" t="Include" />
         </e>
         <e p="Launchpad.Utilities.csproj" t="IncludeRecursive" />
@@ -313,11 +312,7 @@
           </e>
         </e>
         <e p="bin" t="ExcludeRecursive" />
-        <e p="gtk-gui" t="Include">
-          <e p="Launchpad.Utilities.Interface.MainWindow.cs" t="Include" />
-          <e p="generated.cs" t="Include" />
-          <e p="gui.stetic" t="Include" />
-        </e>
+        <e p="log4net.config" t="Include" />
         <e p="obj" t="ExcludeRecursive">
           <e p="x86" t="Include">
             <e p="Debug" t="Include">

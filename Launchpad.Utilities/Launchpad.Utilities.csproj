@@ -23,33 +23,17 @@
     <Prefer32bit>true</Prefer32bit>
   </PropertyGroup>
   <ItemGroup>
-    <EmbeddedResource Include="gtk-gui\gui.stetic">
-      <LogicalName>gui.stetic</LogicalName>
-    </EmbeddedResource>
     <EmbeddedResource Include="Resources/Icons8-Android-Industry-Engineering.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <HintPath>/usr/lib/mono/gac/gtk-sharp/2.12.0.0__35e10195dab3c99f/gdk-sharp.dll</HintPath>
-      <SpecificVersion>true</SpecificVersion>
-    </Reference>
-    <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <HintPath>/usr/lib/mono/gac/gdk-sharp/2.12.0.0__35e10195dab3c99f/gdk-sharp.dll</HintPath>
-      <SpecificVersion>true</SpecificVersion>
-    </Reference>
-    <Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <HintPath>/usr/lib/mono/gac/atk-sharp/2.12.0.0__35e10195dab3c99f/gdk-sharp.dll</HintPath>
-      <SpecificVersion>true</SpecificVersion>
-    </Reference>
-    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <HintPath>/usr/lib/mono/gac/glib-sharp/2.12.0.0__35e10195dab3c99f/gdk-sharp.dll</HintPath>
-      <SpecificVersion>true</SpecificVersion>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
+    <PackageReference Include="GtkSharp" Version="3.22.24.29" />
+    <PackageReference Include="GtkSharp.Win32" Version="3.1.2" />
     <PackageReference Include="CommandLineParser" Version="2.2.1" />
     <PackageReference Include="NGettext" Version="0.6.3" />
     <PackageReference Include="log4net" Version="2.0.8" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Interface\Launchpad.Utilities.glade" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\locale\**\*.po">
@@ -60,7 +44,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <InProject>false</InProject>
     </Content>
-    <Content Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Launchpad.Common\Launchpad.Common.csproj" />

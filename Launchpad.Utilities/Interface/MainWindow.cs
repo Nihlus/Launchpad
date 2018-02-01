@@ -49,44 +49,38 @@ namespace Launchpad.Utilities.Interface
 
 		private CancellationTokenSource TokenSource;
 
-		public MainWindow()
-			: base(WindowType.Toplevel)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="MainWindow"/> class.
+		/// </summary>
+		/// <param name="builder">The UI builder.</param>
+		/// <param name="handle">The native handle of the window.</param>
+		private MainWindow(Builder builder, IntPtr handle)
+			: base(handle)
 		{
-			Build();
+			builder.Autoconnect(this);
+
+			BindUIEvents();
 
 			this.ProgressReporter = new Progress<ManifestGenerationProgressChangedEventArgs>
 			(
 				e =>
 				{
-					var progressString = this.LocalizationCatalog.GetString("{0} : {1} out of {2}");
-					this.progressLabel.Text = string.Format(progressString, e.Filepath, e.CompletedFiles, e.TotalFiles);
+					var progressString = this.LocalizationCatalog.GetString("Hashing {0} : {1} out of {2}");
+					this.StatusLabel.Text = string.Format(progressString, e.Filepath, e.CompletedFiles, e.TotalFiles);
 
-					this.progressbar.Fraction = e.CompletedFiles / (double)e.TotalFiles;
+					this.MainProgressBar.Fraction = e.CompletedFiles / (double)e.TotalFiles;
 				}
 			);
 
-			this.fileChooser.SetCurrentFolder(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory));
-			this.fileChooser.SelectMultiple = false;
+			this.FolderChooser.SetCurrentFolder(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory));
+			this.FolderChooser.SelectMultiple = false;
 
-			this.progressLabel.Text = this.LocalizationCatalog.GetString("Idle");
-		}
-
-		/// <summary>
-		/// Exits the application properly when the window is deleted.
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="a">The alpha component.</param>
-		private void OnDeleteEvent(object sender, DeleteEventArgs a)
-		{
-			this.TokenSource?.Cancel();
-
-			Application.Quit();
-			a.RetVal = true;
+			this.StatusLabel.Text = this.LocalizationCatalog.GetString("Idle");
 		}
 
 		private async void OnGenerateGameManifestButtonClicked(object sender, EventArgs e)
 		{
-			var targetDirectory = this.fileChooser.Filename;
+			var targetDirectory = this.FolderChooser.Filename;
 
 			if (!Directory.GetFiles(targetDirectory).Any(s => s.Contains("GameVersion.txt")))
 			{
@@ -129,10 +123,10 @@ namespace Launchpad.Utilities.Interface
 		{
 			this.TokenSource = new CancellationTokenSource();
 
-			this.generateGameManifestButton.Sensitive = false;
-			this.generateLaunchpadManifestButton.Sensitive = false;
+			this.GenerateGameManifestButton.Sensitive = false;
+			this.GenerateLaunchpadManifestButton.Sensitive = false;
 
-			var targetDirectory = this.fileChooser.Filename;
+			var targetDirectory = this.FolderChooser.Filename;
 
 			try
 			{
@@ -144,16 +138,16 @@ namespace Launchpad.Utilities.Interface
 					this.TokenSource.Token
 				);
 
-				this.progressLabel.Text = this.LocalizationCatalog.GetString("Finished");
+				this.StatusLabel.Text = this.LocalizationCatalog.GetString("Finished");
 			}
 			catch (TaskCanceledException)
 			{
-				this.progressLabel.Text = this.LocalizationCatalog.GetString("Cancelled");
-				this.progressbar.Fraction = 0;
+				this.StatusLabel.Text = this.LocalizationCatalog.GetString("Cancelled");
+				this.MainProgressBar.Fraction = 0;
 			}
 
-			this.generateGameManifestButton.Sensitive = true;
-			this.generateLaunchpadManifestButton.Sensitive = true;
+			this.GenerateGameManifestButton.Sensitive = true;
+			this.GenerateLaunchpadManifestButton.Sensitive = true;
 		}
 	}
 }

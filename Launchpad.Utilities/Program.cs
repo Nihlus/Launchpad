@@ -21,6 +21,8 @@
 
 using System;
 using System.IO;
+using System.Net.Mime;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
@@ -32,6 +34,9 @@ using Launchpad.Utilities.Interface;
 using Launchpad.Utilities.Options;
 using log4net;
 using Launchpad.Common.Enums;
+using Application = Gtk.Application;
+using FileInfo = System.IO.FileInfo;
+using Task = System.Threading.Tasks.Task;
 
 namespace Launchpad.Utilities
 {
@@ -47,6 +52,10 @@ namespace Launchpad.Utilities
 		/// </summary>
 		private static async Task Main(string[] args)
 		{
+			var logRepo = LogManager.GetRepository(Assembly.GetEntryAssembly());
+			var fileInfo = new FileInfo("log4net.config");
+			log4net.Config.XmlConfigurator.Configure(logRepo, fileInfo);
+
 			var options = new CLIOptions();
 			Parser.Default.ParseArguments<CLIOptions>(args)
 				.WithParsed(r => options = r);
@@ -92,7 +101,7 @@ namespace Launchpad.Utilities
 				Application.Init();
 				SynchronizationContext.SetSynchronizationContext(new GLibSynchronizationContext());
 
-				var win = new MainWindow();
+				var win = MainWindow.Create();
 				win.Show();
 				Application.Run();
 			}
