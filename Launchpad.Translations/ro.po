@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: launchpad\n"
 "POT-Creation-Date: 2016-07-28 21:06+0200\n"
-"PO-Revision-Date: 2017-01-25 12:49-0500\n"
+"PO-Revision-Date: 2018-02-01 16:07-0500\n"
 "Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
 "Language-Team: Romanian\n"
 "Language: ro_RO\n"
@@ -24,28 +24,28 @@ msgstr ""
 #: Launchpad.Launcher/Handlers/Protocols/ManifestBasedProtocolHandler.cs:625
 #, csharp-format
 msgid "Verifying file {0} ({1} of {2})"
-msgstr ""
+msgstr "Se verifică fișierul {0} ({1} din {2})"
 
 #: Launchpad.Launcher/Handlers/Protocols/ManifestBasedProtocolHandler.cs:637
 #, csharp-format
 msgid "Updating file {0} ({1} of {2})"
-msgstr ""
+msgstr "Se actualizează fișierul {0} ({1} din {2})"
 
 #: Launchpad.Launcher/Handlers/Protocols/ManifestBasedProtocolHandler.cs:649
 #, csharp-format
 msgid "Downloading file {0} ({1} of {2})"
-msgstr ""
+msgstr "Se descarcă fișierul {0} ({1} din {2})"
 
 #: Launchpad.Launcher/Handlers/Protocols/ManifestBasedProtocolHandler.cs:661
 #, csharp-format
 msgid "Downloading {0}: {1} out of {2}"
-msgstr ""
+msgstr "Se descarcă {0}: {1} din {2}"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:108
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:90
 #, csharp-format
 msgid "Launchpad - {0}"
-msgstr ""
+msgstr "Launchpad - {0}"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:114
 #: Launchpad.Launcher/Interface/MainWindow.cs:435
@@ -53,142 +53,146 @@ msgstr ""
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:215
 #: Launchpad.Utilities/Interface/MainWindow.cs:57
 msgid "Idle"
-msgstr ""
+msgstr "Inactiv"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:124
 msgid "Failed to connect to the patch server. Please check your settings."
-msgstr ""
+msgstr "Nu s-a reușit conectarea la serverul patch. Te rugăm să îți verifici setările."
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:129
 msgid "Could not connect to server."
-msgstr ""
+msgstr "Nu s-a putut efectua conexiunea la server."
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:160
 msgid "This appears to be the first time you're starting the launcher.\n"
 "Is this the location where you would like to install the game?"
-msgstr ""
+msgstr "Aceasta pare să fie prima dată când pornești lansatorul. \n"
+"Este locația unde vrei să instalezi jocul?"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:269
 msgid "Installing..."
-msgstr ""
+msgstr "Se instalează..."
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:274
 msgid "Install"
-msgstr ""
+msgstr "Instalare"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:283
 msgid "Updating..."
-msgstr ""
+msgstr "Se actualizează..."
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:288
 msgid "Update"
-msgstr ""
+msgstr "Actualizare"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:297
 msgid "Repairing..."
-msgstr ""
+msgstr "Se repară..."
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:302
 msgid "Repair"
-msgstr ""
+msgstr "Reparare"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:311
 msgid "Launching..."
-msgstr ""
+msgstr "Se lansează..."
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:316
 msgid "Launch"
-msgstr ""
+msgstr "Lansează"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:325
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:272
 msgid "Inactive"
-msgstr ""
+msgstr "Inactiv"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:386
 msgid "The server does not provide the game for the selected platform."
-msgstr ""
+msgstr "Serverul nu permite jocului să fie lansat pe platforma selectată."
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:489
 msgid "The game failed to launch. Try repairing the installation."
-msgstr ""
+msgstr "Lansarea jocului a eșuat. Încearcă să repari instalarea."
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:557
 msgid "Installation finished"
-msgstr ""
+msgstr "Instalarea s-a terminat"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:562
 msgid "Update finished"
-msgstr ""
+msgstr "Actualizarea s-a terminat"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:567
 msgid "Repair finished"
-msgstr ""
+msgstr "Repararea s-a terminat"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:595
 msgid "Whoops! The game appears to have crashed.\n"
 "Would you like the launcher to verify the installation?"
-msgstr ""
+msgstr "Hopa! Jocul pare să se fi oprit brusc.\n"
+"Vrei ca lansatorul să verifice instalarea?"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:627
 msgid "Reinstalling the game will delete all local files and download the entire game again.\n"
 "Are you sure you want to reinstall the game?"
-msgstr ""
+msgstr "Reinstalarea jocului va duce la ștergerea fișierelor locale și la descărcarea jocului.\n"
+"Ești sigur că vrei să reinstalezi jocul?"
 
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:61
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:63
 msgid "Menu"
-msgstr ""
+msgstr "Meniu"
 
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:69
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:73
 msgid "Repair Game"
-msgstr ""
+msgstr "Repară jocul"
 
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:70
 msgid "Starts a repair process for the installed game."
-msgstr ""
+msgstr "Începe un proces de reparare pentru jocul instalat."
 
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:79
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:83
 msgid "Reinstall Game"
-msgstr ""
+msgstr "Reinstalează jocul"
 
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:80
 msgid "Reinstalls the installed game."
-msgstr ""
+msgstr "Reinstalează jocul instalat."
 
 #: Launchpad.Utilities/Interface/MainWindow.cs:84
 msgid "No GameVersion.txt file could be found in the target directory. This file is required.\n"
 "Would you like to add one? The version will be \"1.0.0\"."
-msgstr ""
+msgstr "Nici un fișier de tip GameVersion.txt nu a fost găsit în directorul țintă. Acest fișier este necesar.\n"
+"Vrei să mai adaugi altul? Versiunea va fi \"1.0.0\"."
 
 #: Launchpad.Utilities/Interface/MainWindow.cs:124
 #, csharp-format
 msgid "{0} : {1} out of {2}"
-msgstr ""
+msgstr "{0} : {1} din {2}"
 
 #: Launchpad.Utilities/Interface/MainWindow.cs:140
 msgid "Finished"
-msgstr ""
+msgstr "Finalizat"
 
 #: Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs:61
 msgid "Launchpad Utilities - Manifest"
-msgstr ""
+msgstr "Manifest - Utilitățiile Launchpad"
 
 #: Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs:128
 msgid "Progress: "
-msgstr ""
+msgstr "Progres: "
 
 #: Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs:146
 msgid "/some/file/path : 1 out of 100"
-msgstr ""
+msgstr "/unele/fișier/cale: 1 din 100"
 
 #: Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs:196
 msgid "Generate Game Manifest"
-msgstr ""
+msgstr "Generează Manifestul Jocului"
 
 #: Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs:218
 msgid "Generate Launchpad Manifest"
-msgstr ""
+msgstr "Generează Manifestul Launchpad"
 

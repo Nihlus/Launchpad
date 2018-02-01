@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: launchpad\n"
 "POT-Creation-Date: 2016-07-28 21:06+0200\n"
-"PO-Revision-Date: 2017-01-25 12:49-0500\n"
+"PO-Revision-Date: 2017-11-14 09:31-0500\n"
 "Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
@@ -24,28 +24,28 @@ msgstr ""
 #: Launchpad.Launcher/Handlers/Protocols/ManifestBasedProtocolHandler.cs:625
 #, csharp-format
 msgid "Verifying file {0} ({1} of {2})"
-msgstr ""
+msgstr "Verificar archivo {0} ({1} de {2})"
 
 #: Launchpad.Launcher/Handlers/Protocols/ManifestBasedProtocolHandler.cs:637
 #, csharp-format
 msgid "Updating file {0} ({1} of {2})"
-msgstr ""
+msgstr "Actualizando archivo {0} ({1} de {2})"
 
 #: Launchpad.Launcher/Handlers/Protocols/ManifestBasedProtocolHandler.cs:649
 #, csharp-format
 msgid "Downloading file {0} ({1} of {2})"
-msgstr ""
+msgstr "Descargando archivo {0} ({1} of {2})"
 
 #: Launchpad.Launcher/Handlers/Protocols/ManifestBasedProtocolHandler.cs:661
 #, csharp-format
 msgid "Downloading {0}: {1} out of {2}"
-msgstr ""
+msgstr "Descargando {0}: {1} de {2}"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:108
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:90
 #, csharp-format
 msgid "Launchpad - {0}"
-msgstr ""
+msgstr "Launchpad - {0}"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:114
 #: Launchpad.Launcher/Interface/MainWindow.cs:435
@@ -66,7 +66,8 @@ msgstr "No se pudo conectar al servidor."
 #: Launchpad.Launcher/Interface/MainWindow.cs:160
 msgid "This appears to be the first time you're starting the launcher.\n"
 "Is this the location where you would like to install the game?"
-msgstr ""
+msgstr "Parece que es la primera vez que abres el launcher.\n"
+"Is ¿Es esta la ubicación donde quieres instalar el juego?"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:269
 msgid "Installing..."
@@ -115,15 +116,15 @@ msgstr "El juego falló al iniciar. Trate de reparar la instalación."
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:557
 msgid "Installation finished"
-msgstr ""
+msgstr "Instalación finalizada"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:562
 msgid "Update finished"
-msgstr ""
+msgstr "Actualización finalizada"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:567
 msgid "Repair finished"
-msgstr ""
+msgstr "Reparación finalizada"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:595
 msgid "Whoops! The game appears to have crashed.\n"
@@ -134,12 +135,13 @@ msgstr "Oops! El juego parece tener un error.\n"
 #: Launchpad.Launcher/Interface/MainWindow.cs:627
 msgid "Reinstalling the game will delete all local files and download the entire game again.\n"
 "Are you sure you want to reinstall the game?"
-msgstr ""
+msgstr "Volver a instalar el juego eliminará todos los archivos locales, y descargará todo el juego otra vez.\n"
+"¿Seguro que desea volver a instalar el juego?"
 
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:61
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:63
 msgid "Menu"
-msgstr ""
+msgstr "Menú"
 
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:69
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:73
@@ -148,21 +150,22 @@ msgstr "Reparar el Juego"
 
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:70
 msgid "Starts a repair process for the installed game."
-msgstr ""
+msgstr "Inicia proceso de reparación para el juego instalado."
 
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:79
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:83
 msgid "Reinstall Game"
-msgstr ""
+msgstr "Reinstalar el juego"
 
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:80
 msgid "Reinstalls the installed game."
-msgstr ""
+msgstr "Reinstalar el juego instalado."
 
 #: Launchpad.Utilities/Interface/MainWindow.cs:84
 msgid "No GameVersion.txt file could be found in the target directory. This file is required.\n"
 "Would you like to add one? The version will be \"1.0.0\"."
-msgstr ""
+msgstr "No hay ningún archivo GameVersion.txt, podría encontrarse en el directorio de destino. Este archivo es necesario.\n"
+"¿Desea agregar uno? La versión será \"1.0.0\"."
 
 #: Launchpad.Utilities/Interface/MainWindow.cs:124
 #, csharp-format

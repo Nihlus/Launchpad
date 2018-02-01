@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: launchpad\n"
 "POT-Creation-Date: 2016-07-28 21:06+0200\n"
-"PO-Revision-Date: 2017-01-25 12:49-0500\n"
+"PO-Revision-Date: 2017-11-14 09:31-0500\n"
 "Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -24,28 +24,28 @@ msgstr ""
 #: Launchpad.Launcher/Handlers/Protocols/ManifestBasedProtocolHandler.cs:625
 #, csharp-format
 msgid "Verifying file {0} ({1} of {2})"
-msgstr ""
+msgstr "验证文件 {0} ({1} {2})"
 
 #: Launchpad.Launcher/Handlers/Protocols/ManifestBasedProtocolHandler.cs:637
 #, csharp-format
 msgid "Updating file {0} ({1} of {2})"
-msgstr ""
+msgstr "更新文件 {0} ({1} {2})"
 
 #: Launchpad.Launcher/Handlers/Protocols/ManifestBasedProtocolHandler.cs:649
 #, csharp-format
 msgid "Downloading file {0} ({1} of {2})"
-msgstr ""
+msgstr "下载文件 {0}： {1} {2} bytes。"
 
 #: Launchpad.Launcher/Handlers/Protocols/ManifestBasedProtocolHandler.cs:661
 #, csharp-format
 msgid "Downloading {0}: {1} out of {2}"
-msgstr ""
+msgstr "下载 {0}: {1} {2}"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:108
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:90
 #, csharp-format
 msgid "Launchpad - {0}"
-msgstr ""
+msgstr "Launchpad - (0)"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:114
 #: Launchpad.Launcher/Interface/MainWindow.cs:435
@@ -57,7 +57,7 @@ msgstr "闲置"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:124
 msgid "Failed to connect to the patch server. Please check your settings."
-msgstr ""
+msgstr "无法连接到修补服务器。请检查您的设置。"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:129
 msgid "Could not connect to server."
@@ -66,7 +66,7 @@ msgstr "无法连接到伺服器。"
 #: Launchpad.Launcher/Interface/MainWindow.cs:160
 msgid "This appears to be the first time you're starting the launcher.\n"
 "Is this the location where you would like to install the game?"
-msgstr ""
+msgstr "这似乎是您第一次启动启动程序. 这是您要安装游戏的位置吗？"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:269
 msgid "Installing..."
@@ -103,7 +103,7 @@ msgstr "启动"
 #: Launchpad.Launcher/Interface/MainWindow.cs:325
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:272
 msgid "Inactive"
-msgstr ""
+msgstr "未激活"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:386
 msgid "The server does not provide the game for the selected platform."
@@ -115,80 +115,83 @@ msgstr "游戏无法启动。尝试修复安装程序。"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:557
 msgid "Installation finished"
-msgstr ""
+msgstr "安装完成"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:562
 msgid "Update finished"
-msgstr ""
+msgstr "更新已完成"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:567
 msgid "Repair finished"
-msgstr ""
+msgstr "修复完成"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:595
 msgid "Whoops! The game appears to have crashed.\n"
 "Would you like the launcher to verify the installation?"
-msgstr ""
+msgstr "呦! 游戏似乎已经崩溃. \n"
+"是否您喜欢启动器来验证安装吗？"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:627
 msgid "Reinstalling the game will delete all local files and download the entire game again.\n"
 "Are you sure you want to reinstall the game?"
-msgstr ""
+msgstr "重新安装游戏将删除所有本地文件, 并再次下载整个游戏. n\n"
+" 您确定要重新安装游戏吗？"
 
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:61
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:63
 msgid "Menu"
-msgstr ""
+msgstr "选单"
 
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:69
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:73
 msgid "Repair Game"
-msgstr ""
+msgstr "维修游戏"
 
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:70
 msgid "Starts a repair process for the installed game."
-msgstr ""
+msgstr "启动已安装游戏的修复过程。"
 
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:79
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:83
 msgid "Reinstall Game"
-msgstr ""
+msgstr "重新安装游戏"
 
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:80
 msgid "Reinstalls the installed game."
-msgstr ""
+msgstr "重新安装游戏。"
 
 #: Launchpad.Utilities/Interface/MainWindow.cs:84
 msgid "No GameVersion.txt file could be found in the target directory. This file is required.\n"
 "Would you like to add one? The version will be \"1.0.0\"."
-msgstr ""
+msgstr "在目录中找不到 GameVersion.txt 文件。\n"
+"此文件是必需的. 是否要添加一个吗？该版本将是 \"1.0.0\"。"
 
 #: Launchpad.Utilities/Interface/MainWindow.cs:124
 #, csharp-format
 msgid "{0} : {1} out of {2}"
-msgstr ""
+msgstr "{0}: {1} {2}"
 
 #: Launchpad.Utilities/Interface/MainWindow.cs:140
 msgid "Finished"
-msgstr ""
+msgstr "完成"
 
 #: Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs:61
 msgid "Launchpad Utilities - Manifest"
-msgstr ""
+msgstr "启动板实用程序"
 
 #: Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs:128
 msgid "Progress: "
-msgstr ""
+msgstr "进度： "
 
 #: Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs:146
 msgid "/some/file/path : 1 out of 100"
-msgstr ""
+msgstr "/部分/文件/路径: 1/100"
 
 #: Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs:196
 msgid "Generate Game Manifest"
-msgstr ""
+msgstr "生成游戏清单"
 
 #: Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs:218
 msgid "Generate Launchpad Manifest"
-msgstr ""
+msgstr "生成游戏清单"
 

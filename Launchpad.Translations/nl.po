@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: launchpad\n"
 "POT-Creation-Date: 2016-07-28 21:06+0200\n"
-"PO-Revision-Date: 2017-01-25 12:49-0500\n"
+"PO-Revision-Date: 2017-11-14 09:31-0500\n"
 "Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
 "Language-Team: Dutch\n"
 "Language: nl_NL\n"
@@ -24,28 +24,28 @@ msgstr ""
 #: Launchpad.Launcher/Handlers/Protocols/ManifestBasedProtocolHandler.cs:625
 #, csharp-format
 msgid "Verifying file {0} ({1} of {2})"
-msgstr ""
+msgstr "Bestand {0} ({1} van de {2} verifiëren)"
 
 #: Launchpad.Launcher/Handlers/Protocols/ManifestBasedProtocolHandler.cs:637
 #, csharp-format
 msgid "Updating file {0} ({1} of {2})"
-msgstr ""
+msgstr "Bestand {0} ({1} van de {2} updaten)"
 
 #: Launchpad.Launcher/Handlers/Protocols/ManifestBasedProtocolHandler.cs:649
 #, csharp-format
 msgid "Downloading file {0} ({1} of {2})"
-msgstr ""
+msgstr "Bestand {0} ({1} van de {2} downloaden)"
 
 #: Launchpad.Launcher/Handlers/Protocols/ManifestBasedProtocolHandler.cs:661
 #, csharp-format
 msgid "Downloading {0}: {1} out of {2}"
-msgstr ""
+msgstr "Bestand {0}: {1} van de {2} aan het downloaden"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:108
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:90
 #, csharp-format
 msgid "Launchpad - {0}"
-msgstr ""
+msgstr "Launchpad - {0}"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:114
 #: Launchpad.Launcher/Interface/MainWindow.cs:435
@@ -66,7 +66,8 @@ msgstr "Kan geen verbinding met de server maken."
 #: Launchpad.Launcher/Interface/MainWindow.cs:160
 msgid "This appears to be the first time you're starting the launcher.\n"
 "Is this the location where you would like to install the game?"
-msgstr ""
+msgstr "Dit lijkt de eerste keer dat je dit programma start.\n"
+"Is dit de locatie waar je het spel wilt installeren?"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:269
 msgid "Installing..."
@@ -115,15 +116,15 @@ msgstr "Het spel kon niet starten. Probeer de installatie te repareren."
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:557
 msgid "Installation finished"
-msgstr ""
+msgstr "Installatie voltooid"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:562
 msgid "Update finished"
-msgstr ""
+msgstr "Update voltooid"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:567
 msgid "Repair finished"
-msgstr ""
+msgstr "Reparatie voltooid"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:595
 msgid "Whoops! The game appears to have crashed.\n"
@@ -134,12 +135,13 @@ msgstr "Oeps! Het lijkt er op dat het spel niet meer werkt.\n"
 #: Launchpad.Launcher/Interface/MainWindow.cs:627
 msgid "Reinstalling the game will delete all local files and download the entire game again.\n"
 "Are you sure you want to reinstall the game?"
-msgstr ""
+msgstr "Het opnieuw installeren van het spel zal alle lokale bestanden verwijderen en het volledige spel opnieuw downloaden.\n"
+"Ben je zeker dat je het spel wil herinstalleren?"
 
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:61
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:63
 msgid "Menu"
-msgstr ""
+msgstr "Menu"
 
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:69
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:73
@@ -148,30 +150,31 @@ msgstr "Spel herstellen"
 
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:70
 msgid "Starts a repair process for the installed game."
-msgstr ""
+msgstr "Hiermee start u een herstelprocedure voor het geïnstalleerde spel."
 
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:79
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:83
 msgid "Reinstall Game"
-msgstr ""
+msgstr "Spel opnieuw installeren"
 
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:80
 msgid "Reinstalls the installed game."
-msgstr ""
+msgstr "Herinstalleerd het geïnstalleerde spel."
 
 #: Launchpad.Utilities/Interface/MainWindow.cs:84
 msgid "No GameVersion.txt file could be found in the target directory. This file is required.\n"
 "Would you like to add one? The version will be \"1.0.0\"."
-msgstr ""
+msgstr "Het GameVersion.txt bestand kon niet gevonden worden in de doelmap. Dit bestand is vereist.\n"
+"Wenst u dit bestand toe te voegen? Dit bestand zal versie \"1.0.0\" hebben."
 
 #: Launchpad.Utilities/Interface/MainWindow.cs:124
 #, csharp-format
 msgid "{0} : {1} out of {2}"
-msgstr ""
+msgstr "{0} : {1} van de {2}"
 
 #: Launchpad.Utilities/Interface/MainWindow.cs:140
 msgid "Finished"
-msgstr ""
+msgstr "Voltooid"
 
 #: Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs:61
 msgid "Launchpad Utilities - Manifest"
@@ -187,9 +190,9 @@ msgstr "/some/file/path : 1 van de 100"
 
 #: Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs:196
 msgid "Generate Game Manifest"
-msgstr ""
+msgstr "Genereren van spel Manifest"
 
 #: Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs:218
 msgid "Generate Launchpad Manifest"
-msgstr ""
+msgstr "Genereren van Launchpad Manifest"
 

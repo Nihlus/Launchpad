@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: launchpad\n"
 "POT-Creation-Date: 2016-07-28 21:06+0200\n"
-"PO-Revision-Date: 2017-01-25 12:49-0500\n"
+"PO-Revision-Date: 2017-11-30 10:15-0500\n"
 "Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
@@ -24,28 +24,28 @@ msgstr ""
 #: Launchpad.Launcher/Handlers/Protocols/ManifestBasedProtocolHandler.cs:625
 #, csharp-format
 msgid "Verifying file {0} ({1} of {2})"
-msgstr ""
+msgstr "ファイル{0} の確認中（{2} の{1}）"
 
 #: Launchpad.Launcher/Handlers/Protocols/ManifestBasedProtocolHandler.cs:637
 #, csharp-format
 msgid "Updating file {0} ({1} of {2})"
-msgstr ""
+msgstr "ファイル{0} の更新中（{2} の{1}）"
 
 #: Launchpad.Launcher/Handlers/Protocols/ManifestBasedProtocolHandler.cs:649
 #, csharp-format
 msgid "Downloading file {0} ({1} of {2})"
-msgstr ""
+msgstr "ファイル{0} をダウンロード中（{2} の{1}）"
 
 #: Launchpad.Launcher/Handlers/Protocols/ManifestBasedProtocolHandler.cs:661
 #, csharp-format
 msgid "Downloading {0}: {1} out of {2}"
-msgstr ""
+msgstr "{0} をダウンロード中：{2} のうち{1}"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:108
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:90
 #, csharp-format
 msgid "Launchpad - {0}"
-msgstr ""
+msgstr "Launchpad - {0}"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:114
 #: Launchpad.Launcher/Interface/MainWindow.cs:435
@@ -53,142 +53,145 @@ msgstr ""
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:215
 #: Launchpad.Utilities/Interface/MainWindow.cs:57
 msgid "Idle"
-msgstr ""
+msgstr "アイドル"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:124
 msgid "Failed to connect to the patch server. Please check your settings."
-msgstr ""
+msgstr "パッチサーバーに接続できませんでした。 設定を確認してください。"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:129
 msgid "Could not connect to server."
-msgstr ""
+msgstr "サーバーに接続できませんでした"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:160
 msgid "This appears to be the first time you're starting the launcher.\n"
 "Is this the location where you would like to install the game?"
-msgstr ""
+msgstr "これはランチャーを初めて起動したときに表示されます。\\ nゲームをインストールしたい場所ですか？"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:269
 msgid "Installing..."
-msgstr ""
+msgstr "インストール中..."
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:274
 msgid "Install"
-msgstr ""
+msgstr "インストール"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:283
 msgid "Updating..."
-msgstr ""
+msgstr "更新中..."
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:288
 msgid "Update"
-msgstr ""
+msgstr "更新"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:297
 msgid "Repairing..."
-msgstr ""
+msgstr "修理..."
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:302
 msgid "Repair"
-msgstr ""
+msgstr "修理"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:311
 msgid "Launching..."
-msgstr ""
+msgstr "起動中..."
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:316
 msgid "Launch"
-msgstr ""
+msgstr "起動"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:325
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:272
 msgid "Inactive"
-msgstr ""
+msgstr "非アクティブ"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:386
 msgid "The server does not provide the game for the selected platform."
-msgstr ""
+msgstr "サーバーは、選択したプラットフォームのゲームを提供しません。"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:489
 msgid "The game failed to launch. Try repairing the installation."
-msgstr ""
+msgstr "ゲームは起動できませんでした。 インストールを修復してください。"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:557
 msgid "Installation finished"
-msgstr ""
+msgstr "インストールが完了しました"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:562
 msgid "Update finished"
-msgstr ""
+msgstr "更新が完了しました"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:567
 msgid "Repair finished"
-msgstr ""
+msgstr "修理済み"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:595
 msgid "Whoops! The game appears to have crashed.\n"
 "Would you like the launcher to verify the installation?"
-msgstr ""
+msgstr "うわー！ ゲームがクラッシュしたように見える.\n"
+"ランチャーでインストールを確認しますか？"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:627
 msgid "Reinstalling the game will delete all local files and download the entire game again.\n"
 "Are you sure you want to reinstall the game?"
-msgstr ""
+msgstr "ゲームを再インストールすると、すべてのローカルファイルが削除され、ゲーム全体が再度ダウンロードされます.\n"
+" ゲームを再インストールしてもよろしいですか？"
 
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:61
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:63
 msgid "Menu"
-msgstr ""
+msgstr "メニュー"
 
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:69
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:73
 msgid "Repair Game"
-msgstr ""
+msgstr "ゲームを修復します。"
 
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:70
 msgid "Starts a repair process for the installed game."
-msgstr ""
+msgstr "インストールされているゲームの修復処理を開始します。"
 
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:79
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:83
 msgid "Reinstall Game"
-msgstr ""
+msgstr "ゲームを再インストールする"
 
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:80
 msgid "Reinstalls the installed game."
-msgstr ""
+msgstr "インストールされているゲームを再インストールします。"
 
 #: Launchpad.Utilities/Interface/MainWindow.cs:84
 msgid "No GameVersion.txt file could be found in the target directory. This file is required.\n"
 "Would you like to add one? The version will be \"1.0.0\"."
-msgstr ""
+msgstr "ターゲットディレクトリにGameVersion.txtファイルが見つかりませんでした。このファイルは必須です。\n"
+" あなたは1つを追加しますか？ バージョンは「1.0.0」になります。"
 
 #: Launchpad.Utilities/Interface/MainWindow.cs:124
 #, csharp-format
 msgid "{0} : {1} out of {2}"
-msgstr ""
+msgstr "{0} - {1} / {2}"
 
 #: Launchpad.Utilities/Interface/MainWindow.cs:140
 msgid "Finished"
-msgstr ""
+msgstr "終了"
 
 #: Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs:61
 msgid "Launchpad Utilities - Manifest"
-msgstr ""
+msgstr "Launchpadユーティリティ- 目録"
 
 #: Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs:128
 msgid "Progress: "
-msgstr ""
+msgstr "進行状況: "
 
 #: Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs:146
 msgid "/some/file/path : 1 out of 100"
-msgstr ""
+msgstr "/some/file/path: 1 のうち 100"
 
 #: Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs:196
 msgid "Generate Game Manifest"
-msgstr ""
+msgstr "ゲームマニフェストを生成する"
 
 #: Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs:218
 msgid "Generate Launchpad Manifest"
-msgstr ""
+msgstr "Launchpad マニフェストを生成する"
 

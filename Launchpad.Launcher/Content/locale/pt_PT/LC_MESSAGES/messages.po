@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: launchpad\n"
 "POT-Creation-Date: 2016-07-28 21:06+0200\n"
-"PO-Revision-Date: 2017-01-25 12:49-0500\n"
+"PO-Revision-Date: 2017-11-14 09:31-0500\n"
 "Last-Translator: JarlGullberg <jarl.gullberg@gmail.com>\n"
 "Language-Team: Portuguese\n"
 "Language: pt_PT\n"
@@ -24,28 +24,28 @@ msgstr ""
 #: Launchpad.Launcher/Handlers/Protocols/ManifestBasedProtocolHandler.cs:625
 #, csharp-format
 msgid "Verifying file {0} ({1} of {2})"
-msgstr ""
+msgstr "Verificar ficheiro {0} ({1} of {2})"
 
 #: Launchpad.Launcher/Handlers/Protocols/ManifestBasedProtocolHandler.cs:637
 #, csharp-format
 msgid "Updating file {0} ({1} of {2})"
-msgstr ""
+msgstr "Actualizando ficheiros {0} ({1} of {2})"
 
 #: Launchpad.Launcher/Handlers/Protocols/ManifestBasedProtocolHandler.cs:649
 #, csharp-format
 msgid "Downloading file {0} ({1} of {2})"
-msgstr ""
+msgstr "A transferir ficheiros {0} ({1} of {2})"
 
 #: Launchpad.Launcher/Handlers/Protocols/ManifestBasedProtocolHandler.cs:661
 #, csharp-format
 msgid "Downloading {0}: {1} out of {2}"
-msgstr ""
+msgstr "Transferindo {0}: {1} out of {2}"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:108
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:90
 #, csharp-format
 msgid "Launchpad - {0}"
-msgstr ""
+msgstr "Plataforma de lançamento - {0}"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:114
 #: Launchpad.Launcher/Interface/MainWindow.cs:435
@@ -53,142 +53,151 @@ msgstr ""
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:215
 #: Launchpad.Utilities/Interface/MainWindow.cs:57
 msgid "Idle"
-msgstr ""
+msgstr "Ocioso"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:124
 msgid "Failed to connect to the patch server. Please check your settings."
-msgstr ""
+msgstr "Falha ao conectar ao servidor de actualização. Por favor verifique as suas configurações."
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:129
 msgid "Could not connect to server."
-msgstr ""
+msgstr "Não foi possível conectar ao servidor."
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:160
 msgid "This appears to be the first time you're starting the launcher.\n"
 "Is this the location where you would like to install the game?"
-msgstr ""
+msgstr "Olá, parece que é a primeira vez que inicia o seu launcher..\n"
+"Is Este é o local onde pretende instalar o jogo?\n"
+""
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:269
 msgid "Installing..."
-msgstr ""
+msgstr "A instalar..."
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:274
 msgid "Install"
-msgstr ""
+msgstr "Instalar"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:283
 msgid "Updating..."
-msgstr ""
+msgstr "A actualizar..."
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:288
 msgid "Update"
-msgstr ""
+msgstr "Actualizar"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:297
 msgid "Repairing..."
-msgstr ""
+msgstr "A reparar..."
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:302
 msgid "Repair"
-msgstr ""
+msgstr "Reparar"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:311
 msgid "Launching..."
-msgstr ""
+msgstr "A Iniciar..."
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:316
 msgid "Launch"
-msgstr ""
+msgstr "Iniciar"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:325
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:272
 msgid "Inactive"
-msgstr ""
+msgstr "Inativo"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:386
 msgid "The server does not provide the game for the selected platform."
-msgstr ""
+msgstr "O servidor não fornece o jogo para a plataforma seleccionada.\n"
+""
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:489
 msgid "The game failed to launch. Try repairing the installation."
-msgstr ""
+msgstr "O jogo falhou ao iniciar. Tente reparar a instalação."
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:557
 msgid "Installation finished"
-msgstr ""
+msgstr "Instalação terminada"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:562
 msgid "Update finished"
-msgstr ""
+msgstr "Atualização terminada"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:567
 msgid "Repair finished"
-msgstr ""
+msgstr "Reparação terminada"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:595
 msgid "Whoops! The game appears to have crashed.\n"
 "Would you like the launcher to verify the installation?"
-msgstr ""
+msgstr "\n"
+"Ups! O jogo parece ter caído.\n"
+" Você gostaria que o lançador verificasse a instalação?"
 
 #: Launchpad.Launcher/Interface/MainWindow.cs:627
 msgid "Reinstalling the game will delete all local files and download the entire game again.\n"
 "Are you sure you want to reinstall the game?"
-msgstr ""
+msgstr "Reinstalar o jogo excluirá todos os arquivos locais e baixará o jogo inteiro novamente.\n"
+"N Você tem certeza que deseja reinstalar o jogo?"
 
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:61
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:63
 msgid "Menu"
-msgstr ""
+msgstr "Menu"
 
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:69
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:73
 msgid "Repair Game"
-msgstr ""
+msgstr "Reparar o jogo"
 
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:70
 msgid "Starts a repair process for the installed game."
-msgstr ""
+msgstr "Inicia um processo de reparação do jogo instalado."
 
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:79
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:83
 msgid "Reinstall Game"
-msgstr ""
+msgstr "Reinstalar o jogo"
 
 #: Launchpad.Launcher/gtk-gui/Launchpad.Launcher.Interface.MainWindow.cs:80
 msgid "Reinstalls the installed game."
-msgstr ""
+msgstr "Reinstala o jogo instalado."
 
 #: Launchpad.Utilities/Interface/MainWindow.cs:84
 msgid "No GameVersion.txt file could be found in the target directory. This file is required.\n"
 "Would you like to add one? The version will be \"1.0.0\"."
-msgstr ""
+msgstr "Nenhum arquivo GameVersion.txt pode ser encontrado no directório de destino. Este arquivo é necessário.\n"
+"Você gostaria de adicionar um? A versão será \"1.0.0\".\n"
+""
 
 #: Launchpad.Utilities/Interface/MainWindow.cs:124
 #, csharp-format
 msgid "{0} : {1} out of {2}"
-msgstr ""
+msgstr "{0} : {1} fora de {2}"
 
 #: Launchpad.Utilities/Interface/MainWindow.cs:140
 msgid "Finished"
-msgstr ""
+msgstr "Terminado"
 
 #: Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs:61
 msgid "Launchpad Utilities - Manifest"
-msgstr ""
+msgstr "Utilidades de Launchpad - Manifest"
 
 #: Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs:128
 msgid "Progress: "
-msgstr ""
+msgstr "Progresso"
 
 #: Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs:146
 msgid "/some/file/path : 1 out of 100"
-msgstr ""
+msgstr "/algum/caminho/deficheiro : 1 de 100\n"
+""
 
 #: Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs:196
 msgid "Generate Game Manifest"
-msgstr ""
+msgstr "Gerar o manifesto do jogo"
 
 #: Launchpad.Utilities/gtk-gui/Launchpad.Utilities.Interface.MainWindow.cs:218
 msgid "Generate Launchpad Manifest"
-msgstr ""
+msgstr "Gerar o manifesto do Launchpad"
 
