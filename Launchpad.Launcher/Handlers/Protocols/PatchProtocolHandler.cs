@@ -28,6 +28,7 @@ using Launchpad.Common.Enums;
 using Launchpad.Launcher.Configuration;
 using Launchpad.Launcher.Services;
 using log4net;
+using SixLabors.ImageSharp;
 
 namespace Launchpad.Launcher.Handlers.Protocols
 {
@@ -164,7 +165,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// Gets the banner.
 		/// </summary>
 		/// <returns>The banner.</returns>
-		public abstract Bitmap GetBanner();
+		public abstract Image<Rgba32> GetBanner();
 
 		/// <summary>
 		/// Determines whether or not the specified module is outdated.

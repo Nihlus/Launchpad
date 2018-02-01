@@ -40,7 +40,6 @@
         </e>
       </e>
       <e p="Launchpad.Launcher" t="IncludeRecursive">
-        <e p="App.config" t="Include" />
         <e p="Configuration" t="Include">
           <e p="ILaunchpadConfiguration.cs" t="Include" />
         </e>
@@ -227,10 +226,6 @@
           </e>
         </e>
         <e p="Interface" t="Include">
-          <e p="ChangelogBrowser" t="Include">
-            <e p="Changelog.cs" t="Include" />
-            <e p="WindowsBrowser.cs" t="Include" />
-          </e>
           <e p="Launchpad.glade" t="Include" />
           <e p="Launchpad.glade~" t="Include" />
           <e p="MainWindow.UI.cs" t="Include" />
@@ -258,10 +253,14 @@
         </e>
         <e p="app.manifest" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
+        <e p="log4net.config" t="Include" />
         <e p="obj" t="ExcludeRecursive">
           <e p="x86" t="Include">
             <e p="Debug" t="Include">
               <e p="net462" t="Include">
+                <e p="Launchpad.Launcher.AssemblyInfo.cs" t="Include" />
+              </e>
+              <e p="netcoreapp2.0" t="Include">
                 <e p="Launchpad.Launcher.AssemblyInfo.cs" t="Include" />
               </e>
             </e>

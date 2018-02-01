@@ -22,6 +22,7 @@
 
 using System;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using GLib;
@@ -30,6 +31,7 @@ using Launchpad.Launcher.Interface;
 using Launchpad.Launcher.Services;
 using Launchpad.Launcher.Utility;
 using log4net;
+using FileInfo = System.IO.FileInfo;
 using Task = System.Threading.Tasks.Task;
 using Timeout = GLib.Timeout;
 
@@ -56,7 +58,9 @@ namespace Launchpad.Launcher
 			// Bind any unhandled exceptions in the main thread so that they are logged.
 			AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
 
-			log4net.Config.XmlConfigurator.Configure();
+			var logRepo = LogManager.GetRepository(Assembly.GetEntryAssembly());
+			var fileInfo = new FileInfo("log4net.config");
+			log4net.Config.XmlConfigurator.Configure(logRepo, fileInfo);
 
 			Log.Info("----------------");
 			Log.Info($"Launchpad v{LocalVersionService.GetLocalLauncherVersion()} starting...");
@@ -129,6 +133,12 @@ namespace Launchpad.Launcher
 			if (!(unhandledExceptionEventArgs.ExceptionObject is Exception unhandledException))
 			{
 				return;
+			}
+
+			// Unwrap TargetInvocationExceptions
+			if (unhandledException is TargetInvocationException)
+			{
+				unhandledException = unhandledException.InnerException ?? unhandledException;
 			}
 
 			if (unhandledException is DllNotFoundException)

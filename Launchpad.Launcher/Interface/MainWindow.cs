@@ -22,23 +22,26 @@
 
 using System;
 using System.Diagnostics;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Threading.Tasks;
 using Gdk;
+using GLib;
 using Gtk;
 
 using Launchpad.Common;
 using Launchpad.Launcher.Configuration;
 using Launchpad.Launcher.Handlers;
 using Launchpad.Launcher.Handlers.Protocols;
-using Launchpad.Launcher.Interface.ChangelogBrowser;
 using Launchpad.Launcher.Services;
 using Launchpad.Launcher.Utility;
 using Launchpad.Launcher.Utility.Enums;
 using log4net;
 
 using NGettext;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Png;
+using Application = Gtk.Application;
+using Process = System.Diagnostics.Process;
+using Task = System.Threading.Tasks.Task;
 
 namespace Launchpad.Launcher.Interface
 {
@@ -78,11 +81,6 @@ namespace Launchpad.Launcher.Interface
 		private readonly TagfileService TagfileService = new TagfileService();
 
 		/// <summary>
-		/// The changelog browser.
-		/// </summary>
-		//private readonly Changelog Browser;
-
-		/// <summary>
 		/// The current mode that the launcher is in. Determines what the primary button does when pressed.
 		/// </summary>
 		private ELauncherMode Mode = ELauncherMode.Inactive;
@@ -102,14 +100,12 @@ namespace Launchpad.Launcher.Interface
 		/// </summary>
 		/// <param name="builder">The UI builder.</param>
 		/// <param name="handle">The native handle of the window.</param>
-		public MainWindow(Builder builder, IntPtr handle)
+		private MainWindow(Builder builder, IntPtr handle)
 			: base(handle)
 		{
 			builder.Autoconnect(this);
 
-			this.DeleteEvent += OnDeleteEvent;
-			this.MenuReinstallItem.Activated += OnReinstallGameActionActivated;
-			this.MenuRepairItem.Activated += OnMenuRepairItemActivated;
+			BindUIEvents();
 
 			// Bind the handler events
 			this.Game.ProgressChanged += OnModuleInstallationProgressChanged;
@@ -127,11 +123,6 @@ namespace Launchpad.Launcher.Interface
 
 			// Set the window title
 			this.Title = LocalizationCatalog.GetString("Launchpad - {0}", this.Configuration.GameName);
-
-			// Create a new changelog widget, and add it to the scrolled window
-			//this.Browser = new Changelog(this.ChangelogScrolledWindow);
-			//this.ChangelogScrolledWindow.ShowAll();
-
 			this.StatusLabel.Text = LocalizationCatalog.GetString("Idle");
 		}
 
@@ -166,8 +157,6 @@ namespace Launchpad.Launcher.Interface
 			}
 			else
 			{
-				LoadChangelog();
-
 				LoadBanner();
 
 				// If we can connect, proceed with the rest of our checks.
@@ -284,35 +273,28 @@ namespace Launchpad.Launcher.Interface
 			(
 				() =>
 				{
-					using (var bannerStream = new MemoryStream())
-					{
-						// Fetch the banner from the server
-						patchHandler.GetBanner().Save(bannerStream, ImageFormat.Png);
+					// Fetch the banner from the server
+					var bannerImage = patchHandler.GetBanner();
 
-						// Load the image into a pixel buffer
-						bannerStream.Position = 0;
-						return new Pixbuf(bannerStream);
-					}
+					bannerImage.Mutate(i => i.Resize(this.BannerImage.AllocatedWidth, 0));
+
+					// Load the image into a pixel buffer
+					return new Pixbuf
+					(
+						Bytes.NewStatic(bannerImage.SavePixelData()),
+						Colorspace.Rgb,
+						true,
+						8,
+						bannerImage.Width,
+						bannerImage.Height,
+						4 * bannerImage.Width
+					);
 				}
 			)
 			.ContinueWith
 			(
 				async bannerTask => this.BannerImage.Pixbuf = await bannerTask
 			);
-		}
-
-		private void LoadChangelog()
-		{
-			// Load the changelog. Try a direct URL first, and a protocol-specific
-			// implementation after.
-			if (LauncherHandler.CanAccessStandardChangelog())
-			{
-				//this.Browser.Navigate(this.Configuration.ChangelogAddress.AbsoluteUri);
-			}
-			else
-			{
-				this.Launcher.LoadFallbackChangelog();
-			}
 		}
 
 		/// <summary>
@@ -414,17 +396,6 @@ namespace Launchpad.Launcher.Interface
 		}
 
 		/// <summary>
-		/// Exits the application properly when the window is deleted.
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="a">The alpha component.</param>
-		private static void OnDeleteEvent(object sender, DeleteEventArgs a)
-		{
-			Application.Quit();
-			a.RetVal = true;
-		}
-
-		/// <summary>
 		/// Runs a game repair, no matter what the state the installation is in.
 		/// </summary>
 		/// <param name="sender">Sender.</param>
@@ -434,7 +405,7 @@ namespace Launchpad.Launcher.Interface
 			SetLauncherMode(ELauncherMode.Repair, false);
 
 			// Simulate a button press from the user.
-			OnMainButtonClicked(this, EventArgs.Empty);
+			this.MainButton.Click();
 		}
 
 		/// <summary>
@@ -557,10 +528,13 @@ namespace Launchpad.Launcher.Interface
 		/// <param name="e">Empty event args.</param>
 		private void OnGameLaunchFailed(object sender, EventArgs e)
 		{
-			this.StatusLabel.Text = LocalizationCatalog.GetString("The game failed to launch. Try repairing the installation.");
-			this.MainProgressBar.Text = string.Empty;
+			Application.Invoke((o, args) =>
+			{
+				this.StatusLabel.Text = LocalizationCatalog.GetString("The game failed to launch. Try repairing the installation.");
+				this.MainProgressBar.Text = string.Empty;
 
-			SetLauncherMode(ELauncherMode.Repair, false);
+				SetLauncherMode(ELauncherMode.Repair, false);
+			});
 		}
 
 		/// <summary>
@@ -570,25 +544,28 @@ namespace Launchpad.Launcher.Interface
 		/// <param name="e">Contains the type of failure that occurred.</param>
 		private void OnGameDownloadFailed(object sender, EventArgs e)
 		{
-			switch (this.Mode)
+			Application.Invoke((o, args) =>
 			{
-				case ELauncherMode.Install:
-				case ELauncherMode.Update:
-				case ELauncherMode.Repair:
+				switch (this.Mode)
 				{
-					// Set the mode to the same as it was, but no longer in progress.
-					// The modes which fall to this case are all capable of repairing an incomplete or
-					// broken install on their own.
-					SetLauncherMode(this.Mode, false);
-					break;
+					case ELauncherMode.Install:
+					case ELauncherMode.Update:
+					case ELauncherMode.Repair:
+					{
+						// Set the mode to the same as it was, but no longer in progress.
+						// The modes which fall to this case are all capable of repairing an incomplete or
+						// broken install on their own.
+						SetLauncherMode(this.Mode, false);
+						break;
+					}
+					default:
+					{
+						// Other cases (such as Launch) will go to the default mode of Repair.
+						SetLauncherMode(ELauncherMode.Repair, false);
+						break;
+					}
 				}
-				default:
-				{
-					// Other cases (such as Launch) will go to the default mode of Repair.
-					SetLauncherMode(ELauncherMode.Repair, false);
-					break;
-				}
-			}
+			});
 		}
 
 		/// <summary>
@@ -651,36 +628,39 @@ namespace Launchpad.Launcher.Interface
 		/// </summary>
 		private void OnGameExited(object sender, GameExitEventArgs e)
 		{
-			if (e.ExitCode != 0)
+			Application.Invoke((o, args) =>
 			{
-				var crashDialog = new MessageDialog
-				(
-					this,
-					DialogFlags.Modal,
-					MessageType.Question,
-					ButtonsType.YesNo,
-					LocalizationCatalog.GetString
-					(
-						"Whoops! The game appears to have crashed.\n" +
-						"Would you like the launcher to verify the installation?"
-					)
-				);
-
-				if (crashDialog.Run() == (int)ResponseType.Yes)
+				if (e.ExitCode != 0)
 				{
-					SetLauncherMode(ELauncherMode.Repair, false);
-					OnMainButtonClicked(this, EventArgs.Empty);
+					var crashDialog = new MessageDialog
+					(
+						this,
+						DialogFlags.Modal,
+						MessageType.Question,
+						ButtonsType.YesNo,
+						LocalizationCatalog.GetString
+						(
+							"Whoops! The game appears to have crashed.\n" +
+							"Would you like the launcher to verify the installation?"
+						)
+					);
+
+					if (crashDialog.Run() == (int)ResponseType.Yes)
+					{
+						SetLauncherMode(ELauncherMode.Repair, false);
+						this.MainButton.Click();
+					}
+					else
+					{
+						SetLauncherMode(ELauncherMode.Launch, false);
+					}
+					crashDialog.Destroy();
 				}
 				else
 				{
 					SetLauncherMode(ELauncherMode.Launch, false);
 				}
-				crashDialog.Destroy();
-			}
-			else
-			{
-				SetLauncherMode(ELauncherMode.Launch, false);
-			}
+			});
 		}
 
 		/// <summary>

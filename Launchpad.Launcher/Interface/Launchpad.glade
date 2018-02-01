@@ -120,7 +120,13 @@
                         <property name="shadow_type">in</property>
                         <property name="min_content_width">310</property>
                         <child>
-                          <placeholder/>
+                          <object class="GtkTextView" id="ChangelogTextView">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="editable">False</property>
+                            <property name="cursor_visible">False</property>
+                            <property name="accepts_tab">False</property>
+                          </object>
                         </child>
                       </object>
                     </child>
@@ -179,6 +185,8 @@
                       <object class="GtkProgressBar" id="MainProgressBar">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="show_text">True</property>
+                        <property name="ellipsize">middle</property>
                       </object>
                     </child>
                   </object>

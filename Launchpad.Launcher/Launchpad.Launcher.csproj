@@ -2,7 +2,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <AssemblyName>Launchpad</AssemblyName>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFrameworks>net462;netcoreapp2.0</TargetFrameworks>
     <Platform>x86</Platform>
     <PlatformTarget>x86</PlatformTarget>
     <CodeAnalysisRuleSet>..\stylecop.ruleset</CodeAnalysisRuleSet>
@@ -36,12 +36,12 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation" />
-    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Config.Net" Version="4.6.1.82" />
     <PackageReference Include="GtkSharp" Version="3.22.24.29" />
     <PackageReference Include="GtkSharp.Win32" Version="3.1.2" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0002" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta004" PrivateAssets="all" />
     <PackageReference Include="NGettext" Version="0.6.3" />
     <PackageReference Include="log4net" Version="2.0.8" />
@@ -58,7 +58,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <InProject>false</InProject>
     </Content>
-    <Content Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="$(ProjectDir)\..\stylecop.json">
@@ -77,7 +76,7 @@
     <ItemGroup>
       <BundledLibraries Include="$(ProjectDir)lib\**\*.*" />
     </ItemGroup>
-    <Copy SourceFiles="$(BundledLibraries)"/>
+    <Copy SourceFiles="$(BundledLibraries)" />
   </Target>
   <Target Name="DeleteRuntimeInfoMono" AfterTargets="AfterBuild">
     <Delete Files="$(OutputPath)\System.Runtime.InteropServices.RuntimeInformation.dll" Condition="'$(OS)' == 'Unix'" />

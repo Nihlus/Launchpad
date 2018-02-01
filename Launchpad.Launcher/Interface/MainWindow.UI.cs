@@ -20,6 +20,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using System;
 using System.Reflection;
 using Gtk;
 using UIElement = Gtk.Builder.ObjectAttribute;
@@ -42,7 +43,7 @@ namespace Launchpad.Launcher.Interface
 		[UIElement] private readonly ImageMenuItem MenuReinstallItem;
 		[UIElement] private readonly ImageMenuItem MenuAboutItem;
 
-		[UIElement] private readonly ScrolledWindow ChangelogScrolledWindow;
+		[UIElement] private readonly TextView ChangelogTextView;
 		[UIElement] private readonly Image BannerImage;
 
 		[UIElement] private readonly Label StatusLabel;
@@ -60,6 +61,28 @@ namespace Launchpad.Launcher.Interface
 			{
 				return new MainWindow(builder, builder.GetObject(nameof(MainWindow)).Handle);
 			}
+		}
+
+		/// <summary>
+		/// Binds UI-related events.
+		/// </summary>
+		private void BindUIEvents()
+		{
+			this.DeleteEvent += OnDeleteEvent;
+			this.MenuReinstallItem.Activated += OnReinstallGameActionActivated;
+			this.MenuRepairItem.Activated += OnMenuRepairItemActivated;
+			this.MainButton.Clicked += OnMainButtonClicked;
+		}
+
+		/// <summary>
+		/// Exits the application properly when the window is deleted.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="a">The alpha component.</param>
+		private static void OnDeleteEvent(object sender, DeleteEventArgs a)
+		{
+			Application.Quit();
+			a.RetVal = true;
 		}
 	}
 }

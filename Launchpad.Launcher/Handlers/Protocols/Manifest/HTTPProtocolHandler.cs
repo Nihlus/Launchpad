@@ -21,7 +21,6 @@
 //
 
 using System;
-using System.Drawing;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -29,6 +28,8 @@ using System.Text;
 using Launchpad.Common;
 using Launchpad.Common.Enums;
 using log4net;
+using SixLabors.ImageSharp;
+using Image = SixLabors.ImageSharp.Image;
 
 namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 {
@@ -121,13 +122,13 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		}
 
 		/// <inheritdoc />
-		public override Bitmap GetBanner()
+		public override Image<Rgba32> GetBanner()
 		{
 			var bannerURL = $"{this.Configuration.RemoteAddress}/launcher/banner.png";
 			var localBannerPath = $"{Path.GetTempPath()}/banner.png";
 
 			DownloadRemoteFile(bannerURL, localBannerPath);
-			return new Bitmap(localBannerPath);
+			return Image.Load(localBannerPath);
 		}
 
 		/// <inheritdoc />
