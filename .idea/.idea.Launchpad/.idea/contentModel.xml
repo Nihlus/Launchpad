@@ -241,6 +241,7 @@
           </e>
         </e>
         <e p="Interface" t="Include">
+          <e p="#Launchpad.glade#" t="Include" />
           <e p="Launchpad.glade" t="Include" />
           <e p="Launchpad.glade~" t="Include" />
           <e p="MainWindow.UI.cs" t="Include" />
