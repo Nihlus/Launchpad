@@ -128,11 +128,11 @@ namespace Launchpad.Launcher.Interface
 		/// Initializes the UI of the launcher, performing varying checks against the patching server.
 		/// </summary>
 		/// <returns>A task that must be awaited.</returns>
-		public async Task InitializeAsync()
+		public Task InitializeAsync()
 		{
 			if (this.IsInitialized)
 			{
-				return;
+				return Task.CompletedTask;
 			}
 
 			// First of all, check if we can connect to the patching service.
@@ -217,6 +217,7 @@ namespace Launchpad.Launcher.Interface
 			}
 
 			this.IsInitialized = true;
+			return Task.CompletedTask;
 		}
 
 		private void DisplayInitialStartupDialog()

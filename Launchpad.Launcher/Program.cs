@@ -52,8 +52,7 @@ namespace Launchpad.Launcher
 		/// <summary>
 		/// The main entry point for the application.
 		/// </summary>
-		[STAThread]
-		private static async Task Main()
+		private static void Main()
 		{
 			// Bind any unhandled exceptions in the main thread so that they are logged.
 			AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;

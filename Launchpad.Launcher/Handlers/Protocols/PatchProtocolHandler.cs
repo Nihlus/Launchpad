@@ -185,7 +185,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			{
 				// Create the .install file to mark that an installation has begun.
 				// If it exists, do nothing.
-				TagfileService.CreateGameTagfile();
+				this.TagfileService.CreateGameTagfile();
 
 				// Download Game
 				DownloadModule(EModule.Game);

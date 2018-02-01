@@ -482,7 +482,11 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				var localPathParentDir = Path.GetDirectoryName(localPath);
 				if (!Directory.Exists(localPathParentDir))
 				{
-					Directory.CreateDirectory(Path.GetDirectoryName(localPath));
+					var parentDir = Path.GetDirectoryName(localPath);
+					if (!(parentDir is null))
+					{
+						Directory.CreateDirectory(parentDir);
+					}
 				}
 			}
 			else

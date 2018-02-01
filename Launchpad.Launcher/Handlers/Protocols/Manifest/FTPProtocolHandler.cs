@@ -288,7 +288,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 								fileSize
 							);
 
-							this.ModuleDownloadProgressArgs.ProgressFraction = (double)totalBytesDownloaded / (double)fileSize;
+							this.ModuleDownloadProgressArgs.ProgressFraction = (double)totalBytesDownloaded / fileSize;
 							OnModuleDownloadProgressChanged();
 						}
 						else
@@ -315,7 +315,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 									totalBytesDownloaded,
 									fileSize
 								);
-								this.ModuleDownloadProgressArgs.ProgressFraction = (double)totalBytesDownloaded / (double)fileSize;
+								this.ModuleDownloadProgressArgs.ProgressFraction = (double)totalBytesDownloaded / fileSize;
 								OnModuleDownloadProgressChanged();
 							}
 						}
