@@ -279,9 +279,6 @@
               <e p="net462" t="Include">
                 <e p="Launchpad.Launcher.AssemblyInfo.cs" t="Include" />
               </e>
-              <e p="netcoreapp2.0" t="Include">
-                <e p="Launchpad.Launcher.AssemblyInfo.cs" t="Include" />
-              </e>
             </e>
           </e>
         </e>
