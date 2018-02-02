@@ -6,7 +6,3 @@ install:
   - dotnet restore
 script:
   - msbuild /p:Configuration=Release Launchpad.sln
-after_success:
-  - mono --debug --profile=log:coverage,covfilter=+Launchpad,covfilter=-Launchpad.Tests Launchpad.Tests/bin/x86/Debug/net462/Launchpad.Tests.exe --noresult
-  - mprof-report --reports=coverage --coverage-out=coverage.xml output.mlpd
-  - bash <(curl -s https://codecov.io/bash)

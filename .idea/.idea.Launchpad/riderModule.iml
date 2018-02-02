@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="RIDER_MODULE" version="4">
   <component name="NewModuleRootManager">
-    <content url="file://$USER_HOME$/.nuget/packages/nunit3testadapter/3.9.0/build/net35/Mono.Cecil.Mdb.dll" />
-    <content url="file://$USER_HOME$/.nuget/packages/nunit3testadapter/3.9.0/build/net35/Mono.Cecil.Pdb.dll" />
-    <content url="file://$USER_HOME$/.nuget/packages/nunit3testadapter/3.9.0/build/net35/Mono.Cecil.Rocks.dll" />
-    <content url="file://$USER_HOME$/.nuget/packages/nunit3testadapter/3.9.0/build/net35/Mono.Cecil.dll" />
-    <content url="file://$USER_HOME$/.nuget/packages/nunit3testadapter/3.9.0/build/net35/NUnit3.TestAdapter.dll" />
-    <content url="file://$USER_HOME$/.nuget/packages/nunit3testadapter/3.9.0/build/net35/nunit.engine.api.dll" />
-    <content url="file://$USER_HOME$/.nuget/packages/nunit3testadapter/3.9.0/build/net35/nunit.engine.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.3.1/build/_common/xunit.abstractions.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.3.1/build/_common/xunit.runner.reporters.net452.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.3.1/build/_common/xunit.runner.utility.net452.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.3.1/build/_common/xunit.runner.visualstudio.testadapter.dll" />
     <content url="file://$MODULE_DIR$/../.." />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>

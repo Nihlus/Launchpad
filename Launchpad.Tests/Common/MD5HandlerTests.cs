@@ -21,11 +21,10 @@
 
 using System.IO;
 using Launchpad.Common.Handlers;
-using NUnit.Framework;
+using Xunit;
 
 namespace Launchpad.Tests.Common
 {
-	[TestFixture]
 	public class MD5HandlerTests
 	{
 		/// <summary>
@@ -38,10 +37,10 @@ namespace Launchpad.Tests.Common
 
 		private const string ExpectedHash = "6A99C575AB87F8C7D1ED1E52E7E349CE";
 
-		[Test]
+		[Fact]
 		public void TestHashStream()
 		{
-			Assert.AreEqual(ExpectedHash, MD5Handler.GetStreamHash(this.DataStream));
+			Assert.Equal(ExpectedHash, MD5Handler.GetStreamHash(this.DataStream));
 		}
 	}
 }

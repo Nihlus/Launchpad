@@ -20,11 +20,10 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using Launchpad.Common;
-using NUnit.Framework;
+using Xunit;
 
 namespace Launchpad.Tests.Common
 {
-	[TestFixture]
 	public class ExtensionMethodTests
 	{
 		private const string Expected = "data";
@@ -33,28 +32,28 @@ namespace Launchpad.Tests.Common
 		private const string StringThatContainsLinefeeds = "data\n\n";
 		private const string StringThatContainsEverything = "data\0\r\n";
 
-		[Test]
+		[Fact]
 		public void TestRemoveNulls()
 		{
-			Assert.AreEqual(Expected, StringThatContainsNulls.RemoveLineSeparatorsAndNulls());
+			Assert.Equal(Expected, StringThatContainsNulls.RemoveLineSeparatorsAndNulls());
 		}
 
-		[Test]
+		[Fact]
 		public void TestRemoveCarriageReturns()
 		{
-			Assert.AreEqual(Expected, StringThatContainsCarriageReturns.RemoveLineSeparatorsAndNulls());
+			Assert.Equal(Expected, StringThatContainsCarriageReturns.RemoveLineSeparatorsAndNulls());
 		}
 
-		[Test]
+		[Fact]
 		public void TestRemoveLinefeeds()
 		{
-			Assert.AreEqual(Expected, StringThatContainsLinefeeds.RemoveLineSeparatorsAndNulls());
+			Assert.Equal(Expected, StringThatContainsLinefeeds.RemoveLineSeparatorsAndNulls());
 		}
 
-		[Test]
+		[Fact]
 		public void TestRemoveNullsCarriageReturnsLinefeeds()
 		{
-			Assert.AreEqual(Expected, StringThatContainsEverything.RemoveLineSeparatorsAndNulls());
+			Assert.Equal(Expected, StringThatContainsEverything.RemoveLineSeparatorsAndNulls());
 		}
 	}
 }

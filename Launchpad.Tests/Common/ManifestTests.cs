@@ -23,11 +23,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Launchpad.Common.Handlers.Manifest;
-using NUnit.Framework;
+using Xunit;
 
 namespace Launchpad.Tests.Common
 {
-	[TestFixture]
 	public class ManifestTests
 	{
 		private readonly ManifestEntry ExpectedObject = new ManifestEntry
@@ -101,106 +100,106 @@ namespace Launchpad.Tests.Common
 		};
 
 
-		[Test]
+		[Fact]
 		public void TestCreateFromValidInput()
 		{
 			bool parsingSucceded = ManifestEntry.TryParse(ValidInput, out var createdEntry);
 
-			Assert.That(parsingSucceded);
-			Assert.AreEqual(this.ExpectedObject, createdEntry);
+			Assert.True(parsingSucceded);
+			Assert.Equal(this.ExpectedObject, createdEntry);
 		}
 
-		[Test]
+		[Fact]
 		public void TestInvalidEmptyString()
 		{
 			bool parsingSucceeded = ManifestEntry.TryParse(string.Empty, out ManifestEntry _);
-			Assert.That(!parsingSucceeded);
+			Assert.False(parsingSucceeded);
 		}
 
-		[Test]
+		[Fact]
 		public void TestInvalidNullInput()
 		{
 			bool parsingSucceeded = ManifestEntry.TryParse(null, out ManifestEntry _);
-			Assert.That(!parsingSucceeded);
+			Assert.False(parsingSucceeded);
 		}
 
-		[Test]
+		[Fact]
 		public void TestInvalidNegativeSize()
 		{
 			bool parsingSucceded = ManifestEntry.TryParse(InvalidInputNegativeSize, out _);
 
-			Assert.That(!parsingSucceded);
+			Assert.False(parsingSucceded);
 		}
 
-		[Test]
+		[Fact]
 		public void TestInvalidHashTooShort()
 		{
 			bool parsingSucceded = ManifestEntry.TryParse(InvalidInputHashTooShort, out _);
 
-			Assert.That(!parsingSucceded);
+			Assert.False(parsingSucceded);
 		}
 
-		[Test]
+		[Fact]
 		public void TestInvalidTooManyElements()
 		{
 			bool parsingSucceded = ManifestEntry.TryParse(InvalidInputTooManyElements, out _);
 
-			Assert.That(!parsingSucceded);
+			Assert.False(parsingSucceded);
 		}
 
-		[Test]
+		[Fact]
 		public void TestInvalidInvalidNumber()
 		{
 			bool parsingSucceded = ManifestEntry.TryParse(InvalidInputInvalidNumber, out _);
 
-			Assert.That(!parsingSucceded);
+			Assert.False(parsingSucceded);
 		}
 
-		[Test]
+		[Fact]
 		public void TestInvalidMissingHash()
 		{
 			bool parsingSucceded = ManifestEntry.TryParse(InvalidInputMissingHash, out _);
 
-			Assert.That(!parsingSucceded);
+			Assert.False(parsingSucceded);
 		}
 
-		[Test]
+		[Fact]
 		public void TestToString()
 		{
-			Assert.AreEqual(ExpectedOutputString, this.ExpectedObject.ToString());
+			Assert.Equal(ExpectedOutputString, this.ExpectedObject.ToString());
 		}
 
-		[Test]
+		[Fact]
 		public void TestObjectsNotEqualNull()
 		{
-			Assert.That(!this.ValidObject1.Equals(null));
+			Assert.False(this.ValidObject1.Equals(null));
 		}
 
-		[Test]
+		[Fact]
 		public void TestObjectsNotEqualOtherType()
 		{
-			Assert.That(!this.ValidObject1.Equals(new object()));
+			Assert.False(this.ValidObject1.Equals(new object()));
 		}
 
-		[Test]
+		[Fact]
 		public void TestObjectsEqual()
 		{
-			Assert.That(this.ValidObject1.Equals(this.ValidObject1));
+			Assert.True(this.ValidObject1.Equals(this.ValidObject1));
 		}
 
-		[Test]
+		[Fact]
 		public void TestObjectsEqualDifferentHashCase()
 		{
-			Assert.That(this.ValidObject2.Equals(this.ValidObject3EqualTo2));
+			Assert.True(this.ValidObject2.Equals(this.ValidObject3EqualTo2));
 		}
 
-		[Test]
+		[Fact]
 		public void TestObjectsNotEqual()
 		{
-			Assert.That(!this.ValidObject1.Equals(this.ValidObject2));
+			Assert.False(this.ValidObject1.Equals(this.ValidObject2));
 		}
 
-		[Test]
+		[Fact]
 		public void TestLoadManifestWindowsStyle()
 		{
 			IReadOnlyList<ManifestEntry> loadedEntries;
@@ -209,10 +208,10 @@ namespace Launchpad.Tests.Common
 				loadedEntries = ManifestHandler.LoadManifest(ms);
 			}
 
-			Assert.That(loadedEntries, Is.EquivalentTo(SampleManifestEntries));
+			Assert.Equal(loadedEntries, SampleManifestEntries);
 		}
 
-		[Test]
+		[Fact]
 		public void TestLoadManifestUnixStyle()
 		{
 			IReadOnlyList<ManifestEntry> loadedEntries;
@@ -221,7 +220,7 @@ namespace Launchpad.Tests.Common
 				loadedEntries = ManifestHandler.LoadManifest(ms);
 			}
 
-			Assert.That(loadedEntries, Is.EquivalentTo(SampleManifestEntries));
+			Assert.Equal(loadedEntries, SampleManifestEntries);
 		}
 	}
 }
