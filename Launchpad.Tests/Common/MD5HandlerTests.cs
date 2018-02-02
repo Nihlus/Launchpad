@@ -38,7 +38,7 @@ namespace Launchpad.Tests.Common
 		private const string ExpectedHash = "6A99C575AB87F8C7D1ED1E52E7E349CE";
 
 		[Fact]
-		public void TestHashStream()
+		public void HashesCorrectly()
 		{
 			Assert.Equal(ExpectedHash, MD5Handler.GetStreamHash(this.DataStream));
 		}
