@@ -22,6 +22,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Launchpad.Common;
 using Launchpad.Common.Handlers.Manifest;
 using Xunit;
 
@@ -77,27 +78,32 @@ namespace Launchpad.Tests.Common
 			"/MyGame.exe:D41D8CD98F00B204E9800998ECF8427E:0\n" +
 			"/MyGame.txt:170606695BC36CDC3455E29ADBEE0D40:28\n";
 
-		private static readonly List<ManifestEntry> SampleManifestEntries = new List<ManifestEntry>
+		private readonly List<ManifestEntry> SampleManifestEntries;
+
+		public ManifestTests()
 		{
-			new ManifestEntry
+			this.SampleManifestEntries = new List<ManifestEntry>
 			{
-				Hash = "7D23FF901039AEF6293954D33D23C066",
-				RelativePath = "/GameVersion.txt",
-				Size = 5
-			},
-			new ManifestEntry
-			{
-				Hash = "D41D8CD98F00B204E9800998ECF8427E",
-				RelativePath = "/MyGame.exe",
-				Size = 0
-			},
-			new ManifestEntry
-			{
-				Hash = "170606695BC36CDC3455E29ADBEE0D40",
-				RelativePath = "/MyGame.txt",
-				Size = 28
-			}
-		};
+				new ManifestEntry
+				{
+					Hash = "7D23FF901039AEF6293954D33D23C066",
+					RelativePath = PlatformHelpers.IsRunningOnUnix() ? "/GameVersion.txt" : "\\GameVersion.txt",
+					Size = 5
+				},
+				new ManifestEntry
+				{
+					Hash = "D41D8CD98F00B204E9800998ECF8427E",
+					RelativePath = PlatformHelpers.IsRunningOnUnix() ? "/MyGame.exe" : "\\MyGame.exe",
+					Size = 0
+				},
+				new ManifestEntry
+				{
+					Hash = "170606695BC36CDC3455E29ADBEE0D40",
+					RelativePath = PlatformHelpers.IsRunningOnUnix() ? "/MyGame.txt" : "\\MyGame.txt",
+					Size = 28
+				}
+			};
+		}
 
 
 		[Fact]
