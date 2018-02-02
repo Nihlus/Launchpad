@@ -45,26 +45,7 @@ namespace Launchpad.Tests.Common
 		private const string InvalidInputMissingHash = "/data/content.pak::2000000000";
 
 
-		private readonly ManifestEntry ValidObject1 = new ManifestEntry
-		{
-			RelativePath = "/data/content1.pak",
-			Hash = "6A99C575AB87F8C7D1ED1E52E7E349CE",
-			Size = 3000000000
-		};
-
-		private readonly ManifestEntry ValidObject2 = new ManifestEntry
-		{
-			RelativePath = "/data/content2.pak",
-			Hash = "6a99c575ab87f8c7d1ed1e52e7e349ce",
-			Size = 4000000000
-		};
-
-		private readonly ManifestEntry ValidObject3EqualTo2 = new ManifestEntry
-		{
-			RelativePath = "/data/content2.pak",
-			Hash = "6A99C575AB87F8C7D1ED1E52E7E349CE",
-			Size = 4000000000
-		};
+		private readonly ManifestEntry ValidObject;
 
 		private const string ExpectedOutputString = ValidInput;
 
@@ -82,6 +63,13 @@ namespace Launchpad.Tests.Common
 
 		public ManifestTests()
 		{
+			this.ValidObject = new ManifestEntry
+			{
+				Hash = "6A99C575AB87F8C7D1ED1E52E7E349CE",
+				RelativePath = PlatformHelpers.IsRunningOnUnix() ? "/data/content1.pak" : "\\data\\content1.pak",
+				Size = 3000000000
+			};
+
 			this.SampleManifestEntries = new List<ManifestEntry>
 			{
 				new ManifestEntry
@@ -178,31 +166,19 @@ namespace Launchpad.Tests.Common
 		[Fact]
 		public void TestObjectsNotEqualNull()
 		{
-			Assert.False(this.ValidObject1.Equals(null));
+			Assert.False(this.ValidObject.Equals(null));
 		}
 
 		[Fact]
 		public void TestObjectsNotEqualOtherType()
 		{
-			Assert.False(this.ValidObject1.Equals(new object()));
+			Assert.False(this.ValidObject.Equals(new object()));
 		}
 
 		[Fact]
 		public void TestObjectsEqual()
 		{
-			Assert.True(this.ValidObject1.Equals(this.ValidObject1));
-		}
-
-		[Fact]
-		public void TestObjectsEqualDifferentHashCase()
-		{
-			Assert.True(this.ValidObject2.Equals(this.ValidObject3EqualTo2));
-		}
-
-		[Fact]
-		public void TestObjectsNotEqual()
-		{
-			Assert.False(this.ValidObject1.Equals(this.ValidObject2));
+			Assert.True(this.ValidObject.Equals(this.ValidObject));
 		}
 
 		[Fact]
