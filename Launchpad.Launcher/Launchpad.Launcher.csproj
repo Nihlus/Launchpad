@@ -2,7 +2,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <AssemblyName>Launchpad</AssemblyName>
-    <TargetFrameworks>net462;netcoreapp2.0</TargetFrameworks>
+    <TargetFramework>net462</TargetFramework>
     <Platform>x86</Platform>
     <PlatformTarget>x86</PlatformTarget>
     <CodeAnalysisRuleSet>..\stylecop.ruleset</CodeAnalysisRuleSet>
