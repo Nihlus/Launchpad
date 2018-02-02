@@ -198,7 +198,7 @@ namespace Launchpad.Launcher.Interface
 							if (this.Checks.IsGameOutdated())
 							{
 								// If it does, offer to update it
-								Log.Info($"The game is outdated.");
+								Log.Info("The game is outdated.");
 								SetLauncherMode(ELauncherMode.Update, false);
 							}
 							else
