@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.IO;
 
 using Launchpad.Common.Enums;
-using log4net;
 
 namespace Launchpad.Common.Handlers.Manifest
 {
@@ -34,11 +33,6 @@ namespace Launchpad.Common.Handlers.Manifest
 	/// </summary>
 	public sealed class ManifestHandler
 	{
-		/// <summary>
-		/// Logger instance for this class.
-		/// </summary>
-		private static readonly ILog Log = LogManager.GetLogger(typeof(ManifestHandler));
-
 		private readonly object ManifestsLock = new object();
 
 		/// <summary>
@@ -128,34 +122,20 @@ namespace Launchpad.Common.Handlers.Manifest
 				var oldManifestPath = GetManifestPath(manifestType, true);
 
 				// Reload new manifests
-				try
+				if (!File.Exists(newManifestPath))
 				{
-					if (!File.Exists(newManifestPath))
-					{
-						this.Manifests.AddOrUpdate(manifestType, null);
-					}
+					this.Manifests.AddOrUpdate(manifestType, null);
+				}
 
-					this.Manifests.AddOrUpdate(manifestType, LoadManifest(newManifestPath));
-				}
-				catch (IOException ioex)
-				{
-					Log.Warn($"Could not load manifest of type {manifestType} (IOException): " + ioex.Message);
-				}
+				this.Manifests.AddOrUpdate(manifestType, LoadManifest(newManifestPath));
 
 				// Reload old manifests
-				try
+				if (!File.Exists(oldManifestPath))
 				{
-					if (!File.Exists(oldManifestPath))
-					{
-						this.OldManifests.AddOrUpdate(manifestType, null);
-					}
+					this.OldManifests.AddOrUpdate(manifestType, null);
+				}
 
-					this.OldManifests.AddOrUpdate(manifestType, LoadManifest(oldManifestPath));
-				}
-				catch (IOException ioex)
-				{
-					Log.Warn($"Could not load old manifest of type {manifestType} (IOException): " + ioex.Message);
-				}
+				this.OldManifests.AddOrUpdate(manifestType, LoadManifest(oldManifestPath));
 			}
 		}
 

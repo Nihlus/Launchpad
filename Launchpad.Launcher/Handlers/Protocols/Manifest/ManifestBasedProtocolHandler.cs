@@ -31,8 +31,8 @@ using Launchpad.Common.Handlers;
 using Launchpad.Common.Handlers.Manifest;
 using Launchpad.Launcher.Services;
 using Launchpad.Launcher.Utility;
-using log4net;
 using NGettext;
+using NLog;
 
 namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 {
@@ -42,14 +42,14 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 	public abstract class ManifestBasedProtocolHandler : PatchProtocolHandler
 	{
 		/// <summary>
+		/// Logger instance for this class.
+		/// </summary>
+		private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
+
+		/// <summary>
 		/// The localization catalog.
 		/// </summary>
 		private static readonly ICatalog LocalizationCatalog = new Catalog("Launchpad", "./Content/locale");
-
-		/// <summary>
-		/// Logger instance for this class.
-		/// </summary>
-		private static readonly ILog Log = LogManager.GetLogger(typeof(ManifestBasedProtocolHandler));
 
 		private readonly LocalVersionService LocalVersionService = new LocalVersionService();
 

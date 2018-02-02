@@ -30,7 +30,7 @@ using Launchpad.Launcher.Configuration;
 using Launchpad.Launcher.Handlers.Protocols;
 using Launchpad.Launcher.Services;
 using Launchpad.Launcher.Utility;
-using log4net;
+using NLog;
 
 namespace Launchpad.Launcher.Handlers
 {
@@ -50,7 +50,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// Logger instance for this class.
 		/// </summary>
-		private static readonly ILog Log = LogManager.GetLogger(typeof(GameHandler));
+		private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
 
 		/// <summary>
 		/// Event raised whenever the progress of installing or updating the game changes.

@@ -31,8 +31,7 @@ using Launchpad.Common;
 using Launchpad.Launcher.Interface;
 using Launchpad.Launcher.Services;
 using Launchpad.Launcher.Utility;
-using log4net;
-using FileInfo = System.IO.FileInfo;
+using NLog;
 using Task = System.Threading.Tasks.Task;
 using Timeout = GLib.Timeout;
 
@@ -46,7 +45,7 @@ namespace Launchpad.Launcher
 		/// <summary>
 		/// Logger instance for this class.
 		/// </summary>
-		private static readonly ILog Log = LogManager.GetLogger(typeof(Program));
+		private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
 
 		private static readonly LocalVersionService LocalVersionService = new LocalVersionService();
 
@@ -66,11 +65,6 @@ namespace Launchpad.Launcher
 				Environment.SetEnvironmentVariable("GSETTINGS_SCHEMA_DIR", "share\\glib-2.0\\schemas\\");
 			}
 
-			var logRepo = LogManager.GetRepository(Assembly.GetEntryAssembly());
-			var fileInfo = new FileInfo("log4net.config");
-			log4net.Config.XmlConfigurator.Configure(logRepo, fileInfo);
-
-			Log.Info("----------------");
 			Log.Info($"Launchpad v{LocalVersionService.GetLocalLauncherVersion()} starting...");
 
 			var systemBitness = Environment.Is64BitOperatingSystem ? "x64" : "x86";

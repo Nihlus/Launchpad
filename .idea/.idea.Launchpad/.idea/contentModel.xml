@@ -249,6 +249,7 @@
         </e>
         <e p="Launchpad.Launcher.csproj" t="IncludeRecursive" />
         <e p="Launchpad.Launcher.csproj.DotSettings" t="Include" />
+        <e p="NLog.config" t="Include" />
         <e p="Program.cs" t="Include" />
         <e p="Resources" t="Include">
           <e p="Icon.ico" t="Include" />
@@ -271,7 +272,7 @@
         </e>
         <e p="app.manifest" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
-        <e p="log4net.config" t="Include" />
+        <e p="launchpad-internal.log" t="Include" />
         <e p="obj" t="ExcludeRecursive">
           <e p="x86" t="Include">
             <e p="Debug" t="Include">
@@ -317,6 +318,7 @@
           <e p="MainWindow.cs" t="Include" />
         </e>
         <e p="Launchpad.Utilities.csproj" t="IncludeRecursive" />
+        <e p="NLog.config" t="Include" />
         <e p="Options" t="Include">
           <e p="CLIOptions.cs" t="Include" />
         </e>
@@ -330,7 +332,6 @@
           </e>
         </e>
         <e p="bin" t="ExcludeRecursive" />
-        <e p="log4net.config" t="Include" />
         <e p="obj" t="ExcludeRecursive">
           <e p="x86" t="Include">
             <e p="Debug" t="Include">

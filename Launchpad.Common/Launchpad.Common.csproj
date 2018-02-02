@@ -30,6 +30,5 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta004" PrivateAssets="all" />
-    <PackageReference Include="log4net" Version="2.0.8" />
   </ItemGroup>
 </Project>

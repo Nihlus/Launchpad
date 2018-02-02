@@ -24,7 +24,7 @@ using System;
 using System.IO;
 
 using Launchpad.Launcher.Utility;
-using log4net;
+using NLog;
 
 namespace Launchpad.Launcher.Services
 {
@@ -36,7 +36,7 @@ namespace Launchpad.Launcher.Services
 		/// <summary>
 		/// Logger instance for this class.
 		/// </summary>
-		private static readonly ILog Log = LogManager.GetLogger(typeof(LocalVersionService));
+		private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
 
 		/// <summary>
 		/// Gets the local game version.

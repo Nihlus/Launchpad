@@ -25,9 +25,8 @@ using System.IO;
 using System.Net;
 using System.Text;
 
-using Launchpad.Common;
 using Launchpad.Common.Enums;
-using log4net;
+using NLog;
 using SixLabors.ImageSharp;
 
 namespace Launchpad.Launcher.Handlers.Protocols.Manifest
@@ -43,7 +42,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <summary>
 		/// Logger instance for this class.
 		/// </summary>
-		private static readonly ILog Log = LogManager.GetLogger(typeof(FTPProtocolHandler));
+		private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
 
 		/// <inheritdoc />
 		public override bool CanPatch()

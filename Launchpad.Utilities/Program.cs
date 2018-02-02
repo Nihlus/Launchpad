@@ -21,7 +21,6 @@
 
 using System;
 using System.IO;
-using System.Reflection;
 using System.Threading;
 using CommandLine;
 using GLib;
@@ -29,10 +28,9 @@ using Launchpad.Utilities.Handlers;
 using Launchpad.Utilities.Utility.Events;
 using Launchpad.Utilities.Interface;
 using Launchpad.Utilities.Options;
-using log4net;
 using Launchpad.Common.Enums;
+using NLog;
 using Application = Gtk.Application;
-using FileInfo = System.IO.FileInfo;
 using Task = System.Threading.Tasks.Task;
 
 namespace Launchpad.Utilities
@@ -42,17 +40,13 @@ namespace Launchpad.Utilities
 		/// <summary>
 		/// Logger instance for this class.
 		/// </summary>
-		private static readonly ILog Log = LogManager.GetLogger(typeof(Program));
+		private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
 
 		/// <summary>
 		/// The main entry point for the application.
 		/// </summary>
 		private static async Task Main(string[] args)
 		{
-			var logRepo = LogManager.GetRepository(Assembly.GetEntryAssembly());
-			var fileInfo = new FileInfo("log4net.config");
-			log4net.Config.XmlConfigurator.Configure(logRepo, fileInfo);
-
 			var options = new CLIOptions();
 			Parser.Default.ParseArguments<CLIOptions>(args)
 				.WithParsed(r => options = r);

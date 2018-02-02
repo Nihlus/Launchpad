@@ -27,7 +27,7 @@ using System.Text;
 
 using Launchpad.Common;
 using Launchpad.Common.Enums;
-using log4net;
+using NLog;
 using SixLabors.ImageSharp;
 using Image = SixLabors.ImageSharp.Image;
 
@@ -42,7 +42,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <summary>
 		/// Logger instance for this class.
 		/// </summary>
-		private static readonly ILog Log = LogManager.GetLogger(typeof(HTTPProtocolHandler));
+		private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
 
 		/// <inheritdoc />
 		public override bool CanPatch()

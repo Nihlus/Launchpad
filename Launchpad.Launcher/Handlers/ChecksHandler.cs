@@ -26,7 +26,7 @@ using Launchpad.Common.Enums;
 using Launchpad.Launcher.Handlers.Protocols;
 
 using Launchpad.Launcher.Utility;
-using log4net;
+using NLog;
 
 namespace Launchpad.Launcher.Handlers
 {
@@ -38,7 +38,7 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// Logger instance for this class.
 		/// </summary>
-		private static readonly ILog Log = LogManager.GetLogger(typeof(ChecksHandler));
+		private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
 
 		private readonly PatchProtocolHandler Patch;
 

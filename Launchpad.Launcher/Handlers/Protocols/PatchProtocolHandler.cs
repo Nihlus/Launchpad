@@ -26,7 +26,7 @@ using System.IO;
 using Launchpad.Common.Enums;
 using Launchpad.Launcher.Configuration;
 using Launchpad.Launcher.Services;
-using log4net;
+using NLog;
 using SixLabors.ImageSharp;
 
 namespace Launchpad.Launcher.Handlers.Protocols
@@ -46,7 +46,7 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <summary>
 		/// Logger instance for this class.
 		/// </summary>
-		private static readonly ILog Log = LogManager.GetLogger(typeof(PatchProtocolHandler));
+		private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
 
 		/// <summary>
 		/// Gets the config handler reference.

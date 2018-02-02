@@ -34,9 +34,9 @@ using Launchpad.Launcher.Handlers.Protocols;
 using Launchpad.Launcher.Services;
 using Launchpad.Launcher.Utility;
 using Launchpad.Launcher.Utility.Enums;
-using log4net;
 
 using NGettext;
+using NLog;
 using SixLabors.ImageSharp;
 using Application = Gtk.Application;
 using Process = System.Diagnostics.Process;
@@ -53,7 +53,7 @@ namespace Launchpad.Launcher.Interface
 		/// <summary>
 		/// Logger instance for this class.
 		/// </summary>
-		private static readonly ILog Log = LogManager.GetLogger(typeof(MainWindow));
+		private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
 
 		private readonly LocalVersionService LocalVersionService = new LocalVersionService();
 
