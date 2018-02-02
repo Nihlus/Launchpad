@@ -77,11 +77,9 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// Event raised whenever the game exits.
 		/// </summary>
-		public event EventHandler<GameExitEventArgs> GameExited;
+		public event EventHandler<int> GameExited;
 
 		// ...
-		private readonly GameExitEventArgs GameExitArgs = new GameExitEventArgs();
-
 		private static readonly ILaunchpadConfiguration Configuration = ConfigHandler.Instance.Configuration;
 
 		private readonly PatchProtocolHandler Patch;
@@ -204,8 +202,6 @@ namespace Launchpad.Launcher.Handlers
 					WorkingDirectory = executableDir
 				};
 
-				this.GameExitArgs.GameName = Configuration.GameName;
-
 				Log.Info($"Launching game. \n\tExecutable path: {gameStartInfo.FileName}");
 
 				var gameProcess = new Process
@@ -225,8 +221,7 @@ namespace Launchpad.Launcher.Handlers
 						);
 					}
 
-					this.GameExitArgs.ExitCode = gameProcess.ExitCode;
-					OnGameExited();
+					OnGameExited(gameProcess.ExitCode);
 
 					// Manual disposing
 					gameProcess.Dispose();
@@ -245,13 +240,11 @@ namespace Launchpad.Launcher.Handlers
 				Log.Warn($"Game launch failed (FileNotFoundException): {fex.Message}");
 				Log.Warn("If the game executable is there, try overriding the executable name in the configuration file.");
 
-				this.GameExitArgs.ExitCode = 2;
 				OnGameLaunchFailed();
 			}
 			catch (IOException ioex)
 			{
 				Log.Warn($"Game launch failed (IOException): {ioex.Message}");
-				this.GameExitArgs.ExitCode = 1;
 
 				OnGameLaunchFailed();
 			}
@@ -274,9 +267,9 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		private void OnModuleInstallationFinished(object sender, ModuleInstallationFinishedArgs e)
+		private void OnModuleInstallationFinished(object sender, EModule e)
 		{
-			this.DownloadFinished?.Invoke(sender, e);
+			this.DownloadFinished?.Invoke(sender, EventArgs.Empty);
 		}
 
 		/// <summary>
@@ -285,9 +278,9 @@ namespace Launchpad.Launcher.Handlers
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		private void OnModuleInstallationFailed(object sender, ModuleInstallationFailedArgs e)
+		private void OnModuleInstallationFailed(object sender, EModule e)
 		{
-			this.DownloadFailed?.Invoke(sender, e);
+			this.DownloadFailed?.Invoke(sender, EventArgs.Empty);
 		}
 
 		/// <summary>
@@ -301,9 +294,9 @@ namespace Launchpad.Launcher.Handlers
 		/// <summary>
 		/// Raises the Game Exited event.
 		/// </summary>
-		private void OnGameExited()
+		private void OnGameExited(int exitCode)
 		{
-			this.GameExited?.Invoke(this, this.GameExitArgs);
+			this.GameExited?.Invoke(this, exitCode);
 		}
 	}
 }

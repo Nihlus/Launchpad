@@ -115,7 +115,6 @@ namespace Launchpad.Launcher.Interface
 
 			this.Launcher.LauncherDownloadProgressChanged += OnModuleInstallationProgressChanged;
 			this.Launcher.LauncherDownloadFinished += OnLauncherDownloadFinished;
-			this.Launcher.ChangelogDownloadFinished += OnChangelogDownloadFinished;
 
 			// Set the initial launcher mode
 			SetLauncherMode(ELauncherMode.Inactive, false);
@@ -511,26 +510,10 @@ namespace Launchpad.Launcher.Interface
 		}
 
 		/// <summary>
-		/// Updates the web browser with the asynchronously loaded changelog from the server.
-		/// </summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The arguments containing the HTML from the server.</param>
-		private void OnChangelogDownloadFinished(object sender, ChangelogDownloadFinishedEventArgs e)
-		{
-			// Take the resulting HTML string from the changelog download and send it to the changelog browser
-			//Application.Invoke((o, args) => this.Browser.LoadHTML(e.HTML, e.URL));
-		}
-
-		/// <summary>
 		/// Starts the launcher update process when its files have finished downloading.
 		/// </summary>
-		private static void OnLauncherDownloadFinished(object sender, ModuleInstallationFinishedArgs e)
+		private static void OnLauncherDownloadFinished(object sender, EventArgs e)
 		{
-			if (e.Module != EModule.Launcher)
-			{
-				return;
-			}
-
 			Application.Invoke((o, args) =>
 			{
 				ProcessStartInfo script = LauncherHandler.CreateUpdateScript();
@@ -645,11 +628,11 @@ namespace Launchpad.Launcher.Interface
 		/// Handles offering of repairing the game to the user should the game exit
 		/// with a bad exit code.
 		/// </summary>
-		private void OnGameExited(object sender, GameExitEventArgs e)
+		private void OnGameExited(object sender, int exitCode)
 		{
 			Application.Invoke((o, args) =>
 			{
-				if (e.ExitCode != 0)
+				if (exitCode != 0)
 				{
 					var crashDialog = new MessageDialog
 					(

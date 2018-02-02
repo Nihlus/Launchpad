@@ -74,9 +74,6 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <inheritdoc />
 		public override void InstallGame()
 		{
-			this.ModuleInstallFinishedArgs.Module = EModule.Game;
-			this.ModuleInstallFailedArgs.Module = EModule.Game;
-
 			try
 			{
 				// Create the .install file to mark that an installation has begun.
@@ -115,8 +112,6 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				{
 					RefreshModuleManifest(EModule.Launcher);
 
-					this.ModuleInstallFinishedArgs.Module = EModule.Launcher;
-					this.ModuleInstallFailedArgs.Module = EModule.Launcher;
 					manifest = this.FileManifestHandler.GetManifest(EManifestType.Launchpad, false);
 					oldManifest = this.FileManifestHandler.GetManifest(EManifestType.Launchpad, true);
 					break;
@@ -125,8 +120,6 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				{
 					RefreshModuleManifest(EModule.Game);
 
-					this.ModuleInstallFinishedArgs.Module = EModule.Game;
-					this.ModuleInstallFailedArgs.Module = EModule.Game;
 					manifest = this.FileManifestHandler.GetManifest(EManifestType.Game, false);
 					oldManifest = this.FileManifestHandler.GetManifest(EManifestType.Game, true);
 					break;
@@ -141,7 +134,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			if (manifest == null)
 			{
 				Log.Error($"No manifest was found when updating the module \"{module}\". The server files may be inaccessible or missing.");
-				OnModuleInstallationFailed();
+				OnModuleInstallationFailed(module);
 				return;
 			}
 
@@ -201,11 +194,11 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			catch (IOException ioex)
 			{
 				Log.Warn($"Updating of {module} files failed (IOException): " + ioex.Message);
-				OnModuleInstallationFailed();
+				OnModuleInstallationFailed(module);
 				return;
 			}
 
-			OnModuleInstallationFinished();
+			OnModuleInstallationFinished(module);
 		}
 
 		/// <inheritdoc />
@@ -217,7 +210,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			if (manifest == null)
 			{
 				Log.Error($"No manifest was found when verifying the module \"{module}\". The server files may be inaccessible or missing.");
-				OnModuleInstallationFailed();
+				OnModuleInstallationFailed(module);
 				return;
 			}
 
@@ -277,10 +270,10 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			catch (IOException ioex)
 			{
 				Log.Warn($"Verification of {module} files failed (IOException): " + ioex.Message);
-				OnModuleInstallationFailed();
+				OnModuleInstallationFailed(module);
 			}
 
-			OnModuleInstallationFinished();
+			OnModuleInstallationFinished(module);
 		}
 
 		/// <inheritdoc />
@@ -293,8 +286,6 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				{
 					RefreshModuleManifest(EModule.Launcher);
 
-					this.ModuleInstallFinishedArgs.Module = EModule.Launcher;
-					this.ModuleInstallFailedArgs.Module = EModule.Launcher;
 					moduleManifest = this.FileManifestHandler.GetManifest(EManifestType.Launchpad, false);
 					break;
 				}
@@ -302,8 +293,6 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				{
 					RefreshModuleManifest(EModule.Game);
 
-					this.ModuleInstallFinishedArgs.Module = EModule.Game;
-					this.ModuleInstallFailedArgs.Module = EModule.Game;
 					moduleManifest = this.FileManifestHandler.GetManifest(EManifestType.Game, false);
 					break;
 				}
@@ -321,7 +310,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			if (moduleManifest == null)
 			{
 				Log.Error($"No manifest was found when installing the module \"{module}\". The server files may be inaccessible or missing.");
-				OnModuleInstallationFailed();
+				OnModuleInstallationFailed(module);
 				return;
 			}
 

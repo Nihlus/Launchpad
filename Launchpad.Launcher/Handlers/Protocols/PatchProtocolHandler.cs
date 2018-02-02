@@ -76,12 +76,12 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <summary>
 		/// Raised whenever the installation of a module finishes.
 		/// </summary>
-		public event EventHandler<ModuleInstallationFinishedArgs> ModuleInstallationFinished;
+		public event EventHandler<EModule> ModuleInstallationFinished;
 
 		/// <summary>
 		/// Raised whenver the installation of a module fails.
 		/// </summary>
-		public event EventHandler<ModuleInstallationFailedArgs> ModuleInstallationFailed;
+		public event EventHandler<EModule> ModuleInstallationFailed;
 
 		/// <summary>
 		/// Gets the download progress arguments.
@@ -99,16 +99,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		protected ModuleProgressChangedArgs ModuleUpdateProgressArgs { get; }
 
 		/// <summary>
-		/// Gets the installation finished arguments.
-		/// </summary>
-		protected ModuleInstallationFinishedArgs ModuleInstallFinishedArgs { get; }
-
-		/// <summary>
-		/// Gets the installation failed arguments.
-		/// </summary>
-		protected ModuleInstallationFailedArgs ModuleInstallFailedArgs { get; }
-
-		/// <summary>
 		/// Gets the tagfile service.
 		/// </summary>
 		protected TagfileService TagfileService { get; }
@@ -121,9 +111,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 			this.ModuleDownloadProgressArgs = new ModuleProgressChangedArgs();
 			this.ModuleVerifyProgressArgs = new ModuleProgressChangedArgs();
 			this.ModuleUpdateProgressArgs = new ModuleProgressChangedArgs();
-
-			this.ModuleInstallFinishedArgs = new ModuleInstallationFinishedArgs();
-			this.ModuleInstallFailedArgs = new ModuleInstallationFailedArgs();
 
 			this.TagfileService = new TagfileService();
 		}
@@ -172,9 +159,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// </summary>
 		public virtual void InstallGame()
 		{
-			this.ModuleInstallFinishedArgs.Module = EModule.Game;
-			this.ModuleInstallFailedArgs.Module = EModule.Game;
-
 			try
 			{
 				// Create the .install file to mark that an installation has begun.
@@ -244,17 +228,19 @@ namespace Launchpad.Launcher.Handlers.Protocols
 		/// <summary>
 		/// Invoke the <see cref="ModuleInstallationFinished"/> event.
 		/// </summary>
-		protected void OnModuleInstallationFinished()
+		/// <param name="module">The module that finished.</param>
+		protected void OnModuleInstallationFinished(EModule module)
 		{
-			this.ModuleInstallationFinished?.Invoke(this, this.ModuleInstallFinishedArgs);
+			this.ModuleInstallationFinished?.Invoke(this, module);
 		}
 
 		/// <summary>
 		/// Invoke the <see cref="ModuleInstallationFailed"/> event.
 		/// </summary>
-		protected void OnModuleInstallationFailed()
+		/// <param name="module">The module that failed.</param>
+		protected void OnModuleInstallationFailed(EModule module)
 		{
-			this.ModuleInstallationFailed?.Invoke(this, this.ModuleInstallFailedArgs);
+			this.ModuleInstallationFailed?.Invoke(this, module);
 		}
 	}
 }

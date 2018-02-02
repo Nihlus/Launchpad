@@ -54,21 +54,15 @@ namespace Launchpad.Launcher.Handlers
 		private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
 
 		/// <summary>
-		/// Raised whenever the changelog finishes downloading.
-		/// </summary>
-		public event EventHandler<ChangelogDownloadFinishedEventArgs> ChangelogDownloadFinished;
-
-		/// <summary>
 		/// Raised whenever the launcher finishes downloading.
 		/// </summary>
-		public event EventHandler<ModuleInstallationFinishedArgs> LauncherDownloadFinished;
+		public event EventHandler LauncherDownloadFinished;
 
 		/// <summary>
 		/// Raised whenever the launcher download progress changes.
 		/// </summary>
 		public event EventHandler<ModuleProgressChangedArgs> LauncherDownloadProgressChanged;
 
-		private readonly ChangelogDownloadFinishedEventArgs ChangelogDownloadFinishedArgs = new ChangelogDownloadFinishedEventArgs();
 		private readonly PatchProtocolHandler Patch;
 
 		/// <summary>
@@ -245,23 +239,14 @@ namespace Launchpad.Launcher.Handlers
 			}
 		}
 
-		/// <summary>
-		/// Raises the changelog download finished event.
-		/// Fires when the changelog has finished downloading and all values have been assigned.
-		/// </summary>
-		private void OnChangelogDownloadFinished()
-		{
-			this.ChangelogDownloadFinished?.Invoke(this, this.ChangelogDownloadFinishedArgs);
-		}
-
 		private void OnLauncherDownloadProgressChanged(object sender, ModuleProgressChangedArgs e)
 		{
 			this.LauncherDownloadProgressChanged?.Invoke(sender, e);
 		}
 
-		private void OnLauncherDownloadFinished(object sender, ModuleInstallationFinishedArgs e)
+		private void OnLauncherDownloadFinished(object sender, EModule e)
 		{
-			this.LauncherDownloadFinished?.Invoke(sender, e);
+			this.LauncherDownloadFinished?.Invoke(sender, EventArgs.Empty);
 		}
 	}
 }

@@ -218,10 +218,8 @@
           <e p="ManifestEntryExtensions.cs" t="Include" />
         </e>
         <e p="Handlers" t="Include">
-          <e p="ChangelogDownloadFinishedEventArgs.cs" t="Include" />
           <e p="ChecksHandler.cs" t="Include" />
           <e p="ConfigHandler.cs" t="Include" />
-          <e p="GameExitEventArgs.cs" t="Include" />
           <e p="GameHandler.cs" t="Include" />
           <e p="LauncherHandler.cs" t="Include" />
           <e p="Protocols" t="Include">
@@ -231,8 +229,6 @@
               <e p="HTTPProtocolHandler.cs" t="Include" />
               <e p="ManifestBasedProtocolHandler.cs" t="Include" />
             </e>
-            <e p="ModuleInstallationFailedArgs.cs" t="Include" />
-            <e p="ModuleInstallationFinishedArgs.cs" t="Include" />
             <e p="ModuleProgressChangedArgs.cs" t="Include" />
             <e p="PatchProtocolHandler.cs" t="Include" />
           </e>
