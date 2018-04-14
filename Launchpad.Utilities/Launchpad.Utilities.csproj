@@ -48,4 +48,15 @@
   <ItemGroup>
     <ProjectReference Include="..\Launchpad.Common\Launchpad.Common.csproj" />
   </ItemGroup>
+  <Target Name="CopyGTK" AfterTargets="Build">
+    <ItemGroup>
+      <GTKetc Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\etc\**\*.*" />
+      <GTKlib Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\lib\**\*.*" />
+      <GTKshare Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\share\**\*.*" />
+    </ItemGroup>
+    <Message Text="Copying GTK+ libraries..." />
+    <Copy SourceFiles="@(GTKetc)" DestinationFolder="$(OutputPath)\etc\%(RecursiveDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(GTKlib)" DestinationFolder="$(OutputPath)\lib\%(RecursiveDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(GTKshare)" DestinationFolder="$(OutputPath)\share\%(RecursiveDir)" SkipUnchangedFiles="true" />
+  </Target>
 </Project>

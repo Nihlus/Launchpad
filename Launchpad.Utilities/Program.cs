@@ -21,6 +21,7 @@
 
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 using CommandLine;
 using GLib;
@@ -29,6 +30,7 @@ using Launchpad.Utilities.Utility.Events;
 using Launchpad.Utilities.Interface;
 using Launchpad.Utilities.Options;
 using Launchpad.Common.Enums;
+using Launchpad.Utilities.Utility;
 using NLog;
 using Application = Gtk.Application;
 using Task = System.Threading.Tasks.Task;
@@ -47,6 +49,14 @@ namespace Launchpad.Utilities
 		/// </summary>
 		private static async Task Main(string[] args)
 		{
+			// Set correct working directory for compatibility with double-clicking
+			Directory.SetCurrentDirectory(DirectoryHelpers.GetLocalDir());
+
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			{
+				Environment.SetEnvironmentVariable("GSETTINGS_SCHEMA_DIR", "share\\glib-2.0\\schemas\\");
+			}
+
 			var options = new CLIOptions();
 			Parser.Default.ParseArguments<CLIOptions>(args)
 				.WithParsed(r => options = r);
