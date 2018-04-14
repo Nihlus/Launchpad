@@ -59,7 +59,14 @@ namespace Launchpad.Utilities
 
 			var options = new CLIOptions();
 			Parser.Default.ParseArguments<CLIOptions>(args)
-				.WithParsed(r => options = r);
+				.WithParsed(r => options = r)
+				.WithNotParsed(r => options = null);
+
+			if (options is null)
+			{
+				// Parsing probably failed, bail out
+				return;
+			}
 
 			if (options.RunBatchProcessing)
 			{

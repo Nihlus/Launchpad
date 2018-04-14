@@ -26,11 +26,11 @@
     <EmbeddedResource Include="Resources/Icons8-Android-Industry-Engineering.ico" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="GtkSharp" Version="3.22.24.29" />
+    <PackageReference Include="GtkSharp" Version="3.22.24.36" />
     <PackageReference Include="GtkSharp.Win32" Version="3.1.2" />
     <PackageReference Include="CommandLineParser" Version="2.2.1" />
     <PackageReference Include="NGettext" Version="0.6.3" />
-    <PackageReference Include="NLog" Version="4.5.0-rc04" />
+    <PackageReference Include="NLog" Version="4.5.2" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Interface\Launchpad.Utilities.glade" />
