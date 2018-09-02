@@ -74,11 +74,13 @@
       <GTKetc Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\etc\**\*.*" />
       <GTKlib Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\lib\**\*.*" />
       <GTKshare Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\share\**\*.*" />
+      <GTKbin Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\bin\**\*.*" />
     </ItemGroup>
     <Message Text="Copying GTK+ libraries..." />
     <Copy SourceFiles="@(GTKetc)" DestinationFolder="$(OutputPath)\etc\%(RecursiveDir)" SkipUnchangedFiles="true" />
     <Copy SourceFiles="@(GTKlib)" DestinationFolder="$(OutputPath)\lib\%(RecursiveDir)" SkipUnchangedFiles="true" />
     <Copy SourceFiles="@(GTKshare)" DestinationFolder="$(OutputPath)\share\%(RecursiveDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(GTKbin)" DestinationFolder="$(OutputPath)\%(RecursiveDir)" SkipUnchangedFiles="true" />
   </Target>
   <Target Name="DeleteRuntimeInfoMono" AfterTargets="AfterBuild">
     <Delete Files="$(OutputPath)\System.Runtime.InteropServices.RuntimeInformation.dll" Condition="'$(OS)' == 'Unix'" />
