@@ -27,6 +27,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using GLib;
+using Gtk;
 using Launchpad.Common;
 using Launchpad.Launcher.Interface;
 using Launchpad.Launcher.Services;
@@ -62,6 +63,8 @@ namespace Launchpad.Launcher
 
 			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 			{
+				Environment.SetEnvironmentVariable("GTK_EXE_PREFIX", Directory.GetCurrentDirectory());
+				Environment.SetEnvironmentVariable("GTK_DATA_PREFIX", Directory.GetCurrentDirectory());
 				Environment.SetEnvironmentVariable("GSETTINGS_SCHEMA_DIR", "share\\glib-2.0\\schemas\\");
 			}
 

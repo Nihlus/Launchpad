@@ -1,0 +1,45 @@
+
+########### FILE MANAGERS ##############
+
+style "thunar-handle" { GtkPaned::handle-size = 2 }
+
+style "dark-sidebar" {
+  GtkTreeView::odd_row_color = @dark_sidebar_bg
+  GtkTreeView::even_row_color = @dark_sidebar_bg
+
+
+  base[NORMAL] = @dark_sidebar_bg
+  base[INSENSITIVE] = @dark_sidebar_bg
+
+  text[NORMAL] = "#C3C3C3"
+  text[ACTIVE] = @selected_fg_color
+  text[SELECTED] = @selected_fg_color
+}
+
+style "thunar-frame" {
+  xthickness = 0
+  ythickness = 0
+}
+
+# Thunar
+widget_class "*ThunarWindow*.<GtkScrolledWindow>"       style "thunar-frame"
+widget_class "*ThunarShortcutsView*"                    style "dark-sidebar"
+widget_class "*ThunarTreeView*"                         style "dark-sidebar"
+widget_class "*ThunarWindow*.<GtkHPaned>"               style "thunar-handle"
+
+# Caja
+widget_class "*CajaSidePane*"                           style "dark-sidebar"
+
+
+
+####### TERMINAL ################
+
+style "terminal_screen"
+{
+    text[NORMAL] = "#ffffff"
+    base[NORMAL] = "#3f3f3f"
+
+    TerminalScreen::background-darkness = 0.9
+}
+
+widget "*TerminalWindow.*.TerminalScreen*" style "terminal_screen"
