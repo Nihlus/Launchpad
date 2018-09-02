@@ -82,7 +82,4 @@
     <Copy SourceFiles="@(GTKshare)" DestinationFolder="$(OutputPath)\share\%(RecursiveDir)" SkipUnchangedFiles="true" />
     <Copy SourceFiles="@(GTKbin)" DestinationFolder="$(OutputPath)\%(RecursiveDir)" SkipUnchangedFiles="true" />
   </Target>
-  <Target Name="DeleteRuntimeInfoMono" AfterTargets="AfterBuild">
-    <Delete Files="$(OutputPath)\System.Runtime.InteropServices.RuntimeInformation.dll" Condition="'$(OS)' == 'Unix'" />
-  </Target>
 </Project>

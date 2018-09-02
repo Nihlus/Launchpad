@@ -270,6 +270,7 @@
         </e>
         <e p="app.manifest" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
+        <e p="launchpad-internal.log" t="Include" />
         <e p="obj" t="ExcludeRecursive">
           <e p="x86" t="Include">
             <e p="Debug" t="Include">
