@@ -1,30 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\guestvm\.nuget\packages\xunit.runner.visualstudio\2.3.1\build\_common\xunit.abstractions.dll" t="Include" />
-    <e p="C:\Users\guestvm\.nuget\packages\xunit.runner.visualstudio\2.3.1\build\_common\xunit.runner.reporters.net452.dll" t="Include" />
-    <e p="C:\Users\guestvm\.nuget\packages\xunit.runner.visualstudio\2.3.1\build\_common\xunit.runner.utility.net452.dll" t="Include" />
-    <e p="C:\Users\guestvm\.nuget\packages\xunit.runner.visualstudio\2.3.1\build\_common\xunit.runner.visualstudio.testadapter.dll" t="Include" />
-    <e p="C:\Users\guestvm\.Rider2018.1\system\resharper-host\local\Transient\ReSharperHost\v12\SolutionCaches\_Launchpad.554246131.00" t="ExcludeRecursive" />
-    <e p="F:\Programming\Launchpad" t="IncludeFlat">
+    <e p="/5a1c0d4d" t="IncludeRecursive" />
+    <e p="/app" t="IncludeRecursive" />
+    <e p="$APPLICATION_CONFIG_DIR$/extensions" t="IncludeRecursive" />
+    <e p="$APPLICATION_CONFIG_DIR$/scratches" t="IncludeRecursive" />
+    <e p="$USER_HOME$/.Rider2018.2/system/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/.Rider2018.2/system/resharper-host/local/Transient/ReSharperHost/v182/SolutionCaches/_Launchpad.-586682344.00" t="ExcludeRecursive" />
+    <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.3.1/build/_common/xunit.abstractions.dll" t="Include" />
+    <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.3.1/build/_common/xunit.runner.reporters.net452.dll" t="Include" />
+    <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.3.1/build/_common/xunit.runner.utility.net452.dll" t="Include" />
+    <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.3.1/build/_common/xunit.runner.visualstudio.testadapter.dll" t="Include" />
+    <e p="$PROJECT_DIR$" t="IncludeFlat">
+      <e p=".git/info/exclude" t="IncludeRecursive" />
       <e p=".gitignore" t="Include" />
       <e p=".travis.yml" t="Include" />
-      <e p="appveyor.yml" t="Include" />
+      <e p="LICENSE" t="Include" />
       <e p="Launchpad.Common" t="IncludeRecursive">
-        <e p="bin" t="ExcludeRecursive" />
         <e p="Enums" t="Include">
           <e p="EManifestType.cs" t="Include" />
           <e p="ESystemTarget.cs" t="Include" />
         </e>
         <e p="ExtensionMethods.cs" t="Include" />
         <e p="Handlers" t="Include">
+          <e p="MD5Handler.cs" t="Include" />
           <e p="Manifest" t="Include">
             <e p="ManifestEntry.cs" t="Include" />
             <e p="ManifestHandler.cs" t="Include" />
           </e>
-          <e p="MD5Handler.cs" t="Include" />
         </e>
         <e p="Launchpad.Common.csproj" t="IncludeRecursive" />
+        <e p="PlatformHelpers.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
         <e p="obj" t="ExcludeRecursive">
           <e p="x86" t="Include">
             <e p="Debug" t="Include">
@@ -34,11 +41,8 @@
             </e>
           </e>
         </e>
-        <e p="PlatformHelpers.cs" t="Include" />
       </e>
       <e p="Launchpad.Launcher" t="IncludeRecursive">
-        <e p="app.manifest" t="Include" />
-        <e p="bin" t="ExcludeRecursive" />
         <e p="Configuration" t="Include">
           <e p="ILaunchpadConfiguration.cs" t="Include" />
         </e>
@@ -238,22 +242,12 @@
         <e p="Interface" t="Include">
           <e p="#Launchpad.glade#" t="Include" />
           <e p="Launchpad.glade" t="Include" />
-          <e p="MainWindow.cs" t="Include" />
           <e p="MainWindow.UI.cs" t="Include" />
+          <e p="MainWindow.cs" t="Include" />
         </e>
-        <e p="launchpad-internal.log" t="Include" />
         <e p="Launchpad.Launcher.csproj" t="IncludeRecursive" />
         <e p="Launchpad.Launcher.csproj.DotSettings" t="Include" />
         <e p="NLog.config" t="Include" />
-        <e p="obj" t="ExcludeRecursive">
-          <e p="x86" t="Include">
-            <e p="Debug" t="Include">
-              <e p="net462" t="Include">
-                <e p="Launchpad.Launcher.AssemblyInfo.cs" t="Include" />
-              </e>
-            </e>
-          </e>
-        </e>
         <e p="Program.cs" t="Include" />
         <e p="Resources" t="Include">
           <e p="Icon.ico" t="Include" />
@@ -274,15 +268,26 @@
           <e p="PatchProtocolProvider.cs" t="Include" />
           <e p="ResourceManager.cs" t="Include" />
         </e>
-      </e>
-      <e p="Launchpad.sln" t="IncludeFlat" />
-      <e p="Launchpad.Tests" t="IncludeRecursive">
+        <e p="app.manifest" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
+        <e p="launchpad-internal.log" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="x86" t="Include">
+            <e p="Debug" t="Include">
+              <e p="net462" t="Include">
+                <e p="Launchpad.Launcher.AssemblyInfo.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="Launchpad.Tests" t="IncludeRecursive">
         <e p="Common" t="Include">
           <e p="MD5HandlerTests.cs" t="Include" />
           <e p="StringExtensionsTexts.cs" t="Include" />
         </e>
         <e p="Launchpad.Tests.csproj" t="IncludeRecursive" />
+        <e p="bin" t="ExcludeRecursive" />
         <e p="obj" t="ExcludeRecursive">
           <e p="x86" t="Include">
             <e p="Debug" t="Include">
@@ -295,26 +300,16 @@
         <e p="packages.config" t="Include" />
       </e>
       <e p="Launchpad.Utilities" t="IncludeRecursive">
-        <e p="bin" t="ExcludeRecursive" />
         <e p="Handlers" t="Include">
           <e p="ManifestGenerationHandler.cs" t="Include" />
         </e>
         <e p="Interface" t="Include">
           <e p="Launchpad.Utilities.glade" t="Include" />
-          <e p="MainWindow.cs" t="Include" />
           <e p="MainWindow.UI.cs" t="Include" />
+          <e p="MainWindow.cs" t="Include" />
         </e>
         <e p="Launchpad.Utilities.csproj" t="IncludeRecursive" />
         <e p="NLog.config" t="Include" />
-        <e p="obj" t="ExcludeRecursive">
-          <e p="x86" t="Include">
-            <e p="Debug" t="Include">
-              <e p="net462" t="Include">
-                <e p="Launchpad.Utilities.AssemblyInfo.cs" t="Include" />
-              </e>
-            </e>
-          </e>
-        </e>
         <e p="Options" t="Include">
           <e p="CLIOptions.cs" t="Include" />
         </e>
@@ -328,9 +323,18 @@
             <e p="ManifestGenerationProgressChangedEventArgs.cs" t="Include" />
           </e>
         </e>
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="x86" t="Include">
+            <e p="Debug" t="Include">
+              <e p="net462" t="Include">
+                <e p="Launchpad.Utilities.AssemblyInfo.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+        </e>
       </e>
-      <e p="LICENSE" t="Include" />
-      <e p="packages" t="ExcludeRecursive" />
+      <e p="Launchpad.sln" t="IncludeFlat" />
       <e p="README.md" t="Include" />
       <e p="Scripts" t="Include">
         <e p="launchpad-dependencies.sh" t="Include" />
@@ -338,6 +342,8 @@
         <e p="launchpad-server-setup.sh" t="Include" />
         <e p="update-translations.sh" t="Include" />
       </e>
+      <e p="appveyor.yml" t="Include" />
+      <e p="packages" t="ExcludeRecursive" />
       <e p="stylecop.json" t="Include" />
       <e p="stylecop.ruleset" t="Include" />
     </e>
