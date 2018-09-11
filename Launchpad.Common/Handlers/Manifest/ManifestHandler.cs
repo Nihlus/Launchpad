@@ -126,16 +126,20 @@ namespace Launchpad.Common.Handlers.Manifest
 				{
 					this.Manifests.AddOrUpdate(manifestType, null);
 				}
-
-				this.Manifests.AddOrUpdate(manifestType, LoadManifest(newManifestPath));
+				else
+				{
+					this.Manifests.AddOrUpdate(manifestType, LoadManifest(newManifestPath));
+				}
 
 				// Reload old manifests
 				if (!File.Exists(oldManifestPath))
 				{
 					this.OldManifests.AddOrUpdate(manifestType, null);
 				}
-
-				this.OldManifests.AddOrUpdate(manifestType, LoadManifest(oldManifestPath));
+				else
+				{
+					this.OldManifests.AddOrUpdate(manifestType, LoadManifest(oldManifestPath));
+				}
 			}
 		}
 

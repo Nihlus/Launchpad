@@ -721,7 +721,10 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				}
 
 				// Create a backup of the old manifest so that we can compare them when updating the game
-				File.Move(localPath, oldLocalPath);
+				if (File.Exists(localPath))
+				{
+					File.Move(localPath, oldLocalPath);
+				}
 			}
 			catch (IOException ioex)
 			{
