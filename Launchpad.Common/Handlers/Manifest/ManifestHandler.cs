@@ -213,10 +213,10 @@ namespace Launchpad.Common.Handlers.Manifest
 		{
 			if (manifestType == EManifestType.Launchpad)
 			{
-				return $"{this.RemoteURL.LocalPath}/launcher/{manifestType}Manifest.txt";
+				return $"{this.RemoteURL}/launcher/{manifestType}Manifest.txt";
 			}
 
-			return $"{this.RemoteURL.LocalPath}/game/{this.SystemTarget}/{manifestType}Manifest.txt";
+			return $"{this.RemoteURL}/game/{this.SystemTarget}/{manifestType}Manifest.txt";
 		}
 
 		/// <summary>
