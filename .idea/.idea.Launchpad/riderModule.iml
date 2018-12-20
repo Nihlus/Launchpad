@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="RIDER_MODULE" version="4">
   <component name="NewModuleRootManager">
+    <content url="file:///5a1c0d4d" />
     <content url="file:///app" />
     <content url="file://$APPLICATION_CONFIG_DIR$/consoles/db" />
     <content url="file://$APPLICATION_CONFIG_DIR$/extensions" />
