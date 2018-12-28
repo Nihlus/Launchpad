@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="/5a1c0d4d" t="IncludeRecursive" />
-    <e p="/app" t="IncludeRecursive" />
-    <e p="$APPLICATION_CONFIG_DIR$/consoles/db" t="IncludeRecursive" />
     <e p="$APPLICATION_CONFIG_DIR$/extensions" t="IncludeRecursive" />
-    <e p="$USER_HOME$/.Rider2018.2/system/extResources" t="IncludeRecursive" />
-    <e p="$USER_HOME$/.Rider2018.2/system/resharper-host/local/Transient/ReSharperHost/v182/SolutionCaches/_Launchpad.-586682344.00" t="ExcludeRecursive" />
+    <e p="$APPLICATION_CONFIG_DIR$/scratches" t="IncludeRecursive" />
+    <e p="$USER_HOME$/.Rider2018.3/system/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/.Rider2018.3/system/resharper-host/local/Transient/ReSharperHost/v183/SolutionCaches/_Launchpad.-586682344.00" t="ExcludeRecursive" />
     <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.3.1/build/_common/xunit.abstractions.dll" t="Include" />
     <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.3.1/build/_common/xunit.runner.reporters.net452.dll" t="Include" />
     <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.3.1/build/_common/xunit.runner.utility.net452.dll" t="Include" />
@@ -241,7 +239,6 @@
         </e>
         <e p="Interface" t="Include">
           <e p="Launchpad.glade" t="Include" />
-          <e p="Launchpad.glade~" t="Include" />
           <e p="MainWindow.UI.cs" t="Include" />
           <e p="MainWindow.cs" t="Include" />
         </e>
@@ -305,8 +302,6 @@
         </e>
         <e p="Interface" t="Include">
           <e p="Launchpad.Utilities.glade" t="Include" />
-          <e p="Launchpad.Utilities.glade~" t="Include" />
-          <e p="LaunchpadUtilities.glade~" t="Include" />
           <e p="MainWindow.UI.cs" t="Include" />
           <e p="MainWindow.cs" t="Include" />
         </e>
