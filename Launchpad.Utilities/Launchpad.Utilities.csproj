@@ -1,39 +1,34 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net462</TargetFramework>
     <Platform>x86</Platform>
     <PlatformTarget>x86</PlatformTarget>
     <LangVersion>7.1</LangVersion>
+    <Prefer32bit>true</Prefer32bit>
   </PropertyGroup>
+
   <!-- Workaround for https://github.com/dotnet/roslyn-project-system/issues/1739 -->
   <PropertyGroup>
     <AssemblySearchPaths>$(AssemblySearchPaths);{GAC}</AssemblySearchPaths>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <Prefer32bit>true</Prefer32bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <Prefer32bit>true</Prefer32bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <Prefer32bit>true</Prefer32bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <Prefer32bit>true</Prefer32bit>
-  </PropertyGroup>
+
   <ItemGroup>
     <EmbeddedResource Include="Resources/Icons8-Android-Industry-Engineering.ico" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="GtkSharp" Version="3.22.24.36" />
     <PackageReference Include="CommandLineParser" Version="2.2.1" />
     <PackageReference Include="NGettext" Version="0.6.3" />
     <PackageReference Include="NLog" Version="4.5.2" />
   </ItemGroup>
+
   <ItemGroup>
     <EmbeddedResource Include="Interface\Launchpad.Utilities.glade" />
   </ItemGroup>
+
   <ItemGroup>
     <Content Include="Content\locale\**\*.po">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -44,9 +39,11 @@
       <InProject>false</InProject>
     </Content>
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Launchpad.Common\Launchpad.Common.csproj" />
   </ItemGroup>
+
   <Target Name="CopyGTK" AfterTargets="Build">
     <ItemGroup>
       <GTKetc Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\etc\**\*.*">
@@ -68,4 +65,6 @@
     <Copy SourceFiles="@(GTKshare)" DestinationFolder="$(OutputPath)\share\%(RecursiveDir)" SkipUnchangedFiles="true" />
     <Copy SourceFiles="@(GTKbin)" DestinationFolder="$(OutputPath)\%(RecursiveDir)" SkipUnchangedFiles="true" />
   </Target>
+
+  <Import Project="..\props\netfx-mono.props" />
 </Project>

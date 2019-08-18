@@ -2,34 +2,26 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <AssemblyName>Launchpad</AssemblyName>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net461</TargetFramework>
     <Platform>x86</Platform>
     <PlatformTarget>x86</PlatformTarget>
     <CodeAnalysisRuleSet>..\stylecop.ruleset</CodeAnalysisRuleSet>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <LangVersion>7.1</LangVersion>
+    <Prefer32bit>true</Prefer32bit>
   </PropertyGroup>
+
   <!-- Workaround for https://github.com/dotnet/roslyn-project-system/issues/1739 -->
   <PropertyGroup>
     <AssemblySearchPaths>$(AssemblySearchPaths);{GAC}</AssemblySearchPaths>
   </PropertyGroup>
+
   <PropertyGroup>
     <Version>2.0.0</Version>
     <Description>An open-source launcher for your games.</Description>
     <Authors>Jarl Gullberg;jax</Authors>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <Prefer32bit>true</Prefer32bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <Prefer32bit>true</Prefer32bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <Prefer32bit>true</Prefer32bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <Prefer32bit>true</Prefer32bit>
-  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Config.Net" Version="4.7.3" />
     <PackageReference Include="GtkSharp" Version="3.22.24.36" />
@@ -38,11 +30,13 @@
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta004" PrivateAssets="all" />
     <PackageReference Include="NGettext" Version="0.6.3" />
   </ItemGroup>
+
   <ItemGroup>
     <EmbeddedResource Include="app.manifest" />
     <EmbeddedResource Include="Resources\**\*.*" />
     <EmbeddedResource Include="Interface\Launchpad.glade" />
   </ItemGroup>
+
   <ItemGroup>
     <Content Include="*.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -56,6 +50,7 @@
       <InProject>false</InProject>
     </Content>
   </ItemGroup>
+
   <ItemGroup>
     <AdditionalFiles Include="$(ProjectDir)\..\stylecop.json">
       <Link>stylecop.json</Link>
@@ -66,9 +61,11 @@
       <InProject>false</InProject>
     </AdditionalFiles>
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Launchpad.Common\Launchpad.Common.csproj" />
   </ItemGroup>
+
   <Target Name="CopyGTK" AfterTargets="Build">
     <ItemGroup>
       <GTKetc Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\etc\**\*.*">
@@ -90,4 +87,6 @@
     <Copy SourceFiles="@(GTKshare)" DestinationFolder="$(OutputPath)\share\%(RecursiveDir)" SkipUnchangedFiles="true" />
     <Copy SourceFiles="@(GTKbin)" DestinationFolder="$(OutputPath)\%(RecursiveDir)" SkipUnchangedFiles="true" />
   </Target>
+
+  <Import Project="..\props\netfx-mono.props" />
 </Project>
