@@ -37,7 +37,7 @@ namespace Launchpad.Launcher.Configuration
 		/// <summary>
 		/// Gets or sets the address where the changelog is hosted.
 		/// </summary>
-		[Option(Alias = "Launcher.ChangelogAddress", DefaultValue = "http://sharkman.asuscomm.com/launchpad/changelog/changelog.html")]
+		[Option(Alias = "Launcher.ChangelogAddress", DefaultValue = "http://www.example.com/launchpad/changelog/changelog.html")]
 		Uri ChangelogAddress { get; set; }
 
 		/// <summary>
@@ -45,12 +45,6 @@ namespace Launchpad.Launcher.Configuration
 		/// </summary>
 		[Option(Alias = "Launcher.SystemTarget", DefaultValue = "Linux")]
 		ESystemTarget SystemTarget { get; set; }
-
-		/// <summary>
-		/// Gets or sets a value indicating whether or not to use the official update source.
-		/// </summary>
-		[Option(Alias = "Launcher.UseOfficialUpdates", DefaultValue = true)]
-		bool UseOfficialUpdates { get; set; }
 
 		// Game section
 		// ...
@@ -73,7 +67,7 @@ namespace Launchpad.Launcher.Configuration
 		/// <summary>
 		/// Gets or sets the address of the remote server.
 		/// </summary>
-		[Option(Alias = "Remote.Address", DefaultValue = "ftp://sharkman.asuscomm.com")]
+		[Option(Alias = "Remote.Address", DefaultValue = "ftp://ftp.example.com")]
 		Uri RemoteAddress { get; set; }
 
 		/// <summary>

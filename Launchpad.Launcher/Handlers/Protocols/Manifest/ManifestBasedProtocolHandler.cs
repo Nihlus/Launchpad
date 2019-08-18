@@ -742,9 +742,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		protected virtual Version GetRemoteLauncherVersion()
 		{
 			var remoteVersionPath = DirectoryHelpers.GetRemoteLauncherVersionPath();
-
-			// Config.GetDoOfficialUpdates is used here since the official update server always allows anonymous logins.
-			var remoteVersion = ReadRemoteFile(remoteVersionPath, this.Configuration.UseOfficialUpdates).RemoveLineSeparatorsAndNulls();
+			var remoteVersion = ReadRemoteFile(remoteVersionPath).RemoveLineSeparatorsAndNulls();
 
 			if (Version.TryParse(remoteVersion, out var version))
 			{

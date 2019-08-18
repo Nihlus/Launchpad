@@ -32,8 +32,6 @@ namespace Launchpad.Launcher.Utility
 	/// </summary>
 	public static class DirectoryHelpers
 	{
-		private const string OfficialBaseAddress = "ftp://sharkman.asuscomm.com";
-
 		private const string ConfigurationFolderName = "Config";
 		private const string ConfigurationFileName = "LauncherConfig";
 		private const string GameArgumentsFileName = "GameArguments";
@@ -128,18 +126,7 @@ namespace Launchpad.Launcher.Utility
 		public static string GetRemoteLauncherBinariesPath()
 		{
 			var config = ConfigHandler.Instance.Configuration;
-
-			string launcherURL;
-			if (config.UseOfficialUpdates)
-			{
-				launcherURL = $"{OfficialBaseAddress}/launcher/bin/";
-			}
-			else
-			{
-				launcherURL = $"{config.RemoteAddress}/launcher/bin/";
-			}
-
-			return launcherURL;
+			return $"{config.RemoteAddress}/launcher/bin/";
 		}
 
 		/// <summary>
@@ -152,17 +139,7 @@ namespace Launchpad.Launcher.Utility
 		{
 			var config = ConfigHandler.Instance.Configuration;
 
-			string versionURL;
-			if (config.UseOfficialUpdates)
-			{
-				versionURL = $"{OfficialBaseAddress}/launcher/LauncherVersion.txt";
-			}
-			else
-			{
-				versionURL = $"{config.RemoteAddress}/launcher/LauncherVersion.txt";
-			}
-
-			return versionURL;
+			return $"{config.RemoteAddress}/launcher/LauncherVersion.txt";
 		}
 
 		/// <summary>
