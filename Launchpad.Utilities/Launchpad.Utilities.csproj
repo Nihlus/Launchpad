@@ -19,10 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="GtkSharp" Version="3.22.24.36" />
-    <PackageReference Include="CommandLineParser" Version="2.2.1" />
-    <PackageReference Include="NGettext" Version="0.6.3" />
-    <PackageReference Include="NLog" Version="4.5.2" />
+    <PackageReference Include="GtkSharp" Version="3.22.25.24" />
+    <PackageReference Include="CommandLineParser" Version="2.6.0" />
+    <PackageReference Include="NGettext" Version="0.6.4" />
+    <PackageReference Include="NLog" Version="4.6.6" />
   </ItemGroup>
 
   <ItemGroup>

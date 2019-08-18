@@ -159,7 +159,7 @@ namespace Launchpad.Common.Handlers.Manifest
 		/// <summary>
 		/// Loads a manifest from a <see cref="Stream"/>.
 		/// </summary>
-		/// <param name="manifestStream">A stream containing a manifest."/></param>
+		/// <param name="manifestStream">A stream containing a manifest.</param>
 		/// <returns>A read-only list of <see cref="ManifestEntry"/> objects.</returns>
 		public static IReadOnlyList<ManifestEntry> LoadManifest(Stream manifestStream)
 		{

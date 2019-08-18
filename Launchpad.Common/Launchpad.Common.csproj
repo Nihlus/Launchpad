@@ -29,6 +29,6 @@
     </AdditionalFiles>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta004" PrivateAssets="all" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="all" />
   </ItemGroup>
 </Project>

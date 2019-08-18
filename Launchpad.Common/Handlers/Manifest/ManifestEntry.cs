@@ -136,7 +136,7 @@ namespace Launchpad.Common.Handlers.Manifest
 		/// <summary>
 		/// Returns a <see cref="string"/> that represents the current <see cref="ManifestEntry"/>.
 		/// The returned value matches a raw in-manifest representation of the entry, in the form of
-		/// [path]:[hash]:[size]
+		/// [path]:[hash]:[size].
 		/// </summary>
 		/// <returns>A <see cref="string"/> that represents the current <see cref="ManifestEntry"/>.</returns>
 		public override string ToString()

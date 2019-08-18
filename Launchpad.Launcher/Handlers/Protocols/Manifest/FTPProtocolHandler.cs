@@ -329,7 +329,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// <returns>The ftp web request.</returns>
 		/// <param name="remotePath">Ftp directory path.</param>
 		/// <param name="username">Remote FTP username.</param>
-		/// <param name="password">Remote FTP password</param>
+		/// <param name="password">Remote FTP password.</param>
 		private FtpWebRequest CreateFtpWebRequest(string remotePath, string username, string password)
 		{
 			if (!remotePath.StartsWith(this.Configuration.RemoteAddress.AbsoluteUri))

@@ -98,7 +98,6 @@ namespace Launchpad.Launcher.Interface
 					dialog.Icon = ResourceManager.ApplicationIcon;
 					dialog.Logo = ResourceManager.ApplicationIcon;
 					dialog.Run();
-					dialog.Destroy();
 				}
 			}
 		}

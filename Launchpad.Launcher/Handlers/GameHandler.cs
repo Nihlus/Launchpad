@@ -43,7 +43,7 @@ namespace Launchpad.Launcher.Handlers
 	/// to do.
 	///
 	/// Since this class starts new threads in which it does the larger computations,
-	/// there must be no useage of UI code in this class. Keep it clean!
+	/// there must be no usage of UI code in this class. Keep it clean.
 	/// </summary>
 	internal sealed class GameHandler
 	{

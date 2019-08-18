@@ -114,7 +114,7 @@ namespace Launchpad.Launcher.Handlers
 		}
 
 		/// <summary>
-		/// Determines whether the install cookie is empty
+		/// Determines whether the install cookie is empty.
 		/// </summary>
 		/// <returns><c>true</c> if the install cookie is empty, otherwise, <c>false</c>.</returns>
 		private static bool IsInstallCookieEmpty()

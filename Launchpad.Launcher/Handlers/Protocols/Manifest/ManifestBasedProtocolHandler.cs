@@ -634,7 +634,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		}
 
 		/// <summary>
-		/// Refreshes the current manifest by redownloading it, if required;
+		/// Refreshes the current manifest by redownloading it, if required.
 		/// </summary>
 		/// <param name="module">The module.</param>
 		/// <exception cref="ArgumentOutOfRangeException">
@@ -788,8 +788,8 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		/// </summary>
 		/// <returns>The indicator label message.</returns>
 		/// <param name="currentFilename">Current filename.</param>
-		/// <param name="updatedFiles">Number of files that have been updated</param>
-		/// <param name="totalFiles">Total files that are to be updated</param>
+		/// <param name="updatedFiles">Number of files that have been updated.</param>
+		/// <param name="totalFiles">Total files that are to be updated.</param>
 		protected virtual string GetUpdateIndicatorLabelMessage(string currentFilename, int updatedFiles, int totalFiles)
 		{
 			return LocalizationCatalog.GetString("Updating file {0} ({1} of {2})", currentFilename, updatedFiles, totalFiles);
