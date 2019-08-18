@@ -8,4 +8,3 @@ install:
   - dotnet restore
 script:
   - dotnet build
-ś
