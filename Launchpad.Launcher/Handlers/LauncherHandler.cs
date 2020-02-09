@@ -231,12 +231,10 @@ namespace Launchpad.Launcher.Handlers
 		{
 			if (PlatformHelpers.IsRunningOnUnix())
 			{
-				return $@"{Path.GetTempPath()}launchpad_update.sh";
+				return Path.Combine(Path.GetTempPath(), "launchpad_update.sh");
 			}
-			else
-			{
-				 return $@"{Path.GetTempPath()}launchpad_update.bat";
-			}
+
+			return Path.Combine(Path.GetTempPath(), "launchpad_update.bat");
 		}
 
 		private void OnLauncherDownloadProgressChanged(object sender, ModuleProgressChangedArgs e)

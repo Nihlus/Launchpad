@@ -462,8 +462,8 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			}
 
 			// Build the access strings
-			var remoteURL = $"{baseRemoteURL}{fileEntry.RelativePath}";
-			var localPath = $"{baseLocalPath}{fileEntry.RelativePath}";
+			var remoteURL = $"{baseRemoteURL}/{fileEntry.RelativePath}";
+			var localPath = Path.Combine(baseLocalPath, fileEntry.RelativePath);
 
 			// Make sure we have a directory to put the file in
 			if (!string.IsNullOrEmpty(localPath))

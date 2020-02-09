@@ -120,7 +120,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 		{
 			var bannerURL = $"{this.Configuration.RemoteAddress}/launcher/banner.png";
 
-			var localBannerPath = $"{Path.GetTempPath()}/banner.png";
+			var localBannerPath = Path.Combine(Path.GetTempPath(), "banner.png");
 
 			DownloadRemoteFile(bannerURL, localBannerPath);
 			var bytes = File.ReadAllBytes(localBannerPath);
