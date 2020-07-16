@@ -71,9 +71,14 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				{
 					using (var response = (FtpWebResponse)plainRequest.GetResponse())
 					{
-						if (response.StatusCode == FtpStatusCode.OpeningData)
+						switch (response.StatusCode)
 						{
-							canConnect = true;
+							case FtpStatusCode.OpeningData:
+							case FtpStatusCode.DataAlreadyOpen:
+							{
+								canConnect = true;
+								break;
+							}
 						}
 					}
 				}
