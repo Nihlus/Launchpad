@@ -35,12 +35,8 @@ namespace Launchpad.Launcher.Utility
 		/// </summary>
 		public static Pixbuf ApplicationIcon { get; }
 
-		private static readonly Assembly Assembly;
-
 		static ResourceManager()
 		{
-			Assembly = Assembly.GetExecutingAssembly();
-
 			ApplicationIcon = Pixbuf.LoadFromResource("Launchpad.Launcher.Resources.Icon.png");
 		}
 	}
