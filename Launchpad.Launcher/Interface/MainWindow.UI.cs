@@ -60,15 +60,13 @@ namespace Launchpad.Launcher.Interface
 		/// <returns>An instance of the main window widget.</returns>
 		public static MainWindow Create()
 		{
-			using (var builder = new Builder(Assembly.GetExecutingAssembly(), "Launchpad.Launcher.Interface.Launchpad.glade", null))
+			using var builder = new Builder(Assembly.GetExecutingAssembly(), "Launchpad.Launcher.Interface.Launchpad.glade", null);
+			var window = new MainWindow(builder, builder.GetObject(nameof(MainWindow)).Handle)
 			{
-				var window = new MainWindow(builder, builder.GetObject(nameof(MainWindow)).Handle)
-				{
-					Icon = ResourceManager.ApplicationIcon
-				};
+				Icon = ResourceManager.ApplicationIcon
+			};
 
-				return window;
-			}
+			return window;
 		}
 
 		/// <summary>
@@ -91,15 +89,11 @@ namespace Launchpad.Launcher.Interface
 		/// <param name="e">The event args.</param>
 		private void OnMenuAboutItemActivated(object sender, EventArgs e)
 		{
-			using (var builder = new Builder(Assembly.GetExecutingAssembly(), "Launchpad.Launcher.Interface.Launchpad.glade", null))
-			{
-				using (var dialog = new AboutDialog(builder.GetObject("MainAboutDialog").Handle))
-				{
-					dialog.Icon = ResourceManager.ApplicationIcon;
-					dialog.Logo = ResourceManager.ApplicationIcon;
-					dialog.Run();
-				}
-			}
+			using var builder = new Builder(Assembly.GetExecutingAssembly(), "Launchpad.Launcher.Interface.Launchpad.glade", null);
+			using var dialog = new AboutDialog(builder.GetObject("MainAboutDialog").Handle);
+			dialog.Icon = ResourceManager.ApplicationIcon;
+			dialog.Logo = ResourceManager.ApplicationIcon;
+			dialog.Run();
 		}
 
 		/// <summary>

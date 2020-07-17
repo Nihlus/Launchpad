@@ -51,13 +51,11 @@ namespace Launchpad.Launcher
 				return false;
 			}
 
-			using (Stream file = File.OpenRead(localPath))
+			using Stream file = File.OpenRead(localPath);
+			var localHash = MD5Handler.GetStreamHash(file);
+			if (localHash != entry.Hash)
 			{
-				var localHash = MD5Handler.GetStreamHash(file);
-				if (localHash != entry.Hash)
-				{
-					return false;
-				}
+				return false;
 			}
 
 			return true;

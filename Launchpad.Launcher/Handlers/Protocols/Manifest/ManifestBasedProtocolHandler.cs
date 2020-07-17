@@ -592,12 +592,10 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 			}
 
 			var remoteHash = GetRemoteModuleManifestChecksum(module);
-			using (var file = File.OpenRead(manifestPath))
-			{
-				var localHash = MD5Handler.GetStreamHash(file);
+			using var file = File.OpenRead(manifestPath);
+			var localHash = MD5Handler.GetStreamHash(file);
 
-				return remoteHash != localHash;
-			}
+			return remoteHash != localHash;
 		}
 
 		/// <summary>

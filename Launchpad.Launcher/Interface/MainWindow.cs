@@ -249,28 +249,26 @@ namespace Launchpad.Launcher.Interface
 				"Is this the location where you would like to install the game?"
 			) + $"\n\n{DirectoryHelpers.GetLocalLauncherDirectory()}";
 
-			using (var shouldInstallHereDialog = new MessageDialog
+			using var shouldInstallHereDialog = new MessageDialog
 			(
 				this,
 				DialogFlags.Modal,
 				MessageType.Question,
 				ButtonsType.OkCancel,
 				text
-			))
+			);
+			if (shouldInstallHereDialog.Run() == (int)ResponseType.Ok)
 			{
-				if (shouldInstallHereDialog.Run() == (int)ResponseType.Ok)
-				{
-					// Yes, install here
-					Log.Info("User accepted installation in this directory. Installing in current directory.");
+				// Yes, install here
+				Log.Info("User accepted installation in this directory. Installing in current directory.");
 
-					this.TagfileService.CreateLauncherTagfile();
-				}
-				else
-				{
-					// No, don't install here
-					Log.Info("User declined installation in this directory. Exiting...");
-					Environment.Exit(2);
-				}
+				this.TagfileService.CreateLauncherTagfile();
+			}
+			else
+			{
+				// No, don't install here
+				Log.Info("User declined installation in this directory. Exiting...");
+				Environment.Exit(2);
 			}
 		}
 
@@ -628,7 +626,7 @@ namespace Launchpad.Launcher.Interface
 			{
 				if (exitCode != 0)
 				{
-					using (var crashDialog = new MessageDialog
+					using var crashDialog = new MessageDialog
 					(
 						this,
 						DialogFlags.Modal,
@@ -639,17 +637,15 @@ namespace Launchpad.Launcher.Interface
 							"Whoops! The game appears to have crashed.\n" +
 							"Would you like the launcher to verify the installation?"
 						)
-					))
+					);
+					if (crashDialog.Run() == (int)ResponseType.Yes)
 					{
-						if (crashDialog.Run() == (int)ResponseType.Yes)
-						{
-							SetLauncherMode(ELauncherMode.Repair, false);
-							this.MainButton.Click();
-						}
-						else
-						{
-							SetLauncherMode(ELauncherMode.Launch, false);
-						}
+						SetLauncherMode(ELauncherMode.Repair, false);
+						this.MainButton.Click();
+					}
+					else
+					{
+						SetLauncherMode(ELauncherMode.Launch, false);
 					}
 				}
 				else
@@ -664,7 +660,7 @@ namespace Launchpad.Launcher.Interface
 		/// </summary>
 		private void OnReinstallGameActionActivated(object sender, EventArgs e)
 		{
-			using (var reinstallConfirmDialog = new MessageDialog
+			using var reinstallConfirmDialog = new MessageDialog
 			(
 				this,
 				DialogFlags.Modal,
@@ -675,13 +671,11 @@ namespace Launchpad.Launcher.Interface
 					"Reinstalling the game will delete all local files and download the entire game again.\n" +
 					"Are you sure you want to reinstall the game?"
 				)
-			))
+			);
+			if (reinstallConfirmDialog.Run() == (int)ResponseType.Yes)
 			{
-				if (reinstallConfirmDialog.Run() == (int)ResponseType.Yes)
-				{
-					SetLauncherMode(ELauncherMode.Install, true);
-					this.Game.ReinstallGame();
-				}
+				SetLauncherMode(ELauncherMode.Install, true);
+				this.Game.ReinstallGame();
 			}
 		}
 	}

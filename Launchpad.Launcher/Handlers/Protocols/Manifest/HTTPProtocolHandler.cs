@@ -70,12 +70,10 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
 				try
 				{
-					using (var response = (HttpWebResponse)plainRequest.GetResponse())
+					using var response = (HttpWebResponse)plainRequest.GetResponse();
+					if (response.StatusCode == HttpStatusCode.OK)
 					{
-						if (response.StatusCode == HttpStatusCode.OK)
-						{
-							canConnect = true;
-						}
+						canConnect = true;
 					}
 				}
 				catch (WebException wex)
@@ -152,62 +150,61 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				request.Method = WebRequestMethods.Http.Get;
 				request.AddRange(contentOffset);
 
-				using (var contentStream = request.GetResponse().GetResponseStream())
+				using var contentStream = request.GetResponse().GetResponseStream();
+				if (contentStream == null)
 				{
-					if (contentStream == null)
-					{
-						Log.Error($"Failed to download the remote file at \"{remoteURL}\" (NullReferenceException from the content stream). " +
-								  "Check your internet connection.");
+					Log.Error
+					(
+						$"Failed to download the remote file at \"{remoteURL}\" (NullReferenceException from the " +
+						$"content stream). Check your internet connection."
+					);
 
-						return;
-					}
-
-					using (var fileStream = contentOffset > 0 ? new FileStream(localPath, FileMode.Append) :
-																		new FileStream(localPath, FileMode.Create))
-					{
-						fileStream.Position = contentOffset;
-						var totalBytesDownloaded = contentOffset;
-
-						long totalFileSize;
-						if (contentStream.CanSeek)
-						{
-							totalFileSize = contentOffset + contentStream.Length;
-						}
-						else
-						{
-							totalFileSize = totalSize;
-						}
-
-						var bufferSize = this.Configuration.RemoteFileDownloadBufferSize;
-						var buffer = new byte[bufferSize];
-
-						while (true)
-						{
-							var bytesRead = contentStream.Read(buffer, 0, buffer.Length);
-
-							if (bytesRead == 0)
-							{
-								break;
-							}
-
-							fileStream.Write(buffer, 0, bytesRead);
-
-							totalBytesDownloaded += bytesRead;
-
-							// Report download progress
-							this.ModuleDownloadProgressArgs.ProgressBarMessage = GetDownloadProgressBarMessage
-							(
-								Path.GetFileName(remoteURL),
-								totalBytesDownloaded,
-								totalFileSize
-							);
-							this.ModuleDownloadProgressArgs.ProgressFraction = totalBytesDownloaded / (double)totalFileSize;
-							OnModuleDownloadProgressChanged();
-						}
-
-						fileStream.Flush();
-					}
+					return;
 				}
+
+				using var fileStream = contentOffset > 0 ? new FileStream(localPath, FileMode.Append) :
+					new FileStream(localPath, FileMode.Create);
+				fileStream.Position = contentOffset;
+				var totalBytesDownloaded = contentOffset;
+
+				long totalFileSize;
+				if (contentStream.CanSeek)
+				{
+					totalFileSize = contentOffset + contentStream.Length;
+				}
+				else
+				{
+					totalFileSize = totalSize;
+				}
+
+				var bufferSize = this.Configuration.RemoteFileDownloadBufferSize;
+				var buffer = new byte[bufferSize];
+
+				while (true)
+				{
+					var bytesRead = contentStream.Read(buffer, 0, buffer.Length);
+
+					if (bytesRead == 0)
+					{
+						break;
+					}
+
+					fileStream.Write(buffer, 0, bytesRead);
+
+					totalBytesDownloaded += bytesRead;
+
+					// Report download progress
+					this.ModuleDownloadProgressArgs.ProgressBarMessage = GetDownloadProgressBarMessage
+					(
+						Path.GetFileName(remoteURL),
+						totalBytesDownloaded,
+						totalFileSize
+					);
+					this.ModuleDownloadProgressArgs.ProgressFraction = totalBytesDownloaded / (double)totalFileSize;
+					OnModuleDownloadProgressChanged();
+				}
+
+				fileStream.Flush();
 			}
 			catch (WebException wex)
 			{
@@ -244,35 +241,33 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				request.Method = WebRequestMethods.Http.Get;
 
 				var data = string.Empty;
-				using (var remoteStream = request.GetResponse().GetResponseStream())
+				using var remoteStream = request.GetResponse().GetResponseStream();
+				// Drop out early if the stream wasn't present
+				if (remoteStream == null)
 				{
-					// Drop out early if the stream wasn't present
-					if (remoteStream == null)
-					{
-						Log.Error
-						(
-							$"Failed to read the contents of remote file \"{remoteURL}\": " +
-							"Remote stream was null. This could be due to a network interruption " +
-							"or issues with the remote file."
-						);
+					Log.Error
+					(
+						$"Failed to read the contents of remote file \"{remoteURL}\": " +
+						"Remote stream was null. This could be due to a network interruption " +
+						"or issues with the remote file."
+					);
 
-						return string.Empty;
+					return string.Empty;
+				}
+
+				var bufferSize = this.Configuration.RemoteFileDownloadBufferSize;
+				var buffer = new byte[bufferSize];
+
+				while (true)
+				{
+					var bytesRead = remoteStream.Read(buffer, 0, buffer.Length);
+
+					if (bytesRead == 0)
+					{
+						break;
 					}
 
-					var bufferSize = this.Configuration.RemoteFileDownloadBufferSize;
-					var buffer = new byte[bufferSize];
-
-					while (true)
-					{
-						var bytesRead = remoteStream.Read(buffer, 0, buffer.Length);
-
-						if (bytesRead == 0)
-						{
-							break;
-						}
-
-						data += Encoding.UTF8.GetString(buffer, 0, bytesRead);
-					}
+					data += Encoding.UTF8.GetString(buffer, 0, bytesRead);
 				}
 
 				return data;

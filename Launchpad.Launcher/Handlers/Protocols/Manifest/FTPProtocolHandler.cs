@@ -69,16 +69,14 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
 				try
 				{
-					using (var response = (FtpWebResponse)plainRequest.GetResponse())
+					using var response = (FtpWebResponse)plainRequest.GetResponse();
+					switch (response.StatusCode)
 					{
-						switch (response.StatusCode)
+						case FtpStatusCode.OpeningData:
+						case FtpStatusCode.DataAlreadyOpen:
 						{
-							case FtpStatusCode.OpeningData:
-							case FtpStatusCode.DataAlreadyOpen:
-							{
-								canConnect = true;
-								break;
-							}
+							canConnect = true;
+							break;
 						}
 					}
 				}
@@ -160,42 +158,40 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 				sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
 
 				var data = string.Empty;
-				using (var remoteStream = request.GetResponse().GetResponseStream())
+				using var remoteStream = request.GetResponse().GetResponseStream();
+				if (remoteStream == null)
 				{
-					if (remoteStream == null)
-					{
-						return string.Empty;
-					}
+					return string.Empty;
+				}
 
-					long fileSize;
-					using (var sizeResponse = (FtpWebResponse)sizerequest.GetResponse())
-					{
-						fileSize = sizeResponse.ContentLength;
-					}
+				long fileSize;
+				using (var sizeResponse = (FtpWebResponse)sizerequest.GetResponse())
+				{
+					fileSize = sizeResponse.ContentLength;
+				}
 
-					var bufferSize = this.Configuration.RemoteFileDownloadBufferSize;
-					if (fileSize < bufferSize)
-					{
-						var smallBuffer = new byte[fileSize];
-						remoteStream.Read(smallBuffer, 0, smallBuffer.Length);
+				var bufferSize = this.Configuration.RemoteFileDownloadBufferSize;
+				if (fileSize < bufferSize)
+				{
+					var smallBuffer = new byte[fileSize];
+					remoteStream.Read(smallBuffer, 0, smallBuffer.Length);
 
-						data = Encoding.UTF8.GetString(smallBuffer, 0, smallBuffer.Length);
-					}
-					else
-					{
-						var buffer = new byte[bufferSize];
+					data = Encoding.UTF8.GetString(smallBuffer, 0, smallBuffer.Length);
+				}
+				else
+				{
+					var buffer = new byte[bufferSize];
 
-						while (true)
+					while (true)
+					{
+						int bytesRead = remoteStream.Read(buffer, 0, buffer.Length);
+
+						if (bytesRead == 0)
 						{
-							int bytesRead = remoteStream.Read(buffer, 0, buffer.Length);
-
-							if (bytesRead == 0)
-							{
-								break;
-							}
-
-							data += Encoding.UTF8.GetString(buffer, 0, bytesRead);
+							break;
 						}
+
+						data += Encoding.UTF8.GetString(buffer, 0, bytesRead);
 					}
 				}
 
@@ -237,44 +233,71 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
 				sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
 
-				using (var contentStream = request.GetResponse().GetResponseStream())
+				using var contentStream = request.GetResponse().GetResponseStream();
+				if (contentStream == null)
 				{
-					if (contentStream == null)
+					Log.Error
+					(
+						$"Failed to download the remote file at \"{remoteURL}\" (NullReferenceException from the content stream). " +
+						"Check your internet connection."
+					);
+
+					return;
+				}
+
+				var fileSize = contentOffset;
+				using (var sizereader = (FtpWebResponse)sizerequest.GetResponse())
+				{
+					fileSize += sizereader.ContentLength;
+				}
+
+				using
+				(
+					var fileStream = contentOffset > 0
+						? new FileStream(localPath, FileMode.Append)
+						: new FileStream(localPath, FileMode.Create)
+				)
+				{
+					fileStream.Position = contentOffset;
+					var totalBytesDownloaded = contentOffset;
+
+					var bufferSize = this.Configuration.RemoteFileDownloadBufferSize;
+					if (fileSize < bufferSize)
 					{
-						Log.Error
+						var smallBuffer = new byte[fileSize];
+						contentStream.Read(smallBuffer, 0, smallBuffer.Length);
+
+						fileStream.Write(smallBuffer, 0, smallBuffer.Length);
+
+						totalBytesDownloaded += smallBuffer.Length;
+
+						// Report download progress
+						this.ModuleDownloadProgressArgs.ProgressBarMessage = GetDownloadProgressBarMessage
 						(
-							$"Failed to download the remote file at \"{remoteURL}\" (NullReferenceException from the content stream). " +
-							"Check your internet connection."
+							Path.GetFileName(remoteURL),
+							totalBytesDownloaded,
+							fileSize
 						);
 
-						return;
+						this.ModuleDownloadProgressArgs.ProgressFraction = (double)totalBytesDownloaded / fileSize;
+						OnModuleDownloadProgressChanged();
 					}
-
-					var fileSize = contentOffset;
-					using (var sizereader = (FtpWebResponse)sizerequest.GetResponse())
+					else
 					{
-						fileSize += sizereader.ContentLength;
-					}
+						var buffer = new byte[bufferSize];
 
-					using
-					(
-						var fileStream = contentOffset > 0
-							? new FileStream(localPath, FileMode.Append)
-							: new FileStream(localPath, FileMode.Create)
-					)
-					{
-						fileStream.Position = contentOffset;
-						var totalBytesDownloaded = contentOffset;
-
-						var bufferSize = this.Configuration.RemoteFileDownloadBufferSize;
-						if (fileSize < bufferSize)
+						while (true)
 						{
-							var smallBuffer = new byte[fileSize];
-							contentStream.Read(smallBuffer, 0, smallBuffer.Length);
+							var bytesRead = contentStream.Read(buffer, 0, buffer.Length);
 
-							fileStream.Write(smallBuffer, 0, smallBuffer.Length);
+							if (bytesRead == 0)
+							{
+								break;
+							}
 
-							totalBytesDownloaded += smallBuffer.Length;
+							fileStream.Write(buffer, 0, bytesRead);
+
+							totalBytesDownloaded += bytesRead;
 
 							// Report download progress
 							this.ModuleDownloadProgressArgs.ProgressBarMessage = GetDownloadProgressBarMessage
@@ -283,37 +306,8 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 								totalBytesDownloaded,
 								fileSize
 							);
-
 							this.ModuleDownloadProgressArgs.ProgressFraction = (double)totalBytesDownloaded / fileSize;
 							OnModuleDownloadProgressChanged();
-						}
-						else
-						{
-							var buffer = new byte[bufferSize];
-
-							while (true)
-							{
-								var bytesRead = contentStream.Read(buffer, 0, buffer.Length);
-
-								if (bytesRead == 0)
-								{
-									break;
-								}
-
-								fileStream.Write(buffer, 0, bytesRead);
-
-								totalBytesDownloaded += bytesRead;
-
-								// Report download progress
-								this.ModuleDownloadProgressArgs.ProgressBarMessage = GetDownloadProgressBarMessage
-								(
-									Path.GetFileName(remoteURL),
-									totalBytesDownloaded,
-									fileSize
-								);
-								this.ModuleDownloadProgressArgs.ProgressFraction = (double)totalBytesDownloaded / fileSize;
-								OnModuleDownloadProgressChanged();
-							}
 						}
 					}
 				}

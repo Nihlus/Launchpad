@@ -50,10 +50,8 @@ namespace Launchpad.Utilities.Interface
 		/// <returns>An instance of the main window widget.</returns>
 		public static MainWindow Create()
 		{
-			using (var builder = new Builder(Assembly.GetExecutingAssembly(), "Launchpad.Utilities.Interface.Launchpad.Utilities.glade", null))
-			{
-				return new MainWindow(builder, builder.GetObject(nameof(MainWindow)).Handle);
-			}
+			using var builder = new Builder(Assembly.GetExecutingAssembly(), "Launchpad.Utilities.Interface.Launchpad.Utilities.glade", null);
+			return new MainWindow(builder, builder.GetObject(nameof(MainWindow)).Handle);
 		}
 
 		/// <summary>

@@ -52,18 +52,14 @@ namespace Launchpad.Launcher.Services
 				return;
 			}
 
-			using (var fs = File.Create(DirectoryHelpers.GetGameArgumentsPath()))
-			{
-				using (var sw = new StreamWriter(fs))
-				{
-					sw.WriteLine("# This file contains all the arguments passed to the game executable on startup.");
-					sw.WriteLine("# Lines beginning with a hash character (#) are ignored and considered comments.");
-					sw.WriteLine("# Everything else is passed line-by-line to the game executable on startup.");
-					sw.WriteLine("# Multiple arguments can be on the same line in this file.");
-					sw.WriteLine("# Each line will have a space appended at the end when passed to the game executable.");
-					sw.WriteLine(string.Empty);
-				}
-			}
+			using var fs = File.Create(DirectoryHelpers.GetGameArgumentsPath());
+			using var sw = new StreamWriter(fs);
+			sw.WriteLine("# This file contains all the arguments passed to the game executable on startup.");
+			sw.WriteLine("# Lines beginning with a hash character (#) are ignored and considered comments.");
+			sw.WriteLine("# Everything else is passed line-by-line to the game executable on startup.");
+			sw.WriteLine("# Multiple arguments can be on the same line in this file.");
+			sw.WriteLine("# Each line will have a space appended at the end when passed to the game executable.");
+			sw.WriteLine(string.Empty);
 		}
 
 		/// <summary>

@@ -128,10 +128,8 @@ namespace Launchpad.Launcher.Handlers
 
 			try
 			{
-				using (var headResponse = (HttpWebResponse)headRequest.GetResponse())
-				{
-					return headResponse.StatusCode == HttpStatusCode.OK;
-				}
+				using var headResponse = (HttpWebResponse)headRequest.GetResponse();
+				return headResponse.StatusCode == HttpStatusCode.OK;
 			}
 			catch (WebException wex)
 			{
@@ -193,10 +191,8 @@ namespace Launchpad.Launcher.Handlers
 			{
 				if (resourceStream != null)
 				{
-					using (var reader = new StreamReader(resourceStream))
-					{
-						scriptSource = reader.ReadToEnd();
-					}
+					using var reader = new StreamReader(resourceStream);
+					scriptSource = reader.ReadToEnd();
 				}
 			}
 

@@ -99,20 +99,14 @@ namespace Launchpad.Utilities.Handlers
 		private async Task CreateManifestChecksumAsync(string manifestPath, string manifestChecksumPath)
 		{
 			// Create a checksum file for the manifest.
-			using (var manifestStream = File.OpenRead(manifestPath))
-			{
-				var manifestHash = MD5Handler.GetStreamHash(manifestStream);
+			using var manifestStream = File.OpenRead(manifestPath);
+			var manifestHash = MD5Handler.GetStreamHash(manifestStream);
 
-				using (var checksumStream = File.Create(manifestChecksumPath, 4096, FileOptions.Asynchronous))
-				{
-					using (var tw = new StreamWriter(checksumStream))
-					{
-						await tw.WriteLineAsync(manifestHash);
-						await tw.FlushAsync();
-						tw.Close();
-					}
-				}
-			}
+			using var checksumStream = File.Create(manifestChecksumPath, 4096, FileOptions.Asynchronous);
+			using var tw = new StreamWriter(checksumStream);
+			await tw.WriteLineAsync(manifestHash);
+			await tw.FlushAsync();
+			tw.Close();
 		}
 
 		private ManifestEntry CreateEntryForFile(string parentDirectory, string filePath)
