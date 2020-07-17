@@ -22,10 +22,8 @@
 
 using System;
 using System.Reflection;
-using Gdk;
 using Gtk;
 using Launchpad.Launcher.Utility;
-using Pango;
 using UIElement = Gtk.Builder.ObjectAttribute;
 
 // ReSharper disable UnassignedReadonlyField

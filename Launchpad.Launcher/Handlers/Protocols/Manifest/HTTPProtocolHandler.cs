@@ -24,8 +24,6 @@ using System;
 using System.IO;
 using System.Net;
 using System.Text;
-
-using Launchpad.Common;
 using Launchpad.Common.Enums;
 using NLog;
 using SixLabors.ImageSharp;

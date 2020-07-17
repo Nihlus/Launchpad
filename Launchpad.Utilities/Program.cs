@@ -30,7 +30,6 @@ using Launchpad.Utilities.Utility.Events;
 using Launchpad.Utilities.Interface;
 using Launchpad.Utilities.Options;
 using Launchpad.Common.Enums;
-using Launchpad.Utilities.Utility;
 using NLog;
 using Application = Gtk.Application;
 using Task = System.Threading.Tasks.Task;
