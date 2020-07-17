@@ -100,9 +100,7 @@ namespace Launchpad.Utilities.Interface
 				if (dialog.Run() == (int) ResponseType.Yes)
 				{
 					var gameVersionPath = SysPath.Combine(targetDirectory, "GameVersion.txt");
-					File.WriteAllText(gameVersionPath, new Version("1.0.0").ToString());
-
-					dialog.Destroy();
+					await File.WriteAllTextAsync(gameVersionPath, new Version("1.0.0").ToString());
 				}
 				else
 				{
