@@ -67,7 +67,7 @@ namespace Launchpad.Utilities.Handlers
 
 					this.GenerationProgressArgs.TotalFiles = manifestFilePaths.Count;
 
-					using (var tw = new StreamWriter(File.Create(manifestPath, 4096, FileOptions.Asynchronous)))
+					await using (var tw = new StreamWriter(File.Create(manifestPath, 4096, FileOptions.Asynchronous)))
 					{
 						var completedFiles = 0;
 						foreach (var filePath in manifestFilePaths)
@@ -99,11 +99,11 @@ namespace Launchpad.Utilities.Handlers
 		private async Task CreateManifestChecksumAsync(string manifestPath, string manifestChecksumPath)
 		{
 			// Create a checksum file for the manifest.
-			using var manifestStream = File.OpenRead(manifestPath);
+			await using var manifestStream = File.OpenRead(manifestPath);
 			var manifestHash = MD5Handler.GetStreamHash(manifestStream);
 
-			using var checksumStream = File.Create(manifestChecksumPath, 4096, FileOptions.Asynchronous);
-			using var tw = new StreamWriter(checksumStream);
+			await using var checksumStream = File.Create(manifestChecksumPath, 4096, FileOptions.Asynchronous);
+			await using var tw = new StreamWriter(checksumStream);
 			await tw.WriteLineAsync(manifestHash);
 			await tw.FlushAsync();
 			tw.Close();
