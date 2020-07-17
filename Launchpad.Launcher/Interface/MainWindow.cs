@@ -508,7 +508,7 @@ namespace Launchpad.Launcher.Interface
 		{
 			Application.Invoke((o, args) =>
 			{
-				ProcessStartInfo script = LauncherHandler.CreateUpdateScript();
+				var script = LauncherHandler.CreateUpdateScript();
 				Process.Start(script);
 
 				Application.Quit();

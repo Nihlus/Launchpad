@@ -253,7 +253,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 					);
 					OnModuleDownloadProgressChanged();
 
-					for (int i = 0; i < this.Configuration.RemoteFileDownloadRetries; ++i)
+					for (var i = 0; i < this.Configuration.RemoteFileDownloadRetries; ++i)
 					{
 						if (!fileEntry.IsFileIntegrityIntact())
 						{

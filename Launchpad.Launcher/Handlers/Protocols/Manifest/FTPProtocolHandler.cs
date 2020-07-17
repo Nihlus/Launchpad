@@ -184,7 +184,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
 					while (true)
 					{
-						int bytesRead = remoteStream.Read(buffer, 0, buffer.Length);
+						var bytesRead = remoteStream.Read(buffer, 0, buffer.Length);
 
 						if (bytesRead == 0)
 						{
