@@ -21,7 +21,6 @@
 //
 
 using System;
-using System.Diagnostics;
 using System.Text.RegularExpressions;
 using Gdk;
 using GLib;
