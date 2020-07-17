@@ -672,6 +672,7 @@ namespace Launchpad.Launcher.Interface
 					"Are you sure you want to reinstall the game?"
 				)
 			);
+
 			if (reinstallConfirmDialog.Run() == (int)ResponseType.Yes)
 			{
 				SetLauncherMode(ELauncherMode.Install, true);

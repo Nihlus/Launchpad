@@ -240,6 +240,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
 				var data = string.Empty;
 				using var remoteStream = request.GetResponse().GetResponseStream();
+
 				// Drop out early if the stream wasn't present
 				if (remoteStream == null)
 				{
