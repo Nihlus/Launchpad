@@ -84,7 +84,7 @@ namespace Launchpad.Utilities.Interface
 
 			if (!Directory.GetFiles(targetDirectory).Any(s => s.Contains("GameVersion.txt")))
 			{
-				var dialog = new MessageDialog
+				using var dialog = new MessageDialog
 				(
 					this,
 					DialogFlags.Modal,
@@ -104,7 +104,6 @@ namespace Launchpad.Utilities.Interface
 				}
 				else
 				{
-					dialog.Destroy();
 					return;
 				}
 			}
