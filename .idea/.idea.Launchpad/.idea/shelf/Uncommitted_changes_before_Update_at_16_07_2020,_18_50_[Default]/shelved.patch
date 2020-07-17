@@ -1,0 +1,483 @@
+Index: Launchpad.Launcher/Handlers/Protocols/Manifest/FTPProtocolHandler.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>//\n//  FTPProtocolHandler.cs\n//\n//  Author:\n//       Jarl Gullberg <jarl.gullberg@gmail.com>\n//\n//  Copyright (c) 2017 Jarl Gullberg\n//\n//  This program is free software: you can redistribute it and/or modify\n//  it under the terms of the GNU General Public License as published by\n//  the Free Software Foundation, either version 3 of the License, or\n//  (at your option) any later version.\n//\n//  This program is distributed in the hope that it will be useful,\n//  but WITHOUT ANY WARRANTY; without even the implied warranty of\n//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n//  GNU General Public License for more details.\n//\n//  You should have received a copy of the GNU General Public License\n//  along with this program.  If not, see <http://www.gnu.org/licenses/>.\n//\n\nusing System;\nusing System.IO;\nusing System.Net;\nusing System.Text;\n\nusing Launchpad.Common.Enums;\nusing NLog;\nusing SixLabors.ImageSharp;\n\nnamespace Launchpad.Launcher.Handlers.Protocols.Manifest\n{\n\t/// <summary>\n\t/// FTP handler. Handles downloading and reading files on a remote FTP server.\n\t/// There are also functions for retrieving remote version information of the game and the launcher.\n\t///\n\t/// This protocol uses a manifest.\n\t/// </summary>\n\tinternal sealed class FTPProtocolHandler : ManifestBasedProtocolHandler\n\t{\n\t\t/// <summary>\n\t\t/// Logger instance for this class.\n\t\t/// </summary>\n\t\tprivate static readonly ILogger Log = LogManager.GetCurrentClassLogger();\n\n\t\t/// <inheritdoc />\n\t\tpublic override bool CanPatch()\n\t\t{\n\t\t\tLog.Info(\"Pinging remote patching server to determine if we can connect to it.\");\n\n\t\t\tvar canConnect = false;\n\n\t\t\tvar url = this.Configuration.RemoteAddress.AbsoluteUri;\n\t\t\tvar username = this.Configuration.RemoteUsername;\n\t\t\tvar password = this.Configuration.RemotePassword;\n\n\t\t\ttry\n\t\t\t{\n\t\t\t\tvar plainRequest = CreateFtpWebRequest(url, username, password);\n\n\t\t\t\tif (plainRequest == null)\n\t\t\t\t{\n\t\t\t\t\treturn false;\n\t\t\t\t}\n\n\t\t\t\tplainRequest.Method = WebRequestMethods.Ftp.ListDirectoryDetails;\n\t\t\t\tplainRequest.Timeout = 4000;\n\n\t\t\t\ttry\n\t\t\t\t{\n\t\t\t\t\tusing (var response = (FtpWebResponse)plainRequest.GetResponse())\n\t\t\t\t\t{\n\t\t\t\t\t\tif (response.StatusCode == FtpStatusCode.OpeningData)\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\tcanConnect = true;\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\tcatch (WebException wex)\n\t\t\t\t{\n\t\t\t\t\tLog.Warn(\"Unable to connect to remote patch server (WebException): \" + wex.Message);\n\t\t\t\t\tcanConnect = false;\n\t\t\t\t}\n\t\t\t}\n\t\t\tcatch (WebException wex)\n\t\t\t{\n\t\t\t\tLog.Warn(\"Unable to connect due a malformed url in the configuration (WebException): \" + wex.Message);\n\t\t\t\tcanConnect = false;\n\t\t\t}\n\n\t\t\treturn canConnect;\n\t\t}\n\n\t\t/// <inheritdoc />\n\t\tpublic override bool IsPlatformAvailable(ESystemTarget platform)\n\t\t{\n\t\t\tvar remote = $\"{this.Configuration.RemoteAddress}/game/{platform}/.provides\";\n\n\t\t\treturn DoesRemoteFileExist(remote);\n\t\t}\n\n\t\t/// <inheritdoc />\n\t\tpublic override string GetChangelogMarkup()\n\t\t{\n\t\t\tvar changelogURL = $\"{this.Configuration.RemoteAddress}/launcher/changelog.pango\";\n\t\t\treturn ReadRemoteFile(changelogURL);\n\t\t}\n\n\t\t/// <inheritdoc />\n\t\tpublic override bool CanProvideBanner()\n\t\t{\n\t\t\tvar bannerURL = $\"{this.Configuration.RemoteAddress}/launcher/banner.png\";\n\n\t\t\treturn DoesRemoteFileExist(bannerURL);\n\t\t}\n\n\t\t/// <inheritdoc />\n\t\tpublic override Image<Rgba32> GetBanner()\n\t\t{\n\t\t\tvar bannerURL = $\"{this.Configuration.RemoteAddress}/launcher/banner.png\";\n\n\t\t\tvar localBannerPath = Path.Combine(Path.GetTempPath(), \"banner.png\");\n\n\t\t\tDownloadRemoteFile(bannerURL, localBannerPath);\n\t\t\tvar bytes = File.ReadAllBytes(localBannerPath);\n\t\t\treturn Image.Load(bytes);\n\t\t}\n\n\t\t/// <inheritdoc />\n\t\tprotected override string ReadRemoteFile(string url, bool useAnonymousLogin = false)\n\t\t{\n\t\t\t// Clean the input url first\n\t\t\tvar remoteURL = url.Replace(Path.DirectorySeparatorChar, '/');\n\n\t\t\tstring username;\n\t\t\tstring password;\n\t\t\tif (useAnonymousLogin)\n\t\t\t{\n\t\t\t\tusername = \"anonymous\";\n\t\t\t\tpassword = \"anonymous\";\n\t\t\t}\n\t\t\telse\n\t\t\t{\n\t\t\t\tusername = this.Configuration.RemoteUsername;\n\t\t\t\tpassword = this.Configuration.RemotePassword;\n\t\t\t}\n\n\t\t\ttry\n\t\t\t{\n\t\t\t\tvar request = CreateFtpWebRequest(remoteURL, username, password);\n\t\t\t\tvar sizerequest = CreateFtpWebRequest(remoteURL, username, password);\n\n\t\t\t\trequest.Method = WebRequestMethods.Ftp.DownloadFile;\n\t\t\t\tsizerequest.Method = WebRequestMethods.Ftp.GetFileSize;\n\n\t\t\t\tvar data = string.Empty;\n\t\t\t\tusing (var remoteStream = request.GetResponse().GetResponseStream())\n\t\t\t\t{\n\t\t\t\t\tif (remoteStream == null)\n\t\t\t\t\t{\n\t\t\t\t\t\treturn string.Empty;\n\t\t\t\t\t}\n\n\t\t\t\t\tlong fileSize;\n\t\t\t\t\tusing (var sizeResponse = (FtpWebResponse)sizerequest.GetResponse())\n\t\t\t\t\t{\n\t\t\t\t\t\tfileSize = sizeResponse.ContentLength;\n\t\t\t\t\t}\n\n\t\t\t\t\tvar bufferSize = this.Configuration.RemoteFileDownloadBufferSize;\n\t\t\t\t\tif (fileSize < bufferSize)\n\t\t\t\t\t{\n\t\t\t\t\t\tvar smallBuffer = new byte[fileSize];\n\t\t\t\t\t\tremoteStream.Read(smallBuffer, 0, smallBuffer.Length);\n\n\t\t\t\t\t\tdata = Encoding.UTF8.GetString(smallBuffer, 0, smallBuffer.Length);\n\t\t\t\t\t}\n\t\t\t\t\telse\n\t\t\t\t\t{\n\t\t\t\t\t\tvar buffer = new byte[bufferSize];\n\n\t\t\t\t\t\twhile (true)\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\tint bytesRead = remoteStream.Read(buffer, 0, buffer.Length);\n\n\t\t\t\t\t\t\tif (bytesRead == 0)\n\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\tbreak;\n\t\t\t\t\t\t\t}\n\n\t\t\t\t\t\t\tdata += Encoding.UTF8.GetString(buffer, 0, bytesRead);\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\n\t\t\t\treturn data;\n\t\t\t}\n\t\t\tcatch (WebException wex)\n\t\t\t{\n\t\t\t\tLog.Error($\"Failed to read the contents of remote file \\\"{remoteURL}\\\" (WebException): {wex.Message}\");\n\t\t\t\treturn string.Empty;\n\t\t\t}\n\t\t}\n\n\t\t/// <inheritdoc />\n\t\tprotected override void DownloadRemoteFile(string url, string localPath, long totalSize = 0, long contentOffset = 0, bool useAnonymousLogin = false)\n\t\t{\n\t\t\t// Make sure we're not passing in any backslashes in the url\n\t\t\tvar remoteURL = url.Replace(Path.DirectorySeparatorChar, '/');\n\n\t\t\tstring username;\n\t\t\tstring password;\n\t\t\tif (useAnonymousLogin)\n\t\t\t{\n\t\t\t\tusername = \"anonymous\";\n\t\t\t\tpassword = \"anonymous\";\n\t\t\t}\n\t\t\telse\n\t\t\t{\n\t\t\t\tusername = this.Configuration.RemoteUsername;\n\t\t\t\tpassword = this.Configuration.RemotePassword;\n\t\t\t}\n\n\t\t\ttry\n\t\t\t{\n\t\t\t\tvar request = CreateFtpWebRequest(remoteURL, username, password);\n\t\t\t\tvar sizerequest = CreateFtpWebRequest(remoteURL, username, password);\n\n\t\t\t\trequest.Method = WebRequestMethods.Ftp.DownloadFile;\n\t\t\t\trequest.ContentOffset = contentOffset;\n\n\t\t\t\tsizerequest.Method = WebRequestMethods.Ftp.GetFileSize;\n\n\t\t\t\tusing (var contentStream = request.GetResponse().GetResponseStream())\n\t\t\t\t{\n\t\t\t\t\tif (contentStream == null)\n\t\t\t\t\t{\n\t\t\t\t\t\tLog.Error\n\t\t\t\t\t\t(\n\t\t\t\t\t\t\t$\"Failed to download the remote file at \\\"{remoteURL}\\\" (NullReferenceException from the content stream). \" +\n\t\t\t\t\t\t\t\"Check your internet connection.\"\n\t\t\t\t\t\t);\n\n\t\t\t\t\t\treturn;\n\t\t\t\t\t}\n\n\t\t\t\t\tvar fileSize = contentOffset;\n\t\t\t\t\tusing (var sizereader = (FtpWebResponse)sizerequest.GetResponse())\n\t\t\t\t\t{\n\t\t\t\t\t\tfileSize += sizereader.ContentLength;\n\t\t\t\t\t}\n\n\t\t\t\t\tusing\n\t\t\t\t\t(\n\t\t\t\t\t\tvar fileStream = contentOffset > 0\n\t\t\t\t\t\t\t? new FileStream(localPath, FileMode.Append)\n\t\t\t\t\t\t\t: new FileStream(localPath, FileMode.Create)\n\t\t\t\t\t)\n\t\t\t\t\t{\n\t\t\t\t\t\tfileStream.Position = contentOffset;\n\t\t\t\t\t\tvar totalBytesDownloaded = contentOffset;\n\n\t\t\t\t\t\tvar bufferSize = this.Configuration.RemoteFileDownloadBufferSize;\n\t\t\t\t\t\tif (fileSize < bufferSize)\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\tvar smallBuffer = new byte[fileSize];\n\t\t\t\t\t\t\tcontentStream.Read(smallBuffer, 0, smallBuffer.Length);\n\n\t\t\t\t\t\t\tfileStream.Write(smallBuffer, 0, smallBuffer.Length);\n\n\t\t\t\t\t\t\ttotalBytesDownloaded += smallBuffer.Length;\n\n\t\t\t\t\t\t\t// Report download progress\n\t\t\t\t\t\t\tthis.ModuleDownloadProgressArgs.ProgressBarMessage = GetDownloadProgressBarMessage\n\t\t\t\t\t\t\t(\n\t\t\t\t\t\t\t\tPath.GetFileName(remoteURL),\n\t\t\t\t\t\t\t\ttotalBytesDownloaded,\n\t\t\t\t\t\t\t\tfileSize\n\t\t\t\t\t\t\t);\n\n\t\t\t\t\t\t\tthis.ModuleDownloadProgressArgs.ProgressFraction = (double)totalBytesDownloaded / fileSize;\n\t\t\t\t\t\t\tOnModuleDownloadProgressChanged();\n\t\t\t\t\t\t}\n\t\t\t\t\t\telse\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\tvar buffer = new byte[bufferSize];\n\n\t\t\t\t\t\t\twhile (true)\n\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\tvar bytesRead = contentStream.Read(buffer, 0, buffer.Length);\n\n\t\t\t\t\t\t\t\tif (bytesRead == 0)\n\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\tbreak;\n\t\t\t\t\t\t\t\t}\n\n\t\t\t\t\t\t\t\tfileStream.Write(buffer, 0, bytesRead);\n\n\t\t\t\t\t\t\t\ttotalBytesDownloaded += bytesRead;\n\n\t\t\t\t\t\t\t\t// Report download progress\n\t\t\t\t\t\t\t\tthis.ModuleDownloadProgressArgs.ProgressBarMessage = GetDownloadProgressBarMessage\n\t\t\t\t\t\t\t\t(\n\t\t\t\t\t\t\t\t\tPath.GetFileName(remoteURL),\n\t\t\t\t\t\t\t\t\ttotalBytesDownloaded,\n\t\t\t\t\t\t\t\t\tfileSize\n\t\t\t\t\t\t\t\t);\n\t\t\t\t\t\t\t\tthis.ModuleDownloadProgressArgs.ProgressFraction = (double)totalBytesDownloaded / fileSize;\n\t\t\t\t\t\t\t\tOnModuleDownloadProgressChanged();\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\tcatch (WebException wex)\n\t\t\t{\n\t\t\t\tLog.Error($\"Failed to download the remote file at \\\"{remoteURL}\\\" (WebException): {wex.Message}\");\n\t\t\t}\n\t\t\tcatch (IOException ioex)\n\t\t\t{\n\t\t\t\tLog.Error($\"Failed to download the remote file at \\\"{remoteURL}\\\" (IOException): {ioex.Message}\");\n\t\t\t}\n\t\t}\n\n\t\t/// <summary>\n\t\t/// Creates an ftp web request.\n\t\t/// </summary>\n\t\t/// <returns>The ftp web request.</returns>\n\t\t/// <param name=\"remotePath\">Ftp directory path.</param>\n\t\t/// <param name=\"username\">Remote FTP username.</param>\n\t\t/// <param name=\"password\">Remote FTP password.</param>\n\t\tprivate FtpWebRequest CreateFtpWebRequest(string remotePath, string username, string password)\n\t\t{\n\t\t\tif (!remotePath.StartsWith(this.Configuration.RemoteAddress.AbsoluteUri))\n\t\t\t{\n\t\t\t\tremotePath = $\"{this.Configuration.RemoteAddress}/{remotePath}\";\n\t\t\t}\n\n\t\t\ttry\n\t\t\t{\n\t\t\t\tvar request = (FtpWebRequest)WebRequest.Create(new Uri(remotePath));\n\n\t\t\t\t// Set proxy to null. Under current configuration if this option is not set then the proxy\n\t\t\t\t// that is used will get an html response from the web content gateway (firewall monitoring system)\n\t\t\t\trequest.Proxy = null;\n\n\t\t\t\trequest.UsePassive = true;\n\t\t\t\trequest.UseBinary = true;\n\n\t\t\t\trequest.Credentials = new NetworkCredential(username, password);\n\n\t\t\t\treturn request;\n\t\t\t}\n\t\t\tcatch (WebException wex)\n\t\t\t{\n\t\t\t\tLog.Warn(\"Unable to create a WebRequest for the specified file (WebException): \" + wex.Message);\n\t\t\t\treturn null;\n\t\t\t}\n\t\t\tcatch (ArgumentException aex)\n\t\t\t{\n\t\t\t\tLog.Warn(\"Unable to create a WebRequest for the specified file (ArgumentException): \" + aex.Message);\n\t\t\t\treturn null;\n\t\t\t}\n\t\t\tcatch (UriFormatException uex)\n\t\t\t{\n\t\t\t\tLog.Warn\n\t\t\t\t(\n\t\t\t\t\t\"Unable to create a WebRequest for the specified file (UriFormatException): \" + uex.Message + \"\\n\" +\n\t\t\t\t\t\"You may need to add \\\"ftp://\\\" before the url in the config.\"\n\t\t\t\t);\n\t\t\t\treturn null;\n\t\t\t}\n\t\t}\n\n\t\t/// <summary>\n\t\t/// Checks if a given file exists on the remote FTP server.\n\t\t/// </summary>\n\t\t/// <returns><c>true</c>, if the file exists, <c>false</c> otherwise.</returns>\n\t\t/// <param name=\"remotePath\">Remote path.</param>\n\t\tprivate bool DoesRemoteFileExist(string remotePath)\n\t\t{\n\t\t\tvar request = CreateFtpWebRequest(remotePath, this.Configuration.RemoteUsername, this.Configuration.RemotePassword);\n\t\t\tFtpWebResponse response = null;\n\n\t\t\ttry\n\t\t\t{\n\t\t\t\tresponse = (FtpWebResponse)request.GetResponse();\n\t\t\t}\n\t\t\tcatch (WebException ex)\n\t\t\t{\n\t\t\t\tresponse = (FtpWebResponse)ex.Response;\n\t\t\t\tif (response.StatusCode == FtpStatusCode.ActionNotTakenFileUnavailable)\n\t\t\t\t{\n\t\t\t\t\treturn false;\n\t\t\t\t}\n\t\t\t}\n\t\t\tfinally\n\t\t\t{\n\t\t\t\tresponse?.Dispose();\n\t\t\t}\n\n\t\t\treturn true;\n\t\t}\n\t}\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- Launchpad.Launcher/Handlers/Protocols/Manifest/FTPProtocolHandler.cs	(revision 041bacbdc35bf7dd1fda466f1cb081f59869c8fe)
++++ Launchpad.Launcher/Handlers/Protocols/Manifest/FTPProtocolHandler.cs	(date 1594918155528)
+@@ -71,9 +71,14 @@
+ 				{
+ 					using (var response = (FtpWebResponse)plainRequest.GetResponse())
+ 					{
+-						if (response.StatusCode == FtpStatusCode.OpeningData)
++						switch (response.StatusCode)
+ 						{
+-							canConnect = true;
++							case FtpStatusCode.OpeningData:
++							case FtpStatusCode.DataAlreadyOpen:
++							{
++								canConnect = true;
++								break;
++							}
+ 						}
+ 					}
+ 				}
+Index: Launchpad.Common/Launchpad.Common.csproj
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><Project Sdk=\"Microsoft.NET.Sdk\">\n  <PropertyGroup>\n    <TargetFramework>netstandard2.0</TargetFramework>\n    <CodeAnalysisRuleSet>..\\stylecop.ruleset</CodeAnalysisRuleSet>\n    <GenerateDocumentationFile>true</GenerateDocumentationFile>\n    <Platform>x86</Platform>\n    <PlatformTarget>x86</PlatformTarget>\n  </PropertyGroup>\n  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)' == 'Release|x86'\">\n    <Prefer32bit>true</Prefer32bit>\n  </PropertyGroup>\n  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)' == 'Debug|x86'\">\n    <Prefer32bit>true</Prefer32bit>\n  </PropertyGroup>\n  <PropertyGroup Condition=\" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' \">\n    <Prefer32bit>true</Prefer32bit>\n  </PropertyGroup>\n  <PropertyGroup Condition=\" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' \">\n    <Prefer32bit>true</Prefer32bit>\n  </PropertyGroup>\n  <ItemGroup>\n    <AdditionalFiles Include=\"$(ProjectDir)\\..\\stylecop.json\">\n      <Link>stylecop.json</Link>\n      <InProject>false</InProject>\n    </AdditionalFiles>\n    <AdditionalFiles Include=\"$(ProjectDir)\\..\\stylecop.ruleset\">\n      <Link>stylecop.ruleset</Link>\n      <InProject>false</InProject>\n    </AdditionalFiles>\n  </ItemGroup>\n  <ItemGroup>\n    <PackageReference Include=\"StyleCop.Analyzers\" Version=\"1.1.118\" PrivateAssets=\"all\" />\n  </ItemGroup>\n</Project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- Launchpad.Common/Launchpad.Common.csproj	(revision 041bacbdc35bf7dd1fda466f1cb081f59869c8fe)
++++ Launchpad.Common/Launchpad.Common.csproj	(date 1594917422421)
+@@ -3,21 +3,8 @@
+     <TargetFramework>netstandard2.0</TargetFramework>
+     <CodeAnalysisRuleSet>..\stylecop.ruleset</CodeAnalysisRuleSet>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+-    <Platform>x86</Platform>
+-    <PlatformTarget>x86</PlatformTarget>
+-  </PropertyGroup>
+-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+-    <Prefer32bit>true</Prefer32bit>
+-  </PropertyGroup>
+-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+-    <Prefer32bit>true</Prefer32bit>
+-  </PropertyGroup>
+-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+-    <Prefer32bit>true</Prefer32bit>
+   </PropertyGroup>
+-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+-    <Prefer32bit>true</Prefer32bit>
+-  </PropertyGroup>
++
+   <ItemGroup>
+     <AdditionalFiles Include="$(ProjectDir)\..\stylecop.json">
+       <Link>stylecop.json</Link>
+@@ -28,7 +15,8 @@
+       <InProject>false</InProject>
+     </AdditionalFiles>
+   </ItemGroup>
++
+   <ItemGroup>
+     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="all" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+Index: Launchpad.sln
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\nMicrosoft Visual Studio Solution File, Format Version 12.00\n# Visual Studio 2012\nVisualStudioVersion = 12.0.31101.0\nMinimumVisualStudioVersion = 10.0.40219.1\n\nProject(\"{2150E333-8FDC-42A3-9474-1A3956D46DE8}\") = \"metadata\", \".\\\", \"{F1A57014-71CE-4032-A652-01B7E35E14DB}\"\n\tProjectSection(SolutionItems) = preProject\n\t\t.gitignore = .gitignore\n\t\tREADME.md = README.md\n\t\t.travis.yml = .travis.yml\n\t\tappveyor.yml = appveyor.yml\n\tEndProjectSection\nEndProject\n\nProject(\"{2150E333-8FDC-42A3-9474-1A3956D46DE8}\") = \"Scripts\", \".\\Scripts\", \"{C9B78442-415D-4F02-93B1-C377F6A9A053}\"\n\tProjectSection(SolutionItems) = preProject\n\t\tScripts\\launchpad-dependencies.sh = Scripts\\launchpad-dependencies.sh\n\t\tScripts\\launchpad-publis.sh = Scripts\\launchpad-publish.sh\n\t\tScripts\\launchpad-server-setup.sh = Scripts\\launchpad-server-setup.sh\n\t\tScripts\\update-translations.sh = Scripts\\update-translations.sh\n\tEndProjectSection\nEndProject\n\nProject(\"{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}\") = \"Launchpad.Launcher\", \"Launchpad.Launcher\\Launchpad.Launcher.csproj\", \"{676312FB-AF67-4340-B86F-9CCEB22D802F}\"\nEndProject\nProject(\"{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}\") = \"Launchpad.Utilities\", \"Launchpad.Utilities\\Launchpad.Utilities.csproj\", \"{BA9D77D3-1767-4D9C-80F3-409C52B03861}\"\nEndProject\nProject(\"{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}\") = \"Launchpad.Tests\", \"Launchpad.Tests\\Launchpad.Tests.csproj\", \"{3DCD158D-7903-47AE-8FCC-3292128DE213}\"\nEndProject\nProject(\"{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}\") = \"Launchpad.Common\", \"Launchpad.Common\\Launchpad.Common.csproj\", \"{DDC53837-BA5A-41F3-8258-6224F3526A52}\"\nEndProject\nGlobal\n\tGlobalSection(SolutionConfigurationPlatforms) = preSolution\n\t\tDebug|x86 = Debug|x86\n\t\tRelease|x86 = Release|x86\n\t\tDefault|x86 = Default|x86\n\tEndGlobalSection\n\tGlobalSection(ProjectConfigurationPlatforms) = postSolution\n\t\t{676312FB-AF67-4340-B86F-9CCEB22D802F}.Debug|x86.ActiveCfg = Debug|x86\n\t\t{676312FB-AF67-4340-B86F-9CCEB22D802F}.Debug|x86.Build.0 = Debug|x86\n\t\t{676312FB-AF67-4340-B86F-9CCEB22D802F}.Default|x86.ActiveCfg = Debug|x86\n\t\t{676312FB-AF67-4340-B86F-9CCEB22D802F}.Default|x86.Build.0 = Debug|x86\n\t\t{676312FB-AF67-4340-B86F-9CCEB22D802F}.Release|x86.ActiveCfg = Release|x86\n\t\t{676312FB-AF67-4340-B86F-9CCEB22D802F}.Release|x86.Build.0 = Release|x86\n\t\t{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Debug|x86.ActiveCfg = Debug|x86\n\t\t{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Debug|x86.Build.0 = Debug|x86\n\t\t{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Default|x86.ActiveCfg = Debug|x86\n\t\t{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Default|x86.Build.0 = Debug|x86\n\t\t{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Release|x86.ActiveCfg = Release|x86\n\t\t{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Release|x86.Build.0 = Release|x86\n\t\t{3DCD158D-7903-47AE-8FCC-3292128DE213}.Debug|x86.ActiveCfg = Debug|x86\n\t\t{3DCD158D-7903-47AE-8FCC-3292128DE213}.Debug|x86.Build.0 = Debug|x86\n\t\t{3DCD158D-7903-47AE-8FCC-3292128DE213}.Default|x86.ActiveCfg = Debug|x86\n\t\t{3DCD158D-7903-47AE-8FCC-3292128DE213}.Default|x86.Build.0 = Debug|x86\n\t\t{3DCD158D-7903-47AE-8FCC-3292128DE213}.Release|x86.ActiveCfg = Release|x86\n\t\t{3DCD158D-7903-47AE-8FCC-3292128DE213}.Release|x86.Build.0 = Release|x86\n\t\t{DDC53837-BA5A-41F3-8258-6224F3526A52}.Debug|x86.ActiveCfg = Debug|x86\n\t\t{DDC53837-BA5A-41F3-8258-6224F3526A52}.Debug|x86.Build.0 = Debug|x86\n\t\t{DDC53837-BA5A-41F3-8258-6224F3526A52}.Default|x86.ActiveCfg = Debug|x86\n\t\t{DDC53837-BA5A-41F3-8258-6224F3526A52}.Default|x86.Build.0 = Debug|x86\n\t\t{DDC53837-BA5A-41F3-8258-6224F3526A52}.Release|x86.ActiveCfg = Release|x86\n\t\t{DDC53837-BA5A-41F3-8258-6224F3526A52}.Release|x86.Build.0 = Release|x86\n\tEndGlobalSection\n\tGlobalSection(SolutionProperties) = preSolution\n\t\tHideSolutionNode = FALSE\n\tEndGlobalSection\nEndGlobal\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- Launchpad.sln	(revision 041bacbdc35bf7dd1fda466f1cb081f59869c8fe)
++++ Launchpad.sln	(date 1594917394881)
+@@ -32,35 +32,26 @@
+ EndProject
+ Global
+ 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+-		Debug|x86 = Debug|x86
+-		Release|x86 = Release|x86
+-		Default|x86 = Default|x86
++		Release|Any CPU = Release|Any CPU
++		Debug|Any CPU = Debug|Any CPU
+ 	EndGlobalSection
+ 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+-		{676312FB-AF67-4340-B86F-9CCEB22D802F}.Debug|x86.ActiveCfg = Debug|x86
+-		{676312FB-AF67-4340-B86F-9CCEB22D802F}.Debug|x86.Build.0 = Debug|x86
+-		{676312FB-AF67-4340-B86F-9CCEB22D802F}.Default|x86.ActiveCfg = Debug|x86
+-		{676312FB-AF67-4340-B86F-9CCEB22D802F}.Default|x86.Build.0 = Debug|x86
+-		{676312FB-AF67-4340-B86F-9CCEB22D802F}.Release|x86.ActiveCfg = Release|x86
+-		{676312FB-AF67-4340-B86F-9CCEB22D802F}.Release|x86.Build.0 = Release|x86
+-		{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Debug|x86.ActiveCfg = Debug|x86
+-		{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Debug|x86.Build.0 = Debug|x86
+-		{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Default|x86.ActiveCfg = Debug|x86
+-		{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Default|x86.Build.0 = Debug|x86
+-		{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Release|x86.ActiveCfg = Release|x86
+-		{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Release|x86.Build.0 = Release|x86
+-		{3DCD158D-7903-47AE-8FCC-3292128DE213}.Debug|x86.ActiveCfg = Debug|x86
+-		{3DCD158D-7903-47AE-8FCC-3292128DE213}.Debug|x86.Build.0 = Debug|x86
+-		{3DCD158D-7903-47AE-8FCC-3292128DE213}.Default|x86.ActiveCfg = Debug|x86
+-		{3DCD158D-7903-47AE-8FCC-3292128DE213}.Default|x86.Build.0 = Debug|x86
+-		{3DCD158D-7903-47AE-8FCC-3292128DE213}.Release|x86.ActiveCfg = Release|x86
+-		{3DCD158D-7903-47AE-8FCC-3292128DE213}.Release|x86.Build.0 = Release|x86
+-		{DDC53837-BA5A-41F3-8258-6224F3526A52}.Debug|x86.ActiveCfg = Debug|x86
+-		{DDC53837-BA5A-41F3-8258-6224F3526A52}.Debug|x86.Build.0 = Debug|x86
+-		{DDC53837-BA5A-41F3-8258-6224F3526A52}.Default|x86.ActiveCfg = Debug|x86
+-		{DDC53837-BA5A-41F3-8258-6224F3526A52}.Default|x86.Build.0 = Debug|x86
+-		{DDC53837-BA5A-41F3-8258-6224F3526A52}.Release|x86.ActiveCfg = Release|x86
+-		{DDC53837-BA5A-41F3-8258-6224F3526A52}.Release|x86.Build.0 = Release|x86
++		{DDC53837-BA5A-41F3-8258-6224F3526A52}.Release|Any CPU.ActiveCfg = Release|Any CPU
++		{DDC53837-BA5A-41F3-8258-6224F3526A52}.Release|Any CPU.Build.0 = Release|Any CPU
++		{DDC53837-BA5A-41F3-8258-6224F3526A52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
++		{DDC53837-BA5A-41F3-8258-6224F3526A52}.Debug|Any CPU.Build.0 = Debug|Any CPU
++		{676312FB-AF67-4340-B86F-9CCEB22D802F}.Release|Any CPU.ActiveCfg = Release|Any CPU
++		{676312FB-AF67-4340-B86F-9CCEB22D802F}.Release|Any CPU.Build.0 = Release|Any CPU
++		{676312FB-AF67-4340-B86F-9CCEB22D802F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
++		{676312FB-AF67-4340-B86F-9CCEB22D802F}.Debug|Any CPU.Build.0 = Debug|Any CPU
++		{3DCD158D-7903-47AE-8FCC-3292128DE213}.Release|Any CPU.ActiveCfg = Release|Any CPU
++		{3DCD158D-7903-47AE-8FCC-3292128DE213}.Release|Any CPU.Build.0 = Release|Any CPU
++		{3DCD158D-7903-47AE-8FCC-3292128DE213}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
++		{3DCD158D-7903-47AE-8FCC-3292128DE213}.Debug|Any CPU.Build.0 = Debug|Any CPU
++		{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Release|Any CPU.ActiveCfg = Release|Any CPU
++		{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Release|Any CPU.Build.0 = Release|Any CPU
++		{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
++		{BA9D77D3-1767-4D9C-80F3-409C52B03861}.Debug|Any CPU.Build.0 = Debug|Any CPU
+ 	EndGlobalSection
+ 	GlobalSection(SolutionProperties) = preSolution
+ 		HideSolutionNode = FALSE
+Index: .idea/.idea.Launchpad/riderModule.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<module type=\"RIDER_MODULE\" version=\"4\">\n  <component name=\"NewModuleRootManager\">\n    <content url=\"file://$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.1/build/_common/xunit.abstractions.dll\" />\n    <content url=\"file://$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.1/build/_common/xunit.runner.reporters.net452.dll\" />\n    <content url=\"file://$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.1/build/_common/xunit.runner.utility.net452.dll\" />\n    <content url=\"file://$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.1/build/_common/xunit.runner.visualstudio.testadapter.dll\" />\n    <content url=\"file://$MODULE_DIR$/../..\" />\n    <orderEntry type=\"sourceFolder\" forTests=\"false\" />\n  </component>\n</module>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/.idea.Launchpad/riderModule.iml	(revision 041bacbdc35bf7dd1fda466f1cb081f59869c8fe)
++++ .idea/.idea.Launchpad/riderModule.iml	(date 1594917199941)
+@@ -1,10 +1,10 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <module type="RIDER_MODULE" version="4">
+   <component name="NewModuleRootManager">
+-    <content url="file://$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.1/build/_common/xunit.abstractions.dll" />
+-    <content url="file://$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.1/build/_common/xunit.runner.reporters.net452.dll" />
+-    <content url="file://$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.1/build/_common/xunit.runner.utility.net452.dll" />
+-    <content url="file://$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.1/build/_common/xunit.runner.visualstudio.testadapter.dll" />
++    <content url="file://$USER_HOME$/.nuget/packages/microsoft.net.test.sdk/16.2.0/build/netcoreapp1.0" />
++    <content url="file://$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.1/build/netcoreapp1.0/xunit.runner.reporters.netcoreapp10.dll" />
++    <content url="file://$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.1/build/netcoreapp1.0/xunit.runner.utility.netcoreapp10.dll" />
++    <content url="file://$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.1/build/netcoreapp1.0/xunit.runner.visualstudio.dotnetcore.testadapter.dll" />
+     <content url="file://$MODULE_DIR$/../.." />
+     <orderEntry type="sourceFolder" forTests="false" />
+   </component>
+Index: .idea/.idea.Launchpad/.idea/contentModel.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"ContentModelStore\">\n    <e p=\"$APPLICATION_CONFIG_DIR$/consoles/db\" t=\"IncludeRecursive\" />\n    <e p=\"$APPLICATION_CONFIG_DIR$/extensions\" t=\"IncludeRecursive\" />\n    <e p=\"$APPLICATION_CONFIG_DIR$/scratches\" t=\"IncludeRecursive\" />\n    <e p=\"$USER_HOME$/.Rider2019.3/system/extResources\" t=\"IncludeRecursive\" />\n    <e p=\"$USER_HOME$/.Rider2019.3/system/resharper-host/local/Transient/ReSharperHost/v193/SolutionCaches/_Launchpad.-610662155.00\" t=\"ExcludeRecursive\" />\n    <e p=\"$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.1/build/_common/xunit.abstractions.dll\" t=\"Include\" />\n    <e p=\"$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.1/build/_common/xunit.runner.reporters.net452.dll\" t=\"Include\" />\n    <e p=\"$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.1/build/_common/xunit.runner.utility.net452.dll\" t=\"Include\" />\n    <e p=\"$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.1/build/_common/xunit.runner.visualstudio.testadapter.dll\" t=\"Include\" />\n    <e p=\"$PROJECT_DIR$\" t=\"IncludeFlat\">\n      <e p=\".gitignore\" t=\"Include\" />\n      <e p=\".travis.yml\" t=\"Include\" />\n      <e p=\"LICENSE\" t=\"Include\" />\n      <e p=\"Launchpad.Common\" t=\"IncludeRecursive\">\n        <e p=\"Enums\" t=\"Include\">\n          <e p=\"EManifestType.cs\" t=\"Include\" />\n          <e p=\"ESystemTarget.cs\" t=\"Include\" />\n        </e>\n        <e p=\"ExtensionMethods.cs\" t=\"Include\" />\n        <e p=\"Handlers\" t=\"Include\">\n          <e p=\"MD5Handler.cs\" t=\"Include\" />\n          <e p=\"Manifest\" t=\"Include\">\n            <e p=\"ManifestEntry.cs\" t=\"Include\" />\n            <e p=\"ManifestHandler.cs\" t=\"Include\" />\n          </e>\n        </e>\n        <e p=\"Launchpad.Common.csproj\" t=\"IncludeRecursive\" />\n        <e p=\"PlatformHelpers.cs\" t=\"Include\" />\n        <e p=\"bin\" t=\"ExcludeRecursive\" />\n        <e p=\"obj\" t=\"ExcludeRecursive\">\n          <e p=\"x86\" t=\"Include\">\n            <e p=\"Debug\" t=\"Include\">\n              <e p=\"netstandard2.0\" t=\"Include\">\n                <e p=\"Launchpad.Common.AssemblyInfo.cs\" t=\"Include\" />\n              </e>\n            </e>\n          </e>\n        </e>\n      </e>\n      <e p=\"Launchpad.Launcher\" t=\"IncludeRecursive\">\n        <e p=\"Configuration\" t=\"Include\">\n          <e p=\"ILaunchpadConfiguration.cs\" t=\"Include\" />\n        </e>\n        <e p=\"Content\" t=\"Include\">\n          <e p=\"locale\" t=\"Include\">\n            <e p=\"af\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"ar\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"bg\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"bn\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"ca\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"cs\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"da\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"de\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"el\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"en\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"es_ES\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"fi\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"fr\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"he\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"hi\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"hu\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"id\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"it\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"ja\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"ko\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"nl\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"no\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"pl\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"pt_BR\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"pt_PT\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"ro\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"ru\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"sr\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"sv_SE\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"tr\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"uk\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"vi\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"zh_CN\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n            <e p=\"zh_TW\" t=\"Include\">\n              <e p=\"LC_MESSAGES\" t=\"Include\">\n                <e p=\"messages.po\" t=\"Include\" />\n              </e>\n            </e>\n          </e>\n        </e>\n        <e p=\"Extensions\" t=\"Include\">\n          <e p=\"ManifestEntryExtensions.cs\" t=\"Include\" />\n        </e>\n        <e p=\"Handlers\" t=\"Include\">\n          <e p=\"ChecksHandler.cs\" t=\"Include\" />\n          <e p=\"ConfigHandler.cs\" t=\"Include\" />\n          <e p=\"GameHandler.cs\" t=\"Include\" />\n          <e p=\"LauncherHandler.cs\" t=\"Include\" />\n          <e p=\"Protocols\" t=\"Include\">\n            <e p=\"EModule.cs\" t=\"Include\" />\n            <e p=\"Manifest\" t=\"Include\">\n              <e p=\"FTPProtocolHandler.cs\" t=\"Include\" />\n              <e p=\"HTTPProtocolHandler.cs\" t=\"Include\" />\n              <e p=\"ManifestBasedProtocolHandler.cs\" t=\"Include\" />\n            </e>\n            <e p=\"ModuleProgressChangedArgs.cs\" t=\"Include\" />\n            <e p=\"PatchProtocolHandler.cs\" t=\"Include\" />\n          </e>\n        </e>\n        <e p=\"Interface\" t=\"Include\">\n          <e p=\"Launchpad.glade\" t=\"Include\" />\n          <e p=\"Launchpad.glade~\" t=\"Include\" />\n          <e p=\"MainWindow.UI.cs\" t=\"Include\" />\n          <e p=\"MainWindow.cs\" t=\"Include\" />\n        </e>\n        <e p=\"Launchpad.Launcher.csproj\" t=\"IncludeRecursive\" />\n        <e p=\"Launchpad.Launcher.csproj.DotSettings\" t=\"Include\" />\n        <e p=\"NLog.config\" t=\"Include\" />\n        <e p=\"Program.cs\" t=\"Include\" />\n        <e p=\"Resources\" t=\"Include\">\n          <e p=\"Icon.ico\" t=\"Include\" />\n          <e p=\"Icon.png\" t=\"Include\" />\n          <e p=\"launchpad_update.bat\" t=\"Include\" />\n          <e p=\"launchpad_update.sh\" t=\"Include\" />\n        </e>\n        <e p=\"Services\" t=\"Include\">\n          <e p=\"GameArgumentService.cs\" t=\"Include\" />\n          <e p=\"LocalVersionService.cs\" t=\"Include\" />\n          <e p=\"TagfileService.cs\" t=\"Include\" />\n        </e>\n        <e p=\"Utility\" t=\"Include\">\n          <e p=\"DirectoryHelpers.cs\" t=\"Include\" />\n          <e p=\"Enums\" t=\"Include\">\n            <e p=\"ELauncherMode.cs\" t=\"Include\" />\n          </e>\n          <e p=\"PatchProtocolProvider.cs\" t=\"Include\" />\n          <e p=\"ResourceManager.cs\" t=\"Include\" />\n        </e>\n        <e p=\"app.manifest\" t=\"Include\" />\n        <e p=\"bin\" t=\"ExcludeRecursive\" />\n        <e p=\"launchpad-internal.log\" t=\"Include\" />\n        <e p=\"obj\" t=\"ExcludeRecursive\">\n          <e p=\"x86\" t=\"Include\">\n            <e p=\"Debug\" t=\"Include\">\n              <e p=\"net461\" t=\"Include\">\n                <e p=\"Launchpad.Launcher.AssemblyInfo.cs\" t=\"Include\" />\n              </e>\n            </e>\n          </e>\n        </e>\n      </e>\n      <e p=\"Launchpad.Tests\" t=\"IncludeRecursive\">\n        <e p=\"Common\" t=\"Include\">\n          <e p=\"MD5HandlerTests.cs\" t=\"Include\" />\n          <e p=\"StringExtensionsTexts.cs\" t=\"Include\" />\n        </e>\n        <e p=\"Launchpad.Tests.csproj\" t=\"IncludeRecursive\" />\n        <e p=\"bin\" t=\"ExcludeRecursive\" />\n        <e p=\"obj\" t=\"ExcludeRecursive\">\n          <e p=\"x86\" t=\"Include\">\n            <e p=\"Debug\" t=\"Include\">\n              <e p=\"net462\" t=\"Include\">\n                <e p=\"Launchpad.Tests.AssemblyInfo.cs\" t=\"Include\" />\n              </e>\n            </e>\n          </e>\n        </e>\n        <e p=\"packages.config\" t=\"Include\" />\n      </e>\n      <e p=\"Launchpad.Utilities\" t=\"IncludeRecursive\">\n        <e p=\"Handlers\" t=\"Include\">\n          <e p=\"ManifestGenerationHandler.cs\" t=\"Include\" />\n        </e>\n        <e p=\"Interface\" t=\"Include\">\n          <e p=\"Launchpad.Utilities.glade\" t=\"Include\" />\n          <e p=\"Launchpad.Utilities.glade~\" t=\"Include\" />\n          <e p=\"LaunchpadUtilities.glade~\" t=\"Include\" />\n          <e p=\"MainWindow.UI.cs\" t=\"Include\" />\n          <e p=\"MainWindow.cs\" t=\"Include\" />\n        </e>\n        <e p=\"Launchpad.Utilities.csproj\" t=\"IncludeRecursive\" />\n        <e p=\"NLog.config\" t=\"Include\" />\n        <e p=\"Options\" t=\"Include\">\n          <e p=\"CLIOptions.cs\" t=\"Include\" />\n        </e>\n        <e p=\"Program.cs\" t=\"Include\" />\n        <e p=\"Resources\" t=\"Include\">\n          <e p=\"Icons8-Android-Industry-Engineering.ico\" t=\"Include\" />\n        </e>\n        <e p=\"Utility\" t=\"Include\">\n          <e p=\"DirectoryHelpers.cs\" t=\"Include\" />\n          <e p=\"Events\" t=\"Include\">\n            <e p=\"ManifestGenerationProgressChangedEventArgs.cs\" t=\"Include\" />\n          </e>\n        </e>\n        <e p=\"bin\" t=\"ExcludeRecursive\" />\n        <e p=\"obj\" t=\"ExcludeRecursive\">\n          <e p=\"x86\" t=\"Include\">\n            <e p=\"Debug\" t=\"Include\">\n              <e p=\"net462\" t=\"Include\">\n                <e p=\"Launchpad.Utilities.AssemblyInfo.cs\" t=\"Include\" />\n              </e>\n            </e>\n          </e>\n        </e>\n      </e>\n      <e p=\"Launchpad.sln\" t=\"IncludeFlat\" />\n      <e p=\"README.md\" t=\"Include\" />\n      <e p=\"Scripts\" t=\"Include\">\n        <e p=\"launchpad-dependencies.sh\" t=\"Include\" />\n        <e p=\"launchpad-publish.sh\" t=\"Include\" />\n        <e p=\"launchpad-server-setup.sh\" t=\"Include\" />\n        <e p=\"update-translations.sh\" t=\"Include\" />\n      </e>\n      <e p=\"appveyor.yml\" t=\"Include\" />\n      <e p=\"packages\" t=\"ExcludeRecursive\" />\n      <e p=\"stylecop.json\" t=\"Include\" />\n      <e p=\"stylecop.ruleset\" t=\"Include\" />\n    </e>\n  </component>\n  <component name=\"RiderRiderContentModelStore\">\n    <excludedPaths />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/.idea.Launchpad/.idea/contentModel.xml	(revision 041bacbdc35bf7dd1fda466f1cb081f59869c8fe)
++++ .idea/.idea.Launchpad/.idea/contentModel.xml	(date 1594917388081)
+@@ -1,15 +1,17 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="ContentModelStore">
++    <e p="$USER_HOME$/.cache/JetBrains/Rider2020.2/extResources" t="IncludeRecursive" />
++    <e p="$USER_HOME$/.cache/JetBrains/Rider2020.2/resharper-host/local/Transient/ReSharperHost/v202/SolutionCaches/_Launchpad.-1452281677.00" t="ExcludeRecursive" />
+     <e p="$APPLICATION_CONFIG_DIR$/consoles/db" t="IncludeRecursive" />
+     <e p="$APPLICATION_CONFIG_DIR$/extensions" t="IncludeRecursive" />
+     <e p="$APPLICATION_CONFIG_DIR$/scratches" t="IncludeRecursive" />
+-    <e p="$USER_HOME$/.Rider2019.3/system/extResources" t="IncludeRecursive" />
+-    <e p="$USER_HOME$/.Rider2019.3/system/resharper-host/local/Transient/ReSharperHost/v193/SolutionCaches/_Launchpad.-610662155.00" t="ExcludeRecursive" />
+-    <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.1/build/_common/xunit.abstractions.dll" t="Include" />
+-    <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.1/build/_common/xunit.runner.reporters.net452.dll" t="Include" />
+-    <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.1/build/_common/xunit.runner.utility.net452.dll" t="Include" />
+-    <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.1/build/_common/xunit.runner.visualstudio.testadapter.dll" t="Include" />
++    <e p="$USER_HOME$/.nuget/packages/microsoft.net.test.sdk/16.2.0/build/netcoreapp1.0" t="Include">
++      <e p="Microsoft.NET.Test.Sdk.Program.cs" t="Include" />
++    </e>
++    <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.1/build/netcoreapp1.0/xunit.runner.reporters.netcoreapp10.dll" t="Include" />
++    <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.1/build/netcoreapp1.0/xunit.runner.utility.netcoreapp10.dll" t="Include" />
++    <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.1/build/netcoreapp1.0/xunit.runner.visualstudio.dotnetcore.testadapter.dll" t="Include" />
+     <e p="$PROJECT_DIR$" t="IncludeFlat">
+       <e p=".gitignore" t="Include" />
+       <e p=".travis.yml" t="Include" />
+@@ -31,11 +33,9 @@
+         <e p="PlatformHelpers.cs" t="Include" />
+         <e p="bin" t="ExcludeRecursive" />
+         <e p="obj" t="ExcludeRecursive">
+-          <e p="x86" t="Include">
+-            <e p="Debug" t="Include">
+-              <e p="netstandard2.0" t="Include">
+-                <e p="Launchpad.Common.AssemblyInfo.cs" t="Include" />
+-              </e>
++          <e p="Debug" t="Include">
++            <e p="netstandard2.0" t="Include">
++              <e p="Launchpad.Common.AssemblyInfo.cs" t="Include" />
+             </e>
+           </e>
+         </e>
+@@ -270,11 +270,9 @@
+         <e p="bin" t="ExcludeRecursive" />
+         <e p="launchpad-internal.log" t="Include" />
+         <e p="obj" t="ExcludeRecursive">
+-          <e p="x86" t="Include">
+-            <e p="Debug" t="Include">
+-              <e p="net461" t="Include">
+-                <e p="Launchpad.Launcher.AssemblyInfo.cs" t="Include" />
+-              </e>
++          <e p="Debug" t="Include">
++            <e p="netcoreapp3.1" t="Include">
++              <e p="Launchpad.Launcher.AssemblyInfo.cs" t="Include" />
+             </e>
+           </e>
+         </e>
+@@ -287,11 +285,9 @@
+         <e p="Launchpad.Tests.csproj" t="IncludeRecursive" />
+         <e p="bin" t="ExcludeRecursive" />
+         <e p="obj" t="ExcludeRecursive">
+-          <e p="x86" t="Include">
+-            <e p="Debug" t="Include">
+-              <e p="net462" t="Include">
+-                <e p="Launchpad.Tests.AssemblyInfo.cs" t="Include" />
+-              </e>
++          <e p="Debug" t="Include">
++            <e p="netcoreapp3.1" t="Include">
++              <e p="Launchpad.Tests.AssemblyInfo.cs" t="Include" />
+             </e>
+           </e>
+         </e>
+@@ -325,11 +321,9 @@
+         </e>
+         <e p="bin" t="ExcludeRecursive" />
+         <e p="obj" t="ExcludeRecursive">
+-          <e p="x86" t="Include">
+-            <e p="Debug" t="Include">
+-              <e p="net462" t="Include">
+-                <e p="Launchpad.Utilities.AssemblyInfo.cs" t="Include" />
+-              </e>
++          <e p="Debug" t="Include">
++            <e p="netcoreapp3.1" t="Include">
++              <e p="Launchpad.Utilities.AssemblyInfo.cs" t="Include" />
+             </e>
+           </e>
+         </e>
+Index: Launchpad.Utilities/Program.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>//\n//  Program.cs\n//\n//  Author:\n//       Jarl Gullberg <jarl.gullberg@gmail.com>\n//\n//  Copyright (c) 2016 Jarl Gullberg\n//\n//  This program is free software: you can redistribute it and/or modify\n//  it under the terms of the GNU General Public License as published by\n//  the Free Software Foundation, either version 3 of the License, or\n//  (at your option) any later version.\n//\n//  This program is distributed in the hope that it will be useful,\n//  but WITHOUT ANY WARRANTY; without even the implied warranty of\n//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n//  GNU General Public License for more details.\n//\n//  You should have received a copy of the GNU General Public License\n//  along with this program.  If not, see <http://www.gnu.org/licenses/>.\n\nusing System;\nusing System.IO;\nusing System.Runtime.InteropServices;\nusing System.Threading;\nusing CommandLine;\nusing GLib;\nusing Launchpad.Utilities.Handlers;\nusing Launchpad.Utilities.Utility.Events;\nusing Launchpad.Utilities.Interface;\nusing Launchpad.Utilities.Options;\nusing Launchpad.Common.Enums;\nusing Launchpad.Utilities.Utility;\nusing NLog;\nusing Application = Gtk.Application;\nusing Task = System.Threading.Tasks.Task;\n\nnamespace Launchpad.Utilities\n{\n\tinternal static class Program\n\t{\n\t\t/// <summary>\n\t\t/// Logger instance for this class.\n\t\t/// </summary>\n\t\tprivate static readonly ILogger Log = LogManager.GetCurrentClassLogger();\n\n\t\t/// <summary>\n\t\t/// The main entry point for the application.\n\t\t/// </summary>\n\t\tprivate static async Task Main(string[] args)\n\t\t{\n\t\t\t// Set correct working directory for compatibility with double-clicking\n\t\t\tDirectory.SetCurrentDirectory(DirectoryHelpers.GetLocalDir());\n\n\t\t\tif (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))\n\t\t\t{\n\t\t\t\tEnvironment.SetEnvironmentVariable(\"GSETTINGS_SCHEMA_DIR\", \"share\\\\glib-2.0\\\\schemas\\\\\");\n\t\t\t}\n\n\t\t\tvar options = new CLIOptions();\n\t\t\tParser.Default.ParseArguments<CLIOptions>(args)\n\t\t\t\t.WithParsed(r => options = r)\n\t\t\t\t.WithNotParsed(r => options = null);\n\n\t\t\tif (options is null)\n\t\t\t{\n\t\t\t\t// Parsing probably failed, bail out\n\t\t\t\treturn;\n\t\t\t}\n\n\t\t\tif (options.RunBatchProcessing)\n\t\t\t{\n\t\t\t\tif (string.IsNullOrEmpty(options.TargetDirectory) || options.ManifestType == EManifestType.Unknown)\n\t\t\t\t{\n\t\t\t\t\tLog.Error(\"Target directory not set, or manifest type not set.\");\n\t\t\t\t\treturn;\n\t\t\t\t}\n\n\t\t\t\t// At this point, the options should be valid. Run batch processing.\n\t\t\t\tif (Directory.Exists(options.TargetDirectory))\n\t\t\t\t{\n\t\t\t\t\tLog.Info(\"Generating manifest...\");\n\n\t\t\t\t\tvar manifestGenerationHandler = new ManifestGenerationHandler();\n\n\t\t\t\t\tvar progressReporter = new Progress<ManifestGenerationProgressChangedEventArgs>\n\t\t\t\t\t(\n\t\t\t\t\t\te => Log.Info($\"Processed file {e.Filepath} : {e.Hash} : {e.Filesize}\")\n\t\t\t\t\t);\n\n\t\t\t\t\tawait manifestGenerationHandler.GenerateManifestAsync\n\t\t\t\t\t(\n\t\t\t\t\t\toptions.TargetDirectory,\n\t\t\t\t\t\toptions.ManifestType,\n\t\t\t\t\t\tprogressReporter,\n\t\t\t\t\t\tCancellationToken.None\n\t\t\t\t\t);\n\n\t\t\t\t\tLog.Info(\"Generation finished.\");\n\t\t\t\t}\n\t\t\t\telse\n\t\t\t\t{\n\t\t\t\t\tLog.Error(\"The selected directory did not exist.\");\n\t\t\t\t}\n\t\t\t}\n\t\t\telse if (string.IsNullOrEmpty(options.TargetDirectory) && options.ManifestType == EManifestType.Unknown)\n\t\t\t{\n\t\t\t\t// Run a GTK UI instead of batch processing\n\t\t\t\tApplication.Init();\n\t\t\t\tSynchronizationContext.SetSynchronizationContext(new GLibSynchronizationContext());\n\n\t\t\t\tvar win = MainWindow.Create();\n\t\t\t\twin.Show();\n\t\t\t\tApplication.Run();\n\t\t\t}\n\t\t}\n\t}\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- Launchpad.Utilities/Program.cs	(revision 041bacbdc35bf7dd1fda466f1cb081f59869c8fe)
++++ Launchpad.Utilities/Program.cs	(date 1594917537649)
+@@ -49,9 +49,6 @@
+ 		/// </summary>
+ 		private static async Task Main(string[] args)
+ 		{
+-			// Set correct working directory for compatibility with double-clicking
+-			Directory.SetCurrentDirectory(DirectoryHelpers.GetLocalDir());
+-
+ 			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+ 			{
+ 				Environment.SetEnvironmentVariable("GSETTINGS_SCHEMA_DIR", "share\\glib-2.0\\schemas\\");
+Index: Launchpad.Launcher/Launchpad.Launcher.csproj
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><Project Sdk=\"Microsoft.NET.Sdk\">\n  <PropertyGroup>\n    <OutputType>WinExe</OutputType>\n    <AssemblyName>Launchpad</AssemblyName>\n    <TargetFramework>net461</TargetFramework>\n    <Platform>x86</Platform>\n    <PlatformTarget>x86</PlatformTarget>\n    <CodeAnalysisRuleSet>..\\stylecop.ruleset</CodeAnalysisRuleSet>\n    <GenerateDocumentationFile>true</GenerateDocumentationFile>\n    <LangVersion>7.1</LangVersion>\n    <Prefer32bit>true</Prefer32bit>\n  </PropertyGroup>\n\n  <!-- Workaround for https://github.com/dotnet/roslyn-project-system/issues/1739 -->\n  <PropertyGroup>\n    <AssemblySearchPaths>$(AssemblySearchPaths);{GAC}</AssemblySearchPaths>\n  </PropertyGroup>\n\n  <PropertyGroup>\n    <Version>2.0.0</Version>\n    <Description>An open-source launcher for your games.</Description>\n    <Authors>Jarl Gullberg;jax</Authors>\n  </PropertyGroup>\n\n  <ItemGroup>\n    <PackageReference Include=\"Config.Net\" Version=\"4.13.7\" />\n    <PackageReference Include=\"GtkSharp\" Version=\"3.22.25.24\" />\n    <PackageReference Include=\"NLog\" Version=\"4.6.6\" />\n    <PackageReference Include=\"SixLabors.ImageSharp\" Version=\"1.0.0-beta0002\" />\n    <PackageReference Include=\"StyleCop.Analyzers\" Version=\"1.1.118\" PrivateAssets=\"all\" />\n    <PackageReference Include=\"NGettext\" Version=\"0.6.4\" />\n  </ItemGroup>\n\n  <ItemGroup>\n    <EmbeddedResource Include=\"app.manifest\" />\n    <EmbeddedResource Include=\"Resources\\**\\*.*\" />\n    <EmbeddedResource Include=\"Interface\\Launchpad.glade\" />\n  </ItemGroup>\n\n  <ItemGroup>\n    <Content Include=\"*.config\">\n      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>\n    </Content>\n    <Content Include=\"Content\\locale\\**\\*.po\">\n      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>\n      <InProject>false</InProject>\n    </Content>\n    <Content Include=\"../LICENSE\">\n      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>\n      <InProject>false</InProject>\n    </Content>\n  </ItemGroup>\n\n  <ItemGroup>\n    <AdditionalFiles Include=\"$(ProjectDir)\\..\\stylecop.json\">\n      <Link>stylecop.json</Link>\n      <InProject>false</InProject>\n    </AdditionalFiles>\n    <AdditionalFiles Include=\"$(ProjectDir)\\..\\stylecop.ruleset\">\n      <Link>stylecop.ruleset</Link>\n      <InProject>false</InProject>\n    </AdditionalFiles>\n  </ItemGroup>\n\n  <ItemGroup>\n    <ProjectReference Include=\"..\\Launchpad.Common\\Launchpad.Common.csproj\" />\n  </ItemGroup>\n\n  <Target Name=\"CopyGTK\" AfterTargets=\"Build\">\n    <ItemGroup>\n      <GTKetc Include=\"$(SolutionDir)\\lib\\gtk+-3.16-bundle-win32\\etc\\**\\*.*\">\n        <Visible>false</Visible>\n      </GTKetc>\n      <GTKlib Include=\"$(SolutionDir)\\lib\\gtk+-3.16-bundle-win32\\lib\\**\\*.*\">\n        <Visible>false</Visible>\n      </GTKlib>\n      <GTKshare Include=\"$(SolutionDir)\\lib\\gtk+-3.16-bundle-win32\\share\\**\\*.*\">\n        <Visible>false</Visible>\n      </GTKshare>\n      <GTKbin Include=\"$(SolutionDir)\\lib\\gtk+-3.16-bundle-win32\\bin\\**\\*.*\">\n        <Visible>false</Visible>\n      </GTKbin>\n    </ItemGroup>\n    <Message Text=\"Copying GTK+ libraries...\" />\n    <Copy SourceFiles=\"@(GTKetc)\" DestinationFolder=\"$(OutputPath)\\etc\\%(RecursiveDir)\" SkipUnchangedFiles=\"true\" />\n    <Copy SourceFiles=\"@(GTKlib)\" DestinationFolder=\"$(OutputPath)\\lib\\%(RecursiveDir)\" SkipUnchangedFiles=\"true\" />\n    <Copy SourceFiles=\"@(GTKshare)\" DestinationFolder=\"$(OutputPath)\\share\\%(RecursiveDir)\" SkipUnchangedFiles=\"true\" />\n    <Copy SourceFiles=\"@(GTKbin)\" DestinationFolder=\"$(OutputPath)\\%(RecursiveDir)\" SkipUnchangedFiles=\"true\" />\n  </Target>\n\n  <Import Project=\"..\\props\\netfx-mono.props\" />\n</Project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- Launchpad.Launcher/Launchpad.Launcher.csproj	(revision 041bacbdc35bf7dd1fda466f1cb081f59869c8fe)
++++ Launchpad.Launcher/Launchpad.Launcher.csproj	(date 1594918012000)
+@@ -1,14 +1,11 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+-    <OutputType>WinExe</OutputType>
++    <OutputType>Exe</OutputType>
+     <AssemblyName>Launchpad</AssemblyName>
+-    <TargetFramework>net461</TargetFramework>
+-    <Platform>x86</Platform>
+-    <PlatformTarget>x86</PlatformTarget>
++    <TargetFramework>netcoreapp3.1</TargetFramework>
+     <CodeAnalysisRuleSet>..\stylecop.ruleset</CodeAnalysisRuleSet>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+-    <LangVersion>7.1</LangVersion>
+-    <Prefer32bit>true</Prefer32bit>
++    <LangVersion>latest</LangVersion>
+   </PropertyGroup>
+ 
+   <!-- Workaround for https://github.com/dotnet/roslyn-project-system/issues/1739 -->
+@@ -24,7 +21,7 @@
+ 
+   <ItemGroup>
+     <PackageReference Include="Config.Net" Version="4.13.7" />
+-    <PackageReference Include="GtkSharp" Version="3.22.25.24" />
++    <PackageReference Include="GtkSharp" Version="3.22.25.74" />
+     <PackageReference Include="NLog" Version="4.6.6" />
+     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0002" />
+     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="all" />
+@@ -68,25 +65,17 @@
+ 
+   <Target Name="CopyGTK" AfterTargets="Build">
+     <ItemGroup>
+-      <GTKetc Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\etc\**\*.*">
+-        <Visible>false</Visible>
+-      </GTKetc>
+-      <GTKlib Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\lib\**\*.*">
+-        <Visible>false</Visible>
+-      </GTKlib>
+-      <GTKshare Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\share\**\*.*">
+-        <Visible>false</Visible>
+-      </GTKshare>
+-      <GTKbin Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\bin\**\*.*">
+-        <Visible>false</Visible>
+-      </GTKbin>
++      <GTKbin Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\bin\*.*" />
++      <GTKetc Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\etc\**\*.*" />
++      <GTKlib Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\lib\**\*.*" />
++      <GTKshare Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\share\**\*.*" />
+     </ItemGroup>
++
+     <Message Text="Copying GTK+ libraries..." />
++
++    <Copy SourceFiles="@(GTKbin)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" />
+     <Copy SourceFiles="@(GTKetc)" DestinationFolder="$(OutputPath)\etc\%(RecursiveDir)" SkipUnchangedFiles="true" />
+     <Copy SourceFiles="@(GTKlib)" DestinationFolder="$(OutputPath)\lib\%(RecursiveDir)" SkipUnchangedFiles="true" />
+     <Copy SourceFiles="@(GTKshare)" DestinationFolder="$(OutputPath)\share\%(RecursiveDir)" SkipUnchangedFiles="true" />
+-    <Copy SourceFiles="@(GTKbin)" DestinationFolder="$(OutputPath)\%(RecursiveDir)" SkipUnchangedFiles="true" />
+   </Target>
+-
+-  <Import Project="..\props\netfx-mono.props" />
+-</Project>
+\ No newline at end of file
++</Project>
+Index: Launchpad.Tests/Launchpad.Tests.csproj
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><Project Sdk=\"Microsoft.NET.Sdk\">\n\n  <PropertyGroup>\n    <TargetFramework>net462</TargetFramework>\n    <IsPackable>false</IsPackable>\n    <Prefer32bit>true</Prefer32bit>\n  </PropertyGroup>\n\n  <ItemGroup>\n    <PackageReference Include=\"Microsoft.NET.Test.Sdk\" Version=\"16.2.0\" />\n    <PackageReference Include=\"xunit\" Version=\"2.4.1\" />\n    <PackageReference Include=\"xunit.runner.visualstudio\" Version=\"2.4.1\" />\n  </ItemGroup>\n\n  <ItemGroup>\n    <ProjectReference Include=\"..\\Launchpad.Launcher\\Launchpad.Launcher.csproj\" />\n  </ItemGroup>\n\n  <Import Project=\"..\\props\\netfx-mono.props\" />\n\n</Project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- Launchpad.Tests/Launchpad.Tests.csproj	(revision 041bacbdc35bf7dd1fda466f1cb081f59869c8fe)
++++ Launchpad.Tests/Launchpad.Tests.csproj	(date 1594917413885)
+@@ -1,9 +1,8 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+ 
+   <PropertyGroup>
+-    <TargetFramework>net462</TargetFramework>
++    <TargetFramework>netcoreapp3.1</TargetFramework>
+     <IsPackable>false</IsPackable>
+-    <Prefer32bit>true</Prefer32bit>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+@@ -18,4 +17,4 @@
+ 
+   <Import Project="..\props\netfx-mono.props" />
+ 
+-</Project>
+\ No newline at end of file
++</Project>
+Index: .idea/.idea.Launchpad/.idea/projectSettingsUpdater.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"RiderProjectSettingsUpdater\">\n    <option name=\"vcsConfiguration\" value=\"1\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/.idea.Launchpad/.idea/projectSettingsUpdater.xml	(revision 041bacbdc35bf7dd1fda466f1cb081f59869c8fe)
++++ .idea/.idea.Launchpad/.idea/projectSettingsUpdater.xml	(date 1594916973729)
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="RiderProjectSettingsUpdater">
+-    <option name="vcsConfiguration" value="1" />
++    <option name="vcsConfiguration" value="2" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: Launchpad.Launcher/Utility/DirectoryHelpers.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>//\n//  DirectoryHelpers.cs\n//\n//  Author:\n//       Jarl Gullberg <jarl.gullberg@gmail.com>\n//\n//  Copyright (c) 2017 Jarl Gullberg\n//\n//  This program is free software: you can redistribute it and/or modify\n//  it under the terms of the GNU General Public License as published by\n//  the Free Software Foundation, either version 3 of the License, or\n//  (at your option) any later version.\n//\n//  This program is distributed in the hope that it will be useful,\n//  but WITHOUT ANY WARRANTY; without even the implied warranty of\n//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n//  GNU General Public License for more details.\n//\n//  You should have received a copy of the GNU General Public License\n//  along with this program.  If not, see <http://www.gnu.org/licenses/>.\n//\n\nusing System;\nusing System.IO;\nusing System.Reflection;\nusing Launchpad.Launcher.Handlers;\n\nnamespace Launchpad.Launcher.Utility\n{\n\t/// <summary>\n\t/// Helper methods for common paths and directories.\n\t/// </summary>\n\tpublic static class DirectoryHelpers\n\t{\n\t\tprivate const string ConfigurationFolderName = \"Config\";\n\t\tprivate const string ConfigurationFileName = \"LauncherConfig\";\n\t\tprivate const string GameArgumentsFileName = \"GameArguments\";\n\n\t\t/// <summary>\n\t\t/// Gets the expected path to the config file on disk.\n\t\t/// </summary>\n\t\t/// <returns>The config path.</returns>\n\t\tpublic static string GetConfigPath()\n\t\t{\n\t\t\treturn Path.Combine(GetConfigDirectory(), $\"{ConfigurationFileName}.ini\");\n\t\t}\n\n\t\t/// <summary>\n\t\t/// Gets the path to the config directory.\n\t\t/// </summary>\n\t\t/// <returns>The path.</returns>\n\t\tpublic static string GetConfigDirectory()\n\t\t{\n\t\t\treturn Path.Combine(GetLocalLauncherDirectory(), ConfigurationFolderName);\n\t\t}\n\n\t\t/// <summary>\n\t\t/// Gets the path to the launcher cookie on disk.\n\t\t/// </summary>\n\t\t/// <returns>The launcher cookie.</returns>\n\t\tpublic static string GetLauncherTagfilePath()\n\t\t{\n\t\t\treturn Path.Combine(GetLocalLauncherDirectory(), \".launcher\");\n\t\t}\n\n\t\t/// <summary>\n\t\t/// Gets the install cookie.\n\t\t/// </summary>\n\t\t/// <returns>The install cookie.</returns>\n\t\tpublic static string GetGameTagfilePath()\n\t\t{\n\t\t\treturn Path.Combine(GetLocalLauncherDirectory(), \".game\");\n\t\t}\n\n\t\t/// <summary>\n\t\t/// Gets the local directory where the launcher is stored.\n\t\t/// </summary>\n\t\t/// <returns>The local directory.</returns>\n\t\tpublic static string GetLocalLauncherDirectory()\n\t\t{\n\t\t\tvar codeBaseURI = new UriBuilder(Assembly.GetExecutingAssembly().Location).Uri;\n\t\t\treturn Path.GetDirectoryName(Uri.UnescapeDataString(codeBaseURI.AbsolutePath));\n\t\t}\n\n\t\t/// <summary>\n\t\t/// Gets the temporary launcher download directory.\n\t\t/// </summary>\n\t\t/// <returns>A full path to the directory.</returns>\n\t\tpublic static string GetTempLauncherDownloadPath()\n\t\t{\n\t\t\treturn Path.Combine(Path.GetTempPath(), \"launchpad\", \"launcher\");\n\t\t}\n\n\t\t/// <summary>\n\t\t/// Gets the expected path to the argument file on disk.\n\t\t/// </summary>\n\t\t/// <returns>The path.</returns>\n\t\tpublic static string GetGameArgumentsPath()\n\t\t{\n\t\t\treturn Path.Combine(GetConfigDirectory(), $\"{GameArgumentsFileName}.txt\");\n\t\t}\n\n\t\t/// <summary>\n\t\t/// Gets the game directory.\n\t\t/// </summary>\n\t\t/// <returns>The directory.</returns>\n\t\tpublic static string GetLocalGameDirectory()\n\t\t{\n\t\t\tvar config = ConfigHandler.Instance.Configuration;\n\t\t\treturn Path.Combine(GetLocalLauncherDirectory(), \"Game\", config.SystemTarget.ToString());\n\t\t}\n\n\t\t/// <summary>\n\t\t/// Gets the game version path.\n\t\t/// </summary>\n\t\t/// <returns>The game version path.</returns>\n\t\tpublic static string GetLocalGameVersionPath()\n\t\t{\n\t\t\treturn Path.Combine(GetLocalGameDirectory(), \"GameVersion.txt\");\n\t\t}\n\n\t\t/// <summary>\n\t\t/// Gets the remote path to where launcher binaries are stored.\n\t\t/// </summary>\n\t\t/// <returns>The path.</returns>\n\t\tpublic static string GetRemoteLauncherBinariesPath()\n\t\t{\n\t\t\tvar config = ConfigHandler.Instance.Configuration;\n\t\t\treturn $\"{config.RemoteAddress}/launcher/bin/\";\n\t\t}\n\n\t\t/// <summary>\n\t\t/// Gets the remote path of the launcher version.\n\t\t/// </summary>\n\t\t/// <returns>\n\t\t/// The path to either the official launchpad binaries or a custom launcher, depending on the settings.\n\t\t/// </returns>\n\t\tpublic static string GetRemoteLauncherVersionPath()\n\t\t{\n\t\t\tvar config = ConfigHandler.Instance.Configuration;\n\n\t\t\treturn $\"{config.RemoteAddress}/launcher/LauncherVersion.txt\";\n\t\t}\n\n\t\t/// <summary>\n\t\t/// Gets the remote path where the game is stored..\n\t\t/// </summary>\n\t\t/// <returns>The path.</returns>\n\t\tpublic static string GetRemoteGamePath()\n\t\t{\n\t\t\tvar config = ConfigHandler.Instance.Configuration;\n\t\t\treturn $\"{config.RemoteAddress}/game/{config.SystemTarget}/bin/\";\n\t\t}\n\t}\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- Launchpad.Launcher/Utility/DirectoryHelpers.cs	(revision 041bacbdc35bf7dd1fda466f1cb081f59869c8fe)
++++ Launchpad.Launcher/Utility/DirectoryHelpers.cs	(date 1594917678565)
+@@ -78,8 +78,8 @@
+ 		/// <returns>The local directory.</returns>
+ 		public static string GetLocalLauncherDirectory()
+ 		{
+-			var codeBaseURI = new UriBuilder(Assembly.GetExecutingAssembly().Location).Uri;
+-			return Path.GetDirectoryName(Uri.UnescapeDataString(codeBaseURI.AbsolutePath));
++			var executingLocation = Assembly.GetExecutingAssembly().Location;
++			return Path.GetDirectoryName(executingLocation);
+ 		}
+ 
+ 		/// <summary>
+Index: Launchpad.Launcher/Program.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>//\n//  Program.cs\n//\n//  Author:\n//       Jarl Gullberg <jarl.gullberg@gmail.com>\n//\n//  Copyright (c) 2017 Jarl Gullberg\n//\n//  This program is free software: you can redistribute it and/or modify\n//  it under the terms of the GNU General Public License as published by\n//  the Free Software Foundation, either version 3 of the License, or\n//  (at your option) any later version.\n//\n//  This program is distributed in the hope that it will be useful,\n//  but WITHOUT ANY WARRANTY; without even the implied warranty of\n//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n//  GNU General Public License for more details.\n//\n//  You should have received a copy of the GNU General Public License\n//  along with this program.  If not, see <http://www.gnu.org/licenses/>.\n//\n\nusing System;\nusing System.IO;\nusing System.Reflection;\nusing System.Runtime.InteropServices;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing GLib;\nusing Gtk;\nusing Launchpad.Common;\nusing Launchpad.Launcher.Interface;\nusing Launchpad.Launcher.Services;\nusing Launchpad.Launcher.Utility;\nusing NLog;\nusing Task = System.Threading.Tasks.Task;\nusing Timeout = GLib.Timeout;\n\nnamespace Launchpad.Launcher\n{\n\t/// <summary>\n\t/// The main program class.\n\t/// </summary>\n\tpublic static class Program\n\t{\n\t\t/// <summary>\n\t\t/// Logger instance for this class.\n\t\t/// </summary>\n\t\tprivate static readonly ILogger Log = LogManager.GetCurrentClassLogger();\n\n\t\tprivate static readonly LocalVersionService LocalVersionService = new LocalVersionService();\n\n\t\t/// <summary>\n\t\t/// The main entry point for the application.\n\t\t/// </summary>\n\t\tprivate static void Main()\n\t\t{\n\t\t\t// Bind any unhandled exceptions in the main thread so that they are logged.\n\t\t\tAppDomain.CurrentDomain.UnhandledException += OnUnhandledException;\n\n\t\t\t// Set correct working directory for compatibility with double-clicking\n\t\t\tDirectory.SetCurrentDirectory(DirectoryHelpers.GetLocalLauncherDirectory());\n\n\t\t\tif (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))\n\t\t\t{\n\t\t\t\tEnvironment.SetEnvironmentVariable(\"GTK_EXE_PREFIX\", Directory.GetCurrentDirectory());\n\t\t\t\tEnvironment.SetEnvironmentVariable(\"GTK_DATA_PREFIX\", Directory.GetCurrentDirectory());\n\t\t\t\tEnvironment.SetEnvironmentVariable(\"GSETTINGS_SCHEMA_DIR\", \"share\\\\glib-2.0\\\\schemas\\\\\");\n\t\t\t}\n\n\t\t\tLog.Info($\"Launchpad v{LocalVersionService.GetLocalLauncherVersion()} starting...\");\n\n\t\t\tvar systemBitness = Environment.Is64BitOperatingSystem ? \"x64\" : \"x86\";\n\t\t\tvar processBitness = Environment.Is64BitProcess ? \"64-bit\" : \"32-bit\";\n\t\t\tLog.Info($\"Current platform: {PlatformHelpers.GetCurrentPlatform()} ({systemBitness} platform, {processBitness} process)\");\n\n\t\t\tLog.Info(\"Initializing UI...\");\n\n\t\t\t// Bind any unhandled exceptions in the GTK UI so that they are logged.\n\t\t\tExceptionManager.UnhandledException += OnGLibUnhandledException;\n\n\t\t\t// Run the GTK UI\n\t\t\tGtk.Application.Init();\n\n\t\t\tvar win = MainWindow.Create();\n\t\t\twin.Show();\n\n\t\t\tTimeout.Add\n\t\t\t(\n\t\t\t\t50,\n\t\t\t\t() =>\n\t\t\t\t{\n\t\t\t\t\tTask.Factory.StartNew\n\t\t\t\t\t(\n\t\t\t\t\t\t() => win.InitializeAsync(),\n\t\t\t\t\t\tCancellationToken.None,\n\t\t\t\t\t\tTaskCreationOptions.DenyChildAttach,\n\t\t\t\t\t\tTaskScheduler.FromCurrentSynchronizationContext()\n\t\t\t\t\t);\n\t\t\t\t\treturn false;\n\t\t\t\t}\n\t\t\t);\n\n\t\t\tGtk.Application.Run();\n\t\t}\n\n\t\t/// <summary>\n\t\t/// Passes any unhandled exceptions from the GTK UI to the generic handler.\n\t\t/// </summary>\n\t\t/// <param name=\"args\">The event object containing the information about the exception.</param>\n\t\tprivate static void OnGLibUnhandledException(UnhandledExceptionArgs args)\n\t\t{\n\t\t\tOnUnhandledException(null, args);\n\t\t}\n\n\t\t/// <summary>\n\t\t/// Event handler for all unhandled exceptions that may be encountered during runtime. While there should never\n\t\t/// be any unhandled exceptions in an ideal program, unexpected issues can and will arise. This handler logs\n\t\t/// the exception and all relevant information to a logfile and prints it to the console for debugging purposes.\n\t\t/// </summary>\n\t\t/// <param name=\"sender\">The sending object.</param>\n\t\t/// <param name=\"unhandledExceptionEventArgs\">The event object containing the information about the exception.</param>\n\t\tprivate static void OnUnhandledException(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)\n\t\t{\n\t\t\tLog.Fatal(\"----------------\");\n\t\t\tLog.Fatal(\"FATAL UNHANDLED EXCEPTION!\");\n\t\t\tLog.Fatal(\"Something has gone terribly, terribly wrong during runtime.\");\n\t\t\tLog.Fatal(\"The following is what information could be gathered by the program before crashing.\");\n\t\t\tLog.Fatal\n\t\t\t(\n\t\t\t\t\"Please report this to <jarl.gullberg@gmail.com> or via GitHub. Include the full log and a \" +\n\t\t\t\t\"description of what you were doing when it happened.\"\n\t\t\t);\n\n\t\t\tif (!(unhandledExceptionEventArgs.ExceptionObject is Exception unhandledException))\n\t\t\t{\n\t\t\t\treturn;\n\t\t\t}\n\n\t\t\t// Unwrap TargetInvocationExceptions\n\t\t\tif (unhandledException is TargetInvocationException)\n\t\t\t{\n\t\t\t\tunhandledException = unhandledException.InnerException ?? unhandledException;\n\t\t\t}\n\n\t\t\tif (unhandledException is DllNotFoundException)\n\t\t\t{\n\t\t\t\tLog.Fatal\n\t\t\t\t(\n\t\t\t\t\t\"This exception is typical of instances where the GTK# runtime has not been installed.\\n\" +\n\t\t\t\t\t\"If you haven't installed it, download it at \\'http://www.mono-project.com/download/#download-win\\'.\\n\" +\n\t\t\t\t\t\"If you have installed it, reboot your computer and try again.\"\n\t\t\t\t);\n\n\t\t\t\t// Send the user to the common problems page.\n\t\t\t\tSystem.Diagnostics.Process.Start(\"https://github.com/Nihlus/Launchpad/wiki/Common-problems\");\n\t\t\t}\n\n\t\t\tLog.Fatal(\"Exception type: \" + unhandledException.GetType().FullName);\n\t\t\tLog.Fatal(\"Exception Message: \" + unhandledException.Message);\n\t\t\tLog.Fatal(\"Exception Stacktrace: \" + unhandledException.StackTrace);\n\t\t}\n\t}\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- Launchpad.Launcher/Program.cs	(revision 041bacbdc35bf7dd1fda466f1cb081f59869c8fe)
++++ Launchpad.Launcher/Program.cs	(date 1594917529513)
+@@ -58,9 +58,6 @@
+ 			// Bind any unhandled exceptions in the main thread so that they are logged.
+ 			AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
+ 
+-			// Set correct working directory for compatibility with double-clicking
+-			Directory.SetCurrentDirectory(DirectoryHelpers.GetLocalLauncherDirectory());
+-
+ 			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+ 			{
+ 				Environment.SetEnvironmentVariable("GTK_EXE_PREFIX", Directory.GetCurrentDirectory());
+Index: Launchpad.Utilities/Launchpad.Utilities.csproj
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><Project Sdk=\"Microsoft.NET.Sdk\">\n\n  <PropertyGroup>\n    <OutputType>WinExe</OutputType>\n    <TargetFramework>net462</TargetFramework>\n    <Platform>x86</Platform>\n    <PlatformTarget>x86</PlatformTarget>\n    <LangVersion>7.1</LangVersion>\n    <Prefer32bit>true</Prefer32bit>\n  </PropertyGroup>\n\n  <!-- Workaround for https://github.com/dotnet/roslyn-project-system/issues/1739 -->\n  <PropertyGroup>\n    <AssemblySearchPaths>$(AssemblySearchPaths);{GAC}</AssemblySearchPaths>\n  </PropertyGroup>\n\n  <ItemGroup>\n    <EmbeddedResource Include=\"Resources/Icons8-Android-Industry-Engineering.ico\" />\n  </ItemGroup>\n\n  <ItemGroup>\n    <PackageReference Include=\"GtkSharp\" Version=\"3.22.25.24\" />\n    <PackageReference Include=\"CommandLineParser\" Version=\"2.6.0\" />\n    <PackageReference Include=\"NGettext\" Version=\"0.6.4\" />\n    <PackageReference Include=\"NLog\" Version=\"4.6.6\" />\n  </ItemGroup>\n\n  <ItemGroup>\n    <EmbeddedResource Include=\"Interface\\Launchpad.Utilities.glade\" />\n  </ItemGroup>\n\n  <ItemGroup>\n    <Content Include=\"Content\\locale\\**\\*.po\">\n      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>\n      <InProject>false</InProject>\n    </Content>\n    <Content Include=\"../LICENSE\">\n      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>\n      <InProject>false</InProject>\n    </Content>\n  </ItemGroup>\n\n  <ItemGroup>\n    <ProjectReference Include=\"..\\Launchpad.Common\\Launchpad.Common.csproj\" />\n  </ItemGroup>\n\n  <Target Name=\"CopyGTK\" AfterTargets=\"Build\">\n    <ItemGroup>\n      <GTKetc Include=\"$(SolutionDir)\\lib\\gtk+-3.16-bundle-win32\\etc\\**\\*.*\">\n        <Visible>false</Visible>\n      </GTKetc>\n      <GTKlib Include=\"$(SolutionDir)\\lib\\gtk+-3.16-bundle-win32\\lib\\**\\*.*\">\n        <Visible>false</Visible>\n      </GTKlib>\n      <GTKshare Include=\"$(SolutionDir)\\lib\\gtk+-3.16-bundle-win32\\share\\**\\*.*\">\n        <Visible>false</Visible>\n      </GTKshare>\n      <GTKbin Include=\"$(SolutionDir)\\lib\\gtk+-3.16-bundle-win32\\bin\\**\\*.*\">\n        <Visible>false</Visible>\n      </GTKbin>\n    </ItemGroup>\n    <Message Text=\"Copying GTK+ libraries...\" />\n    <Copy SourceFiles=\"@(GTKetc)\" DestinationFolder=\"$(OutputPath)\\etc\\%(RecursiveDir)\" SkipUnchangedFiles=\"true\" />\n    <Copy SourceFiles=\"@(GTKlib)\" DestinationFolder=\"$(OutputPath)\\lib\\%(RecursiveDir)\" SkipUnchangedFiles=\"true\" />\n    <Copy SourceFiles=\"@(GTKshare)\" DestinationFolder=\"$(OutputPath)\\share\\%(RecursiveDir)\" SkipUnchangedFiles=\"true\" />\n    <Copy SourceFiles=\"@(GTKbin)\" DestinationFolder=\"$(OutputPath)\\%(RecursiveDir)\" SkipUnchangedFiles=\"true\" />\n  </Target>\n\n  <Import Project=\"..\\props\\netfx-mono.props\" />\n</Project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- Launchpad.Utilities/Launchpad.Utilities.csproj	(revision 041bacbdc35bf7dd1fda466f1cb081f59869c8fe)
++++ Launchpad.Utilities/Launchpad.Utilities.csproj	(date 1594918020616)
+@@ -1,12 +1,9 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+ 
+   <PropertyGroup>
+-    <OutputType>WinExe</OutputType>
+-    <TargetFramework>net462</TargetFramework>
+-    <Platform>x86</Platform>
+-    <PlatformTarget>x86</PlatformTarget>
+-    <LangVersion>7.1</LangVersion>
+-    <Prefer32bit>true</Prefer32bit>
++    <OutputType>Exe</OutputType>
++    <TargetFramework>netcoreapp3.1</TargetFramework>
++    <LangVersion>latest</LangVersion>
+   </PropertyGroup>
+ 
+   <!-- Workaround for https://github.com/dotnet/roslyn-project-system/issues/1739 -->
+@@ -46,25 +43,17 @@
+ 
+   <Target Name="CopyGTK" AfterTargets="Build">
+     <ItemGroup>
+-      <GTKetc Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\etc\**\*.*">
+-        <Visible>false</Visible>
+-      </GTKetc>
+-      <GTKlib Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\lib\**\*.*">
+-        <Visible>false</Visible>
+-      </GTKlib>
+-      <GTKshare Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\share\**\*.*">
+-        <Visible>false</Visible>
+-      </GTKshare>
+-      <GTKbin Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\bin\**\*.*">
+-        <Visible>false</Visible>
+-      </GTKbin>
++      <GTKbin Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\bin\*.*" />
++      <GTKetc Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\etc\**\*.*" />
++      <GTKlib Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\lib\**\*.*" />
++      <GTKshare Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\share\**\*.*" />
+     </ItemGroup>
++
+     <Message Text="Copying GTK+ libraries..." />
++
++    <Copy SourceFiles="@(GTKbin)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" />
+     <Copy SourceFiles="@(GTKetc)" DestinationFolder="$(OutputPath)\etc\%(RecursiveDir)" SkipUnchangedFiles="true" />
+     <Copy SourceFiles="@(GTKlib)" DestinationFolder="$(OutputPath)\lib\%(RecursiveDir)" SkipUnchangedFiles="true" />
+     <Copy SourceFiles="@(GTKshare)" DestinationFolder="$(OutputPath)\share\%(RecursiveDir)" SkipUnchangedFiles="true" />
+-    <Copy SourceFiles="@(GTKbin)" DestinationFolder="$(OutputPath)\%(RecursiveDir)" SkipUnchangedFiles="true" />
+   </Target>
+-
+-  <Import Project="..\props\netfx-mono.props" />
+-</Project>
+\ No newline at end of file
++</Project>

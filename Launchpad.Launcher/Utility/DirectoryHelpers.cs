@@ -78,8 +78,8 @@ namespace Launchpad.Launcher.Utility
 		/// <returns>The local directory.</returns>
 		public static string GetLocalLauncherDirectory()
 		{
-			var codeBaseURI = new UriBuilder(Assembly.GetExecutingAssembly().Location).Uri;
-			return Path.GetDirectoryName(Uri.UnescapeDataString(codeBaseURI.AbsolutePath));
+			var executingLocation = Assembly.GetExecutingAssembly().Location;
+			return Path.GetDirectoryName(executingLocation);
 		}
 
 		/// <summary>

@@ -58,9 +58,6 @@ namespace Launchpad.Launcher
 			// Bind any unhandled exceptions in the main thread so that they are logged.
 			AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
 
-			// Set correct working directory for compatibility with double-clicking
-			Directory.SetCurrentDirectory(DirectoryHelpers.GetLocalLauncherDirectory());
-
 			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 			{
 				Environment.SetEnvironmentVariable("GTK_EXE_PREFIX", Directory.GetCurrentDirectory());

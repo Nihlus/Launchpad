@@ -49,9 +49,6 @@ namespace Launchpad.Utilities
 		/// </summary>
 		private static async Task Main(string[] args)
 		{
-			// Set correct working directory for compatibility with double-clicking
-			Directory.SetCurrentDirectory(DirectoryHelpers.GetLocalDir());
-
 			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 			{
 				Environment.SetEnvironmentVariable("GSETTINGS_SCHEMA_DIR", "share\\glib-2.0\\schemas\\");

@@ -1,14 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AssemblyName>Launchpad</AssemblyName>
-    <TargetFramework>net461</TargetFramework>
-    <Platform>x86</Platform>
-    <PlatformTarget>x86</PlatformTarget>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <CodeAnalysisRuleSet>..\stylecop.ruleset</CodeAnalysisRuleSet>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <LangVersion>7.1</LangVersion>
-    <Prefer32bit>true</Prefer32bit>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <!-- Workaround for https://github.com/dotnet/roslyn-project-system/issues/1739 -->
@@ -24,7 +21,7 @@
 
   <ItemGroup>
     <PackageReference Include="Config.Net" Version="4.13.7" />
-    <PackageReference Include="GtkSharp" Version="3.22.25.24" />
+    <PackageReference Include="GtkSharp" Version="3.22.25.74" />
     <PackageReference Include="NLog" Version="4.6.6" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0002" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="all" />
@@ -68,25 +65,17 @@
 
   <Target Name="CopyGTK" AfterTargets="Build">
     <ItemGroup>
-      <GTKetc Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\etc\**\*.*">
-        <Visible>false</Visible>
-      </GTKetc>
-      <GTKlib Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\lib\**\*.*">
-        <Visible>false</Visible>
-      </GTKlib>
-      <GTKshare Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\share\**\*.*">
-        <Visible>false</Visible>
-      </GTKshare>
-      <GTKbin Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\bin\**\*.*">
-        <Visible>false</Visible>
-      </GTKbin>
+      <GTKbin Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\bin\*.*" />
+      <GTKetc Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\etc\**\*.*" />
+      <GTKlib Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\lib\**\*.*" />
+      <GTKshare Include="$(SolutionDir)\lib\gtk+-3.16-bundle-win32\share\**\*.*" />
     </ItemGroup>
+
     <Message Text="Copying GTK+ libraries..." />
+
+    <Copy SourceFiles="@(GTKbin)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" />
     <Copy SourceFiles="@(GTKetc)" DestinationFolder="$(OutputPath)\etc\%(RecursiveDir)" SkipUnchangedFiles="true" />
     <Copy SourceFiles="@(GTKlib)" DestinationFolder="$(OutputPath)\lib\%(RecursiveDir)" SkipUnchangedFiles="true" />
     <Copy SourceFiles="@(GTKshare)" DestinationFolder="$(OutputPath)\share\%(RecursiveDir)" SkipUnchangedFiles="true" />
-    <Copy SourceFiles="@(GTKbin)" DestinationFolder="$(OutputPath)\%(RecursiveDir)" SkipUnchangedFiles="true" />
   </Target>
-
-  <Import Project="..\props\netfx-mono.props" />
 </Project>
