@@ -673,11 +673,13 @@ namespace Launchpad.Launcher.Interface
 				)
 			);
 
-			if (reinstallConfirmDialog.Run() == (int)ResponseType.Yes)
+			if (reinstallConfirmDialog.Run() != (int)ResponseType.Yes)
 			{
-				SetLauncherMode(ELauncherMode.Install, true);
-				this.Game.ReinstallGame();
+				return;
 			}
+
+			SetLauncherMode(ELauncherMode.Install, true);
+			this.Game.ReinstallGame();
 		}
 	}
 }
