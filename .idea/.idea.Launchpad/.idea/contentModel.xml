@@ -282,7 +282,7 @@
       <e p="Launchpad.Tests" t="IncludeRecursive">
         <e p="Common" t="Include">
           <e p="MD5HandlerTests.cs" t="Include" />
-          <e p="StringExtensionsTexts.cs" t="Include" />
+          <e p="StringExtensionsTests.cs" t="Include" />
         </e>
         <e p="Launchpad.Tests.csproj" t="IncludeRecursive" />
         <e p="bin" t="ExcludeRecursive" />

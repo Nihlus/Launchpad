@@ -1,5 +1,5 @@
 ﻿//
-//  MD5HandlerTests.cs
+// MD5HandlerTests.cs
 //
 //  Author:
 //       Jarl Gullberg <jarl.gullberg@gmail.com>
@@ -18,6 +18,7 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
 
 using System.IO;
 using Launchpad.Common.Handlers;
@@ -25,8 +26,16 @@ using Xunit;
 
 namespace Launchpad.Tests.Common
 {
+    /// <summary>
+    /// Tests the MD5 handler.
+    /// </summary>
     public class MD5HandlerTests
     {
+        /// <summary>
+        /// Holds the expected hash.
+        /// </summary>
+        private const string ExpectedHash = "6A99C575AB87F8C7D1ED1E52E7E349CE";
+
         /// <summary>
         /// Holds the string "placeholder".
         /// </summary>
@@ -35,8 +44,9 @@ namespace Launchpad.Tests.Common
             112, 108, 97, 99, 101, 104, 111, 108, 100, 101, 114
         });
 
-        private const string ExpectedHash = "6A99C575AB87F8C7D1ED1E52E7E349CE";
-
+        /// <summary>
+        /// Tests that the handler hashes values correctly.
+        /// </summary>
         [Fact]
         public void HashesCorrectly()
         {

@@ -4,7 +4,7 @@
 //  Author:
 //       Jarl Gullberg <jarl.gullberg@gmail.com>
 //
-//  Copyright (c) 2016 Jarl Gullberg
+//  Copyright (c) 2017 Jarl Gullberg
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
 
 using System;
 using System.IO;
@@ -25,17 +26,20 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using CommandLine;
 using GLib;
+using Launchpad.Common.Enums;
 using Launchpad.Utilities.Handlers;
-using Launchpad.Utilities.Utility.Events;
 using Launchpad.Utilities.Interface;
 using Launchpad.Utilities.Options;
-using Launchpad.Common.Enums;
+using Launchpad.Utilities.Utility.Events;
 using NLog;
 using Application = Gtk.Application;
 using Task = System.Threading.Tasks.Task;
 
 namespace Launchpad.Utilities
 {
+    /// <summary>
+    /// Represents the main class of the program.
+    /// </summary>
     internal static class Program
     {
         /// <summary>
@@ -81,7 +85,7 @@ namespace Launchpad.Utilities
 
                     var progressReporter = new Progress<ManifestGenerationProgressChangedEventArgs>
                     (
-                        e => Log.Info($"Processed file {e.Filepath} : {e.Hash} : {e.Filesize}")
+                        e => Log.Info($"Processed file {e.Filepath} : {e.Hash} : {e.Size}")
                     );
 
                     await manifestGenerationHandler.GenerateManifestAsync

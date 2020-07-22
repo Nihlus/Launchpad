@@ -4,7 +4,7 @@
 //  Author:
 //       Jarl Gullberg <jarl.gullberg@gmail.com>
 //
-//  Copyright (c) 2016 Jarl Gullberg
+//  Copyright (c) 2017 Jarl Gullberg
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -18,23 +18,42 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
 
 using System;
-using Launchpad.Utilities.Utility.Events;
-using System.Threading;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Launchpad.Common.Enums;
 using Launchpad.Common.Handlers;
 using Launchpad.Common.Handlers.Manifest;
+using Launchpad.Utilities.Utility.Events;
 
 namespace Launchpad.Utilities.Handlers
 {
+    /// <summary>
+    /// Generates manifests.
+    /// </summary>
     public class ManifestGenerationHandler
     {
-        private readonly ManifestGenerationProgressChangedEventArgs _generationProgressArgs = new ManifestGenerationProgressChangedEventArgs();
+        private readonly ManifestGenerationProgressChangedEventArgs _generationProgressArgs;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ManifestGenerationHandler"/> class.
+        /// </summary>
+        public ManifestGenerationHandler()
+        {
+            _generationProgressArgs = new ManifestGenerationProgressChangedEventArgs
+            (
+                string.Empty,
+                0,
+                0,
+                string.Empty,
+                0
+            );
+        }
 
         /// <summary>
         /// Generates a manifest containing the relative path, MD5 hash and file size from
@@ -44,6 +63,7 @@ namespace Launchpad.Utilities.Handlers
         /// <param name="manifestType">The type of manifest that should be generated.</param>
         /// <param name="progressReporter">The progress reporter to use.</param>
         /// <param name="ct">The cancellation token to use.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task GenerateManifestAsync
         (
             string targetPath,
@@ -84,7 +104,7 @@ namespace Launchpad.Utilities.Handlers
                             _generationProgressArgs.CompletedFiles = completedFiles;
                             _generationProgressArgs.Filepath = newEntry.RelativePath;
                             _generationProgressArgs.Hash = newEntry.Hash;
-                            _generationProgressArgs.Filesize = newEntry.Size;
+                            _generationProgressArgs.Size = newEntry.Size;
 
                             progressReporter.Report(_generationProgressArgs);
                         }
@@ -140,4 +160,3 @@ namespace Launchpad.Utilities.Handlers
         }
     }
 }
-

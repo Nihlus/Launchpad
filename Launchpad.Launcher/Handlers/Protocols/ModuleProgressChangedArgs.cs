@@ -64,5 +64,20 @@ namespace Launchpad.Launcher.Handlers.Protocols
             get;
             set;
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ModuleProgressChangedArgs"/> class.
+        /// </summary>
+        /// <param name="module">The module.</param>
+        /// <param name="progressBarMessage">The progress bar message.</param>
+        /// <param name="indicatorLabelMessage">The indicator label message.</param>
+        /// <param name="progressFraction">The progress fraction.</param>
+        public ModuleProgressChangedArgs(EModule module, string progressBarMessage, string indicatorLabelMessage, double progressFraction)
+        {
+            this.Module = module;
+            this.ProgressBarMessage = progressBarMessage;
+            this.IndicatorLabelMessage = indicatorLabelMessage;
+            this.ProgressFraction = progressFraction;
+        }
     }
 }

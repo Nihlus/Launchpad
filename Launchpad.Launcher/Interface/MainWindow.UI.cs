@@ -40,17 +40,17 @@ namespace Launchpad.Launcher.Interface
     /// </summary>
     public partial class MainWindow
     {
-        [UIElement] private readonly ImageMenuItem _menuRepairItem;
-        [UIElement] private readonly ImageMenuItem _menuReinstallItem;
-        [UIElement] private readonly ImageMenuItem _menuAboutItem;
+        [UIElement] private readonly ImageMenuItem _menuRepairItem = null!;
+        [UIElement] private readonly ImageMenuItem _menuReinstallItem = null!;
+        [UIElement] private readonly ImageMenuItem _menuAboutItem = null!;
 
-        [UIElement] private readonly TextView _changelogTextView;
-        [UIElement] private readonly Image _bannerImage;
+        [UIElement] private readonly TextView _changelogTextView = null!;
+        [UIElement] private readonly Image _bannerImage = null!;
 
-        [UIElement] private readonly Label _statusLabel;
+        [UIElement] private readonly Label _statusLabel = null!;
 
-        [UIElement] private readonly ProgressBar _mainProgressBar;
-        [UIElement] private readonly Button _mainButton;
+        [UIElement] private readonly ProgressBar _mainProgressBar = null!;
+        [UIElement] private readonly Button _mainButton = null!;
 
         /// <summary>
         /// Creates a new instance of the <see cref="MainWindow"/> class, loading its interface definition from file.

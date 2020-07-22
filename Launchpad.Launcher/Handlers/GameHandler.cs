@@ -55,29 +55,29 @@ namespace Launchpad.Launcher.Handlers
         /// <summary>
         /// Event raised whenever the progress of installing or updating the game changes.
         /// </summary>
-        public event EventHandler<ModuleProgressChangedArgs> ProgressChanged;
+        public event EventHandler<ModuleProgressChangedArgs>? ProgressChanged;
 
         /// <summary>
         /// Event raised whenever the game finishes downloading, regardless of whether or not it's updating
         /// or installing.
         /// </summary>
-        public event EventHandler DownloadFinished;
+        public event EventHandler? DownloadFinished;
 
         /// <summary>
         /// Event raised whenever the game fails to download, regardless of whether or not it's updating
         /// or installing.
         /// </summary>
-        public event EventHandler DownloadFailed;
+        public event EventHandler? DownloadFailed;
 
         /// <summary>
         /// Event raised whenever the game fails to launch.
         /// </summary>
-        public event EventHandler LaunchFailed;
+        public event EventHandler? LaunchFailed;
 
         /// <summary>
         /// Event raised whenever the game exits.
         /// </summary>
-        public event EventHandler<int> GameExited;
+        public event EventHandler<int>? GameExited;
 
         // ...
         private static readonly ILaunchpadConfiguration Configuration = ConfigHandler.Instance.Configuration;

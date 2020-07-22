@@ -290,7 +290,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// <param name="remotePath">url of the desired remote object.</param>
         /// <param name="username">The username used for authentication.</param>
         /// <param name="password">The password used for authentication.</param>
-        private HttpWebRequest CreateHttpWebRequest(string remotePath, string username, string password)
+        private HttpWebRequest? CreateHttpWebRequest(string remotePath, string username, string password)
         {
             if (!remotePath.StartsWith(this.Configuration.RemoteAddress.AbsoluteUri))
             {
@@ -333,7 +333,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             var request = CreateHttpWebRequest(cleanURL, this.Configuration.RemoteUsername, this.Configuration.RemotePassword);
 
             request.Method = WebRequestMethods.Http.Head;
-            HttpWebResponse response = null;
+            HttpWebResponse? response = null;
             try
             {
                 response = (HttpWebResponse)request.GetResponse();

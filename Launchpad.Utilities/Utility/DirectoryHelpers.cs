@@ -4,7 +4,7 @@
 //  Author:
 //       Jarl Gullberg <jarl.gullberg@gmail.com>
 //
-//  Copyright (c) 2016 Jarl Gullberg
+//  Copyright (c) 2017 Jarl Gullberg
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
 
 using System;
 using System.IO;
@@ -34,7 +35,7 @@ namespace Launchpad.Utilities.Utility
         /// Gets the assembly-local directory, that is, the directory where the executing assembly resides.
         /// </summary>
         /// <returns>The local dir, terminated by a directory separator.</returns>
-        public static string GetLocalDir()
+        public static string? GetLocalDir()
         {
             var codeBaseURI = new UriBuilder(Assembly.GetExecutingAssembly().Location).Uri;
 

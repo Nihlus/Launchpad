@@ -104,8 +104,8 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// <inheritdoc />
         public override void UpdateModule(EModule module)
         {
-            IReadOnlyList<ManifestEntry> manifest;
-            IReadOnlyList<ManifestEntry> oldManifest;
+            IReadOnlyList<ManifestEntry>? manifest;
+            IReadOnlyList<ManifestEntry>? oldManifest;
             switch (module)
             {
                 case EModule.Launcher:
@@ -279,7 +279,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// <inheritdoc />
         protected override void DownloadModule(EModule module)
         {
-            IReadOnlyList<ManifestEntry> moduleManifest;
+            IReadOnlyList<ManifestEntry>? moduleManifest;
             switch (module)
             {
                 case EModule.Launcher:
@@ -430,7 +430,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// <exception cref="ArgumentNullException">
         /// Will be thrown if the local path set in the <paramref name="fileEntry"/> passed to the function is not a valid value.
         /// </exception>
-        protected virtual void DownloadManifestEntry(ManifestEntry fileEntry, EModule module, ManifestEntry oldFileEntry = null)
+        protected virtual void DownloadManifestEntry(ManifestEntry fileEntry, EModule module, ManifestEntry? oldFileEntry = null)
         {
             this.ModuleDownloadProgressArgs.Module = module;
 

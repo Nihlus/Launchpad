@@ -35,14 +35,11 @@ namespace Launchpad.Utilities.Interface
 {
     public partial class MainWindow
     {
-        [UIElement] private readonly FileChooserWidget _folderChooser;
-
-        [UIElement] private readonly Label _statusLabel;
-
-        [UIElement] private readonly ProgressBar _mainProgressBar;
-
-        [UIElement] private readonly Button _generateLaunchpadManifestButton;
-        [UIElement] private readonly Button _generateGameManifestButton;
+        [UIElement] private readonly FileChooserWidget _folderChooser = null!;
+        [UIElement] private readonly Label _statusLabel = null!;
+        [UIElement] private readonly ProgressBar _mainProgressBar = null!;
+        [UIElement] private readonly Button _generateLaunchpadManifestButton = null!;
+        [UIElement] private readonly Button _generateGameManifestButton = null!;
 
         /// <summary>
         /// Creates a new instance of the <see cref="MainWindow"/> class, loading its interface definition from file.

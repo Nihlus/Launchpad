@@ -61,27 +61,27 @@ namespace Launchpad.Launcher.Handlers.Protocols
         /// <summary>
         /// Raised whenever the download progress of a module changes.
         /// </summary>
-        public event EventHandler<ModuleProgressChangedArgs> ModuleDownloadProgressChanged;
+        public event EventHandler<ModuleProgressChangedArgs>? ModuleDownloadProgressChanged;
 
         /// <summary>
         /// Raised whenever the verification progress of a module changes.
         /// </summary>
-        public event EventHandler<ModuleProgressChangedArgs> ModuleVerifyProgressChanged;
+        public event EventHandler<ModuleProgressChangedArgs>? ModuleVerifyProgressChanged;
 
         /// <summary>
         /// Raised whenever the update progress of a module changes.
         /// </summary>
-        public event EventHandler<ModuleProgressChangedArgs> ModuleUpdateProgressChanged;
+        public event EventHandler<ModuleProgressChangedArgs>? ModuleUpdateProgressChanged;
 
         /// <summary>
         /// Raised whenever the installation of a module finishes.
         /// </summary>
-        public event EventHandler<EModule> ModuleInstallationFinished;
+        public event EventHandler<EModule>? ModuleInstallationFinished;
 
         /// <summary>
-        /// Raised whenver the installation of a module fails.
+        /// Raised whenever the installation of a module fails.
         /// </summary>
-        public event EventHandler<EModule> ModuleInstallationFailed;
+        public event EventHandler<EModule>? ModuleInstallationFailed;
 
         /// <summary>
         /// Gets the download progress arguments.

@@ -152,10 +152,10 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             try
             {
                 var request = CreateFtpWebRequest(remoteURL, username, password);
-                var sizerequest = CreateFtpWebRequest(remoteURL, username, password);
+                var sizeRequest = CreateFtpWebRequest(remoteURL, username, password);
 
                 request.Method = WebRequestMethods.Ftp.DownloadFile;
-                sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
+                sizeRequest.Method = WebRequestMethods.Ftp.GetFileSize;
 
                 var data = string.Empty;
                 using var remoteStream = request.GetResponse().GetResponseStream();
@@ -165,7 +165,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                 }
 
                 long fileSize;
-                using (var sizeResponse = (FtpWebResponse)sizerequest.GetResponse())
+                using (var sizeResponse = (FtpWebResponse)sizeRequest.GetResponse())
                 {
                     fileSize = sizeResponse.ContentLength;
                 }
@@ -226,12 +226,12 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             try
             {
                 var request = CreateFtpWebRequest(remoteURL, username, password);
-                var sizerequest = CreateFtpWebRequest(remoteURL, username, password);
+                var sizeRequest = CreateFtpWebRequest(remoteURL, username, password);
 
                 request.Method = WebRequestMethods.Ftp.DownloadFile;
                 request.ContentOffset = contentOffset;
 
-                sizerequest.Method = WebRequestMethods.Ftp.GetFileSize;
+                sizeRequest.Method = WebRequestMethods.Ftp.GetFileSize;
 
                 using var contentStream = request.GetResponse().GetResponseStream();
                 if (contentStream == null)
@@ -246,7 +246,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                 }
 
                 var fileSize = contentOffset;
-                using (var sizereader = (FtpWebResponse)sizerequest.GetResponse())
+                using (var sizereader = (FtpWebResponse)sizeRequest.GetResponse())
                 {
                     fileSize += sizereader.ContentLength;
                 }
@@ -329,7 +329,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// <param name="remotePath">Ftp directory path.</param>
         /// <param name="username">Remote FTP username.</param>
         /// <param name="password">Remote FTP password.</param>
-        private FtpWebRequest CreateFtpWebRequest(string remotePath, string username, string password)
+        private FtpWebRequest? CreateFtpWebRequest(string remotePath, string username, string password)
         {
             if (!remotePath.StartsWith(this.Configuration.RemoteAddress.AbsoluteUri))
             {
@@ -380,7 +380,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         private bool DoesRemoteFileExist(string remotePath)
         {
             var request = CreateFtpWebRequest(remotePath, this.Configuration.RemoteUsername, this.Configuration.RemotePassword);
-            FtpWebResponse response = null;
+            FtpWebResponse? response = null;
 
             try
             {

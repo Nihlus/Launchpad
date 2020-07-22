@@ -56,12 +56,12 @@ namespace Launchpad.Launcher.Handlers
         /// <summary>
         /// Raised whenever the launcher finishes downloading.
         /// </summary>
-        public event EventHandler LauncherDownloadFinished;
+        public event EventHandler? LauncherDownloadFinished;
 
         /// <summary>
         /// Raised whenever the launcher download progress changes.
         /// </summary>
-        public event EventHandler<ModuleProgressChangedArgs> LauncherDownloadProgressChanged;
+        public event EventHandler<ModuleProgressChangedArgs>? LauncherDownloadProgressChanged;
 
         private readonly PatchProtocolHandler _patch;
 
@@ -142,7 +142,7 @@ namespace Launchpad.Launcher.Handlers
         /// Creates the update script on disk.
         /// </summary>
         /// <returns>ProcessStartInfo for the update script.</returns>
-        public static ProcessStartInfo CreateUpdateScript()
+        public static ProcessStartInfo? CreateUpdateScript()
         {
             try
             {

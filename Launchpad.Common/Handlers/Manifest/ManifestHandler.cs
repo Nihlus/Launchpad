@@ -167,7 +167,7 @@ namespace Launchpad.Common.Handlers.Manifest
             var rawManifest = new List<string>();
             using (var sr = new StreamReader(manifestStream))
             {
-                string line;
+                string? line;
                 while ((line = sr.ReadLine()) != null)
                 {
                     rawManifest.Add(line);

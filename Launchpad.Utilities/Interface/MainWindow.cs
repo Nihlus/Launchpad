@@ -4,7 +4,7 @@
 //  Author:
 //       Jarl Gullberg <jarl.gullberg@gmail.com>
 //
-//  Copyright (c) 2016 Jarl Gullberg
+//  Copyright (c) 2017 Jarl Gullberg
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
 
 using System;
 using System.IO;
@@ -33,6 +34,9 @@ using SysPath = System.IO.Path;
 
 namespace Launchpad.Utilities.Interface
 {
+    /// <summary>
+    /// Represents the main window of the application.
+    /// </summary>
     public partial class MainWindow : Window
     {
         /// <summary>
@@ -47,7 +51,7 @@ namespace Launchpad.Utilities.Interface
 
         private readonly IProgress<ManifestGenerationProgressChangedEventArgs> _progressReporter;
 
-        private CancellationTokenSource _tokenSource;
+        private CancellationTokenSource? _tokenSource;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow"/> class.
@@ -97,7 +101,7 @@ namespace Launchpad.Utilities.Interface
                     )
                 );
 
-                if (dialog.Run() == (int) ResponseType.Yes)
+                if (dialog.Run() == (int)ResponseType.Yes)
                 {
                     var gameVersionPath = SysPath.Combine(targetDirectory, "GameVersion.txt");
                     await File.WriteAllTextAsync(gameVersionPath, new Version("1.0.0").ToString());

@@ -115,7 +115,7 @@ namespace Launchpad.Launcher
         /// </summary>
         /// <param name="sender">The sending object.</param>
         /// <param name="unhandledExceptionEventArgs">The event object containing the information about the exception.</param>
-        private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
+        private static void OnUnhandledException(object? sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
         {
             Log.Fatal("----------------");
             Log.Fatal("FATAL UNHANDLED EXCEPTION!");
