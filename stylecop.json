@@ -4,7 +4,7 @@
         "indentation" : {
             "indentationSize" : 4,
             "tabSize" : 4,
-            "useTabs" : true
+            "useTabs" : false
         },
         "spacingRules" : {
         },
@@ -25,7 +25,9 @@
         "namingRules" : {
             "allowCommonHungarianPrefixes" : true,
             "allowedHungarianPrefixes" : [
-                "gl"
+                "gl",
+                "f",
+                "db"
             ]
         },
         "maintainabilityRules" : {
