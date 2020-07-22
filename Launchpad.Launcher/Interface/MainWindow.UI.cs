@@ -73,11 +73,11 @@ namespace Launchpad.Launcher.Interface
         private void BindUIEvents()
         {
             this.DeleteEvent += OnDeleteEvent;
-            this._menuReinstallItem.Activated += OnReinstallGameActionActivated;
-            this._menuRepairItem.Activated += OnMenuRepairItemActivated;
-            this._menuAboutItem.Activated += OnMenuAboutItemActivated;
+            _menuReinstallItem.Activated += OnReinstallGameActionActivated;
+            _menuRepairItem.Activated += OnMenuRepairItemActivated;
+            _menuAboutItem.Activated += OnMenuAboutItemActivated;
 
-            this._mainButton.Clicked += OnMainButtonClicked;
+            _mainButton.Clicked += OnMainButtonClicked;
         }
 
         /// <summary>

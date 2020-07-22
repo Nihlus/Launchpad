@@ -40,7 +40,7 @@ namespace Launchpad.Tests.Common
         [Fact]
         public void HashesCorrectly()
         {
-            Assert.Equal(ExpectedHash, MD5Handler.GetStreamHash(this._dataStream));
+            Assert.Equal(ExpectedHash, MD5Handler.GetStreamHash(_dataStream));
         }
     }
 }

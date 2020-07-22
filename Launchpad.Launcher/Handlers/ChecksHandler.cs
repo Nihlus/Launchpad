@@ -47,7 +47,7 @@ namespace Launchpad.Launcher.Handlers
         /// </summary>
         public ChecksHandler()
         {
-            this._patch = PatchProtocolProvider.GetHandler();
+            _patch = PatchProtocolProvider.GetHandler();
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace Launchpad.Launcher.Handlers
         /// <returns><c>true</c> if this instance can connect to a patching service; otherwise, <c>false</c>.</returns>
         public bool CanPatch()
         {
-            return this._patch != null && this._patch.CanPatch();
+            return _patch != null && _patch.CanPatch();
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace Launchpad.Launcher.Handlers
         /// <returns><c>true</c> if the game is outdated; otherwise, <c>false</c>.</returns>
         public bool IsGameOutdated()
         {
-            return this._patch.IsModuleOutdated(EModule.Game);
+            return _patch.IsModuleOutdated(EModule.Game);
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace Launchpad.Launcher.Handlers
         /// <returns><c>true</c> if the launcher is outdated; otherwise, <c>false</c>.</returns>
         public bool IsLauncherOutdated()
         {
-            return this._patch.IsModuleOutdated(EModule.Launcher);
+            return _patch.IsModuleOutdated(EModule.Launcher);
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace Launchpad.Launcher.Handlers
         /// <param name="platform">platform.</param>
         public bool IsPlatformAvailable(ESystemTarget platform)
         {
-            return this._patch.IsPlatformAvailable(platform);
+            return _patch.IsPlatformAvailable(platform);
         }
     }
 }

@@ -61,8 +61,8 @@ namespace Launchpad.Utilities.Interface
         {
             this.DeleteEvent += OnDeleteEvent;
 
-            this._generateLaunchpadManifestButton.Clicked += OnGenerateLaunchpadManifestButtonClicked;
-            this._generateGameManifestButton.Clicked += OnGenerateGameManifestButtonClicked;
+            _generateLaunchpadManifestButton.Clicked += OnGenerateLaunchpadManifestButtonClicked;
+            _generateGameManifestButton.Clicked += OnGenerateGameManifestButtonClicked;
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace Launchpad.Utilities.Interface
         /// <param name="a">The alpha component.</param>
         private void OnDeleteEvent(object sender, DeleteEventArgs a)
         {
-            this._tokenSource?.Cancel();
+            _tokenSource?.Cancel();
 
             Application.Quit();
             a.RetVal = true;

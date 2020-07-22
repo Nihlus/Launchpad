@@ -61,26 +61,26 @@ namespace Launchpad.Utilities.Interface
 
             BindUIEvents();
 
-            this._progressReporter = new Progress<ManifestGenerationProgressChangedEventArgs>
+            _progressReporter = new Progress<ManifestGenerationProgressChangedEventArgs>
             (
                 e =>
                 {
-                    var progressString = this._localizationCatalog.GetString("Hashing {0} : {1} out of {2}");
-                    this._statusLabel.Text = string.Format(progressString, e.Filepath, e.CompletedFiles, e.TotalFiles);
+                    var progressString = _localizationCatalog.GetString("Hashing {0} : {1} out of {2}");
+                    _statusLabel.Text = string.Format(progressString, e.Filepath, e.CompletedFiles, e.TotalFiles);
 
-                    this._mainProgressBar.Fraction = e.CompletedFiles / (double)e.TotalFiles;
+                    _mainProgressBar.Fraction = e.CompletedFiles / (double)e.TotalFiles;
                 }
             );
 
-            this._folderChooser.SetCurrentFolder(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory));
-            this._folderChooser.SelectMultiple = false;
+            _folderChooser.SetCurrentFolder(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory));
+            _folderChooser.SelectMultiple = false;
 
-            this._statusLabel.Text = this._localizationCatalog.GetString("Idle");
+            _statusLabel.Text = _localizationCatalog.GetString("Idle");
         }
 
         private async void OnGenerateGameManifestButtonClicked(object sender, EventArgs e)
         {
-            var targetDirectory = this._folderChooser.Filename;
+            var targetDirectory = _folderChooser.Filename;
 
             if (!Directory.GetFiles(targetDirectory).Any(s => s.Contains("GameVersion.txt")))
             {
@@ -90,7 +90,7 @@ namespace Launchpad.Utilities.Interface
                     DialogFlags.Modal,
                     MessageType.Question,
                     ButtonsType.YesNo,
-                    this._localizationCatalog.GetString
+                    _localizationCatalog.GetString
                     (
                         "No GameVersion.txt file could be found in the target directory. This file is required.\n" +
                         "Would you like to add one? The version will be \"1.0.0\"."
@@ -118,33 +118,33 @@ namespace Launchpad.Utilities.Interface
 
         private async Task GenerateManifestAsync(EManifestType manifestType)
         {
-            this._tokenSource = new CancellationTokenSource();
+            _tokenSource = new CancellationTokenSource();
 
-            this._generateGameManifestButton.Sensitive = false;
-            this._generateLaunchpadManifestButton.Sensitive = false;
+            _generateGameManifestButton.Sensitive = false;
+            _generateLaunchpadManifestButton.Sensitive = false;
 
-            var targetDirectory = this._folderChooser.Filename;
+            var targetDirectory = _folderChooser.Filename;
 
             try
             {
-                await this._manifest.GenerateManifestAsync
+                await _manifest.GenerateManifestAsync
                 (
                     targetDirectory,
                     manifestType,
-                    this._progressReporter,
-                    this._tokenSource.Token
+                    _progressReporter,
+                    _tokenSource.Token
                 );
 
-                this._statusLabel.Text = this._localizationCatalog.GetString("Finished");
+                _statusLabel.Text = _localizationCatalog.GetString("Finished");
             }
             catch (TaskCanceledException)
             {
-                this._statusLabel.Text = this._localizationCatalog.GetString("Cancelled");
-                this._mainProgressBar.Fraction = 0;
+                _statusLabel.Text = _localizationCatalog.GetString("Cancelled");
+                _mainProgressBar.Fraction = 0;
             }
 
-            this._generateGameManifestButton.Sensitive = true;
-            this._generateLaunchpadManifestButton.Sensitive = true;
+            _generateGameManifestButton.Sensitive = true;
+            _generateLaunchpadManifestButton.Sensitive = true;
         }
     }
 }

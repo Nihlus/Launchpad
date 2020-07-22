@@ -91,18 +91,18 @@ namespace Launchpad.Launcher.Handlers
         /// </summary>
         public GameHandler()
         {
-            this._patch = PatchProtocolProvider.GetHandler();
-            if (this._patch == null)
+            _patch = PatchProtocolProvider.GetHandler();
+            if (_patch == null)
             {
                 return;
             }
 
-            this._patch.ModuleDownloadProgressChanged += OnModuleInstallProgressChanged;
-            this._patch.ModuleVerifyProgressChanged += OnModuleInstallProgressChanged;
-            this._patch.ModuleUpdateProgressChanged += OnModuleInstallProgressChanged;
+            _patch.ModuleDownloadProgressChanged += OnModuleInstallProgressChanged;
+            _patch.ModuleVerifyProgressChanged += OnModuleInstallProgressChanged;
+            _patch.ModuleUpdateProgressChanged += OnModuleInstallProgressChanged;
 
-            this._patch.ModuleInstallationFinished += OnModuleInstallationFinished;
-            this._patch.ModuleInstallationFailed += OnModuleInstallationFailed;
+            _patch.ModuleInstallationFinished += OnModuleInstallationFinished;
+            _patch.ModuleInstallationFailed += OnModuleInstallationFailed;
         }
 
         /// <summary>
@@ -110,8 +110,8 @@ namespace Launchpad.Launcher.Handlers
         /// </summary>
         public void InstallGame()
         {
-            Log.Info($"Starting installation of game files using protocol \"{this._patch.GetType().Name}\"");
-            var t = new Thread(this._patch.InstallGame)
+            Log.Info($"Starting installation of game files using protocol \"{_patch.GetType().Name}\"");
+            var t = new Thread(_patch.InstallGame)
             {
                 Name = "InstallGame",
                 IsBackground = true
@@ -125,8 +125,8 @@ namespace Launchpad.Launcher.Handlers
         /// </summary>
         public void UpdateGame()
         {
-            Log.Info($"Starting update of game files using protocol \"{this._patch.GetType().Name}\"");
-            var t = new Thread(() => this._patch.UpdateModule(EModule.Game))
+            Log.Info($"Starting update of game files using protocol \"{_patch.GetType().Name}\"");
+            var t = new Thread(() => _patch.UpdateModule(EModule.Game))
             {
                 Name = "UpdateGame",
                 IsBackground = true
@@ -141,7 +141,7 @@ namespace Launchpad.Launcher.Handlers
         public void VerifyGame()
         {
             Log.Info("Beginning verification of game files.");
-            var t = new Thread(() => this._patch.VerifyModule(EModule.Game))
+            var t = new Thread(() => _patch.VerifyModule(EModule.Game))
             {
                 Name = "VerifyGame",
                 IsBackground = true
@@ -168,7 +168,7 @@ namespace Launchpad.Launcher.Handlers
                 File.Delete(DirectoryHelpers.GetGameTagfilePath());
             }
 
-            var t = new Thread(() => this._patch.InstallGame())
+            var t = new Thread(() => _patch.InstallGame())
             {
                 Name = "ReinstallGame",
                 IsBackground = true
@@ -194,7 +194,7 @@ namespace Launchpad.Launcher.Handlers
 
                 // Do not move the argument assignment inside the gameStartInfo initializer.
                 // It causes a TargetInvocationException crash through black magic.
-                var gameArguments = string.Join(" ", this._gameArgumentService.GetGameArguments());
+                var gameArguments = string.Join(" ", _gameArgumentService.GetGameArguments());
                 var gameStartInfo = new ProcessStartInfo
                 {
                     FileName = executable,

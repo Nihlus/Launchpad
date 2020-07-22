@@ -75,10 +75,10 @@ namespace Launchpad.Launcher.Handlers
         /// </summary>
         public LauncherHandler()
         {
-            this._patch = PatchProtocolProvider.GetHandler();
+            _patch = PatchProtocolProvider.GetHandler();
 
-            this._patch.ModuleDownloadProgressChanged += OnLauncherDownloadProgressChanged;
-            this._patch.ModuleInstallationFinished += OnLauncherDownloadFinished;
+            _patch.ModuleDownloadProgressChanged += OnLauncherDownloadProgressChanged;
+            _patch.ModuleInstallationFinished += OnLauncherDownloadFinished;
         }
 
         /// <summary>
@@ -88,9 +88,9 @@ namespace Launchpad.Launcher.Handlers
         {
             try
             {
-                Log.Info($"Starting update of lancher files using protocol \"{this._patch.GetType().Name}\"");
+                Log.Info($"Starting update of lancher files using protocol \"{_patch.GetType().Name}\"");
 
-                var t = new Thread(() => this._patch.UpdateModule(EModule.Launcher))
+                var t = new Thread(() => _patch.UpdateModule(EModule.Launcher))
                 {
                     Name = "UpdateLauncher",
                     IsBackground = true
