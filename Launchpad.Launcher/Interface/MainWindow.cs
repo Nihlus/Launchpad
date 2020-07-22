@@ -508,10 +508,8 @@ namespace Launchpad.Launcher.Interface
             Application.Invoke((o, args) =>
             {
                 var script = LauncherHandler.CreateUpdateScript();
-                if (!(script is null))
-                {
-                    Process.Start(script);
-                }
+
+                Process.Start(script);
 
                 Application.Quit();
             });

@@ -51,8 +51,8 @@ namespace Launchpad.Common.Handlers.Manifest
         /// </summary>
         private readonly ESystemTarget _systemTarget;
 
-        private readonly Dictionary<EManifestType, IReadOnlyList<ManifestEntry>?> _manifests;
-        private readonly Dictionary<EManifestType, IReadOnlyList<ManifestEntry>?> _oldManifests;
+        private readonly Dictionary<EManifestType, IReadOnlyList<ManifestEntry>> _manifests;
+        private readonly Dictionary<EManifestType, IReadOnlyList<ManifestEntry>> _oldManifests;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ManifestHandler"/> class.
@@ -63,8 +63,8 @@ namespace Launchpad.Common.Handlers.Manifest
         /// <param name="systemTarget">The target system for which the handler should retrieve files.</param>
         public ManifestHandler(string localBaseDirectory, Uri remoteURL, ESystemTarget systemTarget)
         {
-            _manifests = new Dictionary<EManifestType, IReadOnlyList<ManifestEntry>?>();
-            _oldManifests = new Dictionary<EManifestType, IReadOnlyList<ManifestEntry>?>();
+            _manifests = new Dictionary<EManifestType, IReadOnlyList<ManifestEntry>>();
+            _oldManifests = new Dictionary<EManifestType, IReadOnlyList<ManifestEntry>>();
 
             _localBaseDirectory = localBaseDirectory;
             _remoteURL = remoteURL;
@@ -79,7 +79,7 @@ namespace Launchpad.Common.Handlers.Manifest
         /// <param name="getOldManifest">Whether or not the old manifest or the new manifest should be retrieved.</param>
         /// <returns>A list of <see cref="ManifestEntry"/> objects.</returns>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="manifestType"/> is not a known value.</exception>
-        public IReadOnlyList<ManifestEntry>? GetManifest(EManifestType manifestType, bool getOldManifest)
+        public IReadOnlyList<ManifestEntry> GetManifest(EManifestType manifestType, bool getOldManifest)
         {
             switch (manifestType)
             {
@@ -104,7 +104,7 @@ namespace Launchpad.Common.Handlers.Manifest
                         }
                     }
 
-                    return null;
+                    throw new InvalidOperationException();
                 }
                 default:
                 {
@@ -125,21 +125,13 @@ namespace Launchpad.Common.Handlers.Manifest
                 var oldManifestPath = GetManifestPath(manifestType, true);
 
                 // Reload new manifests
-                if (!File.Exists(newManifestPath))
-                {
-                    _manifests.AddOrUpdate(manifestType, null);
-                }
-                else
+                if (File.Exists(newManifestPath))
                 {
                     _manifests.AddOrUpdate(manifestType, LoadManifest(newManifestPath));
                 }
 
                 // Reload old manifests
-                if (!File.Exists(oldManifestPath))
-                {
-                    _oldManifests.AddOrUpdate(manifestType, null);
-                }
-                else
+                if (File.Exists(oldManifestPath))
                 {
                     _oldManifests.AddOrUpdate(manifestType, LoadManifest(oldManifestPath));
                 }

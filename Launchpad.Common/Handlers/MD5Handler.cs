@@ -39,6 +39,7 @@ namespace Launchpad.Common.Handlers
         public static string GetStreamHash(Stream dataStream)
         {
             using var md5 = MD5.Create();
+
             // Calculate the hash of the stream.
             var resultString = BitConverter.ToString(md5.ComputeHash(dataStream)).Replace("-", string.Empty);
 

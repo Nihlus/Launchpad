@@ -145,11 +145,6 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             {
                 var request = CreateHttpWebRequest(remoteURL, username, password);
 
-                if (request is null)
-                {
-                    throw new InvalidOperationException();
-                }
-
                 request.Method = WebRequestMethods.Http.Get;
                 request.AddRange(contentOffset);
 
@@ -241,11 +236,6 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             {
                 var request = CreateHttpWebRequest(remoteURL, username, password);
 
-                if (request is null)
-                {
-                    throw new InvalidOperationException();
-                }
-
                 request.Method = WebRequestMethods.Http.Get;
 
                 var data = string.Empty;
@@ -300,7 +290,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// <param name="remotePath">url of the desired remote object.</param>
         /// <param name="username">The username used for authentication.</param>
         /// <param name="password">The password used for authentication.</param>
-        private HttpWebRequest? CreateHttpWebRequest(string remotePath, string username, string password)
+        private HttpWebRequest CreateHttpWebRequest(string remotePath, string username, string password)
         {
             if (!remotePath.StartsWith(this.Configuration.RemoteAddress.AbsoluteUri))
             {
@@ -317,18 +307,18 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             catch (WebException wex)
             {
                 Log.Warn("Unable to create a WebRequest for the specified file (WebException): " + wex.Message);
-                return null;
+                throw new InvalidOperationException();
             }
             catch (ArgumentException aex)
             {
                 Log.Warn("Unable to create a WebRequest for the specified file (ArgumentException): " + aex.Message);
-                return null;
+                throw new InvalidOperationException();
             }
             catch (UriFormatException uex)
             {
                 Log.Warn("Unable to create a WebRequest for the specified file (UriFormatException): " + uex.Message + "\n" +
                     "You may need to add \"http://\" before the url in the config.");
-                return null;
+                throw new InvalidOperationException();
             }
         }
 
@@ -342,16 +332,10 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             var cleanURL = url.Replace(Path.DirectorySeparatorChar, '/');
             var request = CreateHttpWebRequest(cleanURL, this.Configuration.RemoteUsername, this.Configuration.RemotePassword);
 
-            if (request is null)
-            {
-                throw new InvalidOperationException();
-            }
-
             request.Method = WebRequestMethods.Http.Head;
-            HttpWebResponse? response = null;
             try
             {
-                response = (HttpWebResponse)request.GetResponse();
+                using var response = (HttpWebResponse)request.GetResponse();
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     return false;
@@ -359,15 +343,11 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             }
             catch (WebException wex)
             {
-                response = (HttpWebResponse)wex.Response;
+                using var response = (HttpWebResponse)wex.Response;
                 if (response.StatusCode == HttpStatusCode.NotFound)
                 {
                     return false;
                 }
-            }
-            finally
-            {
-                response?.Dispose();
             }
 
             return true;

@@ -56,7 +56,7 @@ namespace Launchpad.Launcher.Handlers
         /// <returns><c>true</c> if this instance can connect to a patching service; otherwise, <c>false</c>.</returns>
         public bool CanPatch()
         {
-            return _patch != null && _patch.CanPatch();
+            return _patch.CanPatch();
         }
 
         /// <summary>

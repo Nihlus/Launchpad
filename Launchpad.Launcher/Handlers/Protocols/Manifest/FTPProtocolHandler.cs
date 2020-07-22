@@ -59,11 +59,6 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             {
                 var plainRequest = CreateFtpWebRequest(url, username, password);
 
-                if (plainRequest == null)
-                {
-                    return false;
-                }
-
                 plainRequest.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
                 plainRequest.Timeout = 4000;
 
@@ -154,11 +149,6 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                 var request = CreateFtpWebRequest(remoteURL, username, password);
                 var sizeRequest = CreateFtpWebRequest(remoteURL, username, password);
 
-                if (request is null || sizeRequest is null)
-                {
-                    throw new InvalidOperationException();
-                }
-
                 request.Method = WebRequestMethods.Ftp.DownloadFile;
                 sizeRequest.Method = WebRequestMethods.Ftp.GetFileSize;
 
@@ -232,11 +222,6 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             {
                 var request = CreateFtpWebRequest(remoteURL, username, password);
                 var sizeRequest = CreateFtpWebRequest(remoteURL, username, password);
-
-                if (request is null || sizeRequest is null)
-                {
-                    throw new InvalidOperationException();
-                }
 
                 request.Method = WebRequestMethods.Ftp.DownloadFile;
                 request.ContentOffset = contentOffset;
@@ -339,7 +324,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// <param name="remotePath">Ftp directory path.</param>
         /// <param name="username">Remote FTP username.</param>
         /// <param name="password">Remote FTP password.</param>
-        private FtpWebRequest? CreateFtpWebRequest(string remotePath, string username, string password)
+        private FtpWebRequest CreateFtpWebRequest(string remotePath, string username, string password)
         {
             if (!remotePath.StartsWith(this.Configuration.RemoteAddress.AbsoluteUri))
             {
@@ -364,12 +349,12 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             catch (WebException wex)
             {
                 Log.Warn("Unable to create a WebRequest for the specified file (WebException): " + wex.Message);
-                return null;
+                throw new InvalidOperationException();
             }
             catch (ArgumentException aex)
             {
                 Log.Warn("Unable to create a WebRequest for the specified file (ArgumentException): " + aex.Message);
-                return null;
+                throw new InvalidOperationException();
             }
             catch (UriFormatException uex)
             {
@@ -378,7 +363,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                     "Unable to create a WebRequest for the specified file (UriFormatException): " + uex.Message + "\n" +
                     "You may need to add \"ftp://\" before the url in the config."
                 );
-                return null;
+                throw new InvalidOperationException();
             }
         }
 
@@ -397,11 +382,6 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                     this.Configuration.RemoteUsername,
                     this.Configuration.RemotePassword
                 );
-
-                if (request is null)
-                {
-                    throw new InvalidOperationException();
-                }
 
                 using var response = (FtpWebResponse)request.GetResponse();
             }

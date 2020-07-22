@@ -35,11 +35,12 @@ namespace Launchpad.Utilities.Utility
         /// Gets the assembly-local directory, that is, the directory where the executing assembly resides.
         /// </summary>
         /// <returns>The local dir, terminated by a directory separator.</returns>
-        public static string? GetLocalDir()
+        public static string GetLocalDir()
         {
             var codeBaseURI = new UriBuilder(Assembly.GetExecutingAssembly().Location).Uri;
 
-            return Path.GetDirectoryName(Uri.UnescapeDataString(codeBaseURI.AbsolutePath));
+            return Path.GetDirectoryName(Uri.UnescapeDataString(codeBaseURI.AbsolutePath))
+                   ?? throw new InvalidOperationException();
         }
     }
 }

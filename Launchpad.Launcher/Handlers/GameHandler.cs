@@ -92,10 +92,6 @@ namespace Launchpad.Launcher.Handlers
         public GameHandler()
         {
             _patch = PatchProtocolProvider.GetHandler();
-            if (_patch == null)
-            {
-                return;
-            }
 
             _patch.ModuleDownloadProgressChanged += OnModuleInstallProgressChanged;
             _patch.ModuleVerifyProgressChanged += OnModuleInstallProgressChanged;

@@ -142,7 +142,7 @@ namespace Launchpad.Launcher.Handlers
         /// Creates the update script on disk.
         /// </summary>
         /// <returns>ProcessStartInfo for the update script.</returns>
-        public static ProcessStartInfo? CreateUpdateScript()
+        public static ProcessStartInfo CreateUpdateScript()
         {
             try
             {
@@ -172,7 +172,7 @@ namespace Launchpad.Launcher.Handlers
             {
                 Log.Warn("Failed to create update script (IOException): " + ioex.Message);
 
-                return null;
+                throw new InvalidOperationException();
             }
         }
 
