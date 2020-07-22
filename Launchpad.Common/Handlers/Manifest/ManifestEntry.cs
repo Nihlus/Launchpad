@@ -100,11 +100,11 @@ namespace Launchpad.Common.Handlers.Manifest
 			// Sanitize the manifest path, converting \ to / on unix and / to \ on Windows.
 			if (PlatformHelpers.IsRunningOnUnix())
 			{
-				inEntry.RelativePath = entryElements[0].Replace('\\', '/');
+				inEntry.RelativePath = entryElements[0].Replace('\\', '/').TrimStart('/');
 			}
 			else
 			{
-				inEntry.RelativePath = entryElements[0].Replace('/', '\\');
+				inEntry.RelativePath = entryElements[0].Replace('/', '\\').TrimStart('\\');
 			}
 
 			// Hashes must be exactly 32 characters

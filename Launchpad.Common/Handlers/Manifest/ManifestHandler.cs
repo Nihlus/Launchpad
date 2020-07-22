@@ -69,7 +69,7 @@ namespace Launchpad.Common.Handlers.Manifest
 		}
 
 		/// <summary>
-		/// Gets the specifed manifest currently held by the launcher. The return value of this method may be null if no
+		/// Gets the specified manifest currently held by the launcher. The return value of this method may be null if no
 		/// manifest could be retrieved.
 		/// </summary>
 		/// <param name="manifestType">The type of manifest to retrieve, that is, the manifest for a specific component.</param>
