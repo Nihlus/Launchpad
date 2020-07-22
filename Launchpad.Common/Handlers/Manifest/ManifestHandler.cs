@@ -33,26 +33,26 @@ namespace Launchpad.Common.Handlers.Manifest
     /// </summary>
     public sealed class ManifestHandler
     {
-        private readonly object ManifestsLock = new object();
+        private readonly object _manifestsLock = new object();
 
         /// <summary>
         /// The local base directory of the running assembly. Used to produce relative paths for manifest-related
         /// files and folders.
         /// </summary>
-        private readonly string LocalBaseDirectory;
+        private readonly string _localBaseDirectory;
 
         /// <summary>
         /// The remote <see cref="Uri"/> where the manifest files are expected to be.
         /// </summary>
-        private readonly Uri RemoteURL;
+        private readonly Uri _remoteURL;
 
         /// <summary>
         /// The target system for which the handler should retrieve files.
         /// </summary>
-        private readonly ESystemTarget SystemTarget;
+        private readonly ESystemTarget _systemTarget;
 
-        private readonly Dictionary<EManifestType, IReadOnlyList<ManifestEntry>> Manifests = new Dictionary<EManifestType, IReadOnlyList<ManifestEntry>>();
-        private readonly Dictionary<EManifestType, IReadOnlyList<ManifestEntry>> OldManifests = new Dictionary<EManifestType, IReadOnlyList<ManifestEntry>>();
+        private readonly Dictionary<EManifestType, IReadOnlyList<ManifestEntry>> _manifests = new Dictionary<EManifestType, IReadOnlyList<ManifestEntry>>();
+        private readonly Dictionary<EManifestType, IReadOnlyList<ManifestEntry>> _oldManifests = new Dictionary<EManifestType, IReadOnlyList<ManifestEntry>>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ManifestHandler"/> class.
@@ -63,9 +63,9 @@ namespace Launchpad.Common.Handlers.Manifest
         /// <param name="systemTarget">The target system for which the handler should retrieve files.</param>
         public ManifestHandler(string localBaseDirectory, Uri remoteURL, ESystemTarget systemTarget)
         {
-            this.LocalBaseDirectory = localBaseDirectory;
-            this.RemoteURL = remoteURL;
-            this.SystemTarget = systemTarget;
+            this._localBaseDirectory = localBaseDirectory;
+            this._remoteURL = remoteURL;
+            this._systemTarget = systemTarget;
         }
 
         /// <summary>
@@ -83,20 +83,20 @@ namespace Launchpad.Common.Handlers.Manifest
                 case EManifestType.Game:
                 case EManifestType.Launchpad:
                 {
-                    lock (this.ManifestsLock)
+                    lock (this._manifestsLock)
                     {
                         if (getOldManifest)
                         {
-                            if (this.OldManifests.ContainsKey(manifestType))
+                            if (this._oldManifests.ContainsKey(manifestType))
                             {
-                                return this.OldManifests[manifestType];
+                                return this._oldManifests[manifestType];
                             }
                         }
                         else
                         {
-                            if (this.Manifests.ContainsKey(manifestType))
+                            if (this._manifests.ContainsKey(manifestType))
                             {
-                                return this.Manifests[manifestType];
+                                return this._manifests[manifestType];
                             }
                         }
                     }
@@ -116,7 +116,7 @@ namespace Launchpad.Common.Handlers.Manifest
         /// <param name="manifestType">The type of manifest to reload.</param>
         public void ReloadManifests(EManifestType manifestType)
         {
-            lock (this.ManifestsLock)
+            lock (this._manifestsLock)
             {
                 var newManifestPath = GetManifestPath(manifestType, false);
                 var oldManifestPath = GetManifestPath(manifestType, true);
@@ -124,21 +124,21 @@ namespace Launchpad.Common.Handlers.Manifest
                 // Reload new manifests
                 if (!File.Exists(newManifestPath))
                 {
-                    this.Manifests.AddOrUpdate(manifestType, null);
+                    this._manifests.AddOrUpdate(manifestType, null);
                 }
                 else
                 {
-                    this.Manifests.AddOrUpdate(manifestType, LoadManifest(newManifestPath));
+                    this._manifests.AddOrUpdate(manifestType, LoadManifest(newManifestPath));
                 }
 
                 // Reload old manifests
                 if (!File.Exists(oldManifestPath))
                 {
-                    this.OldManifests.AddOrUpdate(manifestType, null);
+                    this._oldManifests.AddOrUpdate(manifestType, null);
                 }
                 else
                 {
-                    this.OldManifests.AddOrUpdate(manifestType, LoadManifest(oldManifestPath));
+                    this._oldManifests.AddOrUpdate(manifestType, LoadManifest(oldManifestPath));
                 }
             }
         }
@@ -194,7 +194,7 @@ namespace Launchpad.Common.Handlers.Manifest
         /// <returns>A fully qualified path to where a manifest should be.</returns>
         public string GetManifestPath(EManifestType manifestType, bool getOldManifestPath)
         {
-            var manifestPath = Path.Combine(this.LocalBaseDirectory, $"{manifestType}Manifest.txt");
+            var manifestPath = Path.Combine(this._localBaseDirectory, $"{manifestType}Manifest.txt");
 
             if (getOldManifestPath)
             {
@@ -213,10 +213,10 @@ namespace Launchpad.Common.Handlers.Manifest
         {
             if (manifestType == EManifestType.Launchpad)
             {
-                return $"{this.RemoteURL}/launcher/{manifestType}Manifest.txt";
+                return $"{this._remoteURL}/launcher/{manifestType}Manifest.txt";
             }
 
-            return $"{this.RemoteURL}/game/{this.SystemTarget}/{manifestType}Manifest.txt";
+            return $"{this._remoteURL}/game/{this._systemTarget}/{manifestType}Manifest.txt";
         }
 
         /// <summary>
@@ -228,10 +228,10 @@ namespace Launchpad.Common.Handlers.Manifest
         {
             if (manifestType == EManifestType.Launchpad)
             {
-                return $"{this.RemoteURL.LocalPath}/launcher/{manifestType}Manifest.checksum";
+                return $"{this._remoteURL.LocalPath}/launcher/{manifestType}Manifest.checksum";
             }
 
-            return $"{this.RemoteURL.LocalPath}/game/{this.SystemTarget}/{manifestType}Manifest.checksum";
+            return $"{this._remoteURL.LocalPath}/game/{this._systemTarget}/{manifestType}Manifest.checksum";
         }
     }
 }

@@ -82,27 +82,27 @@ namespace Launchpad.Launcher.Handlers
         // ...
         private static readonly ILaunchpadConfiguration Configuration = ConfigHandler.Instance.Configuration;
 
-        private readonly PatchProtocolHandler Patch;
+        private readonly PatchProtocolHandler _patch;
 
-        private readonly GameArgumentService GameArgumentService = new GameArgumentService();
+        private readonly GameArgumentService _gameArgumentService = new GameArgumentService();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameHandler"/> class.
         /// </summary>
         public GameHandler()
         {
-            this.Patch = PatchProtocolProvider.GetHandler();
-            if (this.Patch == null)
+            this._patch = PatchProtocolProvider.GetHandler();
+            if (this._patch == null)
             {
                 return;
             }
 
-            this.Patch.ModuleDownloadProgressChanged += OnModuleInstallProgressChanged;
-            this.Patch.ModuleVerifyProgressChanged += OnModuleInstallProgressChanged;
-            this.Patch.ModuleUpdateProgressChanged += OnModuleInstallProgressChanged;
+            this._patch.ModuleDownloadProgressChanged += OnModuleInstallProgressChanged;
+            this._patch.ModuleVerifyProgressChanged += OnModuleInstallProgressChanged;
+            this._patch.ModuleUpdateProgressChanged += OnModuleInstallProgressChanged;
 
-            this.Patch.ModuleInstallationFinished += OnModuleInstallationFinished;
-            this.Patch.ModuleInstallationFailed += OnModuleInstallationFailed;
+            this._patch.ModuleInstallationFinished += OnModuleInstallationFinished;
+            this._patch.ModuleInstallationFailed += OnModuleInstallationFailed;
         }
 
         /// <summary>
@@ -110,8 +110,8 @@ namespace Launchpad.Launcher.Handlers
         /// </summary>
         public void InstallGame()
         {
-            Log.Info($"Starting installation of game files using protocol \"{this.Patch.GetType().Name}\"");
-            var t = new Thread(this.Patch.InstallGame)
+            Log.Info($"Starting installation of game files using protocol \"{this._patch.GetType().Name}\"");
+            var t = new Thread(this._patch.InstallGame)
             {
                 Name = "InstallGame",
                 IsBackground = true
@@ -125,8 +125,8 @@ namespace Launchpad.Launcher.Handlers
         /// </summary>
         public void UpdateGame()
         {
-            Log.Info($"Starting update of game files using protocol \"{this.Patch.GetType().Name}\"");
-            var t = new Thread(() => this.Patch.UpdateModule(EModule.Game))
+            Log.Info($"Starting update of game files using protocol \"{this._patch.GetType().Name}\"");
+            var t = new Thread(() => this._patch.UpdateModule(EModule.Game))
             {
                 Name = "UpdateGame",
                 IsBackground = true
@@ -141,7 +141,7 @@ namespace Launchpad.Launcher.Handlers
         public void VerifyGame()
         {
             Log.Info("Beginning verification of game files.");
-            var t = new Thread(() => this.Patch.VerifyModule(EModule.Game))
+            var t = new Thread(() => this._patch.VerifyModule(EModule.Game))
             {
                 Name = "VerifyGame",
                 IsBackground = true
@@ -168,7 +168,7 @@ namespace Launchpad.Launcher.Handlers
                 File.Delete(DirectoryHelpers.GetGameTagfilePath());
             }
 
-            var t = new Thread(() => this.Patch.InstallGame())
+            var t = new Thread(() => this._patch.InstallGame())
             {
                 Name = "ReinstallGame",
                 IsBackground = true
@@ -194,7 +194,7 @@ namespace Launchpad.Launcher.Handlers
 
                 // Do not move the argument assignment inside the gameStartInfo initializer.
                 // It causes a TargetInvocationException crash through black magic.
-                var gameArguments = string.Join(" ", this.GameArgumentService.GetGameArguments());
+                var gameArguments = string.Join(" ", this._gameArgumentService.GetGameArguments());
                 var gameStartInfo = new ProcessStartInfo
                 {
                     FileName = executable,

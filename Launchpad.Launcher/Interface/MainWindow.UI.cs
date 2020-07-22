@@ -40,17 +40,17 @@ namespace Launchpad.Launcher.Interface
     /// </summary>
     public partial class MainWindow
     {
-        [UIElement] private readonly ImageMenuItem MenuRepairItem;
-        [UIElement] private readonly ImageMenuItem MenuReinstallItem;
-        [UIElement] private readonly ImageMenuItem MenuAboutItem;
+        [UIElement] private readonly ImageMenuItem _menuRepairItem;
+        [UIElement] private readonly ImageMenuItem _menuReinstallItem;
+        [UIElement] private readonly ImageMenuItem _menuAboutItem;
 
-        [UIElement] private readonly TextView ChangelogTextView;
-        [UIElement] private readonly Image BannerImage;
+        [UIElement] private readonly TextView _changelogTextView;
+        [UIElement] private readonly Image _bannerImage;
 
-        [UIElement] private readonly Label StatusLabel;
+        [UIElement] private readonly Label _statusLabel;
 
-        [UIElement] private readonly ProgressBar MainProgressBar;
-        [UIElement] private readonly Button MainButton;
+        [UIElement] private readonly ProgressBar _mainProgressBar;
+        [UIElement] private readonly Button _mainButton;
 
         /// <summary>
         /// Creates a new instance of the <see cref="MainWindow"/> class, loading its interface definition from file.
@@ -73,11 +73,11 @@ namespace Launchpad.Launcher.Interface
         private void BindUIEvents()
         {
             this.DeleteEvent += OnDeleteEvent;
-            this.MenuReinstallItem.Activated += OnReinstallGameActionActivated;
-            this.MenuRepairItem.Activated += OnMenuRepairItemActivated;
-            this.MenuAboutItem.Activated += OnMenuAboutItemActivated;
+            this._menuReinstallItem.Activated += OnReinstallGameActionActivated;
+            this._menuRepairItem.Activated += OnMenuRepairItemActivated;
+            this._menuAboutItem.Activated += OnMenuAboutItemActivated;
 
-            this.MainButton.Clicked += OnMainButtonClicked;
+            this._mainButton.Clicked += OnMainButtonClicked;
         }
 
         /// <summary>

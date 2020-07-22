@@ -35,14 +35,14 @@ namespace Launchpad.Utilities.Interface
 {
     public partial class MainWindow
     {
-        [UIElement] private readonly FileChooserWidget FolderChooser;
+        [UIElement] private readonly FileChooserWidget _folderChooser;
 
-        [UIElement] private readonly Label StatusLabel;
+        [UIElement] private readonly Label _statusLabel;
 
-        [UIElement] private readonly ProgressBar MainProgressBar;
+        [UIElement] private readonly ProgressBar _mainProgressBar;
 
-        [UIElement] private readonly Button GenerateLaunchpadManifestButton;
-        [UIElement] private readonly Button GenerateGameManifestButton;
+        [UIElement] private readonly Button _generateLaunchpadManifestButton;
+        [UIElement] private readonly Button _generateGameManifestButton;
 
         /// <summary>
         /// Creates a new instance of the <see cref="MainWindow"/> class, loading its interface definition from file.
@@ -61,8 +61,8 @@ namespace Launchpad.Utilities.Interface
         {
             this.DeleteEvent += OnDeleteEvent;
 
-            this.GenerateLaunchpadManifestButton.Clicked += OnGenerateLaunchpadManifestButtonClicked;
-            this.GenerateGameManifestButton.Clicked += OnGenerateGameManifestButtonClicked;
+            this._generateLaunchpadManifestButton.Clicked += OnGenerateLaunchpadManifestButtonClicked;
+            this._generateGameManifestButton.Clicked += OnGenerateGameManifestButtonClicked;
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace Launchpad.Utilities.Interface
         /// <param name="a">The alpha component.</param>
         private void OnDeleteEvent(object sender, DeleteEventArgs a)
         {
-            this.TokenSource?.Cancel();
+            this._tokenSource?.Cancel();
 
             Application.Quit();
             a.RetVal = true;

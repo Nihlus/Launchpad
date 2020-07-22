@@ -51,19 +51,19 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// </summary>
         private static readonly ICatalog LocalizationCatalog = new Catalog("Launchpad", "./Content/locale");
 
-        private readonly LocalVersionService LocalVersionService = new LocalVersionService();
+        private readonly LocalVersionService _localVersionService = new LocalVersionService();
 
         /// <summary>
         /// The file manifest handler. This allows access to the launcher and game file lists.
         /// </summary>
-        private readonly ManifestHandler FileManifestHandler;
+        private readonly ManifestHandler _fileManifestHandler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ManifestBasedProtocolHandler"/> class.
         /// </summary>
         protected ManifestBasedProtocolHandler()
         {
-            this.FileManifestHandler = new ManifestHandler
+            this._fileManifestHandler = new ManifestHandler
             (
                 DirectoryHelpers.GetLocalLauncherDirectory(),
                 this.Configuration.RemoteAddress,
@@ -112,16 +112,16 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                 {
                     RefreshModuleManifest(EModule.Launcher);
 
-                    manifest = this.FileManifestHandler.GetManifest(EManifestType.Launchpad, false);
-                    oldManifest = this.FileManifestHandler.GetManifest(EManifestType.Launchpad, true);
+                    manifest = this._fileManifestHandler.GetManifest(EManifestType.Launchpad, false);
+                    oldManifest = this._fileManifestHandler.GetManifest(EManifestType.Launchpad, true);
                     break;
                 }
                 case EModule.Game:
                 {
                     RefreshModuleManifest(EModule.Game);
 
-                    manifest = this.FileManifestHandler.GetManifest(EManifestType.Game, false);
-                    oldManifest = this.FileManifestHandler.GetManifest(EManifestType.Game, true);
+                    manifest = this._fileManifestHandler.GetManifest(EManifestType.Game, false);
+                    oldManifest = this._fileManifestHandler.GetManifest(EManifestType.Game, true);
                     break;
                 }
                 default:
@@ -204,7 +204,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// <inheritdoc />
         public override void VerifyModule(EModule module)
         {
-            var manifest = this.FileManifestHandler.GetManifest((EManifestType)module, false);
+            var manifest = this._fileManifestHandler.GetManifest((EManifestType)module, false);
             var brokenFiles = new List<ManifestEntry>();
 
             if (manifest == null)
@@ -286,14 +286,14 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                 {
                     RefreshModuleManifest(EModule.Launcher);
 
-                    moduleManifest = this.FileManifestHandler.GetManifest(EManifestType.Launchpad, false);
+                    moduleManifest = this._fileManifestHandler.GetManifest(EManifestType.Launchpad, false);
                     break;
                 }
                 case EModule.Game:
                 {
                     RefreshModuleManifest(EModule.Game);
 
-                    moduleManifest = this.FileManifestHandler.GetManifest(EManifestType.Game, false);
+                    moduleManifest = this._fileManifestHandler.GetManifest(EManifestType.Game, false);
                     break;
                 }
                 default:
@@ -388,13 +388,13 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                 {
                     case EModule.Launcher:
                     {
-                        local = this.LocalVersionService.GetLocalLauncherVersion();
+                        local = this._localVersionService.GetLocalLauncherVersion();
                         remote = GetRemoteLauncherVersion();
                         break;
                     }
                     case EModule.Game:
                     {
-                        local = this.LocalVersionService.GetLocalGameVersion();
+                        local = this._localVersionService.GetLocalGameVersion();
                         remote = GetRemoteGameVersion();
                         break;
                     }
@@ -572,7 +572,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                 case EModule.Launcher:
                 case EModule.Game:
                 {
-                    manifestPath = this.FileManifestHandler.GetManifestPath((EManifestType)module, false);
+                    manifestPath = this._fileManifestHandler.GetManifestPath((EManifestType)module, false);
                     break;
                 }
                 default:
@@ -614,7 +614,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                 case EModule.Launcher:
                 case EModule.Game:
                 {
-                    checksum = ReadRemoteFile(this.FileManifestHandler.GetManifestChecksumURL((EManifestType)module)).RemoveLineSeparatorsAndNulls();
+                    checksum = ReadRemoteFile(this._fileManifestHandler.GetManifestChecksumURL((EManifestType)module)).RemoveLineSeparatorsAndNulls();
                     break;
                 }
                 default:
@@ -646,7 +646,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                 case EModule.Launcher:
                 case EModule.Game:
                 {
-                    manifestExists = File.Exists(this.FileManifestHandler.GetManifestPath((EManifestType)module, false));
+                    manifestExists = File.Exists(this._fileManifestHandler.GetManifestPath((EManifestType)module, false));
                     break;
                 }
                 default:
@@ -673,7 +673,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             }
 
             // Now update the handler instance
-            this.FileManifestHandler.ReloadManifests((EManifestType)module);
+            this._fileManifestHandler.ReloadManifests((EManifestType)module);
         }
 
         /// <summary>
@@ -693,9 +693,9 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                 case EModule.Launcher:
                 case EModule.Game:
                 {
-                    remoteURL = this.FileManifestHandler.GetManifestURL((EManifestType)module);
-                    localPath = this.FileManifestHandler.GetManifestPath((EManifestType)module, false);
-                    oldLocalPath = this.FileManifestHandler.GetManifestPath((EManifestType)module, true);
+                    remoteURL = this._fileManifestHandler.GetManifestURL((EManifestType)module);
+                    localPath = this._fileManifestHandler.GetManifestPath((EManifestType)module, false);
+                    oldLocalPath = this._fileManifestHandler.GetManifestPath((EManifestType)module, true);
 
                     break;
                 }

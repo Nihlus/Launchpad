@@ -34,7 +34,7 @@ namespace Launchpad.Utilities.Handlers
 {
     public class ManifestGenerationHandler
     {
-        private readonly ManifestGenerationProgressChangedEventArgs GenerationProgressArgs = new ManifestGenerationProgressChangedEventArgs();
+        private readonly ManifestGenerationProgressChangedEventArgs _generationProgressArgs = new ManifestGenerationProgressChangedEventArgs();
 
         /// <summary>
         /// Generates a manifest containing the relative path, MD5 hash and file size from
@@ -65,7 +65,7 @@ namespace Launchpad.Utilities.Handlers
                         .EnumerateFiles(targetPath, "*", SearchOption.AllDirectories)
                         .Where(s => !IsPathABlacklistedFile(s)));
 
-                    this.GenerationProgressArgs.TotalFiles = manifestFilePaths.Count;
+                    this._generationProgressArgs.TotalFiles = manifestFilePaths.Count;
 
                     await using (var tw = new StreamWriter(File.Create(manifestPath, 4096, FileOptions.Asynchronous)))
                     {
@@ -81,12 +81,12 @@ namespace Launchpad.Utilities.Handlers
 
                             completedFiles++;
 
-                            this.GenerationProgressArgs.CompletedFiles = completedFiles;
-                            this.GenerationProgressArgs.Filepath = newEntry.RelativePath;
-                            this.GenerationProgressArgs.Hash = newEntry.Hash;
-                            this.GenerationProgressArgs.Filesize = newEntry.Size;
+                            this._generationProgressArgs.CompletedFiles = completedFiles;
+                            this._generationProgressArgs.Filepath = newEntry.RelativePath;
+                            this._generationProgressArgs.Hash = newEntry.Hash;
+                            this._generationProgressArgs.Filesize = newEntry.Size;
 
-                            progressReporter.Report(this.GenerationProgressArgs);
+                            progressReporter.Report(this._generationProgressArgs);
                         }
                     }
 

@@ -40,14 +40,14 @@ namespace Launchpad.Launcher.Handlers
         /// </summary>
         private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
 
-        private readonly PatchProtocolHandler Patch;
+        private readonly PatchProtocolHandler _patch;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ChecksHandler"/> class.
         /// </summary>
         public ChecksHandler()
         {
-            this.Patch = PatchProtocolProvider.GetHandler();
+            this._patch = PatchProtocolProvider.GetHandler();
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace Launchpad.Launcher.Handlers
         /// <returns><c>true</c> if this instance can connect to a patching service; otherwise, <c>false</c>.</returns>
         public bool CanPatch()
         {
-            return this.Patch != null && this.Patch.CanPatch();
+            return this._patch != null && this._patch.CanPatch();
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace Launchpad.Launcher.Handlers
         /// <returns><c>true</c> if the game is outdated; otherwise, <c>false</c>.</returns>
         public bool IsGameOutdated()
         {
-            return this.Patch.IsModuleOutdated(EModule.Game);
+            return this._patch.IsModuleOutdated(EModule.Game);
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace Launchpad.Launcher.Handlers
         /// <returns><c>true</c> if the launcher is outdated; otherwise, <c>false</c>.</returns>
         public bool IsLauncherOutdated()
         {
-            return this.Patch.IsModuleOutdated(EModule.Launcher);
+            return this._patch.IsModuleOutdated(EModule.Launcher);
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace Launchpad.Launcher.Handlers
         /// <param name="platform">platform.</param>
         public bool IsPlatformAvailable(ESystemTarget platform)
         {
-            return this.Patch.IsPlatformAvailable(platform);
+            return this._patch.IsPlatformAvailable(platform);
         }
     }
 }

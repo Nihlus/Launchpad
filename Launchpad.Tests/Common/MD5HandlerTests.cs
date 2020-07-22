@@ -30,7 +30,7 @@ namespace Launchpad.Tests.Common
         /// <summary>
         /// Holds the string "placeholder".
         /// </summary>
-        private readonly MemoryStream DataStream = new MemoryStream(new byte[]
+        private readonly MemoryStream _dataStream = new MemoryStream(new byte[]
         {
             112, 108, 97, 99, 101, 104, 111, 108, 100, 101, 114
         });
@@ -40,7 +40,7 @@ namespace Launchpad.Tests.Common
         [Fact]
         public void HashesCorrectly()
         {
-            Assert.Equal(ExpectedHash, MD5Handler.GetStreamHash(this.DataStream));
+            Assert.Equal(ExpectedHash, MD5Handler.GetStreamHash(this._dataStream));
         }
     }
 }

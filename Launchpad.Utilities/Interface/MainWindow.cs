@@ -38,16 +38,16 @@ namespace Launchpad.Utilities.Interface
         /// <summary>
         /// The manifest generation handler.
         /// </summary>
-        private readonly ManifestGenerationHandler Manifest = new ManifestGenerationHandler();
+        private readonly ManifestGenerationHandler _manifest = new ManifestGenerationHandler();
 
         /// <summary>
         /// The localization catalog.
         /// </summary>
-        private readonly ICatalog LocalizationCatalog = new Catalog("Launchpad", "./Content/locale");
+        private readonly ICatalog _localizationCatalog = new Catalog("Launchpad", "./Content/locale");
 
-        private readonly IProgress<ManifestGenerationProgressChangedEventArgs> ProgressReporter;
+        private readonly IProgress<ManifestGenerationProgressChangedEventArgs> _progressReporter;
 
-        private CancellationTokenSource TokenSource;
+        private CancellationTokenSource _tokenSource;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow"/> class.
@@ -61,26 +61,26 @@ namespace Launchpad.Utilities.Interface
 
             BindUIEvents();
 
-            this.ProgressReporter = new Progress<ManifestGenerationProgressChangedEventArgs>
+            this._progressReporter = new Progress<ManifestGenerationProgressChangedEventArgs>
             (
                 e =>
                 {
-                    var progressString = this.LocalizationCatalog.GetString("Hashing {0} : {1} out of {2}");
-                    this.StatusLabel.Text = string.Format(progressString, e.Filepath, e.CompletedFiles, e.TotalFiles);
+                    var progressString = this._localizationCatalog.GetString("Hashing {0} : {1} out of {2}");
+                    this._statusLabel.Text = string.Format(progressString, e.Filepath, e.CompletedFiles, e.TotalFiles);
 
-                    this.MainProgressBar.Fraction = e.CompletedFiles / (double)e.TotalFiles;
+                    this._mainProgressBar.Fraction = e.CompletedFiles / (double)e.TotalFiles;
                 }
             );
 
-            this.FolderChooser.SetCurrentFolder(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory));
-            this.FolderChooser.SelectMultiple = false;
+            this._folderChooser.SetCurrentFolder(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory));
+            this._folderChooser.SelectMultiple = false;
 
-            this.StatusLabel.Text = this.LocalizationCatalog.GetString("Idle");
+            this._statusLabel.Text = this._localizationCatalog.GetString("Idle");
         }
 
         private async void OnGenerateGameManifestButtonClicked(object sender, EventArgs e)
         {
-            var targetDirectory = this.FolderChooser.Filename;
+            var targetDirectory = this._folderChooser.Filename;
 
             if (!Directory.GetFiles(targetDirectory).Any(s => s.Contains("GameVersion.txt")))
             {
@@ -90,7 +90,7 @@ namespace Launchpad.Utilities.Interface
                     DialogFlags.Modal,
                     MessageType.Question,
                     ButtonsType.YesNo,
-                    this.LocalizationCatalog.GetString
+                    this._localizationCatalog.GetString
                     (
                         "No GameVersion.txt file could be found in the target directory. This file is required.\n" +
                         "Would you like to add one? The version will be \"1.0.0\"."
@@ -118,33 +118,33 @@ namespace Launchpad.Utilities.Interface
 
         private async Task GenerateManifestAsync(EManifestType manifestType)
         {
-            this.TokenSource = new CancellationTokenSource();
+            this._tokenSource = new CancellationTokenSource();
 
-            this.GenerateGameManifestButton.Sensitive = false;
-            this.GenerateLaunchpadManifestButton.Sensitive = false;
+            this._generateGameManifestButton.Sensitive = false;
+            this._generateLaunchpadManifestButton.Sensitive = false;
 
-            var targetDirectory = this.FolderChooser.Filename;
+            var targetDirectory = this._folderChooser.Filename;
 
             try
             {
-                await this.Manifest.GenerateManifestAsync
+                await this._manifest.GenerateManifestAsync
                 (
                     targetDirectory,
                     manifestType,
-                    this.ProgressReporter,
-                    this.TokenSource.Token
+                    this._progressReporter,
+                    this._tokenSource.Token
                 );
 
-                this.StatusLabel.Text = this.LocalizationCatalog.GetString("Finished");
+                this._statusLabel.Text = this._localizationCatalog.GetString("Finished");
             }
             catch (TaskCanceledException)
             {
-                this.StatusLabel.Text = this.LocalizationCatalog.GetString("Cancelled");
-                this.MainProgressBar.Fraction = 0;
+                this._statusLabel.Text = this._localizationCatalog.GetString("Cancelled");
+                this._mainProgressBar.Fraction = 0;
             }
 
-            this.GenerateGameManifestButton.Sensitive = true;
-            this.GenerateLaunchpadManifestButton.Sensitive = true;
+            this._generateGameManifestButton.Sensitive = true;
+            this._generateLaunchpadManifestButton.Sensitive = true;
         }
     }
 }
