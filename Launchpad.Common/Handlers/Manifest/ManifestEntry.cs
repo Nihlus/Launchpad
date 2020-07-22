@@ -32,40 +32,31 @@ namespace Launchpad.Common.Handlers.Manifest
 	public sealed class ManifestEntry : IEquatable<ManifestEntry>
 	{
 		/// <summary>
-		/// Gets or sets the path of the file, relative to the game directory.
+		/// Gets the path of the file, relative to the game directory.
 		/// </summary>
-		public string RelativePath
-		{
-			get;
-			set;
-		}
+		public string RelativePath { get; }
 
 		/// <summary>
-		/// Gets or sets the MD5 hash of the file.
+		/// Gets the MD5 hash of the file.
 		/// </summary>
-		public string Hash
-		{
-			get;
-			set;
-		}
+		public string Hash { get; }
 
 		/// <summary>
-		/// Gets or sets the size in bytes of the file.
+		/// Gets the size in bytes of the file.
 		/// </summary>
-		public long Size
-		{
-			get;
-			set;
-		}
+		public long Size { get; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ManifestEntry"/> class.
 		/// </summary>
-		public ManifestEntry()
+		/// <param name="relativePath">The relative path to the file.</param>
+		/// <param name="hash">The hash of the file.</param>
+		/// <param name="size">The size in bytes of the file.</param>
+		public ManifestEntry(string relativePath, string hash, long size)
 		{
-			this.RelativePath = string.Empty;
-			this.Hash = string.Empty;
-			this.Size = 0;
+			this.RelativePath = relativePath;
+			this.Hash = hash;
+			this.Size = size;
 		}
 
 		/// <summary>
@@ -78,8 +69,7 @@ namespace Launchpad.Common.Handlers.Manifest
 		/// <param name="inEntry">The resulting entry.</param>
 		public static bool TryParse(string rawInput, out ManifestEntry inEntry)
 		{
-			// Clear out the entry for the new data
-			inEntry = new ManifestEntry();
+			inEntry = null;
 
 			if (string.IsNullOrEmpty(rawInput))
 			{
@@ -98,13 +88,14 @@ namespace Launchpad.Common.Handlers.Manifest
 			}
 
 			// Sanitize the manifest path, converting \ to / on unix and / to \ on Windows.
+			var relativePath = entryElements[0];
 			if (PlatformHelpers.IsRunningOnUnix())
 			{
-				inEntry.RelativePath = entryElements[0].Replace('\\', '/').TrimStart('/');
+				relativePath = relativePath.Replace('\\', '/').TrimStart('/');
 			}
 			else
 			{
-				inEntry.RelativePath = entryElements[0].Replace('/', '\\').TrimStart('\\');
+				relativePath = relativePath.Replace('/', '\\').TrimStart('\\');
 			}
 
 			// Hashes must be exactly 32 characters
@@ -114,7 +105,7 @@ namespace Launchpad.Common.Handlers.Manifest
 			}
 
 			// Set the hash to the second element
-			inEntry.Hash = entryElements[1];
+			var hash = entryElements[1];
 
 			// Attempt to parse the final element as a long-type byte count.
 			if (!long.TryParse(entryElements[2], out var parsedSize))
@@ -129,7 +120,9 @@ namespace Launchpad.Common.Handlers.Manifest
 				return false;
 			}
 
-			inEntry.Size = parsedSize;
+			var size = parsedSize;
+
+			inEntry = new ManifestEntry(relativePath, hash, size);
 			return true;
 		}
 

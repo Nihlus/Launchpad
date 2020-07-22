@@ -120,12 +120,7 @@ namespace Launchpad.Utilities.Handlers
 			}
 
 			var relativeFilePath = filePath.Substring(parentDirectory.Length).TrimStart(Path.DirectorySeparatorChar);
-			var newEntry = new ManifestEntry
-			{
-				RelativePath = relativeFilePath,
-				Hash = hash,
-				Size = fileSize
-			};
+			var newEntry = new ManifestEntry(relativeFilePath, hash, fileSize);
 
 			return newEntry;
 		}
