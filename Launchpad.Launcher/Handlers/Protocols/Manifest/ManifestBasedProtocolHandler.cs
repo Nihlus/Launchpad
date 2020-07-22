@@ -437,12 +437,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                     }
                     default:
                     {
-                        throw new ArgumentOutOfRangeException
-                        (
-                            nameof(module),
-                            module,
-                            "An invalid module value was passed to IsModuleOutdated."
-                        );
+                        throw new ArgumentOutOfRangeException();
                     }
                 }
 
@@ -495,12 +490,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                 }
                 default:
                 {
-                    throw new ArgumentOutOfRangeException
-                    (
-                        nameof(module),
-                        module,
-                        "An invalid module value was passed to DownloadManifestEntry."
-                    );
+                    throw new ArgumentOutOfRangeException();
                 }
             }
 
@@ -610,25 +600,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// </exception>
         protected virtual async Task<RetrieveEntityResult<bool>> IsModuleManifestOutdatedAsync(EModule module)
         {
-            string manifestPath;
-            switch (module)
-            {
-                case EModule.Launcher:
-                case EModule.Game:
-                {
-                    manifestPath = _fileManifestHandler.GetManifestPath((EManifestType)module, false);
-                    break;
-                }
-                default:
-                {
-                    throw new ArgumentOutOfRangeException
-                    (
-                        nameof(module),
-                        module,
-                        "An invalid module value was passed to RefreshModuleManifest."
-                    );
-                }
-            }
+            var manifestPath = _fileManifestHandler.GetManifestPath((EManifestType)module, false);
 
             if (!File.Exists(manifestPath))
             {
@@ -659,35 +631,17 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// </exception>
         protected virtual async Task<RetrieveEntityResult<string>> GetRemoteModuleManifestChecksumAsync(EModule module)
         {
-            string checksum;
-            switch (module)
+            var getRemoteChecksum = await ReadRemoteFileAsync
+            (
+                _fileManifestHandler.GetManifestChecksumURL((EManifestType)module)
+            );
+
+            if (!getRemoteChecksum.IsSuccess)
             {
-                case EModule.Launcher:
-                case EModule.Game:
-                {
-                    var getRemoteChecksum = await ReadRemoteFileAsync
-                    (
-                        _fileManifestHandler.GetManifestChecksumURL((EManifestType)module)
-                    );
-
-                    if (!getRemoteChecksum.IsSuccess)
-                    {
-                        return RetrieveEntityResult<string>.FromError(getRemoteChecksum);
-                    }
-
-                    checksum = getRemoteChecksum.Entity.RemoveLineSeparatorsAndNulls();
-                    break;
-                }
-                default:
-                {
-                    throw new ArgumentOutOfRangeException
-                    (
-                        nameof(module),
-                        module,
-                        "An invalid module value was passed to GetRemoteModuleManifestChecksum."
-                    );
-                }
+                return RetrieveEntityResult<string>.FromError(getRemoteChecksum);
             }
+
+            var checksum = getRemoteChecksum.Entity.RemoveLineSeparatorsAndNulls();
 
             return checksum.RemoveLineSeparatorsAndNulls();
         }
@@ -702,26 +656,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         protected virtual async Task<DetermineConditionResult> RefreshModuleManifestAsync(EModule module)
         {
-            bool manifestExists;
-            switch (module)
-            {
-                case EModule.Launcher:
-                case EModule.Game:
-                {
-                    manifestExists = File.Exists(_fileManifestHandler.GetManifestPath((EManifestType)module, false));
-                    break;
-                }
-                default:
-                {
-                    throw new ArgumentOutOfRangeException
-                    (
-                        nameof(module),
-                        module,
-                        "An invalid module value was passed to RefreshModuleManifest"
-                    );
-                }
-            }
-
+            var manifestExists = File.Exists(_fileManifestHandler.GetManifestPath((EManifestType)module, false));
             if (manifestExists)
             {
                 var getIsOutdated = await IsModuleManifestOutdatedAsync(module);
@@ -763,31 +698,9 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         protected virtual async Task<DetermineConditionResult> DownloadModuleManifestAsync(EModule module)
         {
-            string remoteURL;
-            string localPath;
-            string oldLocalPath;
-
-            switch (module)
-            {
-                case EModule.Launcher:
-                case EModule.Game:
-                {
-                    remoteURL = _fileManifestHandler.GetManifestURL((EManifestType)module);
-                    localPath = _fileManifestHandler.GetManifestPath((EManifestType)module, false);
-                    oldLocalPath = _fileManifestHandler.GetManifestPath((EManifestType)module, true);
-
-                    break;
-                }
-                default:
-                {
-                    throw new ArgumentOutOfRangeException
-                    (
-                        nameof(module),
-                        module,
-                        "An invalid module value was passed to DownloadModuleManifest"
-                    );
-                }
-            }
+            var remoteURL = _fileManifestHandler.GetManifestURL((EManifestType)module);
+            var localPath = _fileManifestHandler.GetManifestPath((EManifestType)module, false);
+            var oldLocalPath = _fileManifestHandler.GetManifestPath((EManifestType)module, true);
 
             try
             {

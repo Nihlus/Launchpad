@@ -358,19 +358,28 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             }
             catch (WebException wex)
             {
-                Log.Warn("Unable to create a WebRequest for the specified file (WebException): " + wex.Message);
-                throw new InvalidOperationException();
+                return CreateEntityResult<HttpWebRequest>.FromError
+                (
+                    "Unable to create a WebRequest for the specified file.",
+                    wex
+                );
             }
             catch (ArgumentException aex)
             {
-                Log.Warn("Unable to create a WebRequest for the specified file (ArgumentException): " + aex.Message);
-                throw new InvalidOperationException();
+                return CreateEntityResult<HttpWebRequest>.FromError
+                (
+                    "Unable to create a WebRequest for the specified file.",
+                    aex
+                );
             }
             catch (UriFormatException uex)
             {
-                Log.Warn("Unable to create a WebRequest for the specified file (UriFormatException): " + uex.Message + "\n" +
-                    "You may need to add \"http://\" before the url in the config.");
-                throw new InvalidOperationException();
+                return CreateEntityResult<HttpWebRequest>.FromError
+                (
+                    "Unable to create a WebRequest for the specified file. You may need to add \"http://\" before " +
+                    "the url in the config.",
+                    uex
+                );
             }
         }
 
