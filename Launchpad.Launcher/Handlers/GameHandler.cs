@@ -23,14 +23,14 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 using Launchpad.Common;
 using Launchpad.Launcher.Configuration;
 using Launchpad.Launcher.Handlers.Protocols;
 using Launchpad.Launcher.Services;
 using Launchpad.Launcher.Utility;
-using NLog;
+using Microsoft.Extensions.Logging;
+using Process = System.Diagnostics.Process;
+using Task = System.Threading.Tasks.Task;
 
 namespace Launchpad.Launcher.Handlers
 {
@@ -45,12 +45,12 @@ namespace Launchpad.Launcher.Handlers
     /// Since this class starts new threads in which it does the larger computations,
     /// there must be no usage of UI code in this class. Keep it clean.
     /// </summary>
-    internal sealed class GameHandler
+    public sealed class GameHandler
     {
         /// <summary>
         /// Logger instance for this class.
         /// </summary>
-        private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
+        private readonly ILogger<GameHandler> _log;
 
         /// <summary>
         /// Event raised whenever the progress of installing or updating the game changes.
@@ -79,19 +79,48 @@ namespace Launchpad.Launcher.Handlers
         /// </summary>
         public event EventHandler<int>? GameExited;
 
-        // ...
-        private static readonly ILaunchpadConfiguration Configuration = ConfigHandler.Instance.Configuration;
+        /// <summary>
+        /// The configuration.
+        /// </summary>
+        private readonly ILaunchpadConfiguration _configuration;
 
+        /// <summary>
+        /// The patch protocol.
+        /// </summary>
         private readonly PatchProtocolHandler _patch;
 
-        private readonly GameArgumentService _gameArgumentService = new GameArgumentService();
+        /// <summary>
+        /// The game argument service.
+        /// </summary>
+        private readonly GameArgumentService _gameArgumentService;
+
+        /// <summary>
+        /// The directory helpers.
+        /// </summary>
+        private readonly DirectoryHelpers _directoryHelpers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameHandler"/> class.
         /// </summary>
-        public GameHandler()
+        /// <param name="log">The logging instance.</param>
+        /// <param name="patch">The patch protocol.</param>
+        /// <param name="gameArgumentService">The game argument service.</param>
+        /// <param name="configuration">The configuration.</param>
+        /// <param name="directoryHelpers">The directory helpers.</param>
+        public GameHandler
+        (
+            ILogger<GameHandler> log,
+            PatchProtocolHandler patch,
+            GameArgumentService gameArgumentService,
+            ILaunchpadConfiguration configuration,
+            DirectoryHelpers directoryHelpers
+        )
         {
-            _patch = PatchProtocolProvider.GetHandler();
+            _log = log;
+            _patch = patch;
+            _gameArgumentService = gameArgumentService;
+            _configuration = configuration;
+            _directoryHelpers = directoryHelpers;
 
             _patch.ModuleDownloadProgressChanged += OnModuleInstallProgressChanged;
             _patch.ModuleVerifyProgressChanged += OnModuleInstallProgressChanged;
@@ -104,10 +133,10 @@ namespace Launchpad.Launcher.Handlers
         /// <summary>
         /// Starts an asynchronous game installation task.
         /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        /// <returns>A <see cref="System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
         public async Task InstallGameAsync()
         {
-            Log.Info($"Starting installation of game files using protocol \"{_patch.GetType().Name}\"");
+            _log.LogInformation($"Starting installation of game files using protocol \"{_patch.GetType().Name}\"");
             await _patch.InstallGameAsync();
         }
 
@@ -117,7 +146,7 @@ namespace Launchpad.Launcher.Handlers
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task UpdateGameAsync()
         {
-            Log.Info($"Starting update of game files using protocol \"{_patch.GetType().Name}\"");
+            _log.LogInformation($"Starting update of game files using protocol \"{_patch.GetType().Name}\"");
             await _patch.UpdateModuleAsync(EModule.Game);
         }
 
@@ -127,7 +156,7 @@ namespace Launchpad.Launcher.Handlers
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task VerifyGameAsync()
         {
-            Log.Info("Beginning verification of game files.");
+            _log.LogInformation("Beginning verification of game files.");
             await _patch.VerifyModuleAsync(EModule.Game);
         }
 
@@ -137,17 +166,17 @@ namespace Launchpad.Launcher.Handlers
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task ReinstallGameAsync()
         {
-            Log.Info("Beginning full reinstall of game files.");
-            if (Directory.Exists(DirectoryHelpers.GetLocalGameDirectory()))
+            _log.LogInformation("Beginning full reinstall of game files.");
+            if (Directory.Exists(_directoryHelpers.GetLocalGameDirectory()))
             {
-                Log.Info("Deleting existing game files.");
-                Directory.Delete(DirectoryHelpers.GetLocalGameDirectory(), true);
+                _log.LogInformation("Deleting existing game files.");
+                Directory.Delete(_directoryHelpers.GetLocalGameDirectory(), true);
             }
 
-            if (File.Exists(DirectoryHelpers.GetGameTagfilePath()))
+            if (File.Exists(_directoryHelpers.GetGameTagfilePath()))
             {
-                Log.Info("Deleting install progress cookie.");
-                File.Delete(DirectoryHelpers.GetGameTagfilePath());
+                _log.LogInformation("Deleting install progress cookie.");
+                File.Delete(_directoryHelpers.GetGameTagfilePath());
             }
 
             await _patch.InstallGameAsync();
@@ -160,7 +189,7 @@ namespace Launchpad.Launcher.Handlers
         {
             try
             {
-                var executable = Path.Combine(DirectoryHelpers.GetLocalGameDirectory(), Configuration.ExecutablePath);
+                var executable = Path.Combine(_directoryHelpers.GetLocalGameDirectory(), _configuration.ExecutablePath);
                 if (!File.Exists(executable))
                 {
                     throw new FileNotFoundException($"Game executable at path (\"{executable}\") not found.");
@@ -178,7 +207,7 @@ namespace Launchpad.Launcher.Handlers
                     WorkingDirectory = executableDir
                 };
 
-                Log.Info($"Launching game. \n\tExecutable path: {gameStartInfo.FileName}");
+                _log.LogInformation($"Launching game. \n\tExecutable path: {gameStartInfo.FileName}");
 
                 var gameProcess = new Process
                 {
@@ -190,7 +219,7 @@ namespace Launchpad.Launcher.Handlers
                 {
                     if (gameProcess.ExitCode != 0)
                     {
-                        Log.Info
+                        _log.LogInformation
                         (
                             $"The game exited with an exit code of {gameProcess.ExitCode}. " +
                             "There may have been issues during runtime, or the game may not have started at all."
@@ -213,14 +242,14 @@ namespace Launchpad.Launcher.Handlers
             }
             catch (FileNotFoundException fex)
             {
-                Log.Warn($"Game launch failed (FileNotFoundException): {fex.Message}");
-                Log.Warn("If the game executable is there, try overriding the executable name in the configuration file.");
+                _log.LogWarning($"Game launch failed (FileNotFoundException): {fex.Message}");
+                _log.LogWarning("If the game executable is there, try overriding the executable name in the configuration file.");
 
                 OnGameLaunchFailed();
             }
             catch (IOException ioex)
             {
-                Log.Warn($"Game launch failed (IOException): {ioex.Message}");
+                _log.LogWarning($"Game launch failed (IOException): {ioex.Message}");
 
                 OnGameLaunchFailed();
             }

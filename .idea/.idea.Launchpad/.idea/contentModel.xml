@@ -245,7 +245,6 @@
         </e>
         <e p="Launchpad.Launcher.csproj" t="IncludeRecursive" />
         <e p="Launchpad.Launcher.csproj.DotSettings" t="Include" />
-        <e p="NLog.config" t="Include" />
         <e p="Program.cs" t="Include" />
         <e p="Resources" t="Include">
           <e p="Icon.ico" t="Include" />
@@ -258,17 +257,21 @@
           <e p="LocalVersionService.cs" t="Include" />
           <e p="TagfileService.cs" t="Include" />
         </e>
+        <e p="Startup.cs" t="Include" />
         <e p="Utility" t="Include">
           <e p="DirectoryHelpers.cs" t="Include" />
           <e p="Enums" t="Include">
             <e p="ELauncherMode.cs" t="Include" />
           </e>
-          <e p="PatchProtocolProvider.cs" t="Include" />
           <e p="ResourceManager.cs" t="Include" />
         </e>
         <e p="app.manifest" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
+        <e p="config" t="Include">
+          <e p="appsettings.json" t="Include" />
+        </e>
         <e p="launchpad-internal.log" t="Include" />
+        <e p="log4net.config" t="Include" />
         <e p="obj" t="ExcludeRecursive">
           <e p="x86" t="Include">
             <e p="Debug" t="Include">

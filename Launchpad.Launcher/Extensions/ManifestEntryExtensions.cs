@@ -36,10 +36,11 @@ namespace Launchpad.Launcher
         /// Verifies the integrity of the file in the manifest entry.
         /// </summary>
         /// <param name="entry">The manifest entry to test.</param>
+        /// <param name="directoryHelpers">The directory helpers.</param>
         /// <returns><c>true</c>, if file was complete and undamaged, <c>false</c> otherwise.</returns>
-        public static bool IsFileIntegrityIntact(this ManifestEntry entry)
+        public static bool IsFileIntegrityIntact(this ManifestEntry entry, DirectoryHelpers directoryHelpers)
         {
-            var localPath = Path.Combine(DirectoryHelpers.GetLocalGameDirectory(), entry.RelativePath);
+            var localPath = Path.Combine(directoryHelpers.GetLocalGameDirectory(), entry.RelativePath);
             if (!File.Exists(localPath))
             {
                 return false;

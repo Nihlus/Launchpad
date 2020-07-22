@@ -26,7 +26,7 @@ using Launchpad.Common.Enums;
 using Launchpad.Launcher.Handlers.Protocols;
 
 using Launchpad.Launcher.Utility;
-using NLog;
+using Microsoft.Extensions.Logging;
 using Remora.Results;
 
 namespace Launchpad.Launcher.Handlers
@@ -34,21 +34,34 @@ namespace Launchpad.Launcher.Handlers
     /// <summary>
     /// This class handles all the launcher's checks, returning bools for each function.
     /// </summary>
-    internal sealed class ChecksHandler
+    public sealed class ChecksHandler
     {
         /// <summary>
         /// Logger instance for this class.
         /// </summary>
-        private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
+        private readonly ILogger<ChecksHandler> _log;
 
+        /// <summary>
+        /// The patch protocol.
+        /// </summary>
         private readonly PatchProtocolHandler _patch;
+
+        /// <summary>
+        /// The directory helpers.
+        /// </summary>
+        private readonly DirectoryHelpers _directoryHelpers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ChecksHandler"/> class.
         /// </summary>
-        public ChecksHandler()
+        /// <param name="log">The logging instance.</param>
+        /// <param name="patch">The patch protocol.</param>
+        /// <param name="directoryHelpers">The directory helpers.</param>
+        public ChecksHandler(ILogger<ChecksHandler> log, PatchProtocolHandler patch, DirectoryHelpers directoryHelpers)
         {
-            _patch = PatchProtocolProvider.GetHandler();
+            _log = log;
+            _patch = patch;
+            _directoryHelpers = directoryHelpers;
         }
 
         /// <summary>
@@ -61,10 +74,10 @@ namespace Launchpad.Launcher.Handlers
         /// Determines whether this is the first time the launcher starts.
         /// </summary>
         /// <returns><c>true</c> if this is the first time; otherwise, <c>false</c>.</returns>
-        public static bool IsInitialStartup()
+        public bool IsInitialStartup()
         {
             // We use an empty file to determine if this is the first launch or not
-            return !File.Exists(DirectoryHelpers.GetLauncherTagfilePath());
+            return !File.Exists(_directoryHelpers.GetLauncherTagfilePath());
         }
 
         /// <summary>
@@ -74,13 +87,13 @@ namespace Launchpad.Launcher.Handlers
         public bool IsGameInstalled()
         {
             // Criteria for considering the game 'installed'
-            var hasGameDirectory = Directory.Exists(DirectoryHelpers.GetLocalGameDirectory());
-            var hasInstallCookie = File.Exists(DirectoryHelpers.GetGameTagfilePath());
-            var hasGameVersionFile = File.Exists(DirectoryHelpers.GetLocalGameVersionPath());
+            var hasGameDirectory = Directory.Exists(_directoryHelpers.GetLocalGameDirectory());
+            var hasInstallCookie = File.Exists(_directoryHelpers.GetGameTagfilePath());
+            var hasGameVersionFile = File.Exists(_directoryHelpers.GetLocalGameVersionPath());
 
             if (!hasGameVersionFile && hasGameDirectory)
             {
-                Log.Warn
+                _log.LogWarning
                 (
                     "No GameVersion.txt file was found in the installation directory.\n" +
                     "This may be due to a download error, or the developer may not have included one.\n" +
@@ -111,15 +124,15 @@ namespace Launchpad.Launcher.Handlers
         /// Determines whether the install cookie is empty.
         /// </summary>
         /// <returns><c>true</c> if the install cookie is empty, otherwise, <c>false</c>.</returns>
-        private static bool IsInstallCookieEmpty()
+        private bool IsInstallCookieEmpty()
         {
             // Is there an .install file in the directory?
-            var hasInstallCookie = File.Exists(DirectoryHelpers.GetGameTagfilePath());
+            var hasInstallCookie = File.Exists(_directoryHelpers.GetGameTagfilePath());
             var isInstallCookieEmpty = false;
 
             if (hasInstallCookie)
             {
-                isInstallCookieEmpty = string.IsNullOrEmpty(File.ReadAllText(DirectoryHelpers.GetGameTagfilePath()));
+                isInstallCookieEmpty = string.IsNullOrEmpty(File.ReadAllText(_directoryHelpers.GetGameTagfilePath()));
             }
 
             return isInstallCookieEmpty;

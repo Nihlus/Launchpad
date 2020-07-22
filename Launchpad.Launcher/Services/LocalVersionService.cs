@@ -22,9 +22,8 @@
 
 using System;
 using System.IO;
-
 using Launchpad.Launcher.Utility;
-using NLog;
+using Microsoft.Extensions.Logging;
 
 namespace Launchpad.Launcher.Services
 {
@@ -36,7 +35,23 @@ namespace Launchpad.Launcher.Services
         /// <summary>
         /// Logger instance for this class.
         /// </summary>
-        private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
+        private readonly ILogger<LocalVersionService> _log;
+
+        /// <summary>
+        /// The directory helpers.
+        /// </summary>
+        private readonly DirectoryHelpers _directoryHelpers;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LocalVersionService"/> class.
+        /// </summary>
+        /// <param name="log">The logging instance.</param>
+        /// <param name="directoryHelpers">The directory helpers.</param>
+        public LocalVersionService(ILogger<LocalVersionService> log, DirectoryHelpers directoryHelpers)
+        {
+            _log = log;
+            _directoryHelpers = directoryHelpers;
+        }
 
         /// <summary>
         /// Gets the local game version.
@@ -46,19 +61,19 @@ namespace Launchpad.Launcher.Services
         {
             try
             {
-                var rawGameVersion = File.ReadAllText(DirectoryHelpers.GetLocalGameVersionPath());
+                var rawGameVersion = File.ReadAllText(_directoryHelpers.GetLocalGameVersionPath());
 
                 if (Version.TryParse(rawGameVersion, out var gameVersion))
                 {
                     return gameVersion;
                 }
 
-                Log.Warn("Could not parse local game version. Contents: " + rawGameVersion);
+                _log.LogWarning("Could not parse local game version. Contents: " + rawGameVersion);
                 return new Version("0.0.0");
             }
             catch (IOException ioex)
             {
-                Log.Warn("Could not read local game version (IOException): " + ioex.Message);
+                _log.LogWarning("Could not read local game version (IOException): " + ioex.Message);
                 return new Version("0.0.0");
             }
         }

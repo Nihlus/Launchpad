@@ -24,136 +24,158 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Xml;
 using GLib;
-using Launchpad.Common;
+using Launchpad.Common.Handlers.Manifest;
+using Launchpad.Launcher.Configuration;
+using Launchpad.Launcher.Handlers;
+using Launchpad.Launcher.Handlers.Protocols;
+using Launchpad.Launcher.Handlers.Protocols.Manifest;
 using Launchpad.Launcher.Interface;
 using Launchpad.Launcher.Services;
-using NLog;
+using Launchpad.Launcher.Utility;
+using log4net;
+using log4net.Config;
+using log4net.Repository.Hierarchy;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using NGettext;
+using Application = Gtk.Application;
 using Task = System.Threading.Tasks.Task;
-using Timeout = GLib.Timeout;
 
 namespace Launchpad.Launcher
 {
     /// <summary>
     /// The main program class.
     /// </summary>
-    public static class Program
+    public class Program
     {
         /// <summary>
-        /// Logger instance for this class.
+        /// Holds the logging instance for this class.
         /// </summary>
-        private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
-
-        private static readonly LocalVersionService LocalVersionService = new LocalVersionService();
+        private static ILogger<Program>? Log;
 
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
-        private static void Main()
+        [STAThread]
+        private static async Task Main(string[] args)
         {
-            // Bind any unhandled exceptions in the main thread so that they are logged.
-            AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
+            ExceptionManager.UnhandledException += OnUnhandledGLibException;
 
+            Application.Init();
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                Environment.SetEnvironmentVariable("GTK_EXE_PREFIX", Directory.GetCurrentDirectory());
-                Environment.SetEnvironmentVariable("GTK_DATA_PREFIX", Directory.GetCurrentDirectory());
                 Environment.SetEnvironmentVariable("GSETTINGS_SCHEMA_DIR", "share\\glib-2.0\\schemas\\");
             }
 
-            Log.Info($"Launchpad v{LocalVersionService.GetLocalLauncherVersion()} starting...");
-
-            var systemBitness = Environment.Is64BitOperatingSystem ? "x64" : "x86";
-            var processBitness = Environment.Is64BitProcess ? "64-bit" : "32-bit";
-            Log.Info($"Current platform: {PlatformHelpers.GetCurrentPlatform()} ({systemBitness} platform, {processBitness} process)");
-
-            Log.Info("Initializing UI...");
-
-            // Bind any unhandled exceptions in the GTK UI so that they are logged.
-            ExceptionManager.UnhandledException += OnGLibUnhandledException;
-
-            // Run the GTK UI
-            Gtk.Application.Init();
-
-            var win = MainWindow.Create();
-            win.Show();
-
-            Timeout.Add
-            (
-                50,
-                () =>
+            const string configurationName = "Launchpad.Launcher.log4net.config";
+            var logConfig = new XmlDocument();
+            await using (var configStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(configurationName))
+            {
+                if (configStream is null)
                 {
-                    Task.Factory.StartNew
-                    (
-                        () => win.InitializeAsync(),
-                        CancellationToken.None,
-                        TaskCreationOptions.DenyChildAttach,
-                        TaskScheduler.FromCurrentSynchronizationContext()
-                    );
-                    return false;
+                    throw new InvalidOperationException("The log4net configuration stream could not be found.");
                 }
-            );
 
-            Gtk.Application.Run();
+                logConfig.Load(configStream);
+            }
+
+            var repo = LogManager.CreateRepository(Assembly.GetEntryAssembly(), typeof(Hierarchy));
+            XmlConfigurator.Configure(repo, logConfig["log4net"]);
+
+            var host = CreateHostBuilder(args).Build();
+
+            Log = host.Services.GetRequiredService<ILogger<Program>>();
+            var app = host.Services.GetRequiredService<Startup>();
+
+            app.Start();
+            Application.Run();
         }
 
         /// <summary>
         /// Passes any unhandled exceptions from the GTK UI to the generic handler.
         /// </summary>
         /// <param name="args">The event object containing the information about the exception.</param>
-        private static void OnGLibUnhandledException(UnhandledExceptionArgs args)
+        private static void OnUnhandledGLibException(UnhandledExceptionArgs args)
         {
-            OnUnhandledException(null, args);
+            Log.LogError((Exception)args.ExceptionObject, "Unhandled GLib exception.");
         }
 
-        /// <summary>
-        /// Event handler for all unhandled exceptions that may be encountered during runtime. While there should never
-        /// be any unhandled exceptions in an ideal program, unexpected issues can and will arise. This handler logs
-        /// the exception and all relevant information to a logfile and prints it to the console for debugging purposes.
-        /// </summary>
-        /// <param name="sender">The sending object.</param>
-        /// <param name="unhandledExceptionEventArgs">The event object containing the information about the exception.</param>
-        private static void OnUnhandledException(object? sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
-        {
-            Log.Fatal("----------------");
-            Log.Fatal("FATAL UNHANDLED EXCEPTION!");
-            Log.Fatal("Something has gone terribly, terribly wrong during runtime.");
-            Log.Fatal("The following is what information could be gathered by the program before crashing.");
-            Log.Fatal
-            (
-                "Please report this to <jarl.gullberg@gmail.com> or via GitHub. Include the full log and a " +
-                "description of what you were doing when it happened."
-            );
-
-            if (!(unhandledExceptionEventArgs.ExceptionObject is Exception unhandledException))
+        private static IHostBuilder CreateHostBuilder(string[] args) => new HostBuilder()
+            .ConfigureAppConfiguration((hostingContext, config) =>
             {
-                return;
-            }
-
-            // Unwrap TargetInvocationExceptions
-            if (unhandledException is TargetInvocationException)
+                config.SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "config"));
+                config.AddJsonFile("appsettings.json");
+            })
+            .ConfigureServices((hostingContext, services) =>
             {
-                unhandledException = unhandledException.InnerException ?? unhandledException;
-            }
+                services
+                    .AddSingleton<FTPProtocolHandler>()
+                    .AddSingleton<HTTPProtocolHandler>()
+                    .AddSingleton<ChecksHandler>()
+                    .AddSingleton<ConfigHandler>()
+                    .AddSingleton<GameHandler>()
+                    .AddSingleton<LauncherHandler>()
+                    .AddSingleton<GameArgumentService>()
+                    .AddSingleton<LocalVersionService>()
+                    .AddSingleton<TagfileService>()
+                    .AddSingleton<DirectoryHelpers>()
+                    .AddSingleton
+                    (
+                        s =>
+                        {
+                            var configuration = s.GetRequiredService<ILaunchpadConfiguration>();
+                            return new ManifestHandler
+                            (
+                                DirectoryHelpers.GetLocalLauncherDirectory(),
+                                configuration.RemoteAddress,
+                                configuration.SystemTarget
+                            );
+                        }
+                    )
+                    .AddSingleton(s => s.GetRequiredService<ConfigHandler>().Configuration)
+                    .AddSingleton<ICatalog>(s => new Catalog("Launchpad", "./Content/locale"))
+                    .AddSingleton<PatchProtocolHandler>
+                    (
+                        s =>
+                        {
+                            var configuration = s.GetRequiredService<ILaunchpadConfiguration>();
+                            var remoteAddress = configuration.RemoteAddress;
+                            switch (remoteAddress.Scheme.ToLowerInvariant())
+                            {
+                                case "ftp":
+                                {
+                                    return s.GetRequiredService<FTPProtocolHandler>();
+                                }
+                                case "http":
+                                case "https":
+                                {
+                                    return s.GetRequiredService<HTTPProtocolHandler>();
+                                }
+                                default:
+                                {
+                                    throw new ArgumentException
+                                    (
+                                        $"No compatible protocol handler found for a URI of the form " +
+                                        $"\"{remoteAddress}\"."
+                                    );
+                                }
+                            }
+                        }
+                    )
+                    .AddSingleton(new Application("net.Launchpad.Launchpad", ApplicationFlags.None))
+                    .AddSingleton<Startup>();
 
-            if (unhandledException is DllNotFoundException)
+                services
+                    .AddTransient(MainWindow.Create);
+            })
+            .ConfigureLogging(l =>
             {
-                Log.Fatal
-                (
-                    "This exception is typical of instances where the GTK# runtime has not been installed.\n" +
-                    "If you haven't installed it, download it at \'http://www.mono-project.com/download/#download-win\'.\n" +
-                    "If you have installed it, reboot your computer and try again."
-                );
-
-                // Send the user to the common problems page.
-                System.Diagnostics.Process.Start("https://github.com/Nihlus/Launchpad/wiki/Common-problems");
-            }
-
-            Log.Fatal("Exception type: " + unhandledException.GetType().FullName);
-            Log.Fatal("Exception Message: " + unhandledException.Message);
-            Log.Fatal("Exception Stacktrace: " + unhandledException.StackTrace);
-        }
+                l.ClearProviders();
+                l.AddLog4Net();
+            });
     }
 }

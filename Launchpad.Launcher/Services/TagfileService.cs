@@ -30,15 +30,28 @@ namespace Launchpad.Launcher.Services
     /// </summary>
     public class TagfileService
     {
+        private readonly DirectoryHelpers _directoryHelpers;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TagfileService"/> class.
+        /// </summary>
+        /// <param name="directoryHelpers">The directory helpers.</param>
+        public TagfileService(DirectoryHelpers directoryHelpers)
+        {
+            _directoryHelpers = directoryHelpers;
+        }
+
         /// <summary>
         /// Creates the launcher cookie.
         /// </summary>
         public void CreateLauncherTagfile()
         {
-            var doesCookieExist = File.Exists(DirectoryHelpers.GetLauncherTagfilePath());
+            var launcherTagfilePath = _directoryHelpers.GetLauncherTagfilePath();
+
+            var doesCookieExist = File.Exists(launcherTagfilePath);
             if (!doesCookieExist)
             {
-                File.Create(DirectoryHelpers.GetLauncherTagfilePath());
+                File.Create(launcherTagfilePath);
             }
         }
 
@@ -47,10 +60,12 @@ namespace Launchpad.Launcher.Services
         /// </summary>
         public void CreateGameTagfile()
         {
-            var doesCookieExist = File.Exists(DirectoryHelpers.GetGameTagfilePath());
+            var gameTagfilePath = _directoryHelpers.GetGameTagfilePath();
+
+            var doesCookieExist = File.Exists(gameTagfilePath);
             if (!doesCookieExist)
             {
-                File.Create(DirectoryHelpers.GetGameTagfilePath()).Close();
+                File.Create(gameTagfilePath).Close();
             }
         }
     }

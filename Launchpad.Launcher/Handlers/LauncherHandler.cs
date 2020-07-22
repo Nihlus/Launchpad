@@ -25,13 +25,14 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 using Launchpad.Common;
 using Launchpad.Launcher.Configuration;
 using Launchpad.Launcher.Handlers.Protocols;
 using Launchpad.Launcher.Utility;
-using NLog;
+using Microsoft.Extensions.Logging;
+using Process = System.Diagnostics.Process;
+using Task = System.Threading.Tasks.Task;
 
 namespace Launchpad.Launcher.Handlers
 {
@@ -41,7 +42,7 @@ namespace Launchpad.Launcher.Handlers
     /// Since this class starts new threads in which it does the larger computations,
     /// there must be no usage of UI code in this class. Keep it clean.
     /// </summary>
-    internal sealed class LauncherHandler
+    public sealed class LauncherHandler
     {
         // Replace the variables in the script with actual data
         private const string TempDirectoryVariable = "%temp%";
@@ -51,7 +52,7 @@ namespace Launchpad.Launcher.Handlers
         /// <summary>
         /// Logger instance for this class.
         /// </summary>
-        private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
+        private readonly ILogger<LauncherHandler> _log;
 
         /// <summary>
         /// Raised whenever the launcher finishes downloading.
@@ -68,14 +69,32 @@ namespace Launchpad.Launcher.Handlers
         /// <summary>
         /// The config handler reference.
         /// </summary>
-        private static readonly ILaunchpadConfiguration Configuration = ConfigHandler.Instance.Configuration;
+        private readonly ILaunchpadConfiguration _configuration;
+
+        /// <summary>
+        /// The directory helpers.
+        /// </summary>
+        private readonly DirectoryHelpers _directoryHelpers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Launchpad.Launcher.Handlers.LauncherHandler"/> class.
         /// </summary>
-        public LauncherHandler()
+        /// <param name="log">The logging instance.</param>
+        /// <param name="patch">The patch protocol.</param>
+        /// <param name="configuration">The configuration.</param>
+        /// <param name="directoryHelpers">The directory helpers.</param>
+        public LauncherHandler
+        (
+            ILogger<LauncherHandler> log,
+            PatchProtocolHandler patch,
+            ILaunchpadConfiguration configuration,
+            DirectoryHelpers directoryHelpers
+        )
         {
-            _patch = PatchProtocolProvider.GetHandler();
+            _log = log;
+            _patch = patch;
+            _configuration = configuration;
+            _directoryHelpers = directoryHelpers;
 
             _patch.ModuleDownloadProgressChanged += OnLauncherDownloadProgressChanged;
             _patch.ModuleInstallationFinished += OnLauncherDownloadFinished;
@@ -84,18 +103,18 @@ namespace Launchpad.Launcher.Handlers
         /// <summary>
         /// Updates the launcher asynchronously.
         /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        /// <returns>A <see cref="System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
         public async Task UpdateLauncherAsync()
         {
             try
             {
-                Log.Info($"Starting update of lancher files using protocol \"{_patch.GetType().Name}\"");
+                _log.LogInformation($"Starting update of lancher files using protocol \"{_patch.GetType().Name}\"");
 
                 await _patch.UpdateModuleAsync(EModule.Launcher);
             }
             catch (IOException ioex)
             {
-                Log.Warn("The launcher update failed (IOException): " + ioex.Message);
+                _log.LogWarning("The launcher update failed (IOException): " + ioex.Message);
             }
         }
 
@@ -103,14 +122,14 @@ namespace Launchpad.Launcher.Handlers
         /// Checks if the launcher can access the standard HTTP changelog.
         /// </summary>
         /// <returns><c>true</c> if the changelog can be accessed; otherwise, <c>false</c>.</returns>
-        public static async Task<bool> CanAccessStandardChangelog()
+        public async Task<bool> CanAccessStandardChangelog()
         {
-            if (string.IsNullOrEmpty(Configuration.ChangelogAddress.AbsoluteUri))
+            if (string.IsNullOrEmpty(_configuration.ChangelogAddress.AbsoluteUri))
             {
                 return false;
             }
 
-            var address = Configuration.ChangelogAddress;
+            var address = _configuration.ChangelogAddress;
 
             // Only allow HTTP URIs
             if (!(address.Scheme == "http" || address.Scheme == "https"))
@@ -128,7 +147,7 @@ namespace Launchpad.Launcher.Handlers
             }
             catch (WebException wex)
             {
-                Log.Warn("Could not access standard changelog (WebException): " + wex.Message);
+                _log.LogWarning("Could not access standard changelog (WebException): " + wex.Message);
                 return false;
             }
         }
@@ -137,7 +156,7 @@ namespace Launchpad.Launcher.Handlers
         /// Creates the update script on disk.
         /// </summary>
         /// <returns>ProcessStartInfo for the update script.</returns>
-        public static ProcessStartInfo CreateUpdateScript()
+        public ProcessStartInfo CreateUpdateScript()
         {
             try
             {
@@ -165,7 +184,7 @@ namespace Launchpad.Launcher.Handlers
             }
             catch (IOException ioex)
             {
-                Log.Warn("Failed to create update script (IOException): " + ioex.Message);
+                _log.LogWarning("Failed to create update script (IOException): " + ioex.Message);
 
                 throw new InvalidOperationException();
             }
@@ -175,7 +194,7 @@ namespace Launchpad.Launcher.Handlers
         /// Extracts the bundled update script and populates the variables in it
         /// with the data needed for the update procedure.
         /// </summary>
-        private static string GetUpdateScriptSource()
+        private string GetUpdateScriptSource()
         {
             // Load the script from the embedded resources
             var localAssembly = Assembly.GetExecutingAssembly();

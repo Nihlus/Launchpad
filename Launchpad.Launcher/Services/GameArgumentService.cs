@@ -32,11 +32,15 @@ namespace Launchpad.Launcher.Services
     /// </summary>
     public class GameArgumentService
     {
+        private readonly DirectoryHelpers _directoryHelpers;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GameArgumentService"/> class.
         /// </summary>
-        public GameArgumentService()
+        /// <param name="directoryHelpers">The directory helpers.</param>
+        public GameArgumentService(DirectoryHelpers directoryHelpers)
         {
+            _directoryHelpers = directoryHelpers;
             InitializeGameArgumentsFile();
         }
 
@@ -44,15 +48,15 @@ namespace Launchpad.Launcher.Services
         /// Creates a configuration file where the user or developer can add runtime switches for the installed game.
         /// If the file already exists, this method does nothing.
         /// </summary>
-        private static void InitializeGameArgumentsFile()
+        private void InitializeGameArgumentsFile()
         {
             // Initialize the game arguments file, if needed
-            if (File.Exists(DirectoryHelpers.GetGameArgumentsPath()))
+            if (File.Exists(_directoryHelpers.GetGameArgumentsPath()))
             {
                 return;
             }
 
-            using var fs = File.Create(DirectoryHelpers.GetGameArgumentsPath());
+            using var fs = File.Create(_directoryHelpers.GetGameArgumentsPath());
             using var sw = new StreamWriter(fs);
             sw.WriteLine("# This file contains all the arguments passed to the game executable on startup.");
             sw.WriteLine("# Lines beginning with a hash character (#) are ignored and considered comments.");
@@ -68,12 +72,12 @@ namespace Launchpad.Launcher.Services
         /// <returns>The arguments.</returns>
         public IEnumerable<string> GetGameArguments()
         {
-            if (!File.Exists(DirectoryHelpers.GetGameArgumentsPath()))
+            if (!File.Exists(_directoryHelpers.GetGameArgumentsPath()))
             {
                 return new List<string>();
             }
 
-            var gameArguments = new List<string>(File.ReadAllLines(DirectoryHelpers.GetGameArgumentsPath()));
+            var gameArguments = new List<string>(File.ReadAllLines(_directoryHelpers.GetGameArgumentsPath()));
 
             // Return the list of lines in the argument file, except the ones starting with a hash or empty lines
             return gameArguments.Where(s => !s.StartsWith("#") && !string.IsNullOrEmpty(s)).ToList();

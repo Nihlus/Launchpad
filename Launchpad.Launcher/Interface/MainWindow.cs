@@ -34,14 +34,12 @@ using Launchpad.Launcher.Handlers.Protocols;
 using Launchpad.Launcher.Services;
 using Launchpad.Launcher.Utility;
 using Launchpad.Launcher.Utility.Enums;
-
+using Microsoft.Extensions.Logging;
 using NGettext;
-using NLog;
 using Remora.Results;
 using SixLabors.ImageSharp;
 using Application = Gtk.Application;
 using Process = System.Diagnostics.Process;
-using Task = System.Threading.Tasks.Task;
 
 namespace Launchpad.Launcher.Interface
 {
@@ -54,31 +52,42 @@ namespace Launchpad.Launcher.Interface
         /// <summary>
         /// Logger instance for this class.
         /// </summary>
-        private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
+        private readonly ILogger<MainWindow> _log;
 
-        private readonly LocalVersionService _localVersionService = new LocalVersionService();
+        /// <summary>
+        /// The local version service.
+        /// </summary>
+        private readonly LocalVersionService _localVersionService;
 
         /// <summary>
         /// The configuration instance reference.
         /// </summary>
-        private readonly ILaunchpadConfiguration _configuration = ConfigHandler.Instance.Configuration;
+        private readonly ILaunchpadConfiguration _configuration;
 
         /// <summary>
         /// The checks handler reference.
         /// </summary>
-        private readonly ChecksHandler _checks = new ChecksHandler();
+        private readonly ChecksHandler _checks;
 
         /// <summary>
         /// The launcher handler. Allows updating the launcher and loading the changelog.
         /// </summary>
-        private readonly LauncherHandler _launcher = new LauncherHandler();
+        private readonly LauncherHandler _launcher;
 
         /// <summary>
         /// The game handler. Allows updating, installing and repairing the game.
         /// </summary>
-        private readonly GameHandler _game = new GameHandler();
+        private readonly GameHandler _game;
 
-        private readonly TagfileService _tagfileService = new TagfileService();
+        /// <summary>
+        /// The tag file service.
+        /// </summary>
+        private readonly TagfileService _tagfileService;
+
+        /// <summary>
+        /// The patch protocol.
+        /// </summary>
+        private readonly PatchProtocolHandler _patch;
 
         /// <summary>
         /// The current mode that the launcher is in. Determines what the primary button does when pressed.
@@ -100,9 +109,38 @@ namespace Launchpad.Launcher.Interface
         /// </summary>
         /// <param name="builder">The UI builder.</param>
         /// <param name="handle">The native handle of the window.</param>
-        private MainWindow(Builder builder, IntPtr handle)
+        /// <param name="log">The logging instance.</param>
+        /// <param name="localVersionService">The local version service.</param>
+        /// <param name="checks">The checks handler.</param>
+        /// <param name="launcher">The launcher handler.</param>
+        /// <param name="game">The game handler.</param>
+        /// <param name="tagfileService">The tagfile service.</param>
+        /// <param name="patch">The patch protocol.</param>
+        /// <param name="configuration">The configuration.</param>
+        public MainWindow
+        (
+            Builder builder,
+            IntPtr handle,
+            ILogger<MainWindow> log,
+            LocalVersionService localVersionService,
+            ChecksHandler checks,
+            LauncherHandler launcher,
+            GameHandler game,
+            TagfileService tagfileService,
+            PatchProtocolHandler patch,
+            ILaunchpadConfiguration configuration
+        )
             : base(handle)
         {
+            _log = log;
+            _localVersionService = localVersionService;
+            _checks = checks;
+            _launcher = launcher;
+            _game = game;
+            _tagfileService = tagfileService;
+            _patch = patch;
+            _configuration = configuration;
+
             builder.Autoconnect(this);
 
             BindUIEvents();
@@ -167,7 +205,7 @@ namespace Launchpad.Launcher.Interface
                 await LoadChangelogAsync();
 
                 // If we can connect, proceed with the rest of our checks.
-                if (ChecksHandler.IsInitialStartup())
+                if (_checks.IsInitialStartup())
                 {
                     DisplayInitialStartupDialog();
                 }
@@ -189,7 +227,7 @@ namespace Launchpad.Launcher.Interface
 
                     if (!getIsPlatformAvailable.Entity)
                     {
-                        Log.Info
+                        _log.LogInformation
                         (
                             $"The server does not provide files for platform \"{PlatformHelpers.GetCurrentPlatform()}\". " +
                             "A .provides file must be present in the platforms' root directory."
@@ -202,7 +240,7 @@ namespace Launchpad.Launcher.Interface
                         if (!_checks.IsGameInstalled())
                         {
                             // If the game is not installed, offer to install it
-                            Log.Info("The game has not yet been installed.");
+                            _log.LogInformation("The game has not yet been installed.");
                             SetLauncherMode(ELauncherMode.Install, false);
 
                             // Since the game has not yet been installed, disallow manual repairs
@@ -223,13 +261,13 @@ namespace Launchpad.Launcher.Interface
                             if (getIsGameOutdated.Entity)
                             {
                                 // If it does, offer to update it
-                                Log.Info("The game is outdated.");
+                                _log.LogInformation("The game is outdated.");
                                 SetLauncherMode(ELauncherMode.Update, false);
                             }
                             else
                             {
                                 // All checks passed, so we can offer to launch the game.
-                                Log.Info("All checks passed. Game can be launched.");
+                                _log.LogInformation("All checks passed. Game can be launched.");
                                 SetLauncherMode(ELauncherMode.Launch, false);
                             }
                         }
@@ -238,7 +276,7 @@ namespace Launchpad.Launcher.Interface
                 else
                 {
                     // The launcher was outdated.
-                    Log.Info($"The launcher is outdated. \n\tLocal version: {_localVersionService.GetLocalLauncherVersion()}");
+                    _log.LogInformation($"The launcher is outdated. \n\tLocal version: {_localVersionService.GetLocalLauncherVersion()}");
                     SetLauncherMode(ELauncherMode.Update, false);
                 }
             }
@@ -249,8 +287,7 @@ namespace Launchpad.Launcher.Interface
 
         private async Task<DetermineConditionResult> LoadChangelogAsync()
         {
-            var protocol = PatchProtocolProvider.GetHandler();
-            var getMarkup = await protocol.GetChangelogMarkupAsync();
+            var getMarkup = await _patch.GetChangelogMarkupAsync();
             if (!getMarkup.IsSuccess)
             {
                 return DetermineConditionResult.FromError(getMarkup);
@@ -274,7 +311,7 @@ namespace Launchpad.Launcher.Interface
 
         private void DisplayInitialStartupDialog()
         {
-            Log.Info("This instance is the first start of the application in this folder.");
+            _log.LogInformation("This instance is the first start of the application in this folder.");
 
             var text = LocalizationCatalog.GetString
             (
@@ -293,24 +330,22 @@ namespace Launchpad.Launcher.Interface
             if (shouldInstallHereDialog.Run() == (int)ResponseType.Ok)
             {
                 // Yes, install here
-                Log.Info("User accepted installation in this directory. Installing in current directory.");
+                _log.LogInformation("User accepted installation in this directory. Installing in current directory.");
 
                 _tagfileService.CreateLauncherTagfile();
             }
             else
             {
                 // No, don't install here
-                Log.Info("User declined installation in this directory. Exiting...");
+                _log.LogInformation("User declined installation in this directory. Exiting...");
                 Environment.Exit(2);
             }
         }
 
         private async Task<DetermineConditionResult> LoadBannerAsync()
         {
-            var patchHandler = PatchProtocolProvider.GetHandler();
-
             // Load the game banner (if there is one)
-            var getCanProvideBanner = await patchHandler.CanProvideBannerAsync();
+            var getCanProvideBanner = await _patch.CanProvideBannerAsync();
             if (!getCanProvideBanner.IsSuccess)
             {
                 return DetermineConditionResult.FromError(getCanProvideBanner);
@@ -322,7 +357,7 @@ namespace Launchpad.Launcher.Interface
             }
 
             // Fetch the banner from the server
-            var getBannerImage = await patchHandler.GetBannerAsync();
+            var getBannerImage = await _patch.GetBannerAsync();
             if (!getBannerImage.IsSuccess)
             {
                 return DetermineConditionResult.FromError(getBannerImage);
@@ -469,7 +504,7 @@ namespace Launchpad.Launcher.Interface
             var getIsPlatformAvailable = await _checks.IsPlatformAvailableAsync(_configuration.SystemTarget);
             if (!getIsPlatformAvailable.IsSuccess)
             {
-                Log.Error(getIsPlatformAvailable.ErrorReason);
+                _log.LogError(getIsPlatformAvailable.ErrorReason);
                 return;
             }
 
@@ -479,7 +514,7 @@ namespace Launchpad.Launcher.Interface
                     LocalizationCatalog.GetString("The server does not provide the game for the selected platform.");
                 _mainProgressBar.Text = string.Empty;
 
-                Log.Info
+                _log.LogInformation
                 (
                     $"The server does not provide files for platform \"{PlatformHelpers.GetCurrentPlatform()}\". " +
                     "A .provides file must be present in the platforms' root directory."
@@ -514,7 +549,7 @@ namespace Launchpad.Launcher.Interface
                     var getIsLauncherUpdated = await _checks.IsLauncherOutdatedAsync();
                     if (!getIsLauncherUpdated.IsSuccess)
                     {
-                        Log.Error(getIsLauncherUpdated.ErrorReason);
+                        _log.LogError(getIsLauncherUpdated.ErrorReason);
                         return;
                     }
 
@@ -545,7 +580,7 @@ namespace Launchpad.Launcher.Interface
                 }
                 default:
                 {
-                    Log.Warn("The main button was pressed with an invalid active mode. No functionality has been defined for this mode.");
+                    _log.LogWarning("The main button was pressed with an invalid active mode. No functionality has been defined for this mode.");
                     break;
                 }
             }
@@ -554,11 +589,11 @@ namespace Launchpad.Launcher.Interface
         /// <summary>
         /// Starts the launcher update process when its files have finished downloading.
         /// </summary>
-        private static void OnLauncherDownloadFinished(object? sender, EventArgs e)
+        private void OnLauncherDownloadFinished(object? sender, EventArgs e)
         {
             Application.Invoke((o, args) =>
             {
-                var script = LauncherHandler.CreateUpdateScript();
+                var script = _launcher.CreateUpdateScript();
 
                 Process.Start(script);
 

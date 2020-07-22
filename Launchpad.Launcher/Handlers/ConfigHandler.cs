@@ -29,24 +29,18 @@ namespace Launchpad.Launcher.Handlers
 {
     /// <summary>
     /// Config handler.
-    /// This is a singleton class, and it should always be accessed through <see cref="Instance"/>.
     /// </summary>
     public sealed class ConfigHandler
     {
-        /// <summary>
-        /// The singleton Instance. Will always point to one shared object.
-        /// </summary>
-        public static readonly ConfigHandler Instance = new ConfigHandler();
-
         /// <summary>
         /// Gets the configuration instance.
         /// </summary>
         public ILaunchpadConfiguration Configuration { get; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConfigHandler"/> class and initalizes it.
+        /// Initializes a new instance of the <see cref="ConfigHandler"/> class and initializes it.
         /// </summary>
-        private ConfigHandler()
+        public ConfigHandler()
         {
             this.Configuration = new ConfigurationBuilder<ILaunchpadConfiguration>()
                 .UseIniFile(DirectoryHelpers.GetConfigPath())
@@ -57,7 +51,7 @@ namespace Launchpad.Launcher.Handlers
 
         /// <summary>
         /// Initializes the config by checking for bad values or files.
-        /// Run once when the launcher starts, then avoid unless absolutely neccesary.
+        /// Run once when the launcher starts, then avoid unless absolutely necessary.
         /// </summary>
         private void InitializeConfigurationFile()
         {

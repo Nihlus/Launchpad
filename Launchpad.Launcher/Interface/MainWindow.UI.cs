@@ -24,6 +24,7 @@ using System;
 using System.Reflection;
 using Gtk;
 using Launchpad.Launcher.Utility;
+using Microsoft.Extensions.DependencyInjection;
 using UIElement = Gtk.Builder.ObjectAttribute;
 
 // ReSharper disable UnassignedReadonlyField
@@ -67,14 +68,25 @@ namespace Launchpad.Launcher.Interface
         /// <summary>
         /// Creates a new instance of the <see cref="MainWindow"/> class, loading its interface definition from file.
         /// </summary>
+        /// <param name="services">The services.</param>
         /// <returns>An instance of the main window widget.</returns>
-        public static MainWindow Create()
+        public static MainWindow Create(IServiceProvider services)
         {
-            using var builder = new Builder(Assembly.GetExecutingAssembly(), "Launchpad.Launcher.Interface.Launchpad.glade", null);
-            var window = new MainWindow(builder, builder.GetObject(nameof(MainWindow)).Handle)
-            {
-                Icon = ResourceManager.ApplicationIcon
-            };
+            using var builder = new Builder
+            (
+                Assembly.GetExecutingAssembly(),
+                "Launchpad.Launcher.Interface.Launchpad.glade",
+                null
+            );
+
+            var window = ActivatorUtilities.CreateInstance<MainWindow>
+            (
+                services,
+                builder,
+                builder.GetObject("MainWindow").Handle
+            );
+
+            window.Icon = ResourceManager.ApplicationIcon;
 
             return window;
         }

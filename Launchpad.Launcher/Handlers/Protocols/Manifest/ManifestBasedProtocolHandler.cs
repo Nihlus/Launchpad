@@ -30,11 +30,13 @@ using Launchpad.Common;
 using Launchpad.Common.Enums;
 using Launchpad.Common.Handlers;
 using Launchpad.Common.Handlers.Manifest;
+using Launchpad.Launcher.Configuration;
 using Launchpad.Launcher.Services;
 using Launchpad.Launcher.Utility;
+using Microsoft.Extensions.Logging;
 using NGettext;
-using NLog;
 using Remora.Results;
+using FileInfo = System.IO.FileInfo;
 
 namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 {
@@ -46,14 +48,17 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// <summary>
         /// Logger instance for this class.
         /// </summary>
-        private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
+        private readonly ILogger<ManifestBasedProtocolHandler> _log;
 
         /// <summary>
         /// The localization catalog.
         /// </summary>
-        private static readonly ICatalog LocalizationCatalog = new Catalog("Launchpad", "./Content/locale");
+        private readonly ICatalog _localizationCatalog;
 
-        private readonly LocalVersionService _localVersionService = new LocalVersionService();
+        /// <summary>
+        /// The local version service.
+        /// </summary>
+        private readonly LocalVersionService _localVersionService;
 
         /// <summary>
         /// The file manifest handler. This allows access to the launcher and game file lists.
@@ -61,16 +66,37 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         private readonly ManifestHandler _fileManifestHandler;
 
         /// <summary>
+        /// The directory helpers.
+        /// </summary>
+        private readonly DirectoryHelpers _directoryHelpers;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ManifestBasedProtocolHandler"/> class.
         /// </summary>
-        protected ManifestBasedProtocolHandler()
+        /// <param name="log">The logging instance.</param>
+        /// <param name="localVersionService">The local version service.</param>
+        /// <param name="fileManifestHandler">The manifest handler.</param>
+        /// <param name="localizationCatalog">The localization catalog.</param>
+        /// <param name="configuration">The configuration.</param>
+        /// <param name="tagfileService">The tagfile service.</param>
+        /// <param name="directoryHelpers">The directory helpers.</param>
+        protected ManifestBasedProtocolHandler
+        (
+            ILogger<ManifestBasedProtocolHandler> log,
+            LocalVersionService localVersionService,
+            ManifestHandler fileManifestHandler,
+            ICatalog localizationCatalog,
+            ILaunchpadConfiguration configuration,
+            TagfileService tagfileService,
+            DirectoryHelpers directoryHelpers
+        )
+            : base(log, configuration, tagfileService)
         {
-            _fileManifestHandler = new ManifestHandler
-            (
-                DirectoryHelpers.GetLocalLauncherDirectory(),
-                this.Configuration.RemoteAddress,
-                this.Configuration.SystemTarget
-            );
+            _log = log;
+            _localVersionService = localVersionService;
+            _fileManifestHandler = fileManifestHandler;
+            _localizationCatalog = localizationCatalog;
+            _directoryHelpers = directoryHelpers;
         }
 
         /// <inheritdoc />
@@ -236,13 +262,13 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                     );
                     OnModuleVerifyProgressChanged();
 
-                    if (fileEntry.IsFileIntegrityIntact())
+                    if (fileEntry.IsFileIntegrityIntact(_directoryHelpers))
                     {
                         continue;
                     }
 
                     brokenFiles.Add(fileEntry);
-                    Log.Info($"File \"{Path.GetFileName(fileEntry.RelativePath)}\" failed its integrity check and was queued for redownload.");
+                    _log.LogInformation($"File \"{Path.GetFileName(fileEntry.RelativePath)}\" failed its integrity check and was queued for redownload.");
                 }
 
                 var downloadedFiles = 0;
@@ -262,9 +288,9 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                     var retries = 0;
                     while (true)
                     {
-                        if (!fileEntry.IsFileIntegrityIntact())
+                        if (!fileEntry.IsFileIntegrityIntact(_directoryHelpers))
                         {
-                            Log.Info
+                            _log.LogInformation
                             (
                                 $"File \"{Path.GetFileName(fileEntry.RelativePath)}\" failed its integrity check " +
                                 $"again after redownloading. ({retries} retries)"
@@ -334,7 +360,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             // stored in the install cookie.
 
             // Attempt to parse whatever is inside the install cookie
-            if (ManifestEntry.TryParse(File.ReadAllText(DirectoryHelpers.GetGameTagfilePath()), out var lastDownloadedFile))
+            if (ManifestEntry.TryParse(File.ReadAllText(_directoryHelpers.GetGameTagfilePath()), out var lastDownloadedFile))
             {
                 // Loop through all the entries in the manifest until we encounter
                 // an entry which matches the one in the install cookie
@@ -389,7 +415,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// <param name="totalSize">The expected total size of the file.</param>
         /// <param name="contentOffset">The offset into the file where reading and writing should start.</param>
         /// <param name="useAnonymousLogin">Whether or not to use anonymous credentials.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        /// <returns>A <see cref="System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
         protected abstract Task<DetermineConditionResult> DownloadRemoteFileAsync
         (
             string url,
@@ -445,7 +471,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             }
             catch (WebException wex)
             {
-                Log.Warn("Unable to determine whether or not the launcher was outdated (WebException): " + wex.Message);
+                _log.LogWarning("Unable to determine whether or not the launcher was outdated (WebException): " + wex.Message);
                 return false;
             }
         }
@@ -462,7 +488,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// <exception cref="ArgumentNullException">
         /// Will be thrown if the local path set in the <paramref name="fileEntry"/> passed to the function is not a valid value.
         /// </exception>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        /// <returns>A <see cref="System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
         protected virtual async Task<DetermineConditionResult> DownloadManifestEntryAsync
         (
             ManifestEntry fileEntry,
@@ -478,14 +504,14 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             {
                 case EModule.Launcher:
                 {
-                    baseRemoteURL = DirectoryHelpers.GetRemoteLauncherBinariesPath();
-                    baseLocalPath = DirectoryHelpers.GetTempLauncherDownloadPath();
+                    baseRemoteURL = _directoryHelpers.GetRemoteLauncherBinariesPath();
+                    baseLocalPath = _directoryHelpers.GetTempLauncherDownloadPath();
                     break;
                 }
                 case EModule.Game:
                 {
-                    baseRemoteURL = DirectoryHelpers.GetRemoteGamePath();
-                    baseLocalPath = DirectoryHelpers.GetLocalGameDirectory();
+                    baseRemoteURL = _directoryHelpers.GetRemoteGamePath();
+                    baseLocalPath = _directoryHelpers.GetLocalGameDirectory();
                     break;
                 }
                 default:
@@ -517,10 +543,10 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             }
 
             // Reset the cookie
-            File.WriteAllText(DirectoryHelpers.GetGameTagfilePath(), string.Empty);
+            File.WriteAllText(_directoryHelpers.GetGameTagfilePath(), string.Empty);
 
             // Write the current file progress to the install cookie
-            using (TextWriter textWriterProgress = new StreamWriter(DirectoryHelpers.GetGameTagfilePath()))
+            using (TextWriter textWriterProgress = new StreamWriter(_directoryHelpers.GetGameTagfilePath()))
             {
                 textWriterProgress.WriteLine(fileEntry);
                 textWriterProgress.Flush();
@@ -530,7 +556,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             if (oldFileEntry != null)
             {
                 // Check if the file is present, the correct size, and the correct hash
-                if (oldFileEntry.IsFileIntegrityIntact())
+                if (oldFileEntry.IsFileIntegrityIntact(_directoryHelpers))
                 {
                     // If it is, delete it.
                     File.Delete(localPath);
@@ -545,13 +571,13 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                     // If the file is partial, resume the download.
                     if (fileInfo.Length < fileEntry.Size)
                     {
-                        Log.Info($"Resuming interrupted file \"{Path.GetFileNameWithoutExtension(fileEntry.RelativePath)}\" at byte {fileInfo.Length}.");
+                        _log.LogInformation($"Resuming interrupted file \"{Path.GetFileNameWithoutExtension(fileEntry.RelativePath)}\" at byte {fileInfo.Length}.");
                         await DownloadRemoteFileAsync(remoteURL, localPath, fileEntry.Size, fileInfo.Length);
                     }
                     else
                     {
                         // If it's larger than expected, toss it in the bin and try again.
-                        Log.Info($"Restarting interrupted file \"{Path.GetFileNameWithoutExtension(fileEntry.RelativePath)}\": File bigger than expected.");
+                        _log.LogInformation($"Restarting interrupted file \"{Path.GetFileNameWithoutExtension(fileEntry.RelativePath)}\": File bigger than expected.");
 
                         File.Delete(localPath);
                         await DownloadRemoteFileAsync(remoteURL, localPath, fileEntry.Size);
@@ -568,7 +594,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                     if (localHash != fileEntry.Hash)
                     {
                         // If the hash doesn't match, toss it in the bin and try again.
-                        Log.Info
+                        _log.LogInformation
                         (
                             $"Redownloading file \"{Path.GetFileNameWithoutExtension(fileEntry.RelativePath)}\": " +
                             $"Hash sum mismatch. Local: {localHash}, Expected: {fileEntry.Hash}"
@@ -586,7 +612,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             }
 
             // We've finished the download, so empty the cookie
-            File.WriteAllText(DirectoryHelpers.GetGameTagfilePath(), string.Empty);
+            File.WriteAllText(_directoryHelpers.GetGameTagfilePath(), string.Empty);
             return DetermineConditionResult.FromSuccess();
         }
 
@@ -653,7 +679,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// <exception cref="ArgumentOutOfRangeException">
         /// Will be thrown if the <see cref="EModule"/> passed to the function is not a valid value.
         /// </exception>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        /// <returns>A <see cref="System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
         protected virtual async Task<DetermineConditionResult> RefreshModuleManifestAsync(EModule module)
         {
             var manifestExists = File.Exists(_fileManifestHandler.GetManifestPath((EManifestType)module, false));
@@ -695,7 +721,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// <exception cref="ArgumentOutOfRangeException">
         /// Will be thrown if the <see cref="EModule"/> passed to the function is not a valid value.
         /// </exception>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        /// <returns>A <see cref="System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
         protected virtual async Task<DetermineConditionResult> DownloadModuleManifestAsync(EModule module)
         {
             var remoteURL = _fileManifestHandler.GetManifestURL((EManifestType)module);
@@ -736,7 +762,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// <returns>The remote launcher version.</returns>
         protected virtual async Task<RetrieveEntityResult<Version>> GetRemoteLauncherVersionAsync()
         {
-            var remoteVersionPath = DirectoryHelpers.GetRemoteLauncherVersionPath();
+            var remoteVersionPath = _directoryHelpers.GetRemoteLauncherVersionPath();
             var readFile = await ReadRemoteFileAsync(remoteVersionPath);
             if (!readFile.IsSuccess)
             {
@@ -785,7 +811,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// <param name="totalFiles">Total files to download.</param>
         protected virtual string GetVerifyIndicatorLabelMessage(string currentFilename, int verifiedFiles, int totalFiles)
         {
-            return LocalizationCatalog.GetString("Verifying file {0} ({1} of {2})", currentFilename, verifiedFiles, totalFiles);
+            return _localizationCatalog.GetString("Verifying file {0} ({1} of {2})", currentFilename, verifiedFiles, totalFiles);
         }
 
         /// <summary>
@@ -797,7 +823,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// <param name="totalFiles">Total files that are to be updated.</param>
         protected virtual string GetUpdateIndicatorLabelMessage(string currentFilename, int updatedFiles, int totalFiles)
         {
-            return LocalizationCatalog.GetString("Updating file {0} ({1} of {2})", currentFilename, updatedFiles, totalFiles);
+            return _localizationCatalog.GetString("Updating file {0} ({1} of {2})", currentFilename, updatedFiles, totalFiles);
         }
 
         /// <summary>
@@ -809,7 +835,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// <param name="totalFiles">Total files to download.</param>
         protected virtual string GetDownloadIndicatorLabelMessage(string currentFilename, int downloadedFiles, int totalFiles)
         {
-            return LocalizationCatalog.GetString("Downloading file {0} ({1} of {2})", currentFilename, downloadedFiles, totalFiles);
+            return _localizationCatalog.GetString("Downloading file {0} ({1} of {2})", currentFilename, downloadedFiles, totalFiles);
         }
 
         /// <summary>
@@ -821,7 +847,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// <param name="totalBytes">Total bytes.</param>
         protected virtual string GetDownloadProgressBarMessage(string filename, long downloadedBytes, long totalBytes)
         {
-            return LocalizationCatalog.GetString("Downloading {0}: {1} out of {2}", filename, downloadedBytes, totalBytes);
+            return _localizationCatalog.GetString("Downloading {0}: {1} out of {2}", filename, downloadedBytes, totalBytes);
         }
     }
 }

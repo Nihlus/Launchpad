@@ -23,18 +23,29 @@
 using System;
 using System.IO;
 using System.Reflection;
-using Launchpad.Launcher.Handlers;
+using Launchpad.Launcher.Configuration;
 
 namespace Launchpad.Launcher.Utility
 {
     /// <summary>
     /// Helper methods for common paths and directories.
     /// </summary>
-    public static class DirectoryHelpers
+    public class DirectoryHelpers
     {
         private const string ConfigurationFolderName = "Config";
         private const string ConfigurationFileName = "LauncherConfig";
         private const string GameArgumentsFileName = "GameArguments";
+
+        private readonly ILaunchpadConfiguration _configuration;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DirectoryHelpers"/> class.
+        /// </summary>
+        /// <param name="configuration">The configuration instance.</param>
+        public DirectoryHelpers(ILaunchpadConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
 
         /// <summary>
         /// Gets the expected path to the config file on disk.
@@ -58,7 +69,7 @@ namespace Launchpad.Launcher.Utility
         /// Gets the path to the launcher cookie on disk.
         /// </summary>
         /// <returns>The launcher cookie.</returns>
-        public static string GetLauncherTagfilePath()
+        public string GetLauncherTagfilePath()
         {
             return Path.Combine(GetLocalLauncherDirectory(), ".launcher");
         }
@@ -67,7 +78,7 @@ namespace Launchpad.Launcher.Utility
         /// Gets the install cookie.
         /// </summary>
         /// <returns>The install cookie.</returns>
-        public static string GetGameTagfilePath()
+        public string GetGameTagfilePath()
         {
             return Path.Combine(GetLocalLauncherDirectory(), ".game");
         }
@@ -86,7 +97,7 @@ namespace Launchpad.Launcher.Utility
         /// Gets the temporary launcher download directory.
         /// </summary>
         /// <returns>A full path to the directory.</returns>
-        public static string GetTempLauncherDownloadPath()
+        public string GetTempLauncherDownloadPath()
         {
             return Path.Combine(Path.GetTempPath(), "launchpad", "launcher");
         }
@@ -95,7 +106,7 @@ namespace Launchpad.Launcher.Utility
         /// Gets the expected path to the argument file on disk.
         /// </summary>
         /// <returns>The path.</returns>
-        public static string GetGameArgumentsPath()
+        public string GetGameArgumentsPath()
         {
             return Path.Combine(GetConfigDirectory(), $"{GameArgumentsFileName}.txt");
         }
@@ -104,17 +115,16 @@ namespace Launchpad.Launcher.Utility
         /// Gets the game directory.
         /// </summary>
         /// <returns>The directory.</returns>
-        public static string GetLocalGameDirectory()
+        public string GetLocalGameDirectory()
         {
-            var config = ConfigHandler.Instance.Configuration;
-            return Path.Combine(GetLocalLauncherDirectory(), "Game", config.SystemTarget.ToString());
+            return Path.Combine(GetLocalLauncherDirectory(), "Game", _configuration.SystemTarget.ToString());
         }
 
         /// <summary>
         /// Gets the game version path.
         /// </summary>
         /// <returns>The game version path.</returns>
-        public static string GetLocalGameVersionPath()
+        public string GetLocalGameVersionPath()
         {
             return Path.Combine(GetLocalGameDirectory(), "GameVersion.txt");
         }
@@ -123,10 +133,9 @@ namespace Launchpad.Launcher.Utility
         /// Gets the remote path to where launcher binaries are stored.
         /// </summary>
         /// <returns>The path.</returns>
-        public static string GetRemoteLauncherBinariesPath()
+        public string GetRemoteLauncherBinariesPath()
         {
-            var config = ConfigHandler.Instance.Configuration;
-            return $"{config.RemoteAddress}/launcher/bin/";
+            return $"{_configuration.RemoteAddress}/launcher/bin/";
         }
 
         /// <summary>
@@ -135,21 +144,18 @@ namespace Launchpad.Launcher.Utility
         /// <returns>
         /// The path to either the official launchpad binaries or a custom launcher, depending on the settings.
         /// </returns>
-        public static string GetRemoteLauncherVersionPath()
+        public string GetRemoteLauncherVersionPath()
         {
-            var config = ConfigHandler.Instance.Configuration;
-
-            return $"{config.RemoteAddress}/launcher/LauncherVersion.txt";
+            return $"{_configuration.RemoteAddress}/launcher/LauncherVersion.txt";
         }
 
         /// <summary>
         /// Gets the remote path where the game is stored..
         /// </summary>
         /// <returns>The path.</returns>
-        public static string GetRemoteGamePath()
+        public string GetRemoteGamePath()
         {
-            var config = ConfigHandler.Instance.Configuration;
-            return $"{config.RemoteAddress}/game/{config.SystemTarget}/bin/";
+            return $"{_configuration.RemoteAddress}/game/{_configuration.SystemTarget}/bin/";
         }
     }
 }

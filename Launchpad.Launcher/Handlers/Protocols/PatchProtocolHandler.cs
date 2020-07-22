@@ -26,7 +26,7 @@ using System.Threading.Tasks;
 using Launchpad.Common.Enums;
 using Launchpad.Launcher.Configuration;
 using Launchpad.Launcher.Services;
-using NLog;
+using Microsoft.Extensions.Logging;
 using Remora.Results;
 using SixLabors.ImageSharp;
 
@@ -47,12 +47,12 @@ namespace Launchpad.Launcher.Handlers.Protocols
         /// <summary>
         /// Logger instance for this class.
         /// </summary>
-        private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
+        private readonly ILogger<PatchProtocolHandler> _log;
 
         /// <summary>
         /// Gets the configuration instance.
         /// </summary>
-        protected ILaunchpadConfiguration Configuration { get; } = ConfigHandler.Instance.Configuration;
+        protected ILaunchpadConfiguration Configuration { get; }
 
         /// <summary>
         /// Raised whenever the download progress of a module changes.
@@ -102,8 +102,19 @@ namespace Launchpad.Launcher.Handlers.Protocols
         /// <summary>
         /// Initializes a new instance of the <see cref="PatchProtocolHandler"/> class.
         /// </summary>
-        protected PatchProtocolHandler()
+        /// <param name="log">The logging instance.</param>
+        /// <param name="configuration">The configuration.</param>
+        /// <param name="tagfileService">The tagfile service.</param>
+        protected PatchProtocolHandler
+        (
+            ILogger<PatchProtocolHandler> log,
+            ILaunchpadConfiguration configuration,
+            TagfileService tagfileService
+        )
         {
+            _log = log;
+            this.Configuration = configuration;
+            this.TagfileService = tagfileService;
             this.ModuleDownloadProgressArgs = new ModuleProgressChangedArgs
             (
                 EModule.Game,
@@ -127,8 +138,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
                 string.Empty,
                 0
             );
-
-            this.TagfileService = new TagfileService();
         }
 
         /// <summary>

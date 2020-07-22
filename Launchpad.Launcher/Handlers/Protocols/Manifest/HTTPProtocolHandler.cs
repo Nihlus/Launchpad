@@ -26,7 +26,12 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Launchpad.Common.Enums;
-using NLog;
+using Launchpad.Common.Handlers.Manifest;
+using Launchpad.Launcher.Configuration;
+using Launchpad.Launcher.Services;
+using Launchpad.Launcher.Utility;
+using Microsoft.Extensions.Logging;
+using NGettext;
 using Remora.Results;
 using SixLabors.ImageSharp;
 using Image = SixLabors.ImageSharp.Image;
@@ -42,12 +47,46 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// <summary>
         /// Logger instance for this class.
         /// </summary>
-        private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
+        private readonly ILogger<HTTPProtocolHandler> _log;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HTTPProtocolHandler"/> class.
+        /// </summary>
+        /// <param name="log">The logging instance.</param>
+        /// <param name="localVersionService">The local version service.</param>
+        /// <param name="fileManifestHandler">The manifest handler.</param>
+        /// <param name="localizationCatalog">The localization catalog.</param>
+        /// <param name="configuration">The configuration.</param>
+        /// <param name="tagfileService">The tagfile service.</param>
+        /// <param name="directoryHelpers">The directory helpers.</param>
+        public HTTPProtocolHandler
+        (
+            ILogger<HTTPProtocolHandler> log,
+            LocalVersionService localVersionService,
+            ManifestHandler fileManifestHandler,
+            ICatalog localizationCatalog,
+            ILaunchpadConfiguration configuration,
+            TagfileService tagfileService,
+            DirectoryHelpers directoryHelpers
+        )
+            : base
+            (
+                log,
+                localVersionService,
+                fileManifestHandler,
+                localizationCatalog,
+                configuration,
+                tagfileService,
+                directoryHelpers
+            )
+        {
+            _log = log;
+        }
 
         /// <inheritdoc />
         public override async Task<RetrieveEntityResult<bool>> CanPatchAsync()
         {
-            Log.Info("Pinging remote patching server to determine if we can connect to it.");
+            _log.LogInformation("Pinging remote patching server to determine if we can connect to it.");
 
             var canConnect = false;
 
@@ -80,13 +119,13 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                 }
                 catch (WebException wex)
                 {
-                    Log.Warn("Unable to connect to remote patch server (WebException): " + wex.Message);
+                    _log.LogWarning("Unable to connect to remote patch server (WebException): " + wex.Message);
                     canConnect = false;
                 }
             }
             catch (WebException wex)
             {
-                Log.Warn("Unable to connect due a malformed url in the configuration (WebException): " + wex.Message);
+                _log.LogWarning("Unable to connect due a malformed url in the configuration (WebException): " + wex.Message);
                 canConnect = false;
             }
 
@@ -283,7 +322,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                 // Drop out early if the stream wasn't present
                 if (remoteStream == null)
                 {
-                    Log.Error
+                    _log.LogError
                     (
                         $"Failed to read the contents of remote file \"{remoteURL}\": " +
                         "Remote stream was null. This could be due to a network interruption " +
@@ -320,7 +359,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             }
             catch (NullReferenceException nex)
             {
-                Log.Error(" (NullReferenceException): " + nex.Message);
+                _log.LogError(" (NullReferenceException): " + nex.Message);
 
                 return RetrieveEntityResult<string>.FromError
                 (
