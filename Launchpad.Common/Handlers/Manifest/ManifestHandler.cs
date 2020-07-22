@@ -153,10 +153,8 @@ namespace Launchpad.Common.Handlers.Manifest
         /// <returns>A list of <see cref="ManifestEntry"/> objects.</returns>
         public static IReadOnlyList<ManifestEntry> LoadManifest(string manifestPath)
         {
-            using (var fileStream = File.OpenRead(manifestPath))
-            {
-                return LoadManifest(fileStream);
-            }
+            using var fileStream = File.OpenRead(manifestPath);
+            return LoadManifest(fileStream);
         }
 
         /// <summary>

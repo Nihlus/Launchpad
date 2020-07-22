@@ -38,13 +38,11 @@ namespace Launchpad.Common.Handlers
         /// <param name="dataStream">File stream.</param>
         public static string GetStreamHash(Stream dataStream)
         {
-            using (var md5 = MD5.Create())
-            {
-                // Calculate the hash of the stream.
-                var resultString = BitConverter.ToString(md5.ComputeHash(dataStream)).Replace("-", string.Empty);
+            using var md5 = MD5.Create();
+            // Calculate the hash of the stream.
+            var resultString = BitConverter.ToString(md5.ComputeHash(dataStream)).Replace("-", string.Empty);
 
-                return resultString;
-            }
+            return resultString;
         }
     }
 }
