@@ -90,7 +90,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             TagfileService tagfileService,
             DirectoryHelpers directoryHelpers
         )
-            : base(log, configuration, tagfileService)
+            : base(configuration, tagfileService)
         {
             _log = log;
             _localVersionService = localVersionService;
@@ -360,7 +360,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             // stored in the install cookie.
 
             // Attempt to parse whatever is inside the install cookie
-            if (ManifestEntry.TryParse(File.ReadAllText(_directoryHelpers.GetGameTagfilePath()), out var lastDownloadedFile))
+            if (ManifestEntry.TryParse(await File.ReadAllTextAsync(_directoryHelpers.GetGameTagfilePath()), out var lastDownloadedFile))
             {
                 // Loop through all the entries in the manifest until we encounter
                 // an entry which matches the one in the install cookie
@@ -543,13 +543,13 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             }
 
             // Reset the cookie
-            File.WriteAllText(_directoryHelpers.GetGameTagfilePath(), string.Empty);
+            await File.WriteAllTextAsync(_directoryHelpers.GetGameTagfilePath(), string.Empty);
 
             // Write the current file progress to the install cookie
-            using (TextWriter textWriterProgress = new StreamWriter(_directoryHelpers.GetGameTagfilePath()))
+            await using (TextWriter textWriterProgress = new StreamWriter(_directoryHelpers.GetGameTagfilePath()))
             {
                 textWriterProgress.WriteLine(fileEntry);
-                textWriterProgress.Flush();
+                await textWriterProgress.FlushAsync();
             }
 
             // First, let's see if an old file exists, and is valid.
@@ -586,7 +586,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                 else
                 {
                     string localHash;
-                    using (var fs = File.OpenRead(localPath))
+                    await using (var fs = File.OpenRead(localPath))
                     {
                         localHash = MD5Handler.GetStreamHash(fs);
                     }
@@ -612,7 +612,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             }
 
             // We've finished the download, so empty the cookie
-            File.WriteAllText(_directoryHelpers.GetGameTagfilePath(), string.Empty);
+            await File.WriteAllTextAsync(_directoryHelpers.GetGameTagfilePath(), string.Empty);
             return DetermineConditionResult.FromSuccess();
         }
 
@@ -641,7 +641,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
             var remoteHash = getRemoteHash.Entity;
 
-            using var file = File.OpenRead(manifestPath);
+            await using var file = File.OpenRead(manifestPath);
             var localHash = MD5Handler.GetStreamHash(file);
 
             return remoteHash != localHash;

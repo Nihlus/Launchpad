@@ -175,7 +175,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             var localBannerPath = Path.Combine(Path.GetTempPath(), "banner.png");
 
             await DownloadRemoteFileAsync(bannerURL, localBannerPath);
-            var bytes = File.ReadAllBytes(localBannerPath);
+            var bytes = await File.ReadAllBytesAsync(localBannerPath);
             return Image.Load(bytes);
         }
 
@@ -220,7 +220,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                 sizeRequest.Method = WebRequestMethods.Ftp.GetFileSize;
 
                 var data = string.Empty;
-                using var remoteStream = (await request.GetResponseAsync()).GetResponseStream();
+                await using var remoteStream = (await request.GetResponseAsync()).GetResponseStream();
                 if (remoteStream == null)
                 {
                     return string.Empty;
@@ -236,7 +236,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                 if (fileSize < bufferSize)
                 {
                     var smallBuffer = new byte[fileSize];
-                    remoteStream.Read(smallBuffer, 0, smallBuffer.Length);
+                    await remoteStream.ReadAsync(smallBuffer, 0, smallBuffer.Length);
 
                     data = Encoding.UTF8.GetString(smallBuffer, 0, smallBuffer.Length);
                 }
@@ -246,7 +246,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
                     while (true)
                     {
-                        var bytesRead = remoteStream.Read(buffer, 0, buffer.Length);
+                        var bytesRead = await remoteStream.ReadAsync(buffer, 0, buffer.Length);
 
                         if (bytesRead == 0)
                         {
@@ -315,7 +315,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
                 sizeRequest.Method = WebRequestMethods.Ftp.GetFileSize;
 
-                using var contentStream = (await request.GetResponseAsync()).GetResponseStream();
+                await using var contentStream = (await request.GetResponseAsync()).GetResponseStream();
                 if (contentStream == null)
                 {
                     return DetermineConditionResult.FromError
@@ -331,7 +331,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                     fileSize += sizereader.ContentLength;
                 }
 
-                using
+                await using
                 (
                     var fileStream = contentOffset > 0
                         ? new FileStream(localPath, FileMode.Append)
@@ -345,7 +345,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                     if (fileSize < bufferSize)
                     {
                         var smallBuffer = new byte[fileSize];
-                        contentStream.Read(smallBuffer, 0, smallBuffer.Length);
+                        await contentStream.ReadAsync(smallBuffer, 0, smallBuffer.Length);
 
                         fileStream.Write(smallBuffer, 0, smallBuffer.Length);
 
@@ -368,7 +368,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
                         while (true)
                         {
-                            var bytesRead = contentStream.Read(buffer, 0, buffer.Length);
+                            var bytesRead = await contentStream.ReadAsync(buffer, 0, buffer.Length);
 
                             if (bytesRead == 0)
                             {

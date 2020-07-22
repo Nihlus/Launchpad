@@ -26,7 +26,6 @@ using System.Threading.Tasks;
 using Launchpad.Common.Enums;
 using Launchpad.Launcher.Configuration;
 using Launchpad.Launcher.Services;
-using Microsoft.Extensions.Logging;
 using Remora.Results;
 using SixLabors.ImageSharp;
 
@@ -44,11 +43,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
     /// </summary>
     public abstract class PatchProtocolHandler
     {
-        /// <summary>
-        /// Logger instance for this class.
-        /// </summary>
-        private readonly ILogger<PatchProtocolHandler> _log;
-
         /// <summary>
         /// Gets the configuration instance.
         /// </summary>
@@ -102,17 +96,14 @@ namespace Launchpad.Launcher.Handlers.Protocols
         /// <summary>
         /// Initializes a new instance of the <see cref="PatchProtocolHandler"/> class.
         /// </summary>
-        /// <param name="log">The logging instance.</param>
         /// <param name="configuration">The configuration.</param>
         /// <param name="tagfileService">The tagfile service.</param>
         protected PatchProtocolHandler
         (
-            ILogger<PatchProtocolHandler> log,
             ILaunchpadConfiguration configuration,
             TagfileService tagfileService
         )
         {
-            _log = log;
             this.Configuration = configuration;
             this.TagfileService = tagfileService;
             this.ModuleDownloadProgressArgs = new ModuleProgressChangedArgs

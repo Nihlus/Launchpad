@@ -205,7 +205,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                 request.Method = WebRequestMethods.Http.Get;
                 request.AddRange(contentOffset);
 
-                using var contentStream = (await request.GetResponseAsync()).GetResponseStream();
+                await using var contentStream = (await request.GetResponseAsync()).GetResponseStream();
                 if (contentStream == null)
                 {
                     return DetermineConditionResult.FromError
@@ -215,7 +215,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                     );
                 }
 
-                using var fileStream = contentOffset > 0
+                await using var fileStream = contentOffset > 0
                     ? new FileStream(localPath, FileMode.Append)
                     : new FileStream(localPath, FileMode.Create);
 
@@ -237,7 +237,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
                 while (true)
                 {
-                    var bytesRead = contentStream.Read(buffer, 0, buffer.Length);
+                    var bytesRead = await contentStream.ReadAsync(buffer, 0, buffer.Length);
 
                     if (bytesRead == 0)
                     {
@@ -317,7 +317,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                 request.Method = WebRequestMethods.Http.Get;
 
                 var data = string.Empty;
-                using var remoteStream = (await request.GetResponseAsync()).GetResponseStream();
+                await using var remoteStream = (await request.GetResponseAsync()).GetResponseStream();
 
                 // Drop out early if the stream wasn't present
                 if (remoteStream == null)
@@ -337,7 +337,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
                 while (true)
                 {
-                    var bytesRead = remoteStream.Read(buffer, 0, buffer.Length);
+                    var bytesRead = await remoteStream.ReadAsync(buffer, 0, buffer.Length);
 
                     if (bytesRead == 0)
                     {

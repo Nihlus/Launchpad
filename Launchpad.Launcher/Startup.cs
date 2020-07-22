@@ -20,11 +20,9 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using System;
 using GLib;
 using Gtk;
 using Launchpad.Launcher.Interface;
-using Action = System.Action;
 using Application = Gtk.Application;
 using Task = System.Threading.Tasks.Task;
 
@@ -54,7 +52,7 @@ namespace Launchpad.Launcher
         /// </summary>
         public void Start()
         {
-            _app.Register(GLib.Cancellable.Current);
+            _app.Register(Cancellable.Current);
             _app.AddWindow(_mainWindow);
 
             _mainWindow.Show();

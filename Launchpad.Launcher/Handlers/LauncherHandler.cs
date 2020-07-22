@@ -72,29 +72,21 @@ namespace Launchpad.Launcher.Handlers
         private readonly ILaunchpadConfiguration _configuration;
 
         /// <summary>
-        /// The directory helpers.
-        /// </summary>
-        private readonly DirectoryHelpers _directoryHelpers;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="Launchpad.Launcher.Handlers.LauncherHandler"/> class.
         /// </summary>
         /// <param name="log">The logging instance.</param>
         /// <param name="patch">The patch protocol.</param>
         /// <param name="configuration">The configuration.</param>
-        /// <param name="directoryHelpers">The directory helpers.</param>
         public LauncherHandler
         (
             ILogger<LauncherHandler> log,
             PatchProtocolHandler patch,
-            ILaunchpadConfiguration configuration,
-            DirectoryHelpers directoryHelpers
+            ILaunchpadConfiguration configuration
         )
         {
             _log = log;
             _patch = patch;
             _configuration = configuration;
-            _directoryHelpers = directoryHelpers;
 
             _patch.ModuleDownloadProgressChanged += OnLauncherDownloadProgressChanged;
             _patch.ModuleInstallationFinished += OnLauncherDownloadFinished;
