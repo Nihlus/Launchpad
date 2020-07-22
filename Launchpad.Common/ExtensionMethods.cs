@@ -36,10 +36,9 @@ namespace Launchpad.Common
         /// </summary>
         /// <param name="input">Input string.</param>
         /// <returns>The string, without the illegal characters.</returns>
-        [return: NotNullIfNotNull("input")]
-        public static string? RemoveLineSeparatorsAndNulls(this string? input)
+        public static string RemoveLineSeparatorsAndNulls(this string input)
         {
-            return input?.Replace("\n", string.Empty).Replace("\0", string.Empty).Replace("\r", string.Empty);
+            return input.Replace("\n", string.Empty).Replace("\0", string.Empty).Replace("\r", string.Empty);
         }
 
         /// <summary>

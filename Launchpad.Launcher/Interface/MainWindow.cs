@@ -22,6 +22,7 @@
 
 using System;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Gdk;
 using GLib;
 using Gtk;
@@ -36,6 +37,7 @@ using Launchpad.Launcher.Utility.Enums;
 
 using NGettext;
 using NLog;
+using Remora.Results;
 using SixLabors.ImageSharp;
 using Application = Gtk.Application;
 using Process = System.Diagnostics.Process;
@@ -127,15 +129,21 @@ namespace Launchpad.Launcher.Interface
         /// Initializes the UI of the launcher, performing varying checks against the patching server.
         /// </summary>
         /// <returns>A task that must be awaited.</returns>
-        public Task InitializeAsync()
+        public async Task<DetermineConditionResult> InitializeAsync()
         {
             if (_isInitialized)
             {
-                return Task.CompletedTask;
+                return DetermineConditionResult.FromSuccess();
             }
 
             // First of all, check if we can connect to the patching service.
-            if (!_checks.CanPatch())
+            var getCanPatch = await _checks.CanPatchAsync();
+            if (!getCanPatch.IsSuccess)
+            {
+                return DetermineConditionResult.FromError(getCanPatch);
+            }
+
+            if (!getCanPatch.Entity)
             {
                 using (var dialog = new MessageDialog
                 (
@@ -154,9 +162,9 @@ namespace Launchpad.Launcher.Interface
             }
             else
             {
-                LoadBanner();
+                await LoadBannerAsync();
 
-                LoadChangelog();
+                await LoadChangelogAsync();
 
                 // If we can connect, proceed with the rest of our checks.
                 if (ChecksHandler.IsInitialStartup())
@@ -165,9 +173,21 @@ namespace Launchpad.Launcher.Interface
                 }
 
                 // If the launcher does not need an update at this point, we can continue checks for the game
-                if (!_checks.IsLauncherOutdated())
+                var getIsLauncherOutdated = await _checks.IsLauncherOutdatedAsync();
+                if (!getIsLauncherOutdated.IsSuccess)
                 {
-                    if (!_checks.IsPlatformAvailable(_configuration.SystemTarget))
+                    return DetermineConditionResult.FromError(getIsLauncherOutdated);
+                }
+
+                if (!getIsLauncherOutdated.Entity)
+                {
+                    var getIsPlatformAvailable = await _checks.IsPlatformAvailableAsync(_configuration.SystemTarget);
+                    if (!getIsPlatformAvailable.IsSuccess)
+                    {
+                        return DetermineConditionResult.FromError(getIsPlatformAvailable);
+                    }
+
+                    if (!getIsPlatformAvailable.Entity)
                     {
                         Log.Info
                         (
@@ -194,7 +214,13 @@ namespace Launchpad.Launcher.Interface
                         else
                         {
                             // If the game is installed (which it should be at this point), check if it needs to be updated
-                            if (_checks.IsGameOutdated())
+                            var getIsGameOutdated = await _checks.IsGameOutdatedAsync();
+                            if (!getIsGameOutdated.IsSuccess)
+                            {
+                                return DetermineConditionResult.FromError(getIsGameOutdated);
+                            }
+
+                            if (getIsGameOutdated.Entity)
                             {
                                 // If it does, offer to update it
                                 Log.Info("The game is outdated.");
@@ -218,13 +244,19 @@ namespace Launchpad.Launcher.Interface
             }
 
             _isInitialized = true;
-            return Task.CompletedTask;
+            return DetermineConditionResult.FromSuccess();
         }
 
-        private void LoadChangelog()
+        private async Task<DetermineConditionResult> LoadChangelogAsync()
         {
             var protocol = PatchProtocolProvider.GetHandler();
-            var markup = protocol.GetChangelogMarkup();
+            var getMarkup = await protocol.GetChangelogMarkupAsync();
+            if (!getMarkup.IsSuccess)
+            {
+                return DetermineConditionResult.FromError(getMarkup);
+            }
+
+            var markup = getMarkup.Entity;
 
             // Preprocess dot lists
             var dotRegex = new Regex("(?<=^\\s+)\\*", RegexOptions.Multiline);
@@ -236,6 +268,8 @@ namespace Launchpad.Launcher.Interface
 
             var startIter = _changelogTextView.Buffer.StartIter;
             _changelogTextView.Buffer.InsertMarkup(ref startIter, markup);
+
+            return DetermineConditionResult.FromSuccess();
         }
 
         private void DisplayInitialStartupDialog()
@@ -271,42 +305,45 @@ namespace Launchpad.Launcher.Interface
             }
         }
 
-        private void LoadBanner()
+        private async Task<DetermineConditionResult> LoadBannerAsync()
         {
             var patchHandler = PatchProtocolProvider.GetHandler();
 
             // Load the game banner (if there is one)
-            if (!patchHandler.CanProvideBanner())
+            var getCanProvideBanner = await patchHandler.CanProvideBannerAsync();
+            if (!getCanProvideBanner.IsSuccess)
             {
-                return;
+                return DetermineConditionResult.FromError(getCanProvideBanner);
             }
 
-            Task.Factory.StartNew
-            (
-                () =>
-                {
-                    // Fetch the banner from the server
-                    var bannerImage = patchHandler.GetBanner();
+            if (!getCanProvideBanner.Entity)
+            {
+                return DetermineConditionResult.FromSuccess();
+            }
 
-                    bannerImage.Mutate(i => i.Resize(_bannerImage.AllocatedWidth, 0));
+            // Fetch the banner from the server
+            var getBannerImage = await patchHandler.GetBannerAsync();
+            if (!getBannerImage.IsSuccess)
+            {
+                return DetermineConditionResult.FromError(getBannerImage);
+            }
 
-                    // Load the image into a pixel buffer
-                    return new Pixbuf
-                    (
-                        Bytes.NewStatic(bannerImage.SavePixelData()),
-                        Colorspace.Rgb,
-                        true,
-                        8,
-                        bannerImage.Width,
-                        bannerImage.Height,
-                        4 * bannerImage.Width
-                    );
-                }
-            )
-            .ContinueWith
+            var bannerImage = getBannerImage.Entity;
+            bannerImage.Mutate(i => i.Resize(_bannerImage.AllocatedWidth, 0));
+
+            // Load the image into a pixel buffer
+            _bannerImage.Pixbuf = new Pixbuf
             (
-                async bannerTask => _bannerImage.Pixbuf = await bannerTask
+                Bytes.NewStatic(bannerImage.SavePixelData()),
+                Colorspace.Rgb,
+                true,
+                8,
+                bannerImage.Width,
+                bannerImage.Height,
+                4 * bannerImage.Width
             );
+
+            return DetermineConditionResult.FromSuccess();
         }
 
         /// <summary>
@@ -426,10 +463,17 @@ namespace Launchpad.Launcher.Interface
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">Empty arguments.</param>
-        private void OnMainButtonClicked(object? sender, EventArgs e)
+        private async void OnMainButtonClicked(object? sender, EventArgs e)
         {
             // Drop out if the current platform isn't available on the server
-            if (!_checks.IsPlatformAvailable(_configuration.SystemTarget))
+            var getIsPlatformAvailable = await _checks.IsPlatformAvailableAsync(_configuration.SystemTarget);
+            if (!getIsPlatformAvailable.IsSuccess)
+            {
+                Log.Error(getIsPlatformAvailable.ErrorReason);
+                return;
+            }
+
+            if (!getIsPlatformAvailable.Entity)
             {
                 _statusLabel.Text =
                     LocalizationCatalog.GetString("The server does not provide the game for the selected platform.");
@@ -453,7 +497,7 @@ namespace Launchpad.Launcher.Interface
                 {
                     // Repair the game asynchronously
                     SetLauncherMode(ELauncherMode.Repair, true);
-                    _game.VerifyGame();
+                    await _game.VerifyGameAsync();
 
                     break;
                 }
@@ -461,23 +505,30 @@ namespace Launchpad.Launcher.Interface
                 {
                     // Install the game asynchronously
                     SetLauncherMode(ELauncherMode.Install, true);
-                    _game.InstallGame();
+                    await _game.InstallGameAsync();
 
                     break;
                 }
                 case ELauncherMode.Update:
                 {
-                    if (_checks.IsLauncherOutdated())
+                    var getIsLauncherUpdated = await _checks.IsLauncherOutdatedAsync();
+                    if (!getIsLauncherUpdated.IsSuccess)
+                    {
+                        Log.Error(getIsLauncherUpdated.ErrorReason);
+                        return;
+                    }
+
+                    if (getIsLauncherUpdated.Entity)
                     {
                         // Update the launcher asynchronously
                         SetLauncherMode(ELauncherMode.Update, true);
-                        _launcher.UpdateLauncher();
+                        await _launcher.UpdateLauncherAsync();
                     }
                     else
                     {
                         // Update the game asynchronously
                         SetLauncherMode(ELauncherMode.Update, true);
-                        _game.UpdateGame();
+                        await _game.UpdateGameAsync();
                     }
 
                     break;
@@ -658,7 +709,7 @@ namespace Launchpad.Launcher.Interface
         /// <summary>
         /// Handles starting of a reinstallation procedure as requested by the user.
         /// </summary>
-        private void OnReinstallGameActionActivated(object? sender, EventArgs e)
+        private async void OnReinstallGameActionActivated(object? sender, EventArgs e)
         {
             using var reinstallConfirmDialog = new MessageDialog
             (
@@ -679,7 +730,7 @@ namespace Launchpad.Launcher.Interface
             }
 
             SetLauncherMode(ELauncherMode.Install, true);
-            _game.ReinstallGame();
+            await _game.ReinstallGameAsync();
         }
     }
 }

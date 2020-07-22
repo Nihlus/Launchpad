@@ -24,7 +24,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
-
+using System.Threading.Tasks;
 using Launchpad.Common;
 using Launchpad.Launcher.Configuration;
 using Launchpad.Launcher.Handlers.Protocols;
@@ -104,52 +104,38 @@ namespace Launchpad.Launcher.Handlers
         /// <summary>
         /// Starts an asynchronous game installation task.
         /// </summary>
-        public void InstallGame()
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task InstallGameAsync()
         {
             Log.Info($"Starting installation of game files using protocol \"{_patch.GetType().Name}\"");
-            var t = new Thread(_patch.InstallGame)
-            {
-                Name = "InstallGame",
-                IsBackground = true
-            };
-
-            t.Start();
+            await _patch.InstallGameAsync();
         }
 
         /// <summary>
         /// Starts an asynchronous game update task.
         /// </summary>
-        public void UpdateGame()
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task UpdateGameAsync()
         {
             Log.Info($"Starting update of game files using protocol \"{_patch.GetType().Name}\"");
-            var t = new Thread(() => _patch.UpdateModule(EModule.Game))
-            {
-                Name = "UpdateGame",
-                IsBackground = true
-            };
-
-            t.Start();
+            await _patch.UpdateModuleAsync(EModule.Game);
         }
 
         /// <summary>
         /// Starts an asynchronous game verification task.
         /// </summary>
-        public void VerifyGame()
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task VerifyGameAsync()
         {
             Log.Info("Beginning verification of game files.");
-            var t = new Thread(() => _patch.VerifyModule(EModule.Game))
-            {
-                Name = "VerifyGame",
-                IsBackground = true
-            };
-
-            t.Start();
+            await _patch.VerifyModuleAsync(EModule.Game);
         }
 
         /// <summary>
         /// Deletes all local data and installs the game again.
         /// </summary>
-        public void ReinstallGame()
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task ReinstallGameAsync()
         {
             Log.Info("Beginning full reinstall of game files.");
             if (Directory.Exists(DirectoryHelpers.GetLocalGameDirectory()))
@@ -164,13 +150,7 @@ namespace Launchpad.Launcher.Handlers
                 File.Delete(DirectoryHelpers.GetGameTagfilePath());
             }
 
-            var t = new Thread(() => _patch.InstallGame())
-            {
-                Name = "ReinstallGame",
-                IsBackground = true
-            };
-
-            t.Start();
+            await _patch.InstallGameAsync();
         }
 
         /// <summary>

@@ -1,2 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="Remora.Results" Version="1.1.0" />
+  </ItemGroup>
 </Project>

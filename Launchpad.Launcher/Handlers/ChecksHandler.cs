@@ -21,12 +21,13 @@
 //
 
 using System.IO;
-
+using System.Threading.Tasks;
 using Launchpad.Common.Enums;
 using Launchpad.Launcher.Handlers.Protocols;
 
 using Launchpad.Launcher.Utility;
 using NLog;
+using Remora.Results;
 
 namespace Launchpad.Launcher.Handlers
 {
@@ -54,10 +55,7 @@ namespace Launchpad.Launcher.Handlers
         /// Determines whether this instance can connect to a patching service.
         /// </summary>
         /// <returns><c>true</c> if this instance can connect to a patching service; otherwise, <c>false</c>.</returns>
-        public bool CanPatch()
-        {
-            return _patch.CanPatch();
-        }
+        public Task<RetrieveEntityResult<bool>> CanPatchAsync() => _patch.CanPatchAsync();
 
         /// <summary>
         /// Determines whether this is the first time the launcher starts.
@@ -99,19 +97,15 @@ namespace Launchpad.Launcher.Handlers
         /// Determines whether the game is outdated.
         /// </summary>
         /// <returns><c>true</c> if the game is outdated; otherwise, <c>false</c>.</returns>
-        public bool IsGameOutdated()
-        {
-            return _patch.IsModuleOutdated(EModule.Game);
-        }
+        public Task<RetrieveEntityResult<bool>> IsGameOutdatedAsync()
+            => _patch.IsModuleOutdatedAsync(EModule.Game);
 
         /// <summary>
         /// Determines whether the launcher is outdated.
         /// </summary>
         /// <returns><c>true</c> if the launcher is outdated; otherwise, <c>false</c>.</returns>
-        public bool IsLauncherOutdated()
-        {
-            return _patch.IsModuleOutdated(EModule.Launcher);
-        }
+        public Task<RetrieveEntityResult<bool>> IsLauncherOutdatedAsync()
+            => _patch.IsModuleOutdatedAsync(EModule.Launcher);
 
         /// <summary>
         /// Determines whether the install cookie is empty.
@@ -136,9 +130,7 @@ namespace Launchpad.Launcher.Handlers
         /// </summary>
         /// <returns><c>true</c>, if the server does provide files for the platform, <c>false</c> otherwise.</returns>
         /// <param name="platform">platform.</param>
-        public bool IsPlatformAvailable(ESystemTarget platform)
-        {
-            return _patch.IsPlatformAvailable(platform);
-        }
+        public Task<RetrieveEntityResult<bool>> IsPlatformAvailableAsync(ESystemTarget platform)
+            => _patch.IsPlatformAvailableAsync(platform);
     }
 }

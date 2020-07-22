@@ -26,7 +26,7 @@ using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Threading;
-
+using System.Threading.Tasks;
 using Launchpad.Common;
 using Launchpad.Launcher.Configuration;
 using Launchpad.Launcher.Handlers.Protocols;
@@ -84,19 +84,14 @@ namespace Launchpad.Launcher.Handlers
         /// <summary>
         /// Updates the launcher asynchronously.
         /// </summary>
-        public void UpdateLauncher()
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task UpdateLauncherAsync()
         {
             try
             {
                 Log.Info($"Starting update of lancher files using protocol \"{_patch.GetType().Name}\"");
 
-                var t = new Thread(() => _patch.UpdateModule(EModule.Launcher))
-                {
-                    Name = "UpdateLauncher",
-                    IsBackground = true
-                };
-
-                t.Start();
+                await _patch.UpdateModuleAsync(EModule.Launcher);
             }
             catch (IOException ioex)
             {
@@ -108,7 +103,7 @@ namespace Launchpad.Launcher.Handlers
         /// Checks if the launcher can access the standard HTTP changelog.
         /// </summary>
         /// <returns><c>true</c> if the changelog can be accessed; otherwise, <c>false</c>.</returns>
-        public static bool CanAccessStandardChangelog()
+        public static async Task<bool> CanAccessStandardChangelog()
         {
             if (string.IsNullOrEmpty(Configuration.ChangelogAddress.AbsoluteUri))
             {
@@ -128,7 +123,7 @@ namespace Launchpad.Launcher.Handlers
 
             try
             {
-                using var headResponse = (HttpWebResponse)headRequest.GetResponse();
+                using var headResponse = (HttpWebResponse)await headRequest.GetResponseAsync();
                 return headResponse.StatusCode == HttpStatusCode.OK;
             }
             catch (WebException wex)

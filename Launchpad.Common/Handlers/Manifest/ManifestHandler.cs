@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.IO;
 
 using Launchpad.Common.Enums;
+using Remora.Results;
 
 namespace Launchpad.Common.Handlers.Manifest
 {
@@ -79,38 +80,27 @@ namespace Launchpad.Common.Handlers.Manifest
         /// <param name="getOldManifest">Whether or not the old manifest or the new manifest should be retrieved.</param>
         /// <returns>A list of <see cref="ManifestEntry"/> objects.</returns>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="manifestType"/> is not a known value.</exception>
-        public IReadOnlyList<ManifestEntry> GetManifest(EManifestType manifestType, bool getOldManifest)
+        public RetrieveEntityResult<IReadOnlyList<ManifestEntry>> GetManifest(EManifestType manifestType, bool getOldManifest)
         {
-            switch (manifestType)
+            lock (_manifestsLock)
             {
-                case EManifestType.Game:
-                case EManifestType.Launchpad:
+                if (getOldManifest)
                 {
-                    lock (_manifestsLock)
+                    if (_oldManifests.TryGetValue(manifestType, out var oldManifest))
                     {
-                        if (getOldManifest)
-                        {
-                            if (_oldManifests.ContainsKey(manifestType))
-                            {
-                                return _oldManifests[manifestType];
-                            }
-                        }
-                        else
-                        {
-                            if (_manifests.ContainsKey(manifestType))
-                            {
-                                return _manifests[manifestType];
-                            }
-                        }
+                        return RetrieveEntityResult<IReadOnlyList<ManifestEntry>>.FromSuccess(oldManifest);
                     }
-
-                    throw new InvalidOperationException();
                 }
-                default:
+                else
                 {
-                    throw new ArgumentOutOfRangeException(nameof(manifestType), "An unknown manifest type was requested.");
+                    if (_manifests.TryGetValue(manifestType, out var manifest))
+                    {
+                        return RetrieveEntityResult<IReadOnlyList<ManifestEntry>>.FromSuccess(manifest);
+                    }
                 }
             }
+
+            return RetrieveEntityResult<IReadOnlyList<ManifestEntry>>.FromError("No manifest found.");
         }
 
         /// <summary>

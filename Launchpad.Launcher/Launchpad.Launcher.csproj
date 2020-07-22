@@ -14,6 +14,7 @@
     <PackageReference Include="Config.Net" Version="4.13.7" />
     <PackageReference Include="GtkSharp" Version="3.22.25.74" />
     <PackageReference Include="NLog" Version="4.6.6" />
+    <PackageReference Include="Remora.Results" Version="1.1.0" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0002" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="all" />
     <PackageReference Include="NGettext" Version="0.6.4" />

@@ -22,11 +22,12 @@
 
 using System;
 using System.IO;
-
+using System.Threading.Tasks;
 using Launchpad.Common.Enums;
 using Launchpad.Launcher.Configuration;
 using Launchpad.Launcher.Services;
 using NLog;
+using Remora.Results;
 using SixLabors.ImageSharp;
 
 namespace Launchpad.Launcher.Handlers.Protocols
@@ -47,11 +48,6 @@ namespace Launchpad.Launcher.Handlers.Protocols
         /// Logger instance for this class.
         /// </summary>
         private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
-
-        /// <summary>
-        /// Gets the config handler reference.
-        /// </summary>
-        protected ConfigHandler Config { get; } = ConfigHandler.Instance;
 
         /// <summary>
         /// Gets the configuration instance.
@@ -140,44 +136,45 @@ namespace Launchpad.Launcher.Handlers.Protocols
         /// patch provider (file server, distributed hash tables, hyperspace compression waves etc.)
         /// </summary>
         /// <returns><c>true</c> if this instance can provide patches; otherwise, <c>false</c>.</returns>
-        public abstract bool CanPatch();
+        public abstract Task<RetrieveEntityResult<bool>> CanPatchAsync();
 
         /// <summary>
         /// Determines whether the protocol can provide patches and updates for the provided platform.
         /// </summary>
         /// <param name="platform">The platform to check.</param>
         /// <returns><c>true</c> if the platform is available; otherwise, <c>false</c>.</returns>
-        public abstract bool IsPlatformAvailable(ESystemTarget platform);
+        public abstract Task<RetrieveEntityResult<bool>> IsPlatformAvailableAsync(ESystemTarget platform);
 
         /// <summary>
         /// Determines whether this protocol can provide access to a banner for the game.
         /// </summary>
         /// <returns><c>true</c> if this instance can provide banner; otherwise, <c>false</c>.</returns>
-        public abstract bool CanProvideBanner();
+        public abstract Task<RetrieveEntityResult<bool>> CanProvideBannerAsync();
 
         /// <summary>
         /// Gets the changelog.
         /// </summary>
         /// <returns>The changelog.</returns>
-        public abstract string GetChangelogMarkup();
+        public abstract Task<RetrieveEntityResult<string>> GetChangelogMarkupAsync();
 
         /// <summary>
         /// Gets the banner.
         /// </summary>
         /// <returns>The banner.</returns>
-        public abstract Image<Rgba32> GetBanner();
+        public abstract Task<RetrieveEntityResult<Image<Rgba32>>> GetBannerAsync();
 
         /// <summary>
         /// Determines whether or not the specified module is outdated.
         /// </summary>
         /// <param name="module">The module.</param>
         /// <returns>true if the module is outdated; otherwise, false.</returns>
-        public abstract bool IsModuleOutdated(EModule module);
+        public abstract Task<RetrieveEntityResult<bool>> IsModuleOutdatedAsync(EModule module);
 
         /// <summary>
         /// Installs the game.
         /// </summary>
-        public virtual void InstallGame()
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public virtual async Task<DetermineConditionResult> InstallGameAsync()
         {
             try
             {
@@ -186,40 +183,47 @@ namespace Launchpad.Launcher.Handlers.Protocols
                 this.TagfileService.CreateGameTagfile();
 
                 // Download Game
-                DownloadModule(EModule.Game);
+                var downloadResult = await DownloadModuleAsync(EModule.Game);
+                if (!downloadResult.IsSuccess)
+                {
+                    return DetermineConditionResult.FromError(downloadResult);
+                }
 
                 // Verify Game
-                VerifyModule(EModule.Game);
+                var verifyResult = await VerifyModuleAsync(EModule.Game);
+                if (!verifyResult.IsSuccess)
+                {
+                    return DetermineConditionResult.FromError(verifyResult);
+                }
             }
             catch (IOException ioex)
             {
-                Log.Warn("Game installation failed (IOException): " + ioex.Message);
+                return DetermineConditionResult.FromError(ioex);
             }
 
-            // OnModuleInstallationFinished and OnModuleInstallationFailed is in VerifyGame
-            // in order to allow it to run as a standalone action, while still keeping this functional.
-
-            // As a side effect, it is required that it is the last action to run in Install and Update,
-            // which happens to coincide with the general design.
+            return DetermineConditionResult.FromSuccess();
         }
 
         /// <summary>
         /// Downloads the latest version of the specified module.
         /// </summary>
         /// <param name="module">The module.</param>
-        protected abstract void DownloadModule(EModule module);
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        protected abstract Task<DetermineConditionResult> DownloadModuleAsync(EModule module);
 
         /// <summary>
         /// Updates the specified module to the latest version.
         /// </summary>
         /// <param name="module">The module to update.</param>
-        public abstract void UpdateModule(EModule module);
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public abstract Task<DetermineConditionResult> UpdateModuleAsync(EModule module);
 
         /// <summary>
         /// Verifies and repairs the files of the specified module.
         /// </summary>
         /// <param name="module">The module.</param>
-        public abstract void VerifyModule(EModule module);
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public abstract Task<DetermineConditionResult> VerifyModuleAsync(EModule module);
 
         /// <summary>
         /// Invoke the <see cref="ModuleDownloadProgressChanged"/> event.
