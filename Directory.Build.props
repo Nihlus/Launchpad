@@ -1,0 +1,125 @@
+<!--
+    This file contains common properties for all DIGOS.Ambassador projects. It is divided into multiple sections,
+    depending on the use case for the properties.
+-->
+
+<Project>
+    <!-- Common properties for all projects -->
+    <PropertyGroup>
+        <LangVersion>latest</LangVersion>
+        <Deterministic>true</Deterministic>
+        <DebugSymbols>true</DebugSymbols>
+
+        <TargetFrameworks>netcoreapp3.1;netstandard2.1</TargetFrameworks>
+
+        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+        <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <SolutionDir>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)/))</SolutionDir>
+    </PropertyGroup>
+
+    <Choose>
+        <When Condition="'$(TargetFramework.TrimEnd(`0123456789.`))' == 'netcoreapp'">
+            <PropertyGroup>
+                <IsRunnableTarget>true</IsRunnableTarget>
+            </PropertyGroup>
+        </When>
+        <Otherwise>
+            <PropertyGroup>
+                <IsRunnableTarget>false</IsRunnableTarget>
+            </PropertyGroup>
+        </Otherwise>
+    </Choose>
+
+    <!-- NuGet-related properties -->
+    <PropertyGroup>
+        <Title>$(AssemblyName)</Title>
+        <Authors>Jarl Gullberg</Authors>
+        <Copyright>Jarl Gullberg 2020</Copyright>
+        <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+
+        <IncludeSymbols>true</IncludeSymbols>
+        <IncludeSource>true</IncludeSource>
+
+        <RepositoryUrl>https://github.com/Nihlus/Launchpad</RepositoryUrl>
+        <RepositoryBranch>master</RepositoryBranch>
+        <PackageOutputPath>$(SolutionDir)/nuget</PackageOutputPath>
+        <PackageProjectUrl>https://github.com/Nihlus/Launchpad</PackageProjectUrl>
+        <PackageTags>launcher;game;free;</PackageTags>
+    </PropertyGroup>
+
+    <!-- Code inspection properties -->
+    <PropertyGroup>
+        <StyleCopRuleset>$(SolutionDir)/stylecop.ruleset</StyleCopRuleset>
+        <StyleCopConfiguration>$(SolutionDir)/stylecop.json</StyleCopConfiguration>
+
+        <Nullable>enable</Nullable>
+
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+        <RunCodeAnalysis>true</RunCodeAnalysis>
+        <CodeAnalysisRuleSet>$(StyleCopRuleset)</CodeAnalysisRuleSet>
+        <WarningsAsErrors>
+            CS8600;
+            CS8601;
+            CS8602;
+            CS8603;
+            CS8604;
+            CS8608;
+            CS8609;
+            CS8610;
+            CS8611;
+            CS8612;
+            CS8613;
+            CS8614;
+            CS8615;
+            CS8616;
+            CS8617;
+            CS8618;
+            CS8619;
+            CS8620;
+            CS8621;
+            CS8622;
+            CS8625;
+            CS8626;
+            CS8629;
+            CS8631;
+            CS8633;
+            CS8634;
+            CS8638;
+            CS8639;
+            CS8643;
+            CS8644;
+            CS8645;
+            CS8762;
+            CS8765;
+        </WarningsAsErrors>
+        <NoWarn>
+            CS8632;
+        </NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <AdditionalFiles Include="$(StyleCopConfiguration)">
+            <Link>stylecop.json</Link>
+            <InProject>false</InProject>
+        </AdditionalFiles>
+        <AdditionalFiles Include="$(StyleCopRuleset">
+            <Link>stylecop.ruleset</Link>
+            <InProject>false</InProject>
+        </AdditionalFiles>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.164" PrivateAssets="all" />
+        <PackageReference Include="Nullable" Version="1.2.1" PrivateAssets="all" />
+    </ItemGroup>
+
+    <!-- JetBrains Annotations -->
+    <ItemGroup>
+        <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" PrivateAssets="all" />
+    </ItemGroup>
+</Project>

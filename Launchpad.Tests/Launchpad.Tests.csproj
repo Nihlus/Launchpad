@@ -15,6 +15,4 @@
     <ProjectReference Include="..\Launchpad.Launcher\Launchpad.Launcher.csproj" />
   </ItemGroup>
 
-  <Import Project="..\props\netfx-mono.props" />
-
 </Project>

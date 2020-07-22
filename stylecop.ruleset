@@ -1,4 +1,4 @@
-<RuleSet Name="OpenTK Rules" ToolsVersion="12.0">
+<RuleSet Name="OpenTK Rules" ToolsVersion="14.0">
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
 
     <!-- Special rules -->
@@ -15,7 +15,7 @@
     <Rule Id="SA1006" Action="Error" /> <!-- Preprocessor keywords must not be preceded by space -->
     <Rule Id="SA1007" Action="Error" /> <!-- Operator keyword must be followed by space -->
     <Rule Id="SA1008" Action="Error" /> <!-- Opening parenthesis must be spaced correctly -->
-    <Rule Id="SA1009" Action="None" Intentional="true" Reason="Used for alignment"/> <!-- Closing parenthesis must be spaced correctly -->
+    <Rule Id="SA1009" Action="None" /> <!-- Closing parenthesis must be spaced correctly -->
     <Rule Id="SA1010" Action="Error" /> <!-- Opening square brackets must be spaced correctly -->
     <Rule Id="SA1011" Action="Error" /> <!-- Closing square brackets must be spaced correctly -->
     <Rule Id="SA1012" Action="Error" /> <!-- Opening braces must be spaced correctly -->
@@ -39,7 +39,7 @@
     <!-- Readability rules -->
     <Rule Id="SA1100" Action="Error" /> <!-- Do not prefix calls with base unless local implementation exists -->
     <Rule Id="SA1101" Action="None"/> <!-- Prefix local calls with this -->
-    <Rule Id="SX1101" Action="None" Intentional="true" /> <!-- Do not prefix local calls with this. -->
+    <Rule Id="SX1101" Action="None" /> <!-- Do not prefix local calls with this. -->
     <Rule Id="SA1102" Action="Error" /> <!-- Query clause must follow previous clause -->
     <Rule Id="SA1103" Action="Error" /> <!-- Query clauses must be on separate lines or all on one line -->
     <Rule Id="SA1104" Action="Error" /> <!-- Query clause must begin on new line when previous clause spans multiple lines -->
@@ -47,8 +47,8 @@
     <Rule Id="SA1106" Action="Error" /> <!-- Code must not contain empty statements -->
     <Rule Id="SA1107" Action="Error" /> <!-- Code must not contain multiple statements on one line -->
     <Rule Id="SA1108" Action="Error" /> <!-- Block statements must not contain embedded comments -->
-    <Rule Id="SA1110" Action="None" Intentional="true" /> <!-- Opening parenthesis or bracket must be on declaration line -->
-    <Rule Id="SA1111" Action="None" Intentional="true" /> <!-- Closing parenthesis must be on line of last parameter -->
+    <Rule Id="SA1110" Action="None" /> <!-- Opening parenthesis or bracket must be on declaration line -->
+    <Rule Id="SA1111" Action="None" /> <!-- Closing parenthesis must be on line of last parameter -->
     <Rule Id="SA1112" Action="Error" /> <!-- Closing parenthesis must be on line of opening parenthesis -->
     <Rule Id="SA1113" Action="Error" /> <!-- Comma must be on the same line as previous parameter -->
     <Rule Id="SA1114" Action="Error" /> <!-- Parameter list must follow declaration -->
@@ -57,35 +57,36 @@
     <Rule Id="SA1117" Action="Error" /> <!-- Parameters must be on same line or separate lines -->
     <Rule Id="SA1118" Action="Error" /> <!-- Parameter must not span multiple lines -->
     <Rule Id="SA1119" Action="Error" /> <!-- Statement must not use unnecessary parenthesis -->
-    <Rule Id="SA1120" Action="None" Intentional="true" Reason="Used for spacing in license header"/> <!-- Comments must contain text -->
+    <Rule Id="SA1120" Action="None" /> <!-- Comments must contain text -->
     <Rule Id="SA1121" Action="Error" /> <!-- Use built-in type alias -->
     <Rule Id="SA1122" Action="Error" /> <!-- Use string.Empty for empty strings -->
     <Rule Id="SA1123" Action="Error" /> <!-- Do not place regions within elements -->
     <Rule Id="SA1124" Action="Error" /> <!-- Do not use regions -->
     <Rule Id="SA1125" Action="Error" /> <!-- Use shorthand for nullable types -->
-    <Rule Id="SA1127" Action="None" Intentional="true" /> <!-- Generic type constraints must be on their own line -->
+    <Rule Id="SA1127" Action="None" /> <!-- Generic type constraints must be on their own line -->
     <Rule Id="SA1128" Action="Error" /> <!-- Put constructor initializers on their own line -->
     <Rule Id="SA1129" Action="Error" /> <!-- Do not use default value type constructor -->
     <Rule Id="SA1130" Action="Error" /> <!-- Use lambda syntax -->
     <Rule Id="SA1131" Action="Error" /> <!-- Use readable conditions -->
     <Rule Id="SA1132" Action="Error" /> <!-- Do not combine fields -->
-    <Rule Id="SA1133" Action="Error" /> <!-- Do not combine attributes -->
-    <Rule Id="SA1134" Action="Error" /> <!-- Attributes must not share line -->
+    <Rule Id="SA1133" Action="None" /> <!-- Do not combine attributes -->
+    <Rule Id="SA1134" Action="None" /> <!-- Attributes must not share line -->
     <Rule Id="SA1136" Action="Error" /> <!-- Enum values should be on separate lines -->
     <Rule Id="SA1137" Action="Error" /> <!-- Elements should have the same indentation -->
     <Rule Id="SA1139" Action="Error" /> <!-- Use literals suffix notation instead of casting -->
 
     <!-- Ordering rules -->
     <Rule Id="SA1200" Action="Error" /> <!-- Using directives must be placed correctly -->
-    <Rule Id="SA1201" Action="None" Intentional="true" /> <!-- Elements must appear in the correct order -->
-    <Rule Id="SA1202" Action="None" Intentional="true" /> <!-- Elements must be ordered by access -->
+    <Rule Id="SA1201" Action="None" /> <!-- Elements must appear in the correct order -->
+    <Rule Id="SA1202" Action="None" /> <!-- Elements must be ordered by access -->
     <Rule Id="SA1203" Action="Error" /> <!-- Constants must appear before fields -->
-    <Rule Id="SA1204" Action="None" Intentional="true" /> <!-- Static elements must appear before instance elements -->
+    <Rule Id="SA1204" Action="None" /> <!-- Static elements must appear before instance elements -->
     <Rule Id="SA1205" Action="Error" /> <!-- Partial elements must declare access -->
     <Rule Id="SA1206" Action="Error" /> <!-- Declaration keywords must follow order -->
     <Rule Id="SA1207" Action="Error" /> <!-- Protected must come before internal -->
     <Rule Id="SA1208" Action="Error" /> <!-- System using directives must be placed before other using directives -->
     <Rule Id="SA1209" Action="Error" /> <!-- Using alias directives must be placed after other using directives -->
+    <Rule Id="SA1210" Action="Error" /> <!-- Using directives must be ordered alphabetically by namespace -->
     <Rule Id="SA1210" Action="Error" /> <!-- Using directives must be ordered alphabetically by namespace -->
     <Rule Id="SA1211" Action="Error" /> <!-- Using alias directives must be ordered alphabetically by alias name -->
     <Rule Id="SA1212" Action="Error" /> <!-- Property accessors must follow order -->
@@ -100,12 +101,12 @@
     <Rule Id="SA1303" Action="Error" /> <!-- Const field names must begin with upper-case letter -->
     <Rule Id="SA1304" Action="Error" /> <!-- Non-private readonly fields must begin with upper-case letter -->
     <Rule Id="SA1305" Action="Error" /> <!-- Field names must not use Hungarian notation -->
-    <Rule Id="SA1306" Action="None" Intentional="true" Reason="Field names should begin with upper-case latter"/> <!-- Field names must begin with lower-case letter -->
+    <Rule Id="SA1306" Action="None" /> <!-- Field names must begin with lower-case letter -->
     <Rule Id="SA1307" Action="Error" /> <!-- Accessible fields must begin with upper-case letter -->
     <Rule Id="SA1308" Action="Error" /> <!-- Variable names must not be prefixed -->
-    <Rule Id="SA1309" Action="Error" /> <!-- Field names must not begin with underscore -->
-    <Rule Id="SX1309" Action="None" Intentional="true" /> <!-- Field names must begin with underscore -->
-    <Rule Id="SX1309S" Action="None" Intentional="true" /> <!-- Static field names must begin with underscore -->
+    <Rule Id="SA1309" Action="None" /> <!-- Field names must not begin with underscore -->
+    <Rule Id="SX1309" Action="Error" /> <!-- Field names must begin with underscore -->
+    <Rule Id="SX1309S" Action="None" /> <!-- Static field names must begin with underscore -->
     <Rule Id="SA1310" Action="Error" /> <!-- Field names must not contain underscore -->
     <Rule Id="SA1311" Action="Error" /> <!-- Static readonly fields must begin with upper-case letter -->
     <Rule Id="SA1312" Action="Error" /> <!-- Variable names must begin with lower-case letter -->
@@ -124,8 +125,8 @@
     <Rule Id="SA1408" Action="Error" /> <!-- Conditional expressions must declare precedence -->
     <Rule Id="SA1410" Action="Error" /> <!-- Remove delegate parenthesis when possible -->
     <Rule Id="SA1411" Action="Error" /> <!-- Attribute constructor must not use unnecessary parenthesis -->
-    <Rule Id="SA1412" Action="None" Intentional="true" /> <!-- Store files as UTF-8 with byte order mark -->
-    <Rule Id="SA1413" Action="None" Intentional="true" /> <!-- Use trailing comma in multi-line initializers -->
+    <Rule Id="SA1412" Action="None" /> <!-- Store files as UTF-8 with byte order mark -->
+    <Rule Id="SA1413" Action="None" /> <!-- Use trailing comma in multi-line initializers -->
 
     <!-- Layout rules -->
     <Rule Id="SA1500" Action="Error" /> <!-- Braces for multi-line statements must not share line -->
@@ -141,7 +142,7 @@
     <Rule Id="SA1510" Action="Error" /> <!-- Chained statement blocks must not be preceded by blank line -->
     <Rule Id="SA1511" Action="Error" /> <!-- While-do footer must not be preceded by blank line -->
     <Rule Id="SA1512" Action="Warning" /> <!-- Single-line comments must not be followed by blank line -->
-    <Rule Id="SA1513" Action="None" Intentional="true" Reason="Waiting for configurable option for enums"/> <!-- Closing brace must be followed by blank line -->
+    <Rule Id="SA1513" Action="None" /> <!-- Closing brace must be followed by blank line -->
     <Rule Id="SA1514" Action="Error" /> <!-- Element documentation header must be preceded by blank line -->
     <Rule Id="SA1515" Action="Warning" /> <!-- Single-line comment must be preceded by blank line -->
     <Rule Id="SA1516" Action="Error" /> <!-- Elements must be separated by blank line -->
@@ -152,15 +153,15 @@
 
     <!-- Documentation rules -->
     <Rule Id="SA1600" Action="Error" /> <!-- Elements must be documented -->
-    <Rule Id="SA1601" Action="None" Intentional="true" /> <!-- Partial elements must be documented -->
+    <Rule Id="SA1601" Action="None" /> <!-- Partial elements must be documented -->
     <Rule Id="SA1602" Action="Error" /> <!-- Enumeration items must be documented -->
     <Rule Id="SA1604" Action="Error" /> <!-- Element documentation must have summary -->
     <Rule Id="SA1605" Action="Error" /> <!-- Partial element documentation must have summary -->
     <Rule Id="SA1606" Action="Error" /> <!-- Element documentation must have summary text -->
     <Rule Id="SA1607" Action="Error" /> <!-- Partial element documentation must have summary text -->
     <Rule Id="SA1608" Action="Error" /> <!-- Element documentation must not have default summary -->
-    <Rule Id="SA1609" Action="None" Intentional="true" /> <!-- Property documentation must have value -->
-    <Rule Id="SA1610" Action="None" Intentional="true "/> <!-- Property documentation must have value text -->
+    <Rule Id="SA1609" Action="None" /> <!-- Property documentation must have value -->
+    <Rule Id="SA1610" Action="None" /> <!-- Property documentation must have value text -->
     <Rule Id="SA1611" Action="Error" /> <!-- Element parameters must be documented -->
     <Rule Id="SA1612" Action="Error" /> <!-- Element parameter documentation must match element parameters -->
     <Rule Id="SA1613" Action="Error" /> <!-- Element parameter documentation must declare parameter name -->
@@ -182,7 +183,7 @@
     <Rule Id="SA1633" Action="Error" /> <!-- File must have header -->
     <Rule Id="SA1634" Action="Error" /> <!-- File header must show copyright -->
     <Rule Id="SA1635" Action="Error" /> <!-- File header must have copyright text -->
-    <Rule Id="SA1636" Action="Error" Intentional="true" /> <!-- File header copyright text must match -->
+    <Rule Id="SA1636" Action="Error" /> <!-- File header copyright text must match -->
     <Rule Id="SA1637" Action="Error" /> <!-- File header must contain file name -->
     <Rule Id="SA1638" Action="Error" /> <!-- File header file name documentation must match file name -->
     <Rule Id="SA1639" Action="Error" /> <!-- File header must have summary -->
@@ -190,7 +191,7 @@
     <Rule Id="SA1641" Action="Error" /> <!-- File header company name text must match -->
     <Rule Id="SA1642" Action="Error" /> <!-- Constructor summary documentation must begin with standard text -->
     <Rule Id="SA1643" Action="Error" /> <!-- Destructor summary documentation must begin with standard text -->
-    <Rule Id="SA1644" Action="None" Intentional="true" /> <!-- Documentation header must not contain blank lines -->
+    <Rule Id="SA1644" Action="None" /> <!-- Documentation header must not contain blank lines -->
     <Rule Id="SA1648" Action="Error" /> <!-- inheritdoc must be used with inheriting class -->
     <Rule Id="SA1649" Action="Error" /> <!-- File name must match first type name -->
     <Rule Id="SA1651" Action="Error" /> <!-- Do not use placeholder elements -->
