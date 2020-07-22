@@ -21,6 +21,7 @@
 //
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Launchpad.Common.Handlers.Manifest
 {
@@ -67,7 +68,7 @@ namespace Launchpad.Common.Handlers.Manifest
         /// <returns><c>true</c>, if the input was successfully parse, <c>false</c> otherwise.</returns>
         /// <param name="rawInput">Raw input.</param>
         /// <param name="inEntry">The resulting entry.</param>
-        public static bool TryParse(string rawInput, out ManifestEntry inEntry)
+        public static bool TryParse(string rawInput, [NotNullWhen(true)] out ManifestEntry? inEntry)
         {
             inEntry = null;
 
@@ -143,13 +144,13 @@ namespace Launchpad.Common.Handlers.Manifest
         /// <param name="obj">The <see cref="object"/> to compare with the current <see cref="ManifestEntry"/>.</param>
         /// <returns><c>true</c> if the specified <see cref="object"/> is equal to the current
         /// <see cref="ManifestEntry"/>; otherwise, <c>false</c>.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return Equals(obj as ManifestEntry);
         }
 
         /// <inheritdoc />
-        public bool Equals(ManifestEntry other)
+        public bool Equals(ManifestEntry? other)
         {
             if (other == null)
             {
