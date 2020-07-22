@@ -82,7 +82,7 @@ namespace Launchpad.Utilities.Interface
             _statusLabel.Text = _localizationCatalog.GetString("Idle");
         }
 
-        private async void OnGenerateGameManifestButtonClicked(object sender, EventArgs e)
+        private async void OnGenerateGameManifestButtonClicked(object? sender, EventArgs e)
         {
             var targetDirectory = _folderChooser.Filename;
 
@@ -115,7 +115,7 @@ namespace Launchpad.Utilities.Interface
             await GenerateManifestAsync(EManifestType.Game);
         }
 
-        private async void OnGenerateLaunchpadManifestButtonClicked(object sender, EventArgs e)
+        private async void OnGenerateLaunchpadManifestButtonClicked(object? sender, EventArgs e)
         {
             await GenerateManifestAsync(EManifestType.Launchpad);
         }

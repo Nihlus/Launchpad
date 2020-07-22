@@ -233,12 +233,12 @@ namespace Launchpad.Launcher.Handlers
             return Path.Combine(Path.GetTempPath(), "launchpad_update.bat");
         }
 
-        private void OnLauncherDownloadProgressChanged(object sender, ModuleProgressChangedArgs e)
+        private void OnLauncherDownloadProgressChanged(object? sender, ModuleProgressChangedArgs e)
         {
             this.LauncherDownloadProgressChanged?.Invoke(sender, e);
         }
 
-        private void OnLauncherDownloadFinished(object sender, EModule e)
+        private void OnLauncherDownloadFinished(object? sender, EModule e)
         {
             this.LauncherDownloadFinished?.Invoke(sender, EventArgs.Empty);
         }

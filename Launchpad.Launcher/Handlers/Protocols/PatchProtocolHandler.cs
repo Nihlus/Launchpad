@@ -108,9 +108,29 @@ namespace Launchpad.Launcher.Handlers.Protocols
         /// </summary>
         protected PatchProtocolHandler()
         {
-            this.ModuleDownloadProgressArgs = new ModuleProgressChangedArgs();
-            this.ModuleVerifyProgressArgs = new ModuleProgressChangedArgs();
-            this.ModuleUpdateProgressArgs = new ModuleProgressChangedArgs();
+            this.ModuleDownloadProgressArgs = new ModuleProgressChangedArgs
+            (
+                EModule.Game,
+                string.Empty,
+                string.Empty,
+                0
+            );
+
+            this.ModuleVerifyProgressArgs = new ModuleProgressChangedArgs
+            (
+                EModule.Game,
+                string.Empty,
+                string.Empty,
+                0
+            );
+
+            this.ModuleUpdateProgressArgs = new ModuleProgressChangedArgs
+            (
+                EModule.Game,
+                string.Empty,
+                string.Empty,
+                0
+            );
 
             this.TagfileService = new TagfileService();
         }

@@ -154,6 +154,11 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                 var request = CreateFtpWebRequest(remoteURL, username, password);
                 var sizeRequest = CreateFtpWebRequest(remoteURL, username, password);
 
+                if (request is null || sizeRequest is null)
+                {
+                    throw new InvalidOperationException();
+                }
+
                 request.Method = WebRequestMethods.Ftp.DownloadFile;
                 sizeRequest.Method = WebRequestMethods.Ftp.GetFileSize;
 
@@ -227,6 +232,11 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             {
                 var request = CreateFtpWebRequest(remoteURL, username, password);
                 var sizeRequest = CreateFtpWebRequest(remoteURL, username, password);
+
+                if (request is null || sizeRequest is null)
+                {
+                    throw new InvalidOperationException();
+                }
 
                 request.Method = WebRequestMethods.Ftp.DownloadFile;
                 request.ContentOffset = contentOffset;
@@ -379,24 +389,31 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// <param name="remotePath">Remote path.</param>
         private bool DoesRemoteFileExist(string remotePath)
         {
-            var request = CreateFtpWebRequest(remotePath, this.Configuration.RemoteUsername, this.Configuration.RemotePassword);
-            FtpWebResponse? response = null;
-
             try
             {
-                response = (FtpWebResponse)request.GetResponse();
+                var request = CreateFtpWebRequest
+                (
+                    remotePath,
+                    this.Configuration.RemoteUsername,
+                    this.Configuration.RemotePassword
+                );
+
+                if (request is null)
+                {
+                    throw new InvalidOperationException();
+                }
+
+                using var response = (FtpWebResponse)request.GetResponse();
             }
             catch (WebException ex)
             {
-                response = (FtpWebResponse)ex.Response;
+                using var response = (FtpWebResponse)ex.Response;
                 if (response.StatusCode == FtpStatusCode.ActionNotTakenFileUnavailable)
                 {
                     return false;
                 }
-            }
-            finally
-            {
-                response?.Dispose();
+
+                throw;
             }
 
             return true;

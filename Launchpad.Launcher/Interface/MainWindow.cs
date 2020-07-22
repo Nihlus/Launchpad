@@ -412,7 +412,7 @@ namespace Launchpad.Launcher.Interface
         /// </summary>
         /// <param name="sender">Sender.</param>
         /// <param name="e">E.</param>
-        private void OnMenuRepairItemActivated(object sender, EventArgs e)
+        private void OnMenuRepairItemActivated(object? sender, EventArgs e)
         {
             SetLauncherMode(ELauncherMode.Repair, false);
 
@@ -426,7 +426,7 @@ namespace Launchpad.Launcher.Interface
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">Empty arguments.</param>
-        private void OnMainButtonClicked(object sender, EventArgs e)
+        private void OnMainButtonClicked(object? sender, EventArgs e)
         {
             // Drop out if the current platform isn't available on the server
             if (!_checks.IsPlatformAvailable(_configuration.SystemTarget))
@@ -503,12 +503,15 @@ namespace Launchpad.Launcher.Interface
         /// <summary>
         /// Starts the launcher update process when its files have finished downloading.
         /// </summary>
-        private static void OnLauncherDownloadFinished(object sender, EventArgs e)
+        private static void OnLauncherDownloadFinished(object? sender, EventArgs e)
         {
             Application.Invoke((o, args) =>
             {
                 var script = LauncherHandler.CreateUpdateScript();
-                Process.Start(script);
+                if (!(script is null))
+                {
+                    Process.Start(script);
+                }
 
                 Application.Quit();
             });
@@ -519,7 +522,7 @@ namespace Launchpad.Launcher.Interface
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">Empty event args.</param>
-        private void OnGameLaunchFailed(object sender, EventArgs e)
+        private void OnGameLaunchFailed(object? sender, EventArgs e)
         {
             Application.Invoke((o, args) =>
             {
@@ -535,7 +538,7 @@ namespace Launchpad.Launcher.Interface
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">Contains the type of failure that occurred.</param>
-        private void OnGameDownloadFailed(object sender, EventArgs e)
+        private void OnGameDownloadFailed(object? sender, EventArgs e)
         {
             Application.Invoke((o, args) =>
             {
@@ -566,7 +569,7 @@ namespace Launchpad.Launcher.Interface
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">Contains the progress values and current filename.</param>
-        private void OnModuleInstallationProgressChanged(object sender, ModuleProgressChangedArgs e)
+        private void OnModuleInstallationProgressChanged(object? sender, ModuleProgressChangedArgs e)
         {
             Application.Invoke((o, args) =>
             {
@@ -581,7 +584,7 @@ namespace Launchpad.Launcher.Interface
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">Contains the result of the download.</param>
-        private void OnGameDownloadFinished(object sender, EventArgs e)
+        private void OnGameDownloadFinished(object? sender, EventArgs e)
         {
             Application.Invoke((o, args) =>
             {
@@ -619,7 +622,7 @@ namespace Launchpad.Launcher.Interface
         /// Handles offering of repairing the game to the user should the game exit
         /// with a bad exit code.
         /// </summary>
-        private void OnGameExited(object sender, int exitCode)
+        private void OnGameExited(object? sender, int exitCode)
         {
             Application.Invoke((o, args) =>
             {
@@ -657,7 +660,7 @@ namespace Launchpad.Launcher.Interface
         /// <summary>
         /// Handles starting of a reinstallation procedure as requested by the user.
         /// </summary>
-        private void OnReinstallGameActionActivated(object sender, EventArgs e)
+        private void OnReinstallGameActionActivated(object? sender, EventArgs e)
         {
             using var reinstallConfirmDialog = new MessageDialog
             (

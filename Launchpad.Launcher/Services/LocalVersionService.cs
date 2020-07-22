@@ -42,7 +42,7 @@ namespace Launchpad.Launcher.Services
         /// Gets the local game version.
         /// </summary>
         /// <returns>The local game version.</returns>
-        public Version? GetLocalGameVersion()
+        public Version GetLocalGameVersion()
         {
             try
             {
@@ -59,7 +59,7 @@ namespace Launchpad.Launcher.Services
             catch (IOException ioex)
             {
                 Log.Warn("Could not read local game version (IOException): " + ioex.Message);
-                return null;
+                return new Version("0.0.0");
             }
         }
 
@@ -67,9 +67,9 @@ namespace Launchpad.Launcher.Services
         /// Gets the local launcher version.
         /// </summary>
         /// <returns>The version.</returns>
-        public Version? GetLocalLauncherVersion()
+        public Version GetLocalLauncherVersion()
         {
-            return GetType().Assembly.GetName().Version;
+            return GetType().Assembly.GetName().Version ?? new Version("0.0.0");
         }
     }
 }

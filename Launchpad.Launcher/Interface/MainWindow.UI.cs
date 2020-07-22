@@ -40,17 +40,29 @@ namespace Launchpad.Launcher.Interface
     /// </summary>
     public partial class MainWindow
     {
-        [UIElement] private readonly ImageMenuItem _menuRepairItem = null!;
-        [UIElement] private readonly ImageMenuItem _menuReinstallItem = null!;
-        [UIElement] private readonly ImageMenuItem _menuAboutItem = null!;
+        [UIElement("MenuRepairItem")]
+        private readonly ImageMenuItem _menuRepairItem = null!;
 
-        [UIElement] private readonly TextView _changelogTextView = null!;
-        [UIElement] private readonly Image _bannerImage = null!;
+        [UIElement("MenuReinstallItem")]
+        private readonly ImageMenuItem _menuReinstallItem = null!;
 
-        [UIElement] private readonly Label _statusLabel = null!;
+        [UIElement("MenuAboutItem")]
+        private readonly ImageMenuItem _menuAboutItem = null!;
 
-        [UIElement] private readonly ProgressBar _mainProgressBar = null!;
-        [UIElement] private readonly Button _mainButton = null!;
+        [UIElement("ChangelogTextView")]
+        private readonly TextView _changelogTextView = null!;
+
+        [UIElement("BannerImage")]
+        private readonly Image _bannerImage = null!;
+
+        [UIElement("StatusLabel")]
+        private readonly Label _statusLabel = null!;
+
+        [UIElement("ProgressBar")]
+        private readonly ProgressBar _mainProgressBar = null!;
+
+        [UIElement("MainButton")]
+        private readonly Button _mainButton = null!;
 
         /// <summary>
         /// Creates a new instance of the <see cref="MainWindow"/> class, loading its interface definition from file.
@@ -85,7 +97,7 @@ namespace Launchpad.Launcher.Interface
         /// </summary>
         /// <param name="sender">The sending object.</param>
         /// <param name="e">The event args.</param>
-        private void OnMenuAboutItemActivated(object sender, EventArgs e)
+        private void OnMenuAboutItemActivated(object? sender, EventArgs e)
         {
             using var builder = new Builder(Assembly.GetExecutingAssembly(), "Launchpad.Launcher.Interface.Launchpad.glade", null);
             using var dialog = new AboutDialog(builder.GetObject("MainAboutDialog").Handle);
@@ -99,7 +111,7 @@ namespace Launchpad.Launcher.Interface
         /// </summary>
         /// <param name="sender">Sender.</param>
         /// <param name="a">The alpha component.</param>
-        private static void OnDeleteEvent(object sender, DeleteEventArgs a)
+        private static void OnDeleteEvent(object? sender, DeleteEventArgs a)
         {
             Application.Quit();
             a.RetVal = true;

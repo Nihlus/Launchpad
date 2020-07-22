@@ -256,7 +256,7 @@ namespace Launchpad.Launcher.Handlers
         /// </summary>
         /// <param name="sender">Sender.</param>
         /// <param name="e">E.</param>
-        private void OnModuleInstallProgressChanged(object sender, ModuleProgressChangedArgs e)
+        private void OnModuleInstallProgressChanged(object? sender, ModuleProgressChangedArgs e)
         {
             this.ProgressChanged?.Invoke(sender, e);
         }
@@ -267,7 +267,7 @@ namespace Launchpad.Launcher.Handlers
         /// </summary>
         /// <param name="sender">Sender.</param>
         /// <param name="e">E.</param>
-        private void OnModuleInstallationFinished(object sender, EModule e)
+        private void OnModuleInstallationFinished(object? sender, EModule e)
         {
             this.DownloadFinished?.Invoke(sender, EventArgs.Empty);
         }
@@ -278,7 +278,7 @@ namespace Launchpad.Launcher.Handlers
         /// </summary>
         /// <param name="sender">Sender.</param>
         /// <param name="e">E.</param>
-        private void OnModuleInstallationFailed(object sender, EModule e)
+        private void OnModuleInstallationFailed(object? sender, EModule e)
         {
             this.DownloadFailed?.Invoke(sender, EventArgs.Empty);
         }

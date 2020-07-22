@@ -145,6 +145,11 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             {
                 var request = CreateHttpWebRequest(remoteURL, username, password);
 
+                if (request is null)
+                {
+                    throw new InvalidOperationException();
+                }
+
                 request.Method = WebRequestMethods.Http.Get;
                 request.AddRange(contentOffset);
 
@@ -235,6 +240,11 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             try
             {
                 var request = CreateHttpWebRequest(remoteURL, username, password);
+
+                if (request is null)
+                {
+                    throw new InvalidOperationException();
+                }
 
                 request.Method = WebRequestMethods.Http.Get;
 
@@ -331,6 +341,11 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         {
             var cleanURL = url.Replace(Path.DirectorySeparatorChar, '/');
             var request = CreateHttpWebRequest(cleanURL, this.Configuration.RemoteUsername, this.Configuration.RemotePassword);
+
+            if (request is null)
+            {
+                throw new InvalidOperationException();
+            }
 
             request.Method = WebRequestMethods.Http.Head;
             HttpWebResponse? response = null;
