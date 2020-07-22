@@ -22,19 +22,19 @@
 
 namespace Launchpad.Launcher.Handlers.Protocols
 {
-	/// <summary>
-	/// A list of modules that can be downloaded and reported on.
-	/// </summary>
-	public enum EModule : byte
-	{
-		/// <summary>
-		/// The launcher itself.
-		/// </summary>
-		Launcher = 1,
+    /// <summary>
+    /// A list of modules that can be downloaded and reported on.
+    /// </summary>
+    public enum EModule : byte
+    {
+        /// <summary>
+        /// The launcher itself.
+        /// </summary>
+        Launcher = 1,
 
-		/// <summary>
-		/// The managed game.
-		/// </summary>
-		Game = 2
-	}
+        /// <summary>
+        /// The managed game.
+        /// </summary>
+        Game = 2
+    }
 }

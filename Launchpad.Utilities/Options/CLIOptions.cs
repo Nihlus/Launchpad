@@ -24,32 +24,32 @@ using Launchpad.Common.Enums;
 
 namespace Launchpad.Utilities.Options
 {
-	public class CLIOptions
-	{
-		[Option('b', "batch", Required = false,
-		 HelpText = "Run the utilities in batch mode without a UI.")]
-		public bool RunBatchProcessing
-		{
-			get;
-			set;
-		}
+    public class CLIOptions
+    {
+        [Option('b', "batch", Required = false,
+         HelpText = "Run the utilities in batch mode without a UI.")]
+        public bool RunBatchProcessing
+        {
+            get;
+            set;
+        }
 
-		[Option('d', "directory", Required = false,
-		 HelpText = "The target directory from which the manifest should be generated.")]
-		public string TargetDirectory
-		{
-			get;
-			set;
-		}
+        [Option('d', "directory", Required = false,
+         HelpText = "The target directory from which the manifest should be generated.")]
+        public string TargetDirectory
+        {
+            get;
+            set;
+        }
 
-		[Option('m', "manifest", Required = false,
-		 HelpText = "The type of manifest that should be generated. This only affects the output filename, " +
-		            "and not the actual file content. " +
-		 			"Valid manifests: Game or Launcher")]
-		public EManifestType ManifestType
-		{
-			get;
-			set;
-		}
-	}
+        [Option('m', "manifest", Required = false,
+         HelpText = "The type of manifest that should be generated. This only affects the output filename, " +
+                    "and not the actual file content. " +
+                     "Valid manifests: Game or Launcher")]
+        public EManifestType ManifestType
+        {
+            get;
+            set;
+        }
+    }
 }

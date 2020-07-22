@@ -24,45 +24,45 @@ using System;
 
 namespace Launchpad.Launcher.Handlers.Protocols
 {
-	/// <summary>
-	/// Event arguments for changing modules.
-	/// </summary>
-	public sealed class ModuleProgressChangedArgs : EventArgs
-	{
-		/// <summary>
-		/// Gets or sets the module that is being changed.
-		/// </summary>
-		public EModule Module
-		{
-			get;
-			set;
-		}
+    /// <summary>
+    /// Event arguments for changing modules.
+    /// </summary>
+    public sealed class ModuleProgressChangedArgs : EventArgs
+    {
+        /// <summary>
+        /// Gets or sets the module that is being changed.
+        /// </summary>
+        public EModule Module
+        {
+            get;
+            set;
+        }
 
-		/// <summary>
-		/// Gets or sets the message that should be displayed on the progress bar.
-		/// </summary>
-		public string ProgressBarMessage
-		{
-			get;
-			set;
-		}
+        /// <summary>
+        /// Gets or sets the message that should be displayed on the progress bar.
+        /// </summary>
+        public string ProgressBarMessage
+        {
+            get;
+            set;
+        }
 
-		/// <summary>
-		/// Gets or sets the message that should be displayed on the indicator label.
-		/// </summary>
-		public string IndicatorLabelMessage
-		{
-			get;
-			set;
-		}
+        /// <summary>
+        /// Gets or sets the message that should be displayed on the indicator label.
+        /// </summary>
+        public string IndicatorLabelMessage
+        {
+            get;
+            set;
+        }
 
-		/// <summary>
-		/// Gets or sets the fractional progress (in the range 0 to 1).
-		/// </summary>
-		public double ProgressFraction
-		{
-			get;
-			set;
-		}
-	}
+        /// <summary>
+        /// Gets or sets the fractional progress (in the range 0 to 1).
+        /// </summary>
+        public double ProgressFraction
+        {
+            get;
+            set;
+        }
+    }
 }

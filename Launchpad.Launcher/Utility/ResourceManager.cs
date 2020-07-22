@@ -24,19 +24,19 @@ using Gdk;
 
 namespace Launchpad.Launcher.Utility
 {
-	/// <summary>
-	/// Manages embedded resources of the application.
-	/// </summary>
-	public static class ResourceManager
-	{
-		/// <summary>
-		/// Gets the application icon as a pixel buffer.
-		/// </summary>
-		public static Pixbuf ApplicationIcon { get; }
+    /// <summary>
+    /// Manages embedded resources of the application.
+    /// </summary>
+    public static class ResourceManager
+    {
+        /// <summary>
+        /// Gets the application icon as a pixel buffer.
+        /// </summary>
+        public static Pixbuf ApplicationIcon { get; }
 
-		static ResourceManager()
-		{
-			ApplicationIcon = Pixbuf.LoadFromResource("Launchpad.Launcher.Resources.Icon.png");
-		}
-	}
+        static ResourceManager()
+        {
+            ApplicationIcon = Pixbuf.LoadFromResource("Launchpad.Launcher.Resources.Icon.png");
+        }
+    }
 }

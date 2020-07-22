@@ -27,51 +27,51 @@ using Launchpad.Launcher.Utility;
 
 namespace Launchpad.Launcher.Handlers
 {
-	/// <summary>
-	/// Config handler.
-	/// This is a singleton class, and it should always be accessed through <see cref="Instance"/>.
-	/// </summary>
-	public sealed class ConfigHandler
-	{
-		/// <summary>
-		/// The singleton Instance. Will always point to one shared object.
-		/// </summary>
-		public static readonly ConfigHandler Instance = new ConfigHandler();
+    /// <summary>
+    /// Config handler.
+    /// This is a singleton class, and it should always be accessed through <see cref="Instance"/>.
+    /// </summary>
+    public sealed class ConfigHandler
+    {
+        /// <summary>
+        /// The singleton Instance. Will always point to one shared object.
+        /// </summary>
+        public static readonly ConfigHandler Instance = new ConfigHandler();
 
-		/// <summary>
-		/// Gets the configuration instance.
-		/// </summary>
-		public ILaunchpadConfiguration Configuration { get; }
+        /// <summary>
+        /// Gets the configuration instance.
+        /// </summary>
+        public ILaunchpadConfiguration Configuration { get; }
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="ConfigHandler"/> class and initalizes it.
-		/// </summary>
-		private ConfigHandler()
-		{
-			this.Configuration = new ConfigurationBuilder<ILaunchpadConfiguration>()
-				.UseIniFile(DirectoryHelpers.GetConfigPath())
-				.Build();
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConfigHandler"/> class and initalizes it.
+        /// </summary>
+        private ConfigHandler()
+        {
+            this.Configuration = new ConfigurationBuilder<ILaunchpadConfiguration>()
+                .UseIniFile(DirectoryHelpers.GetConfigPath())
+                .Build();
 
-			InitializeConfigurationFile();
-		}
+            InitializeConfigurationFile();
+        }
 
-		/// <summary>
-		/// Initializes the config by checking for bad values or files.
-		/// Run once when the launcher starts, then avoid unless absolutely neccesary.
-		/// </summary>
-		private void InitializeConfigurationFile()
-		{
-			if (File.Exists(DirectoryHelpers.GetConfigPath()))
-			{
-				return;
-			}
+        /// <summary>
+        /// Initializes the config by checking for bad values or files.
+        /// Run once when the launcher starts, then avoid unless absolutely neccesary.
+        /// </summary>
+        private void InitializeConfigurationFile()
+        {
+            if (File.Exists(DirectoryHelpers.GetConfigPath()))
+            {
+                return;
+            }
 
-			// Get the default values and write them back to the file, forcing it to be written to disk
-			foreach (var property in typeof(ILaunchpadConfiguration).GetProperties())
-			{
-				var value = property.GetValue(this.Configuration);
-				property.SetValue(this.Configuration, value);
-			}
-		}
-	}
+            // Get the default values and write them back to the file, forcing it to be written to disk
+            foreach (var property in typeof(ILaunchpadConfiguration).GetProperties())
+            {
+                var value = property.GetValue(this.Configuration);
+                property.SetValue(this.Configuration, value);
+            }
+        }
+    }
 }

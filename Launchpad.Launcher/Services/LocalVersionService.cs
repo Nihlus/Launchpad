@@ -28,48 +28,48 @@ using NLog;
 
 namespace Launchpad.Launcher.Services
 {
-	/// <summary>
-	/// A service which handles local version discovery.
-	/// </summary>
-	public class LocalVersionService
-	{
-		/// <summary>
-		/// Logger instance for this class.
-		/// </summary>
-		private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
+    /// <summary>
+    /// A service which handles local version discovery.
+    /// </summary>
+    public class LocalVersionService
+    {
+        /// <summary>
+        /// Logger instance for this class.
+        /// </summary>
+        private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
 
-		/// <summary>
-		/// Gets the local game version.
-		/// </summary>
-		/// <returns>The local game version.</returns>
-		public Version GetLocalGameVersion()
-		{
-			try
-			{
-				var rawGameVersion = File.ReadAllText(DirectoryHelpers.GetLocalGameVersionPath());
+        /// <summary>
+        /// Gets the local game version.
+        /// </summary>
+        /// <returns>The local game version.</returns>
+        public Version GetLocalGameVersion()
+        {
+            try
+            {
+                var rawGameVersion = File.ReadAllText(DirectoryHelpers.GetLocalGameVersionPath());
 
-				if (Version.TryParse(rawGameVersion, out var gameVersion))
-				{
-					return gameVersion;
-				}
+                if (Version.TryParse(rawGameVersion, out var gameVersion))
+                {
+                    return gameVersion;
+                }
 
-				Log.Warn("Could not parse local game version. Contents: " + rawGameVersion);
-				return new Version("0.0.0");
-			}
-			catch (IOException ioex)
-			{
-				Log.Warn("Could not read local game version (IOException): " + ioex.Message);
-				return null;
-			}
-		}
+                Log.Warn("Could not parse local game version. Contents: " + rawGameVersion);
+                return new Version("0.0.0");
+            }
+            catch (IOException ioex)
+            {
+                Log.Warn("Could not read local game version (IOException): " + ioex.Message);
+                return null;
+            }
+        }
 
-		/// <summary>
-		/// Gets the local launcher version.
-		/// </summary>
-		/// <returns>The version.</returns>
-		public Version GetLocalLauncherVersion()
-		{
-			return GetType().Assembly.GetName().Version;
-		}
-	}
+        /// <summary>
+        /// Gets the local launcher version.
+        /// </summary>
+        /// <returns>The version.</returns>
+        public Version GetLocalLauncherVersion()
+        {
+            return GetType().Assembly.GetName().Version;
+        }
+    }
 }

@@ -25,33 +25,33 @@ using Launchpad.Launcher.Utility;
 
 namespace Launchpad.Launcher.Services
 {
-	/// <summary>
-	/// Service for creating and managing tagfiles.
-	/// </summary>
-	public class TagfileService
-	{
-		/// <summary>
-		/// Creates the launcher cookie.
-		/// </summary>
-		public void CreateLauncherTagfile()
-		{
-			var doesCookieExist = File.Exists(DirectoryHelpers.GetLauncherTagfilePath());
-			if (!doesCookieExist)
-			{
-				File.Create(DirectoryHelpers.GetLauncherTagfilePath());
-			}
-		}
+    /// <summary>
+    /// Service for creating and managing tagfiles.
+    /// </summary>
+    public class TagfileService
+    {
+        /// <summary>
+        /// Creates the launcher cookie.
+        /// </summary>
+        public void CreateLauncherTagfile()
+        {
+            var doesCookieExist = File.Exists(DirectoryHelpers.GetLauncherTagfilePath());
+            if (!doesCookieExist)
+            {
+                File.Create(DirectoryHelpers.GetLauncherTagfilePath());
+            }
+        }
 
-		/// <summary>
-		/// Creates the install cookie.
-		/// </summary>
-		public void CreateGameTagfile()
-		{
-			var doesCookieExist = File.Exists(DirectoryHelpers.GetGameTagfilePath());
-			if (!doesCookieExist)
-			{
-				File.Create(DirectoryHelpers.GetGameTagfilePath()).Close();
-			}
-		}
-	}
+        /// <summary>
+        /// Creates the install cookie.
+        /// </summary>
+        public void CreateGameTagfile()
+        {
+            var doesCookieExist = File.Exists(DirectoryHelpers.GetGameTagfilePath());
+            if (!doesCookieExist)
+            {
+                File.Create(DirectoryHelpers.GetGameTagfilePath()).Close();
+            }
+        }
+    }
 }

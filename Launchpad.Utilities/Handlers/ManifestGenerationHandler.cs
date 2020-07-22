@@ -32,112 +32,112 @@ using Launchpad.Common.Handlers.Manifest;
 
 namespace Launchpad.Utilities.Handlers
 {
-	public class ManifestGenerationHandler
-	{
-		private readonly ManifestGenerationProgressChangedEventArgs GenerationProgressArgs = new ManifestGenerationProgressChangedEventArgs();
+    public class ManifestGenerationHandler
+    {
+        private readonly ManifestGenerationProgressChangedEventArgs GenerationProgressArgs = new ManifestGenerationProgressChangedEventArgs();
 
-		/// <summary>
-		/// Generates a manifest containing the relative path, MD5 hash and file size from
-		/// all files in the provided root path.
-		/// </summary>
-		/// <param name="targetPath">The root path of the directory the manifest should represent.</param>
-		/// <param name="manifestType">The type of manifest that should be generated.</param>
-		/// <param name="progressReporter">The progress reporter to use.</param>
-		/// <param name="ct">The cancellation token to use.</param>
-		public Task GenerateManifestAsync
-		(
-			string targetPath,
-			EManifestType manifestType,
-			IProgress<ManifestGenerationProgressChangedEventArgs> progressReporter,
-			CancellationToken ct
-		)
-		{
-			var parentDirectory = Directory.GetParent(targetPath).ToString();
+        /// <summary>
+        /// Generates a manifest containing the relative path, MD5 hash and file size from
+        /// all files in the provided root path.
+        /// </summary>
+        /// <param name="targetPath">The root path of the directory the manifest should represent.</param>
+        /// <param name="manifestType">The type of manifest that should be generated.</param>
+        /// <param name="progressReporter">The progress reporter to use.</param>
+        /// <param name="ct">The cancellation token to use.</param>
+        public Task GenerateManifestAsync
+        (
+            string targetPath,
+            EManifestType manifestType,
+            IProgress<ManifestGenerationProgressChangedEventArgs> progressReporter,
+            CancellationToken ct
+        )
+        {
+            var parentDirectory = Directory.GetParent(targetPath).ToString();
 
-			var manifestPath = Path.Combine(parentDirectory, $"{manifestType}Manifest.txt");
-			var manifestChecksumPath = Path.Combine(parentDirectory, $"{manifestType}Manifest.checksum");
+            var manifestPath = Path.Combine(parentDirectory, $"{manifestType}Manifest.txt");
+            var manifestChecksumPath = Path.Combine(parentDirectory, $"{manifestType}Manifest.checksum");
 
-			return Task.Run
-			(
-				async () =>
-				{
-					var manifestFilePaths = new List<string>(Directory
-						.EnumerateFiles(targetPath, "*", SearchOption.AllDirectories)
-						.Where(s => !IsPathABlacklistedFile(s)));
+            return Task.Run
+            (
+                async () =>
+                {
+                    var manifestFilePaths = new List<string>(Directory
+                        .EnumerateFiles(targetPath, "*", SearchOption.AllDirectories)
+                        .Where(s => !IsPathABlacklistedFile(s)));
 
-					this.GenerationProgressArgs.TotalFiles = manifestFilePaths.Count;
+                    this.GenerationProgressArgs.TotalFiles = manifestFilePaths.Count;
 
-					await using (var tw = new StreamWriter(File.Create(manifestPath, 4096, FileOptions.Asynchronous)))
-					{
-						var completedFiles = 0;
-						foreach (var filePath in manifestFilePaths)
-						{
-							ct.ThrowIfCancellationRequested();
+                    await using (var tw = new StreamWriter(File.Create(manifestPath, 4096, FileOptions.Asynchronous)))
+                    {
+                        var completedFiles = 0;
+                        foreach (var filePath in manifestFilePaths)
+                        {
+                            ct.ThrowIfCancellationRequested();
 
-							var newEntry = CreateEntryForFile(targetPath, filePath);
+                            var newEntry = CreateEntryForFile(targetPath, filePath);
 
-							await tw.WriteLineAsync(newEntry.ToString());
-							await tw.FlushAsync();
+                            await tw.WriteLineAsync(newEntry.ToString());
+                            await tw.FlushAsync();
 
-							completedFiles++;
+                            completedFiles++;
 
-							this.GenerationProgressArgs.CompletedFiles = completedFiles;
-							this.GenerationProgressArgs.Filepath = newEntry.RelativePath;
-							this.GenerationProgressArgs.Hash = newEntry.Hash;
-							this.GenerationProgressArgs.Filesize = newEntry.Size;
+                            this.GenerationProgressArgs.CompletedFiles = completedFiles;
+                            this.GenerationProgressArgs.Filepath = newEntry.RelativePath;
+                            this.GenerationProgressArgs.Hash = newEntry.Hash;
+                            this.GenerationProgressArgs.Filesize = newEntry.Size;
 
-							progressReporter.Report(this.GenerationProgressArgs);
-						}
-					}
+                            progressReporter.Report(this.GenerationProgressArgs);
+                        }
+                    }
 
-					await CreateManifestChecksumAsync(manifestPath, manifestChecksumPath);
-				},
-				ct
-			);
-		}
+                    await CreateManifestChecksumAsync(manifestPath, manifestChecksumPath);
+                },
+                ct
+            );
+        }
 
-		private async Task CreateManifestChecksumAsync(string manifestPath, string manifestChecksumPath)
-		{
-			// Create a checksum file for the manifest.
-			await using var manifestStream = File.OpenRead(manifestPath);
-			var manifestHash = MD5Handler.GetStreamHash(manifestStream);
+        private async Task CreateManifestChecksumAsync(string manifestPath, string manifestChecksumPath)
+        {
+            // Create a checksum file for the manifest.
+            await using var manifestStream = File.OpenRead(manifestPath);
+            var manifestHash = MD5Handler.GetStreamHash(manifestStream);
 
-			await using var checksumStream = File.Create(manifestChecksumPath, 4096, FileOptions.Asynchronous);
-			await using var tw = new StreamWriter(checksumStream);
-			await tw.WriteLineAsync(manifestHash);
-			await tw.FlushAsync();
-			tw.Close();
-		}
+            await using var checksumStream = File.Create(manifestChecksumPath, 4096, FileOptions.Asynchronous);
+            await using var tw = new StreamWriter(checksumStream);
+            await tw.WriteLineAsync(manifestHash);
+            await tw.FlushAsync();
+            tw.Close();
+        }
 
-		private ManifestEntry CreateEntryForFile(string parentDirectory, string filePath)
-		{
-			string hash;
-			long fileSize;
-			using (var fileStream = File.OpenRead(filePath))
-			{
-				hash = MD5Handler.GetStreamHash(fileStream);
-				fileSize = fileStream.Length;
-			}
+        private ManifestEntry CreateEntryForFile(string parentDirectory, string filePath)
+        {
+            string hash;
+            long fileSize;
+            using (var fileStream = File.OpenRead(filePath))
+            {
+                hash = MD5Handler.GetStreamHash(fileStream);
+                fileSize = fileStream.Length;
+            }
 
-			var relativeFilePath = filePath.Substring(parentDirectory.Length).TrimStart(Path.DirectorySeparatorChar);
-			var newEntry = new ManifestEntry(relativeFilePath, hash, fileSize);
+            var relativeFilePath = filePath.Substring(parentDirectory.Length).TrimStart(Path.DirectorySeparatorChar);
+            var newEntry = new ManifestEntry(relativeFilePath, hash, fileSize);
 
-			return newEntry;
-		}
+            return newEntry;
+        }
 
-		/// <summary>
-		/// Determines whether or not the specified path is blacklisted and should not be included in the manifest.
-		/// </summary>
-		/// <param name="filePath">The path to test.</param>
-		/// <returns><value>true</value> if the path is blackliste; otherwise, <value>false</value>.</returns>
-		private bool IsPathABlacklistedFile(string filePath)
-		{
-			return
-				filePath.EndsWith(".install") ||
-		        filePath.EndsWith(".update") ||
-		        filePath.EndsWith("GameManifest.txt") ||
-				filePath.EndsWith("GameManifest.checksum");
-		}
-	}
+        /// <summary>
+        /// Determines whether or not the specified path is blacklisted and should not be included in the manifest.
+        /// </summary>
+        /// <param name="filePath">The path to test.</param>
+        /// <returns><value>true</value> if the path is blackliste; otherwise, <value>false</value>.</returns>
+        private bool IsPathABlacklistedFile(string filePath)
+        {
+            return
+                filePath.EndsWith(".install") ||
+                filePath.EndsWith(".update") ||
+                filePath.EndsWith("GameManifest.txt") ||
+                filePath.EndsWith("GameManifest.checksum");
+        }
+    }
 }
 

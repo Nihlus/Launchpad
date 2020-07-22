@@ -33,49 +33,49 @@ using UIElement = Gtk.Builder.ObjectAttribute;
 
 namespace Launchpad.Utilities.Interface
 {
-	public partial class MainWindow
-	{
-		[UIElement] private readonly FileChooserWidget FolderChooser;
+    public partial class MainWindow
+    {
+        [UIElement] private readonly FileChooserWidget FolderChooser;
 
-		[UIElement] private readonly Label StatusLabel;
+        [UIElement] private readonly Label StatusLabel;
 
-		[UIElement] private readonly ProgressBar MainProgressBar;
+        [UIElement] private readonly ProgressBar MainProgressBar;
 
-		[UIElement] private readonly Button GenerateLaunchpadManifestButton;
-		[UIElement] private readonly Button GenerateGameManifestButton;
+        [UIElement] private readonly Button GenerateLaunchpadManifestButton;
+        [UIElement] private readonly Button GenerateGameManifestButton;
 
-		/// <summary>
-		/// Creates a new instance of the <see cref="MainWindow"/> class, loading its interface definition from file.
-		/// </summary>
-		/// <returns>An instance of the main window widget.</returns>
-		public static MainWindow Create()
-		{
-			using var builder = new Builder(Assembly.GetExecutingAssembly(), "Launchpad.Utilities.Interface.Launchpad.Utilities.glade", null);
-			return new MainWindow(builder, builder.GetObject(nameof(MainWindow)).Handle);
-		}
+        /// <summary>
+        /// Creates a new instance of the <see cref="MainWindow"/> class, loading its interface definition from file.
+        /// </summary>
+        /// <returns>An instance of the main window widget.</returns>
+        public static MainWindow Create()
+        {
+            using var builder = new Builder(Assembly.GetExecutingAssembly(), "Launchpad.Utilities.Interface.Launchpad.Utilities.glade", null);
+            return new MainWindow(builder, builder.GetObject(nameof(MainWindow)).Handle);
+        }
 
-		/// <summary>
-		/// Binds UI-related events.
-		/// </summary>
-		private void BindUIEvents()
-		{
-			this.DeleteEvent += OnDeleteEvent;
+        /// <summary>
+        /// Binds UI-related events.
+        /// </summary>
+        private void BindUIEvents()
+        {
+            this.DeleteEvent += OnDeleteEvent;
 
-			this.GenerateLaunchpadManifestButton.Clicked += OnGenerateLaunchpadManifestButtonClicked;
-			this.GenerateGameManifestButton.Clicked += OnGenerateGameManifestButtonClicked;
-		}
+            this.GenerateLaunchpadManifestButton.Clicked += OnGenerateLaunchpadManifestButtonClicked;
+            this.GenerateGameManifestButton.Clicked += OnGenerateGameManifestButtonClicked;
+        }
 
-		/// <summary>
-		/// Exits the application properly when the window is deleted.
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="a">The alpha component.</param>
-		private void OnDeleteEvent(object sender, DeleteEventArgs a)
-		{
-			this.TokenSource?.Cancel();
+        /// <summary>
+        /// Exits the application properly when the window is deleted.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="a">The alpha component.</param>
+        private void OnDeleteEvent(object sender, DeleteEventArgs a)
+        {
+            this.TokenSource?.Cancel();
 
-			Application.Quit();
-			a.RetVal = true;
-		}
-	}
+            Application.Quit();
+            a.RetVal = true;
+        }
+    }
 }

@@ -27,37 +27,37 @@ using Launchpad.Launcher.Handlers.Protocols.Manifest;
 
 namespace Launchpad.Launcher.Utility
 {
-	/// <summary>
-	/// TODO: Temporary hack class. This is going away.
-	/// </summary>
-	public static class PatchProtocolProvider
-	{
-		/// <summary>
-		/// Gets an instance of the patch protocol handler which supports the URI set in the configuration.
-		/// </summary>
-		/// <returns>A handler instance.</returns>
-		/// <exception cref="ArgumentException">Thrown if no compatible handler is available.</exception>
-		public static PatchProtocolHandler GetHandler()
-		{
-			var config = ConfigHandler.Instance.Configuration;
-			var remoteAddress = config.RemoteAddress;
+    /// <summary>
+    /// TODO: Temporary hack class. This is going away.
+    /// </summary>
+    public static class PatchProtocolProvider
+    {
+        /// <summary>
+        /// Gets an instance of the patch protocol handler which supports the URI set in the configuration.
+        /// </summary>
+        /// <returns>A handler instance.</returns>
+        /// <exception cref="ArgumentException">Thrown if no compatible handler is available.</exception>
+        public static PatchProtocolHandler GetHandler()
+        {
+            var config = ConfigHandler.Instance.Configuration;
+            var remoteAddress = config.RemoteAddress;
 
-			switch (remoteAddress.Scheme.ToLowerInvariant())
-			{
-				case "ftp":
-				{
-					return new FTPProtocolHandler();
-				}
-				case "http":
-				case "https":
-				{
-					return new HTTPProtocolHandler();
-				}
-				default:
-				{
-					throw new ArgumentException($"No compatible protocol handler found for a URI of the form \"{remoteAddress}\".");
-				}
-			}
-		}
-	}
+            switch (remoteAddress.Scheme.ToLowerInvariant())
+            {
+                case "ftp":
+                {
+                    return new FTPProtocolHandler();
+                }
+                case "http":
+                case "https":
+                {
+                    return new HTTPProtocolHandler();
+                }
+                default:
+                {
+                    throw new ArgumentException($"No compatible protocol handler found for a URI of the form \"{remoteAddress}\".");
+                }
+            }
+        }
+    }
 }

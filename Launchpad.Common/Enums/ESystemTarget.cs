@@ -24,12 +24,12 @@
 
 namespace Launchpad.Common.Enums
 {
-	public enum ESystemTarget
-	{
-		Linux,
-		Mac,
-		Win64,
-		Win32,
-		Unknown
-	}
+    public enum ESystemTarget
+    {
+        Linux,
+        Mac,
+        Win64,
+        Win32,
+        Unknown
+    }
 }

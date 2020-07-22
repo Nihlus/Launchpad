@@ -35,74 +35,74 @@ using UIElement = Gtk.Builder.ObjectAttribute;
 
 namespace Launchpad.Launcher.Interface
 {
-	/// <summary>
-	/// Interface elements for the <see cref="MainWindow"/> widget.
-	/// </summary>
-	public partial class MainWindow
-	{
-		[UIElement] private readonly ImageMenuItem MenuRepairItem;
-		[UIElement] private readonly ImageMenuItem MenuReinstallItem;
-		[UIElement] private readonly ImageMenuItem MenuAboutItem;
+    /// <summary>
+    /// Interface elements for the <see cref="MainWindow"/> widget.
+    /// </summary>
+    public partial class MainWindow
+    {
+        [UIElement] private readonly ImageMenuItem MenuRepairItem;
+        [UIElement] private readonly ImageMenuItem MenuReinstallItem;
+        [UIElement] private readonly ImageMenuItem MenuAboutItem;
 
-		[UIElement] private readonly TextView ChangelogTextView;
-		[UIElement] private readonly Image BannerImage;
+        [UIElement] private readonly TextView ChangelogTextView;
+        [UIElement] private readonly Image BannerImage;
 
-		[UIElement] private readonly Label StatusLabel;
+        [UIElement] private readonly Label StatusLabel;
 
-		[UIElement] private readonly ProgressBar MainProgressBar;
-		[UIElement] private readonly Button MainButton;
+        [UIElement] private readonly ProgressBar MainProgressBar;
+        [UIElement] private readonly Button MainButton;
 
-		/// <summary>
-		/// Creates a new instance of the <see cref="MainWindow"/> class, loading its interface definition from file.
-		/// </summary>
-		/// <returns>An instance of the main window widget.</returns>
-		public static MainWindow Create()
-		{
-			using var builder = new Builder(Assembly.GetExecutingAssembly(), "Launchpad.Launcher.Interface.Launchpad.glade", null);
-			var window = new MainWindow(builder, builder.GetObject(nameof(MainWindow)).Handle)
-			{
-				Icon = ResourceManager.ApplicationIcon
-			};
+        /// <summary>
+        /// Creates a new instance of the <see cref="MainWindow"/> class, loading its interface definition from file.
+        /// </summary>
+        /// <returns>An instance of the main window widget.</returns>
+        public static MainWindow Create()
+        {
+            using var builder = new Builder(Assembly.GetExecutingAssembly(), "Launchpad.Launcher.Interface.Launchpad.glade", null);
+            var window = new MainWindow(builder, builder.GetObject(nameof(MainWindow)).Handle)
+            {
+                Icon = ResourceManager.ApplicationIcon
+            };
 
-			return window;
-		}
+            return window;
+        }
 
-		/// <summary>
-		/// Binds UI-related events.
-		/// </summary>
-		private void BindUIEvents()
-		{
-			this.DeleteEvent += OnDeleteEvent;
-			this.MenuReinstallItem.Activated += OnReinstallGameActionActivated;
-			this.MenuRepairItem.Activated += OnMenuRepairItemActivated;
-			this.MenuAboutItem.Activated += OnMenuAboutItemActivated;
+        /// <summary>
+        /// Binds UI-related events.
+        /// </summary>
+        private void BindUIEvents()
+        {
+            this.DeleteEvent += OnDeleteEvent;
+            this.MenuReinstallItem.Activated += OnReinstallGameActionActivated;
+            this.MenuRepairItem.Activated += OnMenuRepairItemActivated;
+            this.MenuAboutItem.Activated += OnMenuAboutItemActivated;
 
-			this.MainButton.Clicked += OnMainButtonClicked;
-		}
+            this.MainButton.Clicked += OnMainButtonClicked;
+        }
 
-		/// <summary>
-		/// Displays the about window to the user.
-		/// </summary>
-		/// <param name="sender">The sending object.</param>
-		/// <param name="e">The event args.</param>
-		private void OnMenuAboutItemActivated(object sender, EventArgs e)
-		{
-			using var builder = new Builder(Assembly.GetExecutingAssembly(), "Launchpad.Launcher.Interface.Launchpad.glade", null);
-			using var dialog = new AboutDialog(builder.GetObject("MainAboutDialog").Handle);
-			dialog.Icon = ResourceManager.ApplicationIcon;
-			dialog.Logo = ResourceManager.ApplicationIcon;
-			dialog.Run();
-		}
+        /// <summary>
+        /// Displays the about window to the user.
+        /// </summary>
+        /// <param name="sender">The sending object.</param>
+        /// <param name="e">The event args.</param>
+        private void OnMenuAboutItemActivated(object sender, EventArgs e)
+        {
+            using var builder = new Builder(Assembly.GetExecutingAssembly(), "Launchpad.Launcher.Interface.Launchpad.glade", null);
+            using var dialog = new AboutDialog(builder.GetObject("MainAboutDialog").Handle);
+            dialog.Icon = ResourceManager.ApplicationIcon;
+            dialog.Logo = ResourceManager.ApplicationIcon;
+            dialog.Run();
+        }
 
-		/// <summary>
-		/// Exits the application properly when the window is deleted.
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="a">The alpha component.</param>
-		private static void OnDeleteEvent(object sender, DeleteEventArgs a)
-		{
-			Application.Quit();
-			a.RetVal = true;
-		}
-	}
+        /// <summary>
+        /// Exits the application properly when the window is deleted.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="a">The alpha component.</param>
+        private static void OnDeleteEvent(object sender, DeleteEventArgs a)
+        {
+            Application.Quit();
+            a.RetVal = true;
+        }
+    }
 }

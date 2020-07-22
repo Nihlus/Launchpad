@@ -14,26 +14,26 @@ unzip launchpad.zip
 
 for D in `find . -type d`
 do
-	LOCALE_NAME=${D/./}
-	LOCALE_NAME=${LOCALE_NAME///}
-	LOCALE_NAME=${LOCALE_NAME/-/_}
+    LOCALE_NAME=${D/./}
+    LOCALE_NAME=${LOCALE_NAME///}
+    LOCALE_NAME=${LOCALE_NAME/-/_}
 
-	if [ ! -z "$LOCALE_NAME" ];
-	then
-		cp "$D/messages.po" "../$LOCALE_NAME.po"
-		
-		mkdir -p "../../Launchpad.Launcher/Content/locale/$LOCALE_NAME/LC_MESSAGES/"
-		cp "$D/messages.po" "../../Launchpad.Launcher/Content/locale/$LOCALE_NAME/LC_MESSAGES/messages.po"
-	fi	
+    if [ ! -z "$LOCALE_NAME" ];
+    then
+        cp "$D/messages.po" "../$LOCALE_NAME.po"
+
+        mkdir -p "../../Launchpad.Launcher/Content/locale/$LOCALE_NAME/LC_MESSAGES/"
+        cp "$D/messages.po" "../../Launchpad.Launcher/Content/locale/$LOCALE_NAME/LC_MESSAGES/messages.po"
+    fi
 done
 
 rm launchpad.zip
 
 for D in `find . -type d`
 do
-	if [ ! $D == "." ]; then
-		rm -r $D
-	fi	
+    if [ ! $D == "." ]; then
+        rm -r $D
+    fi
 done
 
 cd ..

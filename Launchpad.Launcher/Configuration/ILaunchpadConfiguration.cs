@@ -26,72 +26,72 @@ using Launchpad.Common.Enums;
 
 namespace Launchpad.Launcher.Configuration
 {
-	/// <summary>
-	/// Configuration file interface.
-	/// </summary>
-	public interface ILaunchpadConfiguration
-	{
-		// Launcher section
-		// ...
+    /// <summary>
+    /// Configuration file interface.
+    /// </summary>
+    public interface ILaunchpadConfiguration
+    {
+        // Launcher section
+        // ...
 
-		/// <summary>
-		/// Gets or sets the address where the changelog is hosted.
-		/// </summary>
-		[Option(Alias = "Launcher.ChangelogAddress", DefaultValue = "http://www.example.com/launchpad/changelog/changelog.html")]
-		Uri ChangelogAddress { get; set; }
+        /// <summary>
+        /// Gets or sets the address where the changelog is hosted.
+        /// </summary>
+        [Option(Alias = "Launcher.ChangelogAddress", DefaultValue = "http://www.example.com/launchpad/changelog/changelog.html")]
+        Uri ChangelogAddress { get; set; }
 
-		/// <summary>
-		/// Gets or sets the system target of the launcher.
-		/// </summary>
-		[Option(Alias = "Launcher.SystemTarget", DefaultValue = "Linux")]
-		ESystemTarget SystemTarget { get; set; }
+        /// <summary>
+        /// Gets or sets the system target of the launcher.
+        /// </summary>
+        [Option(Alias = "Launcher.SystemTarget", DefaultValue = "Linux")]
+        ESystemTarget SystemTarget { get; set; }
 
-		// Game section
-		// ...
+        // Game section
+        // ...
 
-		/// <summary>
-		/// Gets or sets the name of the game.
-		/// </summary>
-		[Option(Alias = "Game.Name", DefaultValue = "LaunchpadExample")]
-		string GameName { get; set; }
+        /// <summary>
+        /// Gets or sets the name of the game.
+        /// </summary>
+        [Option(Alias = "Game.Name", DefaultValue = "LaunchpadExample")]
+        string GameName { get; set; }
 
-		/// <summary>
-		/// Gets or sets the path to the game's executable, relative to the launcher.
-		/// </summary>
-		[Option(Alias = "Game.ExecutablePath", DefaultValue = "LaunchpadExample/Binaries/Linux/LaunchpadExample")]
-		string ExecutablePath { get; set; }
+        /// <summary>
+        /// Gets or sets the path to the game's executable, relative to the launcher.
+        /// </summary>
+        [Option(Alias = "Game.ExecutablePath", DefaultValue = "LaunchpadExample/Binaries/Linux/LaunchpadExample")]
+        string ExecutablePath { get; set; }
 
-		// Remote section
-		// ...
+        // Remote section
+        // ...
 
-		/// <summary>
-		/// Gets or sets the address of the remote server.
-		/// </summary>
-		[Option(Alias = "Remote.Address", DefaultValue = "ftp://ftp.example.com")]
-		Uri RemoteAddress { get; set; }
+        /// <summary>
+        /// Gets or sets the address of the remote server.
+        /// </summary>
+        [Option(Alias = "Remote.Address", DefaultValue = "ftp://ftp.example.com")]
+        Uri RemoteAddress { get; set; }
 
-		/// <summary>
-		/// Gets or sets the username to use when authenticating with the remote server.
-		/// </summary>
-		[Option(Alias = "Remote.Username", DefaultValue = "anonymous")]
-		string RemoteUsername { get; set; }
+        /// <summary>
+        /// Gets or sets the username to use when authenticating with the remote server.
+        /// </summary>
+        [Option(Alias = "Remote.Username", DefaultValue = "anonymous")]
+        string RemoteUsername { get; set; }
 
-		/// <summary>
-		/// Gets or sets the password to use when authenticating with the remote server.
-		/// </summary>
-		[Option(Alias = "Remote.Password", DefaultValue = "anonymous")]
-		string RemotePassword { get; set; }
+        /// <summary>
+        /// Gets or sets the password to use when authenticating with the remote server.
+        /// </summary>
+        [Option(Alias = "Remote.Password", DefaultValue = "anonymous")]
+        string RemotePassword { get; set; }
 
-		/// <summary>
-		/// Gets or sets the number of times to retry file downloads.
-		/// </summary>
-		[Option(Alias = "Remote.FileDownloadRetries", DefaultValue = 2)]
-		int RemoteFileDownloadRetries { get; set; }
+        /// <summary>
+        /// Gets or sets the number of times to retry file downloads.
+        /// </summary>
+        [Option(Alias = "Remote.FileDownloadRetries", DefaultValue = 2)]
+        int RemoteFileDownloadRetries { get; set; }
 
-		/// <summary>
-		/// Gets or sets the buffer size to use when downloading files.
-		/// </summary>
-		[Option(Alias = "Remote.FileDownloadBufferSize", DefaultValue = 8192)]
-		int RemoteFileDownloadBufferSize { get; set; }
-	}
+        /// <summary>
+        /// Gets or sets the buffer size to use when downloading files.
+        /// </summary>
+        [Option(Alias = "Remote.FileDownloadBufferSize", DefaultValue = 8192)]
+        int RemoteFileDownloadBufferSize { get; set; }
+    }
 }

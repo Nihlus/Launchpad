@@ -26,25 +26,25 @@ using System.Security.Cryptography;
 
 namespace Launchpad.Common.Handlers
 {
-	/// <summary>
-	/// MD5 hashing handler. Used to ensure file integrity.
-	/// </summary>
-	public static class MD5Handler
-	{
-		/// <summary>
-		/// Gets the file hash from a data stream.
-		/// </summary>
-		/// <returns>The hash.</returns>
-		/// <param name="dataStream">File stream.</param>
-		public static string GetStreamHash(Stream dataStream)
-		{
-			using (var md5 = MD5.Create())
-			{
-				// Calculate the hash of the stream.
-				var resultString = BitConverter.ToString(md5.ComputeHash(dataStream)).Replace("-", string.Empty);
+    /// <summary>
+    /// MD5 hashing handler. Used to ensure file integrity.
+    /// </summary>
+    public static class MD5Handler
+    {
+        /// <summary>
+        /// Gets the file hash from a data stream.
+        /// </summary>
+        /// <returns>The hash.</returns>
+        /// <param name="dataStream">File stream.</param>
+        public static string GetStreamHash(Stream dataStream)
+        {
+            using (var md5 = MD5.Create())
+            {
+                // Calculate the hash of the stream.
+                var resultString = BitConverter.ToString(md5.ComputeHash(dataStream)).Replace("-", string.Empty);
 
-				return resultString;
-			}
-		}
-	}
+                return resultString;
+            }
+        }
+    }
 }

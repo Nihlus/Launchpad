@@ -25,22 +25,22 @@ using Xunit;
 
 namespace Launchpad.Tests.Common
 {
-	public class MD5HandlerTests
-	{
-		/// <summary>
-		/// Holds the string "placeholder".
-		/// </summary>
-		private readonly MemoryStream DataStream = new MemoryStream(new byte[]
-		{
-			112, 108, 97, 99, 101, 104, 111, 108, 100, 101, 114
-		});
+    public class MD5HandlerTests
+    {
+        /// <summary>
+        /// Holds the string "placeholder".
+        /// </summary>
+        private readonly MemoryStream DataStream = new MemoryStream(new byte[]
+        {
+            112, 108, 97, 99, 101, 104, 111, 108, 100, 101, 114
+        });
 
-		private const string ExpectedHash = "6A99C575AB87F8C7D1ED1E52E7E349CE";
+        private const string ExpectedHash = "6A99C575AB87F8C7D1ED1E52E7E349CE";
 
-		[Fact]
-		public void HashesCorrectly()
-		{
-			Assert.Equal(ExpectedHash, MD5Handler.GetStreamHash(this.DataStream));
-		}
-	}
+        [Fact]
+        public void HashesCorrectly()
+        {
+            Assert.Equal(ExpectedHash, MD5Handler.GetStreamHash(this.DataStream));
+        }
+    }
 }

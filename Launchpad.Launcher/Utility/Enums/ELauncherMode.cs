@@ -22,34 +22,34 @@
 
 namespace Launchpad.Launcher.Utility.Enums
 {
-	/// <summary>
-	/// The mode the launcher is in.
-	/// </summary>
-	internal enum ELauncherMode
-	{
-		/// <summary>
-		/// The launcher can install or is installing a game.
-		/// </summary>
-		Install,
+    /// <summary>
+    /// The mode the launcher is in.
+    /// </summary>
+    internal enum ELauncherMode
+    {
+        /// <summary>
+        /// The launcher can install or is installing a game.
+        /// </summary>
+        Install,
 
-		/// <summary>
-		/// The launcher can update or is updating a game.
-		/// </summary>
-		Update,
+        /// <summary>
+        /// The launcher can update or is updating a game.
+        /// </summary>
+        Update,
 
-		/// <summary>
-		/// The launcher can repair or is repairing a game.
-		/// </summary>
-		Repair,
+        /// <summary>
+        /// The launcher can repair or is repairing a game.
+        /// </summary>
+        Repair,
 
-		/// <summary>
-		/// The launcher can launch or is launching a game.
-		/// </summary>
-		Launch,
+        /// <summary>
+        /// The launcher can launch or is launching a game.
+        /// </summary>
+        Launch,
 
-		/// <summary>
-		/// The launcher can't do or isn't doing anything.
-		/// </summary>
-		Inactive
-	}
+        /// <summary>
+        /// The launcher can't do or isn't doing anything.
+        /// </summary>
+        Inactive
+    }
 }

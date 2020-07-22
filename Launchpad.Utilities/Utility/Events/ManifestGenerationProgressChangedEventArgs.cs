@@ -23,37 +23,37 @@ using System;
 
 namespace Launchpad.Utilities.Utility.Events
 {
-	public class ManifestGenerationProgressChangedEventArgs : EventArgs
-	{
-		public string Filepath
-		{
-			get;
-			set;
-		}
+    public class ManifestGenerationProgressChangedEventArgs : EventArgs
+    {
+        public string Filepath
+        {
+            get;
+            set;
+        }
 
-		public int TotalFiles
-		{
-			get;
-			set;
-		}
+        public int TotalFiles
+        {
+            get;
+            set;
+        }
 
-		public int CompletedFiles
-		{
-			get;
-			set;
-		}
+        public int CompletedFiles
+        {
+            get;
+            set;
+        }
 
-		public string Hash
-		{
-			get;
-			set;
-		}
+        public string Hash
+        {
+            get;
+            set;
+        }
 
-		public long Filesize
-		{
-			get;
-			set;
-		}
-	}
+        public long Filesize
+        {
+            get;
+            set;
+        }
+    }
 }
 
