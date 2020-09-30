@@ -1,4 +1,4 @@
-Launchpad
+Welcome to Launchpad
 =========
 
 An open-source launcher for your games.
@@ -11,7 +11,7 @@ Chat on Discord with us! http://discord.gg/0uvPPH2sOmcalj0K
 
 ![Launchpad (GTK# on Linux)](https://i.imgur.com/Xq1mtRl.png "Launchpad (GTK# on Linux)")
 
-## Features
+##  Amazing Features
 
 * Self-updating
 * Can install, update and verify the game installation
