@@ -233,7 +233,12 @@ internal sealed class FTPProtocolHandler : ManifestBasedProtocolHandler
             if (fileSize < bufferSize)
             {
                 var smallBuffer = new byte[fileSize];
-                await remoteStream.ReadAsync(smallBuffer, 0, smallBuffer.Length);
+
+                var read = 0;
+                while (read < smallBuffer.Length)
+                {
+                    read = await remoteStream.ReadAsync(smallBuffer, read, smallBuffer.Length);
+                }
 
                 data = Encoding.UTF8.GetString(smallBuffer, 0, smallBuffer.Length);
             }
@@ -334,7 +339,12 @@ internal sealed class FTPProtocolHandler : ManifestBasedProtocolHandler
                 if (fileSize < bufferSize)
                 {
                     var smallBuffer = new byte[fileSize];
-                    await contentStream.ReadAsync(smallBuffer, 0, smallBuffer.Length);
+
+                    var read = 0;
+                    while (read < smallBuffer.Length)
+                    {
+                        read = await contentStream.ReadAsync(smallBuffer, read, smallBuffer.Length);
+                    }
 
                     fileStream.Write(smallBuffer, 0, smallBuffer.Length);
 
