@@ -34,6 +34,7 @@ using Microsoft.Extensions.Logging;
 using NGettext;
 using Remora.Results;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 using Image = SixLabors.ImageSharp.Image;
 
 namespace Launchpad.Launcher.Handlers.Protocols.Manifest
@@ -162,7 +163,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             var localBannerPath = Path.Combine(Path.GetTempPath(), "banner.png");
 
             await DownloadRemoteFileAsync(bannerURL, localBannerPath);
-            return Image.Load(localBannerPath);
+            return Image.Load<Rgba32>(localBannerPath);
         }
 
         /// <inheritdoc />
@@ -455,8 +456,8 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             }
             catch (WebException wex)
             {
-                using var response = (HttpWebResponse)wex.Response;
-                if (response.StatusCode == HttpStatusCode.NotFound)
+                using var response = (HttpWebResponse?)wex.Response;
+                if (response?.StatusCode == HttpStatusCode.NotFound)
                 {
                     return false;
                 }

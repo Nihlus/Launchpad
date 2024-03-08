@@ -34,6 +34,7 @@ using Microsoft.Extensions.Logging;
 using NGettext;
 using Remora.Results;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 {
@@ -176,7 +177,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
             await DownloadRemoteFileAsync(bannerURL, localBannerPath);
             var bytes = await File.ReadAllBytesAsync(localBannerPath);
-            return Image.Load(bytes);
+            return Image.Load<Rgba32>(bytes);
         }
 
         /// <inheritdoc />
@@ -494,8 +495,8 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             }
             catch (WebException ex)
             {
-                using var response = (FtpWebResponse)ex.Response;
-                if (response.StatusCode == FtpStatusCode.ActionNotTakenFileUnavailable)
+                using var response = (FtpWebResponse?)ex.Response;
+                if (response?.StatusCode == FtpStatusCode.ActionNotTakenFileUnavailable)
                 {
                     return false;
                 }

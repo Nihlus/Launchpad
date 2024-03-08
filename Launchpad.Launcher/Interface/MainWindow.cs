@@ -38,6 +38,7 @@ using Microsoft.Extensions.Logging;
 using NGettext;
 using Remora.Results;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 using Application = Gtk.Application;
 using Process = System.Diagnostics.Process;
 
@@ -366,10 +367,14 @@ namespace Launchpad.Launcher.Interface
             var bannerImage = getBannerImage.Entity;
             bannerImage.Mutate(i => i.Resize(_bannerImage.AllocatedWidth, 0));
 
+            // RGBA32 is a 32-bit number, so we'll use a sizeof here
+            var buffer = new byte[bannerImage.Width * bannerImage.Height * sizeof(int)];
+            bannerImage.CopyPixelDataTo(buffer);
+
             // Load the image into a pixel buffer
             _bannerImage.Pixbuf = new Pixbuf
             (
-                Bytes.NewStatic(bannerImage.SavePixelData()),
+                Bytes.NewStatic(buffer),
                 Colorspace.Rgb,
                 true,
                 8,

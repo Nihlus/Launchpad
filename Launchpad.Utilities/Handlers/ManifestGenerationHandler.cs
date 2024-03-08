@@ -72,7 +72,7 @@ namespace Launchpad.Utilities.Handlers
             CancellationToken ct
         )
         {
-            var parentDirectory = Directory.GetParent(targetPath).ToString();
+            var parentDirectory = Directory.GetParent(targetPath)?.ToString() ?? throw new InvalidOperationException();
 
             var manifestPath = Path.Combine(parentDirectory, $"{manifestType}Manifest.txt");
             var manifestChecksumPath = Path.Combine(parentDirectory, $"{manifestType}Manifest.checksum");

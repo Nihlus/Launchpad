@@ -28,6 +28,7 @@ using Launchpad.Launcher.Configuration;
 using Launchpad.Launcher.Services;
 using Remora.Results;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace Launchpad.Launcher.Handlers.Protocols
 {

@@ -10,7 +10,7 @@
         <Deterministic>true</Deterministic>
         <DebugSymbols>true</DebugSymbols>
 
-        <TargetFrameworks>netcoreapp3.1;netstandard2.1</TargetFrameworks>
+        <TargetFramework>net8.0</TargetFramework>
 
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
         <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
