@@ -60,7 +60,7 @@ internal static class Program
         var options = new CLIOptions();
         Parser.Default.ParseArguments<CLIOptions>(args)
             .WithParsed(r => options = r)
-            .WithNotParsed(r => options = null);
+            .WithNotParsed(_ => options = null);
 
         if (options is null)
         {

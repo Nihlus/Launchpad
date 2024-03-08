@@ -88,7 +88,7 @@ internal sealed class FTPProtocolHandler : ManifestBasedProtocolHandler
     /// <inheritdoc />
     public override async Task<Result<bool>> CanPatchAsync()
     {
-        _log.LogInformation("Pinging remote patching server to determine if we can connect to it.");
+        _log.LogInformation("Pinging remote patching server to determine if we can connect to it");
 
         var canConnect = false;
 
@@ -132,13 +132,13 @@ internal sealed class FTPProtocolHandler : ManifestBasedProtocolHandler
             }
             catch (WebException wex)
             {
-                _log.LogWarning("Unable to connect to remote patch server (WebException): " + wex.Message);
+                _log.LogWarning(wex, "Unable to connect to remote patch server");
                 canConnect = false;
             }
         }
         catch (WebException wex)
         {
-            _log.LogWarning("Unable to connect due a malformed url in the configuration (WebException): " + wex.Message);
+            _log.LogWarning(wex, "Unable to connect due a malformed url in the configuration");
             canConnect = false;
         }
 
@@ -222,10 +222,6 @@ internal sealed class FTPProtocolHandler : ManifestBasedProtocolHandler
 
             var data = string.Empty;
             await using var remoteStream = (await request.GetResponseAsync()).GetResponseStream();
-            if (remoteStream == null)
-            {
-                return string.Empty;
-            }
 
             long fileSize;
             using (var sizeResponse = (FtpWebResponse)await sizeRequest.GetResponseAsync())
@@ -262,7 +258,7 @@ internal sealed class FTPProtocolHandler : ManifestBasedProtocolHandler
         }
         catch (WebException wex)
         {
-            _log.LogError($"Failed to read the contents of remote file \"{remoteURL}\" (WebException): {wex.Message}");
+            _log.LogError(wex, "Failed to read the contents of remote file \"{RemoteUrl}\"", remoteURL);
             return string.Empty;
         }
     }

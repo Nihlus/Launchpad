@@ -136,7 +136,7 @@ public sealed class GameHandler
     /// <returns>A <see cref="System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
     public async Task InstallGameAsync()
     {
-        _log.LogInformation($"Starting installation of game files using protocol \"{_patch.GetType().Name}\"");
+        _log.LogInformation("Starting installation of game files using protocol \"{Protocol}\"", _patch.GetType().Name);
         await _patch.InstallGameAsync();
     }
 
@@ -146,7 +146,7 @@ public sealed class GameHandler
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task UpdateGameAsync()
     {
-        _log.LogInformation($"Starting update of game files using protocol \"{_patch.GetType().Name}\"");
+        _log.LogInformation("Starting update of game files using protocol \"{Protocol}\"", _patch.GetType().Name);
         await _patch.UpdateModuleAsync(EModule.Game);
     }
 
@@ -156,7 +156,7 @@ public sealed class GameHandler
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task VerifyGameAsync()
     {
-        _log.LogInformation("Beginning verification of game files.");
+        _log.LogInformation("Beginning verification of game files");
         await _patch.VerifyModuleAsync(EModule.Game);
     }
 
@@ -166,16 +166,16 @@ public sealed class GameHandler
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task ReinstallGameAsync()
     {
-        _log.LogInformation("Beginning full reinstall of game files.");
+        _log.LogInformation("Beginning full reinstall of game files");
         if (Directory.Exists(_directoryHelpers.GetLocalGameDirectory()))
         {
-            _log.LogInformation("Deleting existing game files.");
+            _log.LogInformation("Deleting existing game files");
             Directory.Delete(_directoryHelpers.GetLocalGameDirectory(), true);
         }
 
         if (File.Exists(_directoryHelpers.GetGameTagfilePath()))
         {
-            _log.LogInformation("Deleting install progress cookie.");
+            _log.LogInformation("Deleting install progress cookie");
             File.Delete(_directoryHelpers.GetGameTagfilePath());
         }
 
@@ -207,7 +207,7 @@ public sealed class GameHandler
                 WorkingDirectory = executableDir
             };
 
-            _log.LogInformation($"Launching game. \n\tExecutable path: {gameStartInfo.FileName}");
+            _log.LogInformation("Launching game. \n\tExecutable path: {Executable}", gameStartInfo.FileName);
 
             var gameProcess = new Process
             {
@@ -215,14 +215,15 @@ public sealed class GameHandler
                 EnableRaisingEvents = true
             };
 
-            gameProcess.Exited += (sender, args) =>
+            gameProcess.Exited += (_, _) =>
             {
                 if (gameProcess.ExitCode != 0)
                 {
                     _log.LogInformation
                     (
-                        $"The game exited with an exit code of {gameProcess.ExitCode}. " +
-                        "There may have been issues during runtime, or the game may not have started at all."
+                        "The game exited with an exit code of {ExitCode}. " +
+                        "There may have been issues during runtime, or the game may not have started at all",
+                        gameProcess.ExitCode
                     );
                 }
 
@@ -242,14 +243,14 @@ public sealed class GameHandler
         }
         catch (FileNotFoundException fex)
         {
-            _log.LogWarning($"Game launch failed (FileNotFoundException): {fex.Message}");
-            _log.LogWarning("If the game executable is there, try overriding the executable name in the configuration file.");
+            _log.LogWarning(fex, "Game launch failed");
+            _log.LogWarning("If the game executable is there, try overriding the executable name in the configuration file");
 
             OnGameLaunchFailed();
         }
         catch (IOException ioex)
         {
-            _log.LogWarning($"Game launch failed (IOException): {ioex.Message}");
+            _log.LogWarning(ioex, $"Game launch failed");
 
             OnGameLaunchFailed();
         }

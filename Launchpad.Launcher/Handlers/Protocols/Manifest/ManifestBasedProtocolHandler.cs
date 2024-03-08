@@ -268,7 +268,7 @@ public abstract class ManifestBasedProtocolHandler : PatchProtocolHandler
                 }
 
                 brokenFiles.Add(fileEntry);
-                _log.LogInformation($"File \"{Path.GetFileName(fileEntry.RelativePath)}\" failed its integrity check and was queued for redownload.");
+                _log.LogInformation("File \"{File}\" failed its integrity check and was queued for redownload", Path.GetFileName(fileEntry.RelativePath));
             }
 
             var downloadedFiles = 0;
@@ -292,8 +292,9 @@ public abstract class ManifestBasedProtocolHandler : PatchProtocolHandler
                     {
                         _log.LogInformation
                         (
-                            $"File \"{Path.GetFileName(fileEntry.RelativePath)}\" failed its integrity check " +
-                            $"again after redownloading. ({retries} retries)"
+                            "File \"{File}\" failed its integrity check again after redownloading. ({Retries} retries)",
+                            Path.GetFileName(fileEntry.RelativePath),
+                            retries
                         );
 
                         var downloadEntry = await DownloadManifestEntryAsync(fileEntry, module);
@@ -468,7 +469,7 @@ public abstract class ManifestBasedProtocolHandler : PatchProtocolHandler
         }
         catch (WebException wex)
         {
-            _log.LogWarning("Unable to determine whether or not the launcher was outdated (WebException): " + wex.Message);
+            _log.LogWarning(wex, "Unable to determine whether or not the launcher was outdated");
             return false;
         }
     }
@@ -568,13 +569,13 @@ public abstract class ManifestBasedProtocolHandler : PatchProtocolHandler
                 // If the file is partial, resume the download.
                 if (fileInfo.Length < fileEntry.Size)
                 {
-                    _log.LogInformation($"Resuming interrupted file \"{Path.GetFileNameWithoutExtension(fileEntry.RelativePath)}\" at byte {fileInfo.Length}.");
+                    _log.LogInformation("Resuming interrupted file \"{File}\" at byte {Byte}", Path.GetFileNameWithoutExtension(fileEntry.RelativePath), fileInfo.Length);
                     await DownloadRemoteFileAsync(remoteURL, localPath, fileEntry.Size, fileInfo.Length);
                 }
                 else
                 {
                     // If it's larger than expected, toss it in the bin and try again.
-                    _log.LogInformation($"Restarting interrupted file \"{Path.GetFileNameWithoutExtension(fileEntry.RelativePath)}\": File bigger than expected.");
+                    _log.LogInformation("Restarting interrupted file \"{File}\": File bigger than expected", Path.GetFileNameWithoutExtension(fileEntry.RelativePath));
 
                     File.Delete(localPath);
                     await DownloadRemoteFileAsync(remoteURL, localPath, fileEntry.Size);
@@ -593,8 +594,10 @@ public abstract class ManifestBasedProtocolHandler : PatchProtocolHandler
                     // If the hash doesn't match, toss it in the bin and try again.
                     _log.LogInformation
                     (
-                        $"Redownloading file \"{Path.GetFileNameWithoutExtension(fileEntry.RelativePath)}\": " +
-                        $"Hash sum mismatch. Local: {localHash}, Expected: {fileEntry.Hash}"
+                        "Redownloading file \"{File}\": Hash sum mismatch. Local: {LocalHash}, Expected: {ExpectedHash}",
+                        Path.GetFileNameWithoutExtension(fileEntry.RelativePath),
+                        localHash,
+                        fileEntry.Hash
                     );
 
                     File.Delete(localPath);

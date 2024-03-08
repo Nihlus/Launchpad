@@ -100,13 +100,13 @@ public sealed class LauncherHandler
     {
         try
         {
-            _log.LogInformation($"Starting update of lancher files using protocol \"{_patch.GetType().Name}\"");
+            _log.LogInformation("Starting update of lancher files using protocol \"{Protocol}\"", _patch.GetType().Name);
 
             await _patch.UpdateModuleAsync(EModule.Launcher);
         }
         catch (IOException ioex)
         {
-            _log.LogWarning("The launcher update failed (IOException): " + ioex.Message);
+            _log.LogWarning(ioex, "The launcher update failed");
         }
     }
 
@@ -139,7 +139,7 @@ public sealed class LauncherHandler
         }
         catch (WebException wex)
         {
-            _log.LogWarning("Could not access standard changelog (WebException): " + wex.Message);
+            _log.LogWarning(wex, "Could not access standard changelog");
             return false;
         }
     }
@@ -160,7 +160,7 @@ public sealed class LauncherHandler
             if (PlatformHelpers.IsRunningOnUnix())
             {
                 var chmod = Process.Start("chmod", $"+x {updateScriptPath}");
-                chmod?.WaitForExit();
+                chmod.WaitForExit();
             }
 
             var updateShellProcess = new ProcessStartInfo
@@ -176,7 +176,7 @@ public sealed class LauncherHandler
         }
         catch (IOException ioex)
         {
-            _log.LogWarning("Failed to create update script (IOException): " + ioex.Message);
+            _log.LogWarning(ioex, "Failed to create update script");
 
             throw new InvalidOperationException();
         }

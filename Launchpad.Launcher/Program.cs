@@ -101,16 +101,16 @@ public class Program
     /// <param name="args">The event object containing the information about the exception.</param>
     private static void OnUnhandledGLibException(UnhandledExceptionArgs args)
     {
-        Log.LogError((Exception)args.ExceptionObject, "Unhandled GLib exception.");
+        Log.LogError((Exception)args.ExceptionObject, "Unhandled GLib exception");
     }
 
     private static IHostBuilder CreateHostBuilder(string[] args) => new HostBuilder()
-        .ConfigureAppConfiguration((hostingContext, config) =>
+        .ConfigureAppConfiguration((_, config) =>
         {
             config.SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "config"));
             config.AddJsonFile("appsettings.json");
         })
-        .ConfigureServices((hostingContext, services) =>
+        .ConfigureServices((_, services) =>
         {
             services
                 .AddSingleton<FTPProtocolHandler>()
@@ -137,7 +137,7 @@ public class Program
                     }
                 )
                 .AddSingleton(s => s.GetRequiredService<ConfigHandler>().Configuration)
-                .AddSingleton<ICatalog>(s => new Catalog("Launchpad", "./Content/locale"))
+                .AddSingleton<ICatalog>(_ => new Catalog("Launchpad", "./Content/locale"))
                 .AddSingleton<PatchProtocolHandler>
                 (
                     s =>

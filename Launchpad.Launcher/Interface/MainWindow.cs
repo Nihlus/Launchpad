@@ -37,7 +37,6 @@ using Launchpad.Launcher.Utility.Enums;
 using Microsoft.Extensions.Logging;
 using NGettext;
 using Remora.Results;
-using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using Application = Gtk.Application;
 using Process = System.Diagnostics.Process;
@@ -230,8 +229,8 @@ public sealed partial class MainWindow : Gtk.Window
                 {
                     _log.LogInformation
                     (
-                        $"The server does not provide files for platform \"{PlatformHelpers.GetCurrentPlatform()}\". " +
-                        "A .provides file must be present in the platforms' root directory."
+                        "The server does not provide files for platform \"{Platform}\". A .provides file must be present in the platforms' root directory",
+                        PlatformHelpers.GetCurrentPlatform()
                     );
 
                     SetLauncherMode(ELauncherMode.Inactive, false);
@@ -241,7 +240,7 @@ public sealed partial class MainWindow : Gtk.Window
                     if (!_checks.IsGameInstalled())
                     {
                         // If the game is not installed, offer to install it
-                        _log.LogInformation("The game has not yet been installed.");
+                        _log.LogInformation("The game has not yet been installed");
                         SetLauncherMode(ELauncherMode.Install, false);
 
                         // Since the game has not yet been installed, disallow manual repairs
@@ -262,13 +261,13 @@ public sealed partial class MainWindow : Gtk.Window
                         if (getIsGameOutdated.Entity)
                         {
                             // If it does, offer to update it
-                            _log.LogInformation("The game is outdated.");
+                            _log.LogInformation("The game is outdated");
                             SetLauncherMode(ELauncherMode.Update, false);
                         }
                         else
                         {
                             // All checks passed, so we can offer to launch the game.
-                            _log.LogInformation("All checks passed. Game can be launched.");
+                            _log.LogInformation("All checks passed. Game can be launched");
                             SetLauncherMode(ELauncherMode.Launch, false);
                         }
                     }
@@ -277,7 +276,7 @@ public sealed partial class MainWindow : Gtk.Window
             else
             {
                 // The launcher was outdated.
-                _log.LogInformation($"The launcher is outdated. \n\tLocal version: {_localVersionService.GetLocalLauncherVersion()}");
+                _log.LogInformation("The launcher is outdated. \n\tLocal version: {LocalVersion}", _localVersionService.GetLocalLauncherVersion());
                 SetLauncherMode(ELauncherMode.Update, false);
             }
         }
@@ -312,7 +311,7 @@ public sealed partial class MainWindow : Gtk.Window
 
     private void DisplayInitialStartupDialog()
     {
-        _log.LogInformation("This instance is the first start of the application in this folder.");
+        _log.LogInformation("This instance is the first start of the application in this folder");
 
         var text = LocalizationCatalog.GetString
             (
@@ -331,7 +330,7 @@ public sealed partial class MainWindow : Gtk.Window
         if (shouldInstallHereDialog.Run() == (int)ResponseType.Ok)
         {
             // Yes, install here
-            _log.LogInformation("User accepted installation in this directory. Installing in current directory.");
+            _log.LogInformation("User accepted installation in this directory. Installing in current directory");
 
             _tagfileService.CreateLauncherTagfile();
         }
@@ -521,8 +520,8 @@ public sealed partial class MainWindow : Gtk.Window
 
             _log.LogInformation
             (
-                $"The server does not provide files for platform \"{PlatformHelpers.GetCurrentPlatform()}\". " +
-                "A .provides file must be present in the platforms' root directory."
+                "The server does not provide files for platform \"{Platform}\". A .provides file must be present in the platforms' root directory",
+                PlatformHelpers.GetCurrentPlatform()
             );
 
             SetLauncherMode(ELauncherMode.Inactive, false);
@@ -585,7 +584,7 @@ public sealed partial class MainWindow : Gtk.Window
             }
             default:
             {
-                _log.LogWarning("The main button was pressed with an invalid active mode. No functionality has been defined for this mode.");
+                _log.LogWarning("The main button was pressed with an invalid active mode. No functionality has been defined for this mode");
                 break;
             }
         }
@@ -596,7 +595,7 @@ public sealed partial class MainWindow : Gtk.Window
     /// </summary>
     private void OnLauncherDownloadFinished(object? sender, EventArgs e)
     {
-        Application.Invoke((o, args) =>
+        Application.Invoke((_, _) =>
         {
             var script = _launcher.CreateUpdateScript();
 
@@ -613,7 +612,7 @@ public sealed partial class MainWindow : Gtk.Window
     /// <param name="e">Empty event args.</param>
     private void OnGameLaunchFailed(object? sender, EventArgs e)
     {
-        Application.Invoke((o, args) =>
+        Application.Invoke((_, _) =>
         {
             _statusLabel.Text = LocalizationCatalog.GetString("The game failed to launch. Try repairing the installation.");
             _mainProgressBar.Text = string.Empty;
@@ -629,7 +628,7 @@ public sealed partial class MainWindow : Gtk.Window
     /// <param name="e">Contains the type of failure that occurred.</param>
     private void OnGameDownloadFailed(object? sender, EventArgs e)
     {
-        Application.Invoke((o, args) =>
+        Application.Invoke((_, _) =>
         {
             switch (_mode)
             {
@@ -660,7 +659,7 @@ public sealed partial class MainWindow : Gtk.Window
     /// <param name="e">Contains the progress values and current filename.</param>
     private void OnModuleInstallationProgressChanged(object? sender, ModuleProgressChangedArgs e)
     {
-        Application.Invoke((o, args) =>
+        Application.Invoke((_, _) =>
         {
             _mainProgressBar.Text = e.ProgressBarMessage;
             _statusLabel.Text = e.IndicatorLabelMessage;
@@ -675,7 +674,7 @@ public sealed partial class MainWindow : Gtk.Window
     /// <param name="e">Contains the result of the download.</param>
     private void OnGameDownloadFinished(object? sender, EventArgs e)
     {
-        Application.Invoke((o, args) =>
+        Application.Invoke((_, _) =>
         {
             _statusLabel.Text = LocalizationCatalog.GetString("Idle");
 
@@ -713,7 +712,7 @@ public sealed partial class MainWindow : Gtk.Window
     /// </summary>
     private void OnGameExited(object? sender, int exitCode)
     {
-        Application.Invoke((o, args) =>
+        Application.Invoke((_, _) =>
         {
             if (exitCode != 0)
             {

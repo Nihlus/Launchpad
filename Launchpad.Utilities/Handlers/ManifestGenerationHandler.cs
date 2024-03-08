@@ -97,7 +97,7 @@ public class ManifestGenerationHandler
                         var newEntry = CreateEntryForFile(targetPath, filePath);
 
                         await tw.WriteLineAsync(newEntry.ToString());
-                        await tw.FlushAsync();
+                        await tw.FlushAsync(ct);
 
                         completedFiles++;
 

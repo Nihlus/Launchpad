@@ -68,12 +68,12 @@ public class LocalVersionService
                 return gameVersion;
             }
 
-            _log.LogWarning("Could not parse local game version. Contents: " + rawGameVersion);
+            _log.LogWarning("Could not parse local game version. Contents: {Contents}", rawGameVersion);
             return new Version("0.0.0");
         }
         catch (IOException ioex)
         {
-            _log.LogWarning("Could not read local game version (IOException): " + ioex.Message);
+            _log.LogWarning(ioex, "Could not read local game version");
             return new Version("0.0.0");
         }
     }

@@ -57,13 +57,6 @@ public static class ExtensionMethods
             throw new ArgumentNullException(nameof(dictionary));
         }
 
-        if (dictionary.ContainsKey(key))
-        {
-            dictionary[key] = value;
-        }
-        else
-        {
-            dictionary.Add(key, value);
-        }
+        dictionary[key] = value;
     }
 }

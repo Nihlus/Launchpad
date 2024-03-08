@@ -87,7 +87,7 @@ internal sealed class HTTPProtocolHandler : ManifestBasedProtocolHandler
     /// <inheritdoc />
     public override async Task<Result<bool>> CanPatchAsync()
     {
-        _log.LogInformation("Pinging remote patching server to determine if we can connect to it.");
+        _log.LogInformation("Pinging remote patching server to determine if we can connect to it");
 
         var canConnect = false;
 
@@ -120,13 +120,13 @@ internal sealed class HTTPProtocolHandler : ManifestBasedProtocolHandler
             }
             catch (WebException wex)
             {
-                _log.LogWarning("Unable to connect to remote patch server (WebException): " + wex.Message);
+                _log.LogWarning(wex, "Unable to connect to remote patch server");
                 canConnect = false;
             }
         }
         catch (WebException wex)
         {
-            _log.LogWarning("Unable to connect due a malformed url in the configuration (WebException): " + wex.Message);
+            _log.LogWarning(wex, "Unable to connect due a malformed url in the configuration");
             canConnect = false;
         }
 
