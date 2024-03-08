@@ -100,7 +100,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         }
 
         /// <inheritdoc />
-        public override async Task<DetermineConditionResult> InstallGameAsync()
+        public override async Task<Result> InstallGameAsync()
         {
             // Create the .install file to mark that an installation has begun.
             // If it exists, do nothing.
@@ -110,28 +110,28 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             var refreshResult = await RefreshModuleManifestAsync(EModule.Game);
             if (!refreshResult.IsSuccess)
             {
-                return DetermineConditionResult.FromError(refreshResult);
+                return refreshResult;
             }
 
             // Download Game
             var downloadResult = await DownloadModuleAsync(EModule.Game);
             if (!downloadResult.IsSuccess)
             {
-                return DetermineConditionResult.FromError(downloadResult);
+                return downloadResult;
             }
 
             // Verify Game
             var verifyResult = await VerifyModuleAsync(EModule.Game);
             if (!verifyResult.IsSuccess)
             {
-                return DetermineConditionResult.FromError(verifyResult);
+                return verifyResult;
             }
 
-            return DetermineConditionResult.FromSuccess();
+            return Result.FromSuccess();
         }
 
         /// <inheritdoc />
-        public override async Task<DetermineConditionResult> UpdateModuleAsync(EModule module)
+        public override async Task<Result> UpdateModuleAsync(EModule module)
         {
             var manifestType = module switch
             {
@@ -143,13 +143,13 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             var refreshResult = await RefreshModuleManifestAsync(module);
             if (!refreshResult.IsSuccess)
             {
-                return DetermineConditionResult.FromError(refreshResult);
+                return refreshResult;
             }
 
             var getManifest = _fileManifestHandler.GetManifest(manifestType, false);
             if (!getManifest.IsSuccess)
             {
-                return DetermineConditionResult.FromError
+                return new NotFoundError
                 (
                     $"No manifest was found when updating the module \"{module}\". The server files may be inaccessible" +
                     $" or missing."
@@ -217,25 +217,25 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
                     if (!downloadEntry.IsSuccess)
                     {
-                        return DetermineConditionResult.FromError(downloadEntry);
+                        return downloadEntry;
                     }
                 }
             }
             catch (IOException ioex)
             {
-                return DetermineConditionResult.FromError(ioex);
+                return ioex;
             }
 
-            return DetermineConditionResult.FromSuccess();
+            return Result.FromSuccess();
         }
 
         /// <inheritdoc />
-        public override async Task<DetermineConditionResult> VerifyModuleAsync(EModule module)
+        public override async Task<Result> VerifyModuleAsync(EModule module)
         {
             var getManifest = _fileManifestHandler.GetManifest((EManifestType)module, false);
             if (!getManifest.IsSuccess)
             {
-                return DetermineConditionResult.FromError
+                return new NotFoundError
                 (
                     $"No manifest was found when verifying the module \"{module}\". The server files may be " +
                     $"inaccessible or missing."
@@ -304,7 +304,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
                             if (retries > this.Configuration.RemoteFileDownloadRetries)
                             {
-                                return DetermineConditionResult.FromError(downloadEntry);
+                                return downloadEntry;
                             }
 
                             ++retries;
@@ -318,18 +318,15 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             }
             catch (IOException ioex)
             {
-                return DetermineConditionResult.FromError
-                (
-                    $"Verification of {module} files failed.",
-                    ioex
-                );
+                _log.LogError(ioex, "Verification of {Module} files failed", module);
+                return ioex;
             }
 
-            return DetermineConditionResult.FromSuccess();
+            return Result.FromSuccess();
         }
 
         /// <inheritdoc />
-        protected override async Task<DetermineConditionResult> DownloadModuleAsync(EModule module)
+        protected override async Task<Result> DownloadModuleAsync(EModule module)
         {
             var manifestType = module switch
             {
@@ -341,13 +338,13 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             var refreshResult = await RefreshModuleManifestAsync(module);
             if (!refreshResult.IsSuccess)
             {
-                return DetermineConditionResult.FromError(refreshResult);
+                return refreshResult;
             }
 
             var getManifest = _fileManifestHandler.GetManifest(manifestType, false);
             if (!getManifest.IsSuccess)
             {
-                return DetermineConditionResult.FromError
+                return new NotFoundError
                 (
                     $"No manifest was found when installing the module \"{module}\". The server files may be " +
                     $"inaccessible or missing."
@@ -391,11 +388,11 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                 var downloadResult = await DownloadManifestEntryAsync(fileEntry, module);
                 if (!downloadResult.IsSuccess)
                 {
-                    return DetermineConditionResult.FromError(downloadResult);
+                    return downloadResult;
                 }
             }
 
-            return DetermineConditionResult.FromSuccess();
+            return Result.FromSuccess();
         }
 
         /// <summary>
@@ -404,7 +401,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// <param name="url">The URL to read.</param>
         /// <param name="useAnonymousLogin">Whether or not to use anonymous credentials.</param>
         /// <returns>The contents of the file.</returns>
-        protected abstract Task<RetrieveEntityResult<string>> ReadRemoteFileAsync(string url, bool useAnonymousLogin = false);
+        protected abstract Task<Result<string>> ReadRemoteFileAsync(string url, bool useAnonymousLogin = false);
 
         /// <summary>
         /// Downloads the contents of the file at the specified url to the specified local path.
@@ -416,7 +413,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// <param name="contentOffset">The offset into the file where reading and writing should start.</param>
         /// <param name="useAnonymousLogin">Whether or not to use anonymous credentials.</param>
         /// <returns>A <see cref="System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
-        protected abstract Task<DetermineConditionResult> DownloadRemoteFileAsync
+        protected abstract Task<Result> DownloadRemoteFileAsync
         (
             string url,
             string localPath,
@@ -426,7 +423,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         );
 
         /// <inheritdoc />
-        public override async Task<RetrieveEntityResult<bool>> IsModuleOutdatedAsync(EModule module)
+        public override async Task<Result<bool>> IsModuleOutdatedAsync(EModule module)
         {
             try
             {
@@ -441,7 +438,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                         var getRemote = await GetRemoteLauncherVersionAsync();
                         if (!getRemote.IsSuccess)
                         {
-                            return RetrieveEntityResult<bool>.FromError(getRemote);
+                            return Result<bool>.FromError(getRemote);
                         }
 
                         remote = getRemote.Entity;
@@ -454,7 +451,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                         var getRemote = await GetRemoteGameVersionAsync();
                         if (!getRemote.IsSuccess)
                         {
-                            return RetrieveEntityResult<bool>.FromError(getRemote);
+                            return Result<bool>.FromError(getRemote);
                         }
 
                         remote = getRemote.Entity;
@@ -489,7 +486,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// Will be thrown if the local path set in the <paramref name="fileEntry"/> passed to the function is not a valid value.
         /// </exception>
         /// <returns>A <see cref="System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
-        protected virtual async Task<DetermineConditionResult> DownloadManifestEntryAsync
+        protected virtual async Task<Result> DownloadManifestEntryAsync
         (
             ManifestEntry fileEntry,
             EModule module,
@@ -613,7 +610,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
             // We've finished the download, so empty the cookie
             await File.WriteAllTextAsync(_directoryHelpers.GetGameTagfilePath(), string.Empty);
-            return DetermineConditionResult.FromSuccess();
+            return Result.FromSuccess();
         }
 
         /// <summary>
@@ -624,7 +621,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// <exception cref="ArgumentOutOfRangeException">
         /// Will be thrown if the <see cref="EModule"/> passed to the function is not a valid value.
         /// </exception>
-        protected virtual async Task<RetrieveEntityResult<bool>> IsModuleManifestOutdatedAsync(EModule module)
+        protected virtual async Task<Result<bool>> IsModuleManifestOutdatedAsync(EModule module)
         {
             var manifestPath = _fileManifestHandler.GetManifestPath((EManifestType)module, false);
 
@@ -636,7 +633,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             var getRemoteHash = await GetRemoteModuleManifestChecksumAsync(module);
             if (!getRemoteHash.IsSuccess)
             {
-                return RetrieveEntityResult<bool>.FromError(getRemoteHash);
+                return Result<bool>.FromError(getRemoteHash);
             }
 
             var remoteHash = getRemoteHash.Entity;
@@ -655,7 +652,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// <exception cref="ArgumentOutOfRangeException">
         /// Will be thrown if the <see cref="EModule"/> passed to the function is not a valid value.
         /// </exception>
-        protected virtual async Task<RetrieveEntityResult<string>> GetRemoteModuleManifestChecksumAsync(EModule module)
+        protected virtual async Task<Result<string>> GetRemoteModuleManifestChecksumAsync(EModule module)
         {
             var getRemoteChecksum = await ReadRemoteFileAsync
             (
@@ -664,7 +661,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
             if (!getRemoteChecksum.IsSuccess)
             {
-                return RetrieveEntityResult<string>.FromError(getRemoteChecksum);
+                return Result<string>.FromError(getRemoteChecksum);
             }
 
             var checksum = getRemoteChecksum.Entity.RemoveLineSeparatorsAndNulls();
@@ -680,7 +677,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// Will be thrown if the <see cref="EModule"/> passed to the function is not a valid value.
         /// </exception>
         /// <returns>A <see cref="System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
-        protected virtual async Task<DetermineConditionResult> RefreshModuleManifestAsync(EModule module)
+        protected virtual async Task<Result> RefreshModuleManifestAsync(EModule module)
         {
             var manifestExists = File.Exists(_fileManifestHandler.GetManifestPath((EManifestType)module, false));
             if (manifestExists)
@@ -688,7 +685,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                 var getIsOutdated = await IsModuleManifestOutdatedAsync(module);
                 if (!getIsOutdated.IsSuccess)
                 {
-                    return DetermineConditionResult.FromError(getIsOutdated);
+                    return Result.FromError(getIsOutdated);
                 }
 
                 if (getIsOutdated.Entity)
@@ -696,7 +693,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                     var downloadResult = await DownloadModuleManifestAsync(module);
                     if (!downloadResult.IsSuccess)
                     {
-                        return DetermineConditionResult.FromError(downloadResult);
+                        return downloadResult;
                     }
                 }
             }
@@ -705,13 +702,13 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                 var downloadResult = await DownloadModuleManifestAsync(module);
                 if (!downloadResult.IsSuccess)
                 {
-                    return DetermineConditionResult.FromError(downloadResult);
+                    return downloadResult;
                 }
             }
 
             // Now update the handler instance
             _fileManifestHandler.ReloadManifests((EManifestType)module);
-            return DetermineConditionResult.FromSuccess();
+            return Result.FromSuccess();
         }
 
         /// <summary>
@@ -722,7 +719,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// Will be thrown if the <see cref="EModule"/> passed to the function is not a valid value.
         /// </exception>
         /// <returns>A <see cref="System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
-        protected virtual async Task<DetermineConditionResult> DownloadModuleManifestAsync(EModule module)
+        protected virtual async Task<Result> DownloadModuleManifestAsync(EModule module)
         {
             var remoteURL = _fileManifestHandler.GetManifestURL((EManifestType)module);
             var localPath = _fileManifestHandler.GetManifestPath((EManifestType)module, false);
@@ -744,36 +741,36 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             }
             catch (IOException ioex)
             {
-                return DetermineConditionResult.FromError(ioex);
+                return ioex;
             }
 
             var downloadResult = await DownloadRemoteFileAsync(remoteURL, localPath);
             if (!downloadResult.IsSuccess)
             {
-                return DetermineConditionResult.FromError(downloadResult);
+                return downloadResult;
             }
 
-            return DetermineConditionResult.FromSuccess();
+            return Result.FromSuccess();
         }
 
         /// <summary>
         /// Gets the remote launcher version.
         /// </summary>
         /// <returns>The remote launcher version.</returns>
-        protected virtual async Task<RetrieveEntityResult<Version>> GetRemoteLauncherVersionAsync()
+        protected virtual async Task<Result<Version>> GetRemoteLauncherVersionAsync()
         {
             var remoteVersionPath = _directoryHelpers.GetRemoteLauncherVersionPath();
             var readFile = await ReadRemoteFileAsync(remoteVersionPath);
             if (!readFile.IsSuccess)
             {
-                return RetrieveEntityResult<Version>.FromError(readFile);
+                return Result<Version>.FromError(readFile);
             }
 
             var remoteVersion = readFile.Entity.RemoveLineSeparatorsAndNulls();
 
             if (Version.TryParse(remoteVersion, out var version) || version is null)
             {
-                return RetrieveEntityResult<Version>.FromError("Failed to parse the remote launcher version.");
+                return new InvalidOperationError("Failed to parse the remote launcher version.");
             }
 
             return version;
@@ -783,20 +780,20 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// Gets the remote game version.
         /// </summary>
         /// <returns>The remote game version.</returns>
-        protected virtual async Task<RetrieveEntityResult<Version>> GetRemoteGameVersionAsync()
+        protected virtual async Task<Result<Version>> GetRemoteGameVersionAsync()
         {
             var remoteVersionPath = $"{this.Configuration.RemoteAddress}/game/{this.Configuration.SystemTarget}/bin/GameVersion.txt";
             var readFile = await ReadRemoteFileAsync(remoteVersionPath);
             if (!readFile.IsSuccess)
             {
-                return RetrieveEntityResult<Version>.FromError(readFile);
+                return Result<Version>.FromError(readFile);
             }
 
             var remoteVersion = readFile.Entity.RemoveLineSeparatorsAndNulls();
 
             if (!Version.TryParse(remoteVersion, out var version))
             {
-                return RetrieveEntityResult<Version>.FromError("Failed to parse the remote game version.");
+                return new InvalidOperationError("Failed to parse the remote game version.");
             }
 
             return version;

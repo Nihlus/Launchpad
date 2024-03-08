@@ -68,7 +68,7 @@ namespace Launchpad.Launcher.Handlers
         /// Determines whether this instance can connect to a patching service.
         /// </summary>
         /// <returns><c>true</c> if this instance can connect to a patching service; otherwise, <c>false</c>.</returns>
-        public Task<RetrieveEntityResult<bool>> CanPatchAsync() => _patch.CanPatchAsync();
+        public Task<Result<bool>> CanPatchAsync() => _patch.CanPatchAsync();
 
         /// <summary>
         /// Determines whether this is the first time the launcher starts.
@@ -110,14 +110,14 @@ namespace Launchpad.Launcher.Handlers
         /// Determines whether the game is outdated.
         /// </summary>
         /// <returns><c>true</c> if the game is outdated; otherwise, <c>false</c>.</returns>
-        public Task<RetrieveEntityResult<bool>> IsGameOutdatedAsync()
+        public Task<Result<bool>> IsGameOutdatedAsync()
             => _patch.IsModuleOutdatedAsync(EModule.Game);
 
         /// <summary>
         /// Determines whether the launcher is outdated.
         /// </summary>
         /// <returns><c>true</c> if the launcher is outdated; otherwise, <c>false</c>.</returns>
-        public Task<RetrieveEntityResult<bool>> IsLauncherOutdatedAsync()
+        public Task<Result<bool>> IsLauncherOutdatedAsync()
             => _patch.IsModuleOutdatedAsync(EModule.Launcher);
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace Launchpad.Launcher.Handlers
         /// </summary>
         /// <returns><c>true</c>, if the server does provide files for the platform, <c>false</c> otherwise.</returns>
         /// <param name="platform">platform.</param>
-        public Task<RetrieveEntityResult<bool>> IsPlatformAvailableAsync(ESystemTarget platform)
+        public Task<Result<bool>> IsPlatformAvailableAsync(ESystemTarget platform)
             => _patch.IsPlatformAvailableAsync(platform);
     }
 }

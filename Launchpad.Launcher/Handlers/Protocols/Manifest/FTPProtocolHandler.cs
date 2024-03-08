@@ -86,7 +86,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         }
 
         /// <inheritdoc />
-        public override async Task<RetrieveEntityResult<bool>> CanPatchAsync()
+        public override async Task<Result<bool>> CanPatchAsync()
         {
             _log.LogInformation("Pinging remote patching server to determine if we can connect to it.");
 
@@ -101,7 +101,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                 var getPlainRequest = CreateFtpWebRequest(url, username, password);
                 if (!getPlainRequest.IsSuccess)
                 {
-                    return RetrieveEntityResult<bool>.FromError(getPlainRequest);
+                    return Result<bool>.FromError(getPlainRequest);
                 }
 
                 var request = getPlainRequest.Entity;
@@ -146,7 +146,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         }
 
         /// <inheritdoc />
-        public override Task<RetrieveEntityResult<bool>> IsPlatformAvailableAsync(ESystemTarget platform)
+        public override Task<Result<bool>> IsPlatformAvailableAsync(ESystemTarget platform)
         {
             var remote = $"{this.Configuration.RemoteAddress}/game/{platform}/.provides";
 
@@ -154,14 +154,14 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         }
 
         /// <inheritdoc />
-        public override Task<RetrieveEntityResult<string>> GetChangelogMarkupAsync()
+        public override Task<Result<string>> GetChangelogMarkupAsync()
         {
             var changelogURL = $"{this.Configuration.RemoteAddress}/launcher/changelog.pango";
             return ReadRemoteFileAsync(changelogURL);
         }
 
         /// <inheritdoc />
-        public override Task<RetrieveEntityResult<bool>> CanProvideBannerAsync()
+        public override Task<Result<bool>> CanProvideBannerAsync()
         {
             var bannerURL = $"{this.Configuration.RemoteAddress}/launcher/banner.png";
 
@@ -169,7 +169,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         }
 
         /// <inheritdoc />
-        public override async Task<RetrieveEntityResult<Image<Rgba32>>> GetBannerAsync()
+        public override async Task<Result<Image<Rgba32>>> GetBannerAsync()
         {
             var bannerURL = $"{this.Configuration.RemoteAddress}/launcher/banner.png";
 
@@ -181,7 +181,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         }
 
         /// <inheritdoc />
-        protected override async Task<RetrieveEntityResult<string>> ReadRemoteFileAsync(string url, bool useAnonymousLogin = false)
+        protected override async Task<Result<string>> ReadRemoteFileAsync(string url, bool useAnonymousLogin = false)
         {
             // Clean the input url first
             var remoteURL = url.Replace(Path.DirectorySeparatorChar, '/');
@@ -206,12 +206,12 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
                 if (!getRequest.IsSuccess)
                 {
-                    return RetrieveEntityResult<string>.FromError(getRequest);
+                    return Result<string>.FromError(getRequest);
                 }
 
                 if (!getSizeRequest.IsSuccess)
                 {
-                    return RetrieveEntityResult<string>.FromError(getSizeRequest);
+                    return Result<string>.FromError(getSizeRequest);
                 }
 
                 var request = getRequest.Entity;
@@ -268,7 +268,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         }
 
         /// <inheritdoc />
-        protected override async Task<DetermineConditionResult> DownloadRemoteFileAsync
+        protected override async Task<Result> DownloadRemoteFileAsync
         (
             string url,
             string localPath,
@@ -300,12 +300,12 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
                 if (!getRequest.IsSuccess)
                 {
-                    return DetermineConditionResult.FromError(getRequest);
+                    return Result.FromError(getRequest);
                 }
 
                 if (!getSizeRequest.IsSuccess)
                 {
-                    return DetermineConditionResult.FromError(getSizeRequest);
+                    return Result.FromError(getSizeRequest);
                 }
 
                 var request = getRequest.Entity;
@@ -317,19 +317,11 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                 sizeRequest.Method = WebRequestMethods.Ftp.GetFileSize;
 
                 await using var contentStream = (await request.GetResponseAsync()).GetResponseStream();
-                if (contentStream == null)
-                {
-                    return DetermineConditionResult.FromError
-                    (
-                        $"Failed to download the remote file at \"{remoteURL}\" (content stream was null). " +
-                        $"Check your internet connection."
-                    );
-                }
 
                 var fileSize = contentOffset;
-                using (var sizereader = (FtpWebResponse)sizeRequest.GetResponse())
+                using (var sizeReader = (FtpWebResponse)sizeRequest.GetResponse())
                 {
-                    fileSize += sizereader.ContentLength;
+                    fileSize += sizeReader.ContentLength;
                 }
 
                 await using
@@ -395,22 +387,16 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             }
             catch (WebException wex)
             {
-                return DetermineConditionResult.FromError
-                (
-                    $"Failed to download the remote file at \"{remoteURL}\".",
-                    wex
-                );
+                _log.LogError(wex, "Failed to read the contents of remote file \"{RemoteUrl}\"", remoteURL);
+                return wex;
             }
             catch (IOException ioex)
             {
-                return DetermineConditionResult.FromError
-                (
-                    $"Failed to download the remote file at \"{remoteURL}\".",
-                    ioex
-                );
+                _log.LogError(ioex, "Failed to read the contents of remote file \"{RemoteUrl}\"", remoteURL);
+                return ioex;
             }
 
-            return DetermineConditionResult.FromSuccess();
+            return Result.FromSuccess();
         }
 
         /// <summary>
@@ -420,7 +406,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// <param name="remotePath">Ftp directory path.</param>
         /// <param name="username">Remote FTP username.</param>
         /// <param name="password">Remote FTP password.</param>
-        private CreateEntityResult<FtpWebRequest> CreateFtpWebRequest(string remotePath, string username, string password)
+        private Result<FtpWebRequest> CreateFtpWebRequest(string remotePath, string username, string password)
         {
             if (!remotePath.StartsWith(this.Configuration.RemoteAddress.AbsoluteUri))
             {
@@ -444,28 +430,23 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
             }
             catch (WebException wex)
             {
-                return CreateEntityResult<FtpWebRequest>.FromError
-                (
-                    "Unable to create a WebRequest for the specified file.",
-                    wex
-                );
+                _log.LogError(wex, "Unable to create a WebRequest for the specified file \"{RemotePath}\"", remotePath);
+                return wex;
             }
             catch (ArgumentException aex)
             {
-                return CreateEntityResult<FtpWebRequest>.FromError
-                (
-                    "Unable to create a WebRequest for the specified file.",
-                    aex
-                );
+                _log.LogError(aex, "Unable to create a WebRequest for the specified file \"{RemotePath}\"", remotePath);
+                return aex;
             }
             catch (UriFormatException uex)
             {
-                return CreateEntityResult<FtpWebRequest>.FromError
+                _log.LogError
                 (
-                    "Unable to create a WebRequest for the specified file. You may need to add \"ftp://\" before the " +
-                    "url in the config",
-                    uex
+                    uex,
+                    "Unable to create a WebRequest for the specified file. You may need to add \"ftp://\" before the url in the config"
                 );
+
+                return uex;
             }
         }
 
@@ -474,7 +455,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
         /// </summary>
         /// <returns><c>true</c>, if the file exists, <c>false</c> otherwise.</returns>
         /// <param name="remotePath">Remote path.</param>
-        private async Task<RetrieveEntityResult<bool>> DoesRemoteFileExistAsync(string remotePath)
+        private async Task<Result<bool>> DoesRemoteFileExistAsync(string remotePath)
         {
             try
             {
@@ -487,7 +468,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
 
                 if (!createRequest.IsSuccess)
                 {
-                    return RetrieveEntityResult<bool>.FromError(createRequest);
+                    return Result<bool>.FromError(createRequest);
                 }
 
                 var request = createRequest.Entity;
@@ -501,7 +482,7 @@ namespace Launchpad.Launcher.Handlers.Protocols.Manifest
                     return false;
                 }
 
-                return RetrieveEntityResult<bool>.FromError(ex);
+                return Result<bool>.FromError(ex);
             }
 
             return true;

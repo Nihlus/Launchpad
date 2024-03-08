@@ -168,18 +168,18 @@ namespace Launchpad.Launcher.Interface
         /// Initializes the UI of the launcher, performing varying checks against the patching server.
         /// </summary>
         /// <returns>A task that must be awaited.</returns>
-        public async Task<DetermineConditionResult> InitializeAsync()
+        public async Task<Result> InitializeAsync()
         {
             if (_isInitialized)
             {
-                return DetermineConditionResult.FromSuccess();
+                return Result.FromSuccess();
             }
 
             // First of all, check if we can connect to the patching service.
             var getCanPatch = await _checks.CanPatchAsync();
             if (!getCanPatch.IsSuccess)
             {
-                return DetermineConditionResult.FromError(getCanPatch);
+                return Result.FromError(getCanPatch);
             }
 
             if (!getCanPatch.Entity)
@@ -215,7 +215,7 @@ namespace Launchpad.Launcher.Interface
                 var getIsLauncherOutdated = await _checks.IsLauncherOutdatedAsync();
                 if (!getIsLauncherOutdated.IsSuccess)
                 {
-                    return DetermineConditionResult.FromError(getIsLauncherOutdated);
+                    return Result.FromError(getIsLauncherOutdated);
                 }
 
                 if (!getIsLauncherOutdated.Entity)
@@ -223,7 +223,7 @@ namespace Launchpad.Launcher.Interface
                     var getIsPlatformAvailable = await _checks.IsPlatformAvailableAsync(_configuration.SystemTarget);
                     if (!getIsPlatformAvailable.IsSuccess)
                     {
-                        return DetermineConditionResult.FromError(getIsPlatformAvailable);
+                        return Result.FromError(getIsPlatformAvailable);
                     }
 
                     if (!getIsPlatformAvailable.Entity)
@@ -256,7 +256,7 @@ namespace Launchpad.Launcher.Interface
                             var getIsGameOutdated = await _checks.IsGameOutdatedAsync();
                             if (!getIsGameOutdated.IsSuccess)
                             {
-                                return DetermineConditionResult.FromError(getIsGameOutdated);
+                                return Result.FromError(getIsGameOutdated);
                             }
 
                             if (getIsGameOutdated.Entity)
@@ -283,15 +283,15 @@ namespace Launchpad.Launcher.Interface
             }
 
             _isInitialized = true;
-            return DetermineConditionResult.FromSuccess();
+            return Result.FromSuccess();
         }
 
-        private async Task<DetermineConditionResult> LoadChangelogAsync()
+        private async Task<Result> LoadChangelogAsync()
         {
             var getMarkup = await _patch.GetChangelogMarkupAsync();
             if (!getMarkup.IsSuccess)
             {
-                return DetermineConditionResult.FromError(getMarkup);
+                return Result.FromError(getMarkup);
             }
 
             var markup = getMarkup.Entity;
@@ -307,7 +307,7 @@ namespace Launchpad.Launcher.Interface
             var startIter = _changelogTextView.Buffer.StartIter;
             _changelogTextView.Buffer.InsertMarkup(ref startIter, markup);
 
-            return DetermineConditionResult.FromSuccess();
+            return Result.FromSuccess();
         }
 
         private void DisplayInitialStartupDialog()
@@ -343,25 +343,25 @@ namespace Launchpad.Launcher.Interface
             }
         }
 
-        private async Task<DetermineConditionResult> LoadBannerAsync()
+        private async Task<Result> LoadBannerAsync()
         {
             // Load the game banner (if there is one)
             var getCanProvideBanner = await _patch.CanProvideBannerAsync();
             if (!getCanProvideBanner.IsSuccess)
             {
-                return DetermineConditionResult.FromError(getCanProvideBanner);
+                return Result.FromError(getCanProvideBanner);
             }
 
             if (!getCanProvideBanner.Entity)
             {
-                return DetermineConditionResult.FromSuccess();
+                return Result.FromSuccess();
             }
 
             // Fetch the banner from the server
             var getBannerImage = await _patch.GetBannerAsync();
             if (!getBannerImage.IsSuccess)
             {
-                return DetermineConditionResult.FromError(getBannerImage);
+                return Result.FromError(getBannerImage);
             }
 
             var bannerImage = getBannerImage.Entity;
@@ -383,7 +383,7 @@ namespace Launchpad.Launcher.Interface
                 4 * bannerImage.Width
             );
 
-            return DetermineConditionResult.FromSuccess();
+            return Result.FromSuccess();
         }
 
         /// <summary>
@@ -509,7 +509,7 @@ namespace Launchpad.Launcher.Interface
             var getIsPlatformAvailable = await _checks.IsPlatformAvailableAsync(_configuration.SystemTarget);
             if (!getIsPlatformAvailable.IsSuccess)
             {
-                _log.LogError(getIsPlatformAvailable.ErrorReason);
+                _log.LogError("Failed to determine if the target platform is available: {Message}", getIsPlatformAvailable.Error.Message);
                 return;
             }
 
@@ -554,7 +554,7 @@ namespace Launchpad.Launcher.Interface
                     var getIsLauncherUpdated = await _checks.IsLauncherOutdatedAsync();
                     if (!getIsLauncherUpdated.IsSuccess)
                     {
-                        _log.LogError(getIsLauncherUpdated.ErrorReason);
+                        _log.LogError("Failed to determine if the launcher is out of date: {Message}", getIsLauncherUpdated.Error.Message);
                         return;
                     }
 

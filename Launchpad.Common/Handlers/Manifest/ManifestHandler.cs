@@ -80,7 +80,7 @@ namespace Launchpad.Common.Handlers.Manifest
         /// <param name="getOldManifest">Whether or not the old manifest or the new manifest should be retrieved.</param>
         /// <returns>A list of <see cref="ManifestEntry"/> objects.</returns>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="manifestType"/> is not a known value.</exception>
-        public RetrieveEntityResult<IReadOnlyList<ManifestEntry>> GetManifest(EManifestType manifestType, bool getOldManifest)
+        public Result<IReadOnlyList<ManifestEntry>> GetManifest(EManifestType manifestType, bool getOldManifest)
         {
             lock (_manifestsLock)
             {
@@ -88,19 +88,19 @@ namespace Launchpad.Common.Handlers.Manifest
                 {
                     if (_oldManifests.TryGetValue(manifestType, out var oldManifest))
                     {
-                        return RetrieveEntityResult<IReadOnlyList<ManifestEntry>>.FromSuccess(oldManifest);
+                        return Result<IReadOnlyList<ManifestEntry>>.FromSuccess(oldManifest);
                     }
                 }
                 else
                 {
                     if (_manifests.TryGetValue(manifestType, out var manifest))
                     {
-                        return RetrieveEntityResult<IReadOnlyList<ManifestEntry>>.FromSuccess(manifest);
+                        return Result<IReadOnlyList<ManifestEntry>>.FromSuccess(manifest);
                     }
                 }
             }
 
-            return RetrieveEntityResult<IReadOnlyList<ManifestEntry>>.FromError("No manifest found.");
+            return new NotFoundError("No manifest found.");
         }
 
         /// <summary>

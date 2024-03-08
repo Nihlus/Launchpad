@@ -137,45 +137,45 @@ namespace Launchpad.Launcher.Handlers.Protocols
         /// patch provider (file server, distributed hash tables, hyperspace compression waves etc.)
         /// </summary>
         /// <returns><c>true</c> if this instance can provide patches; otherwise, <c>false</c>.</returns>
-        public abstract Task<RetrieveEntityResult<bool>> CanPatchAsync();
+        public abstract Task<Result<bool>> CanPatchAsync();
 
         /// <summary>
         /// Determines whether the protocol can provide patches and updates for the provided platform.
         /// </summary>
         /// <param name="platform">The platform to check.</param>
         /// <returns><c>true</c> if the platform is available; otherwise, <c>false</c>.</returns>
-        public abstract Task<RetrieveEntityResult<bool>> IsPlatformAvailableAsync(ESystemTarget platform);
+        public abstract Task<Result<bool>> IsPlatformAvailableAsync(ESystemTarget platform);
 
         /// <summary>
         /// Determines whether this protocol can provide access to a banner for the game.
         /// </summary>
         /// <returns><c>true</c> if this instance can provide banner; otherwise, <c>false</c>.</returns>
-        public abstract Task<RetrieveEntityResult<bool>> CanProvideBannerAsync();
+        public abstract Task<Result<bool>> CanProvideBannerAsync();
 
         /// <summary>
         /// Gets the changelog.
         /// </summary>
         /// <returns>The changelog.</returns>
-        public abstract Task<RetrieveEntityResult<string>> GetChangelogMarkupAsync();
+        public abstract Task<Result<string>> GetChangelogMarkupAsync();
 
         /// <summary>
         /// Gets the banner.
         /// </summary>
         /// <returns>The banner.</returns>
-        public abstract Task<RetrieveEntityResult<Image<Rgba32>>> GetBannerAsync();
+        public abstract Task<Result<Image<Rgba32>>> GetBannerAsync();
 
         /// <summary>
         /// Determines whether or not the specified module is outdated.
         /// </summary>
         /// <param name="module">The module.</param>
         /// <returns>true if the module is outdated; otherwise, false.</returns>
-        public abstract Task<RetrieveEntityResult<bool>> IsModuleOutdatedAsync(EModule module);
+        public abstract Task<Result<bool>> IsModuleOutdatedAsync(EModule module);
 
         /// <summary>
         /// Installs the game.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public virtual async Task<DetermineConditionResult> InstallGameAsync()
+        public virtual async Task<Result> InstallGameAsync()
         {
             try
             {
@@ -187,22 +187,22 @@ namespace Launchpad.Launcher.Handlers.Protocols
                 var downloadResult = await DownloadModuleAsync(EModule.Game);
                 if (!downloadResult.IsSuccess)
                 {
-                    return DetermineConditionResult.FromError(downloadResult);
+                    return downloadResult;
                 }
 
                 // Verify Game
                 var verifyResult = await VerifyModuleAsync(EModule.Game);
                 if (!verifyResult.IsSuccess)
                 {
-                    return DetermineConditionResult.FromError(verifyResult);
+                    return verifyResult;
                 }
             }
             catch (IOException ioex)
             {
-                return DetermineConditionResult.FromError(ioex);
+                return ioex;
             }
 
-            return DetermineConditionResult.FromSuccess();
+            return Result.FromSuccess();
         }
 
         /// <summary>
@@ -210,21 +210,21 @@ namespace Launchpad.Launcher.Handlers.Protocols
         /// </summary>
         /// <param name="module">The module.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        protected abstract Task<DetermineConditionResult> DownloadModuleAsync(EModule module);
+        protected abstract Task<Result> DownloadModuleAsync(EModule module);
 
         /// <summary>
         /// Updates the specified module to the latest version.
         /// </summary>
         /// <param name="module">The module to update.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public abstract Task<DetermineConditionResult> UpdateModuleAsync(EModule module);
+        public abstract Task<Result> UpdateModuleAsync(EModule module);
 
         /// <summary>
         /// Verifies and repairs the files of the specified module.
         /// </summary>
         /// <param name="module">The module.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public abstract Task<DetermineConditionResult> VerifyModuleAsync(EModule module);
+        public abstract Task<Result> VerifyModuleAsync(EModule module);
 
         /// <summary>
         /// Invoke the <see cref="ModuleDownloadProgressChanged"/> event.
