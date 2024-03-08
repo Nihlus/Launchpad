@@ -24,23 +24,22 @@ using System;
 using System.IO;
 using System.Reflection;
 
-namespace Launchpad.Utilities.Utility
+namespace Launchpad.Utilities.Utility;
+
+/// <summary>
+/// Contains helper functions for directory manipulation.
+/// </summary>
+public static class DirectoryHelpers
 {
     /// <summary>
-    /// Contains helper functions for directory manipulation.
+    /// Gets the assembly-local directory, that is, the directory where the executing assembly resides.
     /// </summary>
-    public static class DirectoryHelpers
+    /// <returns>The local dir, terminated by a directory separator.</returns>
+    public static string GetLocalDir()
     {
-        /// <summary>
-        /// Gets the assembly-local directory, that is, the directory where the executing assembly resides.
-        /// </summary>
-        /// <returns>The local dir, terminated by a directory separator.</returns>
-        public static string GetLocalDir()
-        {
-            var codeBaseURI = new UriBuilder(Assembly.GetExecutingAssembly().Location).Uri;
+        var codeBaseURI = new UriBuilder(Assembly.GetExecutingAssembly().Location).Uri;
 
-            return Path.GetDirectoryName(Uri.UnescapeDataString(codeBaseURI.AbsolutePath))
-                   ?? throw new InvalidOperationException();
-        }
+        return Path.GetDirectoryName(Uri.UnescapeDataString(codeBaseURI.AbsolutePath))
+               ?? throw new InvalidOperationException();
     }
 }

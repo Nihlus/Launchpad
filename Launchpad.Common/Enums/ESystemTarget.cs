@@ -22,14 +22,13 @@
 
 #pragma warning disable CS1591, SA1600, SA1602 // Elements should be documented, enumeration items should be documented
 
-namespace Launchpad.Common.Enums
+namespace Launchpad.Common.Enums;
+
+public enum ESystemTarget
 {
-    public enum ESystemTarget
-    {
-        Linux,
-        Mac,
-        Win64,
-        Win32,
-        Unknown
-    }
+    Linux,
+    Mac,
+    Win64,
+    Win32,
+    Unknown
 }

@@ -25,66 +25,65 @@ using System.IO;
 using Launchpad.Launcher.Utility;
 using Microsoft.Extensions.Logging;
 
-namespace Launchpad.Launcher.Services
+namespace Launchpad.Launcher.Services;
+
+/// <summary>
+/// A service which handles local version discovery.
+/// </summary>
+public class LocalVersionService
 {
     /// <summary>
-    /// A service which handles local version discovery.
+    /// Logger instance for this class.
     /// </summary>
-    public class LocalVersionService
+    private readonly ILogger<LocalVersionService> _log;
+
+    /// <summary>
+    /// The directory helpers.
+    /// </summary>
+    private readonly DirectoryHelpers _directoryHelpers;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LocalVersionService"/> class.
+    /// </summary>
+    /// <param name="log">The logging instance.</param>
+    /// <param name="directoryHelpers">The directory helpers.</param>
+    public LocalVersionService(ILogger<LocalVersionService> log, DirectoryHelpers directoryHelpers)
     {
-        /// <summary>
-        /// Logger instance for this class.
-        /// </summary>
-        private readonly ILogger<LocalVersionService> _log;
+        _log = log;
+        _directoryHelpers = directoryHelpers;
+    }
 
-        /// <summary>
-        /// The directory helpers.
-        /// </summary>
-        private readonly DirectoryHelpers _directoryHelpers;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LocalVersionService"/> class.
-        /// </summary>
-        /// <param name="log">The logging instance.</param>
-        /// <param name="directoryHelpers">The directory helpers.</param>
-        public LocalVersionService(ILogger<LocalVersionService> log, DirectoryHelpers directoryHelpers)
+    /// <summary>
+    /// Gets the local game version.
+    /// </summary>
+    /// <returns>The local game version.</returns>
+    public Version GetLocalGameVersion()
+    {
+        try
         {
-            _log = log;
-            _directoryHelpers = directoryHelpers;
-        }
+            var rawGameVersion = File.ReadAllText(_directoryHelpers.GetLocalGameVersionPath());
 
-        /// <summary>
-        /// Gets the local game version.
-        /// </summary>
-        /// <returns>The local game version.</returns>
-        public Version GetLocalGameVersion()
-        {
-            try
+            if (Version.TryParse(rawGameVersion, out var gameVersion))
             {
-                var rawGameVersion = File.ReadAllText(_directoryHelpers.GetLocalGameVersionPath());
-
-                if (Version.TryParse(rawGameVersion, out var gameVersion))
-                {
-                    return gameVersion;
-                }
-
-                _log.LogWarning("Could not parse local game version. Contents: " + rawGameVersion);
-                return new Version("0.0.0");
+                return gameVersion;
             }
-            catch (IOException ioex)
-            {
-                _log.LogWarning("Could not read local game version (IOException): " + ioex.Message);
-                return new Version("0.0.0");
-            }
+
+            _log.LogWarning("Could not parse local game version. Contents: " + rawGameVersion);
+            return new Version("0.0.0");
         }
-
-        /// <summary>
-        /// Gets the local launcher version.
-        /// </summary>
-        /// <returns>The version.</returns>
-        public Version GetLocalLauncherVersion()
+        catch (IOException ioex)
         {
-            return GetType().Assembly.GetName().Version ?? new Version("0.0.0");
+            _log.LogWarning("Could not read local game version (IOException): " + ioex.Message);
+            return new Version("0.0.0");
         }
+    }
+
+    /// <summary>
+    /// Gets the local launcher version.
+    /// </summary>
+    /// <returns>The version.</returns>
+    public Version GetLocalLauncherVersion()
+    {
+        return GetType().Assembly.GetName().Version ?? new Version("0.0.0");
     }
 }

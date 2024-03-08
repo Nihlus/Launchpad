@@ -23,50 +23,49 @@
 using System.IO;
 using Launchpad.Launcher.Utility;
 
-namespace Launchpad.Launcher.Services
+namespace Launchpad.Launcher.Services;
+
+/// <summary>
+/// Service for creating and managing tagfiles.
+/// </summary>
+public class TagfileService
 {
+    private readonly DirectoryHelpers _directoryHelpers;
+
     /// <summary>
-    /// Service for creating and managing tagfiles.
+    /// Initializes a new instance of the <see cref="TagfileService"/> class.
     /// </summary>
-    public class TagfileService
+    /// <param name="directoryHelpers">The directory helpers.</param>
+    public TagfileService(DirectoryHelpers directoryHelpers)
     {
-        private readonly DirectoryHelpers _directoryHelpers;
+        _directoryHelpers = directoryHelpers;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TagfileService"/> class.
-        /// </summary>
-        /// <param name="directoryHelpers">The directory helpers.</param>
-        public TagfileService(DirectoryHelpers directoryHelpers)
+    /// <summary>
+    /// Creates the launcher cookie.
+    /// </summary>
+    public void CreateLauncherTagfile()
+    {
+        var launcherTagfilePath = _directoryHelpers.GetLauncherTagfilePath();
+
+        var doesCookieExist = File.Exists(launcherTagfilePath);
+        if (!doesCookieExist)
         {
-            _directoryHelpers = directoryHelpers;
+            File.Create(launcherTagfilePath);
         }
+    }
 
-        /// <summary>
-        /// Creates the launcher cookie.
-        /// </summary>
-        public void CreateLauncherTagfile()
+    /// <summary>
+    /// Creates the install cookie.
+    /// </summary>
+    public void CreateGameTagfile()
+    {
+        var gameTagfilePath = _directoryHelpers.GetGameTagfilePath();
+
+        var doesCookieExist = File.Exists(gameTagfilePath);
+        if (!doesCookieExist)
         {
-            var launcherTagfilePath = _directoryHelpers.GetLauncherTagfilePath();
-
-            var doesCookieExist = File.Exists(launcherTagfilePath);
-            if (!doesCookieExist)
-            {
-                File.Create(launcherTagfilePath);
-            }
-        }
-
-        /// <summary>
-        /// Creates the install cookie.
-        /// </summary>
-        public void CreateGameTagfile()
-        {
-            var gameTagfilePath = _directoryHelpers.GetGameTagfilePath();
-
-            var doesCookieExist = File.Exists(gameTagfilePath);
-            if (!doesCookieExist)
-            {
-                File.Create(gameTagfilePath).Close();
-            }
+            File.Create(gameTagfilePath).Close();
         }
     }
 }

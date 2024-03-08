@@ -20,21 +20,20 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-namespace Launchpad.Launcher.Handlers.Protocols
+namespace Launchpad.Launcher.Handlers.Protocols;
+
+/// <summary>
+/// A list of modules that can be downloaded and reported on.
+/// </summary>
+public enum EModule : byte
 {
     /// <summary>
-    /// A list of modules that can be downloaded and reported on.
+    /// The launcher itself.
     /// </summary>
-    public enum EModule : byte
-    {
-        /// <summary>
-        /// The launcher itself.
-        /// </summary>
-        Launcher = 1,
+    Launcher = 1,
 
-        /// <summary>
-        /// The managed game.
-        /// </summary>
-        Game = 2
-    }
+    /// <summary>
+    /// The managed game.
+    /// </summary>
+    Game = 2
 }

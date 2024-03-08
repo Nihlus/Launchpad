@@ -22,80 +22,79 @@
 
 using System;
 
-namespace Launchpad.Utilities.Utility.Events
+namespace Launchpad.Utilities.Utility.Events;
+
+/// <summary>
+/// Represents progress in a manifest generation.
+/// </summary>
+public class ManifestGenerationProgressChangedEventArgs : EventArgs
 {
     /// <summary>
-    /// Represents progress in a manifest generation.
+    /// Gets or sets the current file path.
     /// </summary>
-    public class ManifestGenerationProgressChangedEventArgs : EventArgs
+    public string Filepath
     {
-        /// <summary>
-        /// Gets or sets the current file path.
-        /// </summary>
-        public string Filepath
-        {
-            get;
-            set;
-        }
+        get;
+        set;
+    }
 
-        /// <summary>
-        /// Gets or sets the total number of files.
-        /// </summary>
-        public int TotalFiles
-        {
-            get;
-            set;
-        }
+    /// <summary>
+    /// Gets or sets the total number of files.
+    /// </summary>
+    public int TotalFiles
+    {
+        get;
+        set;
+    }
 
-        /// <summary>
-        /// Gets or sets the number of completed files.
-        /// </summary>
-        public int CompletedFiles
-        {
-            get;
-            set;
-        }
+    /// <summary>
+    /// Gets or sets the number of completed files.
+    /// </summary>
+    public int CompletedFiles
+    {
+        get;
+        set;
+    }
 
-        /// <summary>
-        /// Gets or sets the current hash.
-        /// </summary>
-        public string Hash
-        {
-            get;
-            set;
-        }
+    /// <summary>
+    /// Gets or sets the current hash.
+    /// </summary>
+    public string Hash
+    {
+        get;
+        set;
+    }
 
-        /// <summary>
-        /// Gets or sets the size of the current file.
-        /// </summary>
-        public long Size
-        {
-            get;
-            set;
-        }
+    /// <summary>
+    /// Gets or sets the size of the current file.
+    /// </summary>
+    public long Size
+    {
+        get;
+        set;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ManifestGenerationProgressChangedEventArgs"/> class.
-        /// </summary>
-        /// <param name="filepath">The current file path.</param>
-        /// <param name="totalFiles">The total number of files.</param>
-        /// <param name="completedFiles">The number of completed files.</param>
-        /// <param name="hash">The current hash.</param>
-        /// <param name="size">The size of the current file.</param>
-        public ManifestGenerationProgressChangedEventArgs
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ManifestGenerationProgressChangedEventArgs"/> class.
+    /// </summary>
+    /// <param name="filepath">The current file path.</param>
+    /// <param name="totalFiles">The total number of files.</param>
+    /// <param name="completedFiles">The number of completed files.</param>
+    /// <param name="hash">The current hash.</param>
+    /// <param name="size">The size of the current file.</param>
+    public ManifestGenerationProgressChangedEventArgs
     (
-            string filepath,
-            int totalFiles,
-            int completedFiles,
-            string hash,
-            long size
-        )
-        {
-            this.Filepath = filepath;
-            this.TotalFiles = totalFiles;
-            this.CompletedFiles = completedFiles;
-            this.Hash = hash;
-            this.Size = size;
-        }
+        string filepath,
+        int totalFiles,
+        int completedFiles,
+        string hash,
+        long size
+    )
+    {
+        this.Filepath = filepath;
+        this.TotalFiles = totalFiles;
+        this.CompletedFiles = completedFiles;
+        this.Hash = hash;
+        this.Size = size;
     }
 }

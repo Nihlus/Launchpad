@@ -23,48 +23,47 @@
 using System;
 using System.Collections.Generic;
 
-namespace Launchpad.Common
+namespace Launchpad.Common;
+
+/// <summary>
+/// Various extension methods.
+/// </summary>
+public static class ExtensionMethods
 {
     /// <summary>
-    /// Various extension methods.
+    /// Sanitizes the input string, removing any \n, \r, or \0 characters.
     /// </summary>
-    public static class ExtensionMethods
+    /// <param name="input">Input string.</param>
+    /// <returns>The string, without the illegal characters.</returns>
+    public static string RemoveLineSeparatorsAndNulls(this string input)
     {
-        /// <summary>
-        /// Sanitizes the input string, removing any \n, \r, or \0 characters.
-        /// </summary>
-        /// <param name="input">Input string.</param>
-        /// <returns>The string, without the illegal characters.</returns>
-        public static string RemoveLineSeparatorsAndNulls(this string input)
+        return input.Replace("\n", string.Empty).Replace("\0", string.Empty).Replace("\r", string.Empty);
+    }
+
+    /// <summary>
+    /// Adds a new value to an existing IDictionary, or if the dictionary already contains a value for the given key,
+    /// updates the existing key with the new value.
+    /// </summary>
+    /// <param name="dictionary">The dictionary to update.</param>
+    /// <param name="key">The key of the provided value.</param>
+    /// <param name="value">The value to add or update.</param>
+    /// <typeparam name="TKey">The type of the key.</typeparam>
+    /// <typeparam name="TValue">The type of the value.</typeparam>
+    public static void AddOrUpdate<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue value)
+        where TKey : notnull
+    {
+        if (dictionary == null)
         {
-            return input.Replace("\n", string.Empty).Replace("\0", string.Empty).Replace("\r", string.Empty);
+            throw new ArgumentNullException(nameof(dictionary));
         }
 
-        /// <summary>
-        /// Adds a new value to an existing IDictionary, or if the dictionary already contains a value for the given key,
-        /// updates the existing key with the new value.
-        /// </summary>
-        /// <param name="dictionary">The dictionary to update.</param>
-        /// <param name="key">The key of the provided value.</param>
-        /// <param name="value">The value to add or update.</param>
-        /// <typeparam name="TKey">The type of the key.</typeparam>
-        /// <typeparam name="TValue">The type of the value.</typeparam>
-        public static void AddOrUpdate<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue value)
-            where TKey : notnull
+        if (dictionary.ContainsKey(key))
         {
-            if (dictionary == null)
-            {
-                throw new ArgumentNullException(nameof(dictionary));
-            }
-
-            if (dictionary.ContainsKey(key))
-            {
-                dictionary[key] = value;
-            }
-            else
-            {
-                dictionary.Add(key, value);
-            }
+            dictionary[key] = value;
+        }
+        else
+        {
+            dictionary.Add(key, value);
         }
     }
 }

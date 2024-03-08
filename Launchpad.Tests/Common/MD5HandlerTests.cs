@@ -24,33 +24,32 @@ using System.IO;
 using Launchpad.Common.Handlers;
 using Xunit;
 
-namespace Launchpad.Tests.Common
+namespace Launchpad.Tests.Common;
+
+/// <summary>
+/// Tests the MD5 handler.
+/// </summary>
+public class MD5HandlerTests
 {
     /// <summary>
-    /// Tests the MD5 handler.
+    /// Holds the expected hash.
     /// </summary>
-    public class MD5HandlerTests
+    private const string ExpectedHash = "6A99C575AB87F8C7D1ED1E52E7E349CE";
+
+    /// <summary>
+    /// Holds the string "placeholder".
+    /// </summary>
+    private readonly MemoryStream _dataStream = new MemoryStream(new byte[]
     {
-        /// <summary>
-        /// Holds the expected hash.
-        /// </summary>
-        private const string ExpectedHash = "6A99C575AB87F8C7D1ED1E52E7E349CE";
+        112, 108, 97, 99, 101, 104, 111, 108, 100, 101, 114
+    });
 
-        /// <summary>
-        /// Holds the string "placeholder".
-        /// </summary>
-        private readonly MemoryStream _dataStream = new MemoryStream(new byte[]
-        {
-            112, 108, 97, 99, 101, 104, 111, 108, 100, 101, 114
-        });
-
-        /// <summary>
-        /// Tests that the handler hashes values correctly.
-        /// </summary>
-        [Fact]
-        public void HashesCorrectly()
-        {
-            Assert.Equal(ExpectedHash, MD5Handler.GetStreamHash(_dataStream));
-        }
+    /// <summary>
+    /// Tests that the handler hashes values correctly.
+    /// </summary>
+    [Fact]
+    public void HashesCorrectly()
+    {
+        Assert.Equal(ExpectedHash, MD5Handler.GetStreamHash(_dataStream));
     }
 }

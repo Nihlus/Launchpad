@@ -24,45 +24,44 @@ using System;
 using System.Runtime.InteropServices;
 using Launchpad.Common.Enums;
 
-namespace Launchpad.Common
+namespace Launchpad.Common;
+
+/// <summary>
+/// Helper methods for determining the current platform.
+/// </summary>
+public static class PlatformHelpers
 {
     /// <summary>
-    /// Helper methods for determining the current platform.
+    /// Determines whether this instance is running on Unix.
     /// </summary>
-    public static class PlatformHelpers
+    /// <returns><c>true</c> if this instance is running on unix; otherwise, <c>false</c>.</returns>
+    public static bool IsRunningOnUnix()
     {
-        /// <summary>
-        /// Determines whether this instance is running on Unix.
-        /// </summary>
-        /// <returns><c>true</c> if this instance is running on unix; otherwise, <c>false</c>.</returns>
-        public static bool IsRunningOnUnix()
+        var currentPlatform = GetCurrentPlatform();
+        return currentPlatform == ESystemTarget.Linux || currentPlatform == ESystemTarget.Mac;
+    }
+
+    /// <summary>
+    /// Gets the current platform the launcher is running on.
+    /// </summary>
+    /// <returns>The current platform.</returns>
+    public static ESystemTarget GetCurrentPlatform()
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            var currentPlatform = GetCurrentPlatform();
-            return currentPlatform == ESystemTarget.Linux || currentPlatform == ESystemTarget.Mac;
+            return ESystemTarget.Linux;
         }
 
-        /// <summary>
-        /// Gets the current platform the launcher is running on.
-        /// </summary>
-        /// <returns>The current platform.</returns>
-        public static ESystemTarget GetCurrentPlatform()
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                return ESystemTarget.Linux;
-            }
-
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                return ESystemTarget.Mac;
-            }
-
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                return Environment.Is64BitOperatingSystem ? ESystemTarget.Win64 : ESystemTarget.Win32;
-            }
-
-            throw new PlatformNotSupportedException();
+            return ESystemTarget.Mac;
         }
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return Environment.Is64BitOperatingSystem ? ESystemTarget.Win64 : ESystemTarget.Win32;
+        }
+
+        throw new PlatformNotSupportedException();
     }
 }

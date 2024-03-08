@@ -26,63 +26,62 @@ using Launchpad.Launcher.Interface;
 using Application = Gtk.Application;
 using Task = System.Threading.Tasks.Task;
 
-namespace Launchpad.Launcher
+namespace Launchpad.Launcher;
+
+/// <summary>
+/// Represents startup procedures for the application.
+/// </summary>
+public class Startup
 {
+    private readonly Application _app;
+    private readonly MainWindow _mainWindow;
+
     /// <summary>
-    /// Represents startup procedures for the application.
+    /// Initializes a new instance of the <see cref="Startup"/> class.
     /// </summary>
-    public class Startup
+    /// <param name="app">The application information.</param>
+    /// <param name="mainWindow">The main application window.</param>
+    public Startup(Application app, MainWindow mainWindow)
     {
-        private readonly Application _app;
-        private readonly MainWindow _mainWindow;
+        _app = app;
+        _mainWindow = mainWindow;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Startup"/> class.
-        /// </summary>
-        /// <param name="app">The application information.</param>
-        /// <param name="mainWindow">The main application window.</param>
-        public Startup(Application app, MainWindow mainWindow)
-        {
-            _app = app;
-            _mainWindow = mainWindow;
-        }
+    /// <summary>
+    /// Starts the application.
+    /// </summary>
+    public void Start()
+    {
+        _app.Register(Cancellable.Current);
+        _app.AddWindow(_mainWindow);
 
-        /// <summary>
-        /// Starts the application.
-        /// </summary>
-        public void Start()
-        {
-            _app.Register(Cancellable.Current);
-            _app.AddWindow(_mainWindow);
+        _mainWindow.Show();
 
-            _mainWindow.Show();
+        Idle.Add
+        (
+            () =>
+            {
+                async void Initialize() => await InitializeAsync();
 
-            Idle.Add
-            (
-                () =>
-                {
-                    async void Initialize() => await InitializeAsync();
+                Initialize();
+                return false;
+            }
+        );
 
-                    Initialize();
-                    return false;
-                }
-            );
+        _mainWindow.DeleteEvent += DeletedEvent;
+    }
 
-            _mainWindow.DeleteEvent += DeletedEvent;
-        }
+    /// <summary>
+    /// Asynchronously initializes the application.
+    /// </summary>
+    /// <returns>A <see cref="System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
+    public async Task InitializeAsync()
+    {
+        await _mainWindow.InitializeAsync();
+    }
 
-        /// <summary>
-        /// Asynchronously initializes the application.
-        /// </summary>
-        /// <returns>A <see cref="System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
-        public async Task InitializeAsync()
-        {
-            await _mainWindow.InitializeAsync();
-        }
-
-        private void DeletedEvent(object o, DeleteEventArgs args)
-        {
-            Application.Quit();
-        }
+    private void DeletedEvent(object o, DeleteEventArgs args)
+    {
+        Application.Quit();
     }
 }

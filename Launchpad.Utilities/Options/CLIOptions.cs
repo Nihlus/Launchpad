@@ -26,61 +26,60 @@ using Launchpad.Common.Enums;
 // ReSharper disable SA1118
 #pragma warning disable SA1118
 
-namespace Launchpad.Utilities.Options
+namespace Launchpad.Utilities.Options;
+
+/// <summary>
+/// Represents the command-line options to the program.
+/// </summary>
+public class CLIOptions
 {
     /// <summary>
-    /// Represents the command-line options to the program.
+    /// Gets or sets a value indicating whether the utility should be run in batch mode without a UI.
     /// </summary>
-    public class CLIOptions
+    [Option
+    (
+        'b',
+        "batch",
+        Required = false,
+        HelpText = "Run the utilities in batch mode without a UI."
+    )]
+    public bool RunBatchProcessing
     {
-        /// <summary>
-        /// Gets or sets a value indicating whether the utility should be run in batch mode without a UI.
-        /// </summary>
-        [Option
-        (
-            'b',
-            "batch",
-            Required = false,
-            HelpText = "Run the utilities in batch mode without a UI."
-        )]
-        public bool RunBatchProcessing
-        {
-            get;
-            set;
-        }
+        get;
+        set;
+    }
 
-        /// <summary>
-        /// Gets or sets the target directory from which the manifest should be generated.
-        /// </summary>
-        [Option
-        (
-            'd',
-            "directory",
-            Required = false,
-            HelpText = "The target directory from which the manifest should be generated."
-        )]
-        public string? TargetDirectory
-        {
-            get;
-            set;
-        }
+    /// <summary>
+    /// Gets or sets the target directory from which the manifest should be generated.
+    /// </summary>
+    [Option
+    (
+        'd',
+        "directory",
+        Required = false,
+        HelpText = "The target directory from which the manifest should be generated."
+    )]
+    public string? TargetDirectory
+    {
+        get;
+        set;
+    }
 
-        /// <summary>
-        /// Gets or sets the type of manifest that should be generated.
-        /// </summary>
-        [Option
-        (
-            'm',
-            "manifest",
-            Required = false,
-            HelpText = "The type of manifest that should be generated. This only affects the output filename, " +
-                    "and not the actual file content. " +
-                     "Valid manifests: Game or Launcher"
-        )]
-        public EManifestType ManifestType
-        {
-            get;
-            set;
-        }
+    /// <summary>
+    /// Gets or sets the type of manifest that should be generated.
+    /// </summary>
+    [Option
+    (
+        'm',
+        "manifest",
+        Required = false,
+        HelpText = "The type of manifest that should be generated. This only affects the output filename, " +
+                   "and not the actual file content. " +
+                   "Valid manifests: Game or Launcher"
+    )]
+    public EManifestType ManifestType
+    {
+        get;
+        set;
     }
 }

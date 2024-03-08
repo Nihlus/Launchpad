@@ -45,137 +45,136 @@ using NGettext;
 using Application = Gtk.Application;
 using Task = System.Threading.Tasks.Task;
 
-namespace Launchpad.Launcher
+namespace Launchpad.Launcher;
+
+/// <summary>
+/// The main program class.
+/// </summary>
+public class Program
 {
     /// <summary>
-    /// The main program class.
+    /// Holds the logging instance for this class.
     /// </summary>
-    public class Program
+    private static ILogger<Program>? Log;
+
+    /// <summary>
+    /// The main entry point for the application.
+    /// </summary>
+    [STAThread]
+    private static async Task Main(string[] args)
     {
-        /// <summary>
-        /// Holds the logging instance for this class.
-        /// </summary>
-        private static ILogger<Program>? Log;
+        ExceptionManager.UnhandledException += OnUnhandledGLibException;
 
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        private static async Task Main(string[] args)
+        Application.Init();
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            ExceptionManager.UnhandledException += OnUnhandledGLibException;
-
-            Application.Init();
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                Environment.SetEnvironmentVariable("GSETTINGS_SCHEMA_DIR", "share\\glib-2.0\\schemas\\");
-            }
-
-            const string configurationName = "Launchpad.Launcher.log4net.config";
-            var logConfig = new XmlDocument();
-            await using (var configStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(configurationName))
-            {
-                if (configStream is null)
-                {
-                    throw new InvalidOperationException("The log4net configuration stream could not be found.");
-                }
-
-                logConfig.Load(configStream);
-            }
-
-            var repo = LogManager.CreateRepository(Assembly.GetEntryAssembly(), typeof(Hierarchy));
-            XmlConfigurator.Configure(repo, logConfig["log4net"]);
-
-            var host = CreateHostBuilder(args).Build();
-
-            Log = host.Services.GetRequiredService<ILogger<Program>>();
-            var app = host.Services.GetRequiredService<Startup>();
-
-            app.Start();
-            Application.Run();
+            Environment.SetEnvironmentVariable("GSETTINGS_SCHEMA_DIR", "share\\glib-2.0\\schemas\\");
         }
 
-        /// <summary>
-        /// Passes any unhandled exceptions from the GTK UI to the generic handler.
-        /// </summary>
-        /// <param name="args">The event object containing the information about the exception.</param>
-        private static void OnUnhandledGLibException(UnhandledExceptionArgs args)
+        const string configurationName = "Launchpad.Launcher.log4net.config";
+        var logConfig = new XmlDocument();
+        await using (var configStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(configurationName))
         {
-            Log.LogError((Exception)args.ExceptionObject, "Unhandled GLib exception.");
+            if (configStream is null)
+            {
+                throw new InvalidOperationException("The log4net configuration stream could not be found.");
+            }
+
+            logConfig.Load(configStream);
         }
 
-        private static IHostBuilder CreateHostBuilder(string[] args) => new HostBuilder()
-            .ConfigureAppConfiguration((hostingContext, config) =>
-            {
-                config.SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "config"));
-                config.AddJsonFile("appsettings.json");
-            })
-            .ConfigureServices((hostingContext, services) =>
-            {
-                services
-                    .AddSingleton<FTPProtocolHandler>()
-                    .AddSingleton<HTTPProtocolHandler>()
-                    .AddSingleton<ChecksHandler>()
-                    .AddSingleton<ConfigHandler>()
-                    .AddSingleton<GameHandler>()
-                    .AddSingleton<LauncherHandler>()
-                    .AddSingleton<GameArgumentService>()
-                    .AddSingleton<LocalVersionService>()
-                    .AddSingleton<TagfileService>()
-                    .AddSingleton<DirectoryHelpers>()
-                    .AddSingleton
-                    (
-                        s =>
+        var repo = LogManager.CreateRepository(Assembly.GetEntryAssembly(), typeof(Hierarchy));
+        XmlConfigurator.Configure(repo, logConfig["log4net"]);
+
+        var host = CreateHostBuilder(args).Build();
+
+        Log = host.Services.GetRequiredService<ILogger<Program>>();
+        var app = host.Services.GetRequiredService<Startup>();
+
+        app.Start();
+        Application.Run();
+    }
+
+    /// <summary>
+    /// Passes any unhandled exceptions from the GTK UI to the generic handler.
+    /// </summary>
+    /// <param name="args">The event object containing the information about the exception.</param>
+    private static void OnUnhandledGLibException(UnhandledExceptionArgs args)
+    {
+        Log.LogError((Exception)args.ExceptionObject, "Unhandled GLib exception.");
+    }
+
+    private static IHostBuilder CreateHostBuilder(string[] args) => new HostBuilder()
+        .ConfigureAppConfiguration((hostingContext, config) =>
+        {
+            config.SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "config"));
+            config.AddJsonFile("appsettings.json");
+        })
+        .ConfigureServices((hostingContext, services) =>
+        {
+            services
+                .AddSingleton<FTPProtocolHandler>()
+                .AddSingleton<HTTPProtocolHandler>()
+                .AddSingleton<ChecksHandler>()
+                .AddSingleton<ConfigHandler>()
+                .AddSingleton<GameHandler>()
+                .AddSingleton<LauncherHandler>()
+                .AddSingleton<GameArgumentService>()
+                .AddSingleton<LocalVersionService>()
+                .AddSingleton<TagfileService>()
+                .AddSingleton<DirectoryHelpers>()
+                .AddSingleton
+                (
+                    s =>
+                    {
+                        var configuration = s.GetRequiredService<ILaunchpadConfiguration>();
+                        return new ManifestHandler
+                        (
+                            DirectoryHelpers.GetLocalLauncherDirectory(),
+                            configuration.RemoteAddress,
+                            configuration.SystemTarget
+                        );
+                    }
+                )
+                .AddSingleton(s => s.GetRequiredService<ConfigHandler>().Configuration)
+                .AddSingleton<ICatalog>(s => new Catalog("Launchpad", "./Content/locale"))
+                .AddSingleton<PatchProtocolHandler>
+                (
+                    s =>
+                    {
+                        var configuration = s.GetRequiredService<ILaunchpadConfiguration>();
+                        var remoteAddress = configuration.RemoteAddress;
+                        switch (remoteAddress.Scheme.ToLowerInvariant())
                         {
-                            var configuration = s.GetRequiredService<ILaunchpadConfiguration>();
-                            return new ManifestHandler
-                            (
-                                DirectoryHelpers.GetLocalLauncherDirectory(),
-                                configuration.RemoteAddress,
-                                configuration.SystemTarget
-                            );
-                        }
-                    )
-                    .AddSingleton(s => s.GetRequiredService<ConfigHandler>().Configuration)
-                    .AddSingleton<ICatalog>(s => new Catalog("Launchpad", "./Content/locale"))
-                    .AddSingleton<PatchProtocolHandler>
-                    (
-                        s =>
-                        {
-                            var configuration = s.GetRequiredService<ILaunchpadConfiguration>();
-                            var remoteAddress = configuration.RemoteAddress;
-                            switch (remoteAddress.Scheme.ToLowerInvariant())
+                            case "ftp":
                             {
-                                case "ftp":
-                                {
-                                    return s.GetRequiredService<FTPProtocolHandler>();
-                                }
-                                case "http":
-                                case "https":
-                                {
-                                    return s.GetRequiredService<HTTPProtocolHandler>();
-                                }
-                                default:
-                                {
-                                    throw new ArgumentException
-                                    (
-                                        $"No compatible protocol handler found for a URI of the form " +
-                                        $"\"{remoteAddress}\"."
-                                    );
-                                }
+                                return s.GetRequiredService<FTPProtocolHandler>();
+                            }
+                            case "http":
+                            case "https":
+                            {
+                                return s.GetRequiredService<HTTPProtocolHandler>();
+                            }
+                            default:
+                            {
+                                throw new ArgumentException
+                                (
+                                    $"No compatible protocol handler found for a URI of the form " +
+                                    $"\"{remoteAddress}\"."
+                                );
                             }
                         }
-                    )
-                    .AddSingleton(new Application("net.Launchpad.Launchpad", ApplicationFlags.None))
-                    .AddSingleton<Startup>();
+                    }
+                )
+                .AddSingleton(new Application("net.Launchpad.Launchpad", ApplicationFlags.None))
+                .AddSingleton<Startup>();
 
-                services
-                    .AddTransient(MainWindow.Create);
-            })
-            .ConfigureLogging(l =>
-            {
-                l.ClearProviders();
-                l.AddLog4Net();
-            });
-    }
+            services
+                .AddTransient(MainWindow.Create);
+        })
+        .ConfigureLogging(l =>
+        {
+            l.ClearProviders();
+            l.AddLog4Net();
+        });
 }

@@ -29,121 +29,120 @@ using Launchpad.Launcher.Utility;
 using Microsoft.Extensions.Logging;
 using Remora.Results;
 
-namespace Launchpad.Launcher.Handlers
+namespace Launchpad.Launcher.Handlers;
+
+/// <summary>
+/// This class handles all the launcher's checks, returning bools for each function.
+/// </summary>
+public sealed class ChecksHandler
 {
     /// <summary>
-    /// This class handles all the launcher's checks, returning bools for each function.
+    /// Logger instance for this class.
     /// </summary>
-    public sealed class ChecksHandler
+    private readonly ILogger<ChecksHandler> _log;
+
+    /// <summary>
+    /// The patch protocol.
+    /// </summary>
+    private readonly PatchProtocolHandler _patch;
+
+    /// <summary>
+    /// The directory helpers.
+    /// </summary>
+    private readonly DirectoryHelpers _directoryHelpers;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ChecksHandler"/> class.
+    /// </summary>
+    /// <param name="log">The logging instance.</param>
+    /// <param name="patch">The patch protocol.</param>
+    /// <param name="directoryHelpers">The directory helpers.</param>
+    public ChecksHandler(ILogger<ChecksHandler> log, PatchProtocolHandler patch, DirectoryHelpers directoryHelpers)
     {
-        /// <summary>
-        /// Logger instance for this class.
-        /// </summary>
-        private readonly ILogger<ChecksHandler> _log;
-
-        /// <summary>
-        /// The patch protocol.
-        /// </summary>
-        private readonly PatchProtocolHandler _patch;
-
-        /// <summary>
-        /// The directory helpers.
-        /// </summary>
-        private readonly DirectoryHelpers _directoryHelpers;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ChecksHandler"/> class.
-        /// </summary>
-        /// <param name="log">The logging instance.</param>
-        /// <param name="patch">The patch protocol.</param>
-        /// <param name="directoryHelpers">The directory helpers.</param>
-        public ChecksHandler(ILogger<ChecksHandler> log, PatchProtocolHandler patch, DirectoryHelpers directoryHelpers)
-        {
-            _log = log;
-            _patch = patch;
-            _directoryHelpers = directoryHelpers;
-        }
-
-        /// <summary>
-        /// Determines whether this instance can connect to a patching service.
-        /// </summary>
-        /// <returns><c>true</c> if this instance can connect to a patching service; otherwise, <c>false</c>.</returns>
-        public Task<Result<bool>> CanPatchAsync() => _patch.CanPatchAsync();
-
-        /// <summary>
-        /// Determines whether this is the first time the launcher starts.
-        /// </summary>
-        /// <returns><c>true</c> if this is the first time; otherwise, <c>false</c>.</returns>
-        public bool IsInitialStartup()
-        {
-            // We use an empty file to determine if this is the first launch or not
-            return !File.Exists(_directoryHelpers.GetLauncherTagfilePath());
-        }
-
-        /// <summary>
-        /// Determines whether the game is installed.
-        /// </summary>
-        /// <returns><c>true</c> if the game is installed; otherwise, <c>false</c>.</returns>
-        public bool IsGameInstalled()
-        {
-            // Criteria for considering the game 'installed'
-            var hasGameDirectory = Directory.Exists(_directoryHelpers.GetLocalGameDirectory());
-            var hasInstallCookie = File.Exists(_directoryHelpers.GetGameTagfilePath());
-            var hasGameVersionFile = File.Exists(_directoryHelpers.GetLocalGameVersionPath());
-
-            if (!hasGameVersionFile && hasGameDirectory)
-            {
-                _log.LogWarning
-                (
-                    "No GameVersion.txt file was found in the installation directory.\n" +
-                    "This may be due to a download error, or the developer may not have included one.\n" +
-                    "Without it, the game cannot be considered fully installed.\n" +
-                    "If you are the developer of this game, add one to your game files with your desired version in it."
-                );
-            }
-
-            // If any of these criteria are false, the game is not considered fully installed.
-            return hasGameDirectory && hasInstallCookie && IsInstallCookieEmpty() && hasGameVersionFile;
-        }
-
-        /// <summary>
-        /// Determines whether the game is outdated.
-        /// </summary>
-        /// <returns><c>true</c> if the game is outdated; otherwise, <c>false</c>.</returns>
-        public Task<Result<bool>> IsGameOutdatedAsync()
-            => _patch.IsModuleOutdatedAsync(EModule.Game);
-
-        /// <summary>
-        /// Determines whether the launcher is outdated.
-        /// </summary>
-        /// <returns><c>true</c> if the launcher is outdated; otherwise, <c>false</c>.</returns>
-        public Task<Result<bool>> IsLauncherOutdatedAsync()
-            => _patch.IsModuleOutdatedAsync(EModule.Launcher);
-
-        /// <summary>
-        /// Determines whether the install cookie is empty.
-        /// </summary>
-        /// <returns><c>true</c> if the install cookie is empty, otherwise, <c>false</c>.</returns>
-        private bool IsInstallCookieEmpty()
-        {
-            // Is there an .install file in the directory?
-            var hasInstallCookie = File.Exists(_directoryHelpers.GetGameTagfilePath());
-            var isInstallCookieEmpty = false;
-
-            if (hasInstallCookie)
-            {
-                isInstallCookieEmpty = string.IsNullOrEmpty(File.ReadAllText(_directoryHelpers.GetGameTagfilePath()));
-            }
-
-            return isInstallCookieEmpty;
-        }
-
-        /// <summary>
-        /// Checks whether or not the server provides binaries and patches for the specified platform.
-        /// </summary>
-        /// <returns><c>true</c>, if the server does provide files for the platform, <c>false</c> otherwise.</returns>
-        /// <param name="platform">platform.</param>
-        public Task<Result<bool>> IsPlatformAvailableAsync(ESystemTarget platform)
-            => _patch.IsPlatformAvailableAsync(platform);
+        _log = log;
+        _patch = patch;
+        _directoryHelpers = directoryHelpers;
     }
+
+    /// <summary>
+    /// Determines whether this instance can connect to a patching service.
+    /// </summary>
+    /// <returns><c>true</c> if this instance can connect to a patching service; otherwise, <c>false</c>.</returns>
+    public Task<Result<bool>> CanPatchAsync() => _patch.CanPatchAsync();
+
+    /// <summary>
+    /// Determines whether this is the first time the launcher starts.
+    /// </summary>
+    /// <returns><c>true</c> if this is the first time; otherwise, <c>false</c>.</returns>
+    public bool IsInitialStartup()
+    {
+        // We use an empty file to determine if this is the first launch or not
+        return !File.Exists(_directoryHelpers.GetLauncherTagfilePath());
+    }
+
+    /// <summary>
+    /// Determines whether the game is installed.
+    /// </summary>
+    /// <returns><c>true</c> if the game is installed; otherwise, <c>false</c>.</returns>
+    public bool IsGameInstalled()
+    {
+        // Criteria for considering the game 'installed'
+        var hasGameDirectory = Directory.Exists(_directoryHelpers.GetLocalGameDirectory());
+        var hasInstallCookie = File.Exists(_directoryHelpers.GetGameTagfilePath());
+        var hasGameVersionFile = File.Exists(_directoryHelpers.GetLocalGameVersionPath());
+
+        if (!hasGameVersionFile && hasGameDirectory)
+        {
+            _log.LogWarning
+            (
+                "No GameVersion.txt file was found in the installation directory.\n" +
+                "This may be due to a download error, or the developer may not have included one.\n" +
+                "Without it, the game cannot be considered fully installed.\n" +
+                "If you are the developer of this game, add one to your game files with your desired version in it."
+            );
+        }
+
+        // If any of these criteria are false, the game is not considered fully installed.
+        return hasGameDirectory && hasInstallCookie && IsInstallCookieEmpty() && hasGameVersionFile;
+    }
+
+    /// <summary>
+    /// Determines whether the game is outdated.
+    /// </summary>
+    /// <returns><c>true</c> if the game is outdated; otherwise, <c>false</c>.</returns>
+    public Task<Result<bool>> IsGameOutdatedAsync()
+        => _patch.IsModuleOutdatedAsync(EModule.Game);
+
+    /// <summary>
+    /// Determines whether the launcher is outdated.
+    /// </summary>
+    /// <returns><c>true</c> if the launcher is outdated; otherwise, <c>false</c>.</returns>
+    public Task<Result<bool>> IsLauncherOutdatedAsync()
+        => _patch.IsModuleOutdatedAsync(EModule.Launcher);
+
+    /// <summary>
+    /// Determines whether the install cookie is empty.
+    /// </summary>
+    /// <returns><c>true</c> if the install cookie is empty, otherwise, <c>false</c>.</returns>
+    private bool IsInstallCookieEmpty()
+    {
+        // Is there an .install file in the directory?
+        var hasInstallCookie = File.Exists(_directoryHelpers.GetGameTagfilePath());
+        var isInstallCookieEmpty = false;
+
+        if (hasInstallCookie)
+        {
+            isInstallCookieEmpty = string.IsNullOrEmpty(File.ReadAllText(_directoryHelpers.GetGameTagfilePath()));
+        }
+
+        return isInstallCookieEmpty;
+    }
+
+    /// <summary>
+    /// Checks whether or not the server provides binaries and patches for the specified platform.
+    /// </summary>
+    /// <returns><c>true</c>, if the server does provide files for the platform, <c>false</c> otherwise.</returns>
+    /// <param name="platform">platform.</param>
+    public Task<Result<bool>> IsPlatformAvailableAsync(ESystemTarget platform)
+        => _patch.IsPlatformAvailableAsync(platform);
 }

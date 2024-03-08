@@ -34,99 +34,98 @@ using UIElement = Gtk.Builder.ObjectAttribute;
 #pragma warning disable SA1134 // Each attribute should be placed on its own line of code
 #pragma warning disable SA1214 // Readonly fields should appear before non-readonly fields
 
-namespace Launchpad.Launcher.Interface
+namespace Launchpad.Launcher.Interface;
+
+/// <summary>
+/// Interface elements for the <see cref="MainWindow"/> widget.
+/// </summary>
+public partial class MainWindow
 {
+    [UIElement("MenuRepairItem")]
+    private readonly ImageMenuItem _menuRepairItem = null!;
+
+    [UIElement("MenuReinstallItem")]
+    private readonly ImageMenuItem _menuReinstallItem = null!;
+
+    [UIElement("MenuAboutItem")]
+    private readonly ImageMenuItem _menuAboutItem = null!;
+
+    [UIElement("ChangelogTextView")]
+    private readonly TextView _changelogTextView = null!;
+
+    [UIElement("BannerImage")]
+    private readonly Image _bannerImage = null!;
+
+    [UIElement("StatusLabel")]
+    private readonly Label _statusLabel = null!;
+
+    [UIElement("ProgressBar")]
+    private readonly ProgressBar _mainProgressBar = null!;
+
+    [UIElement("MainButton")]
+    private readonly Button _mainButton = null!;
+
     /// <summary>
-    /// Interface elements for the <see cref="MainWindow"/> widget.
+    /// Creates a new instance of the <see cref="MainWindow"/> class, loading its interface definition from file.
     /// </summary>
-    public partial class MainWindow
+    /// <param name="services">The services.</param>
+    /// <returns>An instance of the main window widget.</returns>
+    public static MainWindow Create(IServiceProvider services)
     {
-        [UIElement("MenuRepairItem")]
-        private readonly ImageMenuItem _menuRepairItem = null!;
+        using var builder = new Builder
+        (
+            Assembly.GetExecutingAssembly(),
+            "Launchpad.Launcher.Interface.Launchpad.glade",
+            null
+        );
 
-        [UIElement("MenuReinstallItem")]
-        private readonly ImageMenuItem _menuReinstallItem = null!;
+        var window = ActivatorUtilities.CreateInstance<MainWindow>
+        (
+            services,
+            builder,
+            builder.GetObject("MainWindow").Handle
+        );
 
-        [UIElement("MenuAboutItem")]
-        private readonly ImageMenuItem _menuAboutItem = null!;
+        window.Icon = ResourceManager.ApplicationIcon;
 
-        [UIElement("ChangelogTextView")]
-        private readonly TextView _changelogTextView = null!;
+        return window;
+    }
 
-        [UIElement("BannerImage")]
-        private readonly Image _bannerImage = null!;
+    /// <summary>
+    /// Binds UI-related events.
+    /// </summary>
+    private void BindUIEvents()
+    {
+        this.DeleteEvent += OnDeleteEvent;
+        _menuReinstallItem.Activated += OnReinstallGameActionActivated;
+        _menuRepairItem.Activated += OnMenuRepairItemActivated;
+        _menuAboutItem.Activated += OnMenuAboutItemActivated;
 
-        [UIElement("StatusLabel")]
-        private readonly Label _statusLabel = null!;
+        _mainButton.Clicked += OnMainButtonClicked;
+    }
 
-        [UIElement("ProgressBar")]
-        private readonly ProgressBar _mainProgressBar = null!;
+    /// <summary>
+    /// Displays the about window to the user.
+    /// </summary>
+    /// <param name="sender">The sending object.</param>
+    /// <param name="e">The event args.</param>
+    private void OnMenuAboutItemActivated(object? sender, EventArgs e)
+    {
+        using var builder = new Builder(Assembly.GetExecutingAssembly(), "Launchpad.Launcher.Interface.Launchpad.glade", null);
+        using var dialog = new AboutDialog(builder.GetObject("MainAboutDialog").Handle);
+        dialog.Icon = ResourceManager.ApplicationIcon;
+        dialog.Logo = ResourceManager.ApplicationIcon;
+        dialog.Run();
+    }
 
-        [UIElement("MainButton")]
-        private readonly Button _mainButton = null!;
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="MainWindow"/> class, loading its interface definition from file.
-        /// </summary>
-        /// <param name="services">The services.</param>
-        /// <returns>An instance of the main window widget.</returns>
-        public static MainWindow Create(IServiceProvider services)
-        {
-            using var builder = new Builder
-            (
-                Assembly.GetExecutingAssembly(),
-                "Launchpad.Launcher.Interface.Launchpad.glade",
-                null
-            );
-
-            var window = ActivatorUtilities.CreateInstance<MainWindow>
-            (
-                services,
-                builder,
-                builder.GetObject("MainWindow").Handle
-            );
-
-            window.Icon = ResourceManager.ApplicationIcon;
-
-            return window;
-        }
-
-        /// <summary>
-        /// Binds UI-related events.
-        /// </summary>
-        private void BindUIEvents()
-        {
-            this.DeleteEvent += OnDeleteEvent;
-            _menuReinstallItem.Activated += OnReinstallGameActionActivated;
-            _menuRepairItem.Activated += OnMenuRepairItemActivated;
-            _menuAboutItem.Activated += OnMenuAboutItemActivated;
-
-            _mainButton.Clicked += OnMainButtonClicked;
-        }
-
-        /// <summary>
-        /// Displays the about window to the user.
-        /// </summary>
-        /// <param name="sender">The sending object.</param>
-        /// <param name="e">The event args.</param>
-        private void OnMenuAboutItemActivated(object? sender, EventArgs e)
-        {
-            using var builder = new Builder(Assembly.GetExecutingAssembly(), "Launchpad.Launcher.Interface.Launchpad.glade", null);
-            using var dialog = new AboutDialog(builder.GetObject("MainAboutDialog").Handle);
-            dialog.Icon = ResourceManager.ApplicationIcon;
-            dialog.Logo = ResourceManager.ApplicationIcon;
-            dialog.Run();
-        }
-
-        /// <summary>
-        /// Exits the application properly when the window is deleted.
-        /// </summary>
-        /// <param name="sender">Sender.</param>
-        /// <param name="a">The alpha component.</param>
-        private static void OnDeleteEvent(object? sender, DeleteEventArgs a)
-        {
-            Application.Quit();
-            a.RetVal = true;
-        }
+    /// <summary>
+    /// Exits the application properly when the window is deleted.
+    /// </summary>
+    /// <param name="sender">Sender.</param>
+    /// <param name="a">The alpha component.</param>
+    private static void OnDeleteEvent(object? sender, DeleteEventArgs a)
+    {
+        Application.Quit();
+        a.RetVal = true;
     }
 }

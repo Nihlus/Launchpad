@@ -20,26 +20,25 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-namespace Launchpad.Common.Enums
+namespace Launchpad.Common.Enums;
+
+/// <summary>
+/// Enum defining the type of manifest.
+/// </summary>
+public enum EManifestType
 {
     /// <summary>
-    /// Enum defining the type of manifest.
+    /// An unknown manifest.
     /// </summary>
-    public enum EManifestType
-    {
-        /// <summary>
-        /// An unknown manifest.
-        /// </summary>
-        Unknown = 0,
+    Unknown = 0,
 
-        /// <summary>
-        /// A launcher manifest.
-        /// </summary>
-        Launchpad = 1,
+    /// <summary>
+    /// A launcher manifest.
+    /// </summary>
+    Launchpad = 1,
 
-        /// <summary>
-        /// A game manifest.
-        /// </summary>
-        Game = 2
-    }
+    /// <summary>
+    /// A game manifest.
+    /// </summary>
+    Game = 2
 }

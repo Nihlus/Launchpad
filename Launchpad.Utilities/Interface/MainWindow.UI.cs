@@ -31,57 +31,56 @@ using UIElement = Gtk.Builder.ObjectAttribute;
 #pragma warning disable SA1134 // Each attribute should be placed on its own line of code
 #pragma warning disable SA1214 // Readonly fields should appear before non-readonly fields
 
-namespace Launchpad.Utilities.Interface
+namespace Launchpad.Utilities.Interface;
+
+public partial class MainWindow
 {
-    public partial class MainWindow
+    [UIElement("FolderChooser")]
+    private readonly FileChooserWidget _folderChooser = null!;
+
+    [UIElement("StatusLabel")]
+    private readonly Label _statusLabel = null!;
+
+    [UIElement("MainProgressBar")]
+    private readonly ProgressBar _mainProgressBar = null!;
+
+    [UIElement("GenerateLaunchpadManifestButton")]
+    private readonly Button _generateLaunchpadManifestButton = null!;
+
+    [UIElement("GenerateGameManifestButton")]
+    private readonly Button _generateGameManifestButton = null!;
+
+    /// <summary>
+    /// Creates a new instance of the <see cref="MainWindow"/> class, loading its interface definition from file.
+    /// </summary>
+    /// <returns>An instance of the main window widget.</returns>
+    public static MainWindow Create()
     {
-        [UIElement("FolderChooser")]
-        private readonly FileChooserWidget _folderChooser = null!;
+        using var builder = new Builder(Assembly.GetExecutingAssembly(), "Launchpad.Utilities.Interface.Launchpad.Utilities.glade", null);
+        return new MainWindow(builder, builder.GetObject(nameof(MainWindow)).Handle);
+    }
 
-        [UIElement("StatusLabel")]
-        private readonly Label _statusLabel = null!;
+    /// <summary>
+    /// Binds UI-related events.
+    /// </summary>
+    private void BindUIEvents()
+    {
+        this.DeleteEvent += OnDeleteEvent;
 
-        [UIElement("MainProgressBar")]
-        private readonly ProgressBar _mainProgressBar = null!;
+        _generateLaunchpadManifestButton.Clicked += OnGenerateLaunchpadManifestButtonClicked;
+        _generateGameManifestButton.Clicked += OnGenerateGameManifestButtonClicked;
+    }
 
-        [UIElement("GenerateLaunchpadManifestButton")]
-        private readonly Button _generateLaunchpadManifestButton = null!;
+    /// <summary>
+    /// Exits the application properly when the window is deleted.
+    /// </summary>
+    /// <param name="sender">Sender.</param>
+    /// <param name="a">The alpha component.</param>
+    private void OnDeleteEvent(object sender, DeleteEventArgs a)
+    {
+        _tokenSource?.Cancel();
 
-        [UIElement("GenerateGameManifestButton")]
-        private readonly Button _generateGameManifestButton = null!;
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="MainWindow"/> class, loading its interface definition from file.
-        /// </summary>
-        /// <returns>An instance of the main window widget.</returns>
-        public static MainWindow Create()
-        {
-            using var builder = new Builder(Assembly.GetExecutingAssembly(), "Launchpad.Utilities.Interface.Launchpad.Utilities.glade", null);
-            return new MainWindow(builder, builder.GetObject(nameof(MainWindow)).Handle);
-        }
-
-        /// <summary>
-        /// Binds UI-related events.
-        /// </summary>
-        private void BindUIEvents()
-        {
-            this.DeleteEvent += OnDeleteEvent;
-
-            _generateLaunchpadManifestButton.Clicked += OnGenerateLaunchpadManifestButtonClicked;
-            _generateGameManifestButton.Clicked += OnGenerateGameManifestButtonClicked;
-        }
-
-        /// <summary>
-        /// Exits the application properly when the window is deleted.
-        /// </summary>
-        /// <param name="sender">Sender.</param>
-        /// <param name="a">The alpha component.</param>
-        private void OnDeleteEvent(object sender, DeleteEventArgs a)
-        {
-            _tokenSource?.Cancel();
-
-            Application.Quit();
-            a.RetVal = true;
-        }
+        Application.Quit();
+        a.RetVal = true;
     }
 }

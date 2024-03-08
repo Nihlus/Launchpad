@@ -23,68 +23,67 @@
 using Launchpad.Common;
 using Xunit;
 
-namespace Launchpad.Tests.Common
+namespace Launchpad.Tests.Common;
+
+/// <summary>
+/// Tests the string extension methods.
+/// </summary>
+public class StringExtensionsTests
 {
     /// <summary>
-    /// Tests the string extension methods.
+    /// Tests line separator and null removals.
     /// </summary>
-    public class StringExtensionsTests
+    public class RemoveLineSeparatorsAndNulls
     {
+        private const string Expected = "data";
+        private const string StringThatContainsNulls = "data\0\0";
+        private const string StringThatContainsCarriageReturns = "data\r\r";
+        private const string StringThatContainsLinefeeds = "data\n\n";
+        private const string StringThatContainsEverything = "data\0\r\n";
+
         /// <summary>
-        /// Tests line separator and null removals.
+        /// Tests that good strings remain unchanged.
         /// </summary>
-        public class RemoveLineSeparatorsAndNulls
+        [Fact]
+        public void DoesNotChangeStringThatDoesNotContainNullsCarriageReturnsOrLineFeeds()
         {
-            private const string Expected = "data";
-            private const string StringThatContainsNulls = "data\0\0";
-            private const string StringThatContainsCarriageReturns = "data\r\r";
-            private const string StringThatContainsLinefeeds = "data\n\n";
-            private const string StringThatContainsEverything = "data\0\r\n";
+            Assert.Equal(Expected, Expected.RemoveLineSeparatorsAndNulls());
+        }
 
-            /// <summary>
-            /// Tests that good strings remain unchanged.
-            /// </summary>
-            [Fact]
-            public void DoesNotChangeStringThatDoesNotContainNullsCarriageReturnsOrLineFeeds()
-            {
-                Assert.Equal(Expected, Expected.RemoveLineSeparatorsAndNulls());
-            }
+        /// <summary>
+        /// Tests that nulls are removed.
+        /// </summary>
+        [Fact]
+        public void RemovesNullCharacters()
+        {
+            Assert.Equal(Expected, StringThatContainsNulls.RemoveLineSeparatorsAndNulls());
+        }
 
-            /// <summary>
-            /// Tests that nulls are removed.
-            /// </summary>
-            [Fact]
-            public void RemovesNullCharacters()
-            {
-                Assert.Equal(Expected, StringThatContainsNulls.RemoveLineSeparatorsAndNulls());
-            }
+        /// <summary>
+        /// Tests that carriage returns are removed.
+        /// </summary>
+        [Fact]
+        public void RemovesCarriageReturns()
+        {
+            Assert.Equal(Expected, StringThatContainsCarriageReturns.RemoveLineSeparatorsAndNulls());
+        }
 
-            /// <summary>
-            /// Tests that carriage returns are removed.
-            /// </summary>
-            [Fact]
-            public void RemovesCarriageReturns()
-            {
-                Assert.Equal(Expected, StringThatContainsCarriageReturns.RemoveLineSeparatorsAndNulls());
-            }
+        /// <summary>
+        /// Tests that line feeds are removed.
+        /// </summary>
+        [Fact]
+        public void RemovesLineFeeds()
+        {
+            Assert.Equal(Expected, StringThatContainsLinefeeds.RemoveLineSeparatorsAndNulls());
+        }
 
-            /// <summary>
-            /// Tests that line feeds are removed.
-            /// </summary>
-            [Fact]
-            public void RemovesLineFeeds()
-            {
-                Assert.Equal(Expected, StringThatContainsLinefeeds.RemoveLineSeparatorsAndNulls());
-            }
-
-            /// <summary>
-            /// Tests that combinations of CR and LF are removed.
-            /// </summary>
-            [Fact]
-            public void RemovesNullsCarriageReturnsAndLineFeeds()
-            {
-                Assert.Equal(Expected, StringThatContainsEverything.RemoveLineSeparatorsAndNulls());
-            }
+        /// <summary>
+        /// Tests that combinations of CR and LF are removed.
+        /// </summary>
+        [Fact]
+        public void RemovesNullsCarriageReturnsAndLineFeeds()
+        {
+            Assert.Equal(Expected, StringThatContainsEverything.RemoveLineSeparatorsAndNulls());
         }
     }
 }

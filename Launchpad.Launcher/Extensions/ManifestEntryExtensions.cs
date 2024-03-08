@@ -25,41 +25,40 @@ using Launchpad.Common.Handlers;
 using Launchpad.Common.Handlers.Manifest;
 using Launchpad.Launcher.Utility;
 
-namespace Launchpad.Launcher
+namespace Launchpad.Launcher;
+
+/// <summary>
+/// Extension methods for the <see cref="ManifestEntry"/> class.
+/// </summary>
+public static class ManifestEntryExtensions
 {
     /// <summary>
-    /// Extension methods for the <see cref="ManifestEntry"/> class.
+    /// Verifies the integrity of the file in the manifest entry.
     /// </summary>
-    public static class ManifestEntryExtensions
+    /// <param name="entry">The manifest entry to test.</param>
+    /// <param name="directoryHelpers">The directory helpers.</param>
+    /// <returns><c>true</c>, if file was complete and undamaged, <c>false</c> otherwise.</returns>
+    public static bool IsFileIntegrityIntact(this ManifestEntry entry, DirectoryHelpers directoryHelpers)
     {
-        /// <summary>
-        /// Verifies the integrity of the file in the manifest entry.
-        /// </summary>
-        /// <param name="entry">The manifest entry to test.</param>
-        /// <param name="directoryHelpers">The directory helpers.</param>
-        /// <returns><c>true</c>, if file was complete and undamaged, <c>false</c> otherwise.</returns>
-        public static bool IsFileIntegrityIntact(this ManifestEntry entry, DirectoryHelpers directoryHelpers)
+        var localPath = Path.Combine(directoryHelpers.GetLocalGameDirectory(), entry.RelativePath);
+        if (!File.Exists(localPath))
         {
-            var localPath = Path.Combine(directoryHelpers.GetLocalGameDirectory(), entry.RelativePath);
-            if (!File.Exists(localPath))
-            {
-                return false;
-            }
-
-            var fileInfo = new FileInfo(localPath);
-            if (fileInfo.Length != entry.Size)
-            {
-                return false;
-            }
-
-            using Stream file = File.OpenRead(localPath);
-            var localHash = MD5Handler.GetStreamHash(file);
-            if (localHash != entry.Hash)
-            {
-                return false;
-            }
-
-            return true;
+            return false;
         }
+
+        var fileInfo = new FileInfo(localPath);
+        if (fileInfo.Length != entry.Size)
+        {
+            return false;
+        }
+
+        using Stream file = File.OpenRead(localPath);
+        var localHash = MD5Handler.GetStreamHash(file);
+        if (localHash != entry.Hash)
+        {
+            return false;
+        }
+
+        return true;
     }
 }
